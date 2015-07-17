@@ -1,0 +1,136 @@
+.plugin_resources_date_over_color {
+   color:red;
+}
+
+.plugin_resources_date_day_color {
+   color: green;
+}
+
+/**************************************************************/
+
+/**********************Wizard table****************************/
+.plugin_resources_wizard {
+   height: 450px;
+   text-align: left;
+   /*-moz-border-radius-topright: 8px;*/
+   /*-moz-border-radius-bottomright: 8px;*/
+   /*-moz-border-radius-bottomleft: 8px;*/
+   width: 700px;
+}
+
+.plugin_resources_presentation_logo {
+   margin: auto;
+   margin-top: 100px;
+}
+
+.plugin_resource_wizard_img{
+   vertical-align : middle;
+}
+
+.plugin_resources_wizard_left_area {
+   /*width: 20px;*/
+}
+
+.plugin_resources_wizard_right_area {
+   width: 700px;
+   padding-bottom: 20px;
+   font-size: 14px;
+   text-align: left;
+}
+
+.plugin_resources_wizard_button {
+   height: 35px;
+   border-top: 2px outset black;
+}
+
+.plugin_resources_wizard_title {
+   font-size: 18px;
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+.plugin_resources_wizard_explain {
+   font-size: 14px;
+   text-align: justify;
+}
+
+.plugin_resources_wizard_comment {
+   font-size: 9px;
+}
+
+.plugin_resources_wizard_choice {
+   font-size: 14px;
+   text-align: left;
+   margin-left: 10px;
+   margin-right: 10px;
+   margin-top: 20px;
+}
+
+.plugin_resources_wizard_table {
+   margin: 0 auto;
+   padding: 5px;
+   -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+   -o-border-radius: 4px;
+   border: 1px solid #ccc;
+   z-index:1;
+   text-align: left;
+   font-size: 11px;
+   width:700px;
+   background-color: #ffffff;
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+   border-radius: 5px;
+   -moz-box-shadow: 0px 2px 5px #666;
+   -webkit-box-shadow: 0px 2px 5px #666;
+   box-shadow: 0px 2px 5px #666;
+}
+
+.plugin_resources_wizard_th1 {
+   font-size: 18px;
+   text-align: center;
+   padding-bottom: 15px;
+}
+
+.plugin_resources_wizard_th2 {
+   font-size: 14px;
+   text-align: left;
+}
+
+.plugin_resources_wizard_choice_td {
+   border: 1px solid #ccc;
+   padding: 5px;
+}
+
+.plugin_resources_hide {
+   display:none;
+}
+.plugin_resources_show {
+   display: block;
+}
+/**************************************************************/
+
+/**************************Button******************************/
+.next {
+   float: right;
+}
+
+.preview {
+   float: left;
+}
+/**************************************************************/
+
+/***********************Presentation***************************/
+
+.plugin_resources_presentation_title {
+   font-size: 22px;
+   text-align: left;
+   margin-top: 30px;
+}
+
+.plugin_resources_presentation_text {
+   font-size: 16px;
+   line-height: 20px;
+   margin-top: 80px;
+   text-align: justify;
+}
