@@ -167,7 +167,7 @@ function plugin_version_resources() {
       'version' => '2.2.0',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
-      'homepage'=>'https://forge.indepnet.net/projects/resources',
+      'homepage'=>'https://github.com/InfotelGLPI/resources',
       'minGlpiVersion' => '0.90',
    );
 }
