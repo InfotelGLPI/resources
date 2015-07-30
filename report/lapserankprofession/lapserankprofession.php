@@ -34,7 +34,7 @@ $DBCONNECTION_REQUIRED = 1;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourceemploymentwithlapseprofession'];
+$titre = $LANG['plugin_resources']['lapserankprofession'];
 $report = new PluginReportsAutoReport($titre);
 
 // Columns title (optional)
