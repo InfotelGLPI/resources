@@ -104,7 +104,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       global $DB;
 
       $query = "SELECT * FROM `".$this->getTable()."`
-					WHERE `plugin_resources_resources_id` = '".$plugin_resources_resources_id."' ";
+                  WHERE `plugin_resources_resources_id` = '".$plugin_resources_resources_id."' ";
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
@@ -182,7 +182,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       echo "</td></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __('Information', 'Informations', 2);
+      echo _n('Information', 'Informations', 2);
       echo "</td>";
       echo "<td>";
       echo "<textarea cols='100' rows='6' name='information' >".$this->fields["information"]."</textarea>";
@@ -261,7 +261,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
             echo "<textarea cols='100' rows='6' name='comment' >".$data["comment"]."</textarea>";
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td>".__('Information', 'Informations', 2)."</td>";
+            echo "<td>"._n('Information', 'Informations', 2)."</td>";
             echo "<td>";
             echo "<textarea cols='100' rows='6' name='information' >".$data["information"]."</textarea>";
             echo "</td>";

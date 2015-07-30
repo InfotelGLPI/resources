@@ -670,7 +670,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $PluginResourcesReportConfig = new PluginResourcesReportConfig();
             $PluginResourcesReportConfig->getFromDB($options['reports_id']);
       
-            $this->datas['##lang.resource.informations##'] = __('Information', 'Informations', 2);
+            $this->datas['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
             $information = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br>", $PluginResourcesReportConfig->fields['information']));
             $this->datas['##resource.informations##'] =  Html::clean(nl2br($information));
             
