@@ -698,7 +698,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       if ($canedit && $number && ($withtemplate < 2)) {
          echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
       }
-      echo "<th>".__('Name')."</th>";
+      echo "<th>".__('Surname')."</th>";
       echo "<th>".__('First name')."</th>";
       if (Session::isMultiEntitiesMode()) {
          echo "<th>".__('Entity')."</th>";

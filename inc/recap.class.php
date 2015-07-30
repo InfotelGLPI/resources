@@ -82,7 +82,7 @@ class PluginResourcesRecap extends CommonDBTM {
 
       $tab[4350]['table']              = 'glpi_plugin_resources_resources';
       $tab[4350]['field']              = 'name';
-      $tab[4350]['name']               = __('Name');
+      $tab[4350]['name']               = __('Surname');
       $tab[4350]['datatype']           = 'itemlink';
       $tab[4350]['itemlink_type']      = 'PluginResourcesResource';
 

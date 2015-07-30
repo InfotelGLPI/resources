@@ -40,7 +40,7 @@ $titre = $LANG['plugin_resources']['resourcewithoutuser'];
 $report = new PluginReportsAutoReport($titre);
 
 // Columns title (optional)
-$report->setColumns( array(new PluginReportsColumnLink('resource_id', __('Name'),'PluginResourcesResource',
+$report->setColumns( array(new PluginReportsColumnLink('resource_id', __('Surname'),'PluginResourcesResource',
                                                    array('sorton' => 'resource_name')),
                            new PluginReportsColumn('firstname', __('First name'),
                                                    array('sorton' => 'firstname')),

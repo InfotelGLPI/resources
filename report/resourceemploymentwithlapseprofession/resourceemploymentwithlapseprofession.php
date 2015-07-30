@@ -247,7 +247,7 @@ if ($nbtot >0) {
    
    showTitle($output_type, $num, __('Entity'), 'entity', true);
    showTitle($output_type, $num, __('Type'), 'type');
-   showTitle($output_type, $num, __('Name'), 'name', true);
+   showTitle($output_type, $num, __('Surname'), 'name', true);
    showTitle($output_type, $num, __('First name'), 'firstname', true);
    showTitle($output_type, $num, __('Administrative number'), 'registration_number', true);
    showTitle($output_type, $num, PluginResourcesProfession::getTypeName(1), 'profession', true);

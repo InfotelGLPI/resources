@@ -172,7 +172,7 @@ class PluginResourcesRuleContracttype extends Rule {
 
       $actions = array();
       
-      $actions['requiredfields_name']['name']  = __('Name');
+      $actions['requiredfields_name']['name']  = __('Surname');
       $actions['requiredfields_name']['type']  = "yesonly";
       $actions['requiredfields_name']['force_actions'] = array('assign');
       $actions['requiredfields_name']['type']  = "yesonly";

@@ -132,7 +132,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
       $tab[1]['table']           = 'glpi_plugin_resources_resources';
       $tab[1]['field']           = 'name';
-      $tab[1]['name']            = __('Name');
+      $tab[1]['name']            = __('Surname');
       $tab[1]['datatype']        = 'itemlink';
       $tab[1]['itemlink_type']   = $this->getType();
       if (!Session::haveRight("plugin_resources_all", READ)) {

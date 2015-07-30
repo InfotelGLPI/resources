@@ -301,7 +301,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##resource.action##'] = __('These resources have normally left the company', 'resources');
 
          $this->datas['##lang.resource.id##'] = "ID";
-         $this->datas['##lang.resource.name##'] = __('Name');
+         $this->datas['##lang.resource.name##'] = __('Surname');
          $this->datas['##lang.resource.firstname##'] = __('First name');
          $this->datas['##lang.resource.type##'] = PluginResourcesContractType::getTypeName(1);
          $this->datas['##lang.resource.users##'] = __('Resource manager', 'resources');
@@ -367,7 +367,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.checklist.title2##'] = __('Checklist needs to verificated', 'resources');
          
          $this->datas['##lang.checklist.id##'] = "ID";
-         $this->datas['##lang.checklist.name##'] = __('Name');
+         $this->datas['##lang.checklist.name##'] = __('Surname');
          $this->datas['##lang.checklist.firstname##'] = __('First name');
          $this->datas['##lang.checklist.type##'] = PluginResourcesContractType::getTypeName(1);
          $this->datas['##lang.checklist.users##'] = __('Resource manager', 'resources');
@@ -437,7 +437,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##resource.action##'] = __('New resource - checklist needs to verificated', 'resources');
 
          $this->datas['##lang.resource.id##'] = "ID";
-         $this->datas['##lang.resource.name##'] = __('Name');
+         $this->datas['##lang.resource.name##'] = __('Surname');
          $this->datas['##lang.resource.firstname##'] = __('First name');
          $this->datas['##lang.resource.url##'] = "URL";      
          
@@ -464,7 +464,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          
          $this->datas['##lang.resource.id##'] = "ID";
          $this->datas['##resource.id##'] = $this->obj->getField("id");
-         $this->datas['##lang.resource.name##'] = __('Name');
+         $this->datas['##lang.resource.name##'] = __('Surname');
          $this->datas['##resource.name##'] = $this->obj->getField("name");
          
          $this->datas['##lang.resource.firstname##'] = __('First name');
@@ -561,7 +561,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                         $this->obj->getField('entities_id'));
          $this->datas['##resource.id##'] = $this->obj->getField("id");
 
-         $this->datas['##lang.resource.name##'] = __('Name');
+         $this->datas['##lang.resource.name##'] = __('Surname');
          $this->datas['##resource.name##'] = $this->obj->getField("name");
 
          $this->datas['##lang.resource.firstname##'] = __('First name');
@@ -1037,7 +1037,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    function getTags() {
 
       $tags = array('resource.id'               => 'ID',
-                   'resource.name'              => __('Name'),
+                   'resource.name'              => __('Surname'),
                    'resource.firstname'         => __('First name'),
                    'resource.type'              => PluginResourcesContractType::getTypeName(1),
                    'resource.quota'             => __('Quota', 'resources'),
@@ -1058,7 +1058,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                    'resource.leavingreason'     => PluginResourcesLeavingReason::getTypeName(1),
                    'resource.helpdesk'          => __('Associable to a ticket'),
                    'resource.action_user'       => __('Last updater'),
-                   'update.name'                => __('Name'),
+                   'update.name'                => __('Surname'),
                    'update.firstname'           => __('First name'),
                    'update.type'                => PluginResourcesContractType::getTypeName(1),
                    'update.quota'               => __('Quota', 'resources'),

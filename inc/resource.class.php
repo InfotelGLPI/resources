@@ -144,7 +144,7 @@ class PluginResourcesResource extends CommonDBTM {
       
       $tab[1]['table']           = $this->getTable();
       $tab[1]['field']           = 'name';
-      $tab[1]['name']            = __('Name');
+      $tab[1]['name']            = __('Surname');
       $tab[1]['datatype']        = 'itemlink';
       $tab[1]['itemlink_type']   = $this->getType();
       if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
@@ -752,7 +752,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("name", $required))
          echo $alert;
       echo ">";
-      echo __('Name')."</td>";
+      echo __('Surname')."</td>";
       echo "<td>";
       $option = array('option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\"");
       Html::autocompletionTextField($this,"name",$option);
@@ -1399,7 +1399,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("name", $required))
          echo $alert;
       echo ">";
-      _e('Name');
+      _e('Surname');
       echo "</td>";
       echo "<td>";
       $option = array('value' => $options["name"],'option' => "onchange=\"javascript:this.value=this.value.toUpperCase();\"");
@@ -2875,7 +2875,7 @@ class PluginResourcesResource extends CommonDBTM {
       $pdf->displayTitle($col1, $col2);
 
       $pdf->displayLine(
-         '<b><i>'.__('Name').' :</i></b> '.$this->fields['name'],
+         '<b><i>'.__('Surname').' :</i></b> '.$this->fields['name'],
          '<b><i>'.__('First name').' :</i></b> '.$this->fields['firstname']);
       $pdf->displayLine(
          '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations',$this->fields['locations_id'])),

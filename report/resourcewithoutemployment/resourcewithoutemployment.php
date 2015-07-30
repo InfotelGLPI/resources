@@ -43,7 +43,7 @@ $report = new PluginReportsAutoReport($titre);
 // Columns title (optional)
 $report->setColumns( array(new PluginReportsColumnInteger('registration_number', __('Administrative number'),
                                                    array('sorton' => 'registration_number')),
-                           new PluginReportsColumnLink('resource_id', __('Name'),'PluginResourcesResource',
+                           new PluginReportsColumnLink('resource_id', __('Surname'),'PluginResourcesResource',
                                                    array('sorton' => 'resource_name')),
                            new PluginReportsColumn('firstname', __('First name'),
                                                    array('sorton' => 'firstname')),
