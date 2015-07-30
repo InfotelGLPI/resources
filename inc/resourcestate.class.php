@@ -43,7 +43,7 @@ class PluginResourcesResourceState extends CommonDropdown {
    }
 
    static function canView() {
-      return Session::haveRight('plugin_resources_plugin_resources', READ);
+      return Session::haveRight('plugin_resources', READ);
    }
    
    static function transfer($ID, $entity) {

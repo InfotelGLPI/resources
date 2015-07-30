@@ -41,7 +41,7 @@ class PluginResourcesDepartment extends CommonDropdown {
    }
    
    static function canView() {
-      return Session::haveRight('plugin_resources_', READ);
+      return Session::haveRight('plugin_resources', READ);
    }
 
    static function canCreate() {
