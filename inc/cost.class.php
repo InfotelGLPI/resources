@@ -32,7 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesCost extends CommonDropdown {
-
+   
+   var $can_be_translated  = true;
+   
    static function getTypeName($nb=0) {
 
       return _n('Budget cost', 'Budget costs', $nb, 'resources');

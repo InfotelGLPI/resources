@@ -1438,29 +1438,19 @@ function plugin_resources_uninstall() {
    foreach ($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
 
-   $in = "IN (".implode(',', array(
-               "'PluginResourcesResource'",
-               "'PluginResourcesTask'",
-               "'PluginResourcesHelpdesk'",
-               "'PluginResourcesDirectory'",
-               "'PluginResourcesChecklistconfig'",
-               "'PluginResourcesResourceResting'",
-               "'PluginResourcesResourceHoliday'",
-               "'PluginResourcesBudget'",
-               "'PluginResourcesEmployment'",
-               "'PluginResourcesRecap'"
-           )).")";
-
    $tables = array(
        "glpi_displaypreferences",
        "glpi_documents_items",
        "glpi_bookmarks",
        "glpi_logs",
-       "glpi_items_tickets"
+       "glpi_items_tickets",
+       "glpi_dropdowntranslations"
    );
 
    foreach ($tables as $table) {
-      $query = "DELETE FROM `$table` WHERE (`itemtype` ".$in." ) ";
+      $DB->query("DELETE
+                  FROM `$table`
+                  WHERE `itemtype` LIKE 'PluginResources'");
       $DB->query($query);
    }
 

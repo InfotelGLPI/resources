@@ -32,7 +32,8 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesEmploymentProfession extends CommonDropdown {
-
+   
+   var $can_be_translated  = true;
    public $table ='glpi_plugin_resources_professions';
 
 }

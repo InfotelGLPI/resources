@@ -34,6 +34,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesLeavingReason extends CommonDropdown {
    
    static $rightname = 'plugin_resources';
+   var $can_be_translated  = true;
    
    static function getTypeName($nb=0) {
 

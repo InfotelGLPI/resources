@@ -33,6 +33,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginResourcesDepartment extends CommonDropdown {
    
+   var $can_be_translated  = true;
+   
    static function getTypeName($nb=0) {
 
       return _n('Department', 'Departments', $nb, 'resources');

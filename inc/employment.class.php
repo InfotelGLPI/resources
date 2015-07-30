@@ -39,7 +39,7 @@ class PluginResourcesEmployment extends CommonDBTM {
    static public $items_id = 'plugin_resources_resources_id';
 
    // From CommonDBTM
-	public $dohistory=true;
+   public $dohistory=true;
    
    static function getTypeName($nb=0) {
 

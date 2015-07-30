@@ -32,7 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesResourceSpeciality extends CommonDropdown {
-
+   
+   var $can_be_translated  = true;
+   
    static function getTypeName($nb=0) {
 
       return _n('Speciality', 'Specialities', $nb, 'resources');

@@ -34,6 +34,8 @@ if (!defined('GLPI_ROOT')) {
 // Class for a Dropdown
 class PluginResourcesContractNature extends CommonDropdown {
    
+   var $can_be_translated  = true;
+   
    static function getTypeName($nb=0) {
 
       return _n('Contract nature', 'Contract natures', $nb, 'resources');
