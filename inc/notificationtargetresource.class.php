@@ -743,11 +743,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $PluginResourcesResourceResting = new PluginResourcesResourceResting();
             $PluginResourcesResourceResting->getFromDB($options['resting_id']);
             
-            $this->datas['##lang.resource.location##'] = __('Agency concerned');
+            $this->datas['##lang.resource.location##'] = __('Agency concerned', 'resources');
             $this->datas['##resource.location##'] =  Dropdown::getDropdownName('glpi_locations',
                                                        $PluginResourcesResourceResting->fields['locations_id']);
                                                        
-            $this->datas['##lang.resource.home##'] = __('At home');
+            $this->datas['##lang.resource.home##'] = __('At home', 'resources');
             $this->datas['##resource.home##'] =  Dropdown::getYesNo($PluginResourcesResourceResting->fields['at_home']);
          
             $this->datas['##lang.resource.datebegin##'] = __('Begin date');
