@@ -3,51 +3,52 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Luis A. Uriarte <luisuriarte@gmail.com>, 2013-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-19 12:10+0100\n"
-"PO-Revision-Date: 2014-11-19 13:42+0000\n"
-"Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>\n"
-"Language-Team: Swedish (Sweden) (http://www.transifex.com/projects/p/GLPI_resources/language/sv_SE/)\n"
+"PO-Revision-Date: 2015-07-22 17:51+0000\n"
+"Last-Translator: Luis A. Uriarte <luisuriarte@gmail.com>\n"
+"Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/GLPI_resources/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: sv_SE\n"
+"Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: hook.php:59
 msgid "Long term contract"
-msgstr "CDI"
+msgstr "Término largo del contrato"
 
 #: hook.php:64
 msgid "Fixed term contract"
-msgstr "CDD - Interim"
+msgstr "Término arreglado del contrato"
 
 #: hook.php:69
 msgid "Trainee"
-msgstr "Trainee"
+msgstr "Pasante"
 
 #: hook.php:1153
 msgid "Specific network rights"
-msgstr "Specificera rättighet i nätverk"
+msgstr "Especificar permisosde red"
 
 #: hook.php:1154
 msgid "Access to the applications"
-msgstr "Behörighet till applikationer"
+msgstr "Acceso a las aplicaciones"
 
 #: hook.php:1155
 msgid "Specific securities groups"
-msgstr "Specificera behörighetsgrupper"
+msgstr "Especificar grupos de seguridad"
 
 #: hook.php:1156
 msgid "Specific distribution lists"
-msgstr "Specificera listor för distribution"
+msgstr "Especificar lista de distribución"
 
 #: hook.php:1157 inc/choice.class.php:115 inc/choice.class.php:302
 msgid "Others needs"
-msgstr "Andra behov"
+msgstr "Otras requerimientos"
 
 #: hook.php:1738 inc/notificationtargetresource.class.php:263
 #: inc/notificationtargetresource.class.php:330
@@ -57,21 +58,21 @@ msgstr "Andra behov"
 #: inc/notificationtargetresource.class.php:975 inc/resource.class.php:229
 #: inc/resource.class.php:1005
 msgid "Declared as leaving"
-msgstr "Deklarerad som utgående"
+msgstr "Declarado en partida"
 
 #: hook.php:1743 inc/employer.class.php:38 inc/employment.class.php:169
 #: inc/employment.class.php:239
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:65
 msgid "Employer"
 msgid_plural "Employers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Empleador"
+msgstr[1] "Empleadores"
 
 #: hook.php:1747 inc/client.class.php:38
 msgid "Affected client"
 msgid_plural "Affected clients"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Cliente afectado"
+msgstr[1] "Clientes afectados"
 
 #: hook.php:1752 hook.php:2382 inc/directory.class.php:126
 #: inc/notificationtargetresource.class.php:77
@@ -85,7 +86,7 @@ msgstr[1] ""
 #: inc/resource.class.php:2486 inc/rulecontracttype.class.php:188
 #: inc/task.class.php:616 inc/task.class.php:957
 msgid "Resource manager"
-msgstr ""
+msgstr "Administración de recursos"
 
 #: hook.php:1764 inc/notificationtargetresource.class.php:79
 #: inc/notificationtargetresource.class.php:262
@@ -95,87 +96,87 @@ msgstr ""
 #: inc/notificationtargetresource.class.php:952
 #: inc/notificationtargetresource.class.php:974 inc/resource.class.php:235
 msgid "Informant of leaving"
-msgstr "Uppgiftslämnare"
+msgstr "Información de partida"
 
 #: hook.php:2158 inc/resource_item.class.php:769
 msgid "Not defined"
-msgstr "Ej definierad"
+msgstr "No definido"
 
 #: hook.php:2348 inc/resource_item.class.php:672
 msgid "Associate a resource"
-msgstr ""
+msgstr "Asociar recurso"
 
 #: hook.php:2349
 msgid "Generate resources"
-msgstr ""
+msgstr "Generar recursos"
 
 #: hook.php:2539 hook.php:2541
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "El recurso existe"
+msgstr[1] "Los recursos existen"
 
 #: hook.php:2547 hook.php:2549
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se ha agregado el rescurso"
+msgstr[1] "Se han agregados los rescursos"
 
 #: hook.php:2592
 msgid "Modification of the associated resource's location"
-msgstr "Modifiering av associerad resurs plats"
+msgstr "Modificación del lugar del recurso asociado"
 
 #: setup.php:166
 msgid "Human Resource"
 msgid_plural "Human Resources"
-msgstr[0] "Human Resource"
-msgstr[1] "Human Resources"
+msgstr[0] "Recurso Humano"
+msgstr[1] "Recursos Humanos"
 
 #: setup.php:179
 msgid "This plugin requires GLPI >= 0.85"
-msgstr ""
+msgstr "Este complemento requiere GLPI>=0.85"
 
 #: setup.php:181
 msgid "Incompatible PHP Installation. Requires module"
-msgstr ""
+msgstr "Instalación incompatible PHP. Necesita módulo"
 
 #: front/config.form.php:60
 msgid "Please activate the plugin"
-msgstr ""
+msgstr "Por favor activar este plugin"
 
 #: front/resource.form.php:314
 msgid "The checklist is not finished"
-msgstr "The checklist is not finished"
+msgstr "La verificación no está terminada"
 
 #: front/resource.form.php:396
 msgid "Notification sent"
-msgstr ""
+msgstr "Notificación enviada"
 
 #: front/resource.form.php:398
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
-msgstr ""
+msgstr "La notificación no se envía porque el recurso no está vinculada a un usuario"
 
 #: front/resource.form.php:431
 msgid "the resource is not linked with a user"
-msgstr ""
+msgstr "el recurso no está vinculado a un usuario"
 
 #: front/resource.php:66 front/resource.php:74 front/resource.php:75
 msgid "View by contract type"
-msgstr "Per kontrakstyp"
+msgstr "Ver por tipo de contrato"
 
 #: front/resource.remove.php:72
 msgid "Declaration of resource leaving OK"
-msgstr "Registrering av resultavslut klart"
+msgstr "Declaración del recurso en partida Lista."
 
 #: front/wizard.form.php:118 inc/resource.class.php:396
 msgid "Required fields are not filled. Please try again."
-msgstr "Obligatoriska fält måste fyllas i. V.v. försök igen."
+msgstr "No se han llenado los campos. Por favor pruebe de nuevo."
 
 #: inc/budget.class.php:78 inc/budget.class.php:95 inc/cost.class.php:66
 #: inc/cost.class.php:83
 msgid "The profession for the budget must be filled"
-msgstr "the profession for the budget must be filled"
+msgstr "Se debe llenar la profesión, para el presupuesto"
 
 #: inc/budget.class.php:125 inc/budget.class.php:216 inc/cost.class.php:97
 #: inc/cost.class.php:126 inc/cost.class.php:190 inc/employment.class.php:142
@@ -183,8 +184,8 @@ msgstr "the profession for the budget must be filled"
 #: inc/resourcespeciality.class.php:60 inc/resourcespeciality.class.php:136
 msgid "Rank"
 msgid_plural "Ranks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Clasificación"
+msgstr[1] "Clasificaciones"
 
 #: inc/budget.class.php:131 inc/budget.class.php:204 inc/cost.class.php:93
 #: inc/cost.class.php:121 inc/cost.class.php:177 inc/employment.class.php:148
@@ -193,25 +194,25 @@ msgstr[1] ""
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Profession"
 msgid_plural "Professions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Profesión"
+msgstr[1] "Profesiones"
 
 #: inc/budget.class.php:137 inc/budgettype.class.php:38
 msgid "Budget type"
 msgid_plural "Budget types"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tipo de presupuesto"
+msgstr[1] "Tipos de presupuestos"
 
 #: inc/budget.class.php:152 inc/budget.class.php:195 inc/budget.class.php:227
 msgid "Budget volume"
-msgstr "Budget volume"
+msgstr "Volumen del presupuesto"
 
 #: inc/budget.class.php:156 inc/budget.class.php:231
 #: inc/budgetvolume.class.php:38
 msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tipo de volumen de presupuesto"
+msgstr[1] "Tipos de volumen de presupuesto"
 
 #: inc/budgettype.class.php:52 inc/budgettype.class.php:102
 #: inc/budgetvolume.class.php:52 inc/budgetvolume.class.php:102
@@ -229,84 +230,84 @@ msgstr[1] ""
 #: report/professionwithoutvolume/professionwithoutvolume.php:287
 #: report/professionwithoutvolume/professionwithoutvolume.php:289
 msgid "Code"
-msgstr "Code"
+msgstr "Código"
 
 #: inc/checklist.class.php:44 inc/profile.class.php:193
 #: inc/resource.class.php:2936
 msgid "Checklist"
 msgid_plural "Checklists"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Verificación"
+msgstr[1] "Verificaciones"
 
 #: inc/checklist.class.php:214 inc/checklist.class.php:684
 msgid "Create a end treatment ticket"
-msgstr "Crate a end treatment ticket"
+msgstr "Crear una incidencia para tratamiento final"
 
 #: inc/checklist.class.php:233 inc/checklist.class.php:248
 msgid "At the arriving of a resource"
-msgstr "När en resurs startar"
+msgstr "A la llegada de un recurso"
 
 #: inc/checklist.class.php:234 inc/checklist.class.php:250
 msgid "At the leaving of a resource"
-msgstr "När en resurs slutar"
+msgstr "A la partida de un recurso"
 
 #: inc/checklist.class.php:278
 msgid "Create checklists"
-msgstr "Skapa checklistor"
+msgstr "Crear verificaciones"
 
 #: inc/checklist.class.php:399 inc/checklist.class.php:499
 #: inc/checklistconfig.class.php:96 inc/checklistconfig.class.php:127
 msgid "Important"
-msgstr "Viktig"
+msgstr "Importante"
 
 #: inc/checklist.class.php:408 inc/checklistconfig.class.php:87
 #: inc/checklistconfig.class.php:135
 msgid "Link"
-msgstr "Länk"
+msgstr "Asociar"
 
 #: inc/checklist.class.php:501 inc/checklist.class.php:996
 msgid "Linked task"
-msgstr "Länkad uppgift"
+msgstr "Tarea asociada"
 
 #: inc/checklist.class.php:626
 msgid "Select all"
-msgstr ""
+msgstr "Seleccionar todo"
 
 #: inc/checklist.class.php:627
 msgid "Deselect all"
-msgstr ""
+msgstr "Deseleccionar todo"
 
 #: inc/checklist.class.php:654
 msgid "Add a task at the arriving checklist"
-msgstr "Lägg till en uppgift till (inkommande) checklista"
+msgstr "Agregar una tarea a la verificación de arrivo"
 
 #: inc/checklist.class.php:656
 msgid "Add a task at the leaving checklist"
-msgstr "Addera en uppgift till checklistan för avslut"
+msgstr "Agregar una tarea a la verificación de partida"
 
 #: inc/checklist.class.php:673
 msgid "Modify state"
-msgstr "Modifiera status"
+msgstr "Modificar estado"
 
 #: inc/checklist.class.php:677
 msgid "Link a task"
-msgstr "Länka en uppgift"
+msgstr "Asociar a una tarea"
 
 #: inc/checklist.class.php:680
 msgid "Add ticket"
-msgstr "Lägg till ärende"
+msgstr "Agregar incidencia"
 
 #: inc/checklist.class.php:685
 msgid "Reset the checklist"
-msgstr "Reset the checklist"
+msgstr "Borrar verificación"
 
 #: inc/checklist.class.php:721 inc/notificationtargetresource.class.php:312
 msgid "Leaving resource - checklist needs to verificated"
-msgstr "Checklista behöver verifieras för resursavslutning"
+msgstr "Partida de recurso - Se necesita verificación"
 
 #: inc/checklist.class.php:723 inc/notificationtargetresource.class.php:308
 msgid "New resource - checklist needs to verificated"
-msgstr "Ny resurs - checklista behöcer verifieras"
+msgstr "Nuevo recurso - Se necesita verificación"
 
 #: inc/checklist.class.php:728 inc/directory.class.php:137
 #: inc/notificationtargetresource.class.php:257
@@ -326,7 +327,7 @@ msgstr "Ny resurs - checklista behöcer verifieras"
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:58
 #: report/resourcewithoutuser/resourcewithoutuser.php:55
 msgid "Departure date"
-msgstr "Slutdatum"
+msgstr "Fecha de partida"
 
 #: inc/checklist.class.php:730 inc/directory.class.php:132
 #: inc/notificationtargetresource.class.php:256
@@ -345,158 +346,158 @@ msgstr "Slutdatum"
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:56
 #: report/resourcewithoutuser/resourcewithoutuser.php:53
 msgid "Arrival date"
-msgstr "Inkommandedatum"
+msgstr "Fecha de arrivo"
 
 #: inc/checklist.class.php:736 inc/notificationtargetresource.class.php:314
 msgid "Checklist needs to verificated"
-msgstr "Checklistan behöver verifieras"
+msgstr "Necesita verificación"
 
 #: inc/checklist.class.php:818 inc/checklist.class.php:915
 msgid "Checklists Verification"
-msgstr "Verifiering av checklistor"
+msgstr "Verificación"
 
 #: inc/checklist.class.php:996
 msgid "Checked"
-msgstr "Kontrollerad"
+msgstr "Chequeado"
 
 #: inc/checklist.class.php:1017
 msgid "No checklist found"
-msgstr "Ingen checklista funnen"
+msgstr "Verificación no encontrada"
 
 #: inc/checklistconfig.class.php:41
 msgid "Checklist setup"
 msgid_plural "Checklists setup"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Configurar verificación"
+msgstr[1] "Configurar verificaciones"
 
 #: inc/checklistconfig.class.php:263
 msgid "Generate a rule"
-msgstr "Generera regel"
+msgstr "Generar regla"
 
 #: inc/choice.class.php:40
 msgid "Need"
 msgid_plural "Needs"
-msgstr[0] "Need"
-msgstr[1] "Needs"
+msgstr[0] "Requerimiento"
+msgstr[1] "Requerimientos"
 
 #: inc/choice.class.php:225 inc/contracttype.class.php:65
 msgid "Enter the computing needs of the resource"
-msgstr ""
+msgstr "Introduzca los requerminientos informáticos del recurso"
 
 #: inc/choice.class.php:236
 msgid "IT needs identified"
-msgstr "IT-behov identifierat"
+msgstr "Necesita identificación TIC"
 
 #: inc/choice.class.php:279 inc/choice.class.php:489
 msgid "Add a need"
-msgstr "Lägg till ett behov"
+msgstr "Agregar requerimiento"
 
 #: inc/choice.class.php:303
 msgid "Will be added to the resource comment area"
-msgstr "Kommer att läggas till i kommentar för resurs"
+msgstr "Se agregará al recurso el área comentada"
 
 #: inc/choice.class.php:346 inc/employee.class.php:345
 #: inc/resource.class.php:1286 inc/resource.class.php:1655
 #: inc/resource.class.php:1666 inc/resource.class.php:1737
 msgctxt "button"
 msgid "Next >"
-msgstr ""
+msgstr "Próximo >"
 
 #: inc/choice.class.php:373
 msgid "Add a comment"
-msgstr "Lägg till en kommentar"
+msgstr "Agregar comentario"
 
 #: inc/choice.class.php:438
 msgid "Element(s) to be affected"
-msgstr "Berörda komponenter"
+msgstr "Elemento(s) a afectar"
 
 #: inc/choice.class.php:512
 msgid "Terminate the declaration"
-msgstr "Avsluta registrering"
+msgstr "Terminar declaración"
 
 #: inc/choice.class.php:514
 msgid "Resend the declaration"
-msgstr "Skicka registreringen igen"
+msgstr "Reenviar declaración"
 
 #: inc/choiceitem.class.php:38
 msgid "Type of need"
 msgid_plural "Types of need"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tipo de requerimiento"
+msgstr[1] "Tipos de requerimientos"
 
 #: inc/contractnature.class.php:39
 msgid "Contract nature"
 msgid_plural "Contract natures"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Naturalezas de los contratos"
+msgstr[1] "Naturaleza del contrato"
 
 #: inc/contracttype.class.php:39
 msgid "Type of contract"
 msgid_plural "Types of contract"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tipo de contrato"
+msgstr[1] "Tipos de contratos"
 
 #: inc/contracttype.class.php:57
 msgid "Wizard resource creation"
-msgstr "Skapande av Wizard resource"
+msgstr "Asistente de creación de recurso"
 
 #: inc/contracttype.class.php:61 inc/contracttype.class.php:92
 #: inc/employee.class.php:307
 msgid "Enter employer information about the resource"
-msgstr ""
+msgstr "Introduzca información del empleador del recurso"
 
 #: inc/contracttype.class.php:69 inc/contracttype.class.php:97
 msgid "Add a picture"
-msgstr "Lägg till en bild"
+msgstr "Agregar imágen"
 
 #: inc/contracttype.class.php:87 inc/resource.class.php:1340
 msgid "Enter general information about the resource"
-msgstr ""
+msgstr "Introduzca información acerca del recurso"
 
 #: inc/contracttype.class.php:157 inc/contracttype.class.php:173
 #: inc/resource.class.php:706 inc/resource.class.php:1353
 msgid "Without contract"
-msgstr "Utan kontrakt"
+msgstr "Sin contrato"
 
 #: inc/cost.class.php:38 inc/cost.class.php:109 inc/cost.class.php:141
 #: inc/cost.class.php:214
 msgid "Budget cost"
 msgid_plural "Budget costs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Costo de presupuesto"
+msgstr[1] "Costos de presupuestos"
 
 #: inc/department.class.php:38
 msgid "Department"
 msgid_plural "Departments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Departamento"
+msgstr[1] "Departamentos"
 
 #: inc/directory.class.php:43 inc/resource.class.php:2906
 msgid "Directory"
 msgid_plural "Directories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Director"
+msgstr[1] "Directores"
 
 #: inc/employee.class.php:40 inc/profile.class.php:198
 msgid "Employee"
 msgid_plural "Employees"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Empleado"
+msgstr[1] "Empleados"
 
 #: inc/employee.class.php:180
 msgid "The resource is also created if not existent"
-msgstr ""
+msgstr "Si no existe se creará el recurso"
 
 #: inc/employee.class.php:342 inc/resource.class.php:1652
 #: inc/resource.class.php:1663
 msgctxt "button"
 msgid "< Previous"
-msgstr ""
+msgstr "< Previo"
 
 #: inc/employee.class.php:415
 msgctxt "button"
 msgid "Next step"
-msgstr ""
+msgstr "Próximo paso"
 
 #: inc/employer.class.php:56 inc/employer.class.php:71
 #: inc/employmentstate.class.php:52 inc/employmentstate.class.php:108
@@ -504,190 +505,190 @@ msgstr ""
 #: inc/rank.class.php:63 inc/rank.class.php:94
 #: inc/resourcesituation.class.php:63 inc/resourcesituation.class.php:121
 msgid "Short name"
-msgstr "Short name"
+msgstr "Nombre corto"
 
 #: inc/employment.class.php:46 inc/profile.class.php:213
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
 msgid_plural "Employments"
-msgstr[0] "Employment"
-msgstr[1] "Employments"
+msgstr[0] "Empleo"
+msgstr[1] "Empleos"
 
 #: inc/employment.class.php:136 inc/employment.class.php:179
 #: inc/employment.class.php:293 inc/profile.class.php:178
 #: inc/resource.class.php:45 inc/taskplanning.class.php:49
 msgid "Human resource"
 msgid_plural "Human resources"
-msgstr[0] "Human Resource"
-msgstr[1] "Human Resources"
+msgstr[0] "Recurso Humano"
+msgstr[1] "Recursos Humanos"
 
 #: inc/employment.class.php:164 inc/employment.class.php:270
 #: inc/employmentstate.class.php:38
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:63
 msgid "Employment state"
 msgid_plural "Employment states"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Estado del empleo"
+msgstr[1] "Estados de los empleos"
 
 #: inc/employment.class.php:174 inc/employment.class.php:276
 #: inc/recap.class.php:157
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:59
 msgid "Ratio Employment / Budget"
-msgstr "Ratio Employment / Budget"
+msgstr "Proporción Empleo / Presupuesto"
 
 #: inc/employment.class.php:337
 msgid "Declare a new employment"
-msgstr "Declare a new employment"
+msgstr "Declarar un nuevo empleo"
 
 #: inc/employment.class.php:348
 msgid "To affect an employment"
-msgstr "To affect an employment"
+msgstr "Para afectar un empleo"
 
 #: inc/employment.class.php:400
 msgid "Updating leaving resources (declaring leaving, state of employment)"
-msgstr "Updating leaving resources (declaring leaving, state of employment)"
+msgstr "Actualización de recursos partidos (declaración partida, estado del empleo)"
 
 #: inc/employment.class.php:476
 msgid ""
 "These resources left the company, linked current employment have been "
 "updated"
-msgstr ""
+msgstr "Se ha actualizado estos recursos que salieron de la empresa, vinculados al empleo corriente"
 
 #: inc/employmentstate.class.php:59 inc/employmentstate.class.php:117
 msgid "Employment state at leaving's resource"
-msgstr "Employment state at leaving's resource"
+msgstr "Estado del empleo del recurso que parte"
 
 #: inc/leavingreason.class.php:38
 msgid "Leaving reason"
 msgid_plural "Leaving reasons"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Razón de partida"
+msgstr[1] "Razones de partida"
 
 #: inc/notification.class.php:41
 msgid "Notification history"
-msgstr ""
+msgstr "Historial de notificaciones"
 
 #: inc/notification.class.php:150
 msgid "Resource creation"
-msgstr ""
+msgstr "Creación de recursos"
 
 #: inc/notification.class.php:151
 msgid "Other"
-msgstr ""
+msgstr "Otro"
 
 #: inc/notificationtargetresource.class.php:46
 msgid "A resource has been added by"
-msgstr "En resurs har adderats av"
+msgstr "Fué agregado un recurso por"
 
 #: inc/notificationtargetresource.class.php:47
 msgid "A resource has been updated by"
-msgstr "En resurs har ändrats av"
+msgstr "Fué modificado un recurso por"
 
 #: inc/notificationtargetresource.class.php:48
 msgid "A resource has been removed by"
-msgstr "En resurs har tagits bort av"
+msgstr "Fué removido un recurso por"
 
 #: inc/notificationtargetresource.class.php:49
 msgid "A task has been added by"
-msgstr "En uppgift har adderats av"
+msgstr "Fué agregado una tarea por"
 
 #: inc/notificationtargetresource.class.php:50
 msgid "A task has been updated by"
-msgstr "En uppgift har ändrats av"
+msgstr "Fué removido un recurso por"
 
 #: inc/notificationtargetresource.class.php:51
 msgid "A task has been removed by"
-msgstr "En uppgift har tagits bort av"
+msgstr "Fué removida una tarea por"
 
 #: inc/notificationtargetresource.class.php:52
 #: inc/notificationtargetresource.class.php:195
 msgid "List of not finished tasks"
-msgstr "Ej slutförda uppgifter"
+msgstr "Lista de tareas no finalizadas"
 
 #: inc/notificationtargetresource.class.php:53
 #: inc/notificationtargetresource.class.php:247 inc/resource.class.php:2572
 msgid "These resources have normally left the company"
-msgstr "Dessa resurser har (normalt) lämnat företaget"
+msgstr "Estos recursos normalmente han dejado la empresa"
 
 #: inc/notificationtargetresource.class.php:54
 #: inc/notificationtargetresource.class.php:307
 msgid "Actions to do on these new resources"
-msgstr "Uppgifter att genomföra vid ny resurs"
+msgstr "Acciones que deben realizar estos nuevos recursos"
 
 #: inc/notificationtargetresource.class.php:55
 #: inc/notificationtargetresource.class.php:311
 msgid "Actions to do on these leaving resources"
-msgstr "Uppgifter att genomföra vid avslut av resurs"
+msgstr "Acciones que deben realizar los recursos que parten"
 
 #: inc/notificationtargetresource.class.php:56
 #: inc/notificationtargetresource.class.php:408
 msgid "A resource has been declared leaving"
-msgstr "En resurs har deklarerats för avslut"
+msgstr "Un recurso se declara en partida"
 
 #: inc/notificationtargetresource.class.php:58
 msgid "A non contract period has been added"
-msgstr "Lägg till ej kontrakterad period"
+msgstr "Se agregó períodos sin contratos"
 
 #: inc/notificationtargetresource.class.php:59
 msgid "A non contract period has been updated"
-msgstr "Ändring av av ej kontrakterad period"
+msgstr "Se modificó período sin contrato"
 
 #: inc/notificationtargetresource.class.php:60
 msgid "A non contract period has been removed"
-msgstr "Borttag avav ej kontrakterad period"
+msgstr "Períodos sin contrato removido"
 
 #: inc/notificationtargetresource.class.php:61
 msgid "A forced holiday has been added"
-msgstr "Lägg till semester"
+msgstr "Se agregó día no laborable"
 
 #: inc/notificationtargetresource.class.php:62
 msgid "A forced holiday has been updated"
-msgstr "Ändring av semester"
+msgstr "Día no laborable actualizado"
 
 #: inc/notificationtargetresource.class.php:63
 msgid "A forced holiday has been removed"
-msgstr "Borttag av semester"
+msgstr "Día no laborable removido"
 
 #: inc/notificationtargetresource.class.php:64
 msgid "Other resource notification"
-msgstr ""
+msgstr "Otra notificación de recurso"
 
 #: inc/notificationtargetresource.class.php:80
 msgid "Resource user"
-msgstr ""
+msgstr "Usuario de recurso"
 
 #: inc/notificationtargetresource.class.php:84
 msgid "Task's responsible technician"
-msgstr "Ansvarig tekniker för uppgift"
+msgstr "Técnico responsable de tareas"
 
 #: inc/notificationtargetresource.class.php:85
 msgid "Task's responsible group"
-msgstr "Ansvarig grupp för ärenden"
+msgstr "Grupo responsable de tareas"
 
 #: inc/notificationtargetresource.class.php:203
 #: inc/notificationtargetresource.class.php:895
 #: inc/notificationtargetresource.class.php:984
 msgid "Used for planning"
-msgstr ""
+msgstr "Planificado"
 
 #: inc/notificationtargetresource.class.php:204
 #: inc/notificationtargetresource.class.php:896
 #: inc/notificationtargetresource.class.php:985 inc/task.class.php:287
 #: inc/task.class.php:486
 msgid "Effective duration"
-msgstr "Effektiv varaktighet"
+msgstr "Duración efectiva"
 
 #: inc/notificationtargetresource.class.php:205
 #: inc/notificationtargetresource.class.php:897
 #: inc/notificationtargetresource.class.php:986 inc/task.class.php:299
 #: inc/task.class.php:481
 msgid "Carried out task"
-msgstr "Genomförd uppgift"
+msgstr "Llevó a cabo la tarea"
 
 #: inc/notificationtargetresource.class.php:410
 msgid "Please check the leaving checklist of the resource"
-msgstr "V.v. kontrollera checklista vid resursavslut"
+msgstr "Por favor, verificar la partida del recurso"
 
 #: inc/notificationtargetresource.class.php:432
 #: inc/notificationtargetresource.class.php:529
@@ -697,129 +698,129 @@ msgstr "V.v. kontrollera checklista vid resursavslut"
 #: inc/resource.class.php:1452 inc/rulecontracttype.class.php:204
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
-msgstr "Quota"
+msgstr "Cuota"
 
 #: inc/notificationtargetresource.class.php:494
 msgid "Thanks to recover his badges"
-msgstr "Tack för att du återvinner dessa brickor/etiketter"
+msgstr "Gracias por recuperar este presupuesto"
 
 #: inc/notificationtargetresource.class.php:590
 msgid "Creation report of the human resource"
-msgstr "Skapanderapport för resurs"
+msgstr "Reporte de creación de recurso humano"
 
 #: inc/notificationtargetresource.class.php:609
 msgid "Informations of the created user"
-msgstr "Information om den skapade användaren"
+msgstr "Información de usuario creado"
 
 #: inc/notificationtargetresource.class.php:615
 #: inc/notificationtargetresource.class.php:655
 #: inc/notificationtargetresource.class.php:687
 msgid "Additional informations"
-msgstr "Ytterligare information"
+msgstr "Información adicional"
 
 #: inc/notificationtargetresource.class.php:633
 msgid "Non contract period management"
-msgstr "Hantering av ej kontrakterade perioder"
+msgstr "Administración de períodos sin contratos"
 
 #: inc/notificationtargetresource.class.php:635
 #: inc/resourceresting.class.php:197
 msgid "Detail of non contract period"
-msgstr "Detalj för ej kontrakterad period"
+msgstr "Detalle de períodos sin contrato"
 
 #: inc/notificationtargetresource.class.php:661
 #: inc/notificationtargetresource.class.php:693
 msgid "Reported by"
-msgstr "Rapporterad av"
+msgstr "Informado por"
 
 #: inc/notificationtargetresource.class.php:672
 msgid "Forced holiday management"
-msgstr "Semesterhantering"
+msgstr "Administración de días no laborables"
 
 #: inc/notificationtargetresource.class.php:674
 #: inc/resourceholiday.class.php:192
 msgid "Detail of the forced holiday"
-msgstr "Specifikation av semester"
+msgstr "Detalle de días no laborables"
 
 #: inc/notificationtargetresource.class.php:707
 #: inc/notificationtargetresource.class.php:999
 msgid "Modified fields"
-msgstr "Ändrade fält"
+msgstr "Campos modificados"
 
 #: inc/notificationtargetresource.class.php:887
 msgid "Associated tasks"
-msgstr "Associerade uppgifter"
+msgstr "Tareas asociadas"
 
 #: inc/notificationtargetresource.class.php:994
 msgid "At creation, update, removal of a resource"
-msgstr "När en resurs skapas, ändras eller tas bort"
+msgstr "En creación, actualización, eliminación de un recurso"
 
 #: inc/notificationtargetresource.class.php:1004
 msgid "At creation, update, removal of a task"
-msgstr "När en uppgift skapas, ändras eller tas bort"
+msgstr "En creación, actualización, eliminación de una tarea"
 
 #: inc/professioncategory.class.php:38 inc/profession.class.php:71
 #: inc/profession.class.php:174
 msgid "Profession category"
 msgid_plural "Profession categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Categoría de profesión"
+msgstr[1] "Categorías de profesión"
 
 #: inc/profession.class.php:67 inc/profession.class.php:169
 #: inc/professionline.class.php:38
 msgid "Profession line"
 msgid_plural "Profession lines"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Linea de profesión"
+msgstr[1] "Lineas de profesión"
 
 #: inc/profile.class.php:141 inc/profile.class.php:226
 msgid "All resources access"
-msgstr "Resursers behörighet"
+msgstr "Acceso a todos los recursos"
 
 #: inc/profile.class.php:152
 msgid "Service company management"
-msgstr "Service company management"
+msgstr "Administración de companía de servicios"
 
 #: inc/profile.class.php:157
 msgid "Public service management"
-msgstr "Public service management"
+msgstr "Administración de servicios públicos"
 
 #: inc/profile.class.php:203 inc/resourceresting.class.php:42
 msgid "Non contract period"
 msgid_plural "Non contract periods"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Período sin contrato"
+msgstr[1] "Períodos sin contratos"
 
 #: inc/profile.class.php:208 inc/resourceholiday.class.php:42
 msgid "Holiday"
 msgid_plural "Holidays"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Licencia"
+msgstr[1] "Licencias"
 
 #: inc/profile.class.php:218
 msgid "Dropdown management"
-msgstr "Dropdown management"
+msgstr "Administración de despalgables"
 
 #: inc/recap.class.php:46
 msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Lista Empleo / Recurso"
+msgstr[1] "Lista Empleos / Recursos"
 
 #: inc/recap.class.php:204
 msgid "Employer address"
-msgstr "Employer address"
+msgstr "Domicilio de empleador"
 
 #: inc/reportconfig.class.php:192 inc/reportconfig.class.php:261
 msgid "Send resource creation notification"
-msgstr ""
+msgstr "Enviar notificación de creación de recurso"
 
 #: inc/reportconfig.class.php:201 inc/reportconfig.class.php:270
 msgid "Send other notification"
-msgstr ""
+msgstr "Enviar otra notificación"
 
 #: inc/reportconfig.class.php:242
 msgid "Notification configuration"
-msgstr ""
+msgstr "Configuración de notificación"
 
 #: inc/resource.class.php:264 inc/resource.class.php:774
 msgid "Photo"
@@ -827,270 +828,270 @@ msgstr "Foto"
 
 #: inc/resource.class.php:587
 msgid "End date was not completed. Please try again."
-msgstr "Slutdatum var inte komplett. V.v. försök igen."
+msgstr "No se ha completado la fecha de finalización. Por favor, inténtelo de nuevo."
 
 #: inc/resource.class.php:788
 msgid "Transfer to user"
-msgstr ""
+msgstr "Transferido al usuario"
 
 #: inc/resource.class.php:1034 inc/resource.class.php:1595
 msgid "Empty for non defined"
-msgstr "Lämna tomt för ej-definierat"
+msgstr "Vacío si no se define"
 
 #: inc/resource.class.php:1129
 msgid "Menu"
-msgstr "Meny"
+msgstr "Menú"
 
 #: inc/resource.class.php:1142
 msgid "Resources management"
-msgstr "Resurshantering"
+msgstr "Administración de Recursos"
 
 #: inc/resource.class.php:1150 inc/resource.class.php:1151
 msgid "Declare an arrival"
-msgstr "Registrera start"
+msgstr "Declarar un arrivo"
 
 #: inc/resource.class.php:1156 inc/resource.class.php:1157
 msgid "Search resources"
-msgstr "Sök resurs"
+msgstr "Buscar recurso"
 
 #: inc/resource.class.php:1162 inc/resource.class.php:1163
 #: inc/resource.class.php:2156 inc/resource.class.php:2189
 msgid "Declare a departure"
-msgstr "Registrera slut"
+msgstr "Declarar partida"
 
 #: inc/resource.class.php:1175
 msgid "Others declarations"
-msgstr "Andra Registreringar"
+msgstr "Otras declaraciones"
 
 #: inc/resource.class.php:1182 inc/resource.class.php:1183
 #: inc/resourceresting.class.php:195 inc/resourceresting.class.php:253
 msgid "Declare a non contract period"
-msgstr "Deklarera en ej kontrakterad period"
+msgstr "Declarar período sin contrato"
 
 #: inc/resource.class.php:1188 inc/resource.class.php:1189
 #: inc/resource.class.php:2910 inc/resourceresting.class.php:256
 #: inc/resourceresting.class.php:1014
 msgid "List of non contract periods"
-msgstr "Lista av ej kontrakterade perioder"
+msgstr "Lista de períodos sin contrato"
 
 #: inc/resource.class.php:1195 inc/resource.class.php:1196
 #: inc/resourceholiday.class.php:190 inc/resourceholiday.class.php:233
 msgid "Declare a forced holiday"
-msgstr "Deklarera semester"
+msgstr "Declarar día no laborable"
 
 #: inc/resource.class.php:1200 inc/resource.class.php:1201
 #: inc/resource.class.php:2915 inc/resourceholiday.class.php:236
 #: inc/resourceholiday.class.php:1004
 msgid "List of forced holidays"
-msgstr "Semesterlista"
+msgstr "Lista de días no laborable"
 
 #: inc/resource.class.php:1209
 msgid "Employments / budgets management"
-msgstr "Employments / budgets managements"
+msgstr "Administración Empleos/Presupuesto"
 
 #: inc/resource.class.php:1218 inc/resource.class.php:1219
 msgid "Declare an employment"
-msgstr "Declare an employment"
+msgstr "Declarar un empleo"
 
 #: inc/resource.class.php:1225 inc/resource.class.php:1226
 #: inc/resource.class.php:2920
 msgid "Employment management"
-msgstr "Employment management"
+msgstr "Administrador de empleos"
 
 #: inc/resource.class.php:1233 inc/resource.class.php:1234
 #: inc/resource.class.php:2926
 msgid "Budget management"
-msgstr "Budget management"
+msgstr "Administrador de tarjetas"
 
 #: inc/resource.class.php:1242 inc/resource.class.php:1243
 #: inc/resource.class.php:2921
 msgid "List Employments / Resources"
-msgstr "List Employments / Resources"
+msgstr "Lista de Empleos / Recursos"
 
 #: inc/resource.class.php:1267
 msgid "Welcome to the wizard resource"
-msgstr "Välkommen till Wizard resource"
+msgstr "Bienvenido al asistente de Recursos"
 
 #: inc/resource.class.php:1271
 msgid "This wizard lets you create new resources in GLPI"
-msgstr ""
+msgstr "Este asistente permite crear un nuevo recurso el GLPI"
 
 #: inc/resource.class.php:1273
 msgid "To begin, select type of contract"
-msgstr "To begin, select type of contract"
+msgstr "Para comenzar, selecciona el tipo de contrato"
 
 #: inc/resource.class.php:1407
 msgid ""
 "Thank you for paying attention to the spelling of the name and the firstname"
 " of the resource. For compound firstnames, separate them with a dash \"-\"."
-msgstr ""
+msgstr "Gracias por prestar atención a la ortografía del apellido y el nombre de pila del recurso. Para primer nombre compuesto, sepárelos con un guión \"-\"."
 
 #: inc/resource.class.php:1630
 msgid "The fields in red must be completed"
-msgstr "Alla fält i rött måste fyllas i"
+msgstr "Los campos en rojo se deben completar"
 
 #: inc/resource.class.php:1696
 msgid "Add the photo of the resource"
-msgstr ""
+msgstr "Agregar una foto al recurso"
 
 #: inc/resource.class.php:1718
 msgid "Photo format : JPG"
-msgstr "Bildformat : JPG"
+msgstr "Formato de foto: JPG"
 
 #: inc/resource.class.php:2506
 msgid "Resources not declaring leaving"
-msgstr "Resources not declaring leaving"
+msgstr "Recurso no declarado como partido"
 
 #: inc/resource.class.php:2624
 msgid "Select the contract type"
-msgstr "Välj kontraktstyp"
+msgstr "Seleccione el tipo de contrato"
 
 #: inc/resource.class.php:2782
 msgid "Click here to send your email"
-msgstr "Klicka här för att skicka ditt mail"
+msgstr "Presione aquí para enviar correo"
 
 #: inc/resource.class.php:2931 inc/taskplanning.class.php:50
 msgid "Tasks list"
-msgstr "Lista med uppgifter"
+msgstr "Lista de tareas"
 
 #: inc/resourceholiday.class.php:56 inc/resourceholiday.class.php:83
 msgid "The begin date of the forced holiday period must be filled"
-msgstr "Startdatum för semester måste fyllas i"
+msgstr "Se debe llenar La fecha de inicio del período de días no laborables"
 
 #: inc/resourceholiday.class.php:60 inc/resourceholiday.class.php:87
 msgid "The end date of the forced holiday period must be filled"
-msgstr "Slutdatum för semester måste fyllas i"
+msgstr "Se debe llenar la fecha de finalización del período de días no laborables"
 
 #: inc/resourceholiday.class.php:70
 msgid "Forced holiday declaration of a resource performed"
-msgstr "Registrering av semester för resurs genomförd"
+msgstr "Se estableció día no laborable de un recurso"
 
 #: inc/resource_item.class.php:246
 msgid "Modification of the associated user's location"
-msgstr "Modifiering av associerad användares plats"
+msgstr "Modificación de la ubicación del usuario asociado"
 
 #: inc/resource_item.class.php:927
 msgid "Associated Human Resource"
-msgstr "associated Human Resource"
+msgstr "Asociado a un Recurso Humano"
 
 #: inc/resourceresting.class.php:56 inc/resourceresting.class.php:80
 msgid "The begin date of the non contract period must be filled"
-msgstr "Startdatum för ej kontrakterad period måste fyllas i"
+msgstr "Se debe llenar la fecha de inicio del período sin contrato"
 
 #: inc/resourceresting.class.php:66
 msgid "Non contract period declaration of a resource performed"
-msgstr "Registrering av ej kontrakterad period för resurs har genomförts"
+msgstr "Se realizó la declaración de período sin conrtrato"
 
 #: inc/resourceresting.class.php:154 inc/resourceresting.class.php:226
 msgid "Agency concerned"
-msgstr "Berörda agenter"
+msgstr "Agencia concernida"
 
 #: inc/resourceresting.class.php:159 inc/resourceresting.class.php:232
 msgid "At home"
-msgstr "Hemma"
+msgstr "En casa"
 
 #: inc/resourcesituation.class.php:38
 msgid "Public status"
 msgid_plural "Public statuses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Estado público"
+msgstr[1] "Estados públicos"
 
 #: inc/resourcesituation.class.php:67 inc/resourcesituation.class.php:125
 msgid "Is linked to a contract"
-msgstr "is linked to a contract"
+msgstr "Esta asociado a un contrato"
 
 #: inc/resourcespeciality.class.php:38
 msgid "Speciality"
 msgid_plural "Specialities"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Especialista"
+msgstr[1] "Especialistas"
 
 #: inc/resourcestate.class.php:38
 msgid "Resource state"
 msgid_plural "Resource states"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Estado del recurso"
+msgstr[1] "Estados de los recursos"
 
 #: inc/rulechecklist.class.php:96
 msgid "Checklist type"
-msgstr "Typ av checklista"
+msgstr "Tipo de verificación"
 
 #: inc/rulechecklist.class.php:169
 msgid "Checklist action"
-msgstr "Uppgift i checklista"
+msgstr "Acción de verificación"
 
 #: inc/rulechecklistcollection.class.php:40
 msgid "Assignment rules of a checklist to a contract type"
-msgstr "Tilldelningsregel för checklista till en kontraktstyp"
+msgstr "Asignar regla de verificación a un tipo de contrato"
 
 #: inc/rulecontracttype.class.php:53
 msgid "Required Fields"
-msgstr ""
+msgstr "Campos requeridos"
 
 #: inc/rulecontracttypecollection.class.php:44
 msgid "Assignment rule of fields to a contract type"
-msgstr "Tilldelningsregel för fält till en kontrakstyp"
+msgstr "Asignar regla de campos a un tipo de contrato"
 
 #: inc/task.class.php:609
 msgid "Tasks in progress"
-msgstr ""
+msgstr "Tareas en progreso"
 
 #: inc/task.class.php:673 inc/task.class.php:712
 msgid "Not finished tasks"
-msgstr ""
+msgstr "Tareas no finalizadas"
 
 #: inc/task.class.php:779
 msgid "Duplicate"
-msgstr "Kopiera"
+msgstr "Duplicar"
 
 #: inc/tasktype.class.php:38
 msgid "Type of task"
 msgid_plural "Types of task"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tipo de tarea"
+msgstr[1] "Tipos de tareas"
 
 #: inc/ticketcategory.class.php:82 inc/ticketcategory.class.php:104
 msgid "Category of created tickets"
-msgstr "Kategori av skapade ärenden"
+msgstr "Categoría de incidentes creados"
 
 #: report/budgetsummary/budgetsummary.php:198
 #: report/budgetsummary/budgetsummary.php:388
 msgid "Budget volume(qty)"
-msgstr ""
+msgstr "Volumen de presupuesto (cant)"
 
 #: report/budgetsummary/budgetsummary.php:199
 #: report/budgetsummary/budgetsummary.php:389
 msgid "Employment volume (qty)"
-msgstr ""
+msgstr "Volumen de empleo (cant)"
 
 #: report/budgetsummary/budgetsummary.php:200
 #: report/budgetsummary/budgetsummary.php:390
 msgid "Resource volume (qty)"
-msgstr ""
+msgstr "Volumen del recurso (cant)"
 
 #: report/budgetsummary/budgetsummary.php:201
 msgid "Remaining budget - employment (qty)"
-msgstr ""
+msgstr "Presupuesto remanente - empleo (cant)"
 
 #: report/budgetsummary/budgetsummary.php:202
 #: report/budgetsummary/budgetsummary.php:392
 msgid "Budget volume (€)"
-msgstr ""
+msgstr "Volumen de presupuesto ($)"
 
 #: report/budgetsummary/budgetsummary.php:203
 #: report/budgetsummary/budgetsummary.php:393
 msgid "Employment volume (€)"
-msgstr ""
+msgstr "Volumen de empleo ($)"
 
 #: report/budgetsummary/budgetsummary.php:204
 #: report/budgetsummary/budgetsummary.php:394
 msgid "Resource volume (€)"
-msgstr ""
+msgstr "Volumen del recurso ($)"
 
 #: report/budgetsummary/budgetsummary.php:205
 #: report/budgetsummary/budgetsummary.php:395
 msgid "Remaining budget - employment (€)"
-msgstr ""
+msgstr "Presupuesto remanente - empleo ($)"
 
 #: report/budgetsummary/budgetsummary.php:388
 #: report/budgetsummary/budgetsummary.php:389
@@ -1100,11 +1101,11 @@ msgstr ""
 #: report/budgetsummary/budgetsummary.php:394
 #: report/budgetsummary/budgetsummary.php:395
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:49
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:51
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:53
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:55
 msgid "Resource"
-msgstr ""
+msgstr "Recurso"
