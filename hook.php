@@ -1450,7 +1450,7 @@ function plugin_resources_uninstall() {
    foreach ($tables as $table) {
       $DB->query("DELETE
                   FROM `$table`
-                  WHERE `itemtype` LIKE 'PluginResources'");
+                  WHERE `itemtype` LIKE 'PluginResources%'");
       $DB->query($query);
    }
 
