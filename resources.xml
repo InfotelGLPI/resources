@@ -6,18 +6,19 @@
    <logo></logo>
    <description>
       <short>
-         <fr><![CDATA[Gestion de ressources humaines. Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />-Gestion des divers modes de fonctionnement (privé, public, SSII)<br />-Gestion de checklists / tâches<br />-Système de notifications<br />-Utilisable depuis le helpdesk]]></fr>
-         <en><![CDATA[Resources management. This plugin allows you to manage human resources to properly manage the allocation of material.<br />-Management of various modes (private, public, SSII)<br />-Checklists / Tasks management<br />-Notifications system<br />-Can be used with helpdesk]]></en>
+         <fr><![CDATA[Gestion de ressources humaines. Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />- Gestion des divers modes de fonctionnement (privé, public, SSII)<br />- Gestion de checklists / tâches<br />- Système de notifications<br />- Utilisable depuis le helpdesk]]></fr>
+         <en><![CDATA[Resources management. This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />- Checklists / Tasks management<br />- Notifications system<br />- Can be used with helpdesk]]></en>
       </short>
       <long>
-         <fr><![CDATA[Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />-Gestion des divers modes de fonctionnement (privé, public, SSII)<br />Fonctionnalités : <br />-Gestion de checklists<br />-Gestion de tâches<br />-Système de notifications<br />-Utilisable avec le plugin badges<br />-Utilisable depuis le helpdesk<br />-Utilisable avec le plugin PDF]]></fr>
-         <en><![CDATA[This plugin allows you to manage human resources to properly manage the allocation of material.<br />-Management of various modes (private, public, SSII)<br />Features : <br />-Checklists management<br />-Tasks management<br />-Notifications system<br />-Can be used with helpdesk<br />-Can be used with badges plugin<br />-Can be used with PDF plugin]]></en>
+         <fr><![CDATA[Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />- Gestion des divers modes de fonctionnement (privé, public, SSII)<br />Fonctionnalités : <br />- Gestion de checklists<br />- Gestion de tâches<br />- Système de notifications<br />- Utilisable avec le plugin badges<br />- Utilisable depuis le helpdesk<br />- Utilisable avec le plugin PDF]]></fr>
+         <en><![CDATA[This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />Features : <br />- Checklists management<br />- Tasks management<br />- Notifications system<br />- Can be used with helpdesk<br />- Can be used with badges plugin<br />- Can be used with PDF plugin]]></en>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/resources</homepage>
    <download>https://github.com/InfotelGLPI/resources/releases</download>
    <authors>
-      <author>Xavier Caillaud / Infotel</author>
+      <author>Xavier Caillaud</author>
+      <author>Infotel</author>
    </authors>
    <versions>
       <version>
