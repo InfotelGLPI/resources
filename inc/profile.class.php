@@ -51,7 +51,7 @@ class PluginResourcesProfile extends Profile {
          $ID = $item->getID();
          $prof = new self();
 
-         self::addDefaultProfileInfos($ID, array('plugin_resources'                 => 0,
+         self::addDefaultProfileInfos($ID, array('plugin_resources'                  => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
                                                   'plugin_resources_task'            => 0, 
                                                   'plugin_resources_checklist'       => 0, 
                                                   'plugin_resources_employee'        => 0, 
@@ -70,7 +70,7 @@ class PluginResourcesProfile extends Profile {
    
    static function createFirstAccess($profiles_id) {
       self::addDefaultProfileInfos($profiles_id, 
-                                   array('plugin_resources'                 => ALLSTANDARDRIGHT,
+                                   array('plugin_resources'                 => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
                                          'plugin_resources_task'            => ALLSTANDARDRIGHT, 
                                          'plugin_resources_checklist'       => ALLSTANDARDRIGHT, 
                                          'plugin_resources_employee'        => ALLSTANDARDRIGHT, 
@@ -256,7 +256,7 @@ class PluginResourcesProfile extends Profile {
          case 'r' :
             return READ;
          case 'w':
-            return ALLSTANDARDRIGHT;
+            return ALLSTANDARDRIGHT + READNOTE + UPDATENOTE;
          case '0':
          case '1':
             return $old_right;

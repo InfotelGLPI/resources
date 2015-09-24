@@ -37,6 +37,8 @@ class PluginResourcesResource extends CommonDBTM {
    
    static $types = array('Computer','Monitor','NetworkEquipment','Peripheral',
          'Phone', 'Printer', 'Software', 'ConsumableItem','User');
+   
+   protected $usenotepad = true;
 
    public $dohistory=true;
 
