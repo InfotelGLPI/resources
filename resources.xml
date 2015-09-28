@@ -3,7 +3,7 @@
    <name>Human Resources Management</name>
    <key>resources</key>
    <state>stable</state>
-   <logo></logo>
+   <logo>https://raw.githubusercontent.com/InfotelGLPI/resources/master/resources.png</logo>
    <description>
       <short>
          <fr><![CDATA[Gestion de ressources humaines. Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />- Gestion des divers modes de fonctionnement (privé, public, SSII)<br />- Gestion de checklists / tâches<br />- Système de notifications<br />- Utilisable depuis le helpdesk]]></fr>
