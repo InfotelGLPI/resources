@@ -1153,7 +1153,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='center'>&nbsp;";
          echo "</td>";
       }
-      if($this->caView()) {
+      if($this->canView()) {
          //See resources
          echo "<td class='center'>";
          echo "<a href=\"./resource.php\">";
