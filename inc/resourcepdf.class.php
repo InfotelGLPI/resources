@@ -34,7 +34,48 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
 
       $this->obj = ($obj ? $obj : new PluginResourcesResource());
    }
+   
 
+   static function pdfMain(PluginPdfSimplePDF $pdf, PluginResourcesResource $res) {
+      
+      $ID = $res->getField('id');
+      if (!$res->can($ID, READ)) {
+         return false;
+      }
+      
+      $pdf->setColumnsSize(50,50);
+      $col1 = '<b>'.__('ID').' '.$res->fields['id'].'</b>';
+      if (isset($res->fields["date_declaration"])) {
+         $users_id_recipient=new User();
+         $users_id_recipient->getFromDB($res->fields["users_id_recipient"]);
+         $col2 = __('Request date').' : '.Html::convDateTime($res->fields["date_declaration"]).' '.__('Requester').' '.$users_id_recipient->getName();
+      } else {
+         $col2 = '';
+      }
+      $pdf->displayTitle($col1, $col2);
+
+      $pdf->displayLine(
+         '<b><i>'.__('Surname').' :</i></b> '.$res->fields['name'],
+         '<b><i>'.__('First name').' :</i></b> '.$res->fields['firstname']);
+      $pdf->displayLine(
+         '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations',$res->fields['locations_id'])),
+         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',$res->fields['plugin_resources_contracttypes_id'])));
+
+      $pdf->displayLine(
+         '<b><i>'.__('Resource manager', 'resources').' :</i></b> '.Html::clean(getusername($res->fields["users_id"])),
+         '<b><i>'.PluginResourcesDepartment::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_departments',$res->fields["plugin_resources_departments_id"])));
+
+      $pdf->displayLine(
+         '<b><i>'.__('Arrival date', 'resources').' :</i></b> '.Html::convDate($res->fields["date_begin"]),
+         '<b><i>'.__('Departure date', 'resources').' :</i></b> '.Html::convDate($res->fields["date_end"]));
+
+      $pdf->setColumnsSize(100);
+
+      $pdf->displayText('<b><i>'.__('Description').' :</i></b>', $res->fields['comment']);
+
+      $pdf->displaySpace();
+   }
+   
    function defineAllTabs($options=array()) {
 
       $onglets = parent::defineAllTabs($options);

@@ -2876,46 +2876,7 @@ class PluginResourcesResource extends CommonDBTM {
       return false;
    }
    
-   /**
-    * Show for PDF an resources
-    *
-    * @param $pdf object for the output
-    * @param $ID of the resources
-    */
-   function show_PDF ($pdf) {
-
-      $pdf->setColumnsSize(50,50);
-      $col1 = '<b>'.__('ID').' '.$this->fields['id'].'</b>';
-      if (isset($this->fields["date_declaration"])) {
-         $users_id_recipient=new User();
-         $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
-         $col2 = __('Request date').' : '.Html::convDateTime($this->fields["date_declaration"]).' '.__('Requester').' '.$users_id_recipient->getName();
-      } else {
-         $col2 = '';
-      }
-      $pdf->displayTitle($col1, $col2);
-
-      $pdf->displayLine(
-         '<b><i>'.__('Surname').' :</i></b> '.$this->fields['name'],
-         '<b><i>'.__('First name').' :</i></b> '.$this->fields['firstname']);
-      $pdf->displayLine(
-         '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations',$this->fields['locations_id'])),
-         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',$this->fields['plugin_resources_contracttypes_id'])));
-
-      $pdf->displayLine(
-         '<b><i>'.__('Resource manager', 'resources').' :</i></b> '.Html::clean(getusername($this->fields["users_id"])),
-         '<b><i>'.PluginResourcesDepartment::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_departments',$this->fields["plugin_resources_departments_id"])));
-
-      $pdf->displayLine(
-         '<b><i>'.__('Arrival date', 'resources').' :</i></b> '.Html::convDate($this->fields["date_begin"]),
-         '<b><i>'.__('Departure date', 'resources').' :</i></b> '.Html::convDate($this->fields["date_end"]));
-
-      $pdf->setColumnsSize(100);
-
-      $pdf->displayText('<b><i>'.__('Description').' :</i></b>', $this->fields['comment']);
-
-      $pdf->displaySpace();
-   }
+   
 
    // Cron action
    static function cronInfo($name) {
