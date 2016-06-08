@@ -149,14 +149,14 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[1]['name']            = __('Surname');
       $tab[1]['datatype']        = 'itemlink';
       $tab[1]['itemlink_type']   = $this->getType();
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[1]['searchtype']      = 'contains';
       }
       
       $tab[2]['table']           = $this->getTable();
       $tab[2]['field']           = 'firstname';
       $tab[2]['name']            = __('First name');
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[2]['searchtype']      = 'contains';
       }
 
@@ -170,7 +170,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[4]['name']            = __('Resource manager', 'resources');
       $tab[4]['datatype']        = 'dropdown';
       $tab[4]['right']           = 'all';
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[4]['searchtype']      = 'contains';
       }
       
@@ -189,7 +189,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[7]['name']            = __('Description');
       $tab[7]['datatype']        = 'text';
       
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
          $tab[8]['table']           = 'glpi_plugin_resources_resources_items';
          $tab[8]['field']           = 'items_id';
          $tab[8]['name']            = _n('Associated item' , 'Associated items', 2);
@@ -212,7 +212,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[10]['datatype']       = 'dropdown';
       $tab[10]['right']          = 'all';
       $tab[10]['massiveaction']  = false;
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[10]['searchtype']      = 'contains';
       }
       
@@ -238,11 +238,11 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[14]['datatype']       = 'dropdown';
       $tab[14]['right']          = 'all';
       $tab[14]['massiveaction']  = false;
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[14]['searchtype']      = 'contains';
       }
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
          $tab[15]['table']          = $this->getTable();
          $tab[15]['field']          = 'is_helpdesk_visible';
          $tab[15]['name']           = __('Associable to a ticket');
@@ -260,7 +260,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[17]['name']           = PluginResourcesResourceState::getTypeName(1);
       $tab[17]['datatype']       = 'dropdown';
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
          $tab[18]['table']          = $this->getTable();
          $tab[18]['field']          = 'picture';
          $tab[18]['name']           = __('Photo', 'resources');
@@ -278,7 +278,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[20]['name']           = __('Quota', 'resources');
       $tab[20]['datatype']       = 'decimal';
 
-      if (Session::haveRight('plugin_resources_dropdown_public', READ)){
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && Session::haveRight('plugin_resources_dropdown_public', READ)){
 
          $tab[21]['table']          = 'glpi_plugin_resources_resourcesituations';
          $tab[21]['field']          = 'name';
@@ -316,7 +316,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[31]['massiveaction']  = false;
       $tab[31]['datatype']       = 'number';
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
          $tab[80]['table']          = 'glpi_entities';
          $tab[80]['field']          = 'completename';
          $tab[80]['name']           = __('Entity');
@@ -1889,7 +1889,7 @@ class PluginResourcesResource extends CommonDBTM {
                                $CFG_GLPI['root_doc']."/plugins/resources/ajax/dropdownResources.php",
                                $params);
       if (class_exists('PluginPositionsPosition')) {
-         PluginPositionsPosition::showGeolocLink('PluginResourcesResource',$params["value"]);
+         PluginPositionsPosition::showGeolocLink('PluginResourcesResource', $params['value']);
       }
             // Display comment
       if ($params['customcomments']) {
