@@ -33,6 +33,8 @@ $AJAX_INCLUDE=1;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
+Session::checkLoginUser();
+
 if (isset($_POST["action"])||isset($_POST["id"])) {
 	echo "<input type='hidden' name='action' value='".$_POST["action"]."'>";
 	echo "<input type='hidden' name='id' value='".$_POST["id"]."'>";

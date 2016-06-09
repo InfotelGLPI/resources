@@ -33,6 +33,8 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownContractnature.php")) {
    Html::header_nocache();
 }
 
+Session::checkLoginUser();
+
 //allow ContractNature's display depending on resource situation
 $options =array(
    'plugin_resources_resourcesituations_id' =>$_POST['plugin_resources_resourcesituations_id'],
