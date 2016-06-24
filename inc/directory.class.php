@@ -915,9 +915,9 @@ class PluginResourcesDirectory extends CommonDBTM {
    function getSpecificMassiveActions($checkitem = NULL) {
       
       $actions = parent::getSpecificMassiveActions($checkitem);
-
-      $actions['PluginResourcesDirectory'.MassiveAction::CLASS_ACTION_SEPARATOR.'Send'] = __('Send a notification');
-
+      if($_SESSION["glpiactiveprofile"]["interface"] == "central"){
+         $actions['PluginResourcesDirectory'.MassiveAction::CLASS_ACTION_SEPARATOR.'Send'] = __('Send a notification');
+      }
       return $actions;
    }
    

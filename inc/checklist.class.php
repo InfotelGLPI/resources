@@ -83,9 +83,14 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       $ID = $item->getField('id');
       if (self::checkifChecklistExist($ID)) {
-         self::showFromResources($ID, self::RESOURCES_CHECKLIST_IN, $withtemplate);
+         $checklist = new self();
+         if($checklist->canCreate()){
+            self::showFromResources($ID, self::RESOURCES_CHECKLIST_IN, $withtemplate);
+         }
          self::showFromResources($ID, self::RESOURCES_CHECKLIST_OUT, $withtemplate);
-         self::showFromResources($ID, self::RESOURCES_CHECKLIST_TRANSFER, $withtemplate);
+         if($checklist->canCreate()){
+            self::showFromResources($ID, self::RESOURCES_CHECKLIST_TRANSFER, $withtemplate);
+         }
       } else {
          self::showAddForm($ID);
       }
@@ -533,7 +538,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $checklists = getAllDatasFromTable("glpi_plugin_resources_checklists", $restrict);
       $numrows    = countElementsInTable("glpi_plugin_resources_checklists", $restrict);
       if (!empty($checklists)) {
-         if (!$isfinished && self::canCreate() && $canedit) {
+         if (!$isfinished && self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
             Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
             $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
             Html::showMassiveActions($massiveactionparams);
@@ -580,7 +585,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          if (!$isfinished) {
             echo "<tr>";
             echo "<th width='10'>";
-            if (self::canCreate() && $canedit) {
+            if (self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
                echo Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand);
             }
             echo "</th>";
@@ -604,7 +609,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
                echo "<tr class='tab_bg_1'>";
                echo "<td width='10'>";
-               if (self::canCreate() && $canedit) {
+               if (self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
                   Html::showMassiveActionCheckBox(__CLASS__, $ID);
                }
                echo "</td>";
@@ -692,7 +697,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
          echo "</table>";
 
-         if (!$isfinished && self::canCreate() && $canedit) {
+         if (!$isfinished && self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
             $massiveactionparams['ontop'] = false;
             Html::showMassiveActions($massiveactionparams);
          }
@@ -717,7 +722,9 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       $actions = parent::getSpecificMassiveActions($checkitem);
 
-      $actions['PluginResourcesChecklist'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_checklist'] = __('Modify state', 'resources');
+      if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
+         $actions['PluginResourcesChecklist'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_checklist'] = __('Modify state', 'resources');
+      }
 
       if (Session::haveRight("plugin_resources_task", UPDATE)) {
          $actions['PluginResourcesChecklist'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_task'] = __('Link a task', 'resources');
@@ -758,7 +765,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       $input      = $ma->getInput();
       $isfinished = self::checkifChecklistFinished($input);
-
+      
       switch ($ma->getAction()) {
          case "update_checklist" :
             if (!$isfinished) {
