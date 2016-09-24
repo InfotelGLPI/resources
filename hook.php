@@ -1,31 +1,30 @@
 <?php
-
 /*
- * @version $Id: hook.php 480 2012-11-09 tynet $
-  -------------------------------------------------------------------------
-  Resources plugin for GLPI
-  Copyright (C) 2006-2012 by the Resources Development Team.
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ resources plugin for GLPI
+ Copyright (C) 2009-2016 by the resources Development Team.
 
-  https://forge.indepnet.net/projects/resources
-  -------------------------------------------------------------------------
+ https://github.com/InfotelGLPI/resources
+ -------------------------------------------------------------------------
 
-  LICENSE
+ LICENSE
+      
+ This file is part of resources.
 
-  This file is part of Resources.
+ resources is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
 
-  Resources is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+ resources is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-  Resources is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Resources. If not, see <http://www.gnu.org/licenses/>.
-  --------------------------------------------------------------------------
+ You should have received a copy of the GNU General Public License
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
  */
 
 function plugin_resources_install() {
@@ -51,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!TableExists("glpi_plugin_resources_resources") && !TableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.0.4.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.0.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
          VALUES (1, '".__('Long term contract', 'resources')."', '')";
@@ -395,32 +394,32 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'New Resource', 0, 'PluginResourcesResource', 'new',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Update Resource', 0, 'PluginResourcesResource', 'update',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Delete Resource', 0, 'PluginResourcesResource', 'delete',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'New Resource Task', 0, 'PluginResourcesResource', 'newtask',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Update Resource Task', 0, 'PluginResourcesResource', 'updatetask',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Delete Resource Task', 0, 'PluginResourcesResource', 'deletetask',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
 
       $result = $DB->query($query);
 
@@ -471,7 +470,7 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Alert Expired Resources Tasks', 0, 'PluginResourcesResource', 'AlertExpiredTasks',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-02-17 22:36:46');";
+                                          '', 1, 1, '2010-02-17 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Leaving Resources'";
@@ -515,7 +514,7 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Alert Leaving Resources', 0, 'PluginResourcesResource', 'AlertLeavingResources',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-02-17 22:36:46');";
+                                          '', 1, 1, '2010-02-17 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Checklists'";
@@ -577,13 +576,13 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Alert Arrival Checklists', 0, 'PluginResourcesResource', 'AlertArrivalChecklists',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-02-17 22:36:46');";
+                                          '', 1, 1, '2010-02-17 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
 
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Alert Leaving Checklists', 0, 'PluginResourcesResource', 'AlertLeavingChecklists',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-02-17 22:36:46');";
+                                          '', 1, 1, '2010-02-17 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Leaving Resource'";
@@ -624,7 +623,7 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Leaving Resource', 0, 'PluginResourcesResource', 'LeavingResource',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
 
       $result = $DB->query($query);
    }
@@ -769,7 +768,7 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Resource Report Creation', 0, 'PluginResourcesResource', 'report',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-11-16 11:36:46');";
+                                          '', 1, 1, '2010-11-16 11:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
    }
 
@@ -981,17 +980,17 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'New Resource Resting', 0, 'PluginResourcesResource', 'newresting',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Update Resource Resting', 0, 'PluginResourcesResource', 'updateresting',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Delete Resource Resting', 0, 'PluginResourcesResource', 'deleteresting',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Holiday'";
@@ -1098,17 +1097,17 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'New Resource Holiday', 0, 'PluginResourcesResource', 'newholiday',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Update Resource Holiday', 0, 'PluginResourcesResource', 'updateholiday',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Delete Resource Holiday', 0, 'PluginResourcesResource', 'deleteholiday',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '2010-05-16 22:36:46');";
+                                          '', 1, 1, '2010-05-16 22:36:46', '2010-05-16 22:36:46');";
       $result = $DB->query($query);
    }
 
@@ -1305,7 +1304,7 @@ function plugin_resources_install() {
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Other resource notification', 0, 'PluginResourcesResource', 'other',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, NOW());";
+                                          '', 1, 1, NOW(), NOW());";
 
       $result = $DB->query($query);
    }
@@ -1335,7 +1334,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
       $query = "INSERT INTO `glpi_notifications`
                                    VALUES (NULL, 'Resource Report Transfer', 0, 'PluginResourcesResource', 'transfer',
                                           'mail',".$itemtype.",
-                                          '', 1, 1, '".date("Y-m-d H:i:s")."');";
+                                          '', 1, 1, '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."');";
       $result=$DB->query($query);
    }
    
@@ -1375,7 +1374,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-   $migration = new Migration("2.1.0");
+   $migration = new Migration("2.3.0");
    $migration->dropTable('glpi_plugin_resources_profiles');
    return true;
 }
@@ -2417,7 +2416,8 @@ function plugin_resources_dynamicReport($parm) {
 // Hook done on before add item case
 function plugin_pre_item_update_resources($item) {
 
-   if (!isset($item->input["_UpdateFromResource_"])) {
+   if (isset ($_SESSION['glpiactiveprofile']) 
+         &&!isset($item->input["_UpdateFromResource_"])) {
       $restrict = "`itemtype` = '".get_class($item)."'
                AND `items_id` = '".$item->getField('id')."'";
       $items = getAllDatasFromTable("glpi_plugin_resources_resources_items", $restrict);

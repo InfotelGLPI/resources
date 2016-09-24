@@ -1,29 +1,29 @@
 <?php
 /*
- * @version $Id: setup.php 480 2012-11-09 tynet $
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- Resources plugin for GLPI
- Copyright (C) 2006-2012 by the Resources Development Team.
+ resources plugin for GLPI
+ Copyright (C) 2009-2016 by the resources Development Team.
 
- https://forge.indepnet.net/projects/resources
+ https://github.com/InfotelGLPI/resources
  -------------------------------------------------------------------------
 
  LICENSE
+      
+ This file is part of resources.
 
- This file is part of Resources.
-
- Resources is free software; you can redistribute it and/or modify
+ resources is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- Resources is distributed in the hope that it will be useful,
+ resources is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Resources. If not, see <http://www.gnu.org/licenses/>.
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
@@ -84,6 +84,10 @@ function plugin_init_resources() {
       Plugin::registerClass('PluginResourcesEmployment', array(
          'massiveaction_nodelete_types' => true));
       
+      if (Session::haveright("plugin_resources_checklist", READ) 
+            && class_exists('PluginMydashboardMenu')) {
+         $PLUGIN_HOOKS['mydashboard']['resources'] = array ("PluginResourcesDashboard");
+      }
       
       if (class_exists('PluginPositionsPosition')) {
          PluginPositionsPosition::registerType('PluginResourcesResource');
@@ -164,25 +168,25 @@ function plugin_version_resources() {
 
    return array (
       'name' => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version' => '2.2.1',
+      'version' => '2.3.0',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/resources',
-      'minGlpiVersion' => '0.90',
+      'minGlpiVersion' => '9.1',
    );
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_resources_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION, '0.90', 'lt') || version_compare(GLPI_VERSION, '0.91', 'ge')) {
-      _e('This plugin requires GLPI >= 0.90', 'resources');
+   if (version_compare(GLPI_VERSION, '9.1', 'lt') || version_compare(GLPI_VERSION, '9.2', 'ge')) {
+      _e('This plugin requires GLPI >= 9.1', 'resources');
+      return false;
    } else if (!extension_loaded("gd")) {
       echo __('Incompatible PHP Installation. Requires module', 'resources'). " gd";
-   } else {
-      return true;
+      return false;
    }
-   return false;
+   return true;
 }
 
 // Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect

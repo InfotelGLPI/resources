@@ -1,33 +1,31 @@
 <?php
-
 /*
- * @version $Id: checklist.class.php 480 2012-11-09 tsmr $
-  -------------------------------------------------------------------------
-  Resources plugin for GLPI
-  Copyright (C) 2006-2012 by the Resources Development Team.
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ resources plugin for GLPI
+ Copyright (C) 2009-2016 by the resources Development Team.
 
-  https://forge.indepnet.net/projects/resources
-  -------------------------------------------------------------------------
+ https://github.com/InfotelGLPI/resources
+ -------------------------------------------------------------------------
 
-  LICENSE
+ LICENSE
+      
+ This file is part of resources.
 
-  This file is part of Resources.
+ resources is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
 
-  Resources is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+ resources is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-  Resources is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Resources. If not, see <http://www.gnu.org/licenses/>.
-  --------------------------------------------------------------------------
+ You should have received a copy of the GNU General Public License
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
  */
-
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -204,6 +202,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
             if (isset($res->fields['users_id'])) {
                $input['_users_id_observer'] = $res->fields['users_id'];
+               $input['_users_id_observer_notif'] = array();
             }
             $input['_users_id_assign'] = Session::getLoginUserID();
 
@@ -240,8 +239,8 @@ class PluginResourcesChecklist extends CommonDBTM {
    function dropdownChecklistType($name, $value = 0) {
 
       $checklists = array(self::RESOURCES_CHECKLIST_IN       => __('At the arriving of a resource', 'resources'),
-          self::RESOURCES_CHECKLIST_OUT      => __('At the leaving of a resource', 'resources'),
-          self::RESOURCES_CHECKLIST_TRANSFER => __('At the transfer of a resource', 'resources'));
+                         self::RESOURCES_CHECKLIST_OUT      => __('At the leaving of a resource', 'resources'),
+                         self::RESOURCES_CHECKLIST_TRANSFER => __('At the transfer of a resource', 'resources'));
 
 
       if (!empty($checklists)) {
