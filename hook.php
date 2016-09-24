@@ -848,7 +848,7 @@ function plugin_resources_install() {
          $query = "INSERT INTO `glpi_fieldunicities`
                                       VALUES (NULL, 'Resources creation', 1, 'PluginResourcesResource', '0',
                                              'name,firstname','1',
-                                             '1', '1', '');";
+                                             '1', '1', '',NOW(),NOW());";
          $DB->queryOrDie($query, " 0.80 Create fieldunicities check");
       }
 
@@ -1248,7 +1248,7 @@ function plugin_resources_install() {
    if ($update203 || $install) {
       // OTHER NOTIF
       $query_id = "INSERT INTO `glpi_notificationtemplates`
-                                 VALUES(NULL, 'Send other resource notification', 'PluginResourcesResource', NOW(), NULL, NULL);";
+                                 VALUES(NULL, 'Send other resource notification', 'PluginResourcesResource', NOW(), NULL, NULL, NOW());";
       $result = $DB->query($query_id) or die($DB->error());
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Send other resource notification'";
@@ -1316,7 +1316,7 @@ function plugin_resources_install() {
 
       if (empty($itemtype)) {
          $query_id = "INSERT INTO `glpi_notificationtemplates`
-                                 VALUES(NULL, 'Resource Transfer', 'PluginResourcesResource', NOW(), NULL, NULL);";
+                                 VALUES(NULL, 'Resource Transfer', 'PluginResourcesResource', NOW(), NULL, NULL, NOW());";
          $result   = $DB->query($query_id) or die($DB->error());
          $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Transfer'";
          $result   = $DB->query($query_id) or die($DB->error());
@@ -1450,7 +1450,6 @@ function plugin_resources_uninstall() {
       $DB->query("DELETE
                   FROM `$table`
                   WHERE `itemtype` LIKE 'PluginResources%'");
-      $DB->query($query);
    }
 
    //drop rules
