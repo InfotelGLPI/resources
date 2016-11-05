@@ -86,12 +86,12 @@ class PluginResourcesContractType extends CommonDropdown {
 
       $tab[15]['table']         = $this->getTable();
       $tab[15]['field']         = 'use_employee_wizard';
-      $tab[15]['name']          = __('Enter general information about the resource', 'resources');
+      $tab[15]['name']          = __('Enter employer information about the resource', 'resources');
       $tab[15]['datatype']      = 'bool';
 
       $tab[16]['table']         = $this->getTable();
       $tab[16]['field']         = 'use_need_wizard';
-      $tab[16]['name']          = __('Enter employer information about the resource', 'resources');
+      $tab[16]['name']          = __('Enter the computing needs of the resource', 'resources');
       $tab[16]['datatype']      = 'bool';
 
       $tab[17]['table']         = $this->getTable();
