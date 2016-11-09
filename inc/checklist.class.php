@@ -1088,7 +1088,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             $message                           = "checklists".": ".$data["resource_name"]." ".$data["resource_firstname"]."<br>\n";
             $checklist_infos[$type][$entity][] = $data;
 
-            if (!isset($checklists_infos[$type][$entity])) {
+            if (!isset($checklist_messages[$type][$entity])) {
                $checklist_messages[$type][$entity] = __('Checklists Verification', 'resources')."<br />";
             }
             $checklist_messages[$type][$entity] .= $message;

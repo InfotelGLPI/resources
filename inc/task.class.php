@@ -729,7 +729,7 @@ class PluginResourcesTask extends CommonDBTM {
                         Html::convDate($data["date_end"])."<br>\n";
             $task_infos[$type][$entity][] = $data;
 
-            if (!isset($tasks_infos[$type][$entity])) {
+            if (!isset($task_messages[$type][$entity])) {
                $task_messages[$type][$entity] = __('Not finished tasks', 'resources')."<br />";
             }
             $task_messages[$type][$entity] .= $message;
