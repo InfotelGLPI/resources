@@ -46,7 +46,7 @@ class PluginResourcesContractType extends CommonDropdown {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr('entity_dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
    }
    
    function getAdditionalFields() {
