@@ -39,6 +39,10 @@ if (!defined('GLPI_ROOT')) {
    die("Can not acces directly to this file");
 }
 
+if (empty($_GET)) {
+   $_GET = $_POST;
+}
+
 Session::checkLoginUser();
 // Default view : Nobody
 if (!isset($_GET['all'])) {
