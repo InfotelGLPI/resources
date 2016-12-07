@@ -207,48 +207,57 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       }
    }
 
-   function addRulesFromChecklists($data) {
+   /**
+    * Create a rule for the checklist
+    * @param type $data
+    * @param type $ma
+    * @param type $item
+    */
+   function addRulesFromChecklists($data, $ma, $item) {
 
       $rulecollection = new PluginResourcesRuleChecklistCollection();
       $rulecollection->checkGlobal(UPDATE);
 
-      foreach ($data["item"] as $key => $val) {
-         if ($val == 1) {
+      foreach ($ma->items["PluginResourcesChecklistconfig"] as $key => $val) {
 
-            $this->getFromDB($key);
-            $rule                   = new PluginResourcesRuleChecklist();
-            $values["name"]         = addslashes($this->fields["name"]);
-            $values["match"]        = "AND";
-            $values["is_active"]    = 1;
-            $values["is_recursive"] = 1;
-            $values["entities_id"]  = $this->fields["entities_id"];
-            $values["sub_type"]     = "PluginResourcesRuleChecklist";
-            $newID                  = $rule->add($values);
+         $this->getFromDB($key);
+         $rule                   = new PluginResourcesRuleChecklist();
+         $values["name"]         = addslashes($this->fields["name"]);
+         $values["match"]        = "AND";
+         $values["is_active"]    = 1;
+         $values["is_recursive"] = 1;
+         $values["entities_id"]  = $this->fields["entities_id"];
+         $values["sub_type"]     = "PluginResourcesRuleChecklist";
+         $newID                  = $rule->add($values);
 
-            if (isset($data["checklist_type"]) && $data["checklist_type"] > 0) {
-               $criteria            = new RuleCriteria();
-               $values["rules_id"]  = $newID;
-               $values["criteria"]  = "checklist_type";
-               $values["condition"] = 0;
-               $values["pattern"]   = $data["checklist_type"];
-               $criteria->add($values);
-            }
+         if (isset($data["checklist_type"]) && $data["checklist_type"] > 0) {
+            $criteria            = new RuleCriteria();
+            $values["rules_id"]  = $newID;
+            $values["criteria"]  = "checklist_type";
+            $values["condition"] = 0;
+            $values["pattern"]   = $data["checklist_type"];
+            $criteria->add($values);
+         }
 
-            if (isset($data["plugin_resources_contracttypes_id"])) {
-               $criteria            = new RuleCriteria();
-               $values["rules_id"]  = $newID;
-               $values["criteria"]  = "plugin_resources_contracttypes_id";
-               $values["condition"] = $data["condition"];
-               $values["pattern"]   = $data["plugin_resources_contracttypes_id"];
-               $criteria->add($values);
-            }
+         if (isset($data["plugin_resources_contracttypes_id"])) {
+            $criteria            = new RuleCriteria();
+            $values["rules_id"]  = $newID;
+            $values["criteria"]  = "plugin_resources_contracttypes_id";
+            $values["condition"] = $data["condition"];
+            $values["pattern"]   = $data["plugin_resources_contracttypes_id"];
+            $criteria->add($values);
+         }
 
-            $action                = new RuleAction();
-            $values["rules_id"]    = $newID;
-            $values["action_type"] = "assign";
-            $values["field"]       = "checklists_id";
-            $values["value"]       = $key;
-            $action->add($values);
+         $action                = new RuleAction();
+         $values["rules_id"]    = $newID;
+         $values["action_type"] = "assign";
+         $values["field"]       = "checklists_id";
+         $values["value"]       = $key;
+         $action->add($values);
+         if ($newID) {
+            $ma->itemDone($item->getType(), $newID, MassiveAction::ACTION_OK);
+         } else {
+            $ma->itemDone($item->getType(), $newID, MassiveAction::ACTION_KO);
          }
       }
    }
@@ -326,7 +335,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
             break;
          case "Generate_Rule" :
             if ($itemtype == 'PluginResourcesChecklistconfig') {
-               $item->addRulesFromChecklists($input);
+               $item->addRulesFromChecklists($input, $ma, $item);
             }
             break;
             

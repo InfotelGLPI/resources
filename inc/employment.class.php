@@ -488,7 +488,7 @@ class PluginResourcesEmployment extends CommonDBTM {
                Html::convDate($data["date_end"])."<br>\n";
             $task_infos[$type][$entity][] = $data;
 
-            if (!isset($tasks_infos[$type][$entity])) {
+            if (!isset($task_messages[$type][$entity])) {
                $task_messages[$type][$entity] = __('These resources left the company, linked current employment have been updated', 'resources')."<br />";
             }
             $task_messages[$type][$entity] .= $message[$entity];

@@ -40,7 +40,7 @@ class PluginResourcesTaskType extends CommonDropdown {
    }
    
    static function canCreate() {
-      return Session::haveRight('entity_dropdown',UPDATE);
+      return Session::haveRight('dropdown',UPDATE);
    }
 
    static function canView() {
