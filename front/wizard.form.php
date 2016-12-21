@@ -101,8 +101,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
       $values["requiredfields"] = 1;
 
-      $_SESSION["MESSAGE_AFTER_REDIRECT"] = "<h3><span class='red'>".
-              __('Required fields are not filled. Please try again.', 'resources')."</span></h3>";
+      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = array("<h3><span class='red'>".
+              __('Required fields are not filled. Please try again.', 'resources')."</span></h3>");
 
       Html::displayMessageAfterRedirect();
 
