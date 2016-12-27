@@ -206,8 +206,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             }
             $input['_users_id_assign'] = Session::getLoginUserID();
 
-            $input["itemtype"] = "PluginResourcesResource";
-            $input["items_id"] = $data['plugin_resources_resources_id'];
+            $input["items_id"] = array('PluginResourcesResource' => array($data['plugin_resources_resources_id']));
             $input["name"].= addslashes(" ".PluginResourcesResource::getResourceName($data['plugin_resources_resources_id']));
          }
 
