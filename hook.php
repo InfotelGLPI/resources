@@ -1694,7 +1694,6 @@ function plugin_resources_getDatabaseRelations() {
                                                                      "glpi_plugin_resources_checklists"              => "plugin_resources_tasks_id",
                                                                      "glpi_plugin_resources_taskplannings"           => "plugin_resources_tasks_id"),
           "glpi_ticketcategories"                           => array("glpi_plugin_resources_ticketcategories"        => "ticketcategories_id"),
-          "glpi_profiles"                                   => array("glpi_plugin_resources_profiles"                => "profiles_id"),
           "glpi_plugin_resources_professions"               => array("glpi_plugin_resources_ranks"                   => "plugin_resources_professions_id",
                                                                      "glpi_plugin_resources_employments"             => "plugin_resources_professions_id",
                                                                      "glpi_plugin_resources_budgets"                 => "plugin_resources_professions_id",
