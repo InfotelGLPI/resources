@@ -146,8 +146,7 @@ function plugin_init_resources() {
       
       //Clean Plugin on Profile delete
       if (class_exists('PluginResourcesResource_Item')) { // only if plugin activated
-         $PLUGIN_HOOKS['pre_item_purge']['resources'] = array('Profile'                 => array('PluginResourcesProfile', 'purgeProfiles'), 
-                                                              'PluginResourcesResource' => array('PluginResourcesNotification', 'purgeNotification'));
+         $PLUGIN_HOOKS['pre_item_purge']['resources'] = array('PluginResourcesResource' => array('PluginResourcesNotification', 'purgeNotification'));
          $PLUGIN_HOOKS['plugin_datainjection_populate']['resources'] = 'plugin_datainjection_populate_resources';
       }
       
