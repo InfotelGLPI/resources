@@ -111,7 +111,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             _e("Manager for the current resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;:&nbsp;".getUserName($resource->getField('users_id'));
+            echo "&nbsp;".getUserName($resource->getField('users_id'));
             echo "</td></tr>";
 
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
@@ -140,7 +140,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             _e("Current access profile of the resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'));
+            echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'));
 
             echo "</td></tr>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
@@ -168,7 +168,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             _e("Current contract type of the resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'));
+            echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'));
 
             echo "</td></tr>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
@@ -196,7 +196,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             _e("Current agency of the resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
+            echo "&nbsp;".Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
 
             echo "</td></tr>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
@@ -320,37 +320,46 @@ class PluginResourcesResource_Change extends CommonDBTM {
       // name and content of ticket
       switch ($action_id){
          case self::CHANGE_RESOURCEMANAGER :
-            $data['name']    = __("Request to change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Request to change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['name']    = __("Change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
             $data['content'] .= __("Manager for the current resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($resource->getField('users_id')) . "\n";
             $data['content'] .= __("New resource manager", 'resources') . "&nbsp;:&nbsp;" . getUserName($options['users_id']) . "\n";
 
+            $input['users_id'] = $options['users_id'];
             break;
          case self::CHANGE_ACCESSPROFIL :
 
-            $data['name'] = __("Request to change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Request to change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
+            $data['name'] = __("Change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
             $data['content'] .= __("Current access profile of the resource", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'))."\n";
             $data['content'] .= __("New access profile of the resource", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $options['plugin_resources_accessprofiles_id'])."\n";
 
+            $input['plugin_resources_accessprofiles_id'] = $options['plugin_resources_accessprofiles_id'];
             break;
          case self::CHANGE_CONTRACTYPE :
 
-            $data['name'] = __("Request to change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Request to change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
+            $data['name'] = __("Change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
             $data['content'] .= __("Current contract type of the resource", 'resources')." "."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'))."\n";
             $data['content'] .= __("New type of contract", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $options['plugin_resources_contracttypes_id'])."\n";
 
+            $input['plugin_resources_contracttypes_id'] = $options['plugin_resources_contracttypes_id'];
             break;
          case self::CHANGE_AGENCY :
 
-            $data['name']    = __("Request for change of agency for", 'resources') ." ". PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Request for change of agency for", 'resources') ." ". PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['name']    = __("Change of agency for", 'resources') ." ". PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change of agency for", 'resources') ." ". PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
             $data['content'] .= __("Current agency of the resource", 'resources') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')) . "\n";
             $data['content'] .= __("New resource agency", 'resources') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $options['locations_id']) . "\n";
 
+            $input['locations_id'] = $options['locations_id'];
             break;
       }
+
+      $input['id']                = $plugin_resources_resources_id;
+      $input['send_notification'] = 0;
+      //update resource
+      $resource->update($input);
 
       self::createTicket($data);
    }

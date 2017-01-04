@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-04 16:19+0100\n"
-"PO-Revision-Date: 2017-01-04 16:23+0100\n"
+"POT-Creation-Date: 2017-01-04 16:51+0100\n"
+"PO-Revision-Date: 2017-01-04 16:54+0100\n"
 "Last-Translator: Amandine Manceau <amandine.manceau@infotel.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/tsmr/GLPI_resources/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -208,7 +208,7 @@ msgid_plural "Checklists"
 msgstr[0] "Checklist"
 msgstr[1] "Checklists"
 
-#: inc/checklist.class.php:221 inc/checklist.class.php:558 inc/resourcebadge.class.php:428 inc/resource_change.class.php:602
+#: inc/checklist.class.php:221 inc/checklist.class.php:558 inc/resourcebadge.class.php:428 inc/resource_change.class.php:611
 msgid "Create a end treatment ticket"
 msgstr "Create a end treatment ticket"
 
@@ -845,27 +845,27 @@ msgstr "Manager for the current resource"
 msgid "New resource manager"
 msgstr "New resource manager"
 
-#: inc/resource_change.class.php:141 inc/resource_change.class.php:333
+#: inc/resource_change.class.php:141 inc/resource_change.class.php:334
 msgid "Current access profile of the resource"
 msgstr "Current access profile of the resource"
 
-#: inc/resource_change.class.php:147 inc/resource_change.class.php:334
+#: inc/resource_change.class.php:147 inc/resource_change.class.php:335
 msgid "New access profile of the resource"
 msgstr "New access profile of the resource"
 
-#: inc/resource_change.class.php:169 inc/resource_change.class.php:341
+#: inc/resource_change.class.php:169 inc/resource_change.class.php:343
 msgid "Current contract type of the resource"
 msgstr "Current contract type of the resource"
 
-#: inc/resource_change.class.php:175 inc/resource_change.class.php:342
+#: inc/resource_change.class.php:175 inc/resource_change.class.php:344
 msgid "New type of contract"
 msgstr "New type of contract"
 
-#: inc/resource_change.class.php:197 inc/resource_change.class.php:349
+#: inc/resource_change.class.php:197 inc/resource_change.class.php:352
 msgid "Current agency of the resource"
 msgstr "Current agency of the resource"
 
-#: inc/resource_change.class.php:203 inc/resource_change.class.php:350
+#: inc/resource_change.class.php:203 inc/resource_change.class.php:353
 msgid "New resource agency"
 msgstr "New resource agency"
 
@@ -874,22 +874,22 @@ msgid "Starting change"
 msgstr "Starting change"
 
 #: inc/resource_change.class.php:323 inc/resource_change.class.php:324
-msgid "Request to change manager for"
-msgstr "Request to change manager for"
+msgid "Change manager for"
+msgstr "Change manager for"
 
-#: inc/resource_change.class.php:331 inc/resource_change.class.php:332
-msgid "Request to change the access profile for"
-msgstr "Request to change the access profile for"
+#: inc/resource_change.class.php:332 inc/resource_change.class.php:333
+msgid "Change the access profile for"
+msgstr "Change the access profile for"
 
-#: inc/resource_change.class.php:339 inc/resource_change.class.php:340
-msgid "Request to change the type of contract for"
-msgstr "Request to change the type of contract for"
+#: inc/resource_change.class.php:341 inc/resource_change.class.php:342
+msgid "Change the type of contract for"
+msgstr "Change the type of contract for"
 
-#: inc/resource_change.class.php:347 inc/resource_change.class.php:348
-msgid "Request for change of agency for"
-msgstr "Request for change of agency for"
+#: inc/resource_change.class.php:350 inc/resource_change.class.php:351
+msgid "Change of agency for"
+msgstr "Change of agency for"
 
-#: inc/resource_change.class.php:365 inc/resource_change.class.php:386
+#: inc/resource_change.class.php:374 inc/resource_change.class.php:395
 msgid "Managing change actions"
 msgstr "Managing change actions"
 
