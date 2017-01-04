@@ -53,7 +53,12 @@ if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_i
 } else if (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $holiday->delete($_POST, 1);
    $holiday->redirectToList();
-   
+
+} else if(isset($_GET['menu'])) {
+   if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
+      $holiday->showMenu();
+   }
+
 } else {
    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
       $holiday->display($_GET);

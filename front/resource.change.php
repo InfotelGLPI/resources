@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -35,21 +35,30 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-$resource = new PluginResourcesResource();
 
-if (isset($_POST["transferresources"])) {
-   if ($resource->checkTransferMandatoryFields($_POST)) {
-      $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
-      
+$resource = new PluginResourcesResource();
+$resource_change = new PluginResourcesResource_Change();
+
+if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["plugin_resources_resources_id"] != 0) {
+
+   if ($_POST["change_action"] == PluginResourcesResource_Change::CHANGE_TRANSFER && isset($_POST['plugin_resources_resources_id'])) {
+      Html::redirect($CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']);
    } else {
+      $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
       Html::back();
    }
-   
-} else {
-   if ($resource->canView() || Session::haveRight("config", "w")) {
+
+}else if(isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0){
+
+   if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //show remove resource form
-      $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
+      $resource->showResourcesToChange($_POST);
+   }
+
+} else {
+   if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+      //show remove resource form
+      $resource->showResourcesToChange($_POST);
    }
 }
 

@@ -83,3 +83,47 @@ function First2UpperCase(texte) {
    }
    return t.join('');
 }
+
+/**
+ *
+ * @param root_doc
+ * @param id
+ */
+function plugin_resources_change_action(root_doc, id){
+    var resource_id = $("input[name='plugin_resources_resources_id']");
+
+    $.ajax({
+        url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+        type: 'POST',
+        data: '&id=' + id + '&plugin_resources_resources_id='+ resource_id.val(),
+        dataType: 'html',
+        success: function (code_html, statut) {
+
+            $('#plugin_resources_actions').html(code_html);
+            $('#plugin_resources_buttonchangeresources').html("");
+        },
+
+    });
+}
+
+/**
+ *
+ * @param root_doc
+ * @param id
+ */
+function plugin_resources_change_resource(root_doc, id){
+    var action_id = $("select[name='change_action']");
+
+    $.ajax({
+        url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+        type: 'POST',
+        data: '&id=' + action_id.val() + '&plugin_resources_resources_id='+ id,
+        dataType: 'html',
+        success: function (code_html, statut) {
+            $('#plugin_resources_actions').html(code_html);
+            $('#plugin_resources_buttonchangeresources').html("");
+        },
+
+    });
+
+}

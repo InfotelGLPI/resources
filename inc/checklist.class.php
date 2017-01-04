@@ -1016,6 +1016,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                          `glpi_plugin_resources_resources`.`date_begin`,
                         `glpi_plugin_resources_resources`.`locations_id`,
                         `glpi_plugin_resources_resources`.`plugin_resources_departments_id`,
+                        `glpi_plugin_resources_resources`.`plugin_resources_accessprofiles_id`,
                         `glpi_plugin_resources_resources`.`plugin_resources_resourcestates_id`,
                         `glpi_plugin_resources_resources`.`users_id`,
                         `glpi_plugin_resources_resources`.`users_id_recipient`,

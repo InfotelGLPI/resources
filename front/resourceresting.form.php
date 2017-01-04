@@ -49,11 +49,25 @@ if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_i
 } else if (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $resting->update($_POST);
    Html::back();
-   
+
+} else if (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"]) ) {
+   $resting->fields = array('id' => $_POST['id'], 'date_end' => $_POST['date_end']);
+   $resting->updateInDB(array('date_end'));
+   Html::back();
+
 } else if (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $resting->delete($_POST, 1);
    $resting->redirectToList();
-   
+
+} else if(isset($_GET['menu'])) {
+      if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+         $resting->showMenu();
+      }
+
+} else if(isset($_GET['end'])) {
+   if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+      $resting->showFormEnd($_GET["id"], array());
+   }
 } else {
    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
       $resting->showForm($_GET["id"], array());

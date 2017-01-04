@@ -199,7 +199,7 @@ class PluginResourcesProfile extends Profile {
                 'type'      => 'general'
           ),
           array('itemtype'  => 'PluginResourcesResourceResting',
-                'label'     => _n('Non contract period', 'Non contract periods', 1, 'resources'),
+                'label'     => _n('Non contract period management', 'Non contract periods management', 1, 'resources'),
                 'field'     => 'plugin_resources_resting',
                 'type'      => 'ssii'
           ),

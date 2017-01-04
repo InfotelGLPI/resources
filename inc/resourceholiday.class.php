@@ -167,6 +167,37 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       
       return $tab;
    }
+
+   /**
+    *Menu
+    */
+   function showMenu() {
+      global $CFG_GLPI;
+
+      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
+      echo "<tr><th colspan='2'>" . __('Forced holiday management', 'resources') . "</th></tr>";
+
+      $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
+
+      echo "<tr class='tab_bg_1'>";
+      if ($canholiday) {
+         echo "<td class='center'>";
+         echo "<a href=\"./resourceholiday.form.php\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidayresource.png' alt='" . __('Declare a forced holiday', 'resources') . "'>";
+         echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
+         echo "</td>";
+         echo "<td class='center'>";
+         echo "<a href=\"./resourceholiday.php\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist.png' alt='" . __('List of forced holidays', 'resources') . "'>";
+         echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
+         echo "</td>";
+      }
+      echo "</tr></table>";
+      Html::closeForm();
+
+      echo "</div>";
+
+   }
    
    //Show form from helpdesk to add holiday of a resource
    function showForm($ID, $options=array()) {

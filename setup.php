@@ -146,8 +146,7 @@ function plugin_init_resources() {
       
       //Clean Plugin on Profile delete
       if (class_exists('PluginResourcesResource_Item')) { // only if plugin activated
-         $PLUGIN_HOOKS['pre_item_purge']['resources'] = array('Profile'                 => array('PluginResourcesProfile', 'purgeProfiles'), 
-                                                              'PluginResourcesResource' => array('PluginResourcesNotification', 'purgeNotification'));
+         $PLUGIN_HOOKS['pre_item_purge']['resources'] = array('PluginResourcesResource' => array('PluginResourcesNotification', 'purgeNotification'));
          $PLUGIN_HOOKS['plugin_datainjection_populate']['resources'] = 'plugin_datainjection_populate_resources';
       }
       
@@ -168,7 +167,7 @@ function plugin_version_resources() {
 
    return array (
       'name' => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version' => '2.3.0',
+      'version' => '2.3.1',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/resources',

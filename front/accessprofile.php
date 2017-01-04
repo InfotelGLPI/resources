@@ -29,33 +29,5 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
-}
-
-$resource = new PluginResourcesResource();
-
-if (isset($_POST["transferresources"])) {
-   if ($resource->checkTransferMandatoryFields($_POST)) {
-      $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
-      
-   } else {
-      Html::back();
-   }
-   
-} else {
-   if ($resource->canView() || Session::haveRight("config", "w")) {
-      //show remove resource form
-      $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
-   }
-}
-
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::footer();
-} else {
-   Html::helpFooter();
-}
-?>
+$dropdown = new PluginResourcesAccessProfile();
+include (GLPI_ROOT . "/front/dropdown.common.php");

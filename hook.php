@@ -46,11 +46,12 @@ function plugin_resources_install() {
    $update83  = false;
    $update203 = false;
    $update204 = false;
+   $update231 = false;
 
    $install = false;
    if (!TableExists("glpi_plugin_resources_resources") && !TableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.1.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
          VALUES (1, '".__('Long term contract', 'resources')."', '')";
@@ -197,6 +198,12 @@ function plugin_resources_install() {
    if(!TableExists("glpi_plugin_resources_transferentities")){
       $update204 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.0.4.sql");
+   }
+
+   //Version 2.3.1
+   if(!TableExists("glpi_plugin_resources_accessprofiles")){
+      $update231 = true;
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.3.1.sql");
    }
 
    if ($update78 || $install) {
@@ -1664,6 +1671,7 @@ function plugin_resources_getDatabaseRelations() {
                                                                      "glpi_plugin_resources_checklists"              => "plugin_resources_contracttypes_id"),
           "glpi_users"                                      => array("glpi_plugin_resources_resources"               => array('users_id', 'users_id_recipient', 'users_id_recipient_leaving'),"glpi_plugin_resources_tasks" => "users_id"),
           "glpi_plugin_resources_departments"               => array("glpi_plugin_resources_resources"               => "plugin_resources_departments_id"),
+          "plugin_resources_accessprofiles"                 => array("glpi_plugin_resources_resources"               => "plugin_resources_accessprofiles_id"),
           "glpi_plugin_resources_resourcestates"            => array("glpi_plugin_resources_resources"               => "plugin_resources_resourcestates_id"),
           "glpi_plugin_resources_resourcesituations"        => array("glpi_plugin_resources_resources"               => "plugin_resources_resourcesituations_id"),
           "glpi_plugin_resources_contractnatures"           => array("glpi_plugin_resources_resources"               => "plugin_resources_contractnatures_id"),
@@ -1694,7 +1702,6 @@ function plugin_resources_getDatabaseRelations() {
                                                                      "glpi_plugin_resources_checklists"              => "plugin_resources_tasks_id",
                                                                      "glpi_plugin_resources_taskplannings"           => "plugin_resources_tasks_id"),
           "glpi_ticketcategories"                           => array("glpi_plugin_resources_ticketcategories"        => "ticketcategories_id"),
-          "glpi_profiles"                                   => array("glpi_plugin_resources_profiles"                => "profiles_id"),
           "glpi_plugin_resources_professions"               => array("glpi_plugin_resources_ranks"                   => "plugin_resources_professions_id",
                                                                      "glpi_plugin_resources_employments"             => "plugin_resources_professions_id",
                                                                      "glpi_plugin_resources_budgets"                 => "plugin_resources_professions_id",
@@ -1736,6 +1743,7 @@ function plugin_resources_getDropdown() {
                    'PluginResourcesEmploymentState'      => PluginResourcesEmploymentState::getTypeName(2),
                    'PluginResourcesBudgetType'           => PluginResourcesBudgetType::getTypeName(2),
                    'PluginResourcesBudgetVolume'         => PluginResourcesBudgetVolume::getTypeName(2),
+                   'PluginResourcesAccessProfile'        => PluginResourcesAccessProfile::getTypeName(2),
                    'PluginResourcesCost'                 => PluginResourcesCost::getTypeName(2));
    } else {
       return array();

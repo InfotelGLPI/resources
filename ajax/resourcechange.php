@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,33 +29,28 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
-}
+$resource_change = new PluginResourcesResource_Change();
 
-$resource = new PluginResourcesResource();
+if (isset($_POST['load_button_changeresources'])) {
+   $resource_change->loadButonChangeResources($_POST['action'], $_POST);
+} else if (isset($_POST['action'])) {
 
-if (isset($_POST["transferresources"])) {
-   if ($resource->checkTransferMandatoryFields($_POST)) {
-      $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
-      
-   } else {
-      Html::back();
+   switch ($_POST['action']) {
+      case "loadEntity" :
+         $resource_change->loadEntity($_POST['actions_id']);
+         break;
+      case "loadCategory" :
+         $resource_change->displayCategory($_POST['entities_id']);
+         break;
+      case "loadButtonAdd" :
+         $resource_change->displayButtonAdd($_POST['itilcategories_id']);
+         break;
+      case "clean" :
+         echo "";
+         break;
+
    }
-   
-} else {
-   if ($resource->canView() || Session::haveRight("config", "w")) {
-      //show remove resource form
-      $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
-   }
-}
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::footer();
 } else {
-   Html::helpFooter();
+   $resource_change->setFieldByAction($_POST["id"], $_POST['plugin_resources_resources_id']);
 }
-?>

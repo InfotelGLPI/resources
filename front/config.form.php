@@ -33,6 +33,8 @@ $plugin = new Plugin();
 if ($plugin->isActivated("resources")) {
    $cat = new PluginResourcesTicketCategory();
    $transferEntity = new PluginResourcesTransferEntity();
+   $resourceChange = new PluginResourcesResource_Change();
+   $resourceBadge = new PluginResourcesResourceBadge();
 
    if (isset($_POST["add_ticket"])) {
       $cat->addTicketCategory($_POST['ticketcategories_id']);
@@ -53,6 +55,12 @@ if ($plugin->isActivated("resources")) {
       
    } else {
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+      $resourceChange->showForm($_SERVER['PHP_SELF']);
+      $plugin = new Plugin();
+      if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
+         $resourceBadge->showFormConfig($_SERVER['PHP_SELF']);
+      }
+
       $cat->showForm($_SERVER['PHP_SELF']);
       $transferEntity->showForm($_SERVER['PHP_SELF']);
    }

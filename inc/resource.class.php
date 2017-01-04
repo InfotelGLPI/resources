@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResource
+ */
 class PluginResourcesResource extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
@@ -42,17 +45,15 @@ class PluginResourcesResource extends CommonDBTM {
 
    public $dohistory=true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Human resource', 'Human resources', $nb, 'resources');
-   }
-
-   static function canView() {
-      return Session::haveRight(self::$rightname, READ);
-   }
-
-   static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
    }
 
    /**
@@ -96,6 +97,11 @@ class PluginResourcesResource extends CommonDBTM {
       return $types;
    }
 
+   /**
+    * Actions done when item is deleted from the database
+    *
+    * @return nothing
+    **/
    function cleanDBonPurge() {
 
       $temp = new PluginResourcesResource_Item();
@@ -125,6 +131,7 @@ class PluginResourcesResource extends CommonDBTM {
 
    /**
     * Hook called After an item is purge
+    * @param CommonDBTM $item
     */
    static function cleanForItem(CommonDBTM $item) {
 
@@ -138,6 +145,14 @@ class PluginResourcesResource extends CommonDBTM {
                                        'items_id' => $item->getField('id')));
    }
 
+   /**
+    * Get the Search options for the given Type
+    *
+    * This should be overloaded in Class
+    *
+    * @return an array of search options
+    * More information on https://forge.indepnet.net/wiki/glpi/SearchEngine
+    **/
    function getSearchOptions() {
 
       $tab = array();
@@ -325,6 +340,16 @@ class PluginResourcesResource extends CommonDBTM {
       return $tab;
    }
 
+   /**
+    * Define tabs to display
+    *
+    * NB : Only called for existing object
+    *
+    * @param $options array
+    *     - withtemplate is a template view ?
+    *
+    * @return array containing the onglets
+    **/
    function defineTabs($options=array()) {
 
       $ong = array();
@@ -353,6 +378,10 @@ class PluginResourcesResource extends CommonDBTM {
       return $ong;
    }
 
+   /**
+    * @param $input
+    * @return array
+    */
    function checkRequiredFields($input) {
 
       $need=array();
@@ -388,6 +417,13 @@ class PluginResourcesResource extends CommonDBTM {
       return $need;
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+    **/
    function prepareInputForAdd($input) {
 
       if (!isset ($input["is_template"])) {
@@ -432,6 +468,11 @@ class PluginResourcesResource extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * Actions done after the ADD of the item in the database
+    *
+    * @return nothing
+    **/
    function post_addItem() {
       global $CFG_GLPI;
 
@@ -476,6 +517,11 @@ class PluginResourcesResource extends CommonDBTM {
       $PluginResourcesChecklistconfig->addChecklistsFromRules($this,PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
    }
 
+   /**
+    * @param $str
+    * @param string $charset
+    * @return mixed|string
+    */
    function replace_accents($str, $charset='utf-8')
    {
       $str = htmlentities($str, ENT_NOQUOTES, $charset);
@@ -487,6 +533,10 @@ class PluginResourcesResource extends CommonDBTM {
       return $str;
    }
 
+   /**
+    * @param $class
+    * @return mixed|string
+    */
    function addPhoto($class)
    {
       $uploadedfile= $_FILES['picture']['tmp_name'];
@@ -520,6 +570,13 @@ class PluginResourcesResource extends CommonDBTM {
       return $name;
    }
 
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param $input datas used to update the item
+    *
+    * @return the modified $input array
+    **/
    function prepareInputForUpdate($input) {
 
       if (isset($input['date_begin']) 
@@ -547,29 +604,35 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-      $input["_old_name"]=$this->fields["name"];
-      $input["_old_firstname"]=$this->fields["firstname"];
-      $input["_old_plugin_resources_contracttypes_id"]=$this->fields["plugin_resources_contracttypes_id"];
-      $input["_old_users_id"]=$this->fields["users_id"];
-      $input["_old_users_id_recipient"]=$this->fields["users_id_recipient"];
-      $input["_old_date_declaration"]=$this->fields["date_declaration"];
-      $input["_old_date_begin"]=$this->fields["date_begin"];
-      $input["_old_date_end"]=$this->fields["date_end"];
-      $input["_old_quota"]=$this->fields["quota"];
-      $input["_old_plugin_resources_departments_id"]=$this->fields["plugin_resources_departments_id"];
-      $input["_old_plugin_resources_resourcestates_id"]=$this->fields["plugin_resources_resourcestates_id"];
-      $input["_old_plugin_resources_resourcesituations_id"]=$this->fields["plugin_resources_resourcesituations_id"];
-      $input["_old_plugin_resources_contractnatures_id"]=$this->fields["plugin_resources_contractnatures_id"];
-      $input["_old_plugin_resources_ranks_id"]=$this->fields["plugin_resources_ranks_id"];
-      $input["_old_plugin_resources_resourcespecialities_id"]=$this->fields["plugin_resources_resourcespecialities_id"];
-      $input["_old_locations_id"]=$this->fields["locations_id"];
-      $input["_old_is_leaving"]=$this->fields["is_leaving"];
-      $input["_old_plugin_resources_leavingreasons_id"]=$this->fields["plugin_resources_leavingreasons_id"];
-      $input["_old_comment"]=$this->fields["comment"];
+      $input["_old_name"]                                     = $this->fields["name"];
+      $input["_old_firstname"]                                = $this->fields["firstname"];
+      $input["_old_plugin_resources_contracttypes_id"]        = $this->fields["plugin_resources_contracttypes_id"];
+      $input["_old_users_id"]                                 = $this->fields["users_id"];
+      $input["_old_users_id_recipient"]                       = $this->fields["users_id_recipient"];
+      $input["_old_date_declaration"]                         = $this->fields["date_declaration"];
+      $input["_old_date_begin"]                               = $this->fields["date_begin"];
+      $input["_old_date_end"]                                 = $this->fields["date_end"];
+      $input["_old_quota"]                                    = $this->fields["quota"];
+      $input["_old_plugin_resources_departments_id"]          = $this->fields["plugin_resources_departments_id"];
+      $input["_old_plugin_resources_resourcestates_id"]       = $this->fields["plugin_resources_resourcestates_id"];
+      $input["_old_plugin_resources_resourcesituations_id"]   = $this->fields["plugin_resources_resourcesituations_id"];
+      $input["_old_plugin_resources_contractnatures_id"]      = $this->fields["plugin_resources_contractnatures_id"];
+      $input["_old_plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
+      $input["_old_plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
+      $input["_old_plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
+      $input["_old_locations_id"]                             = $this->fields["locations_id"];
+      $input["_old_is_leaving"]                               = $this->fields["is_leaving"];
+      $input["_old_plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
+      $input["_old_comment"]                                  = $this->fields["comment"];
 
       return $input;
    }
 
+   /**
+    * Actions done before the UPDATE of the item in the database
+    *
+    * @return nothing
+    **/
    function pre_updateInDB() {
 
       $PluginResourcesResource_Item= new PluginResourcesResource_Item();
@@ -619,6 +682,13 @@ class PluginResourcesResource extends CommonDBTM {
 
    }
 
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @param $history store changes history ? (default 1)
+    *
+    * @return nothing
+    **/
    function post_updateItem($history=1) {
       global $CFG_GLPI;
 
@@ -682,6 +752,12 @@ class PluginResourcesResource extends CommonDBTM {
       }
    }
 
+   /**
+    * Actions done before the DELETE of the item in the database /
+    * Maybe used to add another check for deletion
+    *
+    * @return bool : true if item need to be deleted else false
+    **/
    function pre_deleteItem() {
       global $CFG_GLPI;
 
@@ -700,6 +776,11 @@ class PluginResourcesResource extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $name
+    * @param int $value
+    * @return int|string
+    */
    function dropdownTemplate($name, $value = 0) {
 
       $restrict = "`is_template` = '1'";
@@ -732,6 +813,11 @@ class PluginResourcesResource extends CommonDBTM {
               WHERE `plugin_resources_resources_id`='" . $this->fields['id']."'";
    }
 
+   /**
+    * @param $ID
+    * @param array $options
+    * @return bool
+    */
    function showForm($ID, $options=array()) {
       global $CFG_GLPI;
 
@@ -829,6 +915,20 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<input type='text' name='quota' value='".Html::formatNumber($this->fields["quota"], true, 4).
          "' size='14'>";
       echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td";
+      if(in_array("plugin_resources_accessprofiles_id", $required))
+         echo $alert;
+      echo ">";
+      echo PluginResourcesAccessProfile::getTypeName(1)."</td>";
+      echo "<td>";
+      Dropdown::show('PluginResourcesAccessProfile',
+                     array('value'  => $this->fields["plugin_resources_accessprofiles_id"],
+                           'entity' => $this->fields["entities_id"]));
+      echo "</td>";
+      echo "<td></td>";
       echo "</tr>";
 
       echo "</table><table class='tab_cadre_fixe'>";
@@ -1052,6 +1152,10 @@ class PluginResourcesResource extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $options
+    * @return bool
+    */
    function sendReport($options) {
       global $CFG_GLPI;
 
@@ -1079,6 +1183,10 @@ class PluginResourcesResource extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $options
+    * @return bool
+    */
    function reSendResourceCreation($options) {
       global $CFG_GLPI;
 
@@ -1090,6 +1198,9 @@ class PluginResourcesResource extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $options
+    */
    static function showReportForm($options) {
 
       $reportconfig = new PluginResourcesReportConfig();
@@ -1121,115 +1232,133 @@ class PluginResourcesResource extends CommonDBTM {
       global $CFG_GLPI;
 
       echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='5'>".__('Menu', 'resources')."</th></tr>";
+      echo "<tr><th colspan='6'>".__('Menu', 'resources')."</th></tr>";
 
       $canresting = Session::haveright('plugin_resources_resting', UPDATE);
       $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
       $canemployment = Session::haveright('plugin_resources_employment', UPDATE);
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget = Session::haveright('plugin_resources_budget', READ);
-      $colspan = "1";
-      $colspan2 = "1";
-      if (!$this->canCreate())
-         $colspan+= 3;
-      if (!$canresting || !$canholiday)
-         $colspan2+= 1;
-      echo "<tr><th colspan='5'>".__('Resources management', 'resources')."</th></tr>";
+
+      echo "<tr><th colspan='6'>".__('Resources management', 'resources')."</th></tr>";
 
       echo "<tr class='tab_bg_1'>";
 
       if($this->canCreate()) {
          //Add a resource
-         echo "<td class='center'>";
+         echo "<td class='center' colspan='2' width='200'>";
          echo "<a href=\"./wizard.form.php\">";
          echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/newresource.png' alt='".__('Declare an arrival', 'resources')."'>";
          echo "<br>".__('Declare an arrival', 'resources')."</a>";
          echo "</td>";
       
       } else {
-         echo "<td class='center'>&nbsp;";
+         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
          echo "</td>";
       }
-      if($this->canView()) {
-         //See resources
-         echo "<td class='center'>";
-         echo "<a href=\"./resource.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/resourcelist.png' alt='".__('Search resources', 'resources')."'>";
-         echo "<br>".__('Search resources', 'resources')."</a>";
+
+
+      if($this->canCreate()) {
+         //Add a change
+         echo "<td class='center' colspan='2'  width='200'>";
+         echo "<a href=\"./resource.change.php\">";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/recap.png' alt='".__('Declare a change', 'resources')."'>";
+         echo "<br>".__('Declare a change', 'resources')."</a>";
          echo "</td>";
-         
+
       } else {
-         echo "<td class='center'>&nbsp;";
+         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
          echo "</td>";
       }
+
       if($this->canCreate()) {
       
          //Remove resources
-         echo "<td class='center'>";
+         echo "<td class='center' colspan='2'  width='200'>";
          echo "<a href=\"./resource.remove.php\">";
          echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/removeresource.png' alt='".__('Declare a departure', 'resources')."'>";
          echo "<br>".__('Declare a departure', 'resources')."</a>";
          echo "</td>";
       
-         //Transfer resources
-         echo "<td class='center'>";
-         echo "<a href=\"./resource.transfer.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/transferresource.png' alt='".__('Declare a transfer', 'resources')."'>";
-         echo "<br>".__('Declare a transfer', 'resources')."</a>";
-         echo "</td>";
       } else {
-         echo "<td class='center'>&nbsp;";
-         echo "</td>";
-         echo "<td class='center'>&nbsp;";
+         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
          echo "</td>";
       }
-      echo "<td colspan='$colspan' class='center'>";
+
+      echo "</tr>";
+
+      $plugin = new Plugin();
+      $canbadges = ($plugin->isActivated("badges"));
+
+      if ($canresting || $canholiday || $canbadges) {
+         echo "<tr><th colspan='6'>".__('Others declarations', 'resources')."</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         if ($canresting) {
+            //Management of a non contract period
+            echo "<td colspan='2' class='center'>";
+            echo "<a href=\"./resourceresting.form.php?menu\">";
+            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/deleteresting.png' alt='"._n('Non contract period management', 'Non contract periods management', 2, 'resources')."'>";
+            echo "<br>"._n('Non contract period management', 'Non contract periods management', 2, 'resources')."</a>";
+            echo "</td>";
+         } else {
+            echo "<td colspan='2'></td>";
+         }
+
+         if ($canholiday) {
+            //Management of a non contract period
+            echo "<td colspan='2' class='center'>";
+            echo "<a href=\"./resourceholiday.form.php?menu\">";
+            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/holidayresource.png' alt='".__('Forced holiday management', 'resources')."'>";
+            echo "<br>".__('Forced holiday management', 'resources')."</a>";
+            echo "</td>";
+         } else {
+            echo "<td colspan='2'></td>";
+         }
+
+         if ($canbadges) {
+            //Management of a non contract period
+            echo "<td colspan='2' class='center'>";
+            echo "<a href=\"./resourcebadge.form.php?menu\">";
+            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/badges/badges.png' alt='"._n('Badge management', 'Badges management', 2, 'resources')."'>";
+            echo "<br>"._n('Badge management', 'Badges management', 2, 'resources')."</a>";
+            echo "</td>";
+         } else {
+            echo "<td colspan='2'></td>";
+         }
+         echo "</tr>";
+      }
+
+      echo "<tr><th colspan='6'>".__('Others actions', 'resources')."</th></tr>";
+      echo "<tr class='tab_bg_1'>";
+      if($this->canView()) {
+         //See resources
+         echo "<td class='center' colspan='3'>";
+         echo "<a href=\"./resource.php\">";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/resourcelist.png' alt='".__('Search resources', 'resources')."'>";
+         echo "<br>".__('Search resources', 'resources')."</a>";
+         echo "</td>";
+
+      } else {
+         echo "<td class='center' colspan='3'>&nbsp;";
+         echo "</td>";
+      }
+
+      echo "<td class='center' colspan='3'>";
       echo "<a href=\"./directory.php\">";
       echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/directory.png' alt='".PluginResourcesDirectory::getTypeName(1)."'>";
       echo "<br>".PluginResourcesDirectory::getTypeName(1)."</a>";
       echo "</td>";
-
       echo "</tr>";
 
-      if ($canresting || $canholiday) {
-         echo "<tr><th colspan='5'>".__('Others declarations', 'resources')."</th></tr>";
-
-         echo "<tr class='tab_bg_1'>";
-         if ($canresting) {
-            //Add resting resource
-            echo "<td colspan='$colspan2' class='center'>";
-            echo "<a href=\"./resourceresting.form.php\">";
-            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/newresting.png' alt='".__('Declare a non contract period', 'resources')."'>";
-            echo "<br>".__('Declare a non contract period', 'resources')."</a>";
-            echo "</td>";
-            //List resting resource
-            echo "<td colspan='$colspan2' class='center'>";
-            echo "<a href=\"./resourceresting.php\">";
-            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/restinglist.png' alt='".__('List of non contract periods', 'resources')."'>";
-            echo "<br>".__('List of non contract periods', 'resources')."</a>";
-            echo "</td>";
-         }
-         if ($canholiday) {
-            echo "<td colspan='$colspan2' class='center'>";
-            echo "<a href=\"./resourceholiday.form.php\">";
-            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/holidayresource.png' alt='".__('Declare a forced holiday', 'resources')."'>";
-            echo "<br>".__('Declare a forced holiday', 'resources')."</a>";
-            echo "</td>";
-            echo "<td colspan='$colspan2' class='center'>";
-            echo "<a href=\"./resourceholiday.php\">";
-            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/holidaylist.png' alt='".__('List of forced holidays', 'resources')."'>";
-            echo "<br>".__('List of forced holidays', 'resources')."</a>";
-            echo "</td>";
-         }
-         echo "<td></td>";
-         echo "</tr>";
-      }
-
       if ($canseeemployment || $canseebudget) {
+         $colspan = 0;
 
-         echo "<tr><th colspan='5'>".__('Employments / budgets management', 'resources')."</th></tr>";
+         echo "<tr><th colspan='6'>".__('Employments / budgets management', 'resources')."</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
+         echo "<td class='center'>";
+         echo "</td>";
 
          if($canseeemployment) {
             if($canemployment) {
@@ -1239,6 +1368,8 @@ class PluginResourcesResource extends CommonDBTM {
                echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/employment.png' alt='".__('Declare an employment', 'resources')."'>";
                echo "<br>".__('Declare an employment', 'resources')."</a>";
                echo "</td>";
+            } else {
+               $colspan += 1;
             }
             //See managment employments
             echo "<td class='center'>";
@@ -1246,6 +1377,8 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/employmentlist.png' alt='".__('Employment management', 'resources')."'>";
             echo "<br>".__('Employment management', 'resources')."</a>";
             echo "</td>";
+         } else {
+            $colspan += 1;
          }
          if ($canseebudget){
             //See managment budgets
@@ -1254,6 +1387,8 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/budgetlist.png' alt='".__('Budget management', 'resources')."'>";
             echo "<br>".__('Budget management', 'resources')."</a>";
             echo "</td>";
+         } else {
+            $colspan += 1;
          }
 
          if($canseeemployment) {
@@ -1263,8 +1398,12 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/recap.png' alt='".__('List Employments / Resources', 'resources')."'>";
             echo "<br>".__('List Employments / Resources', 'resources')."</a>";
             echo "</td>";
+         } else {
+            $colspan += 1;
          }
-         echo "<td></td>";
+
+         echo "<td class='center' colspan='".($colspan+1)."'></td>";
+
          echo "</tr>";
       }
       echo " </table></div>";
@@ -1312,6 +1451,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param $ID
+    * @param array $options
+    */
    function wizardSecondForm ($ID, $options=array()) {
       global $CFG_GLPI;
 
@@ -1345,6 +1488,7 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_ranks_id"] = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
          $options["plugin_resources_leavingreasons_id"] = $this->fields["plugin_resources_leavingreasons_id"];
+         $options["plugin_resources_accessprofiles_id"] = $this->fields["plugin_resources_accessprofiles_id"];
 
       }
 
@@ -1476,9 +1620,25 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<input type='text' name='quota' value='".Html::formatNumber($options["quota"], true,4).
          "' size='14'>";
       echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='plugin_resources_wizard_explain'>";
+      echo "<td";
+      if(in_array("plugin_resources_accessprofiles_id", $required))
+         echo $alert;
+      echo ">";
+      echo PluginResourcesAccessProfile::getTypeName(1);
+      echo "</td>";
+      echo "<td>";
+      Dropdown::show('PluginResourcesAccessProfile',
+                     array('name'   => "plugin_resources_accessprofiles_id",
+                           'value'  => $options["plugin_resources_accessprofiles_id"],
+                           'entity' => $this->fields["entities_id"]));
+      echo "</td>";
       echo "</tr></table>";
 
       echo "<br>";
+
 
       if ($rank->canView()) {
          echo "<table class='plugin_resources_wizard_table'>";
@@ -1695,6 +1855,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param $ID
+    * @param array $options
+    * @return bool
+    */
    function wizardFiveForm ($ID, $options=array()) {
       global $CFG_GLPI;
 
@@ -2086,17 +2251,18 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['date_begin']       = null;
             $resource->fields['date_end']         = null;
 
-            $resource->fields['plugin_resources_departments_id'] = $params['plugin_resources_departments_id'];
-            $resource->fields['locations_id']                    = 0;
-            $resource->fields['is_leaving']                      = 0;
-            $resource->fields['users_id_recipient_leaving']      = 0;
-            $resource->fields['comment']                         = '';
-            $resource->fields['notepad']                         = '';
-            $resource->fields['is_template']                     = 0;
-            $resource->fields['template_name']                   = '';
-            $resource->fields['is_deleted']                      = 0;
-            $resource->fields['is_helpdesk_visible']             = 1;
-            $resource->fields['date_mod']                        = date('Y-m-d');
+            $resource->fields['plugin_resources_departments_id']    = $params['plugin_resources_departments_id'];
+            $resource->fields['plugin_resources_accessprofiles_id'] = 0;
+            $resource->fields['locations_id']                       = 0;
+            $resource->fields['is_leaving']                         = 0;
+            $resource->fields['users_id_recipient_leaving']         = 0;
+            $resource->fields['comment']                            = '';
+            $resource->fields['notepad']                            = '';
+            $resource->fields['is_template']                        = 0;
+            $resource->fields['template_name']                      = '';
+            $resource->fields['is_deleted']                         = 0;
+            $resource->fields['is_helpdesk_visible']                = 1;
+            $resource->fields['date_mod']                           = date('Y-m-d');
 
             $resource->fields['plugin_resources_resourcestates_id']       = 0;
             $resource->fields['picture']                                  = null;
@@ -2109,7 +2275,7 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['plugin_resources_leavingreasons_id']       = 0;
 
             $resourceItem = new PluginResourcesResource_Item();
-            if ($resourceItem->can(-1, UPDATE, $input)) {
+            if ($resourceItem->can(-1, UPDATE, $resource)) {
                $idResource = $resource->add($resource->fields);
                if ($idResource) {
                   $resource->fields['id'] = $idResource;
@@ -2203,14 +2369,16 @@ class PluginResourcesResource extends CommonDBTM {
          if ($showOnlyLinkedResources) {
             $query .= "INNER JOIN `glpi_plugin_resources_resources_items`
                         ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`)
+                            = `glpi_plugin_resources_resources`.`id`  
+                            AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
                       INNER JOIN `glpi_users`
                         ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
                               AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User') ";
          } else {
             $query .= "LEFT JOIN `glpi_plugin_resources_resources_items`
                         ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`)
+                            = `glpi_plugin_resources_resources`.`id` 
+                             AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
                       LEFT JOIN `glpi_users`
                         ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
                               AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User') ";
@@ -2380,9 +2548,90 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div align='center'>".__('No item found')."</div>";
       }
    }
-   
-   //Show form from heelpdesk to transfer a resource
-   function showResourcesToTransfer() {
+
+   /**
+    * Show form from helpdesk to change a resource
+    *
+    * @param array $options
+    */
+   function showResourcesToChange($options = array()) {
+      global $CFG_GLPI;
+
+      if (countElementsInTable($this->getTable())>0) {
+
+         echo "<div align='center'>";
+
+         echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resource.change.php\">";
+
+         echo "<table class='plugin_resources_wizard' style='margin-top:1px;'>";
+         echo "<tr>";
+         echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
+         echo "<div class='plugin_resources_presentation_logo'>";
+         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/recap.png' alt='changeresource' /></div>";
+         echo "</td>";
+
+         echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
+
+         echo "<div class='plugin_resources_wizard_title'>";
+         _e('Declare a change', 'resources');
+         echo "</div>";
+
+         echo "<table>";
+         echo "<tr class='plugin_resources_wizard_explain'>";
+         echo "<td style='width:40%'>".self::getTypeName(1)."</td>";
+
+         echo "<td class='left'>";
+         PluginResourcesResource::dropdown(array('name'   => 'plugin_resources_resources_id',
+                                                 'entity' => $_SESSION['glpiactiveentities'],
+                                                 'on_change' => "plugin_resources_change_resource(\"".$CFG_GLPI['root_doc']."\", this.value);"));
+
+         echo "</td></tr>";
+
+         //choose actions
+         echo "<tr class='plugin_resources_wizard_explain'><td>";
+         echo __('Actions to be taken', 'resources')."</td>";
+         echo "<td class='left'>";
+         $actions = PluginResourcesResource_Change::getAllActions();
+         Dropdown::showFromArray('change_action', $actions, array('on_change' => "plugin_resources_change_action(\"".$CFG_GLPI['root_doc']."\", this.value);"));
+         echo "</td></tr>";
+
+         echo "<tr class='plugin_resources_wizard_explain' ><td colspan='2'></tdcolspan>";
+         echo "<div id='plugin_resources_actions'>";
+         $msg = array();
+         if(isset($options['plugin_resources_resources_id']) && $options['plugin_resources_resources_id'] == 0){
+            $msg[] = PluginResourcesResource::getTypeName(1);
+         }
+         if(isset($options['change_action']) && $options['change_action'] == 0){
+            $msg[] = __('Actions to taken');
+         }
+
+         if(count($msg) > 0 ){
+            echo "<span class='red'>".sprintf(__("Please correct: %s", 'resources'), implode(', ', $msg))."</span>";
+         }
+         echo "</div>";
+         echo "</tr>";
+
+         echo "</table>";
+         echo "</td>";
+         echo "</tr>";
+
+         echo "<tr><td class='plugin_resources_wizard_button' colspan='2' id='plugin_resources_buttonchangeresources'>";
+
+         echo "</td></tr></table>";
+         Html::closeForm();
+         echo "</div>";
+
+      } else {
+         echo "<div align='center'>".__('No item found')."</div>";
+      }
+   }
+
+   /**
+    * Show form from heelpdesk to transfer a resource
+    *
+    * @param $plugin_resources_resources_id
+    */
+   function showResourcesToTransfer($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
       if (countElementsInTable($this->getTable())>0) {
@@ -2390,66 +2639,78 @@ class PluginResourcesResource extends CommonDBTM {
          
          echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resource.transfer.php\">";
 
-         echo "<table class='plugin_resources_wizard' style='margin-top:1px;'>";
-         echo "<tr>";
-         echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
-         echo "<div class='plugin_resources_presentation_logo'>";
-         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/transferresource.png'/>";
-         echo "</div>";
-         echo "</td>";
-         
-         echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
-         echo "<div class='plugin_resources_wizard_title'>";
-         _e('Declare a transfer', 'resources');
-         echo "</div>";
-         echo "<table>";
-         echo "<tr class='plugin_resources_wizard_explain'>";
-         echo "<td style='width:40%' valign='top'>".self::getTypeName(1)." <span class='red'>*</span></td>";
-         echo "<td>";
-         $rand = PluginResourcesResource::dropdown(array('name'             => 'plugin_resources_resources_id',
-                                                         'on_change'        => 'loadResourceInfo();',
-                                                         'entity'           => $_SESSION['glpiactiveentities'],
-                                                         'addUnlinkedUsers' => true));
-         echo "<script type='text/javascript'>";
-         echo "function loadResourceInfo(){";
-         echo Ajax::updateItemJsCode('loadResourceInfo', 
-                                     $CFG_GLPI['root_doc'].'/plugins/resources/ajax/resourceinfo.php', 
-                                     array('plugin_resources_resources_id' => '__VALUE__',
-                                           'action'                        => 'resourceInfo'),
-                                     'dropdown_plugin_resources_resources_id'.$rand);
-         echo "}";
-         echo "</script>";
-         echo "<span id='loadResourceInfo'></span>";
-         echo "</td>";
-         echo "</tr>";
-                  
-         echo "<tr class='plugin_resources_wizard_explain'>";
-         echo "<td style='width:40%'>".__('Target entity', 'resources')." <span class='red'>*</span></td>";
-         echo "<td>";
-         $transferentity = new PluginResourcesTransferEntity();
-         $data           = $transferentity->find();
-         $elements       = array(Dropdown::EMPTY_VALUE);
-         foreach ($data as $val) {
-            $elements[$val['entities_id']] = Dropdown::getDropdownName("glpi_entities", $val['entities_id']);
-         }
-         Dropdown::showFromArray("entities_id", $elements);
-         echo "</td>";
-         echo "</tr>";
-         echo "</table>";
-         echo "</td>";
-         echo "</tr>";
+         if (isset($plugin_resources_resources_id)) {
+            $resource = new PluginResourcesResource();
+            if ($resource->getFromDB($plugin_resources_resources_id)) {
+               $resource_item = new PluginResourcesResource_Item();
+               $linked        = $resource_item->find("`plugin_resources_resources_id` = ".$plugin_resources_resources_id);
 
-         echo "<tr>";
-         echo "<td class='plugin_resources_wizard_button' colspan='2'>";
-         echo "<div class='next'>";
-         echo "<input type='submit' name='transferresources' value=\"".__s('Declare a transfer', 'resources')."\" class='submit'>";
-         echo "</div>";
-         echo "</td>";
-         echo "</tr>";
-         echo "</table>";
-         Html::closeForm();
-         echo "</div>";
-         
+               echo "<table class='plugin_resources_wizard' style='margin-top:1px;'>";
+               echo "<tr>";
+               echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
+               echo "<div class='plugin_resources_presentation_logo'>";
+               echo "<img src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/transferresource.png'/>";
+               echo "</div>";
+               echo "</td>";
+
+               echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
+               echo "<div class='plugin_resources_wizard_title'>";
+               _e('Declare a transfer', 'resources');
+               echo "</div>";
+
+               echo "<table>";
+               echo "<tr class='plugin_resources_wizard_explain'>";
+               echo "<td style='width:40%' valign='top'>" . self::getTypeName(1) . " </td>";
+               echo "<td>";
+               echo PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+               echo "</td>";
+               echo "</tr>";
+
+               echo "<tr>";
+               echo "<td colspan='2'>";
+               echo "<table class='tab_cadre' style='text-align:left; margin:0px'>";
+               echo "<tr class='tab_bg_1'>";
+               echo "<th>".__('Current entity', 'resources')."</th>";
+               echo "</tr>";
+
+               echo "<tr class='tab_bg_1'>";
+               echo "<td>";
+               echo Dropdown::getDropdownName('glpi_entities', $resource->fields['entities_id']);
+               echo "</td>";
+               echo "</tr>";
+               echo "</table>";
+               echo "</td>";
+               echo "</tr>";
+
+               echo "<tr class='plugin_resources_wizard_explain'>";
+               echo "<td style='width:40%'>" . __('Target entity', 'resources') . " <span class='red'>*</span></td>";
+               echo "<td>";
+               $transferentity = new PluginResourcesTransferEntity();
+               $data           = $transferentity->find();
+               $elements       = array(Dropdown::EMPTY_VALUE);
+               foreach ($data as $val) {
+                  $elements[$val['entities_id']] = Dropdown::getDropdownName("glpi_entities", $val['entities_id']);
+               }
+               Dropdown::showFromArray("entities_id", $elements);
+               echo "</td>";
+               echo "</tr>";
+               echo "</table>";
+               echo "</td>";
+               echo "</tr>";
+
+               echo "<tr>";
+               echo "<td class='plugin_resources_wizard_button' colspan='2'>";
+               echo "<div class='next'>";
+               echo "<input type='hidden' name='plugin_resources_resources_id' value=\"".$plugin_resources_resources_id."\">";
+               echo "<input type='submit' name='transferresources' value=\"".__s('Declare a transfer', 'resources')."\" class='submit'>";
+               echo "</div>";
+               echo "</td>";
+               echo "</tr>";
+               echo "</table>";
+               Html::closeForm();
+               echo "</div>";
+            }
+         }
       } else {
          echo "<div align='center'>".__('No item found')."</div>";
       }
@@ -2715,6 +2976,16 @@ class PluginResourcesResource extends CommonDBTM {
          if ($department > 0) {
             $values["id"]                              = $resources_id;
             $values["plugin_resources_departments_id"] = $department;
+            $this->update($values);
+         }
+
+         unset($values);
+
+
+         $accessprofile = PluginResourcesAccessProfile::transfer($this->fields["plugin_resources_accessprofiles_id"], $entities_id);
+         if ($department > 0) {
+            $values["id"]                                 = $resources_id;
+            $values["plugin_resources_accessprofiles_id"] = $accessprofile;
             $this->update($values);
          }
 
@@ -3331,5 +3602,3 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 }
-
-?>

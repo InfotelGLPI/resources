@@ -26,36 +26,37 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
-}
+$plugin = new Plugin();
 
-$resource = new PluginResourcesResource();
+if ($plugin->isActivated("badges")) {
 
-if (isset($_POST["transferresources"])) {
-   if ($resource->checkTransferMandatoryFields($_POST)) {
-      $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
-      
+   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      //from central
+      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
    } else {
-      Html::back();
+      //from helpdesk
+      Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
-   
-} else {
-   if ($resource->canView() || Session::haveRight("config", "w")) {
-      //show remove resource form
-      $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
-   }
-}
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::footer();
+   $badge = new PluginResourcesResourceBadge();
+
+   if (($badge->canView() || Session::haveRight("config", UPDATE))) {
+      Search::show("PluginResourcesResourceResting");
+
+   } else {
+      Html::displayRightError();
+   }
+
+   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      Html::footer();
+   } else {
+      Html::helpFooter();
+   }
 } else {
-   Html::helpFooter();
+   Html::header(__('Setup'),'',"config","plugins");
+   echo "<div align='center'><br><br>";
+   echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\"><br><br>";
+   echo "<b>".__('Please activate the plugin badge', 'badge')."</b></div>";
 }
-?>
