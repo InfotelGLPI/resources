@@ -1669,7 +1669,7 @@ function plugin_resources_getDatabaseRelations() {
                                                                      "glpi_plugin_resources_transferentities"        => "entities_id"),
           "glpi_plugin_resources_contracttypes"             => array("glpi_plugin_resources_resources"               => "plugin_resources_contracttypes_id",
                                                                      "glpi_plugin_resources_checklists"              => "plugin_resources_contracttypes_id"),
-          "glpi_users"                                      => array("glpi_plugin_resources_resources"               => array('users_id', 'users_id_recipient', 'users_id_recipient_leaving'),"glpi_plugin_resources_tasks" => "users_id"),
+          "glpi_users"                                      => array("glpi_plugin_resources_resources"               => array('users_id', 'users_id_recipient', 'users_id_recipient_leaving', 'users_id_sales'),"glpi_plugin_resources_tasks" => "users_id"),
           "glpi_plugin_resources_departments"               => array("glpi_plugin_resources_resources"               => "plugin_resources_departments_id"),
           "plugin_resources_accessprofiles"                 => array("glpi_plugin_resources_resources"               => "plugin_resources_accessprofiles_id"),
           "glpi_plugin_resources_resourcestates"            => array("glpi_plugin_resources_resources"               => "plugin_resources_resourcestates_id"),
@@ -1817,6 +1817,16 @@ function plugin_resources_getAddSearchOptions($itemtype) {
          $sopt[4324]['linkfield'] = 'users_id_recipient_leaving';
          $sopt[4324]['name'] = PluginResourcesResource::getTypeName(2)." - ".__('Informant of leaving', 'resources');
          $sopt[4324]['massiveaction'] = false;
+
+         $sopt[4325]['table'] = 'glpi_plugin_resources_salemanagers';
+         $sopt[4325]['field'] = 'name';
+         $sopt[4325]['linkfield'] = 'users_id_sales';
+         $sopt[4325]['name'] = PluginResourcesResource::getTypeName(2)." - ".__('Sale manager', 'resources');
+         $sopt[4325]['massiveaction'] = false;
+
+         $sopt[4326]['table'] = 'glpi_plugin_resources_accessprofiles';
+         $sopt[4326]['field'] = 'name';
+         $sopt[4326]['name'] = PluginResourcesResource::getTypeName(2)." - ".PluginResourcesAccessProfile::getTypeName(1);
       }
    }
    return $sopt;

@@ -55,6 +55,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
                    'comment'                                  => '',
                    'locations_id'                             => 0,
                    'users_id'                                 => 0,
+                   'users_id_sales'                           => 0,
                    'plugin_resources_departments_id'          => 0,
                    'date_begin'                               => 'NULL',
                    'date_end'                                 => 'NULL',

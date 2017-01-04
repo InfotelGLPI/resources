@@ -325,6 +325,22 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[25]['name']           = PluginResourcesLeavingReason::getTypeName(1);
       $tab[25]['datatype']       = 'dropdown';
 
+      $tab[26]['table']          = 'glpi_plugin_resources_accessprofiles';
+      $tab[26]['field']          = 'name';
+      $tab[26]['name']           = PluginResourcesAccessProfile::getTypeName(1);
+      $tab[26]['datatype']       = 'dropdown';
+
+      $tab[27]['table']          = 'glpi_users';
+      $tab[27]['field']          = 'name';
+      $tab[27]['linkfield']      = 'users_id_sale';
+      $tab[27]['name']           = __('Sale manager', 'resources');
+      $tab[27]['datatype']       = 'dropdown';
+      $tab[27]['right']          = 'all';
+      $tab[27]['massiveaction']  = false;
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+         $tab[27]['searchtype']      = 'contains';
+      }
+
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
       $tab[31]['name']           = __('ID');
@@ -608,6 +624,7 @@ class PluginResourcesResource extends CommonDBTM {
       $input["_old_firstname"]                                = $this->fields["firstname"];
       $input["_old_plugin_resources_contracttypes_id"]        = $this->fields["plugin_resources_contracttypes_id"];
       $input["_old_users_id"]                                 = $this->fields["users_id"];
+      $input["_old_users_id_sales"]                           = $this->fields["users_id_sales"];
       $input["_old_users_id_recipient"]                       = $this->fields["users_id_recipient"];
       $input["_old_date_declaration"]                         = $this->fields["date_declaration"];
       $input["_old_date_begin"]                               = $this->fields["date_begin"];
@@ -1047,6 +1064,22 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td";
+      if(in_array("users_id_sales", $required))
+         echo $alert;
+      echo ">";
+      echo __('Sale manager', 'resources')."</td>";
+      echo "<td>";
+      User::dropdown(array('value'  => $this->fields["users_id_sales"],
+                           'name'  => "users_id_sales",
+                           'entity' => $this->fields["entities_id"],
+                           'right'  => 'all'));
+      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr class='tab_bg_1'><td colspan='4'>".__('Description')."</td></tr>";
 
       echo "<tr class='tab_bg_1'><td colspan='4'>";
@@ -1474,21 +1507,22 @@ class PluginResourcesResource extends CommonDBTM {
          $options["requiredfields"] = 0;
       if (($options['withtemplate'] == 2 || $options["new"]!=1) && $options["requiredfields"]!=1) {
 
-         $options["name"] = $this->fields["name"];
-         $options["firstname"] = $this->fields["firstname"];
-         $options["locations_id"] = $this->fields["locations_id"];
-         $options["users_id"] = $this->fields["users_id"];
-         $options["plugin_resources_departments_id"] = $this->fields["plugin_resources_departments_id"];
-         $options["date_begin"] = $this->fields["date_begin"];
-         $options["date_end"] = $this->fields["date_end"];
-         $options["comment"] = $this->fields["comment"];
-         $options["quota"] = $this->fields["quota"];
-         $options["plugin_resources_resourcesituations_id"] = $this->fields["plugin_resources_resourcesituations_id"];
-         $options["plugin_resources_contractnatures_id"] = $this->fields["plugin_resources_contractnatures_id"];
-         $options["plugin_resources_ranks_id"] = $this->fields["plugin_resources_ranks_id"];
+         $options["name"]                                     = $this->fields["name"];
+         $options["firstname"]                                = $this->fields["firstname"];
+         $options["locations_id"]                             = $this->fields["locations_id"];
+         $options["users_id"]                                 = $this->fields["users_id"];
+         $options["users_id_sales"]                           = $this->fields["users_id_sales"];
+         $options["plugin_resources_departments_id"]          = $this->fields["plugin_resources_departments_id"];
+         $options["date_begin"]                               = $this->fields["date_begin"];
+         $options["date_end"]                                 = $this->fields["date_end"];
+         $options["comment"]                                  = $this->fields["comment"];
+         $options["quota"]                                    = $this->fields["quota"];
+         $options["plugin_resources_resourcesituations_id"]   = $this->fields["plugin_resources_resourcesituations_id"];
+         $options["plugin_resources_contractnatures_id"]      = $this->fields["plugin_resources_contractnatures_id"];
+         $options["plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
-         $options["plugin_resources_leavingreasons_id"] = $this->fields["plugin_resources_leavingreasons_id"];
-         $options["plugin_resources_accessprofiles_id"] = $this->fields["plugin_resources_accessprofiles_id"];
+         $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
+         $options["plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
 
       }
 
@@ -1736,6 +1770,20 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td width='70%'>";
       User::dropdown(array('value'  => $options["users_id"],
                            'name'  => "users_id",
+                           'entity' => $input['entities_id'],
+                           'right'  => 'all'));
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='plugin_resources_wizard_explain'>";
+      echo "<td width='30%' ";
+      if(in_array("users_id_sales", $required))
+         echo $alert;
+      echo ">";
+      echo __('Sale manager', 'resources')."</td>";
+      echo "<td width='70%'>";
+      User::dropdown(array('value'  => $options["users_id_sales"],
+                           'name'  => "users_id_sales",
                            'entity' => $input['entities_id'],
                            'right'  => 'all'));
       echo "</td>";
@@ -2246,6 +2294,7 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['plugin_resources_contracttypes_id'] = $params['plugin_resources_contracttypes_id'];
             $resource->fields['users_id_recipient']                = Session::getLoginUserID();
             $resource->fields['users_id']                          = $params["users_id_recipient"];
+            $resource->fields['users_id_sales']                    = 0;
 
             $resource->fields['date_declaration'] = date('Y-m-d');
             $resource->fields['date_begin']       = null;

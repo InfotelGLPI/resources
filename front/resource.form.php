@@ -76,6 +76,7 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       $_POST["entities_id"]                       = $_SESSION["glpiactive_entity"];
       $_POST["plugin_resources_contracttypes_id"] = 0;
       $_POST["users_id"]                          = 0;
+      $_POST["users_id_sales"]                    = 0;
       $_POST["date_end"]                          = "";
       $_POST["departments_id"]                    = 0;
       $_POST["is_leaving"]                        = 0;
