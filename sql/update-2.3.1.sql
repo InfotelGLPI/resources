@@ -21,8 +21,7 @@ CREATE TABLE `glpi_plugin_resources_resources_changes` (
    `comment` text collate utf8_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
-   KEY `itilcategories_id` (`itilcategories_id`),
-   KEY `tickettemplates_id` (`tickettemplates_id`)
+   KEY `itilcategories_id` (`itilcategories_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
