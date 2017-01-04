@@ -45,6 +45,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
    CONST CHANGE_AGENCY          = 4;
    CONST CHANGE_TRANSFER        = 5;
    CONST BADGE_RESTITUTION      = 6;
+   CONST CHANGE_RESOURCESALE    = 7;
 
    /**
     * Returns all actions
@@ -53,6 +54,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $actions                               = array();
       $actions[0]                            = self::getNameActions(0);
       $actions[self::CHANGE_RESOURCEMANAGER] = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
+      $actions[self::CHANGE_RESOURCESALE]    = self::getNameActions(self::CHANGE_RESOURCESALE);
       $actions[self::CHANGE_ACCESSPROFIL]    = self::getNameActions(self::CHANGE_ACCESSPROFIL);
       $actions[self::CHANGE_CONTRACTYPE]     = self::getNameActions(self::CHANGE_CONTRACTYPE);
       $actions[self::CHANGE_AGENCY]          = self::getNameActions(self::CHANGE_AGENCY);
@@ -72,6 +74,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
       switch ($actions_id) {
          case self::CHANGE_RESOURCEMANAGER :
             return __("Change manager", 'resources');
+         case self::CHANGE_RESOURCESALE :
+            return __("Change the sales manager", 'resources');
          case self::CHANGE_ACCESSPROFIL :
             return __("Change the access profil", 'resources');
          case self::CHANGE_CONTRACTYPE :
@@ -126,6 +130,35 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "function plugin_resources_load_button_changeresources_manager(){";
             $params = array('load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMANAGER, 'users_id' => '__VALUE__');
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_users_id' . $rand);
+            echo "}";
+            echo "</script>";
+
+            echo "</td>";
+            echo "</tr></table>";
+
+            break;
+
+         case self::CHANGE_RESOURCESALE :
+
+            echo "<table>";
+            echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
+            _e("Sales manager for the current resource", "resources");
+            echo "</td><td class='left'>";
+            echo "&nbsp;".getUserName($resource->getField('users_id_sales'));
+            echo "</td></tr>";
+
+            echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
+            echo __('New resource sales manager', 'resources')."</td>";
+            echo "<td class='left'>";
+            $rand = User::dropdown(array('name'      => "users_id_sales",
+                                         'entity'    => $resource->fields["entities_id"],
+                                         'right'     => 'all',
+                                         'on_change' => 'plugin_resources_load_button_changeresources_sale()'));
+
+            echo "<script type='text/javascript'>";
+            echo "function plugin_resources_load_button_changeresources_sale(){";
+            $params = array('load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCESALE, 'users_id_sales' => '__VALUE__');
+            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_users_id_sales' . $rand);
             echo "}";
             echo "</script>";
 
@@ -247,6 +280,14 @@ class PluginResourcesResource_Change extends CommonDBTM {
                $display = true;
             }
             break;
+            case self::CHANGE_RESOURCESALE :
+
+            if (isset($options['users_id_sales'])
+                && !empty($options['users_id_sales'])
+                  && $options['users_id_sales'] != 0) {
+               $display = true;
+            }
+            break;
 
          case self::CHANGE_ACCESSPROFIL :
 
@@ -326,6 +367,15 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $data['content'] .= __("New resource manager", 'resources') . "&nbsp;:&nbsp;" . getUserName($options['users_id']) . "\n";
 
             $input['users_id'] = $options['users_id'];
+            break;
+
+         case self::CHANGE_RESOURCESALE :
+            $data['name']    = __("Change of sales manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change of sales manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['content'] .= __("Sales manager for the current resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($resource->getField('users_id_sales')) . "\n";
+            $data['content'] .= __("New sales manager for the resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($options['users_id_sales']) . "\n";
+
+            $input['users_id_sales'] = $options['users_id_sales'];
             break;
          case self::CHANGE_ACCESSPROFIL :
 

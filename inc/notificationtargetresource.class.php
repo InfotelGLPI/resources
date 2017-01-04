@@ -43,6 +43,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    const RESOURCE_SOURCE_ENTITY_GROUP         = 4307;
    const RESOURCE_SOURCE_ENTITY_GROUP_MANAGER = 4308;
    const RESOURCE_TARGET_ENTITY_GROUP_MANAGER = 4309;
+   const RESOURCE_SALES_MANAGER               = 4310;
 
    function getEvents() {
 
@@ -80,6 +81,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
           && $event != 'AlertLeavingChecklists'
       ) {
          $this->addTarget(self::RESOURCE_MANAGER, __('Resource manager', 'resources'));
+         $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
          $this->addTarget(self::RESOURCE_AUTHOR, __('Requester'));
          $this->addTarget(self::RESOURCE_AUTHOR_LEAVING, __('Informant of leaving', 'resources'));
          $this->addTarget(self::RESOURCE_USER, __('Resource user', 'resources'));
@@ -111,6 +113,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          case self::RESOURCE_MANAGER :
             $this->getManagerAddress();
+            break;
+         case self::RESOURCE_SALES_MANAGER :
+            $this->getSalesManagerAddress();
             break;
          case self::RESOURCE_AUTHOR :
             $this->getAuthorAddress();
@@ -171,6 +176,10 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    //Get recipient
    function getManagerAddress() {
       return $this->getUserByField("users_id");
+   }
+
+   function getSalesManagerAddress() {
+      return $this->getUserByField("users_id_sales");
    }
 
    function getAuthorAddress() {
@@ -307,7 +316,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.firstname##']       = __('First name');
          $this->datas['##lang.resource.type##']            = PluginResourcesContractType::getTypeName(1);
          $this->datas['##lang.resource.users##']           = __('Resource manager', 'resources');
-         $this->datas['##lang.resource.userssale##']       = __('Sale manager', 'resources');
+         $this->datas['##lang.resource.userssale##']       = __('Sales manager', 'resources');
          $this->datas['##lang.resource.usersrecipient##']  = __('Requester');
          $this->datas['##lang.resource.datedeclaration##'] = __('Request date');
          $this->datas['##lang.resource.datebegin##']       = __('Arrival date', 'resources');
@@ -378,7 +387,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.checklist.firstname##']       = __('First name');
          $this->datas['##lang.checklist.type##']            = PluginResourcesContractType::getTypeName(1);
          $this->datas['##lang.checklist.users##']           = __('Resource manager', 'resources');
-         $this->datas['##lang.checklist.userssale##']       = __('Sale manager', 'resources');
+         $this->datas['##lang.checklist.userssale##']       = __('Sales manager', 'resources');
          $this->datas['##lang.checklist.usersrecipient##']  = __('Requester');
          $this->datas['##lang.checklist.datedeclaration##'] = __('Request date');
          $this->datas['##lang.checklist.datebegin##']       = __('Arrival date', 'resources');
@@ -520,7 +529,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.users##'] = __('Resource manager', 'resources');
          $this->datas['##resource.users##']      = Html::clean(getUserName($this->obj->getField("users_id")));
 
-         $this->datas['##lang.resource.userssale##'] = __('Sale manager', 'resources');
+         $this->datas['##lang.resource.userssale##'] = __('Sales manager', 'resources');
          $this->datas['##resource.userssale##']      = Html::clean(getUserName($this->obj->getField("users_id_sales")));
 
          $this->datas['##lang.resource.usersrecipient##'] = __('Requester');
@@ -604,7 +613,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.users##'] = __('Resource manager', 'resources');
          $this->datas['##resource.users##']      = Html::clean(getUserName($this->obj->getField("users_id")));
 
-         $this->datas['##lang.resource.userssale##'] = __('Sale manager', 'resources');
+         $this->datas['##lang.resource.userssale##'] = __('Sales manager', 'resources');
          $this->datas['##resource.userssale##']      = Html::clean(getUserName($this->obj->getField("users_id_sales")));
 
          $this->datas['##lang.resource.usersrecipient##'] = __('Requester');

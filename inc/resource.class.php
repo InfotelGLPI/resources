@@ -333,7 +333,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[27]['table']          = 'glpi_users';
       $tab[27]['field']          = 'name';
       $tab[27]['linkfield']      = 'users_id_sale';
-      $tab[27]['name']           = __('Sale manager', 'resources');
+      $tab[27]['name']           = __('Sales manager', 'resources');
       $tab[27]['datatype']       = 'dropdown';
       $tab[27]['right']          = 'all';
       $tab[27]['massiveaction']  = false;
@@ -1069,7 +1069,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("users_id_sales", $required))
          echo $alert;
       echo ">";
-      echo __('Sale manager', 'resources')."</td>";
+      echo __('Sales manager', 'resources')."</td>";
       echo "<td>";
       User::dropdown(array('value'  => $this->fields["users_id_sales"],
                            'name'  => "users_id_sales",
@@ -1780,7 +1780,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("users_id_sales", $required))
          echo $alert;
       echo ">";
-      echo __('Sale manager', 'resources')."</td>";
+      echo __('Sales manager', 'resources')."</td>";
       echo "<td width='70%'>";
       User::dropdown(array('value'  => $options["users_id_sales"],
                            'name'  => "users_id_sales",

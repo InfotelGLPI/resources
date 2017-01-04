@@ -1821,7 +1821,7 @@ function plugin_resources_getAddSearchOptions($itemtype) {
          $sopt[4325]['table'] = 'glpi_plugin_resources_salemanagers';
          $sopt[4325]['field'] = 'name';
          $sopt[4325]['linkfield'] = 'users_id_sales';
-         $sopt[4325]['name'] = PluginResourcesResource::getTypeName(2)." - ".__('Sale manager', 'resources');
+         $sopt[4325]['name'] = PluginResourcesResource::getTypeName(2)." - ".__('Sales manager', 'resources');
          $sopt[4325]['massiveaction'] = false;
 
          $sopt[4326]['table'] = 'glpi_plugin_resources_accessprofiles';
