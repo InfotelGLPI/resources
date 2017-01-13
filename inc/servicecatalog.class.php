@@ -49,7 +49,7 @@ class PluginResourcesServicecatalog extends CommonGLPI
       global $CFG_GLPI;
 
       return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>
-      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/advancedrequest.png\" alt=\"Advanced request\" width=\"200\" height=\"110\"></a>";
+      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/resources.png\" alt=\"Advanced request\" width=\"200\" height=\"110\"></a>";
 
    }
 

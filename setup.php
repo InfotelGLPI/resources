@@ -84,6 +84,10 @@ function plugin_init_resources() {
       Plugin::registerClass('PluginResourcesEmployment', array(
          'massiveaction_nodelete_types' => true));
       
+      if (class_exists('PluginServicecatalogMain')) {
+         $PLUGIN_HOOKS['servicecatalog']['resources'] = array ('PluginResourcesServicecatalog');
+      }
+      
       if (Session::haveright("plugin_resources_checklist", READ) 
             && class_exists('PluginMydashboardMenu')) {
          $PLUGIN_HOOKS['mydashboard']['resources'] = array ("PluginResourcesDashboard");
@@ -106,11 +110,19 @@ function plugin_init_resources() {
       }
       
    
+      if ((Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) && (class_exists('PluginServicecatalogMain') && !Session::haveRight("plugin_servicecatalog", READ))) {
+         $PLUGIN_HOOKS['menu_toadd']['resources'] = array('admin' => 'PluginResourcesResource');
+      }
       // Resource menu
       if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
-         $PLUGIN_HOOKS['menu_toadd']['resources'] = array('admin' => 'PluginResourcesResource');
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
+         
          $PLUGIN_HOOKS['redirect_page']['resources'] = "front/resource.form.php";
+      }
+      
+      if ((Session::haveRight("plugin_resources", READ) 
+            || Session::haveright("plugin_resources_employee", UPDATE)) 
+               && !class_exists('PluginServicecatalogMain')) {
+         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
       }
 
 //      // Other items menu
