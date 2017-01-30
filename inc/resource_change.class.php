@@ -124,6 +124,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $rand = User::dropdown(array('name'      => "users_id",
                                          'entity'    => $resource->fields["entities_id"],
                                          'right'     => 'all',
+                                         'used'      => array($resource->getField('users_id')),
                                          'on_change' => 'plugin_resources_load_button_changeresources_manager()'));
 
             echo "<script type='text/javascript'>";
@@ -153,6 +154,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $rand = User::dropdown(array('name'      => "users_id_sales",
                                          'entity'    => $resource->fields["entities_id"],
                                          'right'     => 'all',
+                                         'used'      => array($resource->getField('users_id_sales')),
                                          'on_change' => 'plugin_resources_load_button_changeresources_sale()'));
 
             echo "<script type='text/javascript'>";
@@ -182,6 +184,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $rand = PluginResourcesAccessProfile::dropdown(array('name'      => "plugin_resources_accessprofiles_id",
                                                                  'entity'    => $resource->fields["entities_id"],
                                                                  'right'     => 'all',
+                                                                 'used'      => array($resource->getField('plugin_resources_accessprofiles_id')),
                                                                  'on_change' => 'plugin_resources_load_button_changeresources_profil()'));
 
             echo "<script type='text/javascript'>";
@@ -210,6 +213,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $rand = PluginResourcesContractType::dropdown(array('name'      => "plugin_resources_contracttypes_id",
                                                                 'entity'    => $resource->fields["entities_id"],
                                                                 'right'     => 'all',
+                                                                'used'      => array($resource->getField('plugin_resources_contracttypes_id')),
                                                                 'on_change' => 'plugin_resources_load_button_changeresources_contract()'));
 
             echo "<script type='text/javascript'>";
@@ -238,6 +242,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $rand = Location::dropdown(array('name'      => "locations_id",
                                              'entity'    => $resource->fields["entities_id"],
                                              'right'     => 'all',
+                                             'used'      => array($resource->getField('locations_id')),
                                              'on_change' => 'plugin_resources_load_button_changeresources_agency();'));
 
             echo "<script type='text/javascript'>";
