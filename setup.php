@@ -110,7 +110,11 @@ function plugin_init_resources() {
       }
       
    
-      if ((Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) && (class_exists('PluginServicecatalogMain') && !Session::haveRight("plugin_servicecatalog", READ))) {
+      if ((Session::haveRight("plugin_resources", READ) 
+         || Session::haveright("plugin_resources_employee", UPDATE)
+            && !class_exists('PluginServicecatalogMain')) 
+               || (class_exists('PluginServicecatalogMain') 
+                  && !Session::haveRight("plugin_servicecatalog", READ))) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = array('admin' => 'PluginResourcesResource');
       }
       // Resource menu
