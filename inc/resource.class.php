@@ -332,7 +332,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $tab[27]['table']          = 'glpi_users';
       $tab[27]['field']          = 'name';
-      $tab[27]['linkfield']      = 'users_id_sale';
+      $tab[27]['linkfield']      = 'users_id_sales';
       $tab[27]['name']           = __('Sales manager', 'resources');
       $tab[27]['datatype']       = 'dropdown';
       $tab[27]['right']          = 'all';
