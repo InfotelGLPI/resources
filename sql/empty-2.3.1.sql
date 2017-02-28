@@ -654,6 +654,27 @@ CREATE TABLE `glpi_plugin_resources_transferentities` (
   KEY `groups_id` (`groups_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `glpi_plugin_resources_resourcebadges`;
+CREATE TABLE `glpi_plugin_resources_resourcebadges` (
+   `id` int(11) NOT NULL auto_increment,
+   `entities_id` int(11) NOT NULL default '0',
+   `plugin_metademands_metademands_id` tinyint(1) NOT NULL DEFAULT '0',
+   PRIMARY KEY  (`id`),
+   KEY `entities_id` (`entities_id`),
+   KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
+CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
+   `id` int(11) NOT NULL auto_increment,
+   `entities_id` int(11) NOT NULL default '0',
+   `action` tinyint(1) NOT NULL DEFAULT '0',
+   `plugin_metademands_metademands_id` tinyint(1) NOT NULL DEFAULT '0',
+   PRIMARY KEY  (`id`),
+   KEY `entities_id` (`entities_id`),
+   KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','3','2','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','4','3','0');
@@ -723,11 +744,21 @@ INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesRecap','4368'
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesRecap','4369','20','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesRecap','4370','21','0');
 
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Resources', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Alert Resources Tasks', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Alert Leaving Resources', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Alert Resources Checklists', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Leaving Resource', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Resource Report Creation', 'PluginResourcesResource', '2010-11-16 11:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Resource Resting', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Resource Holiday', 'PluginResourcesResource', '2010-05-17 22:36:46','',NULL, '2010-05-17 22:36:46');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resources', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Alert Resources Tasks', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Alert Leaving Resources', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Alert Resources Checklists', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Leaving Resource', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resource Report Creation', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resource Resting', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resource Holiday', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resource Holiday', 'PluginResourcesResource');

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-04 18:17+0100\n"
-"PO-Revision-Date: 2017-01-04 18:20+0100\n"
-"Last-Translator: Amandine Manceau <amandine.manceau@infotel.com>\n"
+"POT-Creation-Date: 2017-02-10 17:00+0100\n"
+"PO-Revision-Date: 2017-02-13 09:14+0100\n"
+"Last-Translator: Amandine Manceau\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/tsmr/GLPI_resources/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgstr[1] "Affected clients"
 #: hook.php:1806 inc/directory.class.php:125 inc/notificationtargetresource.class.php:83 inc/notificationtargetresource.class.php:318
 #: inc/notificationtargetresource.class.php:389 inc/notificationtargetresource.class.php:529 inc/notificationtargetresource.class.php:613
 #: inc/notificationtargetresource.class.php:1103 inc/notificationtargetresource.class.php:1129 inc/resource.class.php:185 inc/resource.class.php:1050
-#: inc/resource.class.php:1769 inc/resource.class.php:2244 inc/resourcepdf.class.php:65 inc/rulecontracttype.class.php:188 inc/task.class.php:637
+#: inc/resource.class.php:1783 inc/resource.class.php:2258 inc/resourcepdf.class.php:65 inc/rulecontracttype.class.php:188 inc/task.class.php:637
 #: inc/task.class.php:972
 msgid "Resource manager"
 msgstr "Resource manager"
@@ -85,7 +85,7 @@ msgstr "Informant of leaving"
 
 #: hook.php:1824 inc/notificationtargetresource.class.php:84 inc/notificationtargetresource.class.php:319 inc/notificationtargetresource.class.php:390
 #: inc/notificationtargetresource.class.php:532 inc/notificationtargetresource.class.php:616 inc/resource.class.php:336 inc/resource.class.php:1072
-#: inc/resource.class.php:1783 inc/rulecontracttype.class.php:192
+#: inc/resource.class.php:1797 inc/rulecontracttype.class.php:192
 msgid "Sales manager"
 msgstr "Sales manager"
 
@@ -97,33 +97,34 @@ msgstr "Not defined"
 msgid "Modification of the associated resource's location"
 msgstr "Modification of the associated resource's location"
 
-#: setup.php:169
+#: setup.php:185
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Human Resource"
 msgstr[1] "Human Resources"
 
-#: setup.php:182
+#: setup.php:198
 msgid "This plugin requires GLPI >= 9.1"
 msgstr "This plugin requires GLPI >= 9.1"
 
-#: setup.php:185
+#: setup.php:201
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "Incompatible PHP Installation. Requires module"
 
-#: front/config.form.php:72
+#: front/config.form.php:76
 msgid "Please activate the plugin"
 msgstr "Please activate the plugin"
 
-#: front/resourcebadge.form.php:68 front/resourcebadge.form.php:87
+#: front/resourcebadge.form.php:68 front/resourcebadge.form.php:87 front/resourcehabilitation.form.php:70 front/resourcehabilitation.form.php:89
+#: front/resourcehabilitation.form.php:109
 msgid "Please activate the plugin metademand"
 msgstr "Please activate the plugin metademand"
 
-#: front/resourcebadge.form.php:79
+#: front/resourcebadge.form.php:79 front/resourcehabilitation.form.php:81 front/resourcehabilitation.form.php:102
 msgid "No advanced request found"
 msgstr "No advanced request found"
 
-#: front/resourcebadge.form.php:109 front/resourcebadge.php:61
+#: front/resourcebadge.form.php:109 front/resourcebadge.php:61 front/resourcehabilitation.php:61
 msgid "Please activate the plugin badge"
 msgstr "Please activate the plugin badge"
 
@@ -135,7 +136,7 @@ msgstr "The checklist is not finished"
 msgid "Notification sent"
 msgstr "Notification sent"
 
-#: front/resource.form.php:313 inc/resource.class.php:3185
+#: front/resource.form.php:313 inc/resource.class.php:3199
 msgid "The notification is not sent because the resource is not linked with a user"
 msgstr "The notification is not sent because the resource is not linked with a user"
 
@@ -202,13 +203,13 @@ msgstr[1] "Types of Budget volume"
 msgid "Code"
 msgstr "Code"
 
-#: inc/checklist.class.php:43 inc/profile.class.php:192 inc/resource.class.php:3615
+#: inc/checklist.class.php:43 inc/profile.class.php:194 inc/resource.class.php:3629
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Checklist"
 msgstr[1] "Checklists"
 
-#: inc/checklist.class.php:221 inc/checklist.class.php:558 inc/resourcebadge.class.php:428 inc/resource_change.class.php:661
+#: inc/checklist.class.php:221 inc/checklist.class.php:558 inc/resourcebadge.class.php:428 inc/resource_change.class.php:666
 msgid "Create a end treatment ticket"
 msgstr "Create a end treatment ticket"
 
@@ -287,7 +288,7 @@ msgstr "New resource - checklist needs to verificated"
 #: inc/checklist.class.php:905 inc/dashboard.class.php:122 inc/directory.class.php:136 inc/notificationtargetresource.class.php:323
 #: inc/notificationtargetresource.class.php:394 inc/notificationtargetresource.class.php:544 inc/notificationtargetresource.class.php:628
 #: inc/notificationtargetresource.class.php:1107 inc/notificationtargetresource.class.php:1133 inc/recap.class.php:144 inc/resource.class.php:199
-#: inc/resource.class.php:1163 inc/resource.class.php:1822 inc/resource.class.php:2572 inc/resource_item.class.php:709 inc/resource_item.class.php:960
+#: inc/resource.class.php:1163 inc/resource.class.php:1836 inc/resource.class.php:2586 inc/resource_item.class.php:709 inc/resource_item.class.php:960
 #: inc/resource_item.class.php:970 inc/resourcepdf.class.php:70 inc/rulecontracttype.class.php:204
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
@@ -299,7 +300,7 @@ msgstr "Departure date"
 #: inc/checklist.class.php:907 inc/dashboard.class.php:82 inc/directory.class.php:131 inc/notificationtargetresource.class.php:322
 #: inc/notificationtargetresource.class.php:393 inc/notificationtargetresource.class.php:541 inc/notificationtargetresource.class.php:625
 #: inc/notificationtargetresource.class.php:1106 inc/notificationtargetresource.class.php:1132 inc/recap.class.php:139 inc/resource.class.php:194
-#: inc/resource.class.php:1061 inc/resource.class.php:1810 inc/resource_item.class.php:708 inc/resource_item.class.php:959 inc/resource_item.class.php:969
+#: inc/resource.class.php:1061 inc/resource.class.php:1824 inc/resource_item.class.php:708 inc/resource_item.class.php:959 inc/resource_item.class.php:969
 #: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:200 report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:251
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:55 report/resourcewithoutemployment/resourcewithoutemployment.php:55
@@ -355,8 +356,8 @@ msgstr "Add a need"
 msgid "Will be added to the resource comment area"
 msgstr "Will be added to the resource comment area"
 
-#: inc/choice.class.php:345 inc/employee.class.php:345 inc/resource.class.php:1479 inc/resource.class.php:1884 inc/resource.class.php:1895
-#: inc/resource.class.php:1971
+#: inc/choice.class.php:345 inc/employee.class.php:345 inc/resource.class.php:1493 inc/resource.class.php:1898 inc/resource.class.php:1909
+#: inc/resource.class.php:1985
 msgctxt "button"
 msgid "Next >"
 msgstr "Next >"
@@ -407,7 +408,7 @@ msgstr "Enter employer information about the resource"
 msgid "Add a picture"
 msgstr "Add a picture"
 
-#: inc/contracttype.class.php:159 inc/contracttype.class.php:175 inc/resource.class.php:809 inc/resource.class.php:1552
+#: inc/contracttype.class.php:159 inc/contracttype.class.php:175 inc/resource.class.php:809 inc/resource.class.php:1566
 msgid "Without contract"
 msgstr "Without contract"
 
@@ -423,17 +424,17 @@ msgid_plural "Departments"
 msgstr[0] "Department"
 msgstr[1] "Departments"
 
-#: inc/directory.class.php:42 inc/resource.class.php:3585
+#: inc/directory.class.php:42 inc/resource.class.php:3599
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Directory"
 msgstr[1] "Directories"
 
-#: inc/directory.class.php:963 inc/resource.class.php:3461
+#: inc/directory.class.php:963 inc/resource.class.php:3475
 msgid "Click here to send your email"
 msgstr "Click here to send your email"
 
-#: inc/employee.class.php:40 inc/profile.class.php:197
+#: inc/employee.class.php:40 inc/profile.class.php:199
 msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] "Employee"
@@ -443,7 +444,7 @@ msgstr[1] "Employees"
 msgid "The resource is also created if not existent"
 msgstr "The resource is also created if not existent"
 
-#: inc/employee.class.php:342 inc/resource.class.php:1881 inc/resource.class.php:1892
+#: inc/employee.class.php:342 inc/resource.class.php:1895 inc/resource.class.php:1906
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Previous"
@@ -458,14 +459,14 @@ msgstr "Next step"
 msgid "Short name"
 msgstr "Short name"
 
-#: inc/employment.class.php:46 inc/profile.class.php:212 report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
+#: inc/employment.class.php:46 inc/profile.class.php:219 report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
 msgid_plural "Employments"
 msgstr[0] "Employment"
 msgstr[1] "Employments"
 
-#: inc/employment.class.php:136 inc/employment.class.php:179 inc/employment.class.php:293 inc/profile.class.php:177 inc/resource.class.php:56
+#: inc/employment.class.php:136 inc/employment.class.php:179 inc/employment.class.php:293 inc/profile.class.php:179 inc/resource.class.php:56
 #: inc/taskplanning.class.php:42
 msgid "Human resource"
 msgid_plural "Human resources"
@@ -549,7 +550,7 @@ msgstr "A task has been removed by"
 msgid "List of not finished tasks"
 msgstr "List of not finished tasks"
 
-#: inc/notificationtargetresource.class.php:57 inc/notificationtargetresource.class.php:312 inc/resource.class.php:3270
+#: inc/notificationtargetresource.class.php:57 inc/notificationtargetresource.class.php:312 inc/resource.class.php:3284
 msgid "These resources have normally left the company"
 msgstr "These resources have normally left the company"
 
@@ -648,7 +649,7 @@ msgid "Please check the leaving checklist of the resource"
 msgstr "Please check the leaving checklist of the resource"
 
 #: inc/notificationtargetresource.class.php:506 inc/notificationtargetresource.class.php:610 inc/notificationtargetresource.class.php:1098
-#: inc/notificationtargetresource.class.php:1124 inc/recap.class.php:94 inc/resource.class.php:293 inc/resource.class.php:930 inc/resource.class.php:1651
+#: inc/notificationtargetresource.class.php:1124 inc/recap.class.php:94 inc/resource.class.php:293 inc/resource.class.php:930 inc/resource.class.php:1665
 #: inc/rulecontracttype.class.php:208 report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Quota"
@@ -670,7 +671,7 @@ msgstr "Additional informations"
 msgid "Transfer report of the human resource"
 msgstr "Transfer report of the human resource"
 
-#: inc/notificationtargetresource.class.php:756 inc/notificationtargetresource.class.php:1154 inc/resource.class.php:2735
+#: inc/notificationtargetresource.class.php:756 inc/notificationtargetresource.class.php:1154 inc/resource.class.php:2749
 msgid "Target entity"
 msgstr "Target entity"
 
@@ -678,8 +679,8 @@ msgstr "Target entity"
 msgid "Source entity"
 msgstr "Source entity"
 
-#: inc/notificationtargetresource.class.php:773 inc/notificationtargetresource.class.php:1111 inc/profile.class.php:202 inc/resource.class.php:1334
-#: inc/resource.class.php:1335 inc/resourceresting.class.php:246
+#: inc/notificationtargetresource.class.php:773 inc/notificationtargetresource.class.php:1111 inc/profile.class.php:204 inc/resource.class.php:1337
+#: inc/resource.class.php:1338 inc/resourceresting.class.php:246
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Non contract period management"
@@ -701,7 +702,7 @@ msgstr "At home"
 msgid "Reported by"
 msgstr "Reported by"
 
-#: inc/notificationtargetresource.class.php:813 inc/notificationtargetresource.class.php:1119 inc/resource.class.php:1345 inc/resource.class.php:1346
+#: inc/notificationtargetresource.class.php:813 inc/notificationtargetresource.class.php:1119 inc/resource.class.php:1348 inc/resource.class.php:1349
 #: inc/resourceholiday.class.php:178
 msgid "Forced holiday management"
 msgstr "Forced holiday management"
@@ -738,25 +739,31 @@ msgid_plural "Profession lines"
 msgstr[0] "Profession line"
 msgstr[1] "Profession lines"
 
-#: inc/profile.class.php:140 inc/profile.class.php:225
+#: inc/profile.class.php:142 inc/profile.class.php:232
 msgid "All resources access"
 msgstr "All resources access"
 
-#: inc/profile.class.php:151
+#: inc/profile.class.php:153
 msgid "Service company management"
 msgstr "Service company management"
 
-#: inc/profile.class.php:156
+#: inc/profile.class.php:158
 msgid "Public service management"
 msgstr "Public service management"
 
-#: inc/profile.class.php:207 inc/resourceholiday.class.php:42
+#: inc/profile.class.php:209 inc/resourceholiday.class.php:42
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] "Holiday"
 msgstr[1] "Holidays"
 
-#: inc/profile.class.php:217
+#: inc/profile.class.php:214
+msgid "Super habilitation"
+msgid_plural "Super habilitations"
+msgstr[0] "Super habilitation"
+msgstr[1] "Super habilitations"
+
+#: inc/profile.class.php:224
 msgid "Dropdown management"
 msgstr "Dropdown management"
 
@@ -786,17 +793,17 @@ msgstr "Send other notification"
 msgid "Notification configuration"
 msgstr "Notification configuration"
 
-#: inc/resourcebadge.class.php:51 inc/resourcebadge.class.php:205 inc/resource.class.php:1356 inc/resource.class.php:1357
+#: inc/resourcebadge.class.php:51 inc/resourcebadge.class.php:205 inc/resource.class.php:1370 inc/resource.class.php:1371
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Badge management"
 msgstr[1] "Badges management"
 
-#: inc/resourcebadge.class.php:121
+#: inc/resourcebadge.class.php:121 inc/resourcehabilitation.class.php:130
 msgid "The current entity is already linked to a meta-demand"
 msgstr "The current entity is already linked to a meta-demand"
 
-#: inc/resourcebadge.class.php:166
+#: inc/resourcebadge.class.php:166 inc/resourcehabilitation.class.php:181
 msgid "Meta-demands linked"
 msgstr "Meta-demands linked"
 
@@ -841,75 +848,75 @@ msgstr "Change direction (mutation)"
 msgid "Please select a resource"
 msgstr "Please select a resource"
 
-#: inc/resource_change.class.php:116 inc/resource_change.class.php:366
+#: inc/resource_change.class.php:116 inc/resource_change.class.php:371
 msgid "Manager for the current resource"
 msgstr "Manager for the current resource"
 
-#: inc/resource_change.class.php:122 inc/resource_change.class.php:367
+#: inc/resource_change.class.php:122 inc/resource_change.class.php:372
 msgid "New resource manager"
 msgstr "New resource manager"
 
-#: inc/resource_change.class.php:145 inc/resource_change.class.php:375
+#: inc/resource_change.class.php:146 inc/resource_change.class.php:380
 msgid "Sales manager for the current resource"
 msgstr "Sales manager for the current resource"
 
-#: inc/resource_change.class.php:151
+#: inc/resource_change.class.php:152
 msgid "New resource sales manager"
 msgstr "New resource sales manager"
 
-#: inc/resource_change.class.php:174 inc/resource_change.class.php:384
+#: inc/resource_change.class.php:176 inc/resource_change.class.php:389
 msgid "Current access profile of the resource"
 msgstr "Current access profile of the resource"
 
-#: inc/resource_change.class.php:180 inc/resource_change.class.php:385
+#: inc/resource_change.class.php:182 inc/resource_change.class.php:390
 msgid "New access profile of the resource"
 msgstr "New access profile of the resource"
 
-#: inc/resource_change.class.php:202 inc/resource_change.class.php:393
+#: inc/resource_change.class.php:205 inc/resource_change.class.php:398
 msgid "Current contract type of the resource"
 msgstr "Current contract type of the resource"
 
-#: inc/resource_change.class.php:208 inc/resource_change.class.php:394
+#: inc/resource_change.class.php:211 inc/resource_change.class.php:399
 msgid "New type of contract"
 msgstr "New type of contract"
 
-#: inc/resource_change.class.php:230 inc/resource_change.class.php:402
+#: inc/resource_change.class.php:234 inc/resource_change.class.php:407
 msgid "Current agency of the resource"
 msgstr "Current agency of the resource"
 
-#: inc/resource_change.class.php:236 inc/resource_change.class.php:403
+#: inc/resource_change.class.php:240 inc/resource_change.class.php:408
 msgid "New resource agency"
 msgstr "New resource agency"
 
-#: inc/resource_change.class.php:323
+#: inc/resource_change.class.php:328
 msgid "Starting change"
 msgstr "Starting change"
 
-#: inc/resource_change.class.php:364 inc/resource_change.class.php:365
+#: inc/resource_change.class.php:369 inc/resource_change.class.php:370
 msgid "Change manager for"
 msgstr "Change manager for"
 
-#: inc/resource_change.class.php:373 inc/resource_change.class.php:374
+#: inc/resource_change.class.php:378 inc/resource_change.class.php:379
 msgid "Change of sales manager for"
 msgstr "Change of sales manager for"
 
-#: inc/resource_change.class.php:376
+#: inc/resource_change.class.php:381
 msgid "New sales manager for the resource"
 msgstr "New sales manager for the resource"
 
-#: inc/resource_change.class.php:382 inc/resource_change.class.php:383
+#: inc/resource_change.class.php:387 inc/resource_change.class.php:388
 msgid "Change the access profile for"
 msgstr "Change the access profile for"
 
-#: inc/resource_change.class.php:391 inc/resource_change.class.php:392
+#: inc/resource_change.class.php:396 inc/resource_change.class.php:397
 msgid "Change the type of contract for"
 msgstr "Change the type of contract for"
 
-#: inc/resource_change.class.php:400 inc/resource_change.class.php:401
+#: inc/resource_change.class.php:405 inc/resource_change.class.php:406
 msgid "Change of agency for"
 msgstr "Change of agency for"
 
-#: inc/resource_change.class.php:424 inc/resource_change.class.php:445
+#: inc/resource_change.class.php:429 inc/resource_change.class.php:450
 msgid "Managing change actions"
 msgstr "Managing change actions"
 
@@ -921,7 +928,7 @@ msgstr "Photo"
 msgid "End date was not completed. Please try again."
 msgstr "End date was not completed. Please try again."
 
-#: inc/resource.class.php:1165 inc/resource.class.php:1824
+#: inc/resource.class.php:1165 inc/resource.class.php:1838
 msgid "Empty for non defined"
 msgstr "Empty for non defined"
 
@@ -929,148 +936,162 @@ msgstr "Empty for non defined"
 msgid "Menu"
 msgstr "Menu"
 
-#: inc/resource.class.php:1276
+#: inc/resource.class.php:1277
 msgid "Resources management"
 msgstr "Resources management"
 
-#: inc/resource.class.php:1284 inc/resource.class.php:1285
+#: inc/resource.class.php:1285 inc/resource.class.php:1286
 msgid "Declare an arrival"
 msgstr "Declare an arrival"
 
-#: inc/resource.class.php:1298 inc/resource.class.php:1299 inc/resource.class.php:2625
+#: inc/resource.class.php:1299 inc/resource.class.php:1300 inc/resource.class.php:2639
 msgid "Declare a change"
 msgstr "Declare a change"
 
-#: inc/resource.class.php:1312 inc/resource.class.php:1313 inc/resource.class.php:2559 inc/resource.class.php:2590
+#: inc/resource.class.php:1313 inc/resource.class.php:1314 inc/resource.class.php:2573 inc/resource.class.php:2604
 msgid "Declare a departure"
 msgstr "Declare a departure"
 
-#: inc/resource.class.php:1327
+#: inc/resource.class.php:1328
 msgid "Others declarations"
 msgstr "Others declarations"
 
-#: inc/resource.class.php:1365
+#: inc/resource.class.php:1379
 msgid "Others actions"
 msgstr "Others actions"
 
-#: inc/resource.class.php:1371 inc/resource.class.php:1372
+#: inc/resource.class.php:1385 inc/resource.class.php:1386
 msgid "Search resources"
 msgstr "Search resources"
 
-#: inc/resource.class.php:1390
+#: inc/resource.class.php:1404
 msgid "Employments / budgets management"
 msgstr "Employments / budgets management"
 
-#: inc/resource.class.php:1401 inc/resource.class.php:1402
+#: inc/resource.class.php:1415 inc/resource.class.php:1416
 msgid "Declare an employment"
 msgstr "Declare an employment"
 
-#: inc/resource.class.php:1410 inc/resource.class.php:1411 inc/resource.class.php:3599
+#: inc/resource.class.php:1424 inc/resource.class.php:1425 inc/resource.class.php:3613
 msgid "Employment management"
 msgstr "Employment management"
 
-#: inc/resource.class.php:1420 inc/resource.class.php:1421 inc/resource.class.php:3605
+#: inc/resource.class.php:1434 inc/resource.class.php:1435 inc/resource.class.php:3619
 msgid "Budget management"
 msgstr "Budget management"
 
-#: inc/resource.class.php:1431 inc/resource.class.php:1432 inc/resource.class.php:3600
+#: inc/resource.class.php:1445 inc/resource.class.php:1446 inc/resource.class.php:3614
 msgid "List Employments / Resources"
 msgstr "List Employments / Resources"
 
-#: inc/resource.class.php:1460
+#: inc/resource.class.php:1474
 msgid "Welcome to the wizard resource"
 msgstr "Welcome to the wizard resource"
 
-#: inc/resource.class.php:1464
+#: inc/resource.class.php:1478
 msgid "This wizard lets you create new resources in GLPI"
 msgstr "This wizard lets you create new resources in GLPI"
 
-#: inc/resource.class.php:1466
+#: inc/resource.class.php:1480
 msgid "To begin, select type of contract"
 msgstr "To begin, select type of contract"
 
-#: inc/resource.class.php:1539
+#: inc/resource.class.php:1553
 msgid "Enter general information about the resource"
 msgstr "Enter general information about the resource"
 
-#: inc/resource.class.php:1606
+#: inc/resource.class.php:1620
 msgid "Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr "Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\"."
 
-#: inc/resource.class.php:1859
+#: inc/resource.class.php:1873
 msgid "The fields in red must be completed"
 msgstr "The fields in red must be completed"
 
-#: inc/resource.class.php:1930
+#: inc/resource.class.php:1944
 msgid "Add the photo of the resource"
 msgstr "Add the photo of the resource"
 
-#: inc/resource.class.php:1952
+#: inc/resource.class.php:1966
 msgid "Photo format : JPG"
 msgstr "Photo format : JPG"
 
-#: inc/resource.class.php:2641
+#: inc/resource.class.php:2655
 msgid "Actions to be taken"
 msgstr "Actions to be taken"
 
-#: inc/resource.class.php:2658
+#: inc/resource.class.php:2672
 #, php-format
 msgid "Please correct: %s"
 msgstr "Please correct: %s"
 
-#: inc/resource.class.php:2707 inc/resource.class.php:2754
+#: inc/resource.class.php:2721 inc/resource.class.php:2768
 msgid "Declare a transfer"
 msgstr "Declare a transfer"
 
-#: inc/resource.class.php:2722
+#: inc/resource.class.php:2736
 msgid "Current entity"
 msgstr "Current entity"
 
-#: inc/resource.class.php:2778 inc/resource_item.class.php:673
+#: inc/resource.class.php:2792 inc/resource_item.class.php:673
 msgid "Associate a resource"
 msgstr "Associate a resource"
 
-#: inc/resource.class.php:2780
+#: inc/resource.class.php:2794
 msgid "Generate resources"
 msgstr "Generate resources"
 
-#: inc/resource.class.php:2907 inc/resource.class.php:2933
+#: inc/resource.class.php:2921 inc/resource.class.php:2947
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "This resource has been added"
 msgstr[1] "These resources have been added"
 
-#: inc/resource.class.php:2910 inc/resource.class.php:2930
+#: inc/resource.class.php:2924 inc/resource.class.php:2944
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "This resource aldready exists"
 msgstr[1] "These resources aldready exist"
 
-#: inc/resource.class.php:3188
+#: inc/resource.class.php:3202
 msgid "Declaration of resource transfer OK"
 msgstr "Declaration of resource transfer OK"
 
-#: inc/resource.class.php:3204
+#: inc/resource.class.php:3218
 msgid "Resources not declaring leaving"
 msgstr "Resources not declaring leaving"
 
-#: inc/resource.class.php:3322
+#: inc/resource.class.php:3336
 msgid "Select the contract type"
 msgstr "Select the contract type"
 
-#: inc/resource.class.php:3589 inc/resourceresting.class.php:269 inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
+#: inc/resource.class.php:3603 inc/resourceresting.class.php:269 inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
 #: inc/resourceresting.class.php:445 inc/resourceresting.class.php:1258
 msgid "List of non contract periods"
 msgstr "List of non contract periods"
 
-#: inc/resource.class.php:3594 inc/resourceholiday.class.php:191 inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
+#: inc/resource.class.php:3608 inc/resourceholiday.class.php:191 inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
 #: inc/resourceholiday.class.php:1034
 msgid "List of forced holidays"
 msgstr "List of forced holidays"
 
-#: inc/resource.class.php:3610 inc/taskplanning.class.php:42
+#: inc/resource.class.php:3624 inc/taskplanning.class.php:42
 msgid "Tasks list"
 msgstr "Tasks list"
+
+#: inc/resourcehabilitation.class.php:54
+msgid "Super habilitation management"
+msgid_plural "Super habilitations management"
+msgstr[0] "Super habilitation management"
+msgstr[1] "Super habilitations management"
+
+#: inc/resourcehabilitation.class.php:83 inc/resourcehabilitation.class.php:233 inc/resourcehabilitation.class.php:234
+msgid "Declare a super habilitation"
+msgstr "Declare a super habilitation"
+
+#: inc/resourcehabilitation.class.php:85 inc/resourcehabilitation.class.php:242 inc/resourcehabilitation.class.php:243
+msgid "Remove a super habilitation"
+msgstr "Remove a super habilitation"
 
 #: inc/resourceholiday.class.php:56 inc/resourceholiday.class.php:83
 msgid "The begin date of the forced holiday period must be filled"

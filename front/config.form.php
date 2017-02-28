@@ -60,6 +60,10 @@ if ($plugin->isActivated("resources")) {
       if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
          $resourceBadge->showFormConfig($_SERVER['PHP_SELF']);
       }
+      if ($plugin->isActivated("metademands")) {
+         $resourceHabilitation = new PluginResourcesResourceHabilitation();
+         $resourceHabilitation->showFormConfig($_SERVER['PHP_SELF']);
+      }
 
       $cat->showForm($_SERVER['PHP_SELF']);
       $transferEntity->showForm($_SERVER['PHP_SELF']);

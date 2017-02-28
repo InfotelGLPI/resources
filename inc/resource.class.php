@@ -336,7 +336,6 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[27]['name']           = __('Sales manager', 'resources');
       $tab[27]['datatype']       = 'dropdown';
       $tab[27]['right']          = 'all';
-      $tab[27]['massiveaction']  = false;
       if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[27]['searchtype']      = 'contains';
       }
@@ -1267,11 +1266,12 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
       echo "<tr><th colspan='6'>".__('Menu', 'resources')."</th></tr>";
 
-      $canresting = Session::haveright('plugin_resources_resting', UPDATE);
-      $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
-      $canemployment = Session::haveright('plugin_resources_employment', UPDATE);
+      $canresting       = Session::haveright('plugin_resources_resting', UPDATE);
+      $canholiday       = Session::haveright('plugin_resources_holiday', UPDATE);
+      $canhabilitation  = Session::haveright('plugin_resources_habilitation', UPDATE);
+      $canemployment    = Session::haveright('plugin_resources_employment', UPDATE);
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
-      $canseebudget = Session::haveright('plugin_resources_budget', READ);
+      $canseebudget     = Session::haveright('plugin_resources_budget', READ);
 
       echo "<tr><th colspan='6'>".__('Resources management', 'resources')."</th></tr>";
 
@@ -1323,41 +1323,64 @@ class PluginResourcesResource extends CommonDBTM {
       $plugin = new Plugin();
       $canbadges = ($plugin->isActivated("badges"));
 
-      if ($canresting || $canholiday || $canbadges) {
+      if ($canresting || $canholiday || $canbadges || $canhabilitation) {
          echo "<tr><th colspan='6'>".__('Others declarations', 'resources')."</th></tr>";
+         $num_col = 0;
+         if ($canresting) {
+            $num_col += 1;
+         }
+         if ($canholiday) {
+            $num_col += 1;
+         }
+         if ($canhabilitation) {
+            $num_col += 1;
+         }
+         if ($canbadges) {
+            $num_col += 1;
+         }
+         $colspan = floor(6 / $num_col);
 
          echo "<tr class='tab_bg_1'>";
+         if ($colspan == 1) {
+            echo "<td></td>";
+         }
          if ($canresting) {
             //Management of a non contract period
-            echo "<td colspan='2' class='center'>";
+            echo "<td colspan=$colspan class='center'>";
             echo "<a href=\"./resourceresting.form.php?menu\">";
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/deleteresting.png' alt='"._n('Non contract period management', 'Non contract periods management', 2, 'resources')."'>";
             echo "<br>"._n('Non contract period management', 'Non contract periods management', 2, 'resources')."</a>";
             echo "</td>";
-         } else {
-            echo "<td colspan='2'></td>";
-         }
+         } 
 
          if ($canholiday) {
             //Management of a non contract period
-            echo "<td colspan='2' class='center'>";
+            echo "<td colspan=$colspan class='center'>";
             echo "<a href=\"./resourceholiday.form.php?menu\">";
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/holidayresource.png' alt='".__('Forced holiday management', 'resources')."'>";
             echo "<br>".__('Forced holiday management', 'resources')."</a>";
             echo "</td>";
-         } else {
-            echo "<td colspan='2'></td>";
-         }
+         } 
+         
+         if ($canhabilitation) {
+            //Management of a super habilitation
+            echo "<td colspan=$colspan class='center'>";
+            echo "<a href=\"./resourcehabilitation.form.php?menu\">";
+            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/habilitation.png' alt='".PluginResourcesResourceHabilitation::getTypeName(1)."'>";
+            echo "<br>".PluginResourcesResourceHabilitation::getTypeName(1)."</a>";
+            echo "</td>";
+         } 
 
          if ($canbadges) {
             //Management of a non contract period
-            echo "<td colspan='2' class='center'>";
+            echo "<td colspan=$colspan class='center'>";
             echo "<a href=\"./resourcebadge.form.php?menu\">";
             echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/badges/badges.png' alt='"._n('Badge management', 'Badges management', 2, 'resources')."'>";
             echo "<br>"._n('Badge management', 'Badges management', 2, 'resources')."</a>";
             echo "</td>";
-         } else {
-            echo "<td colspan='2'></td>";
+         } 
+         if ($colspan == 1) {
+            echo "<td></td>";
          }
          echo "</tr>";
       }
@@ -1617,7 +1640,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</td>";
       echo "<td>";
       $option = array('value' => $options["firstname"],
-                  'option' => "onChange='First2UpperCase(this.value);' style='text-transform:capitalize;'");
+                  'option' => "onChange='javascript:this.value=First2UpperCase(this.value);' style='text-transform:capitalize;'");
       Html::autocompletionTextField($this,"firstname",$option);
       echo "</td>";
       echo "</tr>";
