@@ -262,7 +262,7 @@ class PluginResourcesEmployment extends CommonDBTM {
          echo Dropdown::getDropdownName('glpi_plugin_resources_ranks',
             $this->fields["plugin_resources_ranks_id"]);
       } else {
-         _e('None');
+         echo __('None');
       }
       echo "</span></td></tr>";
 

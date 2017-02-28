@@ -232,7 +232,7 @@ class PluginResourcesChoice extends CommonDBTM {
 
          echo "<tr>";
          echo "<th colspan='4' class='plugin_resources_wizard_th1'>";
-         _e('IT needs identified', 'resources');
+         echo __('IT needs identified', 'resources');
          echo "</th>";
          echo "</tr>";
          $used = array();
@@ -369,7 +369,7 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "};";
       echo "</script>\n";
       echo "<p align='center'><a href='javascript:viewAddNeedComment". "$items_id();'>";
-      _e('Add a comment', 'resources');
+      echo __('Add a comment', 'resources');
       echo "</a></p>\n";
       
       echo "<script type='text/javascript' >\n";

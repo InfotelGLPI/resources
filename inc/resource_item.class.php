@@ -384,8 +384,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2'><th colspan='".($canedit?(5+$colsup):(4+$colsup))."'>";
-         //_e('Add a user');
-         _e('Add an item');
+         //echo __('Add a user');
+         echo __('Add an item');
          echo "</th></tr>";
          echo "<tr class='tab_bg_1'><td colspan='".(3+$colsup)."' class='center'>";
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$instID'>";
@@ -520,7 +520,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      
                      echo "<form method='post' name='updatecomment$items_id$rand' id='updatecomment$items_id$rand' action='".Toolbox::getItemTypeFormURL("PluginResourcesResource")."'>";
                      echo "<table><tr><td>";
-                     _e('Comments');
+                     echo __('Comments');
                      echo "<br><textarea cols='150' rows='5' name='comment$items_id' >";
                      echo $data["comment"];
                      echo "</textarea><br><br>";

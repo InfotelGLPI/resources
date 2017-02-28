@@ -359,10 +359,10 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
       echo "<a href=\"./resourceresting.form.php\">";
-      _e('Declare a non contract period', 'resources');
+      echo __('Declare a non contract period', 'resources');
       echo "</a>";
       echo "&nbsp;/&nbsp;<a href=\"./resourceresting.php\">";
-      _e('List of non contract periods', 'resources');
+      echo __('List of non contract periods', 'resources');
       echo "</a>";
       echo "</div>";
       echo "<div class='next'>";
@@ -406,7 +406,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
 
       echo "<div class='plugin_resources_wizard_title'>";
-      _e('Declaring the end of non contract periods', 'resources');
+      echo __('Declaring the end of non contract periods', 'resources');
       echo "</div>";
 
       echo "<table>";
@@ -442,7 +442,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
       echo "<a href=\"./resourceresting.php\">";
-      _e('List of non contract periods', 'resources');
+      echo __('List of non contract periods', 'resources');
       echo "</a>";
       echo "</div>";
       echo "<div class='next' id='plugin_resources_button_resting'>";

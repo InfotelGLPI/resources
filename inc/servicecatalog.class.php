@@ -66,7 +66,7 @@ class PluginResourcesServicecatalog extends CommonGLPI
    static function getMenuComment()
    {
 
-      _e('Manage human resources', 'resources');
+      echo __('Manage human resources', 'resources');
    }
 
    static function getLinkList()

@@ -204,13 +204,13 @@ class PluginResourcesEmployee extends CommonDBTM {
          }
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-         _e('Address');
+         echo __('Address');
          echo "</td><td>";
          echo "<span id='span_location' name='span_location'>";
          if ($locationId>0) {
             echo Dropdown::getDropdownName('glpi_locations', $locationId);
          } else {
-            _e('None');
+            echo __('None');
          }
          echo "</span>";
          echo "</td>";

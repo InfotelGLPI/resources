@@ -42,7 +42,7 @@ if($_POST['plugin_resources_employers_id']>0){
    if ($locationId>0) {
       echo Dropdown::getDropdownName('glpi_locations', $locationId);
    } else {
-      _e('None');
+      echo __('None');
    }
 
 }

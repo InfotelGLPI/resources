@@ -48,7 +48,7 @@ if (isset($_POST["id"])) {
    echo "</div>";
       
 } else {
-   _e("You don't have permission to perform this action.");
+   echo __("You don't have permission to perform this action.");
 }
 
 

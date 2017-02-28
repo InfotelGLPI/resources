@@ -174,7 +174,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      _e('Comments');
+      echo __('Comments');
       echo "</td>";
       echo "<td>";
       echo "<textarea cols='100' rows='6' name='comment' >".$this->fields["comment"]."</textarea>";

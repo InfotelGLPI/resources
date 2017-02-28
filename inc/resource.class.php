@@ -976,7 +976,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo Dropdown::getDropdownName('glpi_plugin_resources_contractnatures',
                $this->fields["plugin_resources_contractnatures_id"]);
          } else {
-            _e('None');
+            echo __('None');
          }
          echo "</span>";
          echo "</td>";
@@ -1009,7 +1009,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo Dropdown::getDropdownName('glpi_plugin_resources_resourcespecialities',
                $this->fields["plugin_resources_resourcespecialities_id"]);
          } else {
-            _e('None');
+            echo __('None');
          }
          echo "</span>";
          echo "</td>";
@@ -1480,13 +1480,13 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class='plugin_resources_wizard_title'><p>";
       echo "<img class='plugin_resource_wizard_img' src='../pics/newresource.png' alt='newresource' />&nbsp;";
-      _e('Welcome to the wizard resource', 'resources');
+      echo __('Welcome to the wizard resource', 'resources');
       echo "</p></div>";
 
       echo "<div class='plugin_resources_presentation_text'>";
-      _e('This wizard lets you create new resources in GLPI', 'resources');
+      echo __('This wizard lets you create new resources in GLPI', 'resources');
       echo "<br /><br /><br />";
-      _e('To begin, select type of contract', 'resources');
+      echo __('To begin, select type of contract', 'resources');
       echo "</div>";
 
       echo "<br /><br /><div class='center'>";
@@ -1559,7 +1559,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class='plugin_resources_wizard_title'><p>";
       echo "<img class='plugin_resource_wizard_img' src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
-      _e('Enter general information about the resource', 'resources');
+      echo __('Enter general information about the resource', 'resources');
       echo "</p></div>";
 
       echo "<div class='center'>";
@@ -1572,7 +1572,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Dropdown::getDropdownName("glpi_plugin_resources_contracttypes",
             $this->fields["plugin_resources_contracttypes_id"]);
       else
-         _e('Without contract', 'resources');
+         echo __('Without contract', 'resources');
       echo "</td>";
       echo "</tr></table>";
 
@@ -1605,7 +1605,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (Session::isMultiEntitiesMode()) {
          echo "<tr class='plugin_resources_wizard_explain'>";
          echo "<td width='30%'>";
-         _e('Entity');
+         echo __('Entity');
          echo "</td>";
          echo "<td width='50%'>";
          echo Dropdown::getDropdownName("glpi_entities",$input['entities_id']);
@@ -1618,7 +1618,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("name", $required))
          echo $alert;
       echo ">";
-      _e('Surname');
+      echo __('Surname');
       echo "</td>";
       echo "<td>";
       $option = array('value' => $options["name"],'option' => "onchange=\"javascript:this.value=this.value.toUpperCase();\"");
@@ -1626,7 +1626,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</td>";
 
       echo "<td rowspan='2' class='plugin_resources_wizard_comment red'>";
-      _e("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
+      echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
       echo "</td>";
 
       echo "</tr>";
@@ -1636,7 +1636,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("firstname", $required))
          echo $alert;
       echo ">";
-      _e('First name');
+      echo __('First name');
       echo "</td>";
       echo "<td>";
       $option = array('value' => $options["firstname"],
@@ -1659,7 +1659,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("locations_id", $required))
          echo $alert;
       echo ">";
-      _e('Location');
+      echo __('Location');
       echo "</td>";
       echo "<td>";
       Dropdown::show('Location', array('name' => "locations_id",'value' => $options["locations_id"]));
@@ -1671,7 +1671,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("quota", $required))
          echo $alert;
       echo ">";
-      _e('Quota', 'resources');
+      echo __('Quota', 'resources');
       echo "</td>";
       echo "<td>";
       echo "<input type='text' name='quota' value='".Html::formatNumber($options["quota"], true,4).
@@ -1730,7 +1730,7 @@ class PluginResourcesResource extends CommonDBTM {
                $options["plugin_resources_contractnatures_id"]);
          } else {
             echo "<input type='hidden' name='plugin_resources_contractnatures_id' value='0'>";
-            _e('None');
+            echo __('None');
          }
          echo "</span>";
          echo "</td>";
@@ -1768,7 +1768,7 @@ class PluginResourcesResource extends CommonDBTM {
                $options["plugin_resources_resourcespecialities_id"]);
          } else {
             echo "<input type='hidden' name='plugin_resources_resourcespecialities_id' value='0'>";
-            _e('None');
+            echo __('None');
          }
          echo "</span>";
          echo "</td>";
@@ -1830,7 +1830,7 @@ class PluginResourcesResource extends CommonDBTM {
       if(in_array("date_begin", $required))
          echo $alert;
       echo ">";
-      _e('Arrival date', 'resources');
+      echo __('Arrival date', 'resources');
       echo "</td>";
       echo "<td>";
       Html::showDateFormItem("date_begin",$options["date_begin"],true,true);
@@ -1879,7 +1879,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (!empty($required)){
          echo "<tr>";
          echo "<td class='right plugin_resources_wizard_explain red' colspan='4'>";
-         _e('The fields in red must be completed', 'resources');
+         echo __('The fields in red must be completed', 'resources');
          echo "</td>";
          echo "</tr>";
       }
@@ -1950,7 +1950,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class='plugin_resources_wizard_title'><p>";
       echo "<img class='plugin_resource_wizard_img' src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
-      _e('Add the photo of the resource', 'resources');
+      echo __('Add the photo of the resource', 'resources');
       echo "</p></div>";
 
       echo "<div class='center'>";
@@ -2579,7 +2579,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
 
          echo "<div class='plugin_resources_wizard_title'>";
-         _e('Declare a departure', 'resources');
+         echo __('Declare a departure', 'resources');
          echo "</div>";
 
          echo "<table>";
@@ -2645,7 +2645,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
 
          echo "<div class='plugin_resources_wizard_title'>";
-         _e('Declare a change', 'resources');
+         echo __('Declare a change', 'resources');
          echo "</div>";
 
          echo "<table>";
@@ -2727,7 +2727,7 @@ class PluginResourcesResource extends CommonDBTM {
 
                echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
                echo "<div class='plugin_resources_wizard_title'>";
-               _e('Declare a transfer', 'resources');
+               echo __('Declare a transfer', 'resources');
                echo "</div>";
 
                echo "<table>";

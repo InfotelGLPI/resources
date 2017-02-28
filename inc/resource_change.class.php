@@ -113,7 +113,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<table>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
-            _e("Manager for the current resource", "resources");
+            echo __("Manager for the current resource", "resources");
             echo "</td><td class='left'>";
             echo "&nbsp;".getUserName($resource->getField('users_id'));
             echo "</td></tr>";
@@ -143,7 +143,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<table>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
-            _e("Sales manager for the current resource", "resources");
+            echo __("Sales manager for the current resource", "resources");
             echo "</td><td class='left'>";
             echo "&nbsp;".getUserName($resource->getField('users_id_sales'));
             echo "</td></tr>";
@@ -173,7 +173,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<table>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
-            _e("Current access profile of the resource", "resources");
+            echo __("Current access profile of the resource", "resources");
             echo "</td><td class='left'>";
             echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'));
 
@@ -202,7 +202,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<table>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
-            _e("Current contract type of the resource", "resources");
+            echo __("Current contract type of the resource", "resources");
             echo "</td><td class='left'>";
             echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'));
 
@@ -231,7 +231,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<table>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
-            _e("Current agency of the resource", "resources");
+            echo __("Current agency of the resource", "resources");
             echo "</td><td class='left'>";
             echo "&nbsp;".Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
 

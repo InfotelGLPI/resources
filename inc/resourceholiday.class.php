@@ -260,10 +260,10 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
       echo "<a href=\"./resourceholiday.form.php\">";
-      _e('Declare a forced holiday','resources');
+      echo __('Declare a forced holiday','resources');
       echo "</a>";
       echo "&nbsp;/&nbsp;<a href=\"./resourceholiday.php\">";
-      _e('List of forced holidays','resources');
+      echo __('List of forced holidays','resources');
       echo "</a>";
       echo "</div>";
       echo "<div class='next'>";

@@ -170,7 +170,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo Html::convDateTime($this->fields["begin"]).
             "&nbsp;->&nbsp;".Html::convDateTime($this->fields["end"]);
          else
-            _e('Plan this task');
+            echo __('Plan this task');
          if ($this->canCreate()) {
             echo "</span>";
             echo "</div>\n";
@@ -192,7 +192,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo "</div>\n";
             echo "<div id='viewplan'></div>\n";
          } else {
-            _e('None');
+            echo __('None');
          }
       }
    }

@@ -285,7 +285,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       echo "<table class='tab_cadre' width='50%'>";
       echo "<tr>";
       echo "<th colspan='2'>";
-      _e('Create checklists', 'resources');
+      echo __('Create checklists', 'resources');
       echo "</th></tr>";
       echo "<tr class='tab_bg_2 center'>";
       echo "<td colspan='2'>";
@@ -404,7 +404,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      _e('Important', 'resources');
+      echo __('Important', 'resources');
       echo "</td><td>";
       Dropdown::showYesNo("tag", $this->fields["tag"]);
       echo "</td>";

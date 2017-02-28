@@ -290,7 +290,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
       echo "<a href=\"".$CFG_GLPI['root_doc']."/plugins/badges/front/badge.php\">";
-      _e('List of badges', 'resources');
+      echo __('List of badges', 'resources');
       echo "</a>";
       echo "</div>";
       echo "<div class='next' id='plugin_resources_button_restitution'>";

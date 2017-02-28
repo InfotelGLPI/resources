@@ -657,7 +657,7 @@ class PluginResourcesTask extends CommonDBTM {
                      Html::convDateTime($plan["end"]);
                   }
                } else {
-                  _e('None');
+                  echo __('None');
                }
                echo "</td>";
                

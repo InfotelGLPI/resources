@@ -195,7 +195,7 @@ function plugin_version_resources() {
 function plugin_resources_check_prerequisites() {
 
    if (version_compare(GLPI_VERSION, '9.1', 'lt') || version_compare(GLPI_VERSION, '9.2', 'ge')) {
-      _e('This plugin requires GLPI >= 9.1', 'resources');
+      echo __('This plugin requires GLPI >= 9.1', 'resources');
       return false;
    } else if (!extension_loaded("gd")) {
       echo __('Incompatible PHP Installation. Requires module', 'resources'). " gd";

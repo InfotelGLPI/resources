@@ -55,12 +55,12 @@ if (isset($_POST["action"])) {
          echo "<input type='hidden' name='plugin_resources_resources_id' value='".$_POST['plugin_resources_resources_id']."'>";
          echo "<input type='hidden' name='entities_id' value='".$_POST['entities_id']."'>";
          echo "&nbsp;";
-         _e('Templates');
+         echo __('Templates');
          echo "&nbsp;";
          Dropdown::show('TicketTemplate',array('name'  => 'tickettemplates_id',
                                              'entities_id' => $_POST["entities_id"]));
          echo "&nbsp;";
-         _e('Total duration');
+         echo __('Total duration');
          echo "&nbsp;";
          Dropdown::showTimeStamp('actiontime', array('addfirstminutes' => true));
 			echo "&nbsp;<input type='submit' name='close_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
