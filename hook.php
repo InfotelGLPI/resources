@@ -1344,8 +1344,78 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                                           '', 1, 1, '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."');";
       $result=$DB->query($query);
    }
-   
-   
+
+   if ($update231 || $install) {
+      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert for sales people'";
+      $result = $DB->query($query_id) or die($DB->error());
+      $itemtype = $DB->result($result, 0, 'id');
+
+      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`,
+                                                                     `content_html`)
+                                 VALUES('".$itemtype."', '##lang.commercial.title##',
+                                 '##lang.commercial.title##
+
+##FOREACHcommercials##
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+##lang.resource.type## : ##resource.type##
+##lang.resource.department## : ##resource.department##
+##lang.resource.location## : ##resource.location##
+##lang.resource.datebegin## : ##resource.datebegin##
+##lang.resource.dateend## : ##resource.dateend##
+##lang.resource.leaving## : ##resource.leaving##
+##lang.resource.userssale## : ##resource.userssale##
+##lang.resource.users## : ##resource.users##
+##lang.resource.accessprofile## : ##resource.accessprofile##
+##ENDFOREACHcommercials##
+
+
+',
+                        '&lt;p&gt;Bonjour,&lt;/p&gt;
+&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
+&lt;tbody&gt;
+&lt;tr bgcolor=\"#d9c4b8\"&gt;
+&lt;th colspan=\"11\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: center;\"&gt;##lang.commercial.title##&lt;/span&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.type##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.leaving##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.userssale##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##FOREACHcommercials##
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=\"##resource.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=\"##resource.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.type##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.leaving##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.userssale##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDFOREACHcommercials##
+&lt;/tbody&gt;
+&lt;/table&gt;');";
+      $DB->query($query);
+
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
+                                   VALUES ('Alert Commercial Manager', 0, 'PluginResourcesResource', 'AlertCommercialManager',
+                                          'mail', '".$itemtype."', 1, 1);";
+      $DB->query($query);
+
+   }
    if (TableExists("glpi_plugin_resources_profiles")) {
    
       $notepad_tables = array('glpi_plugin_resources_resources');
@@ -1378,7 +1448,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    CronTask::Register('PluginResourcesTask', 'ResourcesTask', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesChecklist', 'ResourcesChecklist', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, array('state' => CronTask::STATE_DISABLE));
-   
+   CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, array('state' => CronTask::STATE_DISABLE));
+
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    $migration = new Migration("2.3.0");

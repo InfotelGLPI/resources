@@ -3226,6 +3226,10 @@ class PluginResourcesResource extends CommonDBTM {
             return array (
                'description' => __('Resources not declaring leaving', 'resources'));   // Optional
             break;
+         case 'AlertCommercialManager':
+            return array (
+               'description' => __('Resources list of commercial manager', 'resources'));   // Optional
+            break;
       }
       return array();
    }
@@ -3324,6 +3328,68 @@ class PluginResourcesResource extends CommonDBTM {
                   Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities",$entity).
                      ":  Send leaving resources alert failed",false,ERROR);
                }
+            }
+         }
+      }
+
+      return $cron_status;
+   }
+
+   /**
+    * Cron action on tasks : AlertCommercialManager
+    *
+    * @param $task for log, if NULL display
+    *
+    **/
+   static function cronAlertCommercialManager($task=NULL) {
+      global $DB,$CFG_GLPI;
+
+      if (!$CFG_GLPI["use_mailing"]) {
+         return 0;
+      }
+
+      $message=array();
+      $cron_status = 0;
+
+      $query_commercial = $query = "SELECT DISTINCT(`users_id_sales`) 
+                                     FROM `glpi_plugin_resources_resources` 
+                                     WHERE `users_id_sales` != 0
+                                     AND !`is_deleted`";
+
+      foreach ($DB->request($query_commercial) as $commercial) {
+         $query = "SELECT * 
+                  FROM `glpi_plugin_resources_resources` 
+                  WHERE `users_id_sales` = " . $commercial['users_id_sales']." 
+                  AND !`is_deleted`";
+
+         $resources = array();
+         foreach ($DB->request($query) as $data) {
+            $resources[] = $data;
+         }
+         $resource = new PluginResourcesResource();
+         $resource->fields['id'] = isset($resources[0]['id'])? $resources[0]['id']:0;
+
+         if (count($resources) > 0 && NotificationEvent::raiseEvent("AlertCommercialManager",
+                                           $resource,
+                                           array('resources'=>$resources,
+                                                 'users_id_sales' => $commercial['users_id_sales']))) {
+            $cron_status = 1;
+            if ($task) {
+               $task->log(getUserName($commercial['users_id_sales']).": ".
+                                                    __('Send alert to the commercial manager', 'resources')."\n");
+               $task->addVolume(1);
+            } else {
+               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']).": ".
+                                                __('Send alert to the commercial manager', 'resources')."\n");
+            }
+
+         } else {
+            if ($task) {
+               $task->log(getUserName($commercial['users_id_sales']).": ".
+                                                   __('Failed to Send alert to the commercial manager', 'resources')."\n");
+            } else {
+               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']).": ".
+                                                __('Failed to Send alert to the commercial manager', 'resources')."\n");
             }
          }
       }

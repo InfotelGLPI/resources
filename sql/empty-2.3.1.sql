@@ -762,3 +762,5 @@ INSERT INTO `glpi_notificationtemplates` (name, itemtype)
 VALUES('Resource Holiday', 'PluginResourcesResource');
 INSERT INTO `glpi_notificationtemplates` (name, itemtype)
 VALUES('Resource Holiday', 'PluginResourcesResource');
+INSERT INTO `glpi_notificationtemplates` (name, itemtype)
+VALUES('Resources list of commercial manager', 'PluginResourcesResource');

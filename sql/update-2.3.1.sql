@@ -39,4 +39,4 @@ ALTER TABLE glpi_plugin_resources_resources ADD `plugin_resources_accessprofiles
 ALTER TABLE glpi_plugin_resources_resources ADD `users_id_sales` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)';
 
 INSERT INTO `glpi_notificationtemplates` (name, itemtype)
-VALUES('Alert for sales people', 'PluginResourcesResource');
+VALUES('Resources list of commercial manager', 'PluginResourcesResource');

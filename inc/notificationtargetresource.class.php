@@ -66,7 +66,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                    'updateholiday'          => __('A forced holiday has been updated', 'resources'),
                    'deleteholiday'          => __('A forced holiday has been removed', 'resources'),
                    'other'                  => __('Other resource notification', 'resources'),
-                   'transfer'               => __('Transfer resource notification', 'resources')
+                   'transfer'               => __('Transfer resource notification', 'resources'),
+                   'AlertCommercialManager' => __('Resources list of commercial manager', 'resources')
       );
    }
 
@@ -79,6 +80,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
           && $event != 'AlertLeavingResources'
           && $event != 'AlertLeavingChecklists'
           && $event != 'AlertLeavingChecklists'
+          && $event != 'AlertCommercialManager'
       ) {
          $this->addTarget(self::RESOURCE_MANAGER, __('Resource manager', 'resources'));
          $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
@@ -103,6 +105,10 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->addTarget(self::RESOURCE_SOURCE_ENTITY_GROUP, __('Source entity group', 'resources'));
          $this->addTarget(self::RESOURCE_SOURCE_ENTITY_GROUP_MANAGER, __('Source entity group manager', 'resources'));
          $this->addTarget(self::RESOURCE_TARGET_ENTITY_GROUP_MANAGER, __('Target entity group manager', 'resources'));
+      }
+
+      if ($event == 'AlertCommercialManager') {
+         $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
       }
    }
 
@@ -577,6 +583,104 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                $this->datas['##lang.resource.badge##'] = " ";
          }
 
+      } else if ($event == 'AlertCommercialManager') {
+
+         $this->datas['##lang.commercial.title##']         = __('List of your associated resources', 'resources');
+
+         $this->datas['##lang.resource.id##']              = "ID";
+         $this->datas['##lang.resource.name##']            = __('Surname');
+         $this->datas['##lang.resource.firstname##']       = __('First name');
+         $this->datas['##lang.resource.type##']            = PluginResourcesContractType::getTypeName(1);
+         $this->datas['##lang.resource.situation##']       = PluginResourcesResourceSituation::getTypeName(1);
+         $this->datas['##lang.resource.contractnature##']  = PluginResourcesContractNature::getTypeName(1);
+         $this->datas['##lang.resource.quota##']           = __('Quota', 'resources');
+         $this->datas['##lang.resource.department##']      = PluginResourcesDepartment::getTypeName(1);
+         $this->datas['##lang.resource.accessprofile##']   = PluginResourcesAccessProfile::getTypeName(1);
+         $this->datas['##lang.resource.rank##']            = PluginResourcesRank::getTypeName(1);
+         $this->datas['##lang.resource.speciality##']      = PluginResourcesResourceSpeciality::getTypeName(1);
+         $this->datas['##lang.resource.status##']          = PluginResourcesResourceState::getTypeName(1);
+         $this->datas['##lang.resource.users##']           = __('Resource manager', 'resources');
+         $this->datas['##lang.resource.userssale##']       = __('Sales manager', 'resources');
+         $this->datas['##lang.resource.usersrecipient##']  = __('Requester');
+         $this->datas['##lang.resource.datedeclaration##'] = __('Request date');
+         $this->datas['##lang.resource.datebegin##']       = __('Arrival date', 'resources');
+         $this->datas['##lang.resource.dateend##']         = __('Departure date', 'resources');
+         $this->datas['##lang.resource.location##']        = __('Location');
+         $this->datas['##lang.resource.helpdesk##']        = __('Associable to a ticket');
+         $this->datas['##lang.resource.leaving##']         = __('Declared as leaving', 'resources');
+         $this->datas['##lang.resource.leavingreason##']   = PluginResourcesLeavingReason::getTypeName(1);
+         $this->datas['##lang.resource.usersleaving##']    = __('Informant of leaving', 'resources');
+         $this->datas['##lang.resource.comment##']         = __('Description');
+         $this->datas['##lang.resource.url##']             = "URL";
+
+         foreach ($options['resources'] as $resource) {
+            $tmp = array();
+
+            $tmp['##resource.id##'] = $resource["id"];
+
+            $tmp['##resource.name##'] = $resource["name"];
+
+            $tmp['##resource.firstname##'] = $resource["firstname"];
+
+            $tmp['##resource.type##'] = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                                  $resource['plugin_resources_contracttypes_id']);
+
+            $tmp['##resource.situation##'] = Dropdown::getDropdownName('glpi_plugin_resources_resourcesituations',
+                                                                       $resource['plugin_resources_resourcesituations_id']);
+
+            $tmp['##resource.contractnature##'] = Dropdown::getDropdownName('glpi_plugin_resources_contractnatures',
+                                                                            $resource['plugin_resources_contractnatures_id']);
+
+            $tmp['##resource.quota##'] = $resource['quota'];
+
+            $tmp['##resource.department##'] = Dropdown::getDropdownName('glpi_plugin_resources_departments',
+                                                                        $resource['plugin_resources_departments_id']);
+
+            $tmp['##resource.accessprofile##'] = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
+                                                                           $resource['plugin_resources_accessprofiles_id']);
+
+            $tmp['##resource.rank##'] = Dropdown::getDropdownName('glpi_plugin_resources_ranks',
+                                                                  $resource['plugin_resources_ranks_id']);
+
+            $tmp['##resource.speciality##'] = Dropdown::getDropdownName('glpi_plugin_resources_resourcespecialities',
+                                                                        $resource['plugin_resources_resourcespecialities_id']);
+
+            $tmp['##resource.status##'] = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
+                                                                    $resource['plugin_resources_resourcestates_id']);
+
+            $tmp['##resource.users##'] = Html::clean(getUserName($resource["users_id"]));
+
+            $tmp['##resource.userssale##'] = Html::clean(getUserName($resource["users_id_sales"]));
+
+            $tmp['##resource.usersrecipient##'] = Html::clean(getUserName($resource["users_id_recipient"]));
+
+            $tmp['##resource.datedeclaration##'] = Html::convDate($resource['date_declaration']);
+
+            $tmp['##resource.datebegin##'] = Html::convDate($resource['date_begin']);
+
+            $tmp['##resource.dateend##'] = Html::convDate($resource['date_end']);
+
+            $tmp['##resource.location##'] = Dropdown::getDropdownName('glpi_locations',
+                                                                      $resource['locations_id']);
+
+            $tmp['##resource.helpdesk##'] = Dropdown::getYesNo($resource['is_helpdesk_visible']);
+
+            $tmp['##resource.leaving##'] = Dropdown::getYesNo($resource['is_leaving']);
+
+            $tmp['##resource.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
+                                                                           $resource['plugin_resources_leavingreasons_id']);
+
+            $tmp['##resource.usersleaving##'] = Html::clean(getUserName($resource['users_id_recipient_leaving']));
+
+            $comment                     = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $resource["comment"]));
+            $tmp['##resource.comment##'] = Html::clean($comment);
+
+            $tmp['##resource.url##']      = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
+                                                      $resource["id"]);
+
+            $this->datas['commercials'][] = $tmp;
+
+         }
       } else {
 
          $events = $this->getAllEvents();
@@ -1172,6 +1276,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                 'value'   => false,
                                 'foreach' => true,
                                 'events'  => array('newtask', 'updatetask', 'deletetask')));
+      $this->addTagToList(array('tag'     => 'commercials',
+                                'label'   => __('Resources list of commercial manager', 'resources'),
+                                'value'   => false,
+                                'foreach' => true,
+                                'events'  => array('AlertCommercialManager')));
 
       asort($this->tag_descriptions);
    }
