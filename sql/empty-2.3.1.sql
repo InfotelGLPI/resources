@@ -22,6 +22,7 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
    `is_leaving` int(11) NOT NULL default '0',
    `plugin_resources_leavingreasons_id` int(11) NOT NULL default '0',
+   `date_declaration_leaving` datetime default NULL,
    `users_id_recipient_leaving` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
    `plugin_resources_accessprofiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_accessprofiles (id)',
    `picture` varchar(100) collate utf8_unicode_ci default NULL,

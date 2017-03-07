@@ -641,8 +641,8 @@ function plugin_resources_install() {
       if (!empty($profiles)) {
          foreach ($profiles as $profile) {
             $query = "UPDATE `glpi_plugin_resources_profiles`
-                  SET `profiles_id` = '".$resource["id"]."'
-                  WHERE `id` = '".$resource["id"]."';";
+                  SET `profiles_id` = '".$profile["id"]."'
+                  WHERE `id` = '".$profile["id"]."';";
             $result = $DB->query($query);
          }
       }

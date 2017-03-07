@@ -340,6 +340,12 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[27]['searchtype']      = 'contains';
       }
 
+      $tab[28]['table']          = $this->getTable();
+      $tab[28]['field']          = 'date_declaration_leaving';
+      $tab[28]['name']           = __('Declaration of departure date', 'resources');
+      $tab[28]['datatype']       = 'datetime';
+      $tab[28]['massiveaction']  = false;
+
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
       $tab[31]['name']           = __('ID');
@@ -638,6 +644,7 @@ class PluginResourcesResource extends CommonDBTM {
       $input["_old_plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
       $input["_old_locations_id"]                             = $this->fields["locations_id"];
       $input["_old_is_leaving"]                               = $this->fields["is_leaving"];
+      $input["_old_date_declaration_leaving"]                 = $this->fields["date_declaration_leaving"];
       $input["_old_plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
       $input["_old_comment"]                                  = $this->fields["comment"];
 
@@ -670,8 +677,10 @@ class PluginResourcesResource extends CommonDBTM {
             Html::back();
 
          } else {
-            $this->fields["users_id_recipient_leaving"]=Session::getLoginUserID();
+            $this->fields["users_id_recipient_leaving"] = Session::getLoginUserID();
+            $this->fields["date_declaration_leaving"]   = date('Y-m-d H:i:s');
             $this->updates[]="users_id_recipient_leaving";
+            $this->updates[]="date_declaration_leaving";
 
             $resources_checklist=PluginResourcesChecklist::checkIfChecklistExist($this->fields["id"]);
             if (!$resources_checklist) {
@@ -1141,6 +1150,12 @@ class PluginResourcesResource extends CommonDBTM {
          $users_id_recipient_leaving=new User();
          if ($users_id_recipient_leaving->getFromDB($this->fields["users_id_recipient_leaving"]))
             echo $users_id_recipient_leaving->getName();
+
+         if(isset($this->fields["date_declaration_leaving"])
+            && $this->fields["date_declaration_leaving"] != null) {
+            echo "&nbsp;-&nbsp;";
+            echo Html::convDateTime($this->fields["date_declaration_leaving"]);
+         }
       }
 
       echo "</td>";

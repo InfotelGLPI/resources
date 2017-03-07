@@ -52,8 +52,10 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
    if (($_POST["date_end"] < $date)
            || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
       $input["is_leaving"] = "1";
+      $input["date_declaration_leaving"] = date('Y-m-d H:i:s');
    } else {
       $input["is_leaving"] = "0";
+      $input["date_declaration_leaving"] = null;
    }
    $input["plugin_resources_leavingreasons_id"] = $_POST["plugin_resources_leavingreasons_id"];
    $input["withtemplate"] = "0";

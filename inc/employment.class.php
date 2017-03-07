@@ -479,7 +479,10 @@ class PluginResourcesEmployment extends CommonDBTM {
             }
             $resource = new PluginResourcesResource();
             $resource->getFromDB($data["id"]);
-            $resource->update(array('is_leaving'=>1, 'id'=>$data["id"], 'date_end'=>$data['date_end']));
+            $resource->update(array('is_leaving'                 => 1,
+                                    'id'                         => $data["id"],
+                                    'date_declaration_departure' => date('Y-m-d H:i:s'),
+                                    'date_end'                   => $data['date_end']));
             $entity = $data['entities_id'];
             if(!isset($message[$entity])){
                $message=array($entity => '');

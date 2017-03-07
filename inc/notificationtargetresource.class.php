@@ -341,32 +341,33 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          foreach ($options['resources'] as $id => $resource) {
             $tmp = array();
 
-            $tmp['##resource.name##']            = $resource['name'];
-            $tmp['##resource.firstname##']       = $resource['firstname'];
-            $tmp['##resource.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
-                                                                             $resource['plugin_resources_contracttypes_id']);
-            $tmp['##resource.users##']           = Html::clean(getUserName($resource['users_id']));
-            $tmp['##resource.userssale##']       = Html::clean(getUserName($resource['users_id_sales']));
-            $tmp['##resource.usersrecipient##']  = Html::clean(getUserName($resource['users_id_recipient']));
-            $tmp['##resource.datedeclaration##'] = Html::convDateTime($resource['date_declaration']);
-            $tmp['##resource.datebegin##']       = Html::convDateTime($resource['date_begin']);
-            $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
-            $tmp['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
-                                                                             $resource['plugin_resources_departments_id']);
-            $tmp['##resource.accessprofile##']   = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                             $resource['plugin_resources_accessprofiles_id']);
-            $tmp['##resource.status##']          = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
-                                                                             $resource['plugin_resources_resourcestates_id']);
-            $tmp['##resource.location##']        = Dropdown::getDropdownName('glpi_locations',
-                                                                             $resource['locations_id']);
-            $comment                             = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $resource['comment']));
-            $tmp['##resource.comment##']         = Html::clean($comment);
-            $tmp['##resource.usersleaving##']    = Html::clean(getUserName($resource['users_id_recipient_leaving']));
-            $tmp['##resource.leaving##']         = Dropdown::getYesNo($resource['is_leaving']);
-            $tmp['##resource.leavingreason##']   = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
-                                                                             $resource['plugin_resources_leavingreasons_id']);
-            $tmp['##resource.helpdesk##']        = Dropdown::getYesNo($resource['is_helpdesk_visible']);
-            $tmp['##resource.url##']             = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" . $resource['id']);
+            $tmp['##resource.name##']                   = $resource['name'];
+            $tmp['##resource.firstname##']              = $resource['firstname'];
+            $tmp['##resource.type##']                   = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                                                    $resource['plugin_resources_contracttypes_id']);
+            $tmp['##resource.users##']                  = Html::clean(getUserName($resource['users_id']));
+            $tmp['##resource.userssale##']              = Html::clean(getUserName($resource['users_id_sales']));
+            $tmp['##resource.usersrecipient##']         = Html::clean(getUserName($resource['users_id_recipient']));
+            $tmp['##resource.datedeclaration##']        = Html::convDateTime($resource['date_declaration']);
+            $tmp['##resource.datebegin##']              = Html::convDateTime($resource['date_begin']);
+            $tmp['##resource.dateend##']                = Html::convDateTime($resource['date_end']);
+            $tmp['##resource.department##']             = Dropdown::getDropdownName('glpi_plugin_resources_departments',
+                                                                                    $resource['plugin_resources_departments_id']);
+            $tmp['##resource.accessprofile##']          = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
+                                                                                    $resource['plugin_resources_accessprofiles_id']);
+            $tmp['##resource.status##']                 = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
+                                                                                    $resource['plugin_resources_resourcestates_id']);
+            $tmp['##resource.location##']               = Dropdown::getDropdownName('glpi_locations',
+                                                                                    $resource['locations_id']);
+            $comment                                    = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $resource['comment']));
+            $tmp['##resource.comment##']                = Html::clean($comment);
+            $tmp['##resource.usersleaving##']           = Html::clean(getUserName($resource['users_id_recipient_leaving']));
+            $tmp['##resource.leaving##']                = Dropdown::getYesNo($resource['is_leaving']);
+            $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
+            $tmp['##resource.leavingreason##']          = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
+                                                                                    $resource['plugin_resources_leavingreasons_id']);
+            $tmp['##resource.helpdesk##']               = Dropdown::getYesNo($resource['is_helpdesk_visible']);
+            $tmp['##resource.url##']                    = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" . $resource['id']);
 
             $this->datas['resources'][] = $tmp;
          }
@@ -412,29 +413,30 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          foreach ($options['checklists'] as $id => $checklist) {
             $tmp = array();
 
-            $tmp['##checklist.id##']              = $checklist['plugin_resources_resources_id'];
-            $tmp['##checklist.name##']            = $checklist['resource_name'];
-            $tmp['##checklist.firstname##']       = $checklist['resource_firstname'];
-            $tmp['##checklist.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
-                                                                              $checklist['plugin_resources_contracttypes_id']);
-            $tmp['##checklist.users##']           = Html::clean(getUserName($checklist['users_id']));
-            $tmp['##checklist.userssale##']       = Html::clean(getUserName($checklist['users_id_sales']));
-            $tmp['##checklist.usersrecipient##']  = Html::clean(getUserName($checklist['users_id_recipient']));
-            $tmp['##checklist.datedeclaration##'] = Html::convDateTime($checklist['date_declaration']);
-            $tmp['##checklist.datebegin##']       = Html::convDateTime($checklist['date_begin']);
-            $tmp['##checklist.dateend##']         = Html::convDateTime($checklist['date_end']);
-            $tmp['##checklist.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
-                                                                              $checklist['plugin_resources_departments_id']);
-            $tmp['##checklist.accessprofile##']   = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                              $checklist['plugin_resources_accessprofiles_id']);
-            $tmp['##checklist.status##']          = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
-                                                                              $checklist['plugin_resources_resourcestates_id']);
-            $tmp['##checklist.location##']        = Dropdown::getDropdownName('glpi_locations',
-                                                                              $checklist['locations_id']);
-            $comment                              = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $checklist['comment']));
-            $tmp['##checklist.comment##']         = Html::clean($comment);
-            $tmp['##checklist.usersleaving##']    = Html::clean(getUserName($checklist['users_id_recipient_leaving']));
-            $tmp['##checklist.leaving##']         = Dropdown::getYesNo($checklist['is_leaving']);
+            $tmp['##checklist.id##']                     = $checklist['plugin_resources_resources_id'];
+            $tmp['##checklist.name##']                   = $checklist['resource_name'];
+            $tmp['##checklist.firstname##']              = $checklist['resource_firstname'];
+            $tmp['##checklist.type##']                   = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                                                     $checklist['plugin_resources_contracttypes_id']);
+            $tmp['##checklist.users##']                  = Html::clean(getUserName($checklist['users_id']));
+            $tmp['##checklist.userssale##']              = Html::clean(getUserName($checklist['users_id_sales']));
+            $tmp['##checklist.usersrecipient##']         = Html::clean(getUserName($checklist['users_id_recipient']));
+            $tmp['##checklist.datedeclaration##']        = Html::convDateTime($checklist['date_declaration']);
+            $tmp['##checklist.datebegin##']              = Html::convDateTime($checklist['date_begin']);
+            $tmp['##checklist.dateend##']                = Html::convDateTime($checklist['date_end']);
+            $tmp['##checklist.department##']             = Dropdown::getDropdownName('glpi_plugin_resources_departments',
+                                                                                     $checklist['plugin_resources_departments_id']);
+            $tmp['##checklist.accessprofile##']          = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
+                                                                                     $checklist['plugin_resources_accessprofiles_id']);
+            $tmp['##checklist.status##']                 = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
+                                                                                     $checklist['plugin_resources_resourcestates_id']);
+            $tmp['##checklist.location##']               = Dropdown::getDropdownName('glpi_locations',
+                                                                                     $checklist['locations_id']);
+            $comment                                     = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $checklist['comment']));
+            $tmp['##checklist.comment##']                = Html::clean($comment);
+            $tmp['##checklist.usersleaving##']           = Html::clean(getUserName($checklist['users_id_recipient_leaving']));
+            $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime($checklist['date_declaration_leaving']);
+            $tmp['##checklist.leaving##']                = Dropdown::getYesNo($checklist['is_leaving']);
 //            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
 //                                                   $checklist['plugin_resources_leavingreasons_id']);
             $tmp['##checklist.helpdesk##'] = Dropdown::getYesNo($checklist['is_helpdesk_visible']);
@@ -567,6 +569,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
          $this->datas['##resource.usersleaving##']      = Html::clean(getUserName($this->obj->getField('users_id_recipient_leaving')));
 
+         $this->datas['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
+         $this->datas['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
+
          $this->datas['##lang.resource.comment##'] = __('Description');
          $comment                                  = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $this->obj->getField("comment")));
          $this->datas['##resource.comment##']      = Html::clean($comment);
@@ -672,6 +677,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $tmp['##resource.usersleaving##'] = Html::clean(getUserName($resource['users_id_recipient_leaving']));
 
+            $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
+
             $comment                     = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $resource["comment"]));
             $tmp['##resource.comment##'] = Html::clean($comment);
 
@@ -762,6 +769,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          $this->datas['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
          $this->datas['##resource.usersleaving##']      = Html::clean(getUserName($this->obj->getField("users_id_recipient_leaving")));
+
+         $this->datas['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
+         $this->datas['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
 
          $this->datas['##lang.resource.leaving##'] = __('Declared as leaving', 'resources');
          $this->datas['##resource.leaving##']      = Dropdown::getYesNo($this->obj->getField('is_leaving'));
@@ -1102,6 +1112,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                   $tmp['##update.usersleaving##'] = "---";
                else
                   $tmp['##update.usersleaving##'] = Html::clean(getUserName($this->target_object->oldvalues['users_id_recipient_leaving']));
+            }
+
+            if (isset($this->target_object->oldvalues['date_declaration_leaving'])) {
+               if (empty($this->target_object->oldvalues['date_declaration_leaving']))
+                  $tmp['##update.datedeclarationleaving##'] = "---";
+               else
+                  $tmp['##update.datedeclarationleaving##'] = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
             }
 
             if (isset($this->target_object->oldvalues['is_leaving'])) {
