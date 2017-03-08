@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-26 12:06+0200\n"
-"PO-Revision-Date: 2016-09-26 10:07+0000\n"
-"Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>\n"
+"POT-Creation-Date: 2017-03-08 08:46+0100\n"
+"PO-Revision-Date: 2017-03-08 07:57+0000\n"
+"Last-Translator: Amandine Manceau\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/tsmr/GLPI_resources/language/ro_RO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,49 +18,50 @@ msgstr ""
 "Language: ro_RO\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
-#: hook.php:56
+#: hook.php:57
 msgid "Long term contract"
 msgstr "Contract pe perioadă nedeterminată"
 
-#: hook.php:61
+#: hook.php:62
 msgid "Fixed term contract"
 msgstr "Contract pe perioadă determinată"
 
-#: hook.php:66
+#: hook.php:67
 msgid "Trainee"
 msgstr "Stagiar"
 
-#: hook.php:1155
+#: hook.php:1162
 msgid "Specific network rights"
 msgstr "Drepturi reţea specifice"
 
-#: hook.php:1156
+#: hook.php:1163
 msgid "Access to the applications"
 msgstr "Acces la aplicaţie"
 
-#: hook.php:1157
+#: hook.php:1164
 msgid "Specific securities groups"
 msgstr "Grupuri de securitate specifice"
 
-#: hook.php:1158
+#: hook.php:1165
 msgid "Specific distribution lists"
 msgstr "Liste de distibuţie specifice"
 
-#: hook.php:1159 inc/choice.class.php:114 inc/choice.class.php:301
+#: hook.php:1166 inc/choice.class.php:114 inc/choice.class.php:301
 msgid "Others needs"
 msgstr "Alte necesităţi"
 
-#: hook.php:1784 inc/notificationtargetresource.class.php:316
-#: inc/notificationtargetresource.class.php:382
-#: inc/notificationtargetresource.class.php:525
-#: inc/notificationtargetresource.class.php:626
-#: inc/notificationtargetresource.class.php:1056
-#: inc/notificationtargetresource.class.php:1078 inc/resource.class.php:231
-#: inc/resource.class.php:1003
+#: hook.php:1863 inc/notificationtargetresource.class.php:336
+#: inc/notificationtargetresource.class.php:408
+#: inc/notificationtargetresource.class.php:562
+#: inc/notificationtargetresource.class.php:615
+#: inc/notificationtargetresource.class.php:776
+#: inc/notificationtargetresource.class.php:1236
+#: inc/notificationtargetresource.class.php:1260 inc/resource.class.php:246
+#: inc/resource.class.php:1144
 msgid "Declared as leaving"
 msgstr "Declarat ca parte"
 
-#: hook.php:1789 inc/employer.class.php:40 inc/employment.class.php:169
+#: hook.php:1868 inc/employer.class.php:40 inc/employment.class.php:169
 #: inc/employment.class.php:239
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:65
 msgid "Employer"
@@ -69,99 +70,105 @@ msgstr[0] "Angajator"
 msgstr[1] "Angajatori"
 msgstr[2] "Angajatori"
 
-#: hook.php:1793 inc/client.class.php:38
+#: hook.php:1872 inc/client.class.php:38
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Client afectat"
 msgstr[1] "Clienţi afectaţi"
 msgstr[2] "Clienţi afectaţi"
 
-#: hook.php:1798 inc/directory.class.php:125
-#: inc/notificationtargetresource.class.php:81
-#: inc/notificationtargetresource.class.php:306
-#: inc/notificationtargetresource.class.php:372
-#: inc/notificationtargetresource.class.php:503
-#: inc/notificationtargetresource.class.php:584
-#: inc/notificationtargetresource.class.php:1047
-#: inc/notificationtargetresource.class.php:1068 inc/resource.class.php:170
-#: inc/resource.class.php:933 inc/resource.class.php:1575
-#: inc/resource.class.php:2031 inc/resourcepdf.class.php:65
+#: hook.php:1877 inc/directory.class.php:125
+#: inc/notificationtargetresource.class.php:85
+#: inc/notificationtargetresource.class.php:324
+#: inc/notificationtargetresource.class.php:396
+#: inc/notificationtargetresource.class.php:537
+#: inc/notificationtargetresource.class.php:607
+#: inc/notificationtargetresource.class.php:724
+#: inc/notificationtargetresource.class.php:1224
+#: inc/notificationtargetresource.class.php:1250 inc/resource.class.php:185
+#: inc/resource.class.php:1058 inc/resource.class.php:1807
+#: inc/resource.class.php:2282 inc/resourcepdf.class.php:65
 #: inc/rulecontracttype.class.php:188 inc/task.class.php:637
 #: inc/task.class.php:972
 msgid "Resource manager"
 msgstr "Manager resursă"
 
-#: hook.php:1810 inc/notificationtargetresource.class.php:83
-#: inc/notificationtargetresource.class.php:315
-#: inc/notificationtargetresource.class.php:381
-#: inc/notificationtargetresource.class.php:532
-#: inc/notificationtargetresource.class.php:623
-#: inc/notificationtargetresource.class.php:1055
-#: inc/notificationtargetresource.class.php:1077 inc/resource.class.php:237
+#: hook.php:1889 inc/notificationtargetresource.class.php:88
+#: inc/notificationtargetresource.class.php:335
+#: inc/notificationtargetresource.class.php:407
+#: inc/notificationtargetresource.class.php:569
+#: inc/notificationtargetresource.class.php:617
+#: inc/notificationtargetresource.class.php:770
+#: inc/notificationtargetresource.class.php:1235
+#: inc/notificationtargetresource.class.php:1259 inc/resource.class.php:252
 msgid "Informant of leaving"
 msgstr "Informant al plecării"
 
-#: hook.php:2204 inc/resource_item.class.php:770
+#: hook.php:1895 inc/notificationtargetresource.class.php:86
+#: inc/notificationtargetresource.class.php:111
+#: inc/notificationtargetresource.class.php:325
+#: inc/notificationtargetresource.class.php:397
+#: inc/notificationtargetresource.class.php:540
+#: inc/notificationtargetresource.class.php:608
+#: inc/notificationtargetresource.class.php:727 inc/resource.class.php:336
+#: inc/resource.class.php:1080 inc/resource.class.php:1821
+#: inc/rulecontracttype.class.php:192
+msgid "Sales manager"
+msgstr ""
+
+#: hook.php:2293 inc/resource_item.class.php:770
 msgid "Not defined"
 msgstr "Nedefinit"
 
-#: hook.php:2435
+#: hook.php:2524
 msgid "Modification of the associated resource's location"
 msgstr "Modificare a locaţiei resursei asociate"
 
-#: setup.php:170
+#: setup.php:185
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Resursă Umană"
 msgstr[1] "Resurse Umane"
 msgstr[2] "Resurse Umane"
 
-#: setup.php:183
+#: setup.php:198
 msgid "This plugin requires GLPI >= 9.1"
 msgstr ""
 
-#: setup.php:186
+#: setup.php:201
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "PHP instalat incompatibil. Necesită modulul"
 
-#: ajax/resourceinfo.php:47
-msgid "Current entity"
-msgstr ""
-
-#: ajax/resourceinfo.php:60
-msgid "Associate a user"
-msgstr ""
-
-#: ajax/resourceinfo.php:73
-msgid "Resource does not exist"
-msgstr ""
-
-#: ajax/resourceinfo.php:77 inc/resource.class.php:2468
-#: inc/resource_item.class.php:673
-msgid "Associate a resource"
-msgstr "Asociază o resursă"
-
-#: ajax/resourceinfo.php:87
-msgid "Or"
-msgstr ""
-
-#: ajax/resourceinfo.php:91
-msgid "Generate a resource"
-msgstr ""
-
-#: front/config.form.php:64
+#: front/config.form.php:76
 msgid "Please activate the plugin"
 msgstr "Activaţi pluginul va rog"
 
-#: front/resource.form.php:286
+#: front/resourcebadge.form.php:68 front/resourcebadge.form.php:87
+#: front/resourcehabilitation.form.php:70
+#: front/resourcehabilitation.form.php:89
+#: front/resourcehabilitation.form.php:109
+msgid "Please activate the plugin metademand"
+msgstr ""
+
+#: front/resourcebadge.form.php:79 front/resourcehabilitation.form.php:81
+#: front/resourcehabilitation.form.php:102
+msgid "No advanced request found"
+msgstr ""
+
+#: front/resourcebadge.form.php:109 front/resourcebadge.php:61
+#: front/resourcehabilitation.php:61
+msgid "Please activate the plugin badge"
+msgstr ""
+
+#: front/resource.form.php:287
 msgid "The checklist is not finished"
 msgstr "Lista de control nu este terminată"
 
-#: front/resource.form.php:310
+#: front/resource.form.php:311
 msgid "Notification sent"
 msgstr "Notificare trimisă"
 
-#: front/resource.form.php:312 inc/resource.class.php:2865
+#: front/resource.form.php:313 inc/resource.class.php:3223
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr "Notificarea nu sunt trimisă deoarece resursa nu este legată cu un utilizator"
@@ -170,13 +177,20 @@ msgstr "Notificarea nu sunt trimisă deoarece resursa nu este legată cu un util
 msgid "View by contract type"
 msgstr "Vezi pe tip de contract"
 
-#: front/resource.remove.php:71
+#: front/resource.remove.php:73
 msgid "Declaration of resource leaving OK"
 msgstr "Declararea plecării resursei OK"
 
-#: front/wizard.form.php:105 inc/resource.class.php:398
+#: front/wizard.form.php:107 inc/resource.class.php:455
 msgid "Required fields are not filled. Please try again."
 msgstr "Câmpurile cerute nu sunt completate. Încercaţi din nou."
+
+#: inc/accessprofile.class.php:48
+msgid "Access profile"
+msgid_plural "Access profiles"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: inc/budget.class.php:76 inc/budget.class.php:92 inc/cost.class.php:68
 #: inc/cost.class.php:85
@@ -242,107 +256,109 @@ msgstr[2] "Tipuri de volume bugetare"
 msgid "Code"
 msgstr "Cod"
 
-#: inc/checklist.class.php:43 inc/profile.class.php:192
-#: inc/resource.class.php:3295
+#: inc/checklist.class.php:43 inc/profile.class.php:194
+#: inc/resource.class.php:3719
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Listăde control"
 msgstr[1] "Liste de control"
 msgstr[2] "Liste de control"
 
-#: inc/checklist.class.php:222 inc/checklist.class.php:559
+#: inc/checklist.class.php:221 inc/checklist.class.php:558
+#: inc/resourcebadge.class.php:428 inc/resource_change.class.php:666
 msgid "Create a end treatment ticket"
 msgstr "Crearea unui tichet de sfărşit de tratament"
 
-#: inc/checklist.class.php:241 inc/checklist.class.php:257
+#: inc/checklist.class.php:240 inc/checklist.class.php:256
 msgid "At the arriving of a resource"
 msgstr "La sosirea resursei"
 
-#: inc/checklist.class.php:242 inc/checklist.class.php:259
+#: inc/checklist.class.php:241 inc/checklist.class.php:258
 msgid "At the leaving of a resource"
 msgstr "La plecarea resursei"
 
-#: inc/checklist.class.php:243 inc/checklist.class.php:261
+#: inc/checklist.class.php:242 inc/checklist.class.php:260
 msgid "At the transfer of a resource"
 msgstr ""
 
-#: inc/checklist.class.php:289
+#: inc/checklist.class.php:288
 msgid "Create checklists"
 msgstr "Crează liste de verificare"
 
-#: inc/checklist.class.php:408 inc/checklist.class.php:592
+#: inc/checklist.class.php:407 inc/checklist.class.php:591
 #: inc/checklistconfig.class.php:95 inc/checklistconfig.class.php:126
 msgid "Important"
 msgstr "Important"
 
-#: inc/checklist.class.php:417 inc/checklistconfig.class.php:86
+#: inc/checklist.class.php:416 inc/checklistconfig.class.php:86
 #: inc/checklistconfig.class.php:134
 msgid "Link"
 msgstr "Link"
 
-#: inc/checklist.class.php:464
+#: inc/checklist.class.php:463
 msgid "Add a task at the arriving checklist"
 msgstr "Adaugă un task la lista de verificare la sosire"
 
-#: inc/checklist.class.php:468
+#: inc/checklist.class.php:467
 msgid "Add a task at the leaving checklist"
 msgstr "Adaugă un task la lista de verificare la sosire"
 
-#: inc/checklist.class.php:472
+#: inc/checklist.class.php:471
 msgid "Add a task at the transfer checklist"
 msgstr ""
 
-#: inc/checklist.class.php:489
+#: inc/checklist.class.php:488
 msgid "Check list done"
 msgstr ""
 
-#: inc/checklist.class.php:560
+#: inc/checklist.class.php:559
 msgid "Reset the checklist"
 msgstr "Resetează lista de verificare"
 
-#: inc/checklist.class.php:594 inc/checklist.class.php:1173
+#: inc/checklist.class.php:593 inc/checklist.class.php:1174
 msgid "Linked task"
 msgstr "Task legat"
 
-#: inc/checklist.class.php:725
+#: inc/checklist.class.php:724
 msgid "Modify state"
 msgstr "Modifică statut"
 
-#: inc/checklist.class.php:729
+#: inc/checklist.class.php:728
 msgid "Link a task"
 msgstr "Linl către un task"
 
-#: inc/checklist.class.php:733
+#: inc/checklist.class.php:732
 msgid "Add ticket"
 msgstr "Adaugă tichet"
 
-#: inc/checklist.class.php:786 inc/checklist.class.php:829
-#: inc/checklist.class.php:859
+#: inc/checklist.class.php:785 inc/checklist.class.php:828
+#: inc/checklist.class.php:858
 msgid "The checklist is finished"
 msgstr ""
 
-#: inc/checklist.class.php:899 inc/dashboard.class.php:44
-#: inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:364
+#: inc/checklist.class.php:898 inc/dashboard.class.php:44
+#: inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:388
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Părăsire resursă - lista de verificare trebuie verificată"
 
-#: inc/checklist.class.php:901 inc/dashboard.class.php:43
-#: inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:360
+#: inc/checklist.class.php:900 inc/dashboard.class.php:43
+#: inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:384
 msgid "New resource - checklist needs to verificated"
 msgstr "Resursă nouă - lista de verificare trebuie verificată"
 
-#: inc/checklist.class.php:906 inc/dashboard.class.php:122
-#: inc/directory.class.php:136 inc/notificationtargetresource.class.php:310
-#: inc/notificationtargetresource.class.php:376
-#: inc/notificationtargetresource.class.php:515
-#: inc/notificationtargetresource.class.php:596
-#: inc/notificationtargetresource.class.php:1051
-#: inc/notificationtargetresource.class.php:1072 inc/recap.class.php:144
-#: inc/resource.class.php:184 inc/resource.class.php:1030
-#: inc/resource.class.php:1614 inc/resource.class.php:2355
+#: inc/checklist.class.php:905 inc/dashboard.class.php:122
+#: inc/directory.class.php:136 inc/notificationtargetresource.class.php:329
+#: inc/notificationtargetresource.class.php:401
+#: inc/notificationtargetresource.class.php:552
+#: inc/notificationtargetresource.class.php:612
+#: inc/notificationtargetresource.class.php:739
+#: inc/notificationtargetresource.class.php:1228
+#: inc/notificationtargetresource.class.php:1254 inc/recap.class.php:144
+#: inc/resource.class.php:199 inc/resource.class.php:1177
+#: inc/resource.class.php:1860 inc/resource.class.php:2610
 #: inc/resource_item.class.php:709 inc/resource_item.class.php:960
 #: inc/resource_item.class.php:970 inc/resourcepdf.class.php:70
-#: inc/rulecontracttype.class.php:200
+#: inc/rulecontracttype.class.php:204
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:57
@@ -351,17 +367,18 @@ msgstr "Resursă nouă - lista de verificare trebuie verificată"
 msgid "Departure date"
 msgstr "Data plecare"
 
-#: inc/checklist.class.php:908 inc/dashboard.class.php:82
-#: inc/directory.class.php:131 inc/notificationtargetresource.class.php:309
-#: inc/notificationtargetresource.class.php:375
-#: inc/notificationtargetresource.class.php:512
-#: inc/notificationtargetresource.class.php:593
-#: inc/notificationtargetresource.class.php:1050
-#: inc/notificationtargetresource.class.php:1071 inc/recap.class.php:139
-#: inc/resource.class.php:179 inc/resource.class.php:944
-#: inc/resource.class.php:1602 inc/resource_item.class.php:708
+#: inc/checklist.class.php:907 inc/dashboard.class.php:82
+#: inc/directory.class.php:131 inc/notificationtargetresource.class.php:328
+#: inc/notificationtargetresource.class.php:400
+#: inc/notificationtargetresource.class.php:549
+#: inc/notificationtargetresource.class.php:611
+#: inc/notificationtargetresource.class.php:736
+#: inc/notificationtargetresource.class.php:1227
+#: inc/notificationtargetresource.class.php:1253 inc/recap.class.php:139
+#: inc/resource.class.php:194 inc/resource.class.php:1069
+#: inc/resource.class.php:1848 inc/resource_item.class.php:708
 #: inc/resource_item.class.php:959 inc/resource_item.class.php:969
-#: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:196
+#: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:200
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:251
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:55
@@ -370,19 +387,19 @@ msgstr "Data plecare"
 msgid "Arrival date"
 msgstr "Data sosire"
 
-#: inc/checklist.class.php:914 inc/notificationtargetresource.class.php:366
+#: inc/checklist.class.php:913 inc/notificationtargetresource.class.php:390
 msgid "Checklist needs to verificated"
 msgstr "Lista de verificare trebuie verificată"
 
-#: inc/checklist.class.php:995 inc/checklist.class.php:1092
+#: inc/checklist.class.php:994 inc/checklist.class.php:1093
 msgid "Checklists Verification"
 msgstr "Verificare Lista de verificare"
 
-#: inc/checklist.class.php:1173
+#: inc/checklist.class.php:1174
 msgid "Checked"
 msgstr "Bifat"
 
-#: inc/checklist.class.php:1194
+#: inc/checklist.class.php:1195
 msgid "No checklist found"
 msgstr "Nici o listăde verificare gasită"
 
@@ -393,7 +410,7 @@ msgstr[0] "Setare Liste de verificare"
 msgstr[1] "Setări Liste de verificare"
 msgstr[2] "Setări Liste de verificare"
 
-#: inc/checklistconfig.class.php:269
+#: inc/checklistconfig.class.php:278
 msgid "Generate a rule"
 msgstr "Generează o regulă"
 
@@ -405,6 +422,7 @@ msgstr[1] "Necesare"
 msgstr[2] "Necesare"
 
 #: inc/choice.class.php:224 inc/contracttype.class.php:67
+#: inc/contracttype.class.php:94
 msgid "Enter the computing needs of the resource"
 msgstr "Introduceţi necesarele informatice ale resursei"
 
@@ -421,8 +439,8 @@ msgid "Will be added to the resource comment area"
 msgstr "Va fi adăugat la zona de comentariu a resursei"
 
 #: inc/choice.class.php:345 inc/employee.class.php:345
-#: inc/resource.class.php:1307 inc/resource.class.php:1676
-#: inc/resource.class.php:1687 inc/resource.class.php:1758
+#: inc/resource.class.php:1517 inc/resource.class.php:1922
+#: inc/resource.class.php:1933 inc/resource.class.php:2009
 msgctxt "button"
 msgid "Next >"
 msgstr "Next >"
@@ -468,7 +486,7 @@ msgstr[2] "Tipuri contract"
 msgid "Wizard resource creation"
 msgstr "Wizard  Creare resursă"
 
-#: inc/contracttype.class.php:63 inc/contracttype.class.php:94
+#: inc/contracttype.class.php:63 inc/contracttype.class.php:89
 #: inc/employee.class.php:307
 msgid "Enter employer information about the resource"
 msgstr "Introduceţi informaţii angajator despre resursă"
@@ -477,12 +495,8 @@ msgstr "Introduceţi informaţii angajator despre resursă"
 msgid "Add a picture"
 msgstr "Adaugă o imagine"
 
-#: inc/contracttype.class.php:89 inc/resource.class.php:1361
-msgid "Enter general information about the resource"
-msgstr "Introduceţi informaţii generale despre resursă"
-
 #: inc/contracttype.class.php:159 inc/contracttype.class.php:175
-#: inc/resource.class.php:711 inc/resource.class.php:1374
+#: inc/resource.class.php:817 inc/resource.class.php:1590
 msgid "Without contract"
 msgstr "Fără contract"
 
@@ -501,18 +515,18 @@ msgstr[0] "Departament"
 msgstr[1] "Departamente"
 msgstr[2] "Departamente"
 
-#: inc/directory.class.php:42 inc/resource.class.php:3265
+#: inc/directory.class.php:42 inc/resource.class.php:3689
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Director"
 msgstr[1] "Directoare"
 msgstr[2] "Directoare"
 
-#: inc/directory.class.php:963 inc/resource.class.php:3141
+#: inc/directory.class.php:963 inc/resource.class.php:3565
 msgid "Click here to send your email"
 msgstr "Clic aici pentru a trimite emailul dvs."
 
-#: inc/employee.class.php:40 inc/profile.class.php:197
+#: inc/employee.class.php:40 inc/profile.class.php:199
 msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] "Angajat"
@@ -523,8 +537,8 @@ msgstr[2] "Angajaţi"
 msgid "The resource is also created if not existent"
 msgstr "Resursa este deasemenea creată dacă nu există"
 
-#: inc/employee.class.php:342 inc/resource.class.php:1673
-#: inc/resource.class.php:1684
+#: inc/employee.class.php:342 inc/resource.class.php:1919
+#: inc/resource.class.php:1930
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Previous"
@@ -542,7 +556,7 @@ msgstr "Next step"
 msgid "Short name"
 msgstr "Nume scurt"
 
-#: inc/employment.class.php:46 inc/profile.class.php:212
+#: inc/employment.class.php:46 inc/profile.class.php:219
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
@@ -552,8 +566,8 @@ msgstr[1] "Angajări"
 msgstr[2] "Angajări"
 
 #: inc/employment.class.php:136 inc/employment.class.php:179
-#: inc/employment.class.php:293 inc/profile.class.php:177
-#: inc/resource.class.php:47 inc/taskplanning.class.php:42
+#: inc/employment.class.php:293 inc/profile.class.php:179
+#: inc/resource.class.php:56 inc/taskplanning.class.php:42
 msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "Resursă Umană"
@@ -587,7 +601,7 @@ msgstr "De afectat o angajare"
 msgid "Updating leaving resources (declaring leaving, state of employment)"
 msgstr "Modificarea plecării resurselor( declararea plecării, statutul angajarii)"
 
-#: inc/employment.class.php:492
+#: inc/employment.class.php:495
 msgid ""
 "These resources left the company, linked current employment have been "
 "updated"
@@ -616,231 +630,257 @@ msgstr "Creare resursă"
 msgid "Other"
 msgstr "Altele"
 
-#: inc/notificationtargetresource.class.php:49
+#: inc/notificationtargetresource.class.php:50
 msgid "A resource has been added by"
 msgstr "O resursă a fost adăugată de"
 
-#: inc/notificationtargetresource.class.php:50
+#: inc/notificationtargetresource.class.php:51
 msgid "A resource has been updated by"
 msgstr "O resursă a fost modificată de"
 
-#: inc/notificationtargetresource.class.php:51
+#: inc/notificationtargetresource.class.php:52
 msgid "A resource has been removed by"
 msgstr "O resursă a fost inlăturată de"
 
-#: inc/notificationtargetresource.class.php:52
+#: inc/notificationtargetresource.class.php:53
 msgid "A task has been added by"
 msgstr "Un task a fost adăugat de"
 
-#: inc/notificationtargetresource.class.php:53
+#: inc/notificationtargetresource.class.php:54
 msgid "A task has been updated by"
 msgstr "Un task a fost modificatt de"
 
-#: inc/notificationtargetresource.class.php:54
+#: inc/notificationtargetresource.class.php:55
 msgid "A task has been removed by"
 msgstr "Un task a fost înlăturat de"
 
-#: inc/notificationtargetresource.class.php:55
-#: inc/notificationtargetresource.class.php:248
+#: inc/notificationtargetresource.class.php:56
+#: inc/notificationtargetresource.class.php:266
+#: inc/notificationtargetresource.class.php:1216
 msgid "List of not finished tasks"
 msgstr "Lista taskurilor incomplete"
 
-#: inc/notificationtargetresource.class.php:56
-#: inc/notificationtargetresource.class.php:300 inc/resource.class.php:2950
+#: inc/notificationtargetresource.class.php:57
+#: inc/notificationtargetresource.class.php:318 inc/resource.class.php:3312
 msgid "These resources have normally left the company"
 msgstr "Aceste resurse au părăsit normal compania"
 
-#: inc/notificationtargetresource.class.php:57
-#: inc/notificationtargetresource.class.php:359
+#: inc/notificationtargetresource.class.php:58
+#: inc/notificationtargetresource.class.php:383
 msgid "Actions to do on these new resources"
 msgstr "Acţiuni ce trebuiesc făcute pe aceste resurse noi"
 
-#: inc/notificationtargetresource.class.php:58
-#: inc/notificationtargetresource.class.php:363
+#: inc/notificationtargetresource.class.php:59
+#: inc/notificationtargetresource.class.php:387
 msgid "Actions to do on these leaving resources"
 msgstr "Acţiuni ce trebuiesc făcute pe aceste resurse ce părăsesc"
 
-#: inc/notificationtargetresource.class.php:59
-#: inc/notificationtargetresource.class.php:460
+#: inc/notificationtargetresource.class.php:60
+#: inc/notificationtargetresource.class.php:490
 msgid "A resource has been declared leaving"
 msgstr "O resursă a fost declarată plecată"
 
-#: inc/notificationtargetresource.class.php:60
-#: inc/notificationtargetresource.class.php:642
+#: inc/notificationtargetresource.class.php:61
+#: inc/notificationtargetresource.class.php:792
 msgid "Creation report of the human resource"
 msgstr "Raport Creare resurse umane"
 
-#: inc/notificationtargetresource.class.php:61
+#: inc/notificationtargetresource.class.php:62
 msgid "A non contract period has been added"
 msgstr "O perioadă intercontracte a fost adăugată"
 
-#: inc/notificationtargetresource.class.php:62
+#: inc/notificationtargetresource.class.php:63
 msgid "A non contract period has been updated"
 msgstr "O perioadă intercontracte a fost modificată"
 
-#: inc/notificationtargetresource.class.php:63
+#: inc/notificationtargetresource.class.php:64
 msgid "A non contract period has been removed"
 msgstr "O perioadă intercontracte a fost înlăturată"
 
-#: inc/notificationtargetresource.class.php:64
+#: inc/notificationtargetresource.class.php:65
 msgid "A forced holiday has been added"
 msgstr "Un concediu angajator a fost adăugat"
 
-#: inc/notificationtargetresource.class.php:65
+#: inc/notificationtargetresource.class.php:66
 msgid "A forced holiday has been updated"
 msgstr "Un concediu angajator a fost modificat"
 
-#: inc/notificationtargetresource.class.php:66
+#: inc/notificationtargetresource.class.php:67
 msgid "A forced holiday has been removed"
 msgstr "Un concediu angajator a fost înlăturat"
 
-#: inc/notificationtargetresource.class.php:67
+#: inc/notificationtargetresource.class.php:68
 msgid "Other resource notification"
 msgstr "Alte notificare resurse"
 
-#: inc/notificationtargetresource.class.php:68
+#: inc/notificationtargetresource.class.php:69
 msgid "Transfer resource notification"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:84
+#: inc/notificationtargetresource.class.php:70
+#: inc/notificationtargetresource.class.php:1297 inc/resource.class.php:3246
+msgid "Resources list of commercial manager"
+msgstr ""
+
+#: inc/notificationtargetresource.class.php:89
 msgid "Resource user"
 msgstr "Resurse utilizator"
 
-#: inc/notificationtargetresource.class.php:88
+#: inc/notificationtargetresource.class.php:94
 msgid "Task's responsible technician"
 msgstr "Tehnician responsabil al taskului"
 
-#: inc/notificationtargetresource.class.php:89
+#: inc/notificationtargetresource.class.php:95
 msgid "Task's responsible group"
 msgstr "Grupul responsabil al taskului"
 
-#: inc/notificationtargetresource.class.php:98
+#: inc/notificationtargetresource.class.php:104
 msgid "Target entity group"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:99
+#: inc/notificationtargetresource.class.php:105
 msgid "Source entity group"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:100
+#: inc/notificationtargetresource.class.php:106
 msgid "Source entity group manager"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:101
+#: inc/notificationtargetresource.class.php:107
 msgid "Target entity group manager"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:256
-#: inc/notificationtargetresource.class.php:998
-#: inc/notificationtargetresource.class.php:1087
+#: inc/notificationtargetresource.class.php:274
+#: inc/notificationtargetresource.class.php:1173
+#: inc/notificationtargetresource.class.php:1269
 msgid "Used for planning"
 msgstr "Utilizat la planificare"
 
-#: inc/notificationtargetresource.class.php:257
-#: inc/notificationtargetresource.class.php:999
-#: inc/notificationtargetresource.class.php:1088 inc/task.class.php:286
+#: inc/notificationtargetresource.class.php:275
+#: inc/notificationtargetresource.class.php:1174
+#: inc/notificationtargetresource.class.php:1270 inc/task.class.php:286
 #: inc/task.class.php:485
 msgid "Effective duration"
 msgstr "Durata efectivă"
 
-#: inc/notificationtargetresource.class.php:258
-#: inc/notificationtargetresource.class.php:1000
-#: inc/notificationtargetresource.class.php:1089 inc/task.class.php:298
+#: inc/notificationtargetresource.class.php:276
+#: inc/notificationtargetresource.class.php:1175
+#: inc/notificationtargetresource.class.php:1271 inc/task.class.php:298
 #: inc/task.class.php:480
 msgid "Carried out task"
 msgstr "Task efectuat"
 
-#: inc/notificationtargetresource.class.php:462
+#: inc/notificationtargetresource.class.php:492
 msgid "Please check the leaving checklist of the resource"
 msgstr "Verificaţi lista de verificare la plecare a resursei"
 
-#: inc/notificationtargetresource.class.php:484
-#: inc/notificationtargetresource.class.php:581
-#: inc/notificationtargetresource.class.php:1042
-#: inc/notificationtargetresource.class.php:1063 inc/recap.class.php:94
-#: inc/resource.class.php:278 inc/resource.class.php:827
-#: inc/resource.class.php:1473 inc/rulecontracttype.class.php:204
+#: inc/notificationtargetresource.class.php:514
+#: inc/notificationtargetresource.class.php:601
+#: inc/notificationtargetresource.class.php:721
+#: inc/notificationtargetresource.class.php:1219
+#: inc/notificationtargetresource.class.php:1245 inc/recap.class.php:94
+#: inc/resource.class.php:293 inc/resource.class.php:938
+#: inc/resource.class.php:1689 inc/rulecontracttype.class.php:208
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Cota"
 
-#: inc/notificationtargetresource.class.php:546
+#: inc/notificationtargetresource.class.php:572
+#: inc/notificationtargetresource.class.php:773 inc/resource.class.php:345
+msgid "Declaration of departure date"
+msgstr ""
+
+#: inc/notificationtargetresource.class.php:586
 msgid "Thanks to recover his badges"
 msgstr "Mulţumim pentru recuperarea ecusoanele lui"
 
-#: inc/notificationtargetresource.class.php:661
-#: inc/notificationtargetresource.class.php:701
+#: inc/notificationtargetresource.class.php:593
+msgid "List of your associated resources"
+msgstr ""
+
+#: inc/notificationtargetresource.class.php:811
+#: inc/notificationtargetresource.class.php:851
 msgid "Informations of the created user"
 msgstr "Informaţii utilizator creat"
 
-#: inc/notificationtargetresource.class.php:667
-#: inc/notificationtargetresource.class.php:707
-#: inc/notificationtargetresource.class.php:758
-#: inc/notificationtargetresource.class.php:790
+#: inc/notificationtargetresource.class.php:817
+#: inc/notificationtargetresource.class.php:857
+#: inc/notificationtargetresource.class.php:909
+#: inc/notificationtargetresource.class.php:942
 msgid "Additional informations"
 msgstr "Informaţii adiţionale"
 
-#: inc/notificationtargetresource.class.php:682
+#: inc/notificationtargetresource.class.php:832
 msgid "Transfer report of the human resource"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:720
-#: inc/notificationtargetresource.class.php:1092 inc/resource.class.php:2427
+#: inc/notificationtargetresource.class.php:870
+#: inc/notificationtargetresource.class.php:1275 inc/resource.class.php:2773
 msgid "Target entity"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:721
-#: inc/notificationtargetresource.class.php:1091
+#: inc/notificationtargetresource.class.php:871
+#: inc/notificationtargetresource.class.php:1274
 msgid "Source entity"
 msgstr ""
 
-#: inc/notificationtargetresource.class.php:736
+#: inc/notificationtargetresource.class.php:887
+#: inc/notificationtargetresource.class.php:1232 inc/profile.class.php:204
+#: inc/resource.class.php:1366 inc/resource.class.php:1367
+#: inc/resourceresting.class.php:246
 msgid "Non contract period management"
-msgstr "Managementul perioadelor intercontracte"
+msgid_plural "Non contract periods management"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: inc/notificationtargetresource.class.php:738
-#: inc/resourceresting.class.php:196
+#: inc/notificationtargetresource.class.php:889
+#: inc/notificationtargetresource.class.php:1233
+#: inc/resourceresting.class.php:306
 msgid "Detail of non contract period"
 msgstr "Detalii perioadă intercontracte"
 
-#: inc/notificationtargetresource.class.php:745
-#: inc/resourceresting.class.php:153 inc/resourceresting.class.php:225
+#: inc/notificationtargetresource.class.php:896
+#: inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
 msgid "Agency concerned"
 msgstr "Agenţia în cauză"
 
-#: inc/notificationtargetresource.class.php:749
-#: inc/resourceresting.class.php:158 inc/resourceresting.class.php:231
+#: inc/notificationtargetresource.class.php:900
+#: inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
 msgid "At home"
 msgstr "Acasă"
 
-#: inc/notificationtargetresource.class.php:764
-#: inc/notificationtargetresource.class.php:796
+#: inc/notificationtargetresource.class.php:915
+#: inc/notificationtargetresource.class.php:948
 msgid "Reported by"
 msgstr "Raportat de"
 
-#: inc/notificationtargetresource.class.php:775
+#: inc/notificationtargetresource.class.php:927
+#: inc/notificationtargetresource.class.php:1240 inc/resource.class.php:1375
+#: inc/resource.class.php:1376 inc/resourceholiday.class.php:178
 msgid "Forced holiday management"
 msgstr "Management concedii angajator"
 
-#: inc/notificationtargetresource.class.php:777
-#: inc/resourceholiday.class.php:192
+#: inc/notificationtargetresource.class.php:929
+#: inc/notificationtargetresource.class.php:1241
+#: inc/resourceholiday.class.php:223
 msgid "Detail of the forced holiday"
 msgstr "Detalii concediu angajator"
 
-#: inc/notificationtargetresource.class.php:810
-#: inc/notificationtargetresource.class.php:1104
+#: inc/notificationtargetresource.class.php:963
+#: inc/notificationtargetresource.class.php:1287
 msgid "Modified fields"
 msgstr "Câmpuri modificate"
 
-#: inc/notificationtargetresource.class.php:990
+#: inc/notificationtargetresource.class.php:1165
 msgid "Associated tasks"
 msgstr "Taskuri asociate"
 
-#: inc/notificationtargetresource.class.php:1099
+#: inc/notificationtargetresource.class.php:1282
 msgid "At creation, update, removal of a resource"
 msgstr "La crearea, modificarea, ştergerea unei resurse"
 
-#: inc/notificationtargetresource.class.php:1109
+#: inc/notificationtargetresource.class.php:1292
 msgid "At creation, update, removal of a task"
 msgstr "La crearea, modificarea, ştergerea unui task"
 
@@ -860,33 +900,33 @@ msgstr[0] "Linie profesională"
 msgstr[1] "Linii profesionale"
 msgstr[2] "Linii profesionale"
 
-#: inc/profile.class.php:140 inc/profile.class.php:225
+#: inc/profile.class.php:142 inc/profile.class.php:232
 msgid "All resources access"
 msgstr "Acces la toate resursele"
 
-#: inc/profile.class.php:151
+#: inc/profile.class.php:153
 msgid "Service company management"
 msgstr "Management companie servicii"
 
-#: inc/profile.class.php:156
+#: inc/profile.class.php:158
 msgid "Public service management"
 msgstr "Management Sector public"
 
-#: inc/profile.class.php:202 inc/resourceresting.class.php:41
-msgid "Non contract period"
-msgid_plural "Non contract periods"
-msgstr[0] "Perioadă intercontracte"
-msgstr[1] "Perioade intercontracte"
-msgstr[2] "Perioade intercontracte"
-
-#: inc/profile.class.php:207 inc/resourceholiday.class.php:42
+#: inc/profile.class.php:209 inc/resourceholiday.class.php:42
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] "Concediu"
 msgstr[1] "Concedii"
 msgstr[2] "Concedii"
 
-#: inc/profile.class.php:217
+#: inc/profile.class.php:214
+msgid "Super habilitation"
+msgid_plural "Super habilitations"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: inc/profile.class.php:224
 msgid "Dropdown management"
 msgstr "Managementul  listelor derulantelor"
 
@@ -917,156 +957,332 @@ msgstr "Trimite altă notificare"
 msgid "Notification configuration"
 msgstr "Configurare Notificări"
 
-#: inc/resource.class.php:266 inc/resource.class.php:779
+#: inc/resourcebadge.class.php:51 inc/resourcebadge.class.php:205
+#: inc/resource.class.php:1393 inc/resource.class.php:1394
+msgid "Badge management"
+msgid_plural "Badges management"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: inc/resourcebadge.class.php:121 inc/resourcehabilitation.class.php:135
+msgid "The current entity is already linked to a meta-demand"
+msgstr ""
+
+#: inc/resourcebadge.class.php:166 inc/resourcehabilitation.class.php:187
+msgid "Meta-demands linked"
+msgstr ""
+
+#: inc/resourcebadge.class.php:216 inc/resourcebadge.class.php:217
+msgid "Request new badge"
+msgstr ""
+
+#: inc/resourcebadge.class.php:225 inc/resourcebadge.class.php:226
+#: inc/resourcebadge.class.php:257 inc/resourcebadge.class.php:419
+#: inc/resourcebadge.class.php:420 inc/resource_change.class.php:88
+msgid "Badge restitution"
+msgstr ""
+
+#: inc/resourcebadge.class.php:293
+msgid "List of badges"
+msgstr ""
+
+#: inc/resource_change.class.php:76
+msgid "Change manager"
+msgstr ""
+
+#: inc/resource_change.class.php:78
+msgid "Change the sales manager"
+msgstr ""
+
+#: inc/resource_change.class.php:80
+msgid "Change the access profil"
+msgstr ""
+
+#: inc/resource_change.class.php:82
+msgid "Change contract type"
+msgstr ""
+
+#: inc/resource_change.class.php:84
+msgid "Change of agency"
+msgstr ""
+
+#: inc/resource_change.class.php:86
+msgid "Change direction (mutation)"
+msgstr ""
+
+#: inc/resource_change.class.php:104
+msgid "Please select a resource"
+msgstr ""
+
+#: inc/resource_change.class.php:116 inc/resource_change.class.php:371
+msgid "Manager for the current resource"
+msgstr ""
+
+#: inc/resource_change.class.php:122 inc/resource_change.class.php:372
+msgid "New resource manager"
+msgstr ""
+
+#: inc/resource_change.class.php:146 inc/resource_change.class.php:380
+msgid "Sales manager for the current resource"
+msgstr ""
+
+#: inc/resource_change.class.php:152
+msgid "New resource sales manager"
+msgstr ""
+
+#: inc/resource_change.class.php:176 inc/resource_change.class.php:389
+msgid "Current access profile of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:182 inc/resource_change.class.php:390
+msgid "New access profile of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:205 inc/resource_change.class.php:398
+msgid "Current contract type of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:211 inc/resource_change.class.php:399
+msgid "New type of contract"
+msgstr ""
+
+#: inc/resource_change.class.php:234 inc/resource_change.class.php:407
+msgid "Current agency of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:240 inc/resource_change.class.php:408
+msgid "New resource agency"
+msgstr ""
+
+#: inc/resource_change.class.php:328
+msgid "Starting change"
+msgstr ""
+
+#: inc/resource_change.class.php:369 inc/resource_change.class.php:370
+msgid "Change manager for"
+msgstr ""
+
+#: inc/resource_change.class.php:378 inc/resource_change.class.php:379
+msgid "Change of sales manager for"
+msgstr ""
+
+#: inc/resource_change.class.php:381
+msgid "New sales manager for the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:387 inc/resource_change.class.php:388
+msgid "Change the access profile for"
+msgstr ""
+
+#: inc/resource_change.class.php:396 inc/resource_change.class.php:397
+msgid "Change the type of contract for"
+msgstr ""
+
+#: inc/resource_change.class.php:405 inc/resource_change.class.php:406
+msgid "Change of agency for"
+msgstr ""
+
+#: inc/resource_change.class.php:429 inc/resource_change.class.php:450
+msgid "Managing change actions"
+msgstr ""
+
+#: inc/resource.class.php:281 inc/resource.class.php:890
 msgid "Photo"
 msgstr "Foto"
 
-#: inc/resource.class.php:590
+#: inc/resource.class.php:676
 msgid "End date was not completed. Please try again."
 msgstr "Data de sfârşit nu a fost completată. Încearcă din nou."
 
-#: inc/resource.class.php:1032 inc/resource.class.php:1616
+#: inc/resource.class.php:1179 inc/resource.class.php:1862
 msgid "Empty for non defined"
 msgstr "Gol pentru nedefinit"
 
-#: inc/resource.class.php:1124
+#: inc/resource.class.php:1282
 msgid "Menu"
 msgstr "Meniu"
 
-#: inc/resource.class.php:1137
+#: inc/resource.class.php:1291
 msgid "Resources management"
 msgstr "Managementul resurselor"
 
-#: inc/resource.class.php:1145 inc/resource.class.php:1146
+#: inc/resource.class.php:1299 inc/resource.class.php:1300
 msgid "Declare an arrival"
 msgstr "Declarare sosire"
 
-#: inc/resource.class.php:1157 inc/resource.class.php:1158
-msgid "Search resources"
-msgstr "Caută resursă"
+#: inc/resource.class.php:1313 inc/resource.class.php:1314
+#: inc/resource.class.php:2663
+msgid "Declare a change"
+msgstr ""
 
-#: inc/resource.class.php:1170 inc/resource.class.php:1171
-#: inc/resource.class.php:2342 inc/resource.class.php:2373
+#: inc/resource.class.php:1327 inc/resource.class.php:1328
+#: inc/resource.class.php:2597 inc/resource.class.php:2628
 msgid "Declare a departure"
 msgstr "Declarare plecare"
 
-#: inc/resource.class.php:1177 inc/resource.class.php:1178
-#: inc/resource.class.php:2403 inc/resource.class.php:2445
-msgid "Declare a transfer"
-msgstr ""
-
-#: inc/resource.class.php:1195
+#: inc/resource.class.php:1342
 msgid "Others declarations"
 msgstr "Alte declaraţii"
 
-#: inc/resource.class.php:1202 inc/resource.class.php:1203
-#: inc/resourceresting.class.php:194 inc/resourceresting.class.php:252
-msgid "Declare a non contract period"
-msgstr "Declară o perioadă intercontracte"
+#: inc/resource.class.php:1403
+msgid "Others actions"
+msgstr ""
 
-#: inc/resource.class.php:1208 inc/resource.class.php:1209
-#: inc/resource.class.php:3269 inc/resourceresting.class.php:255
-#: inc/resourceresting.class.php:1013
-msgid "List of non contract periods"
-msgstr "Lista intercontracteleor"
+#: inc/resource.class.php:1409 inc/resource.class.php:1410
+msgid "Search resources"
+msgstr "Caută resursă"
 
-#: inc/resource.class.php:1215 inc/resource.class.php:1216
-#: inc/resourceholiday.class.php:190 inc/resourceholiday.class.php:232
-msgid "Declare a forced holiday"
-msgstr "Declară concediu angajator"
-
-#: inc/resource.class.php:1220 inc/resource.class.php:1221
-#: inc/resource.class.php:3274 inc/resourceholiday.class.php:235
-#: inc/resourceholiday.class.php:1003
-msgid "List of forced holidays"
-msgstr "Lista concediilor angajatori"
-
-#: inc/resource.class.php:1230
+#: inc/resource.class.php:1428
 msgid "Employments / budgets management"
 msgstr "Managementul angajaţilor/ bugetelor"
 
-#: inc/resource.class.php:1239 inc/resource.class.php:1240
+#: inc/resource.class.php:1439 inc/resource.class.php:1440
 msgid "Declare an employment"
 msgstr "Declară un angajat"
 
-#: inc/resource.class.php:1246 inc/resource.class.php:1247
-#: inc/resource.class.php:3279
+#: inc/resource.class.php:1448 inc/resource.class.php:1449
+#: inc/resource.class.php:3703
 msgid "Employment management"
 msgstr "Managementul angajări"
 
-#: inc/resource.class.php:1254 inc/resource.class.php:1255
-#: inc/resource.class.php:3285
+#: inc/resource.class.php:1458 inc/resource.class.php:1459
+#: inc/resource.class.php:3709
 msgid "Budget management"
 msgstr "Management buget"
 
-#: inc/resource.class.php:1263 inc/resource.class.php:1264
-#: inc/resource.class.php:3280
+#: inc/resource.class.php:1469 inc/resource.class.php:1470
+#: inc/resource.class.php:3704
 msgid "List Employments / Resources"
 msgstr "Lista Angajaşilor/ Resurselor"
 
-#: inc/resource.class.php:1288
+#: inc/resource.class.php:1498
 msgid "Welcome to the wizard resource"
 msgstr "Bine aţi venit la wizard ul resursă"
 
-#: inc/resource.class.php:1292
+#: inc/resource.class.php:1502
 msgid "This wizard lets you create new resources in GLPI"
 msgstr "Acest wizard va permite să creaţi o nouă resursă în GLPI"
 
-#: inc/resource.class.php:1294
+#: inc/resource.class.php:1504
 msgid "To begin, select type of contract"
 msgstr "Pentru a începe, selectaţi tipul de contract"
 
-#: inc/resource.class.php:1428
+#: inc/resource.class.php:1577
+msgid "Enter general information about the resource"
+msgstr "Introduceţi informaţii generale despre resursă"
+
+#: inc/resource.class.php:1644
 msgid ""
 "Thank you for paying attention to the spelling of the name and the firstname"
 " of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr "Vă mulțumesc pentru atenția acordată ortografierea numelui și prenumelui resursei. Pentru prenumele compuse, separați-le cu o cratimă \"-\"."
 
-#: inc/resource.class.php:1651
+#: inc/resource.class.php:1897
 msgid "The fields in red must be completed"
 msgstr "Câmpurile în roşu trebuiesc completate"
 
-#: inc/resource.class.php:1717
+#: inc/resource.class.php:1968
 msgid "Add the photo of the resource"
 msgstr "Adaugă foto al resursei"
 
-#: inc/resource.class.php:1739
+#: inc/resource.class.php:1990
 msgid "Photo format : JPG"
 msgstr "Foto format : JPG"
 
-#: inc/resource.class.php:2470
+#: inc/resource.class.php:2679
+msgid "Actions to be taken"
+msgstr ""
+
+#: inc/resource.class.php:2696
+#, php-format
+msgid "Please correct: %s"
+msgstr ""
+
+#: inc/resource.class.php:2745 inc/resource.class.php:2792
+msgid "Declare a transfer"
+msgstr ""
+
+#: inc/resource.class.php:2760
+msgid "Current entity"
+msgstr ""
+
+#: inc/resource.class.php:2816 inc/resource_item.class.php:673
+msgid "Associate a resource"
+msgstr "Asociază o resursă"
+
+#: inc/resource.class.php:2818
 msgid "Generate resources"
 msgstr "Generează resursă"
 
-#: inc/resource.class.php:2597 inc/resource.class.php:2623
+#: inc/resource.class.php:2945 inc/resource.class.php:2971
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Acestă resursă a fost adăugată"
 msgstr[1] "Aceste resurse au fost adăugate"
 msgstr[2] "Aceste resurse au fost adăugate"
 
-#: inc/resource.class.php:2600 inc/resource.class.php:2620
+#: inc/resource.class.php:2948 inc/resource.class.php:2968
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Acestă resursă deja există"
 msgstr[1] "Aceste resurse deja există"
 msgstr[2] "Aceste resurse deja există"
 
-#: inc/resource.class.php:2868
+#: inc/resource.class.php:3226
 msgid "Declaration of resource transfer OK"
 msgstr ""
 
-#: inc/resource.class.php:2884
+#: inc/resource.class.php:3242
 msgid "Resources not declaring leaving"
 msgstr "Resurse nedeclarate plecarea"
 
-#: inc/resource.class.php:3002
+#: inc/resource.class.php:3394 inc/resource.class.php:3398
+msgid "Send alert to the commercial manager"
+msgstr ""
+
+#: inc/resource.class.php:3404 inc/resource.class.php:3407
+msgid "Failed to Send alert to the commercial manager"
+msgstr ""
+
+#: inc/resource.class.php:3426
 msgid "Select the contract type"
 msgstr "Selectează tipul contractului"
 
-#: inc/resource.class.php:3290 inc/taskplanning.class.php:42
+#: inc/resource.class.php:3693 inc/resourceresting.class.php:269
+#: inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
+#: inc/resourceresting.class.php:445 inc/resourceresting.class.php:1258
+msgid "List of non contract periods"
+msgstr "Lista intercontracteleor"
+
+#: inc/resource.class.php:3698 inc/resourceholiday.class.php:191
+#: inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
+#: inc/resourceholiday.class.php:1034
+msgid "List of forced holidays"
+msgstr "Lista concediilor angajatori"
+
+#: inc/resource.class.php:3714 inc/taskplanning.class.php:42
 msgid "Tasks list"
 msgstr "Listă taskuri"
+
+#: inc/resourcehabilitation.class.php:54
+msgid "Super habilitation management"
+msgid_plural "Super habilitations management"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: inc/resourcehabilitation.class.php:89
+#: inc/resourcehabilitation.class.php:239
+#: inc/resourcehabilitation.class.php:240
+msgid "Declare a super habilitation"
+msgstr ""
+
+#: inc/resourcehabilitation.class.php:91
+#: inc/resourcehabilitation.class.php:248
+#: inc/resourcehabilitation.class.php:249
+msgid "Remove a super habilitation"
+msgstr ""
 
 #: inc/resourceholiday.class.php:56 inc/resourceholiday.class.php:83
 msgid "The begin date of the forced holiday period must be filled"
@@ -1080,6 +1296,11 @@ msgstr "Data de sfîrşit a perioadei concediului angajator trebuie completată"
 msgid "Forced holiday declaration of a resource performed"
 msgstr "Declararea concediului angajator a resursei realizată"
 
+#: inc/resourceholiday.class.php:186 inc/resourceholiday.class.php:187
+#: inc/resourceholiday.class.php:221 inc/resourceholiday.class.php:263
+msgid "Declare a forced holiday"
+msgstr "Declară concediu angajator"
+
 #: inc/resource_item.class.php:247
 msgid "Modification of the associated user's location"
 msgstr "Modificare a locaţiei utilizatorului asociat"
@@ -1088,13 +1309,34 @@ msgstr "Modificare a locaţiei utilizatorului asociat"
 msgid "Associated Human Resource"
 msgstr "Resursă umană asociată"
 
-#: inc/resourceresting.class.php:55 inc/resourceresting.class.php:79
+#: inc/resourceresting.class.php:50
+msgid "Non contract period"
+msgid_plural "Non contract periods"
+msgstr[0] "Perioadă intercontracte"
+msgstr[1] "Perioade intercontracte"
+msgstr[2] "Perioade intercontracte"
+
+#: inc/resourceresting.class.php:86 inc/resourceresting.class.php:122
 msgid "The begin date of the non contract period must be filled"
 msgstr "Data de început a perioadei intrecontracte trebuie completată"
 
-#: inc/resourceresting.class.php:65
+#: inc/resourceresting.class.php:101
 msgid "Non contract period declaration of a resource performed"
 msgstr "Declararea perioadei intercontracte a resursei realizată"
+
+#: inc/resourceresting.class.php:255 inc/resourceresting.class.php:256
+#: inc/resourceresting.class.php:304 inc/resourceresting.class.php:362
+msgid "Declare a non contract period"
+msgstr "Declară o perioadă intercontracte"
+
+#: inc/resourceresting.class.php:262 inc/resourceresting.class.php:263
+#: inc/resourceresting.class.php:409
+msgid "Declaring the end of non contract periods"
+msgstr ""
+
+#: inc/resourceresting.class.php:476
+msgid "Choosing the intercontrat"
+msgstr ""
 
 #: inc/resourcesituation.class.php:40
 msgid "Public status"
@@ -1140,6 +1382,18 @@ msgstr "Câmpuri cerute"
 #: inc/rulecontracttypecollection.class.php:43
 msgid "Assignment rule of fields to a contract type"
 msgstr "Reguli de atribuire al câmpurilor la un tip de contract"
+
+#: inc/servicecatalog.class.php:61
+msgid "Manage"
+msgstr ""
+
+#: inc/servicecatalog.class.php:61
+msgid "human resources"
+msgstr ""
+
+#: inc/servicecatalog.class.php:69
+msgid "Manage human resources"
+msgstr ""
 
 #: inc/task.class.php:630
 msgid "Tasks in progress"
