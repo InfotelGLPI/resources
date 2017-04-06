@@ -33,9 +33,11 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginResourcesRuleContracttypeCollection extends RuleCollection {
 
+   static $rightname = 'plugin_resources';
+
    // From RuleCollection
    public $stop_on_first_match=true;
-   static public $right='entity_rule_ticket';
+   static public $right='rule_ticket';
    public $menu_option='contracttypes';
    
    function getTitle() {

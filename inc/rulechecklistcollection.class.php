@@ -33,7 +33,7 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
    
    // From RuleCollection
    //public $use_output_rule_process_as_next_input=true;
-   static public $right='entity_rule_ticket';
+   static public $right='rule_ticket';
    public $menu_option='checklists';
 
    function getTitle() {

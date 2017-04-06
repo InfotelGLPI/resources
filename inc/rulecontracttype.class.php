@@ -44,7 +44,7 @@ class PluginResourcesRuleContracttype extends Rule {
    static $rightname = 'plugin_resources';
    
    // From Rule
-   static public $right='entity_rule_ticket';
+   static public $right='rule_ticket';
    public $can_sort=true;
 
 
