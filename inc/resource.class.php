@@ -1288,52 +1288,35 @@ class PluginResourcesResource extends CommonDBTM {
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
 
-      echo "<tr><th colspan='6'>".__('Resources management', 'resources')."</th></tr>";
-
-      echo "<tr class='tab_bg_1'>";
-
       if($this->canCreate()) {
+         echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+
+
          //Add a resource
          echo "<td class='center' colspan='2' width='200'>";
          echo "<a href=\"./wizard.form.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/newresource.png' alt='".__('Declare an arrival', 'resources')."'>";
-         echo "<br>".__('Declare an arrival', 'resources')."</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/newresource.png' alt='" . __('Declare an arrival', 'resources') . "'>";
+         echo "<br>" . __('Declare an arrival', 'resources') . "</a>";
          echo "</td>";
-      
-      } else {
-         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
-         echo "</td>";
-      }
 
-
-      if($this->canCreate()) {
          //Add a change
          echo "<td class='center' colspan='2'  width='200'>";
          echo "<a href=\"./resource.change.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/recap.png' alt='".__('Declare a change', 'resources')."'>";
-         echo "<br>".__('Declare a change', 'resources')."</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap.png' alt='" . __('Declare a change', 'resources') . "'>";
+         echo "<br>" . __('Declare a change', 'resources') . "</a>";
          echo "</td>";
 
-      } else {
-         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
-         echo "</td>";
-      }
-
-      if($this->canCreate()) {
-      
          //Remove resources
          echo "<td class='center' colspan='2'  width='200'>";
          echo "<a href=\"./resource.remove.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/removeresource.png' alt='".__('Declare a departure', 'resources')."'>";
-         echo "<br>".__('Declare a departure', 'resources')."</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/removeresource.png' alt='" . __('Declare a departure', 'resources') . "'>";
+         echo "<br>" . __('Declare a departure', 'resources') . "</a>";
          echo "</td>";
-      
-      } else {
-         echo "<td class='center' colspan='2'  width='200'>&nbsp;";
-         echo "</td>";
-      }
 
-      echo "</tr>";
+         echo "</tr>";
+      }
 
       $plugin = new Plugin();
       $canbadges = ($plugin->isActivated("badges"));
@@ -1400,27 +1383,25 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</tr>";
       }
 
-      echo "<tr><th colspan='6'>".__('Others actions', 'resources')."</th></tr>";
-      echo "<tr class='tab_bg_1'>";
       if($this->canView()) {
+         echo "<tr><th colspan='6'>" . __('Others actions', 'resources') . "</th></tr>";
+         echo "<tr class='tab_bg_1'>";
+
          //See resources
          echo "<td class='center' colspan='3'>";
          echo "<a href=\"./resource.php\">";
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/resourcelist.png' alt='".__('Search resources', 'resources')."'>";
-         echo "<br>".__('Search resources', 'resources')."</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resourcelist.png' alt='" . __('Search resources', 'resources') . "'>";
+         echo "<br>" . __('Search resources', 'resources') . "</a>";
          echo "</td>";
 
-      } else {
-         echo "<td class='center' colspan='3'>&nbsp;";
+
+         echo "<td class='center' colspan='3'>";
+         echo "<a href=\"./directory.php\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory.png' alt='" . PluginResourcesDirectory::getTypeName(1) . "'>";
+         echo "<br>" . PluginResourcesDirectory::getTypeName(1) . "</a>";
          echo "</td>";
+         echo "</tr>";
       }
-
-      echo "<td class='center' colspan='3'>";
-      echo "<a href=\"./directory.php\">";
-      echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/directory.png' alt='".PluginResourcesDirectory::getTypeName(1)."'>";
-      echo "<br>".PluginResourcesDirectory::getTypeName(1)."</a>";
-      echo "</td>";
-      echo "</tr>";
 
       if ($canseeemployment || $canseebudget) {
          $colspan = 0;
@@ -3682,8 +3663,11 @@ class PluginResourcesResource extends CommonDBTM {
       $menu['title'] = self::getTypeName(2);
       $menu['page'] = $plugin_page;
       $menu['links']['search'] = "/plugins/resources/front/resource.php";
-      $menu['links']['add'] = '/plugins/resources/front/wizard.form.php';
-      $menu['links']['template'] = '/plugins/resources/front/setup.templates.php?add=0';
+
+      if (Session::haveright("plugin_resources", CREATE)) {
+         $menu['links']['add']      = '/plugins/resources/front/wizard.form.php';
+         $menu['links']['template'] = '/plugins/resources/front/setup.templates.php?add=0';
+      }
       
       // Resource directory
       $menu['links']["<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/directory18.png' title='".__('Directory', 'resources')."' alt='".__('Directory', 'resources')."'>"] = '/plugins/resources/front/directory.php';

@@ -49,7 +49,7 @@ class PluginResourcesServicecatalog extends CommonGLPI
       global $CFG_GLPI;
 
       return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>
-      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/resources.png\" alt=\"Advanced request\" width=\"200\" height=\"110\"></a>";
+      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/resources.png\" alt=\"Advanced request\" width=\"190\" height=\"100\"></a>";
 
    }
 
@@ -66,7 +66,7 @@ class PluginResourcesServicecatalog extends CommonGLPI
    static function getMenuComment()
    {
 
-      echo __('Manage human resources', 'resources');
+      _e('Manage human resources', 'resources');
    }
 
    static function getLinkList()
