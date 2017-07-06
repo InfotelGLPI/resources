@@ -374,8 +374,8 @@ class PluginResourcesChoice extends CommonDBTM {
       
       echo "<script type='text/javascript' >\n";
       echo "function hideAddForm$items_id() {\n";
-      echo "Ext.get('addcommentneed$items_id$rand').setDisplayed('none');";
-      echo "Ext.get('viewaccept$items_id').setDisplayed('none');";
+      echo "$('#addcommentneed$items_id$rand').hide();";
+      echo "$('#viewaccept$items_id').hide();";
       echo "}\n";
       echo "</script>\n";
    }
@@ -386,8 +386,9 @@ class PluginResourcesChoice extends CommonDBTM {
       $items_id = $item['id'];
       echo "<script type='text/javascript' >\n";
       echo "function showComment$items_id () {\n";
-      echo "Ext.get('commentneed$items_id$rand').setDisplayed('none');";
-      echo "Ext.get('viewaccept$items_id$rand').setDisplayed('block');";
+      echo "$('#commentneed$items_id$rand').hide();";
+      echo "$('#viewaccept$items_id$rand').show();";
+
       $params = array('name'      => 'commentneed'.$items_id,
                       'data'      => rawurlencode($item["comment"]));
       Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", $CFG_GLPI["root_doc"]."/plugins/resources/ajax/inputtext.php", 
@@ -407,9 +408,9 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "</div>";
       echo "<script type='text/javascript' >\n";
       echo "function hideForm$items_id() {\n";
-      echo "Ext.get('commentneed$items_id$rand').setDisplayed('block');";
-      echo "Ext.select('#viewcommentneed$items_id$rand textarea').remove();";
-      echo "Ext.get('viewaccept$items_id$rand').setDisplayed('none');";
+      echo "$('#viewcommentneed$items_id$rand textarea').remove();";
+      echo "$('#commentneed$items_id$rand').show();";
+      echo "$('#viewaccept$items_id$rand').hide();";
       echo "}\n";
       echo "</script>\n";
    
