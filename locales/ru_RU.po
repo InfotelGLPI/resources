@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Resources Development Team
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Gleb Mekhrenin <mehrenin@gmail.com>, 2013
 # Александр Хомяк <xenon.alex@gmail.com>, 2016
@@ -10,14 +10,18 @@ msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-08 08:46+0100\n"
-"PO-Revision-Date: 2017-03-08 07:57+0000\n"
+"PO-Revision-Date: 2017-07-06 12:08+0200\n"
 "Last-Translator: Amandine Manceau\n"
-"Language-Team: Russian (Russia) (http://www.transifex.com/tsmr/GLPI_resources/language/ru_RU/)\n"
+"Language-Team: Russian (Russia) (http://www.transifex.com/tsmr/"
+"GLPI_resources/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: hook.php:57
 msgid "Long term contract"
@@ -625,8 +629,7 @@ msgstr ""
 
 #: inc/employment.class.php:495
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr ""
 
 #: inc/employmentstate.class.php:61 inc/employmentstate.class.php:119
@@ -1204,8 +1207,8 @@ msgstr ""
 
 #: inc/resource.class.php:1644
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 
 #: inc/resource.class.php:1897
@@ -1305,14 +1308,12 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: inc/resourcehabilitation.class.php:89
-#: inc/resourcehabilitation.class.php:239
+#: inc/resourcehabilitation.class.php:89 inc/resourcehabilitation.class.php:239
 #: inc/resourcehabilitation.class.php:240
 msgid "Declare a super habilitation"
 msgstr ""
 
-#: inc/resourcehabilitation.class.php:91
-#: inc/resourcehabilitation.class.php:248
+#: inc/resourcehabilitation.class.php:91 inc/resourcehabilitation.class.php:248
 #: inc/resourcehabilitation.class.php:249
 msgid "Remove a super habilitation"
 msgstr ""
