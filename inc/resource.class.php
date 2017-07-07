@@ -346,6 +346,18 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[28]['datatype']       = 'datetime';
       $tab[28]['massiveaction']  = false;
 
+      $tab[29]['table']          = $this->getTable();
+      $tab[29]['field']          = 'read_chart';
+      $tab[29]['name']           = __('Reading the security charter', 'resources');
+      $tab[29]['datatype']       = 'bool';
+      $tab[29]['massiveaction']  = true;
+
+      $tab[30]['table']          = $this->getTable();
+      $tab[30]['field']          = 'sensitize_security';
+      $tab[30]['name']           = __('Sensitized to security', 'resources');
+      $tab[30]['datatype']       = 'bool';
+      $tab[30]['massiveaction']  = true;
+
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
       $tab[31]['name']           = __('ID');
