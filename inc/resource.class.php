@@ -1220,6 +1220,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<input type='hidden' value='".(($this->fields['read_chart'] > 0) ? 0 : 1)."' name='is_checked$ID'>";
 
          echo "</td>";
+         echo "<td colspan='2'></td>";
          echo "</tr>";
       }
 
