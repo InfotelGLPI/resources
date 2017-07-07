@@ -51,7 +51,7 @@ function plugin_resources_install() {
    $install = false;
    if (!TableExists("glpi_plugin_resources_resources") && !TableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.2.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
          VALUES (1, '".__('Long term contract', 'resources')."', '')";
@@ -204,6 +204,11 @@ function plugin_resources_install() {
    if(!TableExists("glpi_plugin_resources_accessprofiles")){
       $update231 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.3.1.sql");
+   }
+
+   //Version 2.3.2
+   if(!TableExists("glpi_plugin_resources_configs")){
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.3.2.sql");
    }
 
    if ($update78 || $install) {
@@ -1371,8 +1376,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
 
 ',
-                        '&lt;p&gt;Bonjour,&lt;/p&gt;
-&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
+                        '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
 &lt;tbody&gt;
 &lt;tr bgcolor=\"#d9c4b8\"&gt;
 &lt;th colspan=\"11\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: center;\"&gt;##lang.commercial.title##&lt;/span&gt;&lt;/th&gt;

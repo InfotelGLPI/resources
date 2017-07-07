@@ -780,6 +780,12 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##resource.leavingreason##']      = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
                                                                                      $this->obj->getField('plugin_resources_leavingreasons_id'));
 
+         $this->datas['##lang.resource.sensitizesecurity##'] = __('Sensitized to security', 'resources');
+         $this->datas['##resource.sensitizesecurity##']      = Dropdown::getYesNo($this->obj->getField('sensitize_security'));
+
+         $this->datas['##lang.resource.readchart##'] = __('Reading the security charter', 'resources');
+         $this->datas['##resource.readchart##']      = Dropdown::getYesNo($this->obj->getField('read_chart'));
+
          $this->datas['##lang.resource.helpdesk##'] = __('Associable to a ticket');
          $this->datas['##resource.helpdesk##']      = Dropdown::getYesNo($this->obj->getField('is_helpdesk_visible'));
 
@@ -881,8 +887,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          if ($event == 'newresting'
              || $event == 'updateresting'
-             || $event == 'deleteresting'
-         ) {
+             || $event == 'deleteresting') {
 
             $this->datas['##lang.resource.restingtitle##'] = _n('Non contract period management', 'Non contract periods management', 1, 'resources');
 
@@ -921,8 +926,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          if ($event == 'newholiday'
              || $event == 'updateholiday'
-             || $event == 'deleteholiday'
-         ) {
+             || $event == 'deleteholiday') {
 
             $this->datas['##lang.resource.holidaytitle##'] = __('Forced holiday management', 'resources');
 
@@ -957,8 +961,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
              && !empty($this->target_object->oldvalues)
              && ($event == 'update'
                  || $event == 'updateresting'
-                 || $event == 'updateholiday')
-         ) {
+                 || $event == 'updateholiday')) {
 
             $this->datas['##lang.update.title##'] = __('Modified fields', 'resources');
 
@@ -1136,6 +1139,14 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                $this->target_object->oldvalues['plugin_resources_leavingreasons_id']);
             }
 
+            if (isset($this->target_object->oldvalues['plugin_resources_leavingreasons_id'])) {
+               if (empty($this->target_object->oldvalues['plugin_resources_leavingreasons_id']))
+                  $tmp['##update.leavingreason##'] = "---";
+               else
+                  $tmp['##update.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
+                                                                               $this->target_object->oldvalues['plugin_resources_leavingreasons_id']);
+            }
+
             if (isset($this->target_object->oldvalues['is_helpdesk_visible'])) {
                if (empty($this->target_object->oldvalues['is_helpdesk_visible']))
                   $tmp['##update.helpdesk##'] = "---";
@@ -1210,69 +1221,71 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
    function getTags() {
 
-      $tags = array('resource.id'              => 'ID',
-                    'resource.name'            => __('Surname'),
-                    'resource.entity'          => __('Entity'),
-                    'resource.action'          => __('List of not finished tasks', 'resources'),
-                    'resource.firstname'       => __('First name'),
-                    'resource.type'            => PluginResourcesContractType::getTypeName(1),
-                    'resource.quota'           => __('Quota', 'resources'),
-                    'resource.situation'       => PluginResourcesResourceSituation::getTypeName(1),
-                    'resource.contractnature'  => PluginResourcesContractNature::getTypeName(1),
-                    'resource.rank'            => PluginResourcesRank::getTypeName(1),
-                    'resource.speciality'      => PluginResourcesResourceSpeciality::getTypeName(1),
-                    'resource.users'           => __('Resource manager', 'resources'),
-                    'resource.usersrecipient'  => __('Requester'),
-                    'resource.datedeclaration' => __('Request date'),
-                    'resource.datebegin'       => __('Arrival date', 'resources'),
-                    'resource.dateend'         => __('Departure date', 'resources'),
-                    'resource.department'      => PluginResourcesDepartment::getTypeName(1),
-                    'resource.status'          => PluginResourcesResourceState::getTypeName(1),
-                    'resource.location'        => __('Location'),
-                    'resource.restingtitle'    => __('Non contract period management', 'resources'),
-                    'resource.resting'         => __('Detail of non contract period', 'resources'),
-                    'resource.comment'         => __('Description'),
-                    'resource.usersleaving'    => __('Informant of leaving', 'resources'),
-                    'resource.leaving'         => __('Declared as leaving', 'resources'),
-                    'resource.leavingreason'   => PluginResourcesLeavingReason::getTypeName(1),
-                    'resource.helpdesk'        => __('Associable to a ticket'),
-                    'resource.action_user'     => __('Last updater'),
-                    'resource.holidaytitle'    => __('Forced holiday management', 'resources'),
-                    'resource.holiday'         => __('Detail of the forced holiday', 'resources'),
-                    'update.name'              => __('Surname'),
-                    'update.firstname'         => __('First name'),
-                    'update.type'              => PluginResourcesContractType::getTypeName(1),
-                    'update.quota'             => __('Quota', 'resources'),
-                    'update.situation'         => PluginResourcesResourceSituation::getTypeName(1),
-                    'update.contractnature'    => PluginResourcesContractNature::getTypeName(1),
-                    'update.rank'              => PluginResourcesRank::getTypeName(1),
-                    'update.speciality'        => PluginResourcesResourceSpeciality::getTypeName(1),
-                    'update.users'             => __('Resource manager', 'resources'),
-                    'update.usersrecipient'    => __('Requester'),
-                    'update.datedeclaration'   => __('Request date'),
-                    'update.datebegin'         => __('Arrival date', 'resources'),
-                    'update.dateend'           => __('Departure date', 'resources'),
-                    'update.department'        => PluginResourcesDepartment::getTypeName(1),
-                    'update.status'            => PluginResourcesResourceState::getTypeName(1),
-                    'update.location'          => __('Location'),
-                    'update.comment'           => __('Description'),
-                    'update.usersleaving'      => __('Informant of leaving', 'resources'),
-                    'update.leaving'           => __('Declared as leaving', 'resources'),
-                    'update.leavingreason'     => PluginResourcesLeavingReason::getTypeName(1),
-                    'update.helpdesk'          => __('Associable to a ticket'),
-                    'task.name'                => __('Name'),
-                    'task.type'                => __('Type'),
-                    'task.users'               => __('Technician'),
-                    'task.groups'              => __('Group'),
-                    'task.datebegin'           => __('Begin date'),
-                    'task.dateend'             => __('End date'),
-                    'task.planned'             => __('Used for planning', 'resources'),
-                    'task.realtime'            => __('Effective duration', 'resources'),
-                    'task.finished'            => __('Carried out task', 'resources'),
-                    'task.comment'             => __('Description'),
-                    'task.resource'            => PluginResourcesResource::getTypeName(1),
-                    'resouce.sourceentity'     => __('Source entity', 'resources'),
-                    'resouce.targetentity'     => __('Target entity', 'resources'));
+      $tags = array('resource.id'                 => 'ID',
+                    'resource.name'               => __('Surname'),
+                    'resource.entity'             => __('Entity'),
+                    'resource.action'             => __('List of not finished tasks', 'resources'),
+                    'resource.firstname'          => __('First name'),
+                    'resource.type'               => PluginResourcesContractType::getTypeName(1),
+                    'resource.quota'              => __('Quota', 'resources'),
+                    'resource.situation'          => PluginResourcesResourceSituation::getTypeName(1),
+                    'resource.contractnature'     => PluginResourcesContractNature::getTypeName(1),
+                    'resource.rank'               => PluginResourcesRank::getTypeName(1),
+                    'resource.speciality'         => PluginResourcesResourceSpeciality::getTypeName(1),
+                    'resource.users'              => __('Resource manager', 'resources'),
+                    'resource.usersrecipient'     => __('Requester'),
+                    'resource.datedeclaration'    => __('Request date'),
+                    'resource.datebegin'          => __('Arrival date', 'resources'),
+                    'resource.dateend'            => __('Departure date', 'resources'),
+                    'resource.department'         => PluginResourcesDepartment::getTypeName(1),
+                    'resource.status'             => PluginResourcesResourceState::getTypeName(1),
+                    'resource.location'           => __('Location'),
+                    'resource.restingtitle'       => __('Non contract period management', 'resources'),
+                    'resource.resting'            => __('Detail of non contract period', 'resources'),
+                    'resource.comment'            => __('Description'),
+                    'resource.usersleaving'       => __('Informant of leaving', 'resources'),
+                    'resource.leaving'            => __('Declared as leaving', 'resources'),
+                    'resource.leavingreason'      => PluginResourcesLeavingReason::getTypeName(1),
+                    'resource.sensitizesecurity'  => __('Sensitized to security', 'resources'),
+                    'resource.readchart'          => __('Reading the security charter', 'resources'),
+                    'resource.helpdesk'           => __('Associable to a ticket'),
+                    'resource.action_user'        => __('Last updater'),
+                    'resource.holidaytitle'       => __('Forced holiday management', 'resources'),
+                    'resource.holiday'            => __('Detail of the forced holiday', 'resources'),
+                    'update.name'                 => __('Surname'),
+                    'update.firstname'            => __('First name'),
+                    'update.type'                 => PluginResourcesContractType::getTypeName(1),
+                    'update.quota'                => __('Quota', 'resources'),
+                    'update.situation'            => PluginResourcesResourceSituation::getTypeName(1),
+                    'update.contractnature'       => PluginResourcesContractNature::getTypeName(1),
+                    'update.rank'                 => PluginResourcesRank::getTypeName(1),
+                    'update.speciality'           => PluginResourcesResourceSpeciality::getTypeName(1),
+                    'update.users'                => __('Resource manager', 'resources'),
+                    'update.usersrecipient'       => __('Requester'),
+                    'update.datedeclaration'      => __('Request date'),
+                    'update.datebegin'            => __('Arrival date', 'resources'),
+                    'update.dateend'              => __('Departure date', 'resources'),
+                    'update.department'           => PluginResourcesDepartment::getTypeName(1),
+                    'update.status'               => PluginResourcesResourceState::getTypeName(1),
+                    'update.location'             => __('Location'),
+                    'update.comment'              => __('Description'),
+                    'update.usersleaving'         => __('Informant of leaving', 'resources'),
+                    'update.leaving'              => __('Declared as leaving', 'resources'),
+                    'update.leavingreason'        => PluginResourcesLeavingReason::getTypeName(1),
+                    'update.helpdesk'             => __('Associable to a ticket'),
+                    'task.name'                   => __('Name'),
+                    'task.type'                   => __('Type'),
+                    'task.users'                  => __('Technician'),
+                    'task.groups'                 => __('Group'),
+                    'task.datebegin'              => __('Begin date'),
+                    'task.dateend'                => __('End date'),
+                    'task.planned'                => __('Used for planning', 'resources'),
+                    'task.realtime'               => __('Effective duration', 'resources'),
+                    'task.finished'               => __('Carried out task', 'resources'),
+                    'task.comment'                => __('Description'),
+                    'task.resource'               => PluginResourcesResource::getTypeName(1),
+                    'resouce.sourceentity'        => __('Source entity', 'resources'),
+                    'resouce.targetentity'        => __('Target entity', 'resources'));
       foreach ($tags as $tag => $label) {
          $this->addTagToList(array('tag'   => $tag, 'label' => $label,
                                    'value' => true));
@@ -1301,6 +1314,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       asort($this->tag_descriptions);
    }
+
 }
 
 ?>

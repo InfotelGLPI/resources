@@ -65,7 +65,10 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
                    'plugin_resources_ranks_id'                => 0,
                    'plugin_resources_resourcespecialities_id' => 0,
                    'plugin_resources_leavingreasons_id'       => 0,
-                   'plugin_resources_accessprofiles_id'       => 0);
+                   'plugin_resources_accessprofiles_id'       => 0,
+                   'sensitize_security'                       => 0,
+                   'read_chart'                               => 0,
+   );
 
    // Clean text fields
    $values['name']    = stripslashes($values['name']);

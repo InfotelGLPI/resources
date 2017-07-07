@@ -459,6 +459,10 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (isset($input['date_end']) 
          && empty($input['date_end'])) $input['date_end']='NULL';
+
+      if (!isset($input['sensitize_security'])) $input['sensitize_security'] = 0;
+      if (!isset($input['read_chart'])) $input['read_chart'] = 0;
+
       if (!isset($input['plugin_resources_resourcestates_id'])
             || empty($input['plugin_resources_resourcestates_id'])) $input['plugin_resources_resourcestates_id']='0';
       //Add picture of the resource
@@ -605,6 +609,9 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($input['date_end']) 
             && empty($input['date_end'])) $input['date_end']='NULL';
 
+      if (!isset($input['sensitize_security'])) $input['sensitize_security'] = 0;
+      if (!isset($input['read_chart'])) $input['read_chart'] = 0;
+
       //unset($input['picture']);
       $this->getFromDB($input["id"]);
 
@@ -647,6 +654,8 @@ class PluginResourcesResource extends CommonDBTM {
       $input["_old_date_declaration_leaving"]                 = $this->fields["date_declaration_leaving"];
       $input["_old_plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
       $input["_old_comment"]                                  = $this->fields["comment"];
+      $input["_old_sensitize_security"]                       = $this->fields["sensitize_security"];
+      $input["_old_read_chart"]                               = $this->fields["read_chart"];
 
       return $input;
    }
@@ -1190,6 +1199,30 @@ class PluginResourcesResource extends CommonDBTM {
       }
       echo "</td></tr>\n";
 
+      $config = new PluginResourcesConfig();
+      if($config->useSecurity()) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".__('Sensitized to security', 'resources')."</td>";
+         echo "<td>";
+         $checked = '';
+         if ($this->fields['sensitize_security']) {
+            $checked = "checked = true";
+         }
+         echo "<input type='checkbox' name='sensitize_security' $checked value='1'>";
+         echo "</td>";
+
+         echo "<td>".__('Reading the security charter', 'resources')."</td><td>";
+         $checked = '';
+         if ($this->fields['read_chart']) {
+            $checked = "checked = true";
+         }
+         echo "<input type='checkbox' name='read_chart' $checked value='1'>";
+         echo "<input type='hidden' value='".(($this->fields['read_chart'] > 0) ? 0 : 1)."' name='is_checked$ID'>";
+
+         echo "</td>";
+         echo "</tr>";
+      }
+
       echo "</table><table class='tab_cadre_fixe'>";
 
       if ($_SESSION['glpiactiveprofile']['interface'] != 'central')
@@ -1542,6 +1575,8 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
          $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
          $options["plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
+         $options["sensitize_security"]                       = $this->fields["sensitize_security"];
+         $options["read_chart"]                               = $this->fields["read_chart"];
 
       }
 
@@ -1846,6 +1881,32 @@ class PluginResourcesResource extends CommonDBTM {
       Html::showDateFormItem("date_end",$options["date_end"],true,true);
       echo "</td>";
       echo "</tr></table>";
+
+      echo "<br>";
+
+      $config = new PluginResourcesConfig();
+      if($config->useSecurity()) {
+         echo "<table class='plugin_resources_wizard_table'>";
+         echo "<tr class='plugin_resources_wizard_explain'>";
+         echo "<td>".__('Sensitized to security', 'resources')."</td>";
+         echo "<td>";
+         $checked = '';
+         if ($options['sensitize_security']) {
+            $checked = "checked = true";
+         }
+         echo "<input type='checkbox' name='sensitize_security' $checked value='1'>";
+         echo "</td></tr>";
+
+         echo "<tr class='plugin_resources_wizard_explain'>";
+         echo "<td>".__('Reading the security charter', 'resources')."</td><td>";
+         $checked = '';
+         if ($options['read_chart']) {
+            $checked = "checked = true";
+         }
+         echo "<input type='checkbox' name='read_chart' $checked value='1'>";
+         echo "</td>";
+         echo "</tr></table>";
+      }
 
       echo "<br>";
 
@@ -2341,6 +2402,8 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['plugin_resources_ranks_id']                = 0;
             $resource->fields['plugin_resources_resourcespecialities_id'] = 0;
             $resource->fields['plugin_resources_leavingreasons_id']       = 0;
+            $resource->fields['sensitize_security']                       = 0;
+            $resource->fields['read_chart']                               = 0;
 
             $resourceItem = new PluginResourcesResource_Item();
             if ($resourceItem->can(-1, UPDATE, $resource)) {

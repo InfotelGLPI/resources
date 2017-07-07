@@ -1,6 +1,6 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ *
  -------------------------------------------------------------------------
  resources plugin for GLPI
  Copyright (C) 2009-2016 by the resources Development Team.
@@ -35,11 +35,12 @@ if ($plugin->isActivated("resources")) {
    $transferEntity = new PluginResourcesTransferEntity();
    $resourceChange = new PluginResourcesResource_Change();
    $resourceBadge = new PluginResourcesResourceBadge();
+   $config = new PluginResourcesConfig();
 
    if (isset($_POST["add_ticket"])) {
       $cat->addTicketCategory($_POST['ticketcategories_id']);
       Html::back();
-      
+
    } else if (isset($_POST["delete_ticket"])) {
       foreach ($_POST["item"] as $key => $val) {
          if ($val == 1) {
@@ -47,19 +48,32 @@ if ($plugin->isActivated("resources")) {
          }
       }
       Html::back();
-      
+
    } else if (isset($_POST["add_transferentity"])) {
       $transferEntity->check(-1, UPDATE, $_POST);
       $transferEntity->add($_POST);
       Html::back();
-      
+
+   } else if (isset($_POST["update_setup"])) {
+      $config->check(-1, UPDATE, $_POST);
+      $config->update($_POST);
+      Html::back();
+
    } else {
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+      //setup
+      $config->showForm();
+
+      //changes
       $resourceChange->showForm($_SERVER['PHP_SELF']);
+
+      //badges
       $plugin = new Plugin();
       if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
          $resourceBadge->showFormConfig($_SERVER['PHP_SELF']);
       }
+
+      //metademand
       if ($plugin->isActivated("metademands")) {
          $resourceHabilitation = new PluginResourcesResourceHabilitation();
          $resourceHabilitation->showFormConfig($_SERVER['PHP_SELF']);
@@ -68,7 +82,7 @@ if ($plugin->isActivated("resources")) {
       $cat->showForm($_SERVER['PHP_SELF']);
       $transferEntity->showForm($_SERVER['PHP_SELF']);
    }
-   
+
 } else {
    Html::header(__('Setup'), '', "config", "plugins");
    echo "<div align='center'>";
@@ -77,4 +91,3 @@ if ($plugin->isActivated("resources")) {
 }
 
 Html::footer();
-?>
