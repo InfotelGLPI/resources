@@ -346,17 +346,20 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[28]['datatype']       = 'datetime';
       $tab[28]['massiveaction']  = false;
 
-      $tab[29]['table']          = $this->getTable();
-      $tab[29]['field']          = 'read_chart';
-      $tab[29]['name']           = __('Reading the security charter', 'resources');
-      $tab[29]['datatype']       = 'bool';
-      $tab[29]['massiveaction']  = true;
+      $config = new PluginResourcesConfig();
+      if($config->useSecurity()) {
+         $tab[29]['table']         = $this->getTable();
+         $tab[29]['field']         = 'read_chart';
+         $tab[29]['name']          = __('Reading the security charter', 'resources');
+         $tab[29]['datatype']      = 'bool';
+         $tab[29]['massiveaction'] = true;
 
-      $tab[30]['table']          = $this->getTable();
-      $tab[30]['field']          = 'sensitize_security';
-      $tab[30]['name']           = __('Sensitized to security', 'resources');
-      $tab[30]['datatype']       = 'bool';
-      $tab[30]['massiveaction']  = true;
+         $tab[30]['table']         = $this->getTable();
+         $tab[30]['field']         = 'sensitize_security';
+         $tab[30]['name']          = __('Sensitized to security', 'resources');
+         $tab[30]['datatype']      = 'bool';
+         $tab[30]['massiveaction'] = true;
+      }
 
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
@@ -1904,7 +1907,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td>".__('Sensitized to security', 'resources')."</td>";
          echo "<td>";
          $checked = '';
-         if ($options['sensitize_security']) {
+         if (isset($options['sensitize_security']) && $options['sensitize_security']) {
             $checked = "checked = true";
          }
          echo "<input type='checkbox' name='sensitize_security' $checked value='1'>";
@@ -1913,7 +1916,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<tr class='plugin_resources_wizard_explain'>";
          echo "<td>".__('Reading the security charter', 'resources')."</td><td>";
          $checked = '';
-         if ($options['read_chart']) {
+         if (isset($options['read_chart']) && $options['read_chart']) {
             $checked = "checked = true";
          }
          echo "<input type='checkbox' name='read_chart' $checked value='1'>";
