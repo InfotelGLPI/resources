@@ -45,6 +45,13 @@ class PluginResourcesClient extends CommonDropdown {
    static function canCreate() {
       return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
    }
+
+   public function defineTabs($options = array()) {
+      $ong = parent::defineTabs();
+      $this->addStandardTab('Document_Item', $ong, $options);
+
+      return $ong;
+   }
    
    static function transfer($ID, $entity) {
       global $DB;
