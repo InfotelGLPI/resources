@@ -26,38 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+include ('../../../inc/includes.php');
 
-include('../../../inc/includes.php');
-
-$plugin = new Plugin();
-
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else {
-   //from helpdesk
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
-}
-
-if (!isset($_GET["id"]))
-   $_GET["id"] = "";
-
-$habilitation = new PluginResourcesResourceHabilitation();
-
-if (isset($_POST['add'])) {
-   $habilitation->check(-1, UPDATE, $_POST);
-   $habilitation->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["delete"])) {
-   $habilitation->check($_POST["id"], UPDATE);
-   $habilitation->delete($_POST);
-   Html::back();
-
-}
-
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::footer();
-} else {
-   Html::helpFooter();
-}
+$dropdown = new PluginResourcesHabilitation();
+include (GLPI_ROOT . "/front/dropdown.common.form.php");

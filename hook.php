@@ -1472,6 +1472,8 @@ function plugin_resources_uninstall() {
                    "glpi_plugin_resources_resourcehabilitations",
                    "glpi_plugin_resources_transferentities",
                    "glpi_plugin_resources_resources_changes",
+                   "glpi_plugin_resources_confighabilitations",
+                   "glpi_plugin_resources_habilitations",
                    );
 
    foreach ($tables as $table)
@@ -1700,6 +1702,7 @@ function plugin_resources_getDropdown() {
                    'PluginResourcesBudgetType'           => PluginResourcesBudgetType::getTypeName(2),
                    'PluginResourcesBudgetVolume'         => PluginResourcesBudgetVolume::getTypeName(2),
                    'PluginResourcesAccessProfile'        => PluginResourcesAccessProfile::getTypeName(2),
+                   'PluginResourcesHabilitation'         => PluginResourcesHabilitation::getTypeName(2),
                    'PluginResourcesCost'                 => PluginResourcesCost::getTypeName(2));
    } else {
       return array();

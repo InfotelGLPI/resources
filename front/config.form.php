@@ -75,8 +75,8 @@ if ($plugin->isActivated("resources")) {
 
       //metademand
       if ($plugin->isActivated("metademands")) {
-         $resourceHabilitation = new PluginResourcesResourceHabilitation();
-         $resourceHabilitation->showFormConfig($_SERVER['PHP_SELF']);
+         $configHabilitation = new PluginResourcesConfigHabilitation();
+         $configHabilitation->showFormConfig($_SERVER['PHP_SELF']);
       }
 
       $cat->showForm($_SERVER['PHP_SELF']);

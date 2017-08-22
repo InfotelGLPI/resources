@@ -667,8 +667,8 @@ CREATE TABLE `glpi_plugin_resources_resourcebadges` (
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
-CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
+DROP TABLE IF EXISTS `glpi_plugin_resources_confighabilitations`;
+CREATE TABLE `glpi_plugin_resources_confighabilitations` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `action` tinyint(1) NOT NULL DEFAULT '0',
@@ -676,6 +676,29 @@ CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_resources_habilitations`;
+CREATE TABLE `glpi_plugin_resources_habilitations` (
+   `id` int(11) NOT NULL auto_increment,
+   `entities_id` int(11) NOT NULL default '0',
+   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `comment` text collate utf8_unicode_ci,
+   PRIMARY KEY  (`id`),
+   KEY `name` (`name`),
+   KEY `entities_id` (`entities_id`),
+   KEY `is_recursive` (`is_recursive`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
+CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
+   `id` int(11) NOT NULL auto_increment,
+   `resources_id` int(11) NOT NULL default '0',
+   `plugin_resources_habilitations_id` tinyint(1) NOT NULL DEFAULT '0',
+   PRIMARY KEY  (`id`),
+   KEY `resources_id` (`resources_id`),
+   KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_configs`;

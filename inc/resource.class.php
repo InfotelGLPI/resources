@@ -393,6 +393,7 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginResourcesResource_Item', $ong,$options);
       $this->addStandardTab('PluginResourcesChoice', $ong,$options);
+      $this->addStandardTab('PluginResourcesResourceHabilitation', $ong,$options);
       $this->addStandardTab('PluginResourcesEmployment', $ong, $options);
       $this->addStandardTab('PluginResourcesEmployee',$ong,$options);
       $this->addStandardTab('PluginResourcesChecklist',$ong,$options);
@@ -1379,7 +1380,7 @@ class PluginResourcesResource extends CommonDBTM {
          if ($canholiday) {
             $num_col += 1;
          }
-         if ($canhabilitation) {
+         if ($canhabilitation && $plugin->isActivated("metademands")) {
             $num_col += 1;
          }
          if ($canbadges) {
@@ -1409,14 +1410,14 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</td>";
          } 
          
-         if ($canhabilitation) {
+         if ($canhabilitation && $plugin->isActivated("metademands")) {
             //Management of a super habilitation
             echo "<td colspan=$colspan class='center'>";
-            echo "<a href=\"./resourcehabilitation.form.php?menu\">";
-            echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/habilitation.png' alt='".PluginResourcesResourceHabilitation::getTypeName(1)."'>";
-            echo "<br>".PluginResourcesResourceHabilitation::getTypeName(1)."</a>";
+            echo "<a href=\"./confighabilitation.form.php?menu\">";
+            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitation.png' alt='" . PluginResourcesConfigHabilitation::getTypeName(1) . "'>";
+            echo "<br>" . PluginResourcesConfigHabilitation::getTypeName(1) . "</a>";
             echo "</td>";
-         } 
+         }
 
          if ($canbadges) {
             //Management of a non contract period

@@ -51,7 +51,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Super habilitation management', 'Super habilitations management', 2, 'resources');
+      return _n('Additional habilitation', 'Additional habilitations', $nb, 'resources');
    }
 
    /**
@@ -76,94 +76,72 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
    }
-   
-   /**
-    * Get the name of the action
-    * 
-    * @param type $action
-    * @return type
-    */
-   static function getNameAction($action) {
-      switch ($action) {
-         case self::ACTION_ADD : 
-            return __('Declare a super habilitation', 'resources');
-         case self::ACTION_DELETE : 
-            return __('Remove a super habilitation', 'resources');
-      }
-   }
 
-   /**
-    * Display of the link to configure the super habilitation interface
-    */
-   function showFormConfig(){
-      echo "<br>";
-      echo "<form name='form' method='post' action='".self::getFormURL()."'>";
-      echo "<div align='center'><table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='6'>" . self::getTypeName(2) . "</th></tr>";
-      echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<a href=\"./resourcehabilitation.form.php?config\">".PluginMetademandsMetademand_Resource::getTypeName(2)."</a>";
-      echo "</td></tr></table></div>";
-      Html::closeForm();
-      echo "<br>";
-   }
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
-   /**
-    * Choose link with metademand
-    *
-    * @return bool
-    */
-   function showFormHabilitation(){
-
-      if (!$this->canView())   return false;
-      if (!$this->canCreate())   return false;
-
-      $used_data = array();
-      $data_entities = $this->find("`entities_id` = ".$_SESSION['glpiactive_entity']);
-
-      $number_action = count($data_entities);
-
-      if ($data_entities) {
-         foreach ($data_entities as $field) {
-            $used_data[$field['action']] = $field['action'];
+      if ($item->getType()=='PluginResourcesResource'
+          && $this->canView()) {
+         if ($_SESSION['glpishow_count_on_tabs']) {
+            return self::createTabEntry(self::getTypeName(2), self::countForResource($item));
          }
+         return self::getTypeName(2);
       }
+      return '';
+   }
+
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+
+      if ($item->getType()=='PluginResourcesResource') {
+
+         $self = new self();
+         $self->showItem($item);
+      }
+      return true;
+   }
+
+   static function countForResource(PluginResourcesResource $item) {
+
+      $restrict = "`plugin_resources_resources_id` = '".$item->getField('id')."' ";
+      $nb = countElementsInTable(array('glpi_plugin_resources_resourcehabilitations'), $restrict);
+
+      return $nb ;
+   }
+
+   function showItem($item) {
+      if (!$this->canView())   return false;
+
       $canedit = $this->canCreate();
 
-      if ($canedit) {
-         if($number_action == 2){
-            echo "<div align='center'>";
-            __('The current entity is already linked to a meta-demand', 'resources');
-            echo "</div>";
-         } else {
-            //form to choose the metademand
-            echo "<form name='form' method='post' action='" .
-               Toolbox::getItemTypeFormURL('PluginResourcesResourceHabilitation') . "'>";
-
-            echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='2'>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
-            echo "<tr class='tab_bg_1'><td class='center'>";
-            echo __('Action', 'Actions', 1) . '&nbsp;';
-            Dropdown::showFromArray('action', 
-               array(self::ACTION_ADD => self::getNameAction(self::ACTION_ADD),
-                     self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)),
-               array('used' => $used_data));
-            echo "</td><td>";
-            echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', array('name' => 'plugin_metademands_metademands_id',
-                                                                'entity' => $_SESSION['glpiactive_entity']));
-            echo "</td></tr>";
-            
-            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
-            value=\"" . _sx('button', 'Add') . "\" >";
-            echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
-
-            echo "</td></tr>";
-            echo "</table></div>";
-            Html::closeForm();
-         }
-      }
       //list metademands
-      $data = $this->find();
+      $data = $this->find("`plugin_resources_resources_id` = ".$item->getField('id'));
+
+      if ($canedit) {
+         $used = array();
+         foreach ($data as $habilitation) {
+            $used[] = $habilitation['plugin_resources_habilitations_id'];
+         }
+         //form to choose the metademand
+         echo "<form name='form' method='post' action='" .
+              Toolbox::getItemTypeFormURL('PluginResourcesResourceHabilitation') . "'>";
+
+         echo "<div align='center'><table class='tab_cadre_fixe'>";
+         echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Add additional habilitation', 'resources') . "</th></tr>";
+         echo "<tr class='tab_bg_1'><td class='center'>";
+         echo self::getTypeName(1) . "</td>";
+         echo "<td class='center'>";
+         Dropdown::show('PluginResourcesHabilitation', array('used'   => $used,
+                                                             'entity' => $item->getField("entities_id")));
+         echo "</td></tr>";
+
+         echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add\" 
+                    class=\"submit\" value=\"" . _sx('button', 'Add') . "\" >";
+         echo "<input type='hidden' name='plugin_resources_resources_id' value='".$item->getField('id')."'>";
+
+         echo "</td></tr>";
+         echo "</table></div>";
+         Html::closeForm();
+      }
       $this->listItems($data, $canedit);
    }
 
@@ -174,6 +152,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * @param $canedit
     */
    private function listItems($fields, $canedit){
+
       if(!empty($fields)){
          $rand = mt_rand();
          echo "<div class='center'>";
@@ -184,15 +163,13 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          }
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";
-         echo "<th colspan='4'>".__('Meta-demands linked', 'metademands')."</th>";
+         echo "<th colspan='2'>".self::getTypeName()."</th>";
          echo "</tr>";
          echo "<tr>";
          if ($canedit) {
             echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
          }
          echo "<th>".__('Name')."</th>";
-         echo "<th>".__('Action')."</th>";
-         echo "<th>".__('Entity')."</th>";
          foreach($fields as $field){
             echo "<tr class='tab_bg_1'>";
             if ($canedit) {
@@ -201,10 +178,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                echo "</td>";
             }
             //DATA LINE
-            echo "<td>".Dropdown::getDropdownName('glpi_plugin_metademands_metademands', $field['plugin_metademands_metademands_id'])."</td>";
-            echo "<td>".self::getNameAction($field['action'])."</td>";
-            echo "<td>".Dropdown::getDropdownName('glpi_entities', $field['entities_id'])."</td>";
-            echo "</tr>";
+            echo "<td class='center'>".Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $field['plugin_resources_habilitations_id'])."</td>";
+            echo "</tr></table>";
          }
 
          if ($canedit) {
@@ -214,46 +189,6 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          }
          echo "</div>";
       }
-   }
-
-   /**
-    * Display Menu
-    */
-   function showMenu(){
-      global $CFG_GLPI;
-
-      $plugin = new Plugin();
-
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='2'>" . self::getTypeName(2) . "</th></tr>";
-
-      $canresting = Session::haveright('plugin_resources_habilitation', UPDATE);
-
-      echo "<tr class='tab_bg_1'>";
-      if ($canresting) {
-         $colspan = 1;
-         if ($plugin->isActivated("metademands")) {
-            //new habilitation
-            echo "<td class='center'>";
-            echo "<a href=\"./resourcehabilitation.form.php?new\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationnew.png' alt='" . __('Declare a super habilitation', 'resources') . "'>";
-            echo "<br>" . __('Declare a super habilitation', 'resources') . "</a>";
-            echo "</td>";
-         } else {
-            $colspan = 2;
-         }
-         //delete habilitation
-         echo "<td class='center' colspan='$colspan'>";
-         echo "<a href=\"./resourcehabilitation.form.php?delete\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationdelete.png' alt='" . __('Remove a super habilitation', 'resources') . "'>";
-         echo "<br>" . __('Remove a super habilitation', 'resources') . "</a>";
-         echo "</td>";
-      }
-      echo "</tr></table>";
-      Html::closeForm();
-
-      echo "</div>";
-
    }
 
 }
