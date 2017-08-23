@@ -896,7 +896,7 @@ class PluginResourcesResource extends CommonDBTM {
       Html::autocompletionTextField($this,"name",$option);
       echo "</td>";
 
-      echo "<td rowspan='5' colspan='2' align='center'>";
+      echo "<td rowspan='6' colspan='2' align='center'>";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
          $path = GLPI_PLUGIN_DOC_DIR."/resources/".$this->fields["picture"];
          if (file_exists($path)) {
@@ -978,7 +978,6 @@ class PluginResourcesResource extends CommonDBTM {
                      array('value'  => $this->fields["plugin_resources_accessprofiles_id"],
                            'entity' => $this->fields["entities_id"]));
       echo "</td>";
-      echo "<td></td>";
       echo "</tr>";
 
       echo "</table><table class='tab_cadre_fixe'>";
