@@ -125,5 +125,22 @@ function plugin_resources_change_resource(root_doc, id){
         },
 
     });
+}
 
+/**
+ *
+ * @param root_doc
+ * @param id
+ */
+function plugin_resources_pdf_resource(root_doc, id) {
+    $.ajax({
+        url: root_doc + '/plugins/resources/ajax/pdfresource.php',
+        type: 'POST',
+        data: '&plugin_resources_resources_id=' + id,
+        dataType: 'html',
+        success: function (code_html, statut) {
+            $('#resource_pdf').html(code_html);
+        },
+
+    });
 }

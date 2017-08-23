@@ -2662,8 +2662,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td style='width:40%'>".self::getTypeName(1)."</td>";
          
          echo "<td class='left'>";
-         PluginResourcesResource::dropdown(array('name'   => 'plugin_resources_resources_id',
-                                                'entity' => $_SESSION['glpiactiveentities']));
+         PluginResourcesResource::dropdown(array('name'      => 'plugin_resources_resources_id',
+                                                 'entity'    => $_SESSION['glpiactiveentities'],
+                                                 'on_change' => "plugin_resources_pdf_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
 
          echo "</td></tr>";
          echo "<tr class='plugin_resources_wizard_explain'><td>";
@@ -2682,6 +2683,8 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</table>";
          echo "</td>";
          echo "</tr>";
+
+         echo "<tr><td class='center' id='resource_pdf' colspan='2'></td></tr>";
 
          echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
          echo "<div class='next'>";
