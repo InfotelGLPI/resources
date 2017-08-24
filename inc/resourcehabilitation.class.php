@@ -113,7 +113,6 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       $canedit = $this->canCreate();
 
-      //list metademands
       $data = $this->find("`plugin_resources_resources_id` = ".$item->getField('id'));
 
       if ($canedit) {
@@ -179,7 +178,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             }
             //DATA LINE
             echo "<td class='center'>".Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $field['plugin_resources_habilitations_id'])."</td>";
-            echo "</tr></table>";
+            echo "</tr>";
          }
 
          if ($canedit) {
