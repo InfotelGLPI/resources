@@ -3832,4 +3832,27 @@ class PluginResourcesResource extends CommonDBTM {
       return true;
    }
 
+   /**
+    * Get picture URL from picture field
+    *
+    * @since version 0.85
+    *
+    * @param $picture picture field
+    *
+    * @return string URL to show picture
+    **/
+   static function getThumbnailURLForPicture($picture) {
+      global $CFG_GLPI;
+
+      if (!empty($picture)) {
+         $tmp = explode(".", $picture);
+         if (count($tmp) ==2) {
+            return $CFG_GLPI['root_doc']."/plugins/resources/front/picture.send.php?file=".$tmp[0].'.'. $tmp[1];
+         }
+         return $CFG_GLPI["root_doc"]."/plugins/resources/pics/nobody.png";
+      }
+      return $CFG_GLPI["root_doc"]."/plugins/resources/pics/nobody.png";
+
+   }
+
 }

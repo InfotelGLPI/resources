@@ -224,7 +224,6 @@
 }
 .plugin_resources_content table th {
    height: 26px;
-   background: url(pics/table_head.png) repeat-x;
    font-weight: bold;
    font-size: 12px;
    text-align: left;

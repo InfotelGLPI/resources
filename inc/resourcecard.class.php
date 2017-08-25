@@ -123,12 +123,14 @@ class PluginResourcesResourceCard extends CommonDBTM {
     * @param $resource
     */
    static function showIdentity($resource, $user = false) {
+      global $CFG_GLPI;
 
       echo "<div id='plugin_resources_about' class='plugin_resources_content plugin_resources_clearfix'>";
 
       if ($user === false) {
 
-         echo "<p><span class='b red'>" . __('Warning, this resource is not linked to a user', 'resource') . "</br>";
+         echo "<p>";
+         echo "<span class='b red'>" . __('Information, this resource is not linked to a user', 'resource') . "</br>";
          echo "</p>";
 
          echo "<div id='plugin_resources_about-image'>";
@@ -185,7 +187,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
 
          echo "<div id='plugin_resources_about-image'>";
-         echo "<img src='" . User::getThumbnailURLForPicture($user->fields['picture']) . "' alt='' />";
+         echo "<img src='" . PluginResourcesResource::getThumbnailURLForPicture($resource->fields['picture']) . "' alt='' />";
          echo "</div>"; //end plugin_resources_about-image
 
          echo "<div id='plugin_resources_about-content' align='left'>";
@@ -278,30 +280,29 @@ class PluginResourcesResourceCard extends CommonDBTM {
          if (!($item = getItemForItemtype($itemtype))) {
             continue;
          }
-//         if ($item->canView() || Session::) {
-            $i         = 0;
-            $itemtable = getTableForItemType($itemtype);
-            $query     = "SELECT *
+         $i         = 0;
+         $itemtable = getTableForItemType($itemtype);
+         $query     = "SELECT *
                       FROM `$itemtable`
                       WHERE `" . $field_user . "` = '$ID'";
 
-            if ($item->maybeTemplate()) {
-               $query .= " AND `is_template` = '0' ";
-            }
-            if ($item->maybeDeleted()) {
-               $query .= " AND `is_deleted` = '0' ";
-            }
-            $result = $DB->query($query);
+         if ($item->maybeTemplate()) {
+            $query .= " AND `is_template` = '0' ";
+         }
+         if ($item->maybeDeleted()) {
+            $query .= " AND `is_deleted` = '0' ";
+         }
+         $query .= getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
+         $result = $DB->query($query);
 
-            if ($DB->numrows($result) > 0) {
-               $inv = true;
-               while ($data = $DB->fetch_assoc($result)) {
+         if ($DB->numrows($result) > 0) {
+            $inv = true;
+            while ($data = $DB->fetch_assoc($result)) {
 
-                  $datas[$itemtype][$i] = $data;
-                  $i++;
-               }
+               $datas[$itemtype][$i] = $data;
+               $i++;
             }
-//         }
+         }
       }
       foreach ($datas as $type => $table) {
 
@@ -351,9 +352,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
                echo $values["otherserial"];
                echo "</br>";
             }
-            if (isset($values["states_id"])) {
-               echo Dropdown::getDropdownName("glpi_states", $values['states_id']);
-            }
+//            if (isset($values["states_id"])) {
+//               echo Dropdown::getDropdownName("glpi_states", $values['states_id']);
+//            }
             echo "</td></tr>";
          }
 
