@@ -87,8 +87,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          ///navigation
          echo "<nav>";
          echo "<ul class='plugin_resources_clearfix'>";
-         echo "<li class='active'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#about'>" . __('About', 'myitems') . "</a></li>";
-         echo "<li><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#inventory'>" . __('Inventory', 'myitems') . "</a></li>";
+         echo "<li class='active'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#about'>" . __('About', 'resources') . "</a></li>";
+         echo "<li><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#inventory'>" . __('Inventory', 'resources') . "</a></li>";
          echo "</ul>";
          echo "</nav>";
       } else {
@@ -130,7 +130,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       if ($user === false) {
 
          echo "<p>";
-         echo "<span class='b red'>" . __('Information, this resource is not linked to a user', 'resource') . "</br>";
+         echo "<span class='b red'>" . __('Information, this resource is not linked to a user', 'resources') . "</br>";
          echo "</p>";
 
          echo "<div id='plugin_resources_about-image'>";
@@ -264,7 +264,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       global $CFG_GLPI, $DB;
 
       echo "<div id='plugin_resources_inventory' class='plugin_resources_content' align='left'>";
-      echo "<h1>" . __('Inventory', 'myitems') . "</h1>";
+      echo "<h1>" . __('Inventory', 'resources') . "</h1>";
 
       echo "<div class='scrollable'  style='padding-right: 8px;height:420px;'>";
 

@@ -80,8 +80,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
           && $event != 'AlertLeavingResources'
           && $event != 'AlertLeavingChecklists'
           && $event != 'AlertLeavingChecklists'
-          && $event != 'AlertCommercialManager'
-      ) {
+          && $event != 'AlertCommercialManager') {
          $this->addTarget(self::RESOURCE_MANAGER, __('Resource manager', 'resources'));
          $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
          $this->addTarget(self::RESOURCE_AUTHOR, __('Requester'));

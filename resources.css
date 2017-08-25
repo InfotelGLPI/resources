@@ -273,13 +273,14 @@ nav {
    margin-bottom: 100px;
 }
 nav ul {
+   width: 270px;
    float: left;
    visibility: hidden;
 
 }
 nav ul li {
    float: left;
-   padding: 13px 20px 12px 20px;
+   padding: 10px 20px 10px 20px;
 }
 nav ul li.active {
    background: url(pics/nav_item_active.png) no-repeat top center;
