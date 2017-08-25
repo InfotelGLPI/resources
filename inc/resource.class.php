@@ -2532,6 +2532,11 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
+      if (!Session::haveRight("plugin_resources_all", READ)) {
+         $who=Session::getLoginUserID();
+         $where .=  " AND (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
+      }
+
       if ($count) {
          $query .= " WHERE $where ";
       } else {
