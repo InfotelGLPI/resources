@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin 2.3.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-25 15:57+0200\n"
+"POT-Creation-Date: 2017-08-25 16:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,11 +137,11 @@ msgid "Incompatible PHP Installation. Requires module"
 msgstr ""
 
 #: ajax/pdfresource.php:75
-msgid "Warning, the resource has related materials"
+msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
 
 #: ajax/pdfresource.php:76
-msgid "PDF creation"
+msgid "Download the restitution form"
 msgstr ""
 
 #: front/config.form.php:90

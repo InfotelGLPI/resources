@@ -72,8 +72,8 @@ if ($plugin->isActivated("useditemsexport")) {
          $rand = mt_rand();
 
          $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/export.pdf.php";
-         echo __('Warning, the resource has related materials', 'resources')."<br><br>";
-         echo "<a class='vsubmit' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('PDF creation', 'resources') . "</a>";
+         echo __('Please ensure that the return form is signed by the employee', 'resources')."<br><br>";
+         echo "<a class='vsubmit' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('Download the restitution form', 'resources') . "</a>";
 
          Html::closeForm();
       }
