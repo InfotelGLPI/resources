@@ -1437,14 +1437,19 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<tr class='tab_bg_1'>";
 
          //See resources
-         echo "<td class='center' colspan='3'>";
+         echo "<td class='center' colspan='2'>";
          echo "<a href=\"./resource.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resourcelist.png' alt='" . __('Search resources', 'resources') . "'>";
          echo "<br>" . __('Search resources', 'resources') . "</a>";
          echo "</td>";
 
+         echo "<td class='center' colspan='2'>";
+         echo "<a href=\"./resource.card.form.php\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/detailresource.png' alt='" . __('See details of a resource', 'resources') . "'>";
+         echo "<br>" . __('See details of a resource', 'resources') . "</a>";
+         echo "</td>";
 
-         echo "<td class='center' colspan='3'>";
+         echo "<td class='center' colspan='2'>";
          echo "<a href=\"./directory.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory.png' alt='" . PluginResourcesDirectory::getTypeName(1) . "'>";
          echo "<br>" . PluginResourcesDirectory::getTypeName(1) . "</a>";
@@ -2184,8 +2189,10 @@ class PluginResourcesResource extends CommonDBTM {
       }
       
       $params['value2'] = $params['value'];
+      $user = self::getResourceName($params['value'],2);
       if (!empty($params['value'])) {
-         $params['valuename'] = Dropdown::getDropdownName(self::getTable(), $params['value']);
+         //         $params['valuename'] = Dropdown::getDropdownName(self::getTable(), $params['value']);
+         $params['valuename'] = $user['name'];
       }
 
       $field_id = Html::cleanId("dropdown_".$params['name'].$params['rand']);

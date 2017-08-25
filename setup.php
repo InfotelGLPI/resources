@@ -154,8 +154,13 @@ function plugin_init_resources() {
 
 
       // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_javascript']['resources']="resources.js";
-      $PLUGIN_HOOKS['add_css']['resources']="resources.css";
+      $PLUGIN_HOOKS['add_css']['resources']= array("resources.css");
+      $PLUGIN_HOOKS['add_javascript']['resources'] = array("resources.js",
+                                                           "lib/plugins/jquery.address.js",
+                                                           "lib/plugins/jquery.mousewheel.js",
+                                                           "lib/plugins/jquery.scroll.js",
+                                                           "lib/resources_card.js",
+      );
       
       //TODO : Check
       $PLUGIN_HOOKS['plugin_pdf']['PluginResourcesResource']='PluginResourcesResourcePDF';
