@@ -325,11 +325,6 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[25]['name']           = PluginResourcesLeavingReason::getTypeName(1);
       $tab[25]['datatype']       = 'dropdown';
 
-      $tab[26]['table']          = 'glpi_plugin_resources_accessprofiles';
-      $tab[26]['field']          = 'name';
-      $tab[26]['name']           = PluginResourcesAccessProfile::getTypeName(1);
-      $tab[26]['datatype']       = 'dropdown';
-
       $tab[27]['table']          = 'glpi_users';
       $tab[27]['field']          = 'name';
       $tab[27]['linkfield']      = 'users_id_sales';
@@ -523,6 +518,9 @@ class PluginResourcesResource extends CommonDBTM {
          // ADD choices
          PluginResourcesChoice::cloneItem($this->input["_oldID"], $this->fields['id']);
 
+         // ADD habilitations
+         PluginResourcesResourceHabilitation::cloneItem($this->input["_oldID"], $this->fields['id']);
+
          // ADD items
          PluginResourcesResource_Item::cloneItem($this->input["_oldID"], $this->fields['id']);
 
@@ -538,6 +536,12 @@ class PluginResourcesResource extends CommonDBTM {
          
          // ADD tasks
          PluginResourcesTask::cloneItem($this->input["_oldID"], $this->fields['id']);
+      }
+
+      if (!isset($this->fields['is_template']) && $this->fields['plugin_resources_habilitations_id']) {
+         $ResourceHabilitation = new PluginResourcesResourceHabilitation();
+         $ResourceHabilitation->add(array('plugin_resources_resources_id'     => $this->fields['id'],
+                                          'plugin_resources_habilitations_id' => $this->fields['plugin_resources_habilitations_id']));
       }
 
       //Launch notification
@@ -664,7 +668,6 @@ class PluginResourcesResource extends CommonDBTM {
       $input["_old_plugin_resources_contractnatures_id"]      = $this->fields["plugin_resources_contractnatures_id"];
       $input["_old_plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
       $input["_old_plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
-      $input["_old_plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
       $input["_old_locations_id"]                             = $this->fields["locations_id"];
       $input["_old_is_leaving"]                               = $this->fields["is_leaving"];
       $input["_old_date_declaration_leaving"]                 = $this->fields["date_declaration_leaving"];
@@ -967,18 +970,21 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td";
-      if(in_array("plugin_resources_accessprofiles_id", $required))
-         echo $alert;
-      echo ">";
-      echo PluginResourcesAccessProfile::getTypeName(1)."</td>";
-      echo "<td>";
-      Dropdown::show('PluginResourcesAccessProfile',
-                     array('value'  => $this->fields["plugin_resources_accessprofiles_id"],
-                           'entity' => $this->fields["entities_id"]));
-      echo "</td>";
-      echo "</tr>";
+      if(isset($options['withtemplate']) && $options['withtemplate']) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td";
+         if (in_array("plugin_resources_habilitations_id", $required))
+            echo $alert;
+         echo ">";
+         echo PluginResourcesHabilitation::getTypeName(1) . "</td>";
+         echo "<td>";
+         Dropdown::show('PluginResourcesHabilitation',
+                        array('value'     => $this->fields["plugin_resources_habilitations_id"],
+                              'entity'    => $this->fields["entities_id"],
+                              'condition' => 'allow_resource_creation'));
+         echo "</td>";
+         echo "</tr>";
+      }
 
       echo "</table><table class='tab_cadre_fixe'>";
       $rank = new PluginResourcesRank();
@@ -1154,7 +1160,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td></td><td></td><td>".__('Send a notification')."</td><td>";
       echo "<input type='checkbox' name='send_notification' checked = true";
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central')
+      if ($_SESSION['glpiactiveprofile']['interface'] != 'central'
+          ||(isset($options['withtemplate']) && $options['withtemplate']))
          echo " disabled='true' ";
       echo " value='1'>";
       if ($_SESSION['glpiactiveprofile']['interface'] != 'central')
@@ -1595,7 +1602,7 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
          $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
-         $options["plugin_resources_accessprofiles_id"]       = $this->fields["plugin_resources_accessprofiles_id"];
+         $options["plugin_resources_habilitations_id"]        = $this->fields["plugin_resources_habilitations_id"];
          $options["sensitize_security"]                       = $this->fields["sensitize_security"];
          $options["read_chart"]                               = $this->fields["read_chart"];
 
@@ -1733,16 +1740,17 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<tr class='plugin_resources_wizard_explain'>";
       echo "<td";
-      if(in_array("plugin_resources_accessprofiles_id", $required))
+      if(in_array("plugin_resources_habilitations_id", $required))
          echo $alert;
       echo ">";
-      echo PluginResourcesAccessProfile::getTypeName(1);
+      echo PluginResourcesHabilitation::getTypeName(1);
       echo "</td>";
       echo "<td>";
-      Dropdown::show('PluginResourcesAccessProfile',
-                     array('name'   => "plugin_resources_accessprofiles_id",
-                           'value'  => $options["plugin_resources_accessprofiles_id"],
-                           'entity' => $this->fields["entities_id"]));
+      Dropdown::show('PluginResourcesHabilitation',
+                     array('name'   => "plugin_resources_habilitations_id",
+                           'value'  => $options["plugin_resources_habilitations_id"],
+                           'entity' => $this->fields["entities_id"],
+                           'condition' => 'allow_resource_creation'));
       echo "</td>";
       echo "</tr></table>";
 
@@ -2403,18 +2411,18 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['date_begin']       = null;
             $resource->fields['date_end']         = null;
 
-            $resource->fields['plugin_resources_departments_id']    = $params['plugin_resources_departments_id'];
-            $resource->fields['plugin_resources_accessprofiles_id'] = 0;
-            $resource->fields['locations_id']                       = 0;
-            $resource->fields['is_leaving']                         = 0;
-            $resource->fields['users_id_recipient_leaving']         = 0;
-            $resource->fields['comment']                            = '';
-            $resource->fields['notepad']                            = '';
-            $resource->fields['is_template']                        = 0;
-            $resource->fields['template_name']                      = '';
-            $resource->fields['is_deleted']                         = 0;
-            $resource->fields['is_helpdesk_visible']                = 1;
-            $resource->fields['date_mod']                           = date('Y-m-d');
+            $resource->fields['plugin_resources_departments_id']   = $params['plugin_resources_departments_id'];
+            $resource->fields['plugin_resources_habilitations_id'] = 0;
+            $resource->fields['locations_id']                      = 0;
+            $resource->fields['is_leaving']                        = 0;
+            $resource->fields['users_id_recipient_leaving']        = 0;
+            $resource->fields['comment']                           = '';
+            $resource->fields['notepad']                           = '';
+            $resource->fields['is_template']                       = 0;
+            $resource->fields['template_name']                     = '';
+            $resource->fields['is_deleted']                        = 0;
+            $resource->fields['is_helpdesk_visible']               = 1;
+            $resource->fields['date_mod']                          = date('Y-m-d');
 
             $resource->fields['plugin_resources_resourcestates_id']       = 0;
             $resource->fields['picture']                                  = null;
@@ -3143,16 +3151,6 @@ class PluginResourcesResource extends CommonDBTM {
 
          unset($values);
 
-
-         $accessprofile = PluginResourcesAccessProfile::transfer($this->fields["plugin_resources_accessprofiles_id"], $entities_id);
-         if ($department > 0) {
-            $values["id"]                                 = $resources_id;
-            $values["plugin_resources_accessprofiles_id"] = $accessprofile;
-            $this->update($values);
-         }
-
-         unset($values);
-
          $situation = PluginResourcesResourceSituation::transfer($this->fields["plugin_resources_resourcesituations_id"], $entities_id);
          if ($situation > 0) {
             $values["id"]                                     = $resources_id;
@@ -3186,6 +3184,27 @@ class PluginResourcesResource extends CommonDBTM {
             $this->update($values);
          }
          unset($values);
+
+         //TODO
+//         $PluginResourcesTask = new PluginResources();
+//         $restrict            = "`plugin_resources_resources_id` = '".$resources_id."'";
+//         $tasks               = getAllDatasFromTable("glpi_plugin_resources_tasks", $restrict);
+//         if (!empty($tasks)) {
+//            foreach ($tasks as $task) {
+//               $PluginResourcesTask->getFromDB($task["id"]);
+//               $tasktype = PluginResourcesTaskType::transfer($PluginResourcesTask->fields["plugin_resources_tasktypes_id"], $entities_id);
+//               if ($tasktype > 0) {
+//                  $values["id"]                            = $task["id"];
+//                  $values["plugin_resources_tasktypes_id"] = $tasktype;
+//                  $PluginResourcesTask->update($values);
+//               }
+//               $values["id"]          = $task["id"];
+//               $values["entities_id"] = $entities_id;
+//               $PluginResourcesTask->update($values);
+//            }
+//         }
+//
+//         unset($values);
 
          $PluginResourcesTask = new PluginResourcesTask();
          $restrict            = "`plugin_resources_resources_id` = '".$resources_id."'";
@@ -3396,27 +3415,28 @@ class PluginResourcesResource extends CommonDBTM {
             Plugin::loadLang('resources');
 
             if (NotificationEvent::raiseEvent("AlertLeavingResources",
-               new PluginResourcesResource(),
-               array('entities_id'=>$entity,
-                  'resources'=>$resources))) {
-               $message = $task_messages[$type][$entity];
+                                              new PluginResourcesResource(),
+                                              array('entities_id' => $entity,
+                                                    'resources'   => $resources))
+            ) {
+               $message     = $task_messages[$type][$entity];
                $cron_status = 1;
                if ($task) {
                   $task->log(Dropdown::getDropdownName("glpi_entities",
-                     $entity).":  $message\n");
+                                                       $entity) . ":  $message\n");
                   $task->addVolume(1);
                } else {
                   Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities",
-                     $entity).":  $message");
+                                                                             $entity) . ":  $message");
                }
 
             } else {
                if ($task) {
-                  $task->log(Dropdown::getDropdownName("glpi_entities",$entity).
-                     ":  Send leaving resources alert failed\n");
+                  $task->log(Dropdown::getDropdownName("glpi_entities", $entity) .
+                             ":  Send leaving resources alert failed\n");
                } else {
-                  Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities",$entity).
-                     ":  Send leaving resources alert failed",false,ERROR);
+                  Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities", $entity) .
+                                                   ":  Send leaving resources alert failed", false, ERROR);
                }
             }
          }

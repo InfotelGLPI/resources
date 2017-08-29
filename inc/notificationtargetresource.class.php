@@ -88,8 +88,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->addTarget(self::RESOURCE_USER, __('Resource user', 'resources'));
          if ($event == 'newtask'
              || $event == 'updatetask'
-             || $event == 'deletetask'
-         ) {
+             || $event == 'deletetask') {
             $this->addTarget(self::RESOURCE_TASK_TECHNICIAN, __("Task's responsible technician", "resources"));
             $this->addTarget(self::RESOURCE_TASK_GROUP, __("Task's responsible group", "resources"));
          }
@@ -327,7 +326,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.datebegin##']       = __('Arrival date', 'resources');
          $this->datas['##lang.resource.dateend##']         = __('Departure date', 'resources');
          $this->datas['##lang.resource.department##']      = PluginResourcesDepartment::getTypeName(1);
-         $this->datas['##lang.resource.accessprofile##']   = PluginResourcesAccessProfile::getTypeName(1);
+         $this->datas['##lang.resource.habilitation##']    = PluginResourcesHabilitation::getTypeName(1);
          $this->datas['##lang.resource.status##']          = PluginResourcesResourceState::getTypeName(1);
          $this->datas['##lang.resource.location##']        = __('Location');
          $this->datas['##lang.resource.comment##']         = __('Description');
@@ -340,20 +339,26 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          foreach ($options['resources'] as $id => $resource) {
             $tmp = array();
 
-            $tmp['##resource.name##']                   = $resource['name'];
-            $tmp['##resource.firstname##']              = $resource['firstname'];
-            $tmp['##resource.type##']                   = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
-                                                                                    $resource['plugin_resources_contracttypes_id']);
-            $tmp['##resource.users##']                  = Html::clean(getUserName($resource['users_id']));
-            $tmp['##resource.userssale##']              = Html::clean(getUserName($resource['users_id_sales']));
-            $tmp['##resource.usersrecipient##']         = Html::clean(getUserName($resource['users_id_recipient']));
-            $tmp['##resource.datedeclaration##']        = Html::convDateTime($resource['date_declaration']);
-            $tmp['##resource.datebegin##']              = Html::convDateTime($resource['date_begin']);
-            $tmp['##resource.dateend##']                = Html::convDateTime($resource['date_end']);
-            $tmp['##resource.department##']             = Dropdown::getDropdownName('glpi_plugin_resources_departments',
-                                                                                    $resource['plugin_resources_departments_id']);
-            $tmp['##resource.accessprofile##']          = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                                    $resource['plugin_resources_accessprofiles_id']);
+            $tmp['##resource.name##']            = $resource['name'];
+            $tmp['##resource.firstname##']       = $resource['firstname'];
+            $tmp['##resource.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                                             $resource['plugin_resources_contracttypes_id']);
+            $tmp['##resource.users##']           = Html::clean(getUserName($resource['users_id']));
+            $tmp['##resource.userssale##']       = Html::clean(getUserName($resource['users_id_sales']));
+            $tmp['##resource.usersrecipient##']  = Html::clean(getUserName($resource['users_id_recipient']));
+            $tmp['##resource.datedeclaration##'] = Html::convDateTime($resource['date_declaration']);
+            $tmp['##resource.datebegin##']       = Html::convDateTime($resource['date_begin']);
+            $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
+            $tmp['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
+                                                                             $resource['plugin_resources_departments_id']);
+            $resourcehabilitation = new PluginResourcesResourceHabilitation();
+            $habilitations = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            foreach ($habilitations as $habilitation) {
+               $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                  $habilitation['plugin_resources_habilitations_id']) . "\n";
+            }
+            $tmp['##resource.habilitation##'] = implode(', ', $tab);
+
             $tmp['##resource.status##']                 = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
                                                                                     $resource['plugin_resources_resourcestates_id']);
             $tmp['##resource.location##']               = Dropdown::getDropdownName('glpi_locations',
@@ -399,7 +404,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.checklist.datebegin##']       = __('Arrival date', 'resources');
          $this->datas['##lang.checklist.dateend##']         = __('Departure date', 'resources');
          $this->datas['##lang.checklist.department##']      = PluginResourcesDepartment::getTypeName(1);
-         $this->datas['##lang.checklist.accessprofile##']   = PluginResourcesAccessProfile::getTypeName(1);
+         $this->datas['##lang.checklist.habilitation##']    = PluginResourcesHabilitation::getTypeName(1);
          $this->datas['##lang.checklist.status##']          = PluginResourcesResourceState::getTypeName(1);
          $this->datas['##lang.checklist.location##']        = __('Location');
          $this->datas['##lang.checklist.comment##']         = __('Description');
@@ -412,21 +417,26 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          foreach ($options['checklists'] as $id => $checklist) {
             $tmp = array();
 
-            $tmp['##checklist.id##']                     = $checklist['plugin_resources_resources_id'];
-            $tmp['##checklist.name##']                   = $checklist['resource_name'];
-            $tmp['##checklist.firstname##']              = $checklist['resource_firstname'];
-            $tmp['##checklist.type##']                   = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
-                                                                                     $checklist['plugin_resources_contracttypes_id']);
-            $tmp['##checklist.users##']                  = Html::clean(getUserName($checklist['users_id']));
-            $tmp['##checklist.userssale##']              = Html::clean(getUserName($checklist['users_id_sales']));
-            $tmp['##checklist.usersrecipient##']         = Html::clean(getUserName($checklist['users_id_recipient']));
-            $tmp['##checklist.datedeclaration##']        = Html::convDateTime($checklist['date_declaration']);
-            $tmp['##checklist.datebegin##']              = Html::convDateTime($checklist['date_begin']);
-            $tmp['##checklist.dateend##']                = Html::convDateTime($checklist['date_end']);
-            $tmp['##checklist.department##']             = Dropdown::getDropdownName('glpi_plugin_resources_departments',
-                                                                                     $checklist['plugin_resources_departments_id']);
-            $tmp['##checklist.accessprofile##']          = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                                     $checklist['plugin_resources_accessprofiles_id']);
+            $tmp['##checklist.id##']              = $checklist['plugin_resources_resources_id'];
+            $tmp['##checklist.name##']            = $checklist['resource_name'];
+            $tmp['##checklist.firstname##']       = $checklist['resource_firstname'];
+            $tmp['##checklist.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                                              $checklist['plugin_resources_contracttypes_id']);
+            $tmp['##checklist.users##']           = Html::clean(getUserName($checklist['users_id']));
+            $tmp['##checklist.userssale##']       = Html::clean(getUserName($checklist['users_id_sales']));
+            $tmp['##checklist.usersrecipient##']  = Html::clean(getUserName($checklist['users_id_recipient']));
+            $tmp['##checklist.datedeclaration##'] = Html::convDateTime($checklist['date_declaration']);
+            $tmp['##checklist.datebegin##']       = Html::convDateTime($checklist['date_begin']);
+            $tmp['##checklist.dateend##']         = Html::convDateTime($checklist['date_end']);
+            $tmp['##checklist.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
+                                                                              $checklist['plugin_resources_departments_id']);
+            $resourcehabilitation                 = new PluginResourcesResourceHabilitation();
+            $habilitations                        = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $checklist['plugin_resources_resources_id']);
+            foreach ($habilitations as $habilitation) {
+               $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                  $habilitation['plugin_resources_habilitations_id']) . "\n";
+            }
+            $tmp['##checklist.habilitation##'] = implode(', ', $tab);
             $tmp['##checklist.status##']                 = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
                                                                                      $checklist['plugin_resources_resourcestates_id']);
             $tmp['##checklist.location##']               = Dropdown::getDropdownName('glpi_locations',
@@ -436,8 +446,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.usersleaving##']           = Html::clean(getUserName($checklist['users_id_recipient_leaving']));
             $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime($checklist['date_declaration_leaving']);
             $tmp['##checklist.leaving##']                = Dropdown::getYesNo($checklist['is_leaving']);
-//            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
-//                                                   $checklist['plugin_resources_leavingreasons_id']);
+            //            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
+            //                                                   $checklist['plugin_resources_leavingreasons_id']);
             $tmp['##checklist.helpdesk##'] = Dropdown::getYesNo($checklist['is_helpdesk_visible']);
             $tmp['##checklist.url##']      = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
                                                        $checklist['plugin_resources_resources_id']);
@@ -517,9 +527,14 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                                   $this->obj->getField('plugin_resources_departments_id'));
 
-         $this->datas['##lang.resource.accessprofile##'] = PluginResourcesAccessProfile::getTypeName(1);
-         $this->datas['##resource.accessprofile##']      = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                                     $this->obj->getField('plugin_resources_accessprofiles_id'));
+         $resourcehabilitation                          = new PluginResourcesResourceHabilitation();
+         $habilitations                                 = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
+         $this->datas['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
+         foreach ($habilitations as $habilitation) {
+            $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                               $habilitation['plugin_resources_habilitations_id']) . "\n";
+         }
+         $this->datas['##resource.habilitation##'] = implode(', ', $tab);
 
          $this->datas['##lang.resource.rank##'] = PluginResourcesRank::getTypeName(1);
          $this->datas['##resource.rank##']      = Dropdown::getDropdownName('glpi_plugin_resources_ranks',
@@ -599,7 +614,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.contractnature##']  = PluginResourcesContractNature::getTypeName(1);
          $this->datas['##lang.resource.quota##']           = __('Quota', 'resources');
          $this->datas['##lang.resource.department##']      = PluginResourcesDepartment::getTypeName(1);
-         $this->datas['##lang.resource.accessprofile##']   = PluginResourcesAccessProfile::getTypeName(1);
+         $this->datas['##lang.resource.habilitation##']    = PluginResourcesHabilitation::getTypeName(1);
          $this->datas['##lang.resource.rank##']            = PluginResourcesRank::getTypeName(1);
          $this->datas['##lang.resource.speciality##']      = PluginResourcesResourceSpeciality::getTypeName(1);
          $this->datas['##lang.resource.status##']          = PluginResourcesResourceState::getTypeName(1);
@@ -640,8 +655,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.department##'] = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                         $resource['plugin_resources_departments_id']);
 
-            $tmp['##resource.accessprofile##'] = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                           $resource['plugin_resources_accessprofiles_id']);
+            $resourcehabilitation             = new PluginResourcesResourceHabilitation();
+            $habilitations                    = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            foreach ($habilitations as $habilitation) {
+               $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                  $habilitation['plugin_resources_habilitations_id']) . "\n";
+            }
+            $tmp['##resource.habilitation##'] = implode(', ', $tab);
 
             $tmp['##resource.rank##'] = Dropdown::getDropdownName('glpi_plugin_resources_ranks',
                                                                   $resource['plugin_resources_ranks_id']);
@@ -742,10 +762,6 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                                   $this->obj->getField('plugin_resources_departments_id'));
 
-         $this->datas['##lang.resource.accessprofile##'] = PluginResourcesAccessProfile::getTypeName(1);
-         $this->datas['##resource.accessprofile##']      = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                                     $this->obj->getField('plugin_resources_accessprofiles_id'));
-
          $this->datas['##lang.resource.rank##'] = PluginResourcesRank::getTypeName(1);
          $this->datas['##resource.rank##']      = Dropdown::getDropdownName('glpi_plugin_resources_ranks',
                                                                             $this->obj->getField('plugin_resources_ranks_id'));
@@ -778,6 +794,16 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.resource.leavingreason##'] = PluginResourcesLeavingReason::getTypeName(1);
          $this->datas['##resource.leavingreason##']      = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
                                                                                      $this->obj->getField('plugin_resources_leavingreasons_id'));
+
+
+         $resourcehabilitation                          = new PluginResourcesResourceHabilitation();
+         $habilitations                                 = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
+         $this->datas['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
+         foreach ($habilitations as $habilitation) {
+            $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                               $habilitation['plugin_resources_habilitations_id']);
+         }
+         $this->datas['##resource.habilitation##'] = implode(', ', $tab);
 
          $this->datas['##lang.resource.sensitizesecurity##'] = __('Sensitized to security', 'resources');
          $this->datas['##resource.sensitizesecurity##']      = Dropdown::getYesNo($this->obj->getField('sensitize_security'));
@@ -1042,14 +1068,6 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                else
                   $tmp['##update.department##'] = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                             $this->target_object->oldvalues['plugin_resources_departments_id']);
-            }
-
-            if (isset($this->target_object->oldvalues['plugin_resources_accessprofiles_id'])) {
-               if (empty($this->target_object->oldvalues['plugin_resources_accessprofiles_id']))
-                  $tmp['##update.accessprofile##'] = "---";
-               else
-                  $tmp['##update.accessprofile##'] = Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles',
-                                                                               $this->target_object->oldvalues['plugin_resources_accessprofiles_id']);
             }
 
             if (isset($this->target_object->oldvalues['plugin_resources_resourcestates_id'])) {

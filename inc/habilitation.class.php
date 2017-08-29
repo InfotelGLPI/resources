@@ -34,9 +34,11 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginResourcesHabilitation
  */
-class PluginResourcesHabilitation extends CommonDropdown {
-   
-   var $can_be_translated  = true;
+class PluginResourcesHabilitation extends CommonTreeDropdown {
+
+   // From CommonDBTM
+   public $dohistory          = true;
+   public $can_be_translated  = true;
 
    /**
     * @since version 0.85
@@ -45,7 +47,7 @@ class PluginResourcesHabilitation extends CommonDropdown {
     **/
    static function getTypeName($nb=0) {
 
-      return _n('Additional habilitation', 'Additional habilitations', $nb, 'resources');
+      return _n('Habilitation', 'Habilitations', $nb, 'resources');
    }
 
    /**
@@ -71,6 +73,32 @@ class PluginResourcesHabilitation extends CommonDropdown {
       return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
    }
 
+   function getAdditionalFields() {
+
+      $tab = array(array('name'  => $this->getForeignKeyField(),
+                         'label' => __('As child of'),
+                         'type'  => 'parent',
+                         'list'  => true),
+                   array('name'  => "allow_resource_creation",
+                         'label' => __('Allow when creating the resource', 'resources'),
+                         'type'  => 'bool',
+                         'list'  => true)
+      );
+
+      return $tab;
+   }
+
+   function getSearchOptions() {
+
+      $tab = parent::getSearchOptions();
+
+      $tab[15]['table']         = $this->getTable();
+      $tab[15]['field']         = 'allow_resource_creation';
+      $tab[15]['name']          = __('Allow when creating the resource', 'resources');
+      $tab[15]['datatype']      = 'bool';
+
+      return $tab;
+   }
 
    /**
     * Transfer

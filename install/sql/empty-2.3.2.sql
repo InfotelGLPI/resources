@@ -24,7 +24,7 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `plugin_resources_leavingreasons_id` int(11) NOT NULL default '0',
    `date_declaration_leaving` datetime default NULL,
    `users_id_recipient_leaving` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
-   `plugin_resources_accessprofiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_accessprofiles (id)',
+   `plugin_resources_habilitations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_habilitations (id)',
    `picture` varchar(100) collate utf8_unicode_ci default NULL,
    `is_helpdesk_visible` int(11) NOT NULL default '1',
    `date_mod` datetime default NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    KEY `users_id_sales` (`users_id_sales`),
    KEY `users_id_recipient` (`users_id_recipient`),
    KEY `plugin_resources_departments_id` (`plugin_resources_departments_id`),
-   KEY `plugin_resources_accessprofiles_id` (`plugin_resources_accessprofiles_id`),
+   KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`),
    KEY `plugin_resources_resourcestates_id` (`plugin_resources_resourcestates_id`),
    KEY `plugin_resources_resourcesituations_id` (`plugin_resources_resourcesituations_id`),
    KEY `plugin_resources_contractnatures_id` (`plugin_resources_contractnatures_id`),
@@ -608,19 +608,6 @@ CREATE TABLE `glpi_plugin_resources_budgetvolumes` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `glpi_plugin_resources_accessprofiles`;
-CREATE TABLE `glpi_plugin_resources_accessprofiles` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
-   PRIMARY KEY  (`id`),
-   KEY `name` (`name`),
-   KEY `entities_id` (`entities_id`),
-   KEY `is_recursive` (`is_recursive`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resources_changes`;
 CREATE TABLE `glpi_plugin_resources_resources_changes` (
@@ -680,25 +667,32 @@ CREATE TABLE `glpi_plugin_resources_confighabilitations` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_habilitations`;
 CREATE TABLE `glpi_plugin_resources_habilitations` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
-   PRIMARY KEY  (`id`),
-   KEY `name` (`name`),
-   KEY `entities_id` (`entities_id`),
-   KEY `is_recursive` (`is_recursive`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entities_id` int(11) NOT NULL DEFAULT '0',
+  `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `plugin_resources_habilitations_id` int(11) NOT NULL default '0',
+  `completename` text COLLATE utf8_unicode_ci,
+  `comment` text COLLATE utf8_unicode_ci,
+  `level` int(11) NOT NULL DEFAULT '0',
+  `ancestors_cache` longtext COLLATE utf8_unicode_ci,
+  `sons_cache` longtext COLLATE utf8_unicode_ci,
+  `allow_resource_creation` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`),
+  KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`),
+  KEY `entities_id` (`entities_id`),
+  KEY `is_recursive` (`is_recursive`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
 CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
-   `id` int(11) NOT NULL auto_increment,
-   `resources_id` int(11) NOT NULL default '0',
-   `plugin_resources_habilitations_id` tinyint(1) NOT NULL DEFAULT '0',
-   PRIMARY KEY  (`id`),
-   KEY `resources_id` (`resources_id`),
-   KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
+  `id` int(11) NOT NULL auto_increment,
+  `plugin_resources_resources_id` int(11) NOT NULL default '0',
+  `plugin_resources_habilitations_id` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY  (`id`),
+  KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
+  KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_configs`;

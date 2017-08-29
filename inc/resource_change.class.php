@@ -98,7 +98,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
     * @param $plugin_resources_resources_id
     */
    static function setFieldByAction($action_id, $plugin_resources_resources_id){
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       if($plugin_resources_resources_id == 0){
          echo "<span class='red'>".__('Please select a resource', 'resources')."</span>";
@@ -175,22 +175,36 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             echo __("Current access profile of the resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'));
+            $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
+                      FROM `glpi_plugin_resources_resourcehabilitations` 
+                      LEFT JOIN `glpi_plugin_resources_habilitations` 
+                      ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                      WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
+                      AND `allow_resource_creation`";
+            foreach($DB->request($query) as $data){
+               echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $data['id'])."<br>";
+            }
 
             echo "</td></tr>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             echo __('New access profile of the resource', 'resources')."</td>";
             echo "<td class='left'>";
-            $rand = PluginResourcesAccessProfile::dropdown(array('name'      => "plugin_resources_accessprofiles_id",
+            $rand = PluginResourcesHabilitation::dropdown(array('name'      => "plugin_resources_habilitations_id",
                                                                  'entity'    => $resource->fields["entities_id"],
                                                                  'right'     => 'all',
-                                                                 'used'      => array($resource->getField('plugin_resources_accessprofiles_id')),
+                                                                 'condition' => 'allow_resource_creation',
+                                                                 'used'      => array($resource->getField('plugin_resources_habilitations_id')),
                                                                  'on_change' => 'plugin_resources_load_button_changeresources_profil()'));
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_profil(){";
-            $params = array('load_button_changeresources' => true, 'action' => self::CHANGE_ACCESSPROFIL, 'plugin_resources_accessprofiles_id' => '__VALUE__');
-            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_plugin_resources_accessprofiles_id' . $rand);
+            $params = array('load_button_changeresources' => true,
+                            'action' => self::CHANGE_ACCESSPROFIL,
+                            'plugin_resources_habilitations_id' => '__VALUE__');
+            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
+                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   $params,
+                                   'dropdown_plugin_resources_habilitations_id' . $rand);
             echo "}";
             echo "</script>";
 
@@ -204,7 +218,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
             echo __("Current contract type of the resource", "resources");
             echo "</td><td class='left'>";
-            echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'));
+            echo "&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                    $resource->getField('plugin_resources_contracttypes_id'));
 
             echo "</td></tr>";
             echo "<tr class='plugin_resources_wizard_explain'><td class='left'>";
@@ -218,8 +233,13 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_contract(){";
-            $params = array('load_button_changeresources' => true, 'action' => self::CHANGE_CONTRACTYPE, 'plugin_resources_contracttypes_id' => '__VALUE__');
-            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_plugin_resources_contracttypes_id' . $rand);
+            $params = array('load_button_changeresources' => true,
+                            'action' => self::CHANGE_CONTRACTYPE,
+                            'plugin_resources_contracttypes_id' => '__VALUE__');
+            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
+                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   $params,
+                                   'dropdown_plugin_resources_contracttypes_id' . $rand);
             echo "}";
             echo "</script>";
 
@@ -296,9 +316,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
          case self::CHANGE_ACCESSPROFIL :
 
-            if (isset($options['plugin_resources_accessprofiles_id'])
-                && !empty($options['plugin_resources_accessprofiles_id'])
-                  && $options['plugin_resources_accessprofiles_id'] != 0) {
+            if (isset($options['plugin_resources_habilitations_id'])
+                && !empty($options['plugin_resources_habilitations_id'])
+                  && $options['plugin_resources_habilitations_id'] != 0) {
                $display = true;
             }
             break;
@@ -340,6 +360,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
     * @param array $options
     */
    static function startingChange($plugin_resources_resources_id, $action_id, $options = array()){
+      global $DB;
 
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
@@ -384,19 +405,37 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
          case self::CHANGE_ACCESSPROFIL :
 
-            $data['name'] = __("Change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Change the access profile for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
-            $data['content'] .= __("Current access profile of the resource", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $resource->getField('plugin_resources_accessprofiles_id'))."\n";
-            $data['content'] .= __("New access profile of the resource", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_accessprofiles', $options['plugin_resources_accessprofiles_id'])."\n";
+            $data['name'] = __("Change the access profile for", 'resources')." ".
+                            PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change the access profile for", 'resources')." ".
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
 
-            $input['plugin_resources_accessprofiles_id'] = $options['plugin_resources_accessprofiles_id'];
+            $data['content'] .= __("Current access profile of the resource", 'resources')."&nbsp;:&nbsp;";
+            $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
+                      FROM `glpi_plugin_resources_resourcehabilitations` 
+                      LEFT JOIN `glpi_plugin_resources_habilitations` 
+                      ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                      WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
+                      AND `allow_resource_creation`";
+            foreach($DB->request($query) as $habilitation){
+               $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $habilitation['id'])."\n";
+            }
+
+            $data['content'] .= __("New access profile of the resource", 'resources')."&nbsp;:&nbsp;".
+                                Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $options['plugin_resources_habilitations_id'])."\n";
+
+            $input['plugin_resources_habilitations_id'] = $options['plugin_resources_habilitations_id'];
             break;
          case self::CHANGE_CONTRACTYPE :
 
-            $data['name'] = __("Change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Change the type of contract for", 'resources')." ".PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
-            $data['content'] .= __("Current contract type of the resource", 'resources')." "."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'))."\n";
-            $data['content'] .= __("New type of contract", 'resources')."&nbsp;:&nbsp;".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $options['plugin_resources_contracttypes_id'])."\n";
+            $data['name'] = __("Change the type of contract for", 'resources')." ".
+                            PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change the type of contract for", 'resources')." ".
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id)."\n";
+            $data['content'] .= __("Current contract type of the resource", 'resources')." "."&nbsp;:&nbsp;".
+                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id'))."\n";
+            $data['content'] .= __("New type of contract", 'resources')."&nbsp;:&nbsp;".
+                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $options['plugin_resources_contracttypes_id'])."\n";
 
             $input['plugin_resources_contracttypes_id'] = $options['plugin_resources_contracttypes_id'];
             break;

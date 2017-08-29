@@ -151,11 +151,6 @@ class PluginResourcesResourceCard extends CommonDBTM {
                               "</span>" . Html::convDate($resource->fields["date_begin"])) . "</br>";
          echo "</p>";
 
-         echo "<p>" . sprintf(__('%1$s: %2$s'), "<span class='b'>" . PluginResourcesAccessProfile::getTypeName(1),
-                              "</span>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesAccessProfile'),
-                                                                    $resource->fields['plugin_resources_accessprofiles_id'])) . "</br>";
-         echo "</p>";
-
          if (PluginResourcesResourceHabilitation::canView()) {
 
             if ($count = PluginResourcesResourceHabilitation::countForResource($resource)) {
@@ -220,11 +215,6 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
          echo "<p>" . sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Arrival date', 'resources'),
                               "</span>" . Html::convDate($resource->fields["date_begin"])) . "</br>";
-         echo "</p>";
-
-         echo "<p>" . sprintf(__('%1$s: %2$s'), "<span class='b'>" . PluginResourcesAccessProfile::getTypeName(1),
-                              "</span>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesAccessProfile'),
-                                                                    $resource->fields['plugin_resources_accessprofiles_id'])) . "</br>";
          echo "</p>";
 
          if (PluginResourcesResourceHabilitation::canView()) {

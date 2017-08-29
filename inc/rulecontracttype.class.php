@@ -209,9 +209,9 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_quota']['type']  = "yesonly";
       $actions['requiredfields_quota']['force_actions'] = array('assign');
 
-      $actions['requiredfields_plugin_resources_accessprofiles_id']['name']  = PluginResourcesAccessProfile::getTypeName(1);
-      $actions['requiredfields_plugin_resources_accessprofiles_id']['type']  = "yesonly";
-      $actions['requiredfields_plugin_resources_accessprofiles_id']['force_actions'] = array('assign');
+      $actions['requiredfields_plugin_resources_habilitations_id']['name']  = PluginResourcesHabilitation::getTypeName(1);
+      $actions['requiredfields_plugin_resources_habilitations_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_habilitations_id']['force_actions'] = array('assign');
 
       if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)){
 

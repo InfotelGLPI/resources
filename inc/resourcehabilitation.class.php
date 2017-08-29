@@ -38,9 +38,6 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
    static $rightname = 'plugin_resources_habilitation';
    public $dohistory = true;
-   
-   const ACTION_ADD    = 1;
-   const ACTION_DELETE = 2;
 
    /**
     * Return the localized name of the current Type
@@ -51,7 +48,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Additional habilitation', 'Additional habilitations', $nb, 'resources');
+      return _n('Habilitation', 'Habilitations', $nb, 'resources');
    }
 
    /**
@@ -187,6 +184,30 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             Html::closeForm();
          }
          echo "</div>";
+      }
+   }
+
+   /**
+    * Duplicate item resources from an item template to its clone
+    *
+    * @since version 0.84
+    *
+    * @param $itemtype     itemtype of the item
+    * @param $oldid        ID of the item to clone
+    * @param $newid        ID of the item cloned
+    * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (default '')
+    **/
+   static function cloneItem($oldid, $newid) {
+      global $DB;
+
+      $query  = "SELECT *
+                 FROM `glpi_plugin_resources_resourcehabilitations`
+                 WHERE `plugin_resources_resources_id` = '$oldid';";
+
+      foreach ($DB->request($query) as $data) {
+         $habilitation = new self();
+         $habilitation->add(array('plugin_resources_resources_id'     => $newid,
+                                  'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]));
       }
    }
 

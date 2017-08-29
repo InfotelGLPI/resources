@@ -50,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!TableExists("glpi_plugin_resources_resources") && !TableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/empty-2.3.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.3.2.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
          VALUES (1, '".__('Long term contract', 'resources')."', '')";
@@ -71,73 +71,73 @@ function plugin_resources_install() {
       $update = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.4.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.5.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.4.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.5.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.5.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (TableExists("glpi_plugin_resources_profiles") && FieldExists("glpi_plugin_resources_profiles", "interface")) {
       $update = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.5.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.5.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.5.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (TableExists("glpi_plugin_resources") && !FieldExists("glpi_plugin_resources", "helpdesk_visible")) {
       $update = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.5.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (!TableExists("glpi_plugin_resources_contracttypes")) {
       $update = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (TableExists("glpi_plugin_resources_contracttypes") && !FieldExists("glpi_plugin_resources_resources", "plugin_resources_resourcestates_id")) {
       $update = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (!TableExists("glpi_plugin_resources_reportconfigs")) {
       $update = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    } else if (!TableExists("glpi_plugin_resources_checklistconfigs")) {
       $update80 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    }
 
    //Version 1.7.1
    if (!TableExists("glpi_plugin_resources_choiceitems")) {
       $$update171 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.7.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.1.sql");
 
    }
 
    //Version 1.9.0
    if (!TableExists("glpi_plugin_resources_employments")) {
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.9.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.9.0.sql");
 
       $query = "SELECT * FROM `glpi_plugin_resources_employers`";
       $result = $DB->query($query);
@@ -154,31 +154,35 @@ function plugin_resources_install() {
 
    //Version 1.9.1
    if (TableExists("glpi_plugin_resources_ranks") && !FieldExists("glpi_plugin_resources_ranks", "begin_date")) {
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-1.9.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.9.1.sql");
    }
 
    //Version 2.0.3
    if (!FieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
       $update203 = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/sql/update-2.0.3.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.0.3.sql");
    }
 
    //Version 2.0.4
    if(!TableExists("glpi_plugin_resources_transferentities")){
       $update204 = true;
-      $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.0.4.sql");
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.0.4.sql");
    }
 
    //Version 2.3.1
-   if(!TableExists("glpi_plugin_resources_accessprofiles")){
+   if(!TableExists("glpi_plugin_resources_resources_changes") && !TableExists("glpi_plugin_resources_resourcebadges")){
       $update231 = true;
-      $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.3.1.sql");
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.1.sql");
    }
 
    //Version 2.3.2
-   if(!TableExists("glpi_plugin_resources_configs")){
-      $DB->runFile(GLPI_ROOT ."/plugins/resources/sql/update-2.3.2.sql");
-   }
+//   if(!TableExists("glpi_plugin_resources_configs")){
+//      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.2.sql");
+
+      include(GLPI_ROOT."/plugins/resources/install/update_231_232.php");
+      update231_232();
+
+//   }
 
    if ($update78 || $install) {
       //Do One time on 0.78
@@ -1465,7 +1469,6 @@ function plugin_resources_uninstall() {
                    "glpi_plugin_resources_costs",
                    "glpi_plugin_resources_budgettypes",
                    "glpi_plugin_resources_budgetvolumes",
-                   "glpi_plugin_resources_accessprofiles",
                    "glpi_plugin_resources_configs",
                    "glpi_plugin_resources_notifications",
                    "glpi_plugin_resources_resourcebadges",
@@ -1629,7 +1632,8 @@ function plugin_resources_getDatabaseRelations() {
                                                                     "glpi_plugin_resources_checklists"              => "plugin_resources_contracttypes_id"),
          "glpi_users"                                      => array("glpi_plugin_resources_resources"               => array('users_id', 'users_id_recipient', 'users_id_recipient_leaving', 'users_id_sales'),"glpi_plugin_resources_tasks" => "users_id"),
          "glpi_plugin_resources_departments"               => array("glpi_plugin_resources_resources"               => "plugin_resources_departments_id"),
-         "plugin_resources_accessprofiles"                 => array("glpi_plugin_resources_resources"               => "plugin_resources_accessprofiles_id"),
+         "glpi_plugin_resources_habilitations"             => array("glpi_plugin_resources_resources"               => "plugin_resources_habilitations_id",
+                                                                    "glpi_plugin_resources_resourcehabilitations"   => "plugin_resources_habilitations_id"),
          "glpi_plugin_resources_resourcestates"            => array("glpi_plugin_resources_resources"               => "plugin_resources_resourcestates_id"),
          "glpi_plugin_resources_resourcesituations"        => array("glpi_plugin_resources_resources"               => "plugin_resources_resourcesituations_id"),
          "glpi_plugin_resources_contractnatures"           => array("glpi_plugin_resources_resources"               => "plugin_resources_contractnatures_id"),
@@ -1701,7 +1705,6 @@ function plugin_resources_getDropdown() {
                    'PluginResourcesEmploymentState'      => PluginResourcesEmploymentState::getTypeName(2),
                    'PluginResourcesBudgetType'           => PluginResourcesBudgetType::getTypeName(2),
                    'PluginResourcesBudgetVolume'         => PluginResourcesBudgetVolume::getTypeName(2),
-                   'PluginResourcesAccessProfile'        => PluginResourcesAccessProfile::getTypeName(2),
                    'PluginResourcesHabilitation'         => PluginResourcesHabilitation::getTypeName(2),
                    'PluginResourcesCost'                 => PluginResourcesCost::getTypeName(2));
    } else {
@@ -1783,9 +1786,6 @@ function plugin_resources_getAddSearchOptions($itemtype) {
          $sopt[4325]['name'] = PluginResourcesResource::getTypeName(2)." - ".__('Sales manager', 'resources');
          $sopt[4325]['massiveaction'] = false;
 
-         $sopt[4326]['table'] = 'glpi_plugin_resources_accessprofiles';
-         $sopt[4326]['field'] = 'name';
-         $sopt[4326]['name'] = PluginResourcesResource::getTypeName(2)." - ".PluginResourcesAccessProfile::getTypeName(1);
       }
    }
    return $sopt;
