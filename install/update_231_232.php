@@ -66,9 +66,11 @@ function update231_232() {
 
    }
 
-   $query_add = "DROP TABLE IF EXISTS `glpi_plugin_resources_accessprofiles`;";
-   $DB->query($query_add);
+   $query_drop = "DROP TABLE IF EXISTS `glpi_plugin_resources_accessprofiles`;";
+   $DB->query($query_drop);
 
+   $query_delete_rule = "DELETE FROM `glpi_ruleactions` WHERE `glpi_ruleactions`.`field` = 'requiredfields_plugin_resources_accessprofiles_id';";
+   $DB->query($query_delete_rule);
 
    return true;
 }

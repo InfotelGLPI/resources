@@ -32,7 +32,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesResourceBadge
+ * Class PluginResourcesResourceHabilitation
  */
 class PluginResourcesResourceHabilitation extends CommonDBTM {
 
