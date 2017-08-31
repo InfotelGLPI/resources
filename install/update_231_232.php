@@ -43,20 +43,37 @@ function update231_232() {
 
             $query_add = "INSERT INTO `glpi_plugin_resources_habilitations` (entities_id, is_recursive, name, completename, 
                                                                               comment, allow_resource_creation) 
-                          VALUES ('".$data['entities_id']."', '".$data['is_recursive']."', 
-                          '".$data['name']."', '".$data['name']."', '".$data['comment']."', '1')";
-            $id = $DB->query($query_add);
+                          VALUES ('" . $data['entities_id'] . "', '" . $data['is_recursive'] . "', 
+                          '" . $data['name'] . "', '" . $data['name'] . "', '" . $data['comment'] . "', '1')";
+            $DB->query($query_add);
 
-            $query_resource = "SELECT *
-                              FROM `glpi_plugin_resources_resources`
-                              WHERE `is_template` = 0 AND `plugin_resources_habilitations_id` = '".$data['id']."'";
-            if ($result_resource = $DB->query($query_resource)) {
-               if ($DB->numrows($result_resource) > 0) {
-                  while ($data_resource = $DB->fetch_assoc($result_resource)) {
-                     $query_update = "UPDATE glpi_plugin_resources_resources 
-                                      SET `plugin_resources_habilitations_id` = $id
-                                      WHERE `id` = '".$data_resource['id']."'";
-                     $DB->query($query_update);
+            $query_id = "SELECT `id`
+                         FROM `glpi_plugin_resources_habilitations`
+                         WHERE `name` LIKE '" . $data['name'] . "'";
+            if ($result_id = $DB->query($query_id)) {
+               $id = $DB->result($result_id, 1, 'id');
+
+               $query_resource = "SELECT *
+                                 FROM `glpi_plugin_resources_resources`
+                                 WHERE `plugin_resources_habilitations_id` = '" . $data['id'] . "'";
+               if ($result_resource = $DB->query($query_resource)) {
+                  if ($DB->numrows($result_resource) > 0) {
+                     while ($data_resource = $DB->fetch_assoc($result_resource)) {
+                        if ($data_resource['is_template'] == 0) {
+                           $query_insert = "INSERT INTO `glpi_plugin_resources_resourcehabilitations` 
+                                             (`plugin_resources_resources_id`, `plugin_resources_habilitations_id`) 
+                                             VALUES ('" . $data_resource['id'] . "', '$id')";
+
+                           $DB->query($query_insert);
+                        } else {
+                           $query_update = "UPDATE glpi_plugin_resources_resources 
+                                         SET `plugin_resources_habilitations_id` = '$id'
+                                         WHERE `id` = '" . $data_resource['id'] . "'";
+                           $DB->query($query_update);
+                        }
+
+
+                     }
                   }
                }
             }

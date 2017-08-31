@@ -176,13 +176,13 @@ function plugin_resources_install() {
    }
 
    //Version 2.3.2
-//   if(!TableExists("glpi_plugin_resources_configs")){
-//      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.2.sql");
+   if(!TableExists("glpi_plugin_resources_configs")){
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.2.sql");
 
       include(GLPI_ROOT."/plugins/resources/install/update_231_232.php");
       update231_232();
 
-//   }
+   }
 
    if ($update78 || $install) {
       //Do One time on 0.78
@@ -2418,8 +2418,8 @@ function plugin_pre_item_update_resources($item) {
 
 function plugin_datainjection_populate_resources() {
    global $INJECTABLE_TYPES;
-   $INJECTABLE_TYPES['PluginResourcesResourceInjection'] = 'resources';
-   $INJECTABLE_TYPES['PluginResourcesClientInjection'] = 'resources';
+   $INJECTABLE_TYPES['PluginResourcesResourceInjection']             = 'resources';
+   $INJECTABLE_TYPES['PluginResourcesClientInjection']               = 'resources';
 }
 
 /*
