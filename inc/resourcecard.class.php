@@ -38,6 +38,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
+   static $types = array('Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge');
+
    static function resourceCard($ID) {
       global $CFG_GLPI;
 
@@ -267,7 +269,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       $datas = array();
       foreach ($type_user as $itemtype) {
 
-         if (!($item = getItemForItemtype($itemtype))) {
+         if (!($item = getItemForItemtype($itemtype)) || !in_array($itemtype, self::$types)) {
             continue;
          }
          $i         = 0;
