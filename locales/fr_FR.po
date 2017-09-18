@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 16:14+0200\n"
-"PO-Revision-Date: 2017-08-29 16:23+0200\n"
+"POT-Creation-Date: 2017-09-18 14:11+0200\n"
+"PO-Revision-Date: 2017-09-18 14:19+0200\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_resources/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -53,9 +53,9 @@ msgstr "Listes de distributions spécifiques"
 msgid "Others needs"
 msgstr "Autres besoins"
 
-#: hook.php:1754 inc/notificationtargetresource.class.php:334 inc/notificationtargetresource.class.php:412 inc/notificationtargetresource.class.php:576
-#: inc/notificationtargetresource.class.php:629 inc/notificationtargetresource.class.php:791 inc/notificationtargetresource.class.php:1264
-#: inc/notificationtargetresource.class.php:1290 inc/resource.class.php:246 inc/resource.class.php:1175
+#: hook.php:1754 inc/notificationtargetresource.class.php:334 inc/notificationtargetresource.class.php:413 inc/notificationtargetresource.class.php:579
+#: inc/notificationtargetresource.class.php:632 inc/notificationtargetresource.class.php:795 inc/notificationtargetresource.class.php:1269
+#: inc/notificationtargetresource.class.php:1295 inc/resource.class.php:246 inc/resource.class.php:1175
 msgid "Declared as leaving"
 msgstr "Déclaré partant"
 
@@ -73,22 +73,22 @@ msgstr[0] "Client affecté"
 msgstr[1] "Clients affectés"
 
 #: hook.php:1768 inc/directory.class.php:125 inc/notificationtargetresource.class.php:84 inc/notificationtargetresource.class.php:322
-#: inc/notificationtargetresource.class.php:400 inc/notificationtargetresource.class.php:551 inc/notificationtargetresource.class.php:621
-#: inc/notificationtargetresource.class.php:743 inc/notificationtargetresource.class.php:1252 inc/notificationtargetresource.class.php:1280
+#: inc/notificationtargetresource.class.php:401 inc/notificationtargetresource.class.php:554 inc/notificationtargetresource.class.php:624
+#: inc/notificationtargetresource.class.php:747 inc/notificationtargetresource.class.php:1257 inc/notificationtargetresource.class.php:1285
 #: inc/resource.class.php:185 inc/resource.class.php:1088 inc/resource.class.php:1852 inc/resource.class.php:2355 inc/resourcepdf.class.php:65
 #: inc/rulecontracttype.class.php:188 inc/task.class.php:637 inc/task.class.php:972
 msgid "Resource manager"
 msgstr "Encadrant direct de la ressource"
 
-#: hook.php:1780 inc/notificationtargetresource.class.php:87 inc/notificationtargetresource.class.php:333 inc/notificationtargetresource.class.php:411
-#: inc/notificationtargetresource.class.php:583 inc/notificationtargetresource.class.php:631 inc/notificationtargetresource.class.php:785
-#: inc/notificationtargetresource.class.php:1263 inc/notificationtargetresource.class.php:1289 inc/resource.class.php:252
+#: hook.php:1780 inc/notificationtargetresource.class.php:87 inc/notificationtargetresource.class.php:333 inc/notificationtargetresource.class.php:412
+#: inc/notificationtargetresource.class.php:586 inc/notificationtargetresource.class.php:634 inc/notificationtargetresource.class.php:789
+#: inc/notificationtargetresource.class.php:1268 inc/notificationtargetresource.class.php:1294 inc/resource.class.php:252
 msgid "Informant of leaving"
 msgstr "Déclarant du départ de la ressource"
 
 #: hook.php:1786 inc/notificationtargetresource.class.php:85 inc/notificationtargetresource.class.php:109 inc/notificationtargetresource.class.php:323
-#: inc/notificationtargetresource.class.php:401 inc/notificationtargetresource.class.php:554 inc/notificationtargetresource.class.php:622
-#: inc/notificationtargetresource.class.php:746 inc/resource.class.php:331 inc/resource.class.php:1110 inc/resource.class.php:1866
+#: inc/notificationtargetresource.class.php:402 inc/notificationtargetresource.class.php:557 inc/notificationtargetresource.class.php:625
+#: inc/notificationtargetresource.class.php:750 inc/resource.class.php:331 inc/resource.class.php:1110 inc/resource.class.php:1866
 #: inc/rulecontracttype.class.php:192
 msgid "Sales manager"
 msgstr "Responsable commercial"
@@ -117,7 +117,7 @@ msgstr "Installation PHP incompatible. Requiert le module"
 
 #: ajax/pdfresource.php:75
 msgid "Please ensure that the return form is signed by the employee"
-msgstr "Merci de veiller a faire signer la fiche de restitution au collaborateur"
+msgstr "Merci de veiller à faire signer la fiche de restitution au collaborateur"
 
 #: ajax/pdfresource.php:76
 msgid "Download the restitution form"
@@ -136,7 +136,7 @@ msgstr "Merci d'activer le plugin metademand"
 msgid "No advanced request found"
 msgstr "Aucune demande avancée n'a été trouvée"
 
-#: front/resourcebadge.form.php:109 front/resourcebadge.php:61 front/resourcehabilitation.php:61
+#: front/resourcebadge.form.php:109 front/resourcebadge.php:61
 msgid "Please activate the plugin badge"
 msgstr "Merci d'activer le plugin badge"
 
@@ -167,12 +167,6 @@ msgstr "Déclaration du départ de la ressource effectuée"
 #: front/wizard.form.php:110 inc/resource.class.php:466
 msgid "Required fields are not filled. Please try again."
 msgstr "Un ou plusieurs champs obligatoires sont manquants. Merci de les renseigner."
-
-#: inc/accessprofile.class.php:48
-msgid "Access profile"
-msgid_plural "Access profiles"
-msgstr[0] "Profil d'accès"
-msgstr[1] "Profils d'accès"
 
 #: inc/budget.class.php:76 inc/budget.class.php:92 inc/cost.class.php:68 inc/cost.class.php:85
 msgid "The profession for the budget must be filled"
@@ -293,17 +287,17 @@ msgstr "Ajouter un ticket"
 msgid "The checklist is finished"
 msgstr "La checklist est terminée"
 
-#: inc/checklist.class.php:898 inc/dashboard.class.php:44 inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:392
+#: inc/checklist.class.php:898 inc/dashboard.class.php:44 inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:393
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Ressource partante - checklist à vérifier"
 
-#: inc/checklist.class.php:900 inc/dashboard.class.php:43 inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:388
+#: inc/checklist.class.php:900 inc/dashboard.class.php:43 inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:389
 msgid "New resource - checklist needs to verificated"
 msgstr "Nouvelle ressource - checklist à vérifier"
 
 #: inc/checklist.class.php:905 inc/dashboard.class.php:122 inc/directory.class.php:136 inc/notificationtargetresource.class.php:327
-#: inc/notificationtargetresource.class.php:405 inc/notificationtargetresource.class.php:566 inc/notificationtargetresource.class.php:626
-#: inc/notificationtargetresource.class.php:758 inc/notificationtargetresource.class.php:1256 inc/notificationtargetresource.class.php:1284
+#: inc/notificationtargetresource.class.php:406 inc/notificationtargetresource.class.php:569 inc/notificationtargetresource.class.php:629
+#: inc/notificationtargetresource.class.php:762 inc/notificationtargetresource.class.php:1261 inc/notificationtargetresource.class.php:1289
 #: inc/recap.class.php:144 inc/resource.class.php:199 inc/resource.class.php:1208 inc/resource.class.php:1905 inc/resource.class.php:2691
 #: inc/resource_item.class.php:709 inc/resource_item.class.php:960 inc/resource_item.class.php:970 inc/resourcepdf.class.php:70
 #: inc/rulecontracttype.class.php:204 report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
@@ -314,9 +308,9 @@ msgid "Departure date"
 msgstr "Date de départ"
 
 #: inc/checklist.class.php:907 inc/dashboard.class.php:82 inc/directory.class.php:131 inc/notificationtargetresource.class.php:326
-#: inc/notificationtargetresource.class.php:404 inc/notificationtargetresource.class.php:563 inc/notificationtargetresource.class.php:625
-#: inc/notificationtargetresource.class.php:755 inc/notificationtargetresource.class.php:1255 inc/notificationtargetresource.class.php:1283
-#: inc/recap.class.php:139 inc/resourcecard.class.php:150 inc/resourcecard.class.php:216 inc/resource.class.php:194 inc/resource.class.php:1099
+#: inc/notificationtargetresource.class.php:405 inc/notificationtargetresource.class.php:566 inc/notificationtargetresource.class.php:628
+#: inc/notificationtargetresource.class.php:759 inc/notificationtargetresource.class.php:1260 inc/notificationtargetresource.class.php:1288
+#: inc/recap.class.php:139 inc/resourcecard.class.php:152 inc/resourcecard.class.php:218 inc/resource.class.php:194 inc/resource.class.php:1099
 #: inc/resource.class.php:1893 inc/resource_item.class.php:708 inc/resource_item.class.php:959 inc/resource_item.class.php:969
 #: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:200
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
@@ -326,7 +320,7 @@ msgstr "Date de départ"
 msgid "Arrival date"
 msgstr "Date d'arrivée"
 
-#: inc/checklist.class.php:913 inc/notificationtargetresource.class.php:394
+#: inc/checklist.class.php:913 inc/notificationtargetresource.class.php:395
 msgid "Checklist needs to verificated"
 msgstr "Checklist à vérifier"
 
@@ -374,7 +368,7 @@ msgstr "Ajouter un besoin"
 msgid "Will be added to the resource comment area"
 msgstr "Sera ajouté dans la zone commentaire de la ressource"
 
-#: inc/choice.class.php:345 inc/employee.class.php:345 inc/resource.class.php:1559 inc/resource.class.php:1993 inc/resource.class.php:2004
+#: inc/choice.class.php:345 inc/employee.class.php:350 inc/resource.class.php:1559 inc/resource.class.php:1993 inc/resource.class.php:2004
 #: inc/resource.class.php:2080
 msgctxt "button"
 msgid "Next >"
@@ -401,6 +395,10 @@ msgid "Type of need"
 msgid_plural "Types of need"
 msgstr[0] "Type de besoin"
 msgstr[1] "Types de besoin"
+
+#: inc/client.class.php:59 inc/client.class.php:101 inc/employee.class.php:227
+msgid "Security compliance"
+msgstr "Conforme sécurité"
 
 #: inc/config.class.php:78
 msgid "Displaying the security block on the resource"
@@ -444,7 +442,7 @@ msgstr[1] "Types de contrat"
 msgid "Wizard resource creation"
 msgstr "Assistant de création"
 
-#: inc/contracttype.class.php:63 inc/contracttype.class.php:89 inc/employee.class.php:307
+#: inc/contracttype.class.php:63 inc/contracttype.class.php:89 inc/employee.class.php:312
 msgid "Enter employer information about the resource"
 msgstr "Entrez les informations employeurs de la ressource"
 
@@ -488,12 +486,12 @@ msgstr[1] "Employés"
 msgid "The resource is also created if not existent"
 msgstr "La ressource est aussi créée si celle-ci n'existe pas"
 
-#: inc/employee.class.php:342 inc/resource.class.php:1990 inc/resource.class.php:2001
+#: inc/employee.class.php:347 inc/resource.class.php:1990 inc/resource.class.php:2001
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Précédent"
 
-#: inc/employee.class.php:415
+#: inc/employee.class.php:420
 msgctxt "button"
 msgid "Next step"
 msgstr "Etape suivante"
@@ -600,7 +598,7 @@ msgstr "Modification d'une tâche sur une ressource"
 msgid "A task has been removed by"
 msgstr "Suppression d'une tâche sur une ressource"
 
-#: inc/notificationtargetresource.class.php:56 inc/notificationtargetresource.class.php:264 inc/notificationtargetresource.class.php:1244
+#: inc/notificationtargetresource.class.php:56 inc/notificationtargetresource.class.php:264 inc/notificationtargetresource.class.php:1249
 msgid "List of not finished tasks"
 msgstr "Tâches révolues"
 
@@ -608,19 +606,19 @@ msgstr "Tâches révolues"
 msgid "These resources have normally left the company"
 msgstr "Ces ressources ont normalement quitté l'entreprise"
 
-#: inc/notificationtargetresource.class.php:58 inc/notificationtargetresource.class.php:387
+#: inc/notificationtargetresource.class.php:58 inc/notificationtargetresource.class.php:388
 msgid "Actions to do on these new resources"
 msgstr "Des actions sont à effectuer sur ces nouvelles ressources"
 
-#: inc/notificationtargetresource.class.php:59 inc/notificationtargetresource.class.php:391
+#: inc/notificationtargetresource.class.php:59 inc/notificationtargetresource.class.php:392
 msgid "Actions to do on these leaving resources"
 msgstr "Des actions sont à effectuer sur ces ressources partantes"
 
-#: inc/notificationtargetresource.class.php:60 inc/notificationtargetresource.class.php:499
+#: inc/notificationtargetresource.class.php:60 inc/notificationtargetresource.class.php:501
 msgid "A resource has been declared leaving"
 msgstr "Une ressource a été déclarée partante"
 
-#: inc/notificationtargetresource.class.php:61 inc/notificationtargetresource.class.php:823
+#: inc/notificationtargetresource.class.php:61 inc/notificationtargetresource.class.php:828
 msgid "Creation report of the human resource"
 msgstr "Rapport de création de la ressource humaine"
 
@@ -656,7 +654,7 @@ msgstr "Autre notification de ressources"
 msgid "Transfer resource notification"
 msgstr "Notification de mutation de ressources"
 
-#: inc/notificationtargetresource.class.php:70 inc/notificationtargetresource.class.php:1327 inc/resource.class.php:3340
+#: inc/notificationtargetresource.class.php:70 inc/notificationtargetresource.class.php:1332 inc/resource.class.php:3340
 msgid "Resources list of commercial manager"
 msgstr "Liste des ressources du responsable commercial"
 
@@ -688,118 +686,118 @@ msgstr "Superviseur du groupe de l'entité source"
 msgid "Target entity group manager"
 msgstr "Superviseur du groupe de l'entité cible"
 
-#: inc/notificationtargetresource.class.php:272 inc/notificationtargetresource.class.php:1201 inc/notificationtargetresource.class.php:1299
+#: inc/notificationtargetresource.class.php:272 inc/notificationtargetresource.class.php:1206 inc/notificationtargetresource.class.php:1304
 msgid "Used for planning"
 msgstr "Inclure dans le planning"
 
-#: inc/notificationtargetresource.class.php:273 inc/notificationtargetresource.class.php:1202 inc/notificationtargetresource.class.php:1300
+#: inc/notificationtargetresource.class.php:273 inc/notificationtargetresource.class.php:1207 inc/notificationtargetresource.class.php:1305
 #: inc/task.class.php:286 inc/task.class.php:485
 msgid "Effective duration"
 msgstr "Durée effective"
 
-#: inc/notificationtargetresource.class.php:274 inc/notificationtargetresource.class.php:1203 inc/notificationtargetresource.class.php:1301
+#: inc/notificationtargetresource.class.php:274 inc/notificationtargetresource.class.php:1208 inc/notificationtargetresource.class.php:1306
 #: inc/task.class.php:298 inc/task.class.php:480
 msgid "Carried out task"
 msgstr "Tâche effectuée"
 
-#: inc/notificationtargetresource.class.php:501
+#: inc/notificationtargetresource.class.php:503
 msgid "Please check the leaving checklist of the resource"
 msgstr "Merci de vérifier la checklist de départ de la ressource si nécessaire"
 
-#: inc/notificationtargetresource.class.php:523 inc/notificationtargetresource.class.php:615 inc/notificationtargetresource.class.php:740
-#: inc/notificationtargetresource.class.php:1247 inc/notificationtargetresource.class.php:1275 inc/recap.class.php:94 inc/resource.class.php:293
+#: inc/notificationtargetresource.class.php:525 inc/notificationtargetresource.class.php:618 inc/notificationtargetresource.class.php:744
+#: inc/notificationtargetresource.class.php:1252 inc/notificationtargetresource.class.php:1280 inc/recap.class.php:94 inc/resource.class.php:293
 #: inc/resource.class.php:966 inc/resource.class.php:1733 inc/rulecontracttype.class.php:208 report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Quotité"
 
-#: inc/notificationtargetresource.class.php:586 inc/notificationtargetresource.class.php:788 inc/resource.class.php:340
+#: inc/notificationtargetresource.class.php:589 inc/notificationtargetresource.class.php:792 inc/resource.class.php:340
 msgid "Declaration of departure date"
 msgstr "Date de déclaration de départ"
 
-#: inc/notificationtargetresource.class.php:600
+#: inc/notificationtargetresource.class.php:603
 msgid "Thanks to recover his badges"
 msgstr "Cette ressource possède des badges. Merci de les récuperer"
 
-#: inc/notificationtargetresource.class.php:607
+#: inc/notificationtargetresource.class.php:610
 msgid "List of your associated resources"
 msgstr "Liste de vos ressources associées"
 
-#: inc/notificationtargetresource.class.php:808 inc/notificationtargetresource.class.php:1266 inc/resource.class.php:354 inc/resource.class.php:1227
+#: inc/notificationtargetresource.class.php:813 inc/notificationtargetresource.class.php:1271 inc/resource.class.php:354 inc/resource.class.php:1227
 #: inc/resource.class.php:1920
 msgid "Sensitized to security"
 msgstr "Sensibilisé à la sécurité"
 
-#: inc/notificationtargetresource.class.php:811 inc/notificationtargetresource.class.php:1267 inc/resource.class.php:348 inc/resource.class.php:1236
+#: inc/notificationtargetresource.class.php:816 inc/notificationtargetresource.class.php:1272 inc/resource.class.php:348 inc/resource.class.php:1236
 #: inc/resource.class.php:1930
 msgid "Reading the security charter"
 msgstr "Lecture de la charte de sécurité"
 
-#: inc/notificationtargetresource.class.php:842 inc/notificationtargetresource.class.php:882
+#: inc/notificationtargetresource.class.php:847 inc/notificationtargetresource.class.php:887
 msgid "Informations of the created user"
 msgstr "Informations sur l'utilisateur créé"
 
-#: inc/notificationtargetresource.class.php:848 inc/notificationtargetresource.class.php:888 inc/notificationtargetresource.class.php:939
-#: inc/notificationtargetresource.class.php:971
+#: inc/notificationtargetresource.class.php:853 inc/notificationtargetresource.class.php:893 inc/notificationtargetresource.class.php:944
+#: inc/notificationtargetresource.class.php:976
 msgid "Additional informations"
 msgstr "Informations complémentaires"
 
-#: inc/notificationtargetresource.class.php:863
+#: inc/notificationtargetresource.class.php:868
 msgid "Transfer report of the human resource"
 msgstr "Rapport de mutation de la ressource humaine"
 
-#: inc/notificationtargetresource.class.php:901 inc/notificationtargetresource.class.php:1305 inc/resource.class.php:2856
+#: inc/notificationtargetresource.class.php:906 inc/notificationtargetresource.class.php:1310 inc/resource.class.php:2856
 msgid "Target entity"
 msgstr "Entité cible"
 
-#: inc/notificationtargetresource.class.php:902 inc/notificationtargetresource.class.php:1304
+#: inc/notificationtargetresource.class.php:907 inc/notificationtargetresource.class.php:1309
 msgid "Source entity"
 msgstr "Entité source"
 
-#: inc/notificationtargetresource.class.php:917 inc/notificationtargetresource.class.php:1260 inc/profile.class.php:204 inc/resource.class.php:1405
+#: inc/notificationtargetresource.class.php:922 inc/notificationtargetresource.class.php:1265 inc/profile.class.php:204 inc/resource.class.php:1405
 #: inc/resource.class.php:1406 inc/resourceresting.class.php:246
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Gestion d'intercontrat"
 msgstr[1] "Gestion des intercontrats"
 
-#: inc/notificationtargetresource.class.php:919 inc/notificationtargetresource.class.php:1261 inc/resourceresting.class.php:306
+#: inc/notificationtargetresource.class.php:924 inc/notificationtargetresource.class.php:1266 inc/resourceresting.class.php:306
 msgid "Detail of non contract period"
 msgstr "Détail de l'intercontrat"
 
-#: inc/notificationtargetresource.class.php:926 inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
+#: inc/notificationtargetresource.class.php:931 inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
 msgid "Agency concerned"
 msgstr "Agence concernée"
 
-#: inc/notificationtargetresource.class.php:930 inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
+#: inc/notificationtargetresource.class.php:935 inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
 msgid "At home"
 msgstr "A domicile"
 
-#: inc/notificationtargetresource.class.php:945 inc/notificationtargetresource.class.php:977
+#: inc/notificationtargetresource.class.php:950 inc/notificationtargetresource.class.php:982
 msgid "Reported by"
 msgstr "Déclaré par"
 
-#: inc/notificationtargetresource.class.php:956 inc/notificationtargetresource.class.php:1270 inc/resource.class.php:1414 inc/resource.class.php:1415
+#: inc/notificationtargetresource.class.php:961 inc/notificationtargetresource.class.php:1275 inc/resource.class.php:1414 inc/resource.class.php:1415
 #: inc/resourceholiday.class.php:178
 msgid "Forced holiday management"
 msgstr "Gestion congés employeur"
 
-#: inc/notificationtargetresource.class.php:958 inc/notificationtargetresource.class.php:1271 inc/resourceholiday.class.php:223
+#: inc/notificationtargetresource.class.php:963 inc/notificationtargetresource.class.php:1276 inc/resourceholiday.class.php:223
 msgid "Detail of the forced holiday"
 msgstr "Détail du congé employeur"
 
-#: inc/notificationtargetresource.class.php:991 inc/notificationtargetresource.class.php:1317
+#: inc/notificationtargetresource.class.php:996 inc/notificationtargetresource.class.php:1322
 msgid "Modified fields"
 msgstr "Champs modifiés"
 
-#: inc/notificationtargetresource.class.php:1193
+#: inc/notificationtargetresource.class.php:1198
 msgid "Associated tasks"
 msgstr "Tâches associées"
 
-#: inc/notificationtargetresource.class.php:1312
+#: inc/notificationtargetresource.class.php:1317
 msgid "At creation, update, removal of a resource"
 msgstr "A la création, modification, suppression d'une ressource"
 
-#: inc/notificationtargetresource.class.php:1322
+#: inc/notificationtargetresource.class.php:1327
 msgid "At creation, update, removal of a task"
 msgstr "A la création, modification, suppression d'une tâche"
 
@@ -888,15 +886,15 @@ msgstr "Restitution de badge"
 msgid "List of badges"
 msgstr "Liste des badges"
 
-#: inc/resourcecard.class.php:90
+#: inc/resourcecard.class.php:92
 msgid "About"
 msgstr "A propos"
 
-#: inc/resourcecard.class.php:91 inc/resourcecard.class.php:257
+#: inc/resourcecard.class.php:93 inc/resourcecard.class.php:259
 msgid "Inventory"
 msgstr "Inventaire"
 
-#: inc/resourcecard.class.php:133
+#: inc/resourcecard.class.php:135
 msgid "Information, this resource is not linked to a user"
 msgstr "Information, la ressource n'est pas lié à un utilisateur"
 

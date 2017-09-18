@@ -52,6 +52,15 @@ class PluginResourcesClient extends CommonDropdown {
 
       return $ong;
    }
+
+   function getAdditionalFields() {
+
+      return array(array('name'  => 'security_compliance',
+                         'label' => __('Security compliance', 'resources'),
+                         'type'  => 'bool',
+                         'list'  => true),
+      );
+   }
    
    static function transfer($ID, $entity) {
       global $DB;
@@ -82,6 +91,25 @@ class PluginResourcesClient extends CommonDropdown {
       }
       return 0;
    }
-}
 
-?>
+   function getSearchOptions() {
+
+      $tab = parent::getSearchOptions();
+
+      $tab[14]['table']         = $this->getTable();
+      $tab[14]['field']         = 'security_compliance';
+      $tab[14]['name']          = __('Security compliance', 'resources');
+
+      return $tab;
+   }
+
+   static function isSecurityCompliance($id) {
+      $client = new self();
+
+      if ($client->getFromDB($id)) {
+         return $client->fields['security_compliance'];
+      }
+      return false;
+
+   }
+}

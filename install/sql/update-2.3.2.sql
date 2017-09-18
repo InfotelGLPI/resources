@@ -10,6 +10,7 @@ INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0);
 ALTER TABLE glpi_plugin_resources_resources ADD `sensitize_security` tinyint(1) NOT NULL default '0';
 ALTER TABLE glpi_plugin_resources_resources ADD `read_chart` tinyint(1) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_resources` CHANGE `plugin_resources_accessprofiles_id` `plugin_resources_habilitations_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_habilitations (id)';
+ALTER TABLE `glpi_plugin_resources_clients` ADD `security_compliance` tinyint(1) NOT NULL DEFAULT '0';
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_confighabilitations`;
 ALTER TABLE `glpi_plugin_resources_resourcehabilitations` RENAME TO `glpi_plugin_resources_confighabilitations`;
