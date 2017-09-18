@@ -32,50 +32,43 @@ if (!defined('GLPI_ROOT')) {
 }
 
 
-class PluginResourcesServicecatalog extends CommonGLPI
-{
+class PluginResourcesServicecatalog extends CommonGLPI {
 
    static $rightname = 'plugin_resources';
 
    var $dohistory = false;
 
-   static function canUse()
-   {
+   static function canUse() {
       return Session::haveRight(self::$rightname, UPDATE);
    }
 
-   static function getMenuLogo()
-   {
+   static function getMenuLogo() {
       global $CFG_GLPI;
 
-      return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>
+      return "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>
       <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/resources.png\" alt=\"Advanced request\" width=\"190\" height=\"100\"></a>";
 
    }
 
-   static function getMenuTitle()
-   {
+   static function getMenuTitle() {
       global $CFG_GLPI;
 
-      return "<a href='".$CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php' class='de-em'>
-      <span class='de-em'>" . __('Manage', 'servicecatalog') . " </span><span class='em'>" . __('human resources', 'resources')."</span></a>";
+      return "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php' class='de-em'>
+      <span class='de-em'>" . __('Manage', 'servicecatalog') . " </span><span class='em'>" . __('human resources', 'resources') . "</span></a>";
 
    }
 
 
-   static function getMenuComment()
-   {
+   static function getMenuComment() {
 
-      _e('Manage human resources', 'resources');
+      echo __('Manage human resources', 'resources');
    }
 
-   static function getLinkList()
-   {
+   static function getLinkList() {
       return "";
    }
 
-   static function getList()
-   {
+   static function getList() {
       return "";
    }
 }

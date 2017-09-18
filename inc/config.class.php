@@ -54,7 +54,9 @@ class PluginResourcesConfig extends CommonDBTM {
     * PluginResourcesConfig constructor.
     */
    function __construct() {
-      if (TableExists($this->getTable())) {
+      global $DB;
+
+      if ($DB->tableExists($this->getTable())) {
          $this->getFromDB(1);
       }
    }

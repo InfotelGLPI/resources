@@ -230,11 +230,11 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Begin date')."</td>";
       echo "<td>";
-      Html::showDateFormItem("begin_date", $this->fields["begin_date"], true, true);
+      Html::showDateField("begin_date", ['value' => $this->fields["begin_date"]]);
       echo "</td>";
       echo "<td>".__('End date')."</td>";
       echo "<td>";
-      Html::showDateFormItem("end_date", $this->fields["end_date"], true, true);
+      Html::showDateField("end_date", ['value' => $this->fields["end_date"]]);
       echo "</td>";
       echo "</tr>";
 

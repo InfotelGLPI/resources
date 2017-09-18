@@ -1098,7 +1098,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Arrival date', 'resources')."</td>";
       echo "<td>";
-      Html::showDateFormItem("date_begin",$this->fields["date_begin"],true,true);
+      Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -1210,7 +1210,7 @@ class PluginResourcesResource extends CommonDBTM {
          Html::showToolTip(nl2br(__('Empty for non defined', 'resources')));
       echo "</td>";
       echo "<td>";
-      Html::showDateFormItem("date_end",$this->fields["date_end"],true,true);
+      Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
@@ -1893,7 +1893,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Arrival date', 'resources');
       echo "</td>";
       echo "<td>";
-      Html::showDateFormItem("date_begin",$options["date_begin"],true,true);
+      Html::showDateField("date_begin", ['value' => $options["date_begin"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -1907,7 +1907,7 @@ class PluginResourcesResource extends CommonDBTM {
          Html::showToolTip(nl2br(__('Empty for non defined', 'resources')));
       echo "</td>";
       echo "<td>";
-      Html::showDateFormItem("date_end",$options["date_end"],true,true);
+      Html::showDateField("date_end", ['value' => $options["date_end"]]);
       echo "</td>";
       echo "</tr></table>";
 
@@ -2690,7 +2690,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<tr class='plugin_resources_wizard_explain'><td>";
          echo __('Departure date', 'resources')."</td>";
          echo "<td class='left'>";
-         Html::showDateFormItem("date_end",$_POST["date_end"],true,true);
+         Html::showDateField("date_end", ['value' => $_POST["date_end"]]);
          echo "</td></tr>";
 
          echo "<tr class='plugin_resources_wizard_explain'><td>";
@@ -2933,10 +2933,12 @@ class PluginResourcesResource extends CommonDBTM {
       $itemtype = $ma->getItemtype(false);
       switch ($ma->getAction()) {
          case "Install" :
-            Dropdown::showAllItems("item_item", 0, 0, -1, self::getTypes());
+            Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
+                                                   'itemtypes'     => self::getTypes()]);
             break;
          case "Desinstall" :
-            Dropdown::showAllItems("item_item", 0, 0, -1, self::getTypes());
+            Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
+                                                   'itemtypes'     => self::getTypes()]);
             break;
          case "Transfert" :
             Dropdown::show('Entity');

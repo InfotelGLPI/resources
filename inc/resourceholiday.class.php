@@ -238,12 +238,12 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<tr class='plugin_resources_wizard_explain'><td>";
       echo __('Begin date')."</td>";
       echo "<td class='left'>";
-      Html::showDateFormItem("date_begin",$this->fields["date_begin"],true,true);
+      Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
       echo "</td></tr>";
       echo "<tr class='plugin_resources_wizard_explain'><td>";
-      echo __('End date')."</td>";
+      echo __('End date') . "</td>";
       echo "<td class='left'>";
-      Html::showDateFormItem("date_end",$this->fields["date_end"],true,true);
+      Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
       echo "</td></tr>";
       
       echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";

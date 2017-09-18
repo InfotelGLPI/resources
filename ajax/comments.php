@@ -38,7 +38,7 @@ Session::checkLoginUser();
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
    // Security
-   if (!TableExists($_REQUEST['table']) ) {
+   if (!$DB->tableExists($_REQUEST['table']) ) {
       exit();
    }
 

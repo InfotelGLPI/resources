@@ -817,11 +817,13 @@ class PluginResourcesTask extends CommonDBTM {
 
       switch ($ma->getAction()) {
          case "Install" :
-            Dropdown::showAllItems("item_item",0,0,-1,PluginResourcesResource::getTypes());
+            Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
+                                                   'itemtypes'     => PluginResourcesResource::getTypes()]);
             break;
             
          case "Desinstall" :
-            Dropdown::showAllItems("item_item",0,0,-1,PluginResourcesResource::getTypes());
+            Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
+                                                   'itemtypes'     => PluginResourcesResource::getTypes()]);
             break;
             
          case "Duplicate" :

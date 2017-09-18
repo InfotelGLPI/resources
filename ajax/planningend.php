@@ -37,8 +37,10 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (isset($_POST['duration']) && $_POST['duration']==0) {
-   Html::showDateTimeFormItem("plan[end]",$_POST['end'],-1,false,true,
-               '','',$_POST['global_begin'],$_POST['global_end']);
+   Html::showDateTimeField("plan[end]", ['value'      => $_POST['end'],
+                                         'maybeempty' => false,
+                                         'mintime'    => $_POST['global_begin'],
+                                         'maxtime'    => $_POST['global_end']]);
 }
 
 ?>

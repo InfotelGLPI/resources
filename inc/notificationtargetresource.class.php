@@ -74,7 +74,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    /**
     * Get additionnals targets for Tickets
     */
-   function getAdditionalTargets($event = '') {
+   function addAdditionalTargets($event = '') {
 
       if ($event != 'AlertExpiredTasks'
           && $event != 'AlertLeavingResources'

@@ -48,7 +48,7 @@ function plugin_resources_install() {
    $update231 = false;
 
    $install = false;
-   if (!TableExists("glpi_plugin_resources_resources") && !TableExists("glpi_plugin_resources_employments")) {
+   if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.3.2.sql");
 
@@ -67,7 +67,7 @@ function plugin_resources_install() {
 
       $DB->query($query) or die($DB->error());
 
-   } else if (TableExists("glpi_plugin_resources") && !TableExists("glpi_plugin_resources_employee")) {
+   } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->tableExists("glpi_plugin_resources_employee")) {
       $update = true;
       $update78 = true;
       $update80 = true;
@@ -79,7 +79,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (TableExists("glpi_plugin_resources_profiles") && FieldExists("glpi_plugin_resources_profiles", "interface")) {
+   } else if ($DB->tableExists("glpi_plugin_resources_profiles") && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
       $update = true;
       $update78 = true;
       $update80 = true;
@@ -90,7 +90,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (TableExists("glpi_plugin_resources") && !FieldExists("glpi_plugin_resources", "helpdesk_visible")) {
+   } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
       $update = true;
       $update78 = true;
       $update80 = true;
@@ -100,7 +100,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (!TableExists("glpi_plugin_resources_contracttypes")) {
+   } else if (!$DB->tableExists("glpi_plugin_resources_contracttypes")) {
       $update = true;
       $update78 = true;
       $update80 = true;
@@ -109,34 +109,34 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (TableExists("glpi_plugin_resources_contracttypes") && !FieldExists("glpi_plugin_resources_resources", "plugin_resources_resourcestates_id")) {
+   } else if ($DB->tableExists("glpi_plugin_resources_contracttypes") && !$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_resourcestates_id")) {
       $update = true;
       $update80 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.1.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (!TableExists("glpi_plugin_resources_reportconfigs")) {
+   } else if (!$DB->tableExists("glpi_plugin_resources_reportconfigs")) {
       $update = true;
       $update80 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.6.2.sql");
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
-   } else if (!TableExists("glpi_plugin_resources_checklistconfigs")) {
+   } else if (!$DB->tableExists("glpi_plugin_resources_checklistconfigs")) {
       $update80 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
 
    }
 
    //Version 1.7.1
-   if (!TableExists("glpi_plugin_resources_choiceitems")) {
+   if (!$DB->tableExists("glpi_plugin_resources_choiceitems")) {
       $$update171 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.1.sql");
 
    }
 
    //Version 1.9.0
-   if (!TableExists("glpi_plugin_resources_employments")) {
+   if (!$DB->tableExists("glpi_plugin_resources_employments")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.9.0.sql");
 
       $query = "SELECT * FROM `glpi_plugin_resources_employers`";
@@ -153,30 +153,30 @@ function plugin_resources_install() {
    }
 
    //Version 1.9.1
-   if (TableExists("glpi_plugin_resources_ranks") && !FieldExists("glpi_plugin_resources_ranks", "begin_date")) {
+   if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists("glpi_plugin_resources_ranks", "begin_date")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.9.1.sql");
    }
 
    //Version 2.0.3
-   if (!FieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
+   if (!$DB->fieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
       $update203 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.0.3.sql");
    }
 
    //Version 2.0.4
-   if(!TableExists("glpi_plugin_resources_transferentities")){
+   if(!$DB->tableExists("glpi_plugin_resources_transferentities")){
       $update204 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.0.4.sql");
    }
 
    //Version 2.3.1
-   if(!TableExists("glpi_plugin_resources_resources_changes") && !TableExists("glpi_plugin_resources_resourcebadges")){
+   if(!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists("glpi_plugin_resources_resourcebadges")){
       $update231 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.1.sql");
    }
 
    //Version 2.3.2
-   if(!TableExists("glpi_plugin_resources_configs")){
+   if(!$DB->tableExists("glpi_plugin_resources_configs")){
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.2.sql");
 
       include(GLPI_ROOT."/plugins/resources/install/update_231_232.php");
@@ -376,34 +376,34 @@ function plugin_resources_install() {
                         &lt;/span&gt;##ENDIFtask.realtime##&lt;br /&gt;----------##ENDFOREACHtasks##&lt;/p&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`,
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('New Resource', 0, 'PluginResourcesResource', 'new', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('New Resource', 0, 'PluginResourcesResource', 'new', ".$itemtype.", 1, 1, NOW());";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Update Resource', 0, 'PluginResourcesResource', 'update', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('Update Resource', 0, 'PluginResourcesResource', 'update', ".$itemtype.", 1, 1, NOW());";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Delete Resource', 0, 'PluginResourcesResource', 'delete', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('Delete Resource', 0, 'PluginResourcesResource', 'delete', ".$itemtype.", 1, 1, NOW());";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('New Resource Task', 0, 'PluginResourcesResource', 'newtask', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('New Resource Task', 0, 'PluginResourcesResource', 'newtask', ".$itemtype.", 1, 1, NOW());";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Update Resource Task', 0, 'PluginResourcesResource', 'updatetask', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('Update Resource Task', 0, 'PluginResourcesResource', 'updatetask', ".$itemtype.", 1, 1, NOW());";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Delete Resource Task', 0, 'PluginResourcesResource', 'deletetask', 'mail',".$itemtype.", 1, 1, NOW());";
+                VALUES ('Delete Resource Task', 0, 'PluginResourcesResource', 'deletetask', ".$itemtype.", 1, 1, NOW());";
 
       $DB->query($query);
 
@@ -451,9 +451,9 @@ function plugin_resources_install() {
    &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Expired Resources Tasks', 0, 'PluginResourcesResource', 'AlertExpiredTasks', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Alert Expired Resources Tasks', 0, 'PluginResourcesResource', 'AlertExpiredTasks', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Leaving Resources'";
@@ -494,9 +494,9 @@ function plugin_resources_install() {
    &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Leaving Resources', 0, 'PluginResourcesResource', 'AlertLeavingResources', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Alert Leaving Resources', 0, 'PluginResourcesResource', 'AlertLeavingResources', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Checklists'";
@@ -555,14 +555,14 @@ function plugin_resources_install() {
    &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Arrival Checklists', 0, 'PluginResourcesResource', 'AlertArrivalChecklists', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Alert Arrival Checklists', 0, 'PluginResourcesResource', 'AlertArrivalChecklists', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Leaving Checklists', 0, 'PluginResourcesResource', 'AlertLeavingChecklists', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Alert Leaving Checklists', 0, 'PluginResourcesResource', 'AlertLeavingChecklists', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Leaving Resource'";
@@ -600,9 +600,9 @@ function plugin_resources_install() {
    &lt;/span&gt;&lt;/p&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Leaving Resource', 0, 'PluginResourcesResource', 'LeavingResource', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Leaving Resource', 0, 'PluginResourcesResource', 'LeavingResource', ".$itemtype.", 1, 1);";
 
       $DB->query($query);
    }
@@ -748,9 +748,9 @@ function plugin_resources_install() {
 &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Resource Report Creation', 0, 'PluginResourcesResource', 'report', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Resource Report Creation', 0, 'PluginResourcesResource', 'report', ".$itemtype.", 1, 1);";
       $DB->query($query);
    }
 
@@ -777,7 +777,7 @@ function plugin_resources_install() {
       $DB->query($query);
 
       // Put realtime in seconds
-      if (FieldExists('glpi_plugin_resources_tasks', 'realtime')) {
+      if ($DB->fieldExists('glpi_plugin_resources_tasks', 'realtime')) {
 
          $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             ADD `actiontime` INT( 11 ) NOT NULL DEFAULT 0 ;";
@@ -960,19 +960,19 @@ function plugin_resources_install() {
 &lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('New Resource Resting', 0, 'PluginResourcesResource', 'newresting', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('New Resource Resting', 0, 'PluginResourcesResource', 'newresting', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Update Resource Resting', 0, 'PluginResourcesResource', 'updateresting', 'mail',".$itemtype.", 1, 1);";
+               VALUES ('Update Resource Resting', 0, 'PluginResourcesResource', 'updateresting', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Delete Resource Resting', 0, 'PluginResourcesResource', 'deleteresting', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Delete Resource Resting', 0, 'PluginResourcesResource', 'deleteresting', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
@@ -1077,18 +1077,18 @@ function plugin_resources_install() {
 &lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('New Resource Holiday', 0, 'PluginResourcesResource', 'newholiday', 'mail',".$itemtype.", 1, 1);";
+               VALUES ('New Resource Holiday', 0, 'PluginResourcesResource', 'newholiday', ".$itemtype.", 1, 1);";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Update Resource Holiday', 0, 'PluginResourcesResource', 'updateholiday', 'mail',".$itemtype.", 1, 1);";
+               VALUES ('Update Resource Holiday', 0, 'PluginResourcesResource', 'updateholiday', ".$itemtype.", 1, 1);";
       $DB->query($query);
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Delete Resource Holiday', 0, 'PluginResourcesResource', 'deleteholiday', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Delete Resource Holiday', 0, 'PluginResourcesResource', 'deleteholiday', ".$itemtype.", 1, 1);";
       $DB->query($query);
    }
 
@@ -1187,7 +1187,7 @@ function plugin_resources_install() {
    }
 
    //0.83 - Drop Matricule
-   if (TableExists("glpi_plugin_resources_employees") && FieldExists("glpi_plugin_resources_employees", "matricule")) {
+   if ($DB->tableExists("glpi_plugin_resources_employees") && $DB->fieldExists("glpi_plugin_resources_employees", "matricule")) {
 
       $query = "SELECT * FROM `glpi_users`";
       $result = $DB->query($query);
@@ -1282,9 +1282,9 @@ function plugin_resources_install() {
 &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Other resource notification', 0, 'PluginResourcesResource', 'other', 'mail',".$itemtype.", 1, 1);";
+                VALUES ('Other resource notification', 0, 'PluginResourcesResource', 'other', ".$itemtype.", 1, 1);";
 
       $DB->query($query);
    }
@@ -1314,9 +1314,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 &lt;p&gt;La ressource ##resource.firstname## ##resource.name## a été transférée de l\'entité ##resource.sourceentity## vers l\'entité ##resource.targetentity##.&lt;/p&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`,  
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Resource Report Transfer', 0, 'PluginResourcesResource', 'transfer', 'mail',".$itemtype.", 1, 1);";
+               VALUES ('Resource Report Transfer', 0, 'PluginResourcesResource', 'transfer', ".$itemtype.", 1, 1);";
       $DB->query($query);
    }
 
@@ -1384,19 +1384,19 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 &lt;/table&gt;');";
       $DB->query($query);
 
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `mode`, 
+      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
                                                   `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Commercial Manager', 0, 'PluginResourcesResource', 'AlertCommercialManager', 'mail', '".$itemtype."', 1, 1);";
+                VALUES ('Alert Commercial Manager', 0, 'PluginResourcesResource', 'AlertCommercialManager', '".$itemtype."', 1, 1);";
       $DB->query($query);
 
    }
-   if (TableExists("glpi_plugin_resources_profiles")) {
+   if ($DB->tableExists("glpi_plugin_resources_profiles")) {
 
       $notepad_tables = array('glpi_plugin_resources_resources');
 
       foreach ($notepad_tables as $t) {
          // Migrate data
-         if (FieldExists($t, 'notepad')) {
+         if ($DB->fieldExists($t, 'notepad')) {
             $query = "SELECT id, notepad
                       FROM `$t`
                       WHERE notepad IS NOT NULL

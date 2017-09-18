@@ -64,7 +64,8 @@ class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
       $this->getReport()->endColumn();
 
       $this->getReport()->startColumn();
-      Html::showDateFormItem($this->getName(), $this->getDate(), false);
+      Html::showDateField($this->getName(), ['value'      => $this->getDate(),
+                                             'maybeempty' => false]);
       $this->getReport()->endColumn();
 
    }
