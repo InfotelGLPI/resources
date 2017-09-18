@@ -205,7 +205,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
          echo __('Address');
-         echo "</td><td>";
+         echo "</td><td colspan='2'>";
          echo "<span id='span_location' name='span_location'>";
          if ($locationId>0) {
             echo Dropdown::getDropdownName('glpi_locations', $locationId);
@@ -218,10 +218,15 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
          echo PluginResourcesClient::getTypeName(1)."</td>";
-         echo "<td colspan='2'>";
+         echo "<td>";
          Dropdown::show('PluginResourcesClient',
                      array('value'  => $this->fields["plugin_resources_clients_id"],
                            'entity' => $entity));
+         echo "</td><td style='color: green;'>";
+         if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
+            echo __('Security compliance', 'resources')."&nbsp;";$CFG_GLPI;
+            echo "<img src='".$CFG_GLPI["root_doc"]."/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
+         }
          echo "</td></tr>";
                
          echo "<tr>";
