@@ -57,8 +57,7 @@ class PluginResourcesClient extends CommonDropdown {
 
       return array(array('name'  => 'security_compliance',
                          'label' => __('Security compliance', 'resources'),
-                         'type'  => 'bool',
-                         'list'  => true),
+                         'type'  => 'bool'),
       );
    }
    
@@ -99,6 +98,7 @@ class PluginResourcesClient extends CommonDropdown {
       $tab[14]['table']         = $this->getTable();
       $tab[14]['field']         = 'security_compliance';
       $tab[14]['name']          = __('Security compliance', 'resources');
+      $tab[14]['injectable']    = true;
 
       return $tab;
    }
