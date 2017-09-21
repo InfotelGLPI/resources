@@ -1343,6 +1343,7 @@ class PluginResourcesResource extends CommonDBTM {
       $canemployment    = Session::haveright('plugin_resources_employment', UPDATE);
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
+      $canbadges        = Session::haveright('plugin_badges', READ);
 
       if($this->canCreate()) {
          echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
@@ -1375,7 +1376,6 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $plugin = new Plugin();
-      $canbadges = ($plugin->isActivated("badges"));
 
       if ($canresting || $canholiday || $canbadges || $canhabilitation) {
          echo "<tr><th colspan='6'>".__('Others declarations', 'resources')."</th></tr>";
@@ -1389,7 +1389,7 @@ class PluginResourcesResource extends CommonDBTM {
          if ($canhabilitation && $plugin->isActivated("metademands")) {
             $num_col += 1;
          }
-         if ($canbadges) {
+         if ($canbadges && $plugin->isActivated("badges")) {
             $num_col += 1;
          }
          $colspan = floor(6 / $num_col);
@@ -1425,7 +1425,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</td>";
          }
 
-         if ($canbadges) {
+         if ($canbadges && $plugin->isActivated("badges")) {
             //Management of a non contract period
             echo "<td colspan=$colspan class='center'>";
             echo "<a href=\"./resourcebadge.form.php?menu\">";
