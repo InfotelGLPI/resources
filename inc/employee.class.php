@@ -221,13 +221,15 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<td>";
          Dropdown::show('PluginResourcesClient',
                      array('value'  => $this->fields["plugin_resources_clients_id"],
-                           'entity' => $entity));
-         echo "</td><td style='color: green;'>";
+                           'entity' => $entity,
+                           'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
+
+         echo "</td><td style='color: green;'><div id='security_compliance'>";
          if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             echo __('Security compliance', 'resources')."&nbsp;";$CFG_GLPI;
             echo "<img src='".$CFG_GLPI["root_doc"]."/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
          }
-         echo "</td></tr>";
+         echo "</div></td></tr>";
                
          echo "<tr>";
          echo "<td class='tab_bg_2 top' colspan='4'>";
@@ -328,10 +330,17 @@ class PluginResourcesEmployee extends CommonDBTM {
          
          echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
          echo PluginResourcesClient::getTypeName(1)."</td>";
-         echo "<td colspan='2'>";
-         Dropdown::show('PluginResourcesClient', array('name' => "plugin_resources_clients_id",
-                                                      'value' => $this->fields["plugin_resources_clients_id"],
-                                                      'entity' => $entity));
+         echo "<td>";
+         Dropdown::show('PluginResourcesClient', array('name'      => "plugin_resources_clients_id",
+                                                       'value'     => $this->fields["plugin_resources_clients_id"],
+                                                       'entity'    => $entity,
+                                                       'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
+
+         echo "</td><td style='color: green;'><div id='security_compliance'>";
+         if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
+            echo __('Security compliance', 'resources')."&nbsp;";$CFG_GLPI;
+            echo "<img src='".$CFG_GLPI["root_doc"]."/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
+         }
          echo "</td></tr>";
          
          echo "</table>";

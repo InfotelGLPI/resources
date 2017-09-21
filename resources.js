@@ -144,3 +144,21 @@ function plugin_resources_pdf_resource(root_doc, id) {
 
     });
 }
+
+/**
+ *
+ * @param root_doc
+ * @param id
+ */
+function plugin_resources_security_compliance(root_doc, id) {
+    $.ajax({
+        url: root_doc + '/plugins/resources/ajax/employee.php',
+        type: 'POST',
+        data: '&plugin_resources_clients_id=' + id,
+        dataType: 'html',
+        success: function (code_html, statut) {
+            $('#security_compliance').html(code_html);
+        },
+
+    });
+}

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,37 +26,16 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
 include ('../../../inc/includes.php');
 
-$plugin = new Plugin();
+$resource_change = new PluginResourcesResource_Change();
 
-if ($plugin->isActivated("badges")) {
-
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      //from central
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-   } else {
-      //from helpdesk
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+if (isset($_POST['plugin_resources_clients_id'])) {
+   if(PluginResourcesClient::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
+      echo __('Security compliance', 'resources') . "&nbsp;";
+      echo "<img src='" . $CFG_GLPI["root_doc"] . "/pics/ok.png' alt=\"" . __('OK') . "\" width='14' height='14'>";
    }
 
-   $badge = new PluginResourcesResourceBadge();
-
-   if (($badge->canView() || Session::haveRight("config", UPDATE))) {
-      Search::show("PluginResourcesResourceResting");
-
-   } else {
-      Html::displayRightError();
-   }
-
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      Html::footer();
-   } else {
-      Html::helpFooter();
-   }
-} else {
-   Html::header(__('Setup'),'',"config","plugins");
-   echo "<div align='center'><br><br>";
-   echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\"><br><br>";
-   echo "<b>".__('Please activate the plugin badge', 'badge')."</b></div>";
 }
+
