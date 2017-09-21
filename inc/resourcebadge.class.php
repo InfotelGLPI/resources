@@ -271,9 +271,11 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_badge(){";
       $params = array('action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__');
-      Ajax::updateItemJsCode('plugin_resources_badge', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_plugin_resources_resources_id' . $rand);
+      Ajax::updateItemJsCode('plugin_resources_badge', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
+                             $params, 'dropdown_plugin_resources_resources_id' . $rand);
       $params = array('action' => 'cleanButtonRestitution');
-      Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_plugin_resources_resources_id'.$rand);
+      Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
+                             $params, 'dropdown_plugin_resources_resources_id'.$rand);
       echo "}";
 
       echo "</script>";
