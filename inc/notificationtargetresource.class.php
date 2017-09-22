@@ -80,7 +80,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
           && $event != 'AlertLeavingResources'
           && $event != 'AlertLeavingChecklists'
           && $event != 'AlertLeavingChecklists'
-          && $event != 'AlertCommercialManager') {
+          && $event != 'AlertCommercialManager'
+      ) {
          $this->addTarget(self::RESOURCE_MANAGER, __('Resource manager', 'resources'));
          $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
          $this->addTarget(self::RESOURCE_AUTHOR, __('Requester'));
@@ -88,7 +89,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->addTarget(self::RESOURCE_USER, __('Resource user', 'resources'));
          if ($event == 'newtask'
              || $event == 'updatetask'
-             || $event == 'deletetask') {
+             || $event == 'deletetask'
+         ) {
             $this->addTarget(self::RESOURCE_TASK_TECHNICIAN, __("Task's responsible technician", "resources"));
             $this->addTarget(self::RESOURCE_TASK_GROUP, __("Task's responsible group", "resources"));
          }
@@ -351,9 +353,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
             $tmp['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                              $resource['plugin_resources_departments_id']);
-            $resourcehabilitation = new PluginResourcesResourceHabilitation();
-            $habilitations = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
-            $tab = array();
+            $resourcehabilitation                = new PluginResourcesResourceHabilitation();
+            $habilitations                       = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            $tab                                 = array();
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                   $habilitation['plugin_resources_habilitations_id']) . "\n";
@@ -411,7 +413,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->datas['##lang.checklist.comment##']         = __('Description');
          $this->datas['##lang.checklist.usersleaving##']    = __('Informant of leaving', 'resources');
          $this->datas['##lang.checklist.leaving##']         = __('Declared as leaving', 'resources');
-//         $this->datas['##lang.checklist.leavingreason##'] = PluginResourcesLeavingReason::getTypeName(1);
+         //         $this->datas['##lang.checklist.leavingreason##'] = PluginResourcesLeavingReason::getTypeName(1);
          $this->datas['##lang.checklist.helpdesk##'] = __('Associable to a ticket');
          $this->datas['##lang.checklist.url##']      = "URL";
 
@@ -433,12 +435,12 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                               $checklist['plugin_resources_departments_id']);
             $resourcehabilitation                 = new PluginResourcesResourceHabilitation();
             $habilitations                        = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $checklist['plugin_resources_resources_id']);
-            $tab = array();
+            $tab                                  = array();
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                   $habilitation['plugin_resources_habilitations_id']) . "\n";
             }
-            $tmp['##checklist.habilitation##'] = implode(', ', $tab);
+            $tmp['##checklist.habilitation##']           = implode(', ', $tab);
             $tmp['##checklist.status##']                 = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
                                                                                      $checklist['plugin_resources_resourcestates_id']);
             $tmp['##checklist.location##']               = Dropdown::getDropdownName('glpi_locations',
@@ -531,7 +533,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          $resourcehabilitation                          = new PluginResourcesResourceHabilitation();
          $habilitations                                 = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
-         $tab = array();
+         $tab                                           = array();
          $this->datas['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
          foreach ($habilitations as $habilitation) {
             $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
@@ -607,7 +609,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       } else if ($event == 'AlertCommercialManager') {
 
-         $this->datas['##lang.commercial.title##']         = __('List of your associated resources', 'resources');
+         $this->datas['##lang.commercial.title##'] = __('List of your associated resources', 'resources');
 
          $this->datas['##lang.resource.id##']              = "ID";
          $this->datas['##lang.resource.name##']            = __('Surname');
@@ -658,9 +660,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.department##'] = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                         $resource['plugin_resources_departments_id']);
 
-            $resourcehabilitation             = new PluginResourcesResourceHabilitation();
-            $habilitations                    = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
-            $tab = array();
+            $resourcehabilitation = new PluginResourcesResourceHabilitation();
+            $habilitations        = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            $tab                  = array();
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                   $habilitation['plugin_resources_habilitations_id']) . "\n";
@@ -705,8 +707,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $comment                     = stripslashes(str_replace(array('\r\n', '\n', '\r'), "<br/>", $resource["comment"]));
             $tmp['##resource.comment##'] = Html::clean($comment);
 
-            $tmp['##resource.url##']      = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
-                                                      $resource["id"]);
+            $tmp['##resource.url##'] = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
+                                                 $resource["id"]);
 
             $this->datas['commercials'][] = $tmp;
 
@@ -803,7 +805,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $resourcehabilitation                          = new PluginResourcesResourceHabilitation();
          $habilitations                                 = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
          $this->datas['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
-         $tab = array();
+         $tab                                           = array();
          foreach ($habilitations as $habilitation) {
             $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                $habilitation['plugin_resources_habilitations_id']);
@@ -917,7 +919,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          if ($event == 'newresting'
              || $event == 'updateresting'
-             || $event == 'deleteresting') {
+             || $event == 'deleteresting'
+         ) {
 
             $this->datas['##lang.resource.restingtitle##'] = _n('Non contract period management', 'Non contract periods management', 1, 'resources');
 
@@ -956,7 +959,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          if ($event == 'newholiday'
              || $event == 'updateholiday'
-             || $event == 'deleteholiday') {
+             || $event == 'deleteholiday'
+         ) {
 
             $this->datas['##lang.resource.holidaytitle##'] = __('Forced holiday management', 'resources');
 
@@ -991,7 +995,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
              && !empty($this->target_object->oldvalues)
              && ($event == 'update'
                  || $event == 'updateresting'
-                 || $event == 'updateholiday')) {
+                 || $event == 'updateholiday')
+         ) {
 
             $this->datas['##lang.update.title##'] = __('Modified fields', 'resources');
 
@@ -1243,71 +1248,71 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
    function getTags() {
 
-      $tags = array('resource.id'                 => 'ID',
-                    'resource.name'               => __('Surname'),
-                    'resource.entity'             => __('Entity'),
-                    'resource.action'             => __('List of not finished tasks', 'resources'),
-                    'resource.firstname'          => __('First name'),
-                    'resource.type'               => PluginResourcesContractType::getTypeName(1),
-                    'resource.quota'              => __('Quota', 'resources'),
-                    'resource.situation'          => PluginResourcesResourceSituation::getTypeName(1),
-                    'resource.contractnature'     => PluginResourcesContractNature::getTypeName(1),
-                    'resource.rank'               => PluginResourcesRank::getTypeName(1),
-                    'resource.speciality'         => PluginResourcesResourceSpeciality::getTypeName(1),
-                    'resource.users'              => __('Resource manager', 'resources'),
-                    'resource.usersrecipient'     => __('Requester'),
-                    'resource.datedeclaration'    => __('Request date'),
-                    'resource.datebegin'          => __('Arrival date', 'resources'),
-                    'resource.dateend'            => __('Departure date', 'resources'),
-                    'resource.department'         => PluginResourcesDepartment::getTypeName(1),
-                    'resource.status'             => PluginResourcesResourceState::getTypeName(1),
-                    'resource.location'           => __('Location'),
-                    'resource.restingtitle'       => __('Non contract period management', 'resources'),
-                    'resource.resting'            => __('Detail of non contract period', 'resources'),
-                    'resource.comment'            => __('Description'),
-                    'resource.usersleaving'       => __('Informant of leaving', 'resources'),
-                    'resource.leaving'            => __('Declared as leaving', 'resources'),
-                    'resource.leavingreason'      => PluginResourcesLeavingReason::getTypeName(1),
-                    'resource.sensitizesecurity'  => __('Sensitized to security', 'resources'),
-                    'resource.readchart'          => __('Reading the security charter', 'resources'),
-                    'resource.helpdesk'           => __('Associable to a ticket'),
-                    'resource.action_user'        => __('Last updater'),
-                    'resource.holidaytitle'       => __('Forced holiday management', 'resources'),
-                    'resource.holiday'            => __('Detail of the forced holiday', 'resources'),
-                    'update.name'                 => __('Surname'),
-                    'update.firstname'            => __('First name'),
-                    'update.type'                 => PluginResourcesContractType::getTypeName(1),
-                    'update.quota'                => __('Quota', 'resources'),
-                    'update.situation'            => PluginResourcesResourceSituation::getTypeName(1),
-                    'update.contractnature'       => PluginResourcesContractNature::getTypeName(1),
-                    'update.rank'                 => PluginResourcesRank::getTypeName(1),
-                    'update.speciality'           => PluginResourcesResourceSpeciality::getTypeName(1),
-                    'update.users'                => __('Resource manager', 'resources'),
-                    'update.usersrecipient'       => __('Requester'),
-                    'update.datedeclaration'      => __('Request date'),
-                    'update.datebegin'            => __('Arrival date', 'resources'),
-                    'update.dateend'              => __('Departure date', 'resources'),
-                    'update.department'           => PluginResourcesDepartment::getTypeName(1),
-                    'update.status'               => PluginResourcesResourceState::getTypeName(1),
-                    'update.location'             => __('Location'),
-                    'update.comment'              => __('Description'),
-                    'update.usersleaving'         => __('Informant of leaving', 'resources'),
-                    'update.leaving'              => __('Declared as leaving', 'resources'),
-                    'update.leavingreason'        => PluginResourcesLeavingReason::getTypeName(1),
-                    'update.helpdesk'             => __('Associable to a ticket'),
-                    'task.name'                   => __('Name'),
-                    'task.type'                   => __('Type'),
-                    'task.users'                  => __('Technician'),
-                    'task.groups'                 => __('Group'),
-                    'task.datebegin'              => __('Begin date'),
-                    'task.dateend'                => __('End date'),
-                    'task.planned'                => __('Used for planning', 'resources'),
-                    'task.realtime'               => __('Effective duration', 'resources'),
-                    'task.finished'               => __('Carried out task', 'resources'),
-                    'task.comment'                => __('Description'),
-                    'task.resource'               => PluginResourcesResource::getTypeName(1),
-                    'resouce.sourceentity'        => __('Source entity', 'resources'),
-                    'resouce.targetentity'        => __('Target entity', 'resources'));
+      $tags = array('resource.id'                => 'ID',
+                    'resource.name'              => __('Surname'),
+                    'resource.entity'            => __('Entity'),
+                    'resource.action'            => __('List of not finished tasks', 'resources'),
+                    'resource.firstname'         => __('First name'),
+                    'resource.type'              => PluginResourcesContractType::getTypeName(1),
+                    'resource.quota'             => __('Quota', 'resources'),
+                    'resource.situation'         => PluginResourcesResourceSituation::getTypeName(1),
+                    'resource.contractnature'    => PluginResourcesContractNature::getTypeName(1),
+                    'resource.rank'              => PluginResourcesRank::getTypeName(1),
+                    'resource.speciality'        => PluginResourcesResourceSpeciality::getTypeName(1),
+                    'resource.users'             => __('Resource manager', 'resources'),
+                    'resource.usersrecipient'    => __('Requester'),
+                    'resource.datedeclaration'   => __('Request date'),
+                    'resource.datebegin'         => __('Arrival date', 'resources'),
+                    'resource.dateend'           => __('Departure date', 'resources'),
+                    'resource.department'        => PluginResourcesDepartment::getTypeName(1),
+                    'resource.status'            => PluginResourcesResourceState::getTypeName(1),
+                    'resource.location'          => __('Location'),
+                    'resource.restingtitle'      => __('Non contract period management', 'resources'),
+                    'resource.resting'           => __('Detail of non contract period', 'resources'),
+                    'resource.comment'           => __('Description'),
+                    'resource.usersleaving'      => __('Informant of leaving', 'resources'),
+                    'resource.leaving'           => __('Declared as leaving', 'resources'),
+                    'resource.leavingreason'     => PluginResourcesLeavingReason::getTypeName(1),
+                    'resource.sensitizesecurity' => __('Sensitized to security', 'resources'),
+                    'resource.readchart'         => __('Reading the security charter', 'resources'),
+                    'resource.helpdesk'          => __('Associable to a ticket'),
+                    'resource.action_user'       => __('Last updater'),
+                    'resource.holidaytitle'      => __('Forced holiday management', 'resources'),
+                    'resource.holiday'           => __('Detail of the forced holiday', 'resources'),
+                    'update.name'                => __('Surname'),
+                    'update.firstname'           => __('First name'),
+                    'update.type'                => PluginResourcesContractType::getTypeName(1),
+                    'update.quota'               => __('Quota', 'resources'),
+                    'update.situation'           => PluginResourcesResourceSituation::getTypeName(1),
+                    'update.contractnature'      => PluginResourcesContractNature::getTypeName(1),
+                    'update.rank'                => PluginResourcesRank::getTypeName(1),
+                    'update.speciality'          => PluginResourcesResourceSpeciality::getTypeName(1),
+                    'update.users'               => __('Resource manager', 'resources'),
+                    'update.usersrecipient'      => __('Requester'),
+                    'update.datedeclaration'     => __('Request date'),
+                    'update.datebegin'           => __('Arrival date', 'resources'),
+                    'update.dateend'             => __('Departure date', 'resources'),
+                    'update.department'          => PluginResourcesDepartment::getTypeName(1),
+                    'update.status'              => PluginResourcesResourceState::getTypeName(1),
+                    'update.location'            => __('Location'),
+                    'update.comment'             => __('Description'),
+                    'update.usersleaving'        => __('Informant of leaving', 'resources'),
+                    'update.leaving'             => __('Declared as leaving', 'resources'),
+                    'update.leavingreason'       => PluginResourcesLeavingReason::getTypeName(1),
+                    'update.helpdesk'            => __('Associable to a ticket'),
+                    'task.name'                  => __('Name'),
+                    'task.type'                  => __('Type'),
+                    'task.users'                 => __('Technician'),
+                    'task.groups'                => __('Group'),
+                    'task.datebegin'             => __('Begin date'),
+                    'task.dateend'               => __('End date'),
+                    'task.planned'               => __('Used for planning', 'resources'),
+                    'task.realtime'              => __('Effective duration', 'resources'),
+                    'task.finished'              => __('Carried out task', 'resources'),
+                    'task.comment'               => __('Description'),
+                    'task.resource'              => PluginResourcesResource::getTypeName(1),
+                    'resouce.sourceentity'       => __('Source entity', 'resources'),
+                    'resouce.targetentity'       => __('Target entity', 'resources'));
       foreach ($tags as $tag => $label) {
          $this->addTagToList(array('tag'   => $tag, 'label' => $label,
                                    'value' => true));
@@ -1337,6 +1342,1395 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       asort($this->tag_descriptions);
    }
 
+   public static function update78() {
+      global $DB;
+
+      $template     = new NotificationTemplate();
+
+      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
+                  WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resources'";
+      $result = $DB->query($query_id) or die($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Resources',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = self::getContentTextResource();
+            $tmp['content_html']             = self::getContentHtmlResource();
+
+            $translation->add($tmp);
+         }
+
+         $notifs = array(
+            'New Resource'         => 'new',
+            'Update Resource'      => 'update',
+            'Delete Resource'      => 'delete',
+            'New Resource Task'    => 'newtask',
+            'Update Resource Task' => 'updatetask',
+            'Delete Resource Task' => 'deletetask',
+         );
+
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
+                  WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Tasks'";
+      $result = $DB->query($query_id) or die($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Alert Resources Tasks',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##resource.action## : ##resource.entity##';
+            $tmp['content_text']             = '##FOREACHtasks##
+   ##lang.task.name## : ##task.name##
+   ##lang.task.type## : ##task.type##
+   ##lang.task.users## : ##task.users##
+   ##lang.task.groups## : ##task.groups##
+   ##lang.task.datebegin## : ##task.datebegin##
+   ##lang.task.dateend## : ##task.dateend##
+   ##lang.task.comment## : ##task.comment##
+   ##lang.task.resource## : ##task.resource##
+   ##ENDFOREACHtasks##';
+            $tmp['content_html']             = '&lt;table class="tab_cadre" border="1" cellspacing="2" cellpadding="3"&gt;
+   &lt;tbody&gt;
+   &lt;tr&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.name##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.users##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.groups##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.datebegin##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.comment##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.task.resource##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##FOREACHtasks##
+   &lt;tr&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.name##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.users##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.groups##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.datebegin##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.comment##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##task.resource##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##ENDFOREACHtasks##
+   &lt;/tbody&gt;
+   &lt;/table&gt;';
+
+            $translation->add($tmp);
+         }
+
+         $notifs               = array(
+            'Alert Expired Resources Tasks' => 'AlertExpiredTasks',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
+                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Leaving Resources'";
+      $result = $DB->query($query_id) or die($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Alert Leaving Resources',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##resource.action## : ##resource.entity##';
+            $tmp['content_text']             = '##FOREACHresources##
+   ##lang.resource.name## : ##resource.name##
+   ##lang.resource.firstname## : ##resource.firstname##
+   ##lang.resource.type## : ##resource.type##
+   ##lang.resource.location## : ##resource.location##
+   ##lang.resource.users## : ##resource.users##
+   ##lang.resource.dateend## : ##resource.dateend##
+   ##ENDFOREACHresources##';
+            $tmp['content_html']             = '&lt;table class="tab_cadre" border="1" cellspacing="2" cellpadding="3"&gt;
+   &lt;tbody&gt;
+   &lt;tr&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##FOREACHresources##
+   &lt;tr&gt;
+   &lt;td&gt;&lt;a href="##resource.url##"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##ENDFOREACHresources##
+   &lt;/tbody&gt;
+   &lt;/table&gt;';
+
+            $translation->add($tmp);
+         }
+
+         $notifs               = array(
+            'Alert Leaving Resources' => 'AlertLeavingResources',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Alert Resources Checklists'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Alert Resources Checklists',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##checklist.action## : ##checklist.entity##';
+            $tmp['content_text']             = '##lang.checklist.title##
+
+   ##FOREACHchecklists##
+   ##lang.checklist.name## ##lang.checklist.firstname## : ##checklist.name## ##checklist.firstname##
+   ##lang.checklist.datebegin## : ##checklist.datebegin##
+   ##lang.checklist.dateend## : ##checklist.dateend##
+   ##lang.checklist.entity## : ##checklist.entity##
+   ##lang.checklist.location## : ##checklist.location##
+   ##lang.checklist.type## : ##checklist.type##
+
+   ##lang.checklist.title2## :
+   ##tasklist.name##
+   ##ENDFOREACHchecklists##';
+            $tmp['content_html']             = '&lt;table class="tab_cadre" border="1" cellspacing="2" cellpadding="3"&gt;
+   &lt;tbody&gt;
+   &lt;tr bgcolor="#d9c4b8"&gt;
+   &lt;th colspan="7"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: center;"&gt;##lang.checklist.title##&lt;/span&gt;&lt;/th&gt;
+   &lt;/tr&gt;
+   &lt;tr&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.name## ##lang.checklist.firstname##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.datebegin##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.entity##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.location##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.checklist.title2##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##FOREACHchecklists##
+   &lt;tr&gt;
+   &lt;td&gt;&lt;a href="##checklist.url##"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.name## ##checklist.firstname##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.datebegin##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.dateend##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.entity##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.location##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##checklist.type##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+   &lt;table width="100%"&gt;
+   &lt;tbody&gt;
+   &lt;tr&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt; ##tasklist.name## &lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   &lt;/tbody&gt;
+   &lt;/table&gt;
+   &lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##ENDFOREACHchecklists##
+   &lt;/tbody&gt;
+   &lt;/table&gt;';
+            $translation->add($tmp);
+         }
+         $notifs               = array(
+            'Alert Arrival Checklists' => 'AlertArrivalChecklists',
+            'Alert Leaving Checklists' => 'AlertLeavingChecklists',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Leaving Resource'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Leaving Resource',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = '##lang.resource.title2##
+
+   ##lang.resource.url## : ##resource.url##
+
+   ##lang.resource.entity## : ##resource.entity##
+   ##IFresource.name## ##lang.resource.name## : ##resource.name##
+   ##ENDIFresource.name##
+   ##IFresource.firstname## ##lang.resource.firstname## : ##resource.firstname##
+   ##ENDIFresource.firstname##
+
+   ##lang.resource.badge##';
+            $tmp['content_html']             = '&lt;p&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;&lt;strong&gt;##lang.resource.title2##&lt;/strong&gt;
+   &lt;p&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+   &lt;strong&gt;##lang.resource.url##&lt;/strong&gt; :
+   &lt;a href="##resource.url##"&gt;##resource.url##&lt;/a&gt;
+   &lt;/span&gt; &lt;br /&gt;&lt;br /&gt;
+   &lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+   &lt;strong&gt;##lang.resource.entity##&lt;/strong&gt; : ##resource.entity##&lt;/span&gt;
+   &lt;br /&gt; ##IFresource.name##
+   &lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+   &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##resource.name##&lt;br /&gt;
+   &lt;/span&gt;##ENDIFresource.name## ##IFresource.firstname##
+   &lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+   &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##resource.firstname##
+   &lt;br /&gt;&lt;/span&gt;##ENDIFresource.firstname##&lt;/p&gt;
+   &lt;p&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;&lt;strong&gt;##lang.resource.badge##&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
+   &lt;/span&gt;&lt;/p&gt;';
+
+            $translation->add($tmp);
+         }
+         $notifs               = array(
+            'Leaving Resource' => 'LeavingResource',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+   }
+
+   static function update80() {
+      global $DB;
+
+      $template     = new NotificationTemplate();
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Resource Resting'";
+
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Resource Resting',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = '##lang.resource.restingtitle##
+##lang.resource.openby## : ##resource.openby##
+##lang.resource.entity## : ##resource.entity##
+
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+
+##lang.resource.department## : ##resource.department##
+##lang.resource.users## : ##resource.users##
+
+##lang.resource.resting##
+
+##lang.resource.location## : ##resource.location##
+##lang.resource.home## : ##resource.home##
+##lang.resource.datebegin## : ##resource.datebegin##
+##lang.resource.dateend## : ##resource.dateend##
+
+##lang.resource.commentaires## : ##resource.commentaires##
+
+##FOREACHupdates##
+##lang.update.title##
+
+##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin####ENDIFupdate.datebegin##
+##IFupdate.dateend####lang.resource.dateend## : ##update.dateend####ENDIFupdate.dateend##
+##IFupdate.location####lang.resource.location## : ##update.location###ENDIFupdate.location##
+##IFupdate.home####lang.resource.home## : ##update.home####ENDIFupdate.home##
+##IFupdate.comment####lang.resource.comment## : ##update.comment####ENDIFupdate.comment##
+##ENDFOREACHupdates##';
+            $tmp['content_html']             = self::getContentHtmlResourceResting();
+            $translation->add($tmp);
+         }
+         $notifs = array(
+            'New Resource Resting'     => 'newresting',
+            'Update Resource Resting' => 'updateresting',
+            'Delete Resource Resting'  => 'deleteresting',
+         );
+         $notification = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp = array(
+                  'name'                     => $label,
+                  'entities_id'              => 0,
+                  'itemtype'                 => 'PluginResourcesResource',
+                  'event'                    => $name,
+                  'comment'                  => '',
+                  'is_recursive'             => 1,
+                  'is_active'                => 1,
+                  'date_mod'                 => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                             AND `name` = 'Resource Holiday'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Resource Holiday',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = '##lang.resource.holidaytitle##
+##lang.resource.openby## : ##resource.openby##
+##lang.resource.entity## : ##resource.entity##
+
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+
+##lang.resource.department## : ##resource.department##
+##lang.resource.users## : ##resource.users##
+
+##lang.resource.holiday##
+
+##lang.resource.datebegin## : ##resource.datebegin##
+##lang.resource.dateend## : ##resource.dateend##
+
+##lang.resource.commentaires## : ##resource.commentaires##
+
+##FOREACHupdates##
+##lang.update.title##
+
+##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin####ENDIFupdate.datebegin##
+##IFupdate.dateend####lang.resource.dateend## : ##update.dateend####ENDIFupdate.dateend##
+##IFupdate.comment####lang.resource.comment## : ##update.comment####ENDIFupdate.comment##
+##ENDFOREACHupdates##';
+            $tmp['content_html']             = self::getContentHtmlResourceHoliday();
+            $translation->add($tmp);
+         }
+
+         $notifs = array(
+            'New Resource Holiday'    => 'newholiday',
+            'Update Resource Holiday' => 'updateholiday',
+            'Delete Resource Holiday' => 'deleteholiday',
+         );
+         $notification = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp = array(
+                  'name'                     => $label,
+                  'entities_id'              => 0,
+                  'itemtype'                 => 'PluginResourcesResource',
+                  'event'                    => $name,
+                  'comment'                  => '',
+                  'is_recursive'             => 1,
+                  'is_active'                => 1,
+                  'date_mod'                 => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+   }
+
+   static function update203() {
+      global $DB;
+
+      $template = new NotificationTemplate();
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Send other resource notification'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Send other resource notification',
+            'itemtype' => 'PluginPurchaserequestPurchaseRequest',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = '
+##lang.resource.openby## : ##resource.openby##
+##lang.resource.entity## : ##resource.entity##
+
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+
+##lang.resource.department## : ##resource.department##
+##lang.resource.users## : ##resource.users##
+
+##lang.resource.commentaires## : ##resource.commentaires##';
+            $tmp['content_html']             = '
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;';
+            $translation->add($tmp);
+         }
+         $notifs               = array(
+            'Other resource notification' => 'other',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+   }
+
+   static function update204() {
+      global $DB;
+
+      $template = new NotificationTemplate();
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Resource Transfer'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Resource Transfer',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.transfertitle## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = "##lang.resource.transfertitle##
+La ressource ##resource.firstname## ##resource.name## a été transférée de l\'entité ##resource.sourceentity## vers l\'entité ##resource.sourceentity##.";
+            $tmp['content_html']             = "&lt;p&gt;##lang.resource.transfertitle##&lt;/p&gt;
+&lt;p&gt;La ressource ##resource.firstname## ##resource.name## a été transférée de l\'entité ##resource.sourceentity## vers l\'entité ##resource.targetentity##.&lt;/p&gt;";
+
+            $translation->add($tmp);
+         }
+         $notifs               = array(
+            'Resource Report Transfer'     => 'transfer',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+   }
+
+   static function update231() {
+      global $DB;
+
+      $template = new NotificationTemplate();
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Alert for sales people'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Alert for sales people',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.commercial.title##';
+            $tmp['content_text']             = '##lang.commercial.title##
+
+##FOREACHcommercials##
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+##lang.resource.type## : ##resource.type##
+##lang.resource.department## : ##resource.department##
+##lang.resource.location## : ##resource.location##
+##lang.resource.datebegin## : ##resource.datebegin##
+##lang.resource.dateend## : ##resource.dateend##
+##lang.resource.leaving## : ##resource.leaving##
+##lang.resource.userssale## : ##resource.userssale##
+##lang.resource.users## : ##resource.users##
+##lang.resource.accessprofile## : ##resource.accessprofile##
+##ENDFOREACHcommercials##';
+            $tmp['content_html']             = '&lt;table class="tab_cadre" border="1" cellspacing="2" cellpadding="3"&gt;
+&lt;tbody&gt;
+&lt;tr bgcolor="#d9c4b8"&gt;
+&lt;th colspan="11"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: center;"&gt;##lang.commercial.title##&lt;/span&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.type##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.leaving##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.userssale##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##FOREACHcommercials##
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="##resource.url##"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href="##resource.url##"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.type##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.leaving##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.userssale##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDFOREACHcommercials##
+&lt;/tbody&gt;
+&lt;/table&gt;';
+            $translation->add($tmp);
+         }
+
+         $notifs = array(
+            'Alert Commercial Manager'     => 'AlertCommercialManager',
+         );
+         $notification = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp = array(
+                  'name'                     => $label,
+                  'entities_id'              => 0,
+                  'itemtype'                 => 'PluginResourcesResource',
+                  'event'                    => $name,
+                  'comment'                  => '',
+                  'is_recursive'             => 1,
+                  'is_active'                => 1,
+                  'date_mod'                 => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+   }
+
+   static function update_notif() {
+      global $DB;
+
+      $template     = new NotificationTemplate();
+
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginResourcesResource'
+                       AND `name` = 'Resource Report Creation'";
+      $result = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp          = array(
+            'name'     => 'Resource Report Creation',
+            'itemtype' => 'PluginResourcesResource',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
+            $tmp['content_text']             = '##lang.resource.creationtitle##
+
+##lang.resource.entity## : ##resource.entity##
+
+##lang.resource.name## : ##resource.name##
+##lang.resource.firstname## : ##resource.firstname##
+##lang.resource.department## : ##resource.department##
+##lang.resource.location## : ##resource.location##
+##lang.resource.users## : ##resource.users##
+##lang.resource.usersrecipient## : ##resource.usersrecipient##
+##lang.resource.datedeclaration## : ##resource.datedeclaration##
+##lang.resource.datebegin## : ##resource.datebegin##
+
+##lang.resource.creation##
+
+##lang.resource.datecreation## : ##resource.datecreation##
+##lang.resource.login## : ##resource.login##
+##lang.resource.email## : ##resource.email##
+
+##lang.resource.informationtitle##
+
+##IFresource.commentaires####lang.resource.commentaires## : ##resource.commentaires####ENDIFresource.commentaires##
+
+##IFresource.informations####lang.resource.informations## : ##resource.informations####ENDIFresource.informations##';
+            $tmp['content_html']             = self::getContentHtmlResourceReport();
+
+         }
+
+         $notifs               = array(
+            'Resource Report Creation'     => 'report',
+         );
+         $notification         = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+               $tmp             = array(
+                  'name'         => $label,
+                  'entities_id'  => 0,
+                  'itemtype'     => 'PluginResourcesResource',
+                  'event'        => $name,
+                  'comment'      => '',
+                  'is_recursive' => 1,
+                  'is_active'    => 1,
+                  'date_mod'     => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+   }
+
+   public static function install() {
+      
+      
+      self::update_notif();
+      self::update78();
+      self::update80();
+      self::update203();
+      self::update204();
+      self::update231();
+
+   }
+
+
+   static function getContentTextResource() {
+      return '##lang.resource.url##  : ##resource.url##
+
+   ##lang.resource.entity## : ##resource.entity##
+   ##IFresource.name####lang.resource.name## : ##resource.name##
+   ##ENDIFresource.name## ##IFresource.firstname####lang.resource.firstname## : ##resource.firstname##
+   ##ENDIFresource.firstname## ##IFresource.type####lang.resource.type## : ##resource.type##
+   ##ENDIFresource.type## ##IFresource.users####lang.resource.users## : ##resource.users##
+   ##ENDIFresource.users## ##IFresource.usersrecipient####lang.resource.usersrecipient## : ##resource.usersrecipient##
+   ##ENDIFresource.usersrecipient## ##IFresource.datedeclaration####lang.resource.datedeclaration## : ##resource.datedeclaration##
+   ##ENDIFresource.datedeclaration## ##IFresource.datebegin####lang.resource.datebegin## : ##resource.datebegin##
+   ##ENDIFresource.datebegin## ##IFresource.dateend####lang.resource.dateend## : ##resource.dateend##
+   ##ENDIFresource.dateend## ##IFresource.department####lang.resource.department## : ##resource.department##
+   ##ENDIFresource.department## ##IFresource.status####lang.resource.status## : ##resource.status##
+   ##ENDIFresource.status## ##IFresource.location####lang.resource.location## : ##resource.location##
+   ##ENDIFresource.location## ##IFresource.comment####lang.resource.comment## : ##resource.comment##
+   ##ENDIFresource.comment## ##IFresource.usersleaving####lang.resource.usersleaving## : ##resource.usersleaving##
+   ##ENDIFresource.usersleaving## ##IFresource.leaving####lang.resource.leaving## : ##resource.leaving##
+   ##ENDIFresource.leaving## ##IFresource.helpdesk####lang.resource.helpdesk## : ##resource.helpdesk##
+   ##ENDIFresource.helpdesk## ##FOREACHupdates##----------
+   ##lang.update.title## :
+   ##IFupdate.name####lang.resource.name## : ##update.name##
+   ##ENDIFupdate.name## ##IFupdate.firstname####lang.resource.firstname## : ##update.firstname##
+   ##ENDIFupdate.firstname## ##IFupdate.type####lang.resource.type## : ##update.type##
+   ##ENDIFupdate.type## ##IFupdate.users####lang.resource.users## : ##update.users##
+   ##ENDIFupdate.users## ##IFupdate.usersrecipient####lang.resource.usersrecipient## : ##update.usersrecipient##
+   ##ENDIFupdate.usersrecipient## ##IFupdate.datedeclaration####lang.resource.datedeclaration## : ##update.datedeclaration##
+   ##ENDIFupdate.datedeclaration## ##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin##
+   ##ENDIFupdate.datebegin## ##IFupdate.dateend####lang.resource.dateend## : ##update.dateend##
+   ##ENDIFupdate.dateend## ##IFupdate.department####lang.resource.department## : ##update.department##
+   ##ENDIFupdate.department## ##IFupdate.status####lang.resource.status## : ##update.status##
+   ##ENDIFupdate.status## ##IFupdate.location####lang.resource.location## : ##update.location##
+   ##ENDIFupdate.location## ##IFupdate.comment####lang.resource.comment## : ##update.comment##
+   ##ENDIFupdate.comment## ##IFupdate.usersleaving####lang.resource.usersleaving## : ##update.usersleaving##
+   ##ENDIFupdate.usersleaving## ##IFupdate.leaving####lang.resource.leaving## : ##update.leaving##
+   ##ENDIFupdate.leaving## ##IFupdate.helpdesk####lang.resource.helpdesk## : ##update.helpdesk##
+   ##ENDIFupdate.helpdesk## ----------##ENDFOREACHupdates##
+   ##FOREACHtasks####lang.task.title## :
+   ##IFtask.name####lang.task.name## : ##task.name##
+   ##ENDIFtask.name## ##IFtask.type####lang.task.type## : ##task.type##
+   ##ENDIFtask.type## ##IFtask.users####lang.task.users## : ##task.users##
+   ##ENDIFtask.users## ##IFtask.groups####lang.task.groups## : ##task.groups##
+   ##ENDIFtask.groups## ##IFtask.datebegin####lang.task.datebegin## : ##task.datebegin##
+   ##ENDIFtask.datebegin## ##IFtask.dateend####lang.task.dateend## : ##task.dateend##
+   ##ENDIFtask.dateend## ##IFtask.comment####lang.task.comment## : ##task.comment##
+   ##ENDIFtask.comment## ##IFtask.finished####lang.task.finished## : ##task.finished##
+   ##ENDIFtask.finished## ##IFtask.realtime####lang.task.realtime## : ##task.realtime##
+   ##ENDIFtask.realtime## ----------##ENDFOREACHtasks## ';
+   }
+   
+   static function getContentHtmlResource() {
+      return "&lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.url##
+                        &lt;/strong&gt; :
+                        &lt;a href=\"##resource.url##\"&gt;##resource.url##
+                        &lt;/a&gt;&lt;/span&gt; &lt;br /&gt;&lt;br /&gt;
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.entity##&lt;/strong&gt; : ##resource.entity##
+                        &lt;/span&gt; &lt;br /&gt; ##IFresource.name##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##resource.name##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.name## ##IFresource.firstname##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##resource.firstname##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.firstname## ##IFresource.type##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.type##&lt;/strong&gt; :  ##resource.type##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFresource.type## ##IFresource.status##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.status##&lt;/strong&gt; :  ##resource.status##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFresource.status## ##IFresource.users##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.users##&lt;/strong&gt; :  ##resource.users##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFresource.users## ##IFresource.usersrecipient##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.usersrecipient##
+                        &lt;/strong&gt; :  ##resource.usersrecipient##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFresource.usersrecipient## ##IFresource.datedeclaration##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.datedeclaration##
+                        &lt;/strong&gt; :  ##resource.datedeclaration##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFresource.datedeclaration## ##IFresource.datebegin##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.datebegin##&lt;/strong&gt; :  ##resource.datebegin##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.datebegin## ##IFresource.dateend##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.dateend##&lt;/strong&gt; :  ##resource.dateend##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.dateend## ##IFresource.department##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.department##&lt;/strong&gt; :  ##resource.department##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.department## ##IFresource.location##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.location##&lt;/strong&gt; :  ##resource.location##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.location## ##IFresource.comment##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.comment##&lt;/strong&gt; :  ##resource.comment##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.comment## ##IFresource.usersleaving##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.usersleaving##&lt;/strong&gt; :  ##resource.usersleaving##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.usersleaving## ##IFresource.leaving##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.leaving##&lt;/strong&gt; :  ##resource.leaving##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.leaving## ##IFresource.helpdesk##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.helpdesk##&lt;/strong&gt; :  ##resource.helpdesk##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.helpdesk##   ##FOREACHupdates##----------
+                        &lt;br /&gt;
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.update.title## :&lt;/strong&gt;&lt;/span&gt;
+                        &lt;br /&gt; ##IFupdate.name##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##update.name##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.name## ##IFupdate.firstname##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##update.firstname##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.firstname## ##IFupdate.type##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.type##&lt;/strong&gt; : ##update.type##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.type## ##IFupdate.status##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.status##&lt;/strong&gt; : ##update.status##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.status## ##IFupdate.users##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.users##&lt;/strong&gt; : ##update.users##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.users## ##IFupdate.usersrecipient##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.usersrecipient##&lt;/strong&gt; : ##update.usersrecipient##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.usersrecipient## ##IFupdate.datedeclaration##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.datedeclaration##
+                        &lt;/strong&gt; : ##update.datedeclaration##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.datedeclaration## ##IFupdate.datebegin##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.datebegin##&lt;/strong&gt; : ##update.datebegin##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.datebegin## ##IFupdate.dateend##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.dateend##&lt;/strong&gt; : ##update.dateend##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.dateend## ##IFupdate.department##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.department##&lt;/strong&gt; : ##update.department##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.department## ##IFupdate.location##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.location##&lt;/strong&gt; : ##update.location##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.location## ##IFupdate.comment##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.comment##&lt;/strong&gt; : ##update.comment##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.comment## ##IFupdate.usersleaving##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.usersleaving##
+                        &lt;/strong&gt; : ##update.usersleaving##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFupdate.usersleaving## ##IFupdate.leaving##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.leaving##&lt;/strong&gt; : ##update.leaving##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.leaving## ##IFupdate.helpdesk##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.resource.helpdesk##&lt;/strong&gt; : ##update.helpdesk##
+                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.helpdesk####ENDFOREACHupdates##   ##FOREACHtasks##----------
+                        &lt;br /&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.title## :&lt;/strong&gt;&lt;/span&gt; &lt;br /&gt; ##IFtask.name##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.name##&lt;/strong&gt; : ##task.name##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.name## ##IFtask.type##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.type##&lt;/strong&gt; : ##task.type##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.type## ##IFtask.users##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.users##&lt;/strong&gt; : ##task.users##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.users## ##IFtask.groups##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.groups##&lt;/strong&gt; : ##task.groups##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.groups## ##IFtask.datebegin##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.datebegin##&lt;/strong&gt; : ##task.datebegin##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.datebegin## ##IFtask.dateend##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.dateend##&lt;/strong&gt; : ##task.dateend##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.dateend## ##IFtask.comment##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.comment##&lt;/strong&gt; : ##task.comment##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.comment## ##IFtask.finished##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.finished##&lt;/strong&gt; : ##task.finished##&lt;br /&gt;
+                        &lt;/span&gt;##ENDIFtask.finished## ##IFtask.realtime##
+                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
+                        &lt;strong&gt;##lang.task.realtime##&lt;/strong&gt; : ##task.realtime##
+                        &lt;/span&gt;##ENDIFtask.realtime##&lt;br /&gt;----------##ENDFOREACHtasks##&lt;/p&gt;";
+   }
+
+   static function getContentHtmlResourceReport() {
+                  return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.creationtitle##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="2" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" colspan="2" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.usersrecipient##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.usersrecipient##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datedeclaration##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datedeclaration##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.creation##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datecreation##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datecreation##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.login##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.login##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.email##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.email##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.informationtitle##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+##IFresource.commentaires##
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFresource.commentaires## ##IFresource.informations##
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.informations##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.informations##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFresource.informations##
+&lt;/tbody&gt;
+&lt;/table&gt;';
+
+            }
+
+   static function getContentHtmlResourceResting() {
+      return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.restingtitle##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.resting##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.home##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.home##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;##FOREACHupdates##&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.update.title##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+##IFupdate.datebegin##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin## : ##update.datebegin##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.datebegin## ##IFupdate.dateend##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend## : ##update.dateend##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.dateend## ##IFupdate.location##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.location## : ##update.location##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.location## ##IFupdate.home##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.home## : ##update.home##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.home## ##IFupdate.comment##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.comment## : ##update.comment##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.comment##
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;';
+   }
+
+   static function getContentHtmlResourceHoliday() {
+      return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.holidaytitle##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.holiday##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: left;" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;##FOREACHupdates##&lt;/p&gt;
+&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.update.title##&lt;/span&gt;&lt;/p&gt;
+&lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
+&lt;tbody&gt;
+##IFupdate.datebegin##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.datebegin## : ##update.datebegin##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.datebegin## ##IFupdate.dateend##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.dateend## : ##update.dateend##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.dateend## ##IFupdate.comment##
+&lt;tr&gt;
+&lt;td style="text-align: left;" colspan="4" width="auto"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;
+&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.resource.comment## : ##update.comment##
+&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+##ENDIFupdate.comment##
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;';
+   }
 }
 
 ?>

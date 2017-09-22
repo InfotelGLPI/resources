@@ -43,9 +43,6 @@ function plugin_resources_install() {
    $update78  = false;
    $update80  = false;
    $update171 = false;
-   $update203 = false;
-   $update204 = false;
-   $update231 = false;
 
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
@@ -66,6 +63,10 @@ function plugin_resources_install() {
                VALUES (3, '".__('Trainee', 'resources')."', '')";
 
       $DB->query($query) or die($DB->error());
+
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'install'));
 
    } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->tableExists("glpi_plugin_resources_employee")) {
       $update = true;
@@ -128,9 +129,68 @@ function plugin_resources_install() {
 
    }
 
+   if($update) {
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update_notif'));
+   }
+
+   if ($update78) {
+
+      $profiles = getAllDatasFromTable("glpi_plugin_resources_profiles");
+
+      if (!empty($profiles)) {
+         foreach ($profiles as $profile) {
+            $query = "UPDATE `glpi_plugin_resources_profiles`
+                  SET `profiles_id` = '" . $profile["id"] . "'
+                  WHERE `id` = '" . $profile["id"] . "';";
+            $DB->query($query);
+         }
+      }
+
+      $query = "ALTER TABLE `glpi_plugin_resources_profiles`
+               DROP `name` ;";
+      $DB->query($query);
+
+      $tables = array(
+         "glpi_displaypreferences",
+         "glpi_documents_items",
+         "glpi_savedsearches",
+         "glpi_logs",
+         "glpi_items_tickets"
+      );
+
+      foreach ($tables as $table) {
+         $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
+         $DB->query($query);
+      }
+
+      Plugin::migrateItemType(
+         array(4300 => 'PluginResourcesResource',
+               4301 => 'PluginResourcesTask',
+               4303 => 'PluginResourcesDirectory'),
+         array("glpi_savedsearches", "glpi_savedsearches_users", "glpi_displaypreferences",
+               "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"),
+         array("glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"));
+
+      Plugin::migrateItemType(
+         array(1600 => "PluginBadgesBadge"),
+         array("glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"));
+
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update78'));
+   }
+
+   if ($update80) {
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update80'));
+   }
+
    //Version 1.7.1
    if (!$DB->tableExists("glpi_plugin_resources_choiceitems")) {
-      $$update171 = true;
+      $update171 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.1.sql");
 
    }
@@ -159,20 +219,30 @@ function plugin_resources_install() {
 
    //Version 2.0.3
    if (!$DB->fieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
-      $update203 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.0.3.sql");
+
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update203'));
    }
 
    //Version 2.0.4
    if(!$DB->tableExists("glpi_plugin_resources_transferentities")){
-      $update204 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.0.4.sql");
+
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update204'));
    }
 
    //Version 2.3.1
    if(!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists("glpi_plugin_resources_resourcebadges")){
-      $update231 = true;
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.1.sql");
+
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      call_user_func(array("PluginResourcesNotificationTargetResource", 'update231'));
+
    }
 
    //Version 2.3.2
@@ -182,576 +252,6 @@ function plugin_resources_install() {
       include(GLPI_ROOT."/plugins/resources/install/update_231_232.php");
       update231_232();
 
-   }
-
-   if ($update78 || $install) {
-      //Do One time on 0.78
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resources'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##lang.resource.title## -  ##resource.firstname## ##resource.name##',
-                        '##lang.resource.url##  : ##resource.url##
-
-   ##lang.resource.entity## : ##resource.entity##
-   ##IFresource.name####lang.resource.name## : ##resource.name##
-   ##ENDIFresource.name## ##IFresource.firstname####lang.resource.firstname## : ##resource.firstname##
-   ##ENDIFresource.firstname## ##IFresource.type####lang.resource.type## : ##resource.type##
-   ##ENDIFresource.type## ##IFresource.users####lang.resource.users## : ##resource.users##
-   ##ENDIFresource.users## ##IFresource.usersrecipient####lang.resource.usersrecipient## : ##resource.usersrecipient##
-   ##ENDIFresource.usersrecipient## ##IFresource.datedeclaration####lang.resource.datedeclaration## : ##resource.datedeclaration##
-   ##ENDIFresource.datedeclaration## ##IFresource.datebegin####lang.resource.datebegin## : ##resource.datebegin##
-   ##ENDIFresource.datebegin## ##IFresource.dateend####lang.resource.dateend## : ##resource.dateend##
-   ##ENDIFresource.dateend## ##IFresource.department####lang.resource.department## : ##resource.department##
-   ##ENDIFresource.department## ##IFresource.status####lang.resource.status## : ##resource.status##
-   ##ENDIFresource.status## ##IFresource.location####lang.resource.location## : ##resource.location##
-   ##ENDIFresource.location## ##IFresource.comment####lang.resource.comment## : ##resource.comment##
-   ##ENDIFresource.comment## ##IFresource.usersleaving####lang.resource.usersleaving## : ##resource.usersleaving##
-   ##ENDIFresource.usersleaving## ##IFresource.leaving####lang.resource.leaving## : ##resource.leaving##
-   ##ENDIFresource.leaving## ##IFresource.helpdesk####lang.resource.helpdesk## : ##resource.helpdesk##
-   ##ENDIFresource.helpdesk## ##FOREACHupdates##----------
-   ##lang.update.title## :
-   ##IFupdate.name####lang.resource.name## : ##update.name##
-   ##ENDIFupdate.name## ##IFupdate.firstname####lang.resource.firstname## : ##update.firstname##
-   ##ENDIFupdate.firstname## ##IFupdate.type####lang.resource.type## : ##update.type##
-   ##ENDIFupdate.type## ##IFupdate.users####lang.resource.users## : ##update.users##
-   ##ENDIFupdate.users## ##IFupdate.usersrecipient####lang.resource.usersrecipient## : ##update.usersrecipient##
-   ##ENDIFupdate.usersrecipient## ##IFupdate.datedeclaration####lang.resource.datedeclaration## : ##update.datedeclaration##
-   ##ENDIFupdate.datedeclaration## ##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin##
-   ##ENDIFupdate.datebegin## ##IFupdate.dateend####lang.resource.dateend## : ##update.dateend##
-   ##ENDIFupdate.dateend## ##IFupdate.department####lang.resource.department## : ##update.department##
-   ##ENDIFupdate.department## ##IFupdate.status####lang.resource.status## : ##update.status##
-   ##ENDIFupdate.status## ##IFupdate.location####lang.resource.location## : ##update.location##
-   ##ENDIFupdate.location## ##IFupdate.comment####lang.resource.comment## : ##update.comment##
-   ##ENDIFupdate.comment## ##IFupdate.usersleaving####lang.resource.usersleaving## : ##update.usersleaving##
-   ##ENDIFupdate.usersleaving## ##IFupdate.leaving####lang.resource.leaving## : ##update.leaving##
-   ##ENDIFupdate.leaving## ##IFupdate.helpdesk####lang.resource.helpdesk## : ##update.helpdesk##
-   ##ENDIFupdate.helpdesk## ----------##ENDFOREACHupdates##
-   ##FOREACHtasks####lang.task.title## :
-   ##IFtask.name####lang.task.name## : ##task.name##
-   ##ENDIFtask.name## ##IFtask.type####lang.task.type## : ##task.type##
-   ##ENDIFtask.type## ##IFtask.users####lang.task.users## : ##task.users##
-   ##ENDIFtask.users## ##IFtask.groups####lang.task.groups## : ##task.groups##
-   ##ENDIFtask.groups## ##IFtask.datebegin####lang.task.datebegin## : ##task.datebegin##
-   ##ENDIFtask.datebegin## ##IFtask.dateend####lang.task.dateend## : ##task.dateend##
-   ##ENDIFtask.dateend## ##IFtask.comment####lang.task.comment## : ##task.comment##
-   ##ENDIFtask.comment## ##IFtask.finished####lang.task.finished## : ##task.finished##
-   ##ENDIFtask.finished## ##IFtask.realtime####lang.task.realtime## : ##task.realtime##
-   ##ENDIFtask.realtime## ----------##ENDFOREACHtasks## ',
-                        '&lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.url##
-                        &lt;/strong&gt; :
-                        &lt;a href=\"##resource.url##\"&gt;##resource.url##
-                        &lt;/a&gt;&lt;/span&gt; &lt;br /&gt;&lt;br /&gt;
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.entity##&lt;/strong&gt; : ##resource.entity##
-                        &lt;/span&gt; &lt;br /&gt; ##IFresource.name##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##resource.name##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.name## ##IFresource.firstname##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##resource.firstname##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.firstname## ##IFresource.type##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.type##&lt;/strong&gt; :  ##resource.type##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFresource.type## ##IFresource.status##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.status##&lt;/strong&gt; :  ##resource.status##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFresource.status## ##IFresource.users##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.users##&lt;/strong&gt; :  ##resource.users##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFresource.users## ##IFresource.usersrecipient##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.usersrecipient##
-                        &lt;/strong&gt; :  ##resource.usersrecipient##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFresource.usersrecipient## ##IFresource.datedeclaration##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.datedeclaration##
-                        &lt;/strong&gt; :  ##resource.datedeclaration##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFresource.datedeclaration## ##IFresource.datebegin##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.datebegin##&lt;/strong&gt; :  ##resource.datebegin##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.datebegin## ##IFresource.dateend##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.dateend##&lt;/strong&gt; :  ##resource.dateend##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.dateend## ##IFresource.department##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.department##&lt;/strong&gt; :  ##resource.department##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.department## ##IFresource.location##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.location##&lt;/strong&gt; :  ##resource.location##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.location## ##IFresource.comment##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.comment##&lt;/strong&gt; :  ##resource.comment##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.comment## ##IFresource.usersleaving##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.usersleaving##&lt;/strong&gt; :  ##resource.usersleaving##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.usersleaving## ##IFresource.leaving##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.leaving##&lt;/strong&gt; :  ##resource.leaving##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.leaving## ##IFresource.helpdesk##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.helpdesk##&lt;/strong&gt; :  ##resource.helpdesk##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFresource.helpdesk##   ##FOREACHupdates##----------
-                        &lt;br /&gt;
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.update.title## :&lt;/strong&gt;&lt;/span&gt;
-                        &lt;br /&gt; ##IFupdate.name##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##update.name##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.name## ##IFupdate.firstname##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##update.firstname##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.firstname## ##IFupdate.type##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.type##&lt;/strong&gt; : ##update.type##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.type## ##IFupdate.status##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.status##&lt;/strong&gt; : ##update.status##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.status## ##IFupdate.users##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.users##&lt;/strong&gt; : ##update.users##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.users## ##IFupdate.usersrecipient##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.usersrecipient##&lt;/strong&gt; : ##update.usersrecipient##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.usersrecipient## ##IFupdate.datedeclaration##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.datedeclaration##
-                        &lt;/strong&gt; : ##update.datedeclaration##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.datedeclaration## ##IFupdate.datebegin##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.datebegin##&lt;/strong&gt; : ##update.datebegin##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.datebegin## ##IFupdate.dateend##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.dateend##&lt;/strong&gt; : ##update.dateend##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.dateend## ##IFupdate.department##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.department##&lt;/strong&gt; : ##update.department##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.department## ##IFupdate.location##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.location##&lt;/strong&gt; : ##update.location##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.location## ##IFupdate.comment##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.comment##&lt;/strong&gt; : ##update.comment##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.comment## ##IFupdate.usersleaving##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.usersleaving##
-                        &lt;/strong&gt; : ##update.usersleaving##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFupdate.usersleaving## ##IFupdate.leaving##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.leaving##&lt;/strong&gt; : ##update.leaving##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.leaving## ##IFupdate.helpdesk##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.resource.helpdesk##&lt;/strong&gt; : ##update.helpdesk##
-                        &lt;br /&gt;&lt;/span&gt;##ENDIFupdate.helpdesk####ENDFOREACHupdates##   ##FOREACHtasks##----------
-                        &lt;br /&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.title## :&lt;/strong&gt;&lt;/span&gt; &lt;br /&gt; ##IFtask.name##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.name##&lt;/strong&gt; : ##task.name##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.name## ##IFtask.type##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.type##&lt;/strong&gt; : ##task.type##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.type## ##IFtask.users##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.users##&lt;/strong&gt; : ##task.users##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.users## ##IFtask.groups##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.groups##&lt;/strong&gt; : ##task.groups##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.groups## ##IFtask.datebegin##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.datebegin##&lt;/strong&gt; : ##task.datebegin##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.datebegin## ##IFtask.dateend##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.dateend##&lt;/strong&gt; : ##task.dateend##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.dateend## ##IFtask.comment##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.comment##&lt;/strong&gt; : ##task.comment##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.comment## ##IFtask.finished##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.finished##&lt;/strong&gt; : ##task.finished##&lt;br /&gt;
-                        &lt;/span&gt;##ENDIFtask.finished## ##IFtask.realtime##
-                        &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-                        &lt;strong&gt;##lang.task.realtime##&lt;/strong&gt; : ##task.realtime##
-                        &lt;/span&gt;##ENDIFtask.realtime##&lt;br /&gt;----------##ENDFOREACHtasks##&lt;/p&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`,
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('New Resource', 0, 'PluginResourcesResource', 'new', ".$itemtype.", 1, 1, NOW());";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Update Resource', 0, 'PluginResourcesResource', 'update', ".$itemtype.", 1, 1, NOW());";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Delete Resource', 0, 'PluginResourcesResource', 'delete', ".$itemtype.", 1, 1, NOW());";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('New Resource Task', 0, 'PluginResourcesResource', 'newtask', ".$itemtype.", 1, 1, NOW());";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Update Resource Task', 0, 'PluginResourcesResource', 'updatetask', ".$itemtype.", 1, 1, NOW());";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`, `date_creation`)
-                VALUES ('Delete Resource Task', 0, 'PluginResourcesResource', 'deletetask', ".$itemtype.", 1, 1, NOW());";
-
-      $DB->query($query);
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Tasks'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##resource.action## : ##resource.entity##',
-                        '##FOREACHtasks##
-   ##lang.task.name## : ##task.name##
-   ##lang.task.type## : ##task.type##
-   ##lang.task.users## : ##task.users##
-   ##lang.task.groups## : ##task.groups##
-   ##lang.task.datebegin## : ##task.datebegin##
-   ##lang.task.dateend## : ##task.dateend##
-   ##lang.task.comment## : ##task.comment##
-   ##lang.task.resource## : ##task.resource##
-   ##ENDFOREACHtasks##',
-                           '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
-   &lt;tbody&gt;
-   &lt;tr&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.name##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.users##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.groups##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.datebegin##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.comment##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.task.resource##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##FOREACHtasks##
-   &lt;tr&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.name##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.users##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.groups##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.datebegin##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.comment##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##task.resource##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##ENDFOREACHtasks##
-   &lt;/tbody&gt;
-   &lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Expired Resources Tasks', 0, 'PluginResourcesResource', 'AlertExpiredTasks', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Leaving Resources'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##resource.action## : ##resource.entity##',
-                        '##FOREACHresources##
-   ##lang.resource.name## : ##resource.name##
-   ##lang.resource.firstname## : ##resource.firstname##
-   ##lang.resource.type## : ##resource.type##
-   ##lang.resource.location## : ##resource.location##
-   ##lang.resource.users## : ##resource.users##
-   ##lang.resource.dateend## : ##resource.dateend##
-   ##ENDFOREACHresources##',
-                           '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
-   &lt;tbody&gt;
-   &lt;tr&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##FOREACHresources##
-   &lt;tr&gt;
-   &lt;td&gt;&lt;a href=\"##resource.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##ENDFOREACHresources##
-   &lt;/tbody&gt;
-   &lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Leaving Resources', 0, 'PluginResourcesResource', 'AlertLeavingResources', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Checklists'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##checklist.action## : ##checklist.entity##',
-                        '##lang.checklist.title##
-
-   ##FOREACHchecklists##
-   ##lang.checklist.name## ##lang.checklist.firstname## : ##checklist.name## ##checklist.firstname##
-   ##lang.checklist.datebegin## : ##checklist.datebegin##
-   ##lang.checklist.dateend## : ##checklist.dateend##
-   ##lang.checklist.entity## : ##checklist.entity##
-   ##lang.checklist.location## : ##checklist.location##
-   ##lang.checklist.type## : ##checklist.type##
-
-   ##lang.checklist.title2## :
-   ##tasklist.name##
-   ##ENDFOREACHchecklists##',
-                           '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
-   &lt;tbody&gt;
-   &lt;tr bgcolor=\"#d9c4b8\"&gt;
-   &lt;th colspan=\"7\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: center;\"&gt;##lang.checklist.title##&lt;/span&gt;&lt;/th&gt;
-   &lt;/tr&gt;
-   &lt;tr&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.name## ##lang.checklist.firstname##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.datebegin##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.entity##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.location##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.checklist.title2##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##FOREACHchecklists##
-   &lt;tr&gt;
-   &lt;td&gt;&lt;a href=\"##checklist.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.name## ##checklist.firstname##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.datebegin##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.dateend##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.entity##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.location##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##checklist.type##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-   &lt;table width=\"100%\"&gt;
-   &lt;tbody&gt;
-   &lt;tr&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt; ##tasklist.name## &lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   &lt;/tbody&gt;
-   &lt;/table&gt;
-   &lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##ENDFOREACHchecklists##
-   &lt;/tbody&gt;
-   &lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Arrival Checklists', 0, 'PluginResourcesResource', 'AlertArrivalChecklists', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Leaving Checklists', 0, 'PluginResourcesResource', 'AlertLeavingChecklists', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Leaving Resource'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##lang.resource.title## -  ##resource.firstname## ##resource.name##',
-                        '##lang.resource.title2##
-
-   ##lang.resource.url## : ##resource.url##
-
-   ##lang.resource.entity## : ##resource.entity##
-   ##IFresource.name## ##lang.resource.name## : ##resource.name##
-   ##ENDIFresource.name##
-   ##IFresource.firstname## ##lang.resource.firstname## : ##resource.firstname##
-   ##ENDIFresource.firstname##
-
-   ##lang.resource.badge##',
-                        '&lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;&lt;strong&gt;##lang.resource.title2##&lt;/strong&gt;
-   &lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-   &lt;strong&gt;##lang.resource.url##&lt;/strong&gt; :
-   &lt;a href=\"##resource.url##\"&gt;##resource.url##&lt;/a&gt;
-   &lt;/span&gt; &lt;br /&gt;&lt;br /&gt;
-   &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-   &lt;strong&gt;##lang.resource.entity##&lt;/strong&gt; : ##resource.entity##&lt;/span&gt;
-   &lt;br /&gt; ##IFresource.name##
-   &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-   &lt;strong&gt;##lang.resource.name##&lt;/strong&gt; : ##resource.name##&lt;br /&gt;
-   &lt;/span&gt;##ENDIFresource.name## ##IFresource.firstname##
-   &lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-   &lt;strong&gt;##lang.resource.firstname##&lt;/strong&gt; : ##resource.firstname##
-   &lt;br /&gt;&lt;/span&gt;##ENDIFresource.firstname##&lt;/p&gt;
-   &lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;&lt;strong&gt;##lang.resource.badge##&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;
-   &lt;/span&gt;&lt;/p&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Leaving Resource', 0, 'PluginResourcesResource', 'LeavingResource', ".$itemtype.", 1, 1);";
-
-      $DB->query($query);
-   }
-   if ($update78) {
-
-      $profiles = getAllDatasFromTable("glpi_plugin_resources_profiles");
-
-      if (!empty($profiles)) {
-         foreach ($profiles as $profile) {
-            $query = "UPDATE `glpi_plugin_resources_profiles`
-                  SET `profiles_id` = '".$profile["id"]."'
-                  WHERE `id` = '".$profile["id"]."';";
-            $DB->query($query);
-         }
-      }
-
-      $query = "ALTER TABLE `glpi_plugin_resources_profiles`
-               DROP `name` ;";
-      $DB->query($query);
-
-      $tables = array(
-         "glpi_displaypreferences",
-         "glpi_documents_items",
-         "glpi_bookmarks",
-         "glpi_logs",
-         "glpi_items_tickets"
-      );
-
-      foreach ($tables as $table) {
-         $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
-         $DB->query($query);
-      }
-
-      Plugin::migrateItemType(
-         array(4300 => 'PluginResourcesResource', 4301 => 'PluginResourcesTask', 4303 => 'PluginResourcesDirectory'),
-         array("glpi_bookmarks", "glpi_bookmarks_users", "glpi_displaypreferences",
-               "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"),
-         array("glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"));
-
-      Plugin::migrateItemType(
-         array(1600 => "PluginBadgesBadge"),
-         array("glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"));
-   }
-
-   if ($update || $install) {
-      //Do One time on 0.78 for 1.6.2
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                    WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Report Creation'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##lang.resource.title## -  ##resource.firstname## ##resource.name##',
-                        '##lang.resource.creationtitle##
-
-##lang.resource.entity## : ##resource.entity##
-
-##lang.resource.name## : ##resource.name##
-##lang.resource.firstname## : ##resource.firstname##
-##lang.resource.department## : ##resource.department##
-##lang.resource.location## : ##resource.location##
-##lang.resource.users## : ##resource.users##
-##lang.resource.usersrecipient## : ##resource.usersrecipient##
-##lang.resource.datedeclaration## : ##resource.datedeclaration##
-##lang.resource.datebegin## : ##resource.datebegin##
-
-##lang.resource.creation##
-
-##lang.resource.datecreation## : ##resource.datecreation##
-##lang.resource.login## : ##resource.login##
-##lang.resource.email## : ##resource.email##
-
-##lang.resource.informationtitle##
-
-##IFresource.commentaires####lang.resource.commentaires## : ##resource.commentaires####ENDIFresource.commentaires##
-
-##IFresource.informations####lang.resource.informations## : ##resource.informations####ENDIFresource.informations##',
-                        '&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.creationtitle##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"2\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" colspan=\"2\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.usersrecipient##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.usersrecipient##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datedeclaration##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datedeclaration##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.creation##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datecreation##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datecreation##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.login##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.login##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.email##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.email##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.informationtitle##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-##IFresource.commentaires##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFresource.commentaires## ##IFresource.informations##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.informations##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.informations##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFresource.informations##
-&lt;/tbody&gt;
-&lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Resource Report Creation', 0, 'PluginResourcesResource', 'report', ".$itemtype.", 1, 1);";
-      $DB->query($query);
    }
 
    if ($update80) {
@@ -834,262 +334,6 @@ function plugin_resources_install() {
          $DB->queryOrDie($query, " 0.80 Create fieldunicities check");
       }
 
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Resting'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##lang.resource.title## -  ##resource.firstname## ##resource.name##',
-                        '##lang.resource.restingtitle##
-##lang.resource.openby## : ##resource.openby##
-##lang.resource.entity## : ##resource.entity##
-
-##lang.resource.name## : ##resource.name##
-##lang.resource.firstname## : ##resource.firstname##
-
-##lang.resource.department## : ##resource.department##
-##lang.resource.users## : ##resource.users##
-
-##lang.resource.resting##
-
-##lang.resource.location## : ##resource.location##
-##lang.resource.home## : ##resource.home##
-##lang.resource.datebegin## : ##resource.datebegin##
-##lang.resource.dateend## : ##resource.dateend##
-
-##lang.resource.commentaires## : ##resource.commentaires##
-
-##FOREACHupdates##
-##lang.update.title##
-
-##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin####ENDIFupdate.datebegin##
-##IFupdate.dateend####lang.resource.dateend## : ##update.dateend####ENDIFupdate.dateend##
-##IFupdate.location####lang.resource.location## : ##update.location###ENDIFupdate.location##
-##IFupdate.home####lang.resource.home## : ##update.home####ENDIFupdate.home##
-##IFupdate.comment####lang.resource.comment## : ##update.comment####ENDIFupdate.comment##
-##ENDFOREACHupdates##',
-                        '&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.restingtitle##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.resting##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.home##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.home##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;##FOREACHupdates##&lt;/p&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.update.title##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-##IFupdate.datebegin##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin## : ##update.datebegin##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.datebegin## ##IFupdate.dateend##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend## : ##update.dateend##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.dateend## ##IFupdate.location##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location## : ##update.location##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.location## ##IFupdate.home##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.home## : ##update.home##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.home## ##IFupdate.comment##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.comment## : ##update.comment##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.comment##
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('New Resource Resting', 0, 'PluginResourcesResource', 'newresting', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Update Resource Resting', 0, 'PluginResourcesResource', 'updateresting', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Delete Resource Resting', 0, 'PluginResourcesResource', 'deleteresting', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                    WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Holiday'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##lang.resource.title## -  ##resource.firstname## ##resource.name##',
-                        '##lang.resource.holidaytitle##
-##lang.resource.openby## : ##resource.openby##
-##lang.resource.entity## : ##resource.entity##
-
-##lang.resource.name## : ##resource.name##
-##lang.resource.firstname## : ##resource.firstname##
-
-##lang.resource.department## : ##resource.department##
-##lang.resource.users## : ##resource.users##
-
-##lang.resource.holiday##
-
-##lang.resource.datebegin## : ##resource.datebegin##
-##lang.resource.dateend## : ##resource.dateend##
-
-##lang.resource.commentaires## : ##resource.commentaires##
-
-##FOREACHupdates##
-##lang.update.title##
-
-##IFupdate.datebegin####lang.resource.datebegin## : ##update.datebegin####ENDIFupdate.datebegin##
-##IFupdate.dateend####lang.resource.dateend## : ##update.dateend####ENDIFupdate.dateend##
-##IFupdate.comment####lang.resource.comment## : ##update.comment####ENDIFupdate.comment##
-##ENDFOREACHupdates##',
-                        '&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.holidaytitle##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.resource.holiday##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;##FOREACHupdates##&lt;/p&gt;
-&lt;p style=\"text-align: center;\"&gt;&lt;span style=\"font-size: 11px; font-family: verdana;\"&gt;##lang.update.title##&lt;/span&gt;&lt;/p&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-##IFupdate.datebegin##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin## : ##update.datebegin##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.datebegin## ##IFupdate.dateend##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend## : ##update.dateend##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.dateend## ##IFupdate.comment##
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
-&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.comment## : ##update.comment##
-&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDIFupdate.comment##
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('New Resource Holiday', 0, 'PluginResourcesResource', 'newholiday', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Update Resource Holiday', 0, 'PluginResourcesResource', 'updateholiday', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Delete Resource Holiday', 0, 'PluginResourcesResource', 'deleteholiday', ".$itemtype.", 1, 1);";
-      $DB->query($query);
    }
 
    if ($update171) {
@@ -1225,171 +469,8 @@ function plugin_resources_install() {
       $DB->query($query);
    }
 
-   if ($update203 || $install) {
-      // OTHER NOTIF
-      $query_id = "INSERT INTO `glpi_notificationtemplates` (`name`, `itemtype`, `date_creation`)
-                  VALUES('Send other resource notification', 'PluginResourcesResource', NOW());";
-      $result = $DB->query($query_id) or die($DB->error());
-
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Send other resource notification'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '', '##lang.resource.title## -  ##resource.firstname## ##resource.name##', '
-##lang.resource.openby## : ##resource.openby##
-##lang.resource.entity## : ##resource.entity##
-
-##lang.resource.name## : ##resource.name##
-##lang.resource.firstname## : ##resource.firstname##
-
-##lang.resource.department## : ##resource.department##
-##lang.resource.users## : ##resource.users##
-
-##lang.resource.commentaires## : ##resource.commentaires##', '
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.entity##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.openby##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table border=\"1\" cellspacing=\"2\" cellpadding=\"3\" width=\"590px\" align=\"center\"&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" colspan=\"4\" width=\"auto\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.commentaires##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Other resource notification', 0, 'PluginResourcesResource', 'other', ".$itemtype.", 1, 1);";
-
-      $DB->query($query);
-   }
-
-   if ($update204 || $install) {
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                  WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Transfer'";
-      $result = $DB->query($query_id) or die ($DB->error());
-      $itemtype = $DB->result($result,0,'id');
-
-      if (empty($itemtype)) {
-         $query_id = "INSERT INTO `glpi_notificationtemplates` (`name`, `itemtype`, `date_creation`)
-                       VALUES('Resource Transfer', 'PluginResourcesResource', NOW());";
-
-         $result   = $DB->query($query_id) or die($DB->error());
-         $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                      WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resource Transfer'";
-         $result   = $DB->query($query_id) or die($DB->error());
-         $itemtype = $DB->result($result, 0, 'id');
-      }
-
-      $query="INSERT INTO `glpi_notificationtemplatetranslations`
-VALUES(NULL, ".$itemtype.", '','##lang.resource.transfertitle## -  ##resource.firstname## ##resource.name##',
-'##lang.resource.transfertitle##
-La ressource ##resource.firstname## ##resource.name## a été transférée de l\'entité ##resource.sourceentity## vers l\'entité ##resource.sourceentity##.',
-'&lt;p&gt;##lang.resource.transfertitle##&lt;/p&gt;
-&lt;p&gt;La ressource ##resource.firstname## ##resource.name## a été transférée de l\'entité ##resource.sourceentity## vers l\'entité ##resource.targetentity##.&lt;/p&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`,  
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-               VALUES ('Resource Report Transfer', 0, 'PluginResourcesResource', 'transfer', ".$itemtype.", 1, 1);";
-      $DB->query($query);
-   }
-
-   if ($update231 || $install) {
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
-                  WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert for sales people'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $itemtype = $DB->result($result, 0, 'id');
-
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`,
-                                                                     `content_html`)
-                                 VALUES('".$itemtype."', '##lang.commercial.title##',
-                                 '##lang.commercial.title##
-
-##FOREACHcommercials##
-##lang.resource.name## : ##resource.name##
-##lang.resource.firstname## : ##resource.firstname##
-##lang.resource.type## : ##resource.type##
-##lang.resource.department## : ##resource.department##
-##lang.resource.location## : ##resource.location##
-##lang.resource.datebegin## : ##resource.datebegin##
-##lang.resource.dateend## : ##resource.dateend##
-##lang.resource.leaving## : ##resource.leaving##
-##lang.resource.userssale## : ##resource.userssale##
-##lang.resource.users## : ##resource.users##
-##lang.resource.accessprofile## : ##resource.accessprofile##
-##ENDFOREACHcommercials##
 
 
-',
-                        '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
-&lt;tbody&gt;
-&lt;tr bgcolor=\"#d9c4b8\"&gt;
-&lt;th colspan=\"11\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: center;\"&gt;##lang.commercial.title##&lt;/span&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.name##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.firstname##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.type##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.leaving##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.userssale##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##FOREACHcommercials##
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=\"##resource.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;&lt;a href=\"##resource.url##\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.firstname##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.type##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.department##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.location##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.datebegin##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.dateend##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.leaving##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.userssale##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.users##&lt;/span&gt;&lt;/td&gt;
-&lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##resource.accessprofile##&lt;/span&gt;&lt;/td&gt;
-&lt;/tr&gt;
-##ENDFOREACHcommercials##
-&lt;/tbody&gt;
-&lt;/table&gt;');";
-      $DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, 
-                                                  `notificationtemplates_id`, `is_recursive`, `is_active`)
-                VALUES ('Alert Commercial Manager', 0, 'PluginResourcesResource', 'AlertCommercialManager', '".$itemtype."', 1, 1);";
-      $DB->query($query);
-
-   }
    if ($DB->tableExists("glpi_plugin_resources_profiles")) {
 
       $notepad_tables = array('glpi_plugin_resources_resources');
@@ -1501,7 +582,7 @@ function plugin_resources_uninstall() {
    $tables = array(
       "glpi_displaypreferences",
       "glpi_documents_items",
-      "glpi_bookmarks",
+      "glpi_savedsearches",
       "glpi_logs",
       "glpi_items_tickets",
       "glpi_dropdowntranslations",
