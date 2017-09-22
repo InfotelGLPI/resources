@@ -33,14 +33,14 @@ if (!defined('GLPI_ROOT')) {
 
 // Class for a Dropdown
 class PluginResourcesContractType extends CommonDropdown {
-   
-   var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   var $can_be_translated = true;
+
+   static function getTypeName($nb = 0) {
 
       return _n('Type of contract', 'Types of contract', $nb, 'resources');
    }
-   
+
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
@@ -48,31 +48,31 @@ class PluginResourcesContractType extends CommonDropdown {
    static function canCreate() {
       return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
    }
-   
+
    function getAdditionalFields() {
 
       $tab = array(array('name'  => 'code',
                          'label' => __('Code', 'resources'),
                          'type'  => 'text',
                          'list'  => true),
-                     array('name' => "",
+                   array('name'  => "",
                          'label' => __('Wizard resource creation', 'resources'),
                          'type'  => '',
                          'list'  => false),
-                     array('name'  => 'use_employee_wizard',
+                   array('name'  => 'use_employee_wizard',
                          'label' => __('Enter employer information about the resource', 'resources'),
                          'type'  => 'bool',
                          'list'  => true),
-                     array('name'  => 'use_need_wizard',
+                   array('name'  => 'use_need_wizard',
                          'label' => __('Enter the computing needs of the resource', 'resources'),
                          'type'  => 'bool',
                          'list'  => true),
-                     array('name'  => 'use_picture_wizard',
+                   array('name'  => 'use_picture_wizard',
                          'label' => __('Add a picture', 'resources'),
                          'type'  => 'bool',
                          'list'  => true)
-                   );
-      
+      );
+
       return $tab;
    }
 
@@ -80,35 +80,35 @@ class PluginResourcesContractType extends CommonDropdown {
 
       $tab = parent::getSearchOptions();
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'code';
-      $tab[14]['name']          = __('Code', 'resources');
+      $tab[14]['table'] = $this->getTable();
+      $tab[14]['field'] = 'code';
+      $tab[14]['name']  = __('Code', 'resources');
 
-      $tab[15]['table']         = $this->getTable();
-      $tab[15]['field']         = 'use_employee_wizard';
-      $tab[15]['name']          = __('Enter employer information about the resource', 'resources');
-      $tab[15]['datatype']      = 'bool';
+      $tab[15]['table']    = $this->getTable();
+      $tab[15]['field']    = 'use_employee_wizard';
+      $tab[15]['name']     = __('Enter employer information about the resource', 'resources');
+      $tab[15]['datatype'] = 'bool';
 
-      $tab[16]['table']         = $this->getTable();
-      $tab[16]['field']         = 'use_need_wizard';
-      $tab[16]['name']          = __('Enter the computing needs of the resource', 'resources');
-      $tab[16]['datatype']      = 'bool';
+      $tab[16]['table']    = $this->getTable();
+      $tab[16]['field']    = 'use_need_wizard';
+      $tab[16]['name']     = __('Enter the computing needs of the resource', 'resources');
+      $tab[16]['datatype'] = 'bool';
 
-      $tab[17]['table']         = $this->getTable();
-      $tab[17]['field']         = 'use_picture_wizard';
-      $tab[17]['name']          = __('Add a picture', 'resources');
-      $tab[17]['datatype']      = 'bool';
-      
+      $tab[17]['table']    = $this->getTable();
+      $tab[17]['field']    = 'use_picture_wizard';
+      $tab[17]['name']     = __('Add a picture', 'resources');
+      $tab[17]['datatype'] = 'bool';
+
       return $tab;
    }
 
-   static function checkWizardSetup($ID,$field) {
+   static function checkWizardSetup($ID, $field) {
       global $DB;
 
-      if ($ID>0) {
+      if ($ID > 0) {
          $resource = new PluginResourcesResource();
-         $self = new self();
-         
+         $self     = new self();
+
          if ($resource->getFromDB($ID)) {
             if ($self->getFromDB($resource->fields["plugin_resources_contracttypes_id"])) {
                if ($self->fields[$field] > 0)
@@ -118,27 +118,27 @@ class PluginResourcesContractType extends CommonDropdown {
       }
       return false;
    }
-   
+
    static function transfer($ID, $entity) {
       global $DB;
 
-      if ($ID>0) {
+      if ($ID > 0) {
          // Not already transfer
          // Search init item
          $query = "SELECT *
                    FROM `glpi_plugin_resources_contracttypes`
                    WHERE `id` = '$ID'";
 
-         if ($result=$DB->query($query)) {
+         if ($result = $DB->query($query)) {
             if ($DB->numrows($result)) {
-               $data = $DB->fetch_assoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID($input);
+               $data                 = $DB->fetch_assoc($result);
+               $data                 = Toolbox::addslashes_deep($data);
+               $input['name']        = $data['name'];
+               $input['entities_id'] = $entity;
+               $temp                 = new self();
+               $newID                = $temp->getID($input);
 
-               if ($newID<0) {
+               if ($newID < 0) {
                   $newID = $temp->import($input);
                }
 
@@ -148,33 +148,34 @@ class PluginResourcesContractType extends CommonDropdown {
       }
       return 0;
    }
-   
+
    function dropdownContractType($name, $value = 0) {
-      
-      $restrict=" 1 = 1 ";
-      $restrict.=getEntitiesRestrictRequest(" AND ",$this->getTable(),'','',$this->maybeRecursive());
-      $restrict.=" ORDER BY `name`";
-      $types = getAllDatasFromTable($this->getTable(),$restrict);
-      
+
+      $restrict = " 1 = 1 ";
+      $restrict .= getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
+      $restrict .= " ORDER BY `name`";
+      $dbu   = new DbUtils();
+      $types = $dbu->getAllDataFromTable($this->getTable(), $restrict);
+
       $option[0] = __('Without contract', 'resources');
-      
+
       if (!empty($types)) {
-         
+
          foreach ($types as $type) {
             $option[$type["id"]] = $type["name"];
          }
       }
-      
-      return Dropdown::showFromArray($name, $option, array('value'  => $value));
+
+      return Dropdown::showFromArray($name, $option, array('value' => $value));
    }
-   
+
    function getContractTypeName($value) {
-      
+
       switch ($value) {
          case 0 :
             return __('Without contract', 'resources');
          default :
-            if($this->getFromDB($value)) {
+            if ($this->getFromDB($value)) {
                $name = "";
                if (isset($this->fields["name"])) {
                   $name = $this->fields["name"];
@@ -183,7 +184,7 @@ class PluginResourcesContractType extends CommonDropdown {
             }
       }
    }
-   
+
 }
 
 ?>

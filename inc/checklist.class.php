@@ -112,9 +112,9 @@ class PluginResourcesChecklist extends CommonDBTM {
 
    static function checkifChecklistExist($ID) {
 
-      $restrict = "`plugin_resources_resources_id` = '".$ID."'";
-
-      $checklists = getAllDatasFromTable("glpi_plugin_resources_checklists", $restrict);
+      $restrict   = "`plugin_resources_resources_id` = '" . $ID . "'";
+      $dbu        = new DbUtils();
+      $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
       if (!empty($checklists)) {
          foreach ($checklists as $checklist) {
@@ -127,10 +127,10 @@ class PluginResourcesChecklist extends CommonDBTM {
 
    static function checkifChecklistFinished($input) {
 
-      $restrict = "`plugin_resources_resources_id` = '".$input['plugin_resources_resources_id']."'
-                  AND `checklist_type` = '".$input['checklist_type']."'";
-
-      $checklists = getAllDatasFromTable("glpi_plugin_resources_checklists", $restrict);
+      $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
+                  AND `checklist_type` = '" . $input['checklist_type'] . "'";
+      $dbu        = new DbUtils();
+      $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
       $nok = 0;
       if (!empty($checklists)) {
@@ -151,10 +151,10 @@ class PluginResourcesChecklist extends CommonDBTM {
 
    function openFinishedChecklist($input) {
 
-      $restrict = "`plugin_resources_resources_id` = '".$input['plugin_resources_resources_id']."'
-                  AND `checklist_type` = '".$input['checklist_type']."'";
-
-      $checklists = getAllDatasFromTable("glpi_plugin_resources_checklists", $restrict);
+      $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
+                  AND `checklist_type` = '" . $input['checklist_type'] . "'";
+      $dbu        = new DbUtils();
+      $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
       if (!empty($checklists)) {
          foreach ($checklists as $checklist) {
@@ -527,23 +527,24 @@ class PluginResourcesChecklist extends CommonDBTM {
          echo "<a class='vsubmit' href='javascript:viewAddChecklistTask"."$rand();'>$addLinkName</a>";
          echo "</div>";
       }
-      
+
       // Get check list
-      $restrict   = "`entities_id` = '".$entities_id."' 
+      $restrict   = "`entities_id` = '" . $entities_id . "' 
                      AND `plugin_resources_resources_id` = '$plugin_resources_resources_id' 
                      AND `checklist_type` = '$checklist_type' 
                      ORDER BY `rank`";
-      $checklists = getAllDatasFromTable("glpi_plugin_resources_checklists", $restrict);
+      $dbu        = new DbUtils();
+      $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
       $numrows    = countElementsInTable("glpi_plugin_resources_checklists", $restrict);
       if (!empty($checklists)) {
          if (!$isfinished && self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
-            Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
+            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand);
             Html::showMassiveActions($massiveactionparams);
          }
 
          if ($isfinished) {
-            echo "<form name='form' method='post' action='".Toolbox::getItemTypeFormURL('PluginResourcesResource')."'>";
+            echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginResourcesResource') . "'>";
          }
 
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id' data-glpicore-ma-tags='common'>";

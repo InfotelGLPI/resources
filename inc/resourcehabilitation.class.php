@@ -100,7 +100,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    static function countForResource(PluginResourcesResource $item) {
 
       $restrict = "`plugin_resources_resources_id` = '".$item->getField('id')."' ";
-      $nb = countElementsInTable(array('glpi_plugin_resources_resourcehabilitations'), $restrict);
+      $dbu = new DbUtils();
+      $nb = $dbu->countElementsInTable(array('glpi_plugin_resources_resourcehabilitations'), $restrict);
 
       return $nb ;
    }

@@ -67,7 +67,8 @@ class PluginResourcesNotification extends CommonDBTM {
       $data = $this->getItems($ID, $start);
       if (!empty($data)) {
          echo "<div class='center'>";
-         Html::printAjaxPager(self::getTypeName(2), $start, countElementsInTable($this->getTable()));
+         $dbu = new DbUtils();
+         Html::printAjaxPager(self::getTypeName(2), $start, $dbu->countElementsInTable($this->getTable()));
          echo "<table class='tab_cadre_fixehov'>";
          echo "<tr class='tab_bg_1'>";
          echo "<th colspan='3'>".self::getTypeName(1)."</th>";

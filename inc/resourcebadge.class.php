@@ -44,6 +44,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     * Should be overloaded in each new class
     *
     * @param int $nb
+    *
     * @return string
     */
    static function getTypeName($nb = 0) {
@@ -77,13 +78,13 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Display of the link to configure the badge interface
     */
-   function showFormConfig(){
+   function showFormConfig() {
       echo "<br>";
-      echo "<form name='form' method='post' action='".self::getFormURL()."'>";
+      echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='6'>" . self::getTypeName(2) . "</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<a href=\"./resourcebadge.form.php?config\">".PluginMetademandsMetademand_Resource::getTypeName(2)."</a>";
+      echo "<a href=\"./resourcebadge.form.php?config\">" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</a>";
       echo "</td></tr></table></div>";
       Html::closeForm();
       echo "<br>";
@@ -94,13 +95,13 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     *
     * @return bool
     */
-   function showFormBadge(){
+   function showFormBadge() {
 
-      if (!$this->canView())   return false;
-      if (!$this->canCreate())   return false;
+      if (!$this->canView()) return false;
+      if (!$this->canCreate()) return false;
 
       $used_data = array();
-      $data = $this->find();
+      $data      = $this->find();
 
       $is_present = false;
 
@@ -116,22 +117,22 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $canedit = $this->canCreate();
 
       if ($canedit) {
-         if($is_present){
+         if ($is_present) {
             echo "<div align='center'>";
             __('The current entity is already linked to a meta-demand', 'resources');
             echo "</div>";
          } else {
             //form to choose the metademand
             echo "<form name='form' method='post' action='" .
-               Toolbox::getItemTypeFormURL('PluginResourcesResourceBadge') . "'>";
+                 Toolbox::getItemTypeFormURL('PluginResourcesResourceBadge') . "'>";
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', array('name' => 'plugin_metademands_metademands_id',
-               'used' => $used_data,
-               'entity' => $_SESSION['glpiactive_entity']));
+            Dropdown::show('PluginMetademandsMetademand', array('name'   => 'plugin_metademands_metademands_id',
+                                                                'used'   => $used_data,
+                                                                'entity' => $_SESSION['glpiactive_entity']));
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
             value=\"" . _sx('button', 'Add') . "\" >";
@@ -152,26 +153,26 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     * @param $fields
     * @param $canedit
     */
-   private function listItems($fields, $canedit){
-      if(!empty($fields)){
+   private function listItems($fields, $canedit) {
+      if (!empty($fields)) {
          $rand = mt_rand();
          echo "<div class='center'>";
          if ($canedit) {
-            Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
+            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand);
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";
-         echo "<th colspan='3'>".__('Meta-demands linked', 'metademands')."</th>";
+         echo "<th colspan='3'>" . __('Meta-demands linked', 'metademands') . "</th>";
          echo "</tr>";
          echo "<tr>";
          if ($canedit) {
-            echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
          }
-         echo "<th>".__('Name')."</th>";
-         echo "<th>".__('Entity')."</th>";
-         foreach($fields as $field){
+         echo "<th>" . __('Name') . "</th>";
+         echo "<th>" . __('Entity') . "</th>";
+         foreach ($fields as $field) {
             echo "<tr class='tab_bg_1'>";
             if ($canedit) {
                echo "<td width='10'>";
@@ -179,8 +180,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                echo "</td>";
             }
             //DATA LINE
-            echo "<td>".Dropdown::getDropdownName('glpi_plugin_metademands_metademands', $field['plugin_metademands_metademands_id'])."</td>";
-            echo "<td>".Dropdown::getDropdownName('glpi_entities', $field['entities_id'])."</td>";
+            echo "<td>" . Dropdown::getDropdownName('glpi_plugin_metademands_metademands', $field['plugin_metademands_metademands_id']) . "</td>";
+            echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
             echo "</tr>";
          }
 
@@ -196,7 +197,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Display Menu
     */
-   function showMenu(){
+   function showMenu() {
       global $CFG_GLPI;
 
       $plugin = new Plugin();
@@ -241,7 +242,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<div align='center'>";
 
-      echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resourcebadge.form.php\">";
+      echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourcebadge.form.php\">";
 
       echo "<table class='plugin_resources_wizard' style='margin-top:1px;'>";
       echo "<tr>";
@@ -260,12 +261,12 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<table>";
       //choose resources
       echo "<tr class='plugin_resources_wizard_explain'>";
-      echo "<td>".PluginResourcesResource::getTypeName(1)."</td>";
+      echo "<td>" . PluginResourcesResource::getTypeName(1) . "</td>";
 
       echo "<td class='left'>";
-      $rand = PluginResourcesResource::dropdown(array('name' => 'plugin_resources_resources_id',
-                                              'on_change' => 'plugin_resources_load_badge()',
-                                              'entity' => $_SESSION['glpiactiveentities']));
+      $rand = PluginResourcesResource::dropdown(array('name'      => 'plugin_resources_resources_id',
+                                                      'on_change' => 'plugin_resources_load_badge()',
+                                                      'entity'    => $_SESSION['glpiactiveentities']));
 
       //display list of badges
       echo "<script type='text/javascript'>";
@@ -275,7 +276,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                              $params, 'dropdown_plugin_resources_resources_id' . $rand);
       $params = array('action' => 'cleanButtonRestitution');
       Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
-                             $params, 'dropdown_plugin_resources_resources_id'.$rand);
+                             $params, 'dropdown_plugin_resources_resources_id' . $rand);
       echo "}";
 
       echo "</script>";
@@ -291,7 +292,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
-      echo "<a href=\"".$CFG_GLPI['root_doc']."/plugins/badges/front/badge.php\">";
+      echo "<a href=\"" . $CFG_GLPI['root_doc'] . "/plugins/badges/front/badge.php\">";
       echo __('List of badges', 'resources');
       echo "</a>";
       echo "</div>";
@@ -312,58 +313,59 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    function loadBadge($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
-     echo "<td>".PluginBadgesBadge::getTypeName(1)."</td>";
+      echo "<td>" . PluginBadgesBadge::getTypeName(1) . "</td>";
 
-      $condition = "`plugin_resources_resources_id`= '".$plugin_resources_resources_id."' AND `itemtype` = 'User'";
-
-      $infos = getAllDatasFromTable('glpi_plugin_resources_resources_items',$condition);
-      $users = array();
+      $condition = "`plugin_resources_resources_id`= '" . $plugin_resources_resources_id . "' AND `itemtype` = 'User'";
+      $dbu       = new DbUtils();
+      $infos     = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
+      $users     = array();
       if (!empty($infos)) {
          foreach ($infos as $info) {
             $users[] = $info['items_id'];
          }
       }
 
-     echo "<td class='left'>";
-     $rand = PluginBadgesBadge::dropdown(array('name'      => 'badges_id',
-                                               'condition' => "`users_id` IN ('".implode("','", $users)."')",
-                                               'on_change' => 'plugin_resources_load_badge_restitution()'
-                                         ));
+      echo "<td class='left'>";
+      $rand = PluginBadgesBadge::dropdown(array('name'      => 'badges_id',
+                                                'condition' => "`users_id` IN ('" . implode("','", $users) . "')",
+                                                'on_change' => 'plugin_resources_load_badge_restitution()'
+                                          ));
 
-     //Button display
-     echo "<script type='text/javascript'>";
-     echo "function plugin_resources_load_badge_restitution(){";
-     $params = array('action' => 'loadBadgeRestitution');
-     Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_badges_id' . $rand);
-     echo "}";
+      //Button display
+      echo "<script type='text/javascript'>";
+      echo "function plugin_resources_load_badge_restitution(){";
+      $params = array('action' => 'loadBadgeRestitution');
+      Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_badges_id' . $rand);
+      echo "}";
 
-     echo "</script>";
-  }
+      echo "</script>";
+   }
 
    /**
     * Button display
     */
-  function loadBadgeRestitution(){
+   function loadBadgeRestitution() {
 
-     echo "<input type='submit' name='plugin_resources_badge_restitution' value='"._sx('button', 'Save')."' class='submit' />";
-  }
+      echo "<input type='submit' name='plugin_resources_badge_restitution' value='" . _sx('button', 'Save') . "' class='submit' />";
+   }
 
 
    /**
     * Creation of ticket for restitution badge
     *
     * @param $data
+    *
     * @return bool
     */
-   static function createTicket($plugin_resources_resources_id, $options = array()){
+   static function createTicket($plugin_resources_resources_id, $options = array()) {
 
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
       //Preparation of ticket data
-      $data                                  = array();
-      $data['itilcategories_id']             = 0;
-      $data['tickettemplates_id']            = 0;
+      $data                       = array();
+      $data['itilcategories_id']  = 0;
+      $data['tickettemplates_id'] = 0;
 
 
       //Search for the entity-related category for that action

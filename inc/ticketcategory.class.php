@@ -70,7 +70,8 @@ class PluginResourcesTicketCategory extends CommonDBTM {
    function showForm($target) {
       global $CFG_GLPI;
 
-      $categories = getAllDatasFromTable($this->getTable());
+      $dbu = new DbUtils();
+      $categories = $dbu->getAllDataFromTable($this->getTable());
       if (!empty($categories)) {
          echo "<div align='center'>";
          $rand = mt_rand();

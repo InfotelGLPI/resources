@@ -53,7 +53,8 @@ if (isset($_GET['node'])) {
                   $where)
                   GROUP BY `name`
                   ORDER BY `name`";
-      $contracts = getAllDatasFromTable("glpi_plugin_resources_contracttypes", $restrict);
+      $dbu = new DbUtils();
+      $contracts = $dbu->getAllDataFromTable("glpi_plugin_resources_contracttypes", $restrict);
       
       if (!empty($contracts)) {
          foreach ($contracts as $contract) {

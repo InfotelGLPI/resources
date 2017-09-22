@@ -34,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesReportConfig extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
-   
+
    static function getTypeName($nb = 0) {
 
       return _n('Notification', 'Notifications', $nb);
@@ -61,16 +61,16 @@ class PluginResourcesReportConfig extends CommonDBTM {
       if ($item->getType() == 'PluginResourcesResource') {
          $ID = $item->getField('id');
          self::showReports($ID, $withtemplate);
-         
+
          if ($item->can($ID, UPDATE) && !self::checkIfReportsExist($ID)) {
             $self = new self();
             $self->showForm("", array('plugin_resources_resources_id' => $ID,
-                'target' => $CFG_GLPI['root_doc']."/plugins/resources/front/reportconfig.form.php"));
+                                      'target'                        => $CFG_GLPI['root_doc'] . "/plugins/resources/front/reportconfig.form.php"));
          }
-         
+
          if ($item->can($ID, UPDATE) && self::checkIfReportsExist($ID) && !$withtemplate) {
-            PluginResourcesResource::showReportForm(array('id' => $ID,
-                'target' => $CFG_GLPI['root_doc']."/plugins/resources/front/resource.form.php"));
+            PluginResourcesResource::showReportForm(array('id'     => $ID,
+                                                          'target' => $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.form.php"));
          }
       }
       return true;
@@ -86,9 +86,9 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
    static function checkIfReportsExist($ID) {
 
-      $restrict = "`plugin_resources_resources_id` = '".$ID."'";
-
-      $reports = getAllDatasFromTable("glpi_plugin_resources_reportconfigs", $restrict);
+      $restrict = "`plugin_resources_resources_id` = '" . $ID . "'";
+      $dbu      = new DbUtils();
+      $reports  = $dbu->getAllDataFromTable("glpi_plugin_resources_reportconfigs", $restrict);
 
       if (!empty($reports)) {
          foreach ($reports as $report) {
@@ -102,8 +102,8 @@ class PluginResourcesReportConfig extends CommonDBTM {
    function getFromDBByResource($plugin_resources_resources_id) {
       global $DB;
 
-      $query = "SELECT * FROM `".$this->getTable()."`
-                  WHERE `plugin_resources_resources_id` = '".$plugin_resources_resources_id."' ";
+      $query = "SELECT * FROM `" . $this->getTable() . "`
+                  WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "' ";
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
@@ -141,7 +141,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
                             'information'                   => addslashes($data["information"]),
                             'comment'                       => addslashes($data["comment"]),
                             'send_transfer_notif'           => $data["send_transfer_notif"],
-                            'send_report_notif'             => $data["send_report_notif"], 
+                            'send_report_notif'             => $data["send_report_notif"],
                             'send_other_notif'              => $data["send_other_notif"]));
       }
    }
@@ -177,16 +177,16 @@ class PluginResourcesReportConfig extends CommonDBTM {
       echo __('Comments');
       echo "</td>";
       echo "<td>";
-      echo "<textarea cols='100' rows='6' name='comment' >".$this->fields["comment"]."</textarea>";
+      echo "<textarea cols='100' rows='6' name='comment' >" . $this->fields["comment"] . "</textarea>";
       echo "</td></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo _n('Information', 'Informations', 2);
       echo "</td>";
       echo "<td>";
-      echo "<textarea cols='100' rows='6' name='information' >".$this->fields["information"]."</textarea>";
+      echo "<textarea cols='100' rows='6' name='information' >" . $this->fields["information"] . "</textarea>";
       echo "</td></tr>";
-      
+
       echo "<tr class='tab_bg_2'>";
       echo "<td>";
       echo __('Send resource creation notification', 'resources');
@@ -195,7 +195,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       Dropdown::showYesNo('send_report', $this->fields["send_report_notif"]);
       echo "</td>";
       echo "</tr>";
-      
+
       echo "<tr class='tab_bg_2'>";
       echo "<td>";
       echo __('Send resource transfer notification', 'resources');
@@ -204,7 +204,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       Dropdown::showYesNo('send_transfer_notif', $this->fields["send_transfer_notif"]);
       echo "</td>";
       echo "</tr>";
-      
+
       echo "<tr class='tab_bg_2'>";
       echo "<td>";
       echo __('Send other notification', 'resources');
@@ -223,12 +223,12 @@ class PluginResourcesReportConfig extends CommonDBTM {
    static function showReports($ID, $withtemplate = '') {
       global $DB;
 
-      $rand = mt_rand();
+      $rand     = mt_rand();
       $resource = new PluginResourcesResource();
       $resource->getFromDB($ID);
       $canedit = $resource->can($ID, UPDATE);
 
-      Session::initNavigateListItems("PluginResourcesReportConfig", PluginResourcesResource::getTypeName(1)." = ".$resource->fields["name"]);
+      Session::initNavigateListItems("PluginResourcesReportConfig", PluginResourcesResource::getTypeName(1) . " = " . $resource->fields["name"]);
 
       $query = "SELECT `glpi_plugin_resources_reportconfigs`.`id`,
                `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`,
@@ -238,34 +238,34 @@ class PluginResourcesReportConfig extends CommonDBTM {
                 `glpi_plugin_resources_reportconfigs`.`send_transfer_notif`,
                 `glpi_plugin_resources_reportconfigs`.`comment`
                  FROM `glpi_plugin_resources_reportconfigs` ";
-      $query.= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`)";
-      $query.= " WHERE `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id` = '$ID' LIMIT 1";
+      $query .= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`)";
+      $query .= " WHERE `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id` = '$ID' LIMIT 1";
       $result = $DB->query($query);
       $number = $DB->numrows($result);
-      
-      $i = 0;
+
+      $i       = 0;
       $row_num = 1;
       if ($number != "0") {
          if ($withtemplate < 2)
             echo "<form method='post' name='form_reports$rand' id='form_reports$rand' action=\"./reportconfig.form.php\">";
          echo "<div align='center'><table class='tab_cadre_fixe'>";
-         echo "<tr><th colspan='2'>".__('Notification configuration', 'resources')."</th></tr>";
+         echo "<tr><th colspan='2'>" . __('Notification configuration', 'resources') . "</th></tr>";
 
          while ($data = $DB->fetch_array($result)) {
             $i++;
             $row_num++;
             echo "<tr class='tab_bg_1'>";
-            echo "<td>".__('Comments')."</td>";
+            echo "<td>" . __('Comments') . "</td>";
             echo "<td>";
-            echo "<textarea cols='100' rows='6' name='comment' >".$data["comment"]."</textarea>";
+            echo "<textarea cols='100' rows='6' name='comment' >" . $data["comment"] . "</textarea>";
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td>"._n('Information', 'Informations', 2)."</td>";
+            echo "<td>" . _n('Information', 'Informations', 2) . "</td>";
             echo "<td>";
-            echo "<textarea cols='100' rows='6' name='information' >".$data["information"]."</textarea>";
+            echo "<textarea cols='100' rows='6' name='information' >" . $data["information"] . "</textarea>";
             echo "</td>";
             echo "</tr>";
-            
+
             echo "<tr class='tab_bg_2'>";
             echo "<td>";
             echo __('Send resource creation notification', 'resources');
@@ -274,7 +274,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
             Dropdown::showYesNo('send_report_notif', $data["send_report_notif"]);
             echo "</td>";
             echo "</tr>";
-            
+
             echo "<tr class='tab_bg_2'>";
             echo "<td>";
             echo __('Send resource transfer notification', 'resources');
@@ -283,7 +283,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
             Dropdown::showYesNo('send_transfer_notif', $data["send_transfer_notif"]);
             echo "</td>";
             echo "</tr>";
-            
+
             echo "<tr class='tab_bg_2'>";
             echo "<td>";
             echo __('Send other notification', 'resources');
@@ -292,18 +292,18 @@ class PluginResourcesReportConfig extends CommonDBTM {
             Dropdown::showYesNo('send_other_notif', $data["send_other_notif"]);
             echo "</td>";
             echo "</tr>";
-            
+
             if ($withtemplate < 2 && $canedit) {
                echo "<tr class='tab_bg_1 center'>";
                echo "<td colspan='2'>";
-               echo "<input type='submit' name='update' value='"._sx('button', 'Save')."' class='submit' />";
+               echo "<input type='submit' name='update' value='" . _sx('button', 'Save') . "' class='submit' />";
                echo "</td>";
                echo "</tr>";
-               
+
                echo "<tr class='tab_bg_1 center'>";
                echo "<td colspan='2' class='right'>";
-               echo "<input type='submit' name='delete' value='"._sx('button', 'Delete permanently')."' class='submit' />";
-               echo "<input type='hidden' name='id' value='".$data["id"]."' />";
+               echo "<input type='submit' name='delete' value='" . _sx('button', 'Delete permanently') . "' class='submit' />";
+               echo "<input type='hidden' name='id' value='" . $data["id"] . "' />";
                echo "<input type='hidden' name='plugin_resources_resources_id' value='$ID' />";
                echo "</td>";
                echo "</tr>";
