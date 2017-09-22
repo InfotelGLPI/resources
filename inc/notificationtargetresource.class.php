@@ -1951,7 +1951,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       } else {
          $tmp = array(
             'name'     => 'Send other resource notification',
-            'itemtype' => 'PluginPurchaserequestPurchaseRequest',
+            'itemtype' => 'PluginResourcesResource',
             'date_mod' => $_SESSION['glpi_currenttime'],
             'comment'  => '',
             'css'      => '',
