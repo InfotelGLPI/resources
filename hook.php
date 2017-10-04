@@ -130,7 +130,7 @@ function plugin_resources_install() {
 
    //Version 1.7.1
    if (!TableExists("glpi_plugin_resources_choiceitems")) {
-      $$update171 = true;
+      $update171 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.1.sql");
 
    }

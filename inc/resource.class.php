@@ -356,6 +356,16 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[30]['massiveaction'] = true;
       }
 
+      $tab[32]['table']         = 'glpi_plugin_resources_habilitations';
+      $tab[32]['field']         = 'name';
+      $tab[32]['name']          = PluginResourcesHabilitation::getTypeName();
+      $tab[32]['datatype']      = 'itemlink';
+      $tab[32]['forcegroupby']  = true;
+      $tab[32]['massiveaction'] = false;
+      $tab[32]['joinparams']    = array('beforejoin'
+                                           => array('table'      => 'glpi_plugin_resources_resourcehabilitations',
+                                                    'joinparams' => array('jointype'=>'child')));
+
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
       $tab[31]['name']           = __('ID');
