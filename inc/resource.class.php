@@ -357,6 +357,16 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[30]['massiveaction'] = true;
       }
 
+      $tab[32]['table']         = 'glpi_plugin_resources_habilitations';
+      $tab[32]['field']         = 'name';
+      $tab[32]['name']          = PluginResourcesHabilitation::getTypeName();
+      $tab[32]['datatype']      = 'itemlink';
+      $tab[32]['forcegroupby']  = true;
+      $tab[32]['massiveaction'] = false;
+      $tab[32]['joinparams']    = array('beforejoin'
+                                        => array('table'      => 'glpi_plugin_resources_resourcehabilitations',
+                                                 'joinparams' => array('jointype'=>'child')));
+
       $tab[31]['table']         = $this->getTable();
       $tab[31]['field']         = 'id';
       $tab[31]['name']          = __('ID');
@@ -558,7 +568,7 @@ class PluginResourcesResource extends CommonDBTM {
           && isset($this->input['send_notification'])
           && $this->input['send_notification'] == 1
       ) {
-         if ($CFG_GLPI["use_mailing"]) {
+         if ($CFG_GLPI["notifications_mailing"]) {
             NotificationEvent::raiseEvent("new", $this);
          }
       }
@@ -816,7 +826,7 @@ class PluginResourcesResource extends CommonDBTM {
           && $this->input["withtemplate"] != 1
       ) {
 
-         if ($CFG_GLPI["use_mailing"]
+         if ($CFG_GLPI["notifications_mailing"]
              && isset($this->input['send_notification'])
              && $this->input['send_notification'] == 1
          ) {
@@ -838,7 +848,7 @@ class PluginResourcesResource extends CommonDBTM {
          $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->input['picture'];
          unlink($filename);
       }
-      if ($CFG_GLPI["use_mailing"]
+      if ($CFG_GLPI["notifications_mailing"]
           && $this->fields["is_template"] != 1
           && isset($this->input['delete'])
           && isset($this->input['send_notification'])
@@ -1292,7 +1302,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!$this->getFromDB($options["id"])) return false;
 
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $report = new PluginResourcesReportConfig();
          $report->getFromDB($options["reports_id"]);
 
@@ -1324,7 +1334,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!$this->getFromDB($options["id"])) return false;
 
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $status = "new";
          NotificationEvent::raiseEvent($status, $this);
       }
@@ -3425,7 +3435,7 @@ class PluginResourcesResource extends CommonDBTM {
    static function cronResources($task = NULL) {
       global $DB, $CFG_GLPI;
 
-      if (!$CFG_GLPI["use_mailing"]) {
+      if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
 
@@ -3500,7 +3510,7 @@ class PluginResourcesResource extends CommonDBTM {
    static function cronAlertCommercialManager($task = NULL) {
       global $DB, $CFG_GLPI;
 
-      if (!$CFG_GLPI["use_mailing"]) {
+      if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
 

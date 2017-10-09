@@ -70,7 +70,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       Session::addMessageAfterRedirect(__('Forced holiday declaration of a resource performed', 'resources'));
       
       $PluginResourcesResource = new PluginResourcesResource();
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $options = array('holiday_id' => $this->fields["id"]);
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("newholiday",$PluginResourcesResource,$options);  
@@ -101,7 +101,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
    function post_updateItem($history=1) {
       global $CFG_GLPI;
       
-      if ($CFG_GLPI["use_mailing"] && count($this->updates)) {
+      if ($CFG_GLPI["notifications_mailing"] && count($this->updates)) {
          $options = array('holiday_id' => $this->fields["id"],
                            'oldvalues' => $this->oldvalues);
          $PluginResourcesResource = new PluginResourcesResource();
@@ -114,7 +114,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
    function pre_deleteItem() {
       global $CFG_GLPI;
       
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $PluginResourcesResource = new PluginResourcesResource();
          $options = array('holiday_id' => $this->fields["id"]);
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {

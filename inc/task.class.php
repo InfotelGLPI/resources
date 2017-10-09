@@ -115,7 +115,7 @@ class PluginResourcesTask extends CommonDBTM {
       }
 
       $PluginResourcesResource = new PluginResourcesResource();
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $options = array('tasks_id' => $this->fields["id"]);
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("newtask", $PluginResourcesResource, $options);
@@ -179,7 +179,7 @@ class PluginResourcesTask extends CommonDBTM {
           || (isset($this->input["withtemplate"])
               && $this->input["withtemplate"] != 1)
       ) {
-         if ($CFG_GLPI["use_mailing"]) {
+         if ($CFG_GLPI["notifications_mailing"]) {
             $options                 = array('tasks_id' => $this->fields["id"]);
             $PluginResourcesResource = new PluginResourcesResource();
             if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
@@ -192,7 +192,7 @@ class PluginResourcesTask extends CommonDBTM {
    function pre_deleteItem() {
       global $CFG_GLPI;
 
-      if ($CFG_GLPI["use_mailing"]
+      if ($CFG_GLPI["notifications_mailing"]
           && isset($this->input['delete'])
       ) {
          $PluginResourcesResource = new PluginResourcesResource();
@@ -717,7 +717,7 @@ class PluginResourcesTask extends CommonDBTM {
    static function cronResourcesTask($task = NULL) {
       global $DB, $CFG_GLPI;
 
-      if (!$CFG_GLPI["use_mailing"]) {
+      if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
 

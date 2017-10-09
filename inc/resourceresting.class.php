@@ -101,7 +101,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       Session::addMessageAfterRedirect(__('Non contract period declaration of a resource performed', 'resources'));
 
       $PluginResourcesResource = new PluginResourcesResource();
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $options = array('resting_id' => $this->fields["id"]);
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("newresting", $PluginResourcesResource, $options);
@@ -147,7 +147,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
-      if ($CFG_GLPI["use_mailing"] && count($this->updates)) {
+      if ($CFG_GLPI["notifications_mailing"] && count($this->updates)) {
          $options = array('resting_id' => $this->fields["id"],
              'oldvalues' => $this->oldvalues);
          $PluginResourcesResource = new PluginResourcesResource();
@@ -166,7 +166,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
    function pre_deleteItem() {
       global $CFG_GLPI;
 
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["notifications_mailing"]) {
          $PluginResourcesResource = new PluginResourcesResource();
          $options = array('resting_id' => $this->fields["id"]);
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
