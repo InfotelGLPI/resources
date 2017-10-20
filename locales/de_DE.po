@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Resources Development Team
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Alexander Ehlers <aeli4t@gmail.com>, 2017
 # Erich Iseli <eiseli@gmail.com>, 2015
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 14:11+0200\n"
-"PO-Revision-Date: 2017-09-18 14:20+0200\n"
+"POT-Creation-Date: 2017-10-20 10:52+0200\n"
+"PO-Revision-Date: 2017-10-20 09:07+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: German (Germany) (http://www.transifex.com/tsmr/GLPI_resources/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: hook.php:56
 msgid "Long term contract"
@@ -52,13 +51,19 @@ msgstr "Spezifische Verteilerlisten"
 msgid "Others needs"
 msgstr "Diverse Bedürfnisse"
 
-#: hook.php:1754 inc/notificationtargetresource.class.php:334 inc/notificationtargetresource.class.php:413 inc/notificationtargetresource.class.php:579
-#: inc/notificationtargetresource.class.php:632 inc/notificationtargetresource.class.php:795 inc/notificationtargetresource.class.php:1269
-#: inc/notificationtargetresource.class.php:1295 inc/resource.class.php:246 inc/resource.class.php:1175
+#: hook.php:1754 inc/notificationtargetresource.class.php:334
+#: inc/notificationtargetresource.class.php:413
+#: inc/notificationtargetresource.class.php:579
+#: inc/notificationtargetresource.class.php:632
+#: inc/notificationtargetresource.class.php:795
+#: inc/notificationtargetresource.class.php:1269
+#: inc/notificationtargetresource.class.php:1295 inc/resource.class.php:265
+#: inc/resource.class.php:1238
 msgid "Declared as leaving"
 msgstr "Austritt gemeldet"
 
-#: hook.php:1759 inc/employer.class.php:40 inc/employment.class.php:169 inc/employment.class.php:239
+#: hook.php:1759 inc/employer.class.php:40 inc/employment.class.php:169
+#: inc/employment.class.php:239
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:65
 msgid "Employer"
 msgid_plural "Employers"
@@ -71,23 +76,41 @@ msgid_plural "Affected clients"
 msgstr[0] "Betroffener Kunde"
 msgstr[1] "Betroffene Kunden"
 
-#: hook.php:1768 inc/directory.class.php:125 inc/notificationtargetresource.class.php:84 inc/notificationtargetresource.class.php:322
-#: inc/notificationtargetresource.class.php:401 inc/notificationtargetresource.class.php:554 inc/notificationtargetresource.class.php:624
-#: inc/notificationtargetresource.class.php:747 inc/notificationtargetresource.class.php:1257 inc/notificationtargetresource.class.php:1285
-#: inc/resource.class.php:185 inc/resource.class.php:1088 inc/resource.class.php:1852 inc/resource.class.php:2355 inc/resourcepdf.class.php:65
-#: inc/rulecontracttype.class.php:188 inc/task.class.php:637 inc/task.class.php:972
+#: hook.php:1768 inc/directory.class.php:125
+#: inc/notificationtargetresource.class.php:84
+#: inc/notificationtargetresource.class.php:322
+#: inc/notificationtargetresource.class.php:401
+#: inc/notificationtargetresource.class.php:554
+#: inc/notificationtargetresource.class.php:624
+#: inc/notificationtargetresource.class.php:747
+#: inc/notificationtargetresource.class.php:1257
+#: inc/notificationtargetresource.class.php:1285 inc/resource.class.php:204
+#: inc/resource.class.php:1151 inc/resource.class.php:1915
+#: inc/resource.class.php:2418 inc/resourcepdf.class.php:65
+#: inc/rulecontracttype.class.php:188 inc/task.class.php:637
+#: inc/task.class.php:972
 msgid "Resource manager"
 msgstr "Vorgesetzter des Mitarbeiters"
 
-#: hook.php:1780 inc/notificationtargetresource.class.php:87 inc/notificationtargetresource.class.php:333 inc/notificationtargetresource.class.php:412
-#: inc/notificationtargetresource.class.php:586 inc/notificationtargetresource.class.php:634 inc/notificationtargetresource.class.php:789
-#: inc/notificationtargetresource.class.php:1268 inc/notificationtargetresource.class.php:1294 inc/resource.class.php:252
+#: hook.php:1780 inc/notificationtargetresource.class.php:87
+#: inc/notificationtargetresource.class.php:333
+#: inc/notificationtargetresource.class.php:412
+#: inc/notificationtargetresource.class.php:586
+#: inc/notificationtargetresource.class.php:634
+#: inc/notificationtargetresource.class.php:789
+#: inc/notificationtargetresource.class.php:1268
+#: inc/notificationtargetresource.class.php:1294 inc/resource.class.php:271
 msgid "Informant of leaving"
 msgstr "Melder des Austritts"
 
-#: hook.php:1786 inc/notificationtargetresource.class.php:85 inc/notificationtargetresource.class.php:109 inc/notificationtargetresource.class.php:323
-#: inc/notificationtargetresource.class.php:402 inc/notificationtargetresource.class.php:557 inc/notificationtargetresource.class.php:625
-#: inc/notificationtargetresource.class.php:750 inc/resource.class.php:331 inc/resource.class.php:1110 inc/resource.class.php:1866
+#: hook.php:1786 inc/notificationtargetresource.class.php:85
+#: inc/notificationtargetresource.class.php:109
+#: inc/notificationtargetresource.class.php:323
+#: inc/notificationtargetresource.class.php:402
+#: inc/notificationtargetresource.class.php:557
+#: inc/notificationtargetresource.class.php:625
+#: inc/notificationtargetresource.class.php:750 inc/resource.class.php:350
+#: inc/resource.class.php:1173 inc/resource.class.php:1929
 #: inc/rulecontracttype.class.php:192
 msgid "Sales manager"
 msgstr "Vertriebsleiter"
@@ -100,19 +123,24 @@ msgstr "Nicht definiert"
 msgid "Modification of the associated resource's location"
 msgstr "Standort des verknüpften Mitarbeiters ändern"
 
-#: setup.php:190
+#: setup.php:191
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Mitarbeiter"
 msgstr[1] "Mitarbeiter"
 
-#: setup.php:203
+#: setup.php:204
 msgid "This plugin requires GLPI >= 9.1"
 msgstr "Dieses Plugin benötigt GLPI >=9.1"
 
-#: setup.php:206
+#: setup.php:207
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "PHP-Installation nicht kompatibel. Benötigt Modul"
+
+#: ajax/employee.php:36 inc/client.class.php:60 inc/client.class.php:102
+#: inc/employee.class.php:229 inc/employee.class.php:341
+msgid "Security compliance"
+msgstr ""
 
 #: ajax/pdfresource.php:75
 msgid "Please ensure that the return form is signed by the employee"
@@ -126,16 +154,18 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr "Bitte Plugin aktivieren"
 
-#: front/confighabilitation.form.php:70 front/confighabilitation.form.php:89 front/confighabilitation.form.php:109 front/resourcebadge.form.php:68
+#: front/confighabilitation.form.php:70 front/confighabilitation.form.php:89
+#: front/confighabilitation.form.php:109 front/resourcebadge.form.php:68
 #: front/resourcebadge.form.php:87
 msgid "Please activate the plugin metademand"
 msgstr "Biite das Plugin  metademand aktivieren"
 
-#: front/confighabilitation.form.php:81 front/confighabilitation.form.php:102 front/resourcebadge.form.php:79
+#: front/confighabilitation.form.php:81 front/confighabilitation.form.php:102
+#: front/resourcebadge.form.php:79
 msgid "No advanced request found"
 msgstr "Keine erweiterte anfrage gefunden"
 
-#: front/resourcebadge.form.php:109 front/resourcebadge.php:61
+#: front/resourcebadge.form.php:109
 msgid "Please activate the plugin badge"
 msgstr "Biite das Plugin Badge aktivieren"
 
@@ -151,8 +181,9 @@ msgstr "Die Checkliste ist nicht abgeschlossen"
 msgid "Notification sent"
 msgstr "Die Benachrichtigung wurde  verschickt"
 
-#: front/resource.form.php:313 inc/resource.class.php:3317
-msgid "The notification is not sent because the resource is not linked with a user"
+#: front/resource.form.php:313 inc/resource.class.php:3380
+msgid ""
+"The notification is not sent because the resource is not linked with a user"
 msgstr "Die Benachrichtigung wurde nicht verschickt, weil der Mitarbeiter mit keinem Benutzer verknüpft ist"
 
 #: front/resource.php:65 front/resource.php:73 front/resource.php:74
@@ -163,30 +194,36 @@ msgstr "Ansicht nach Anstellungstyp"
 msgid "Declaration of resource leaving OK"
 msgstr "Austrittsmeldung des Mitarbeiters ist erfolgt"
 
-#: front/wizard.form.php:110 inc/resource.class.php:466
+#: front/wizard.form.php:110 inc/resource.class.php:517
 msgid "Required fields are not filled. Please try again."
 msgstr "Ein oder mehrere Pflichtfelder wurden nicht ausgefüllt. Bitte füllen Sie diese aus."
 
-#: inc/budget.class.php:76 inc/budget.class.php:92 inc/cost.class.php:68 inc/cost.class.php:85
+#: inc/budget.class.php:76 inc/budget.class.php:92 inc/cost.class.php:68
+#: inc/cost.class.php:85
 msgid "The profession for the budget must be filled"
 msgstr "Der Beruf, auf welchen sich das Budget bezieht, ist erforderlich"
 
-#: inc/budget.class.php:122 inc/budget.class.php:211 inc/cost.class.php:99 inc/cost.class.php:128 inc/cost.class.php:192 inc/employment.class.php:142
-#: inc/employment.class.php:259 inc/rank.class.php:38 inc/resourcespeciality.class.php:62 inc/resourcespeciality.class.php:138
+#: inc/budget.class.php:122 inc/budget.class.php:211 inc/cost.class.php:99
+#: inc/cost.class.php:128 inc/cost.class.php:192 inc/employment.class.php:142
+#: inc/employment.class.php:259 inc/rank.class.php:38
+#: inc/resourcespeciality.class.php:62 inc/resourcespeciality.class.php:138
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Dienstgrad"
 msgstr[1] "Dienstgrade"
 
-#: inc/budget.class.php:128 inc/budget.class.php:200 inc/cost.class.php:95 inc/cost.class.php:123 inc/cost.class.php:179 inc/employment.class.php:148
-#: inc/employment.class.php:248 inc/profession.class.php:38 inc/rank.class.php:67 inc/rank.class.php:99
+#: inc/budget.class.php:128 inc/budget.class.php:200 inc/cost.class.php:95
+#: inc/cost.class.php:123 inc/cost.class.php:179 inc/employment.class.php:148
+#: inc/employment.class.php:248 inc/profession.class.php:38
+#: inc/rank.class.php:67 inc/rank.class.php:99
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] "Beruf"
 msgstr[1] "Berufe"
 
-#: inc/budget.class.php:134 inc/budget.class.php:192 inc/budgettype.class.php:40
+#: inc/budget.class.php:134 inc/budget.class.php:192
+#: inc/budgettype.class.php:40
 msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] "Budget-Typ"
@@ -196,29 +233,40 @@ msgstr[1] "Budget-Typen"
 msgid "Budget volume"
 msgstr "Budgetvolumen"
 
-#: inc/budget.class.php:153 inc/budget.class.php:225 inc/budgetvolume.class.php:40
+#: inc/budget.class.php:153 inc/budget.class.php:225
+#: inc/budgetvolume.class.php:40
 msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
 msgstr[0] "Typ von Budget Volumen"
 msgstr[1] "Typen von Budgetvolumen"
 
-#: inc/budgettype.class.php:54 inc/budgettype.class.php:104 inc/budgetvolume.class.php:54 inc/budgetvolume.class.php:104 inc/contractnature.class.php:62
-#: inc/contractnature.class.php:145 inc/contracttype.class.php:55 inc/contracttype.class.php:85 inc/professioncategory.class.php:61
-#: inc/professioncategory.class.php:111 inc/profession.class.php:59 inc/profession.class.php:161 inc/professionline.class.php:61
-#: inc/professionline.class.php:111 inc/rank.class.php:59 inc/rank.class.php:91 inc/resourcesituation.class.php:61 inc/resourcesituation.class.php:119
-#: report/lapserankprofession/lapserankprofession.php:43 report/lapserankprofession/lapserankprofession.php:51
-#: report/professionwithoutcost/professionwithoutcost.php:281 report/professionwithoutcost/professionwithoutcost.php:283
-#: report/professionwithoutvolume/professionwithoutvolume.php:287 report/professionwithoutvolume/professionwithoutvolume.php:289
+#: inc/budgettype.class.php:54 inc/budgettype.class.php:104
+#: inc/budgetvolume.class.php:54 inc/budgetvolume.class.php:104
+#: inc/contractnature.class.php:62 inc/contractnature.class.php:145
+#: inc/contracttype.class.php:55 inc/contracttype.class.php:85
+#: inc/professioncategory.class.php:61 inc/professioncategory.class.php:111
+#: inc/profession.class.php:59 inc/profession.class.php:161
+#: inc/professionline.class.php:61 inc/professionline.class.php:111
+#: inc/rank.class.php:59 inc/rank.class.php:91
+#: inc/resourcesituation.class.php:61 inc/resourcesituation.class.php:119
+#: report/lapserankprofession/lapserankprofession.php:43
+#: report/lapserankprofession/lapserankprofession.php:51
+#: report/professionwithoutcost/professionwithoutcost.php:281
+#: report/professionwithoutcost/professionwithoutcost.php:283
+#: report/professionwithoutvolume/professionwithoutvolume.php:287
+#: report/professionwithoutvolume/professionwithoutvolume.php:289
 msgid "Code"
 msgstr "Code"
 
-#: inc/checklist.class.php:43 inc/profile.class.php:194 inc/resource.class.php:3817
+#: inc/checklist.class.php:43 inc/profile.class.php:194
+#: inc/resource.class.php:3880
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Checkliste"
 msgstr[1] "Checklisten"
 
-#: inc/checklist.class.php:221 inc/checklist.class.php:558 inc/resourcebadge.class.php:428 inc/resource_change.class.php:705
+#: inc/checklist.class.php:221 inc/checklist.class.php:558
+#: inc/resourcebadge.class.php:430 inc/resource_change.class.php:705
 msgid "Create a end treatment ticket"
 msgstr "Abschluss-Ticket erstellen"
 
@@ -238,11 +286,13 @@ msgstr "Bei der Übertragung eines Mitarbeiters"
 msgid "Create checklists"
 msgstr "Checklisten anlegen"
 
-#: inc/checklist.class.php:407 inc/checklist.class.php:591 inc/checklistconfig.class.php:95 inc/checklistconfig.class.php:126
+#: inc/checklist.class.php:407 inc/checklist.class.php:591
+#: inc/checklistconfig.class.php:95 inc/checklistconfig.class.php:126
 msgid "Important"
 msgstr "Wichtig"
 
-#: inc/checklist.class.php:416 inc/checklistconfig.class.php:86 inc/checklistconfig.class.php:134
+#: inc/checklist.class.php:416 inc/checklistconfig.class.php:86
+#: inc/checklistconfig.class.php:134
 msgid "Link"
 msgstr "Verknüpfung"
 
@@ -282,38 +332,59 @@ msgstr "Mit einer Aufgabe verknüpfen"
 msgid "Add ticket"
 msgstr "Ticket hinzufügen"
 
-#: inc/checklist.class.php:785 inc/checklist.class.php:828 inc/checklist.class.php:858
+#: inc/checklist.class.php:785 inc/checklist.class.php:828
+#: inc/checklist.class.php:858
 msgid "The checklist is finished"
 msgstr "Die Checkliste ist beendet"
 
-#: inc/checklist.class.php:898 inc/dashboard.class.php:44 inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:393
+#: inc/checklist.class.php:898 inc/dashboard.class.php:44
+#: inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:393
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Austretender Mitarbeiter - Checkliste überprüfen"
 
-#: inc/checklist.class.php:900 inc/dashboard.class.php:43 inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:389
+#: inc/checklist.class.php:900 inc/dashboard.class.php:43
+#: inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:389
 msgid "New resource - checklist needs to verificated"
 msgstr "Eintretender Mitarbeiter - Checkliste überprüfen"
 
-#: inc/checklist.class.php:905 inc/dashboard.class.php:122 inc/directory.class.php:136 inc/notificationtargetresource.class.php:327
-#: inc/notificationtargetresource.class.php:406 inc/notificationtargetresource.class.php:569 inc/notificationtargetresource.class.php:629
-#: inc/notificationtargetresource.class.php:762 inc/notificationtargetresource.class.php:1261 inc/notificationtargetresource.class.php:1289
-#: inc/recap.class.php:144 inc/resource.class.php:199 inc/resource.class.php:1208 inc/resource.class.php:1905 inc/resource.class.php:2691
-#: inc/resource_item.class.php:709 inc/resource_item.class.php:960 inc/resource_item.class.php:970 inc/resourcepdf.class.php:70
-#: inc/rulecontracttype.class.php:204 report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
+#: inc/checklist.class.php:905 inc/dashboard.class.php:122
+#: inc/directory.class.php:136 inc/notificationtargetresource.class.php:327
+#: inc/notificationtargetresource.class.php:406
+#: inc/notificationtargetresource.class.php:569
+#: inc/notificationtargetresource.class.php:629
+#: inc/notificationtargetresource.class.php:762
+#: inc/notificationtargetresource.class.php:1261
+#: inc/notificationtargetresource.class.php:1289 inc/recap.class.php:144
+#: inc/resource.class.php:218 inc/resource.class.php:1271
+#: inc/resource.class.php:1968 inc/resource.class.php:2754
+#: inc/resource_item.class.php:709 inc/resource_item.class.php:960
+#: inc/resource_item.class.php:970 inc/resourcepdf.class.php:70
+#: inc/rulecontracttype.class.php:204
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:57 report/resourcewithoutemployment/resourcewithoutemployment.php:57
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:57
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:57
 #: report/resourcewithoutuser/resourcewithoutuser.php:55
 msgid "Departure date"
 msgstr "Austrittsdatum"
 
-#: inc/checklist.class.php:907 inc/dashboard.class.php:82 inc/directory.class.php:131 inc/notificationtargetresource.class.php:326
-#: inc/notificationtargetresource.class.php:405 inc/notificationtargetresource.class.php:566 inc/notificationtargetresource.class.php:628
-#: inc/notificationtargetresource.class.php:759 inc/notificationtargetresource.class.php:1260 inc/notificationtargetresource.class.php:1288
-#: inc/recap.class.php:139 inc/resourcecard.class.php:152 inc/resourcecard.class.php:218 inc/resource.class.php:194 inc/resource.class.php:1099
-#: inc/resource.class.php:1893 inc/resource_item.class.php:708 inc/resource_item.class.php:959 inc/resource_item.class.php:969 inc/resourcepdf.class.php:69
-#: inc/rulecontracttype.class.php:200 report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
+#: inc/checklist.class.php:907 inc/dashboard.class.php:82
+#: inc/directory.class.php:131 inc/notificationtargetresource.class.php:326
+#: inc/notificationtargetresource.class.php:405
+#: inc/notificationtargetresource.class.php:566
+#: inc/notificationtargetresource.class.php:628
+#: inc/notificationtargetresource.class.php:759
+#: inc/notificationtargetresource.class.php:1260
+#: inc/notificationtargetresource.class.php:1288 inc/recap.class.php:139
+#: inc/resourcecard.class.php:152 inc/resourcecard.class.php:218
+#: inc/resource.class.php:213 inc/resource.class.php:1162
+#: inc/resource.class.php:1956 inc/resource_item.class.php:708
+#: inc/resource_item.class.php:959 inc/resource_item.class.php:969
+#: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:200
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:251
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:55 report/resourcewithoutemployment/resourcewithoutemployment.php:55
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:55
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:55
 #: report/resourcewithoutuser/resourcewithoutuser.php:53
 msgid "Arrival date"
 msgstr "Eintrittsdatum"
@@ -350,7 +421,8 @@ msgid_plural "Needs"
 msgstr[0] "Bedürfnis"
 msgstr[1] "Bedürfnisse"
 
-#: inc/choice.class.php:224 inc/contracttype.class.php:67 inc/contracttype.class.php:94
+#: inc/choice.class.php:224 inc/contracttype.class.php:67
+#: inc/contracttype.class.php:94
 msgid "Enter the computing needs of the resource"
 msgstr "Bitte IT-Bedürfnisse des Mitarbeiters erfassen"
 
@@ -366,8 +438,9 @@ msgstr "Bedürfnis hinzufügen"
 msgid "Will be added to the resource comment area"
 msgstr "Wird dem Kommentarbereich des Mitarbeiters hinzugefügt"
 
-#: inc/choice.class.php:345 inc/employee.class.php:350 inc/resource.class.php:1559 inc/resource.class.php:1993 inc/resource.class.php:2004
-#: inc/resource.class.php:2080
+#: inc/choice.class.php:345 inc/employee.class.php:359
+#: inc/resource.class.php:1622 inc/resource.class.php:2056
+#: inc/resource.class.php:2067 inc/resource.class.php:2143
 msgctxt "button"
 msgid "Next >"
 msgstr "Weiter >"
@@ -394,10 +467,6 @@ msgid_plural "Types of need"
 msgstr[0] "Bedürfnistyp"
 msgstr[1] "Bedürfnistypen"
 
-#: inc/client.class.php:59 inc/client.class.php:101 inc/employee.class.php:227
-msgid "Security compliance"
-msgstr ""
-
 #: inc/config.class.php:78
 msgid "Displaying the security block on the resource"
 msgstr "Den Sicherheitsblock es Mitarbeiter anzeigen"
@@ -408,11 +477,13 @@ msgid_plural "Super habilitations management"
 msgstr[0] "Verwaltung des ausserordentlichen Verdienstes"
 msgstr[1] "Verwaltung der ausserordentlichen Verdienste"
 
-#: inc/confighabilitation.class.php:89 inc/confighabilitation.class.php:240 inc/confighabilitation.class.php:241
+#: inc/confighabilitation.class.php:89 inc/confighabilitation.class.php:240
+#: inc/confighabilitation.class.php:241
 msgid "Declare a super habilitation"
 msgstr "Ausserordentlichen Verdienst festlegen."
 
-#: inc/confighabilitation.class.php:91 inc/confighabilitation.class.php:248 inc/confighabilitation.class.php:249
+#: inc/confighabilitation.class.php:91 inc/confighabilitation.class.php:248
+#: inc/confighabilitation.class.php:249
 msgid "Remove a super habilitation"
 msgstr "Ausserordentlichen Verdienst entziehen "
 
@@ -440,7 +511,8 @@ msgstr[1] "Vertragstypen"
 msgid "Wizard resource creation"
 msgstr "Assistent zur Anlage von Mitarbeitern"
 
-#: inc/contracttype.class.php:63 inc/contracttype.class.php:89 inc/employee.class.php:312
+#: inc/contracttype.class.php:63 inc/contracttype.class.php:89
+#: inc/employee.class.php:314
 msgid "Enter employer information about the resource"
 msgstr "Bitte Informationen über den Arbeitgeber des Mitarbeiters erfassen"
 
@@ -448,11 +520,13 @@ msgstr "Bitte Informationen über den Arbeitgeber des Mitarbeiters erfassen"
 msgid "Add a picture"
 msgstr "Bild hinzufügen"
 
-#: inc/contracttype.class.php:159 inc/contracttype.class.php:175 inc/resource.class.php:845 inc/resource.class.php:1634
+#: inc/contracttype.class.php:159 inc/contracttype.class.php:175
+#: inc/resource.class.php:908 inc/resource.class.php:1697
 msgid "Without contract"
 msgstr "Ohne Vertrag"
 
-#: inc/cost.class.php:40 inc/cost.class.php:111 inc/cost.class.php:143 inc/cost.class.php:216
+#: inc/cost.class.php:40 inc/cost.class.php:111 inc/cost.class.php:143
+#: inc/cost.class.php:216
 msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Budgetkosten"
@@ -464,13 +538,13 @@ msgid_plural "Departments"
 msgstr[0] "Abteilung"
 msgstr[1] "Abteilungen"
 
-#: inc/directory.class.php:42 inc/resource.class.php:3787
+#: inc/directory.class.php:42 inc/resource.class.php:3850
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Verzeichnis"
 msgstr[1] "Verzeichnisse"
 
-#: inc/directory.class.php:963 inc/resource.class.php:3660
+#: inc/directory.class.php:963 inc/resource.class.php:3723
 msgid "Click here to send your email"
 msgstr "Hier klicken um E-Mail abzuschicken"
 
@@ -484,43 +558,52 @@ msgstr[1] "Arbeitnehmer"
 msgid "The resource is also created if not existent"
 msgstr "Der Mitarbeiter wird auch erzeugt falls noch nicht vorhanden"
 
-#: inc/employee.class.php:347 inc/resource.class.php:1990 inc/resource.class.php:2001
+#: inc/employee.class.php:356 inc/resource.class.php:2053
+#: inc/resource.class.php:2064
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Zurück"
 
-#: inc/employee.class.php:420
+#: inc/employee.class.php:429
 msgctxt "button"
 msgid "Next step"
 msgstr "Nächster Schritt"
 
-#: inc/employer.class.php:58 inc/employer.class.php:73 inc/employmentstate.class.php:54 inc/employmentstate.class.php:110 inc/profession.class.php:63
-#: inc/profession.class.php:165 inc/rank.class.php:63 inc/rank.class.php:95 inc/resourcesituation.class.php:65 inc/resourcesituation.class.php:123
+#: inc/employer.class.php:58 inc/employer.class.php:73
+#: inc/employmentstate.class.php:54 inc/employmentstate.class.php:110
+#: inc/profession.class.php:63 inc/profession.class.php:165
+#: inc/rank.class.php:63 inc/rank.class.php:95
+#: inc/resourcesituation.class.php:65 inc/resourcesituation.class.php:123
 msgid "Short name"
 msgstr "Short name"
 
-#: inc/employment.class.php:46 inc/profile.class.php:219 report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
+#: inc/employment.class.php:46 inc/profile.class.php:219
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
 msgid_plural "Employments"
 msgstr[0] "Stelle"
 msgstr[1] "Stellen"
 
-#: inc/employment.class.php:136 inc/employment.class.php:179 inc/employment.class.php:293 inc/profile.class.php:179 inc/resource.class.php:56
-#: inc/taskplanning.class.php:42
+#: inc/employment.class.php:136 inc/employment.class.php:179
+#: inc/employment.class.php:293 inc/profile.class.php:179
+#: inc/resource.class.php:56 inc/taskplanning.class.php:42
 msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "Mitarbeiter"
 msgstr[1] "Mitarbeiter"
 
-#: inc/employment.class.php:164 inc/employment.class.php:270 inc/employmentstate.class.php:40
+#: inc/employment.class.php:164 inc/employment.class.php:270
+#: inc/employmentstate.class.php:40
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:63
 msgid "Employment state"
 msgid_plural "Employment states"
 msgstr[0] "Stellenstatus"
 msgstr[1] "Stellenstati"
 
-#: inc/employment.class.php:174 inc/employment.class.php:276 inc/recap.class.php:156 report/resourceemploymentdiff/resourceemploymentdiff.php:59
+#: inc/employment.class.php:174 inc/employment.class.php:276
+#: inc/recap.class.php:156
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:59
 msgid "Ratio Employment / Budget"
 msgstr "Verhältnis Stelle / Budget"
 
@@ -537,7 +620,9 @@ msgid "Updating leaving resources (declaring leaving, state of employment)"
 msgstr "Aktualisierung eines austretenden Mitarbeiters (Austrittsmeldung, Stellenstatus)"
 
 #: inc/employment.class.php:495
-msgid "These resources left the company, linked current employment have been updated"
+msgid ""
+"These resources left the company, linked current employment have been "
+"updated"
 msgstr "Diese Mitarbeiter haben die Firma verlassen, die aktuell verknüpften Stellen wurden aktualisiert"
 
 #: inc/employmentstate.class.php:61 inc/employmentstate.class.php:119
@@ -596,27 +681,34 @@ msgstr "Eine Aufgabe wurde geändert"
 msgid "A task has been removed by"
 msgstr "Eine Aufgabe wurde gelöscht"
 
-#: inc/notificationtargetresource.class.php:56 inc/notificationtargetresource.class.php:264 inc/notificationtargetresource.class.php:1249
+#: inc/notificationtargetresource.class.php:56
+#: inc/notificationtargetresource.class.php:264
+#: inc/notificationtargetresource.class.php:1249
 msgid "List of not finished tasks"
 msgstr "Liste offener Aufgaben"
 
-#: inc/notificationtargetresource.class.php:57 inc/notificationtargetresource.class.php:316 inc/resource.class.php:3406
+#: inc/notificationtargetresource.class.php:57
+#: inc/notificationtargetresource.class.php:316 inc/resource.class.php:3469
 msgid "These resources have normally left the company"
 msgstr "Diese Mitarbeiter haben die Firma normalerweise verlassen"
 
-#: inc/notificationtargetresource.class.php:58 inc/notificationtargetresource.class.php:388
+#: inc/notificationtargetresource.class.php:58
+#: inc/notificationtargetresource.class.php:388
 msgid "Actions to do on these new resources"
 msgstr "Für diese eintretenden Mitarbeiter gibt es Pendenzen "
 
-#: inc/notificationtargetresource.class.php:59 inc/notificationtargetresource.class.php:392
+#: inc/notificationtargetresource.class.php:59
+#: inc/notificationtargetresource.class.php:392
 msgid "Actions to do on these leaving resources"
 msgstr "Für diese austretenden Mitarbeiter gibt es Pendenzen"
 
-#: inc/notificationtargetresource.class.php:60 inc/notificationtargetresource.class.php:501
+#: inc/notificationtargetresource.class.php:60
+#: inc/notificationtargetresource.class.php:501
 msgid "A resource has been declared leaving"
 msgstr "Ein Mitarbeiteraustritt wurde gemeldet"
 
-#: inc/notificationtargetresource.class.php:61 inc/notificationtargetresource.class.php:828
+#: inc/notificationtargetresource.class.php:61
+#: inc/notificationtargetresource.class.php:828
 msgid "Creation report of the human resource"
 msgstr "Bericht über Mitarbeiteranlage"
 
@@ -652,7 +744,8 @@ msgstr "Andere Benachrichtigung über Ressourcen"
 msgid "Transfer resource notification"
 msgstr "Mitarbeiter Transfer Benachrichtigung"
 
-#: inc/notificationtargetresource.class.php:70 inc/notificationtargetresource.class.php:1332 inc/resource.class.php:3340
+#: inc/notificationtargetresource.class.php:70
+#: inc/notificationtargetresource.class.php:1332 inc/resource.class.php:3403
 msgid "Resources list of commercial manager"
 msgstr "Mitarbeiterliste des kaufmännischen Leiters"
 
@@ -684,17 +777,23 @@ msgstr "Quellentitätsgruppenverwalter"
 msgid "Target entity group manager"
 msgstr "Zielentitätsgruppenverwalter"
 
-#: inc/notificationtargetresource.class.php:272 inc/notificationtargetresource.class.php:1206 inc/notificationtargetresource.class.php:1304
+#: inc/notificationtargetresource.class.php:272
+#: inc/notificationtargetresource.class.php:1206
+#: inc/notificationtargetresource.class.php:1304
 msgid "Used for planning"
 msgstr "In Planung berücksichtigen"
 
-#: inc/notificationtargetresource.class.php:273 inc/notificationtargetresource.class.php:1207 inc/notificationtargetresource.class.php:1305
-#: inc/task.class.php:286 inc/task.class.php:485
+#: inc/notificationtargetresource.class.php:273
+#: inc/notificationtargetresource.class.php:1207
+#: inc/notificationtargetresource.class.php:1305 inc/task.class.php:286
+#: inc/task.class.php:485
 msgid "Effective duration"
 msgstr "Effektive Dauer"
 
-#: inc/notificationtargetresource.class.php:274 inc/notificationtargetresource.class.php:1208 inc/notificationtargetresource.class.php:1306
-#: inc/task.class.php:298 inc/task.class.php:480
+#: inc/notificationtargetresource.class.php:274
+#: inc/notificationtargetresource.class.php:1208
+#: inc/notificationtargetresource.class.php:1306 inc/task.class.php:298
+#: inc/task.class.php:480
 msgid "Carried out task"
 msgstr "Aufgabe erledigt"
 
@@ -702,13 +801,19 @@ msgstr "Aufgabe erledigt"
 msgid "Please check the leaving checklist of the resource"
 msgstr "Bitte Austritt-Checkliste überprüfen"
 
-#: inc/notificationtargetresource.class.php:525 inc/notificationtargetresource.class.php:618 inc/notificationtargetresource.class.php:744
-#: inc/notificationtargetresource.class.php:1252 inc/notificationtargetresource.class.php:1280 inc/recap.class.php:94 inc/resource.class.php:293
-#: inc/resource.class.php:966 inc/resource.class.php:1733 inc/rulecontracttype.class.php:208 report/resourceemploymentdiff/resourceemploymentdiff.php:47
+#: inc/notificationtargetresource.class.php:525
+#: inc/notificationtargetresource.class.php:618
+#: inc/notificationtargetresource.class.php:744
+#: inc/notificationtargetresource.class.php:1252
+#: inc/notificationtargetresource.class.php:1280 inc/recap.class.php:94
+#: inc/resource.class.php:312 inc/resource.class.php:1029
+#: inc/resource.class.php:1796 inc/rulecontracttype.class.php:208
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Quote"
 
-#: inc/notificationtargetresource.class.php:589 inc/notificationtargetresource.class.php:792 inc/resource.class.php:340
+#: inc/notificationtargetresource.class.php:589
+#: inc/notificationtargetresource.class.php:792 inc/resource.class.php:359
 msgid "Declaration of departure date"
 msgstr "Austrittsdatum festlegen"
 
@@ -720,21 +825,26 @@ msgstr "Bitte den Badge vom Mitarbeiter zurückfordern"
 msgid "List of your associated resources"
 msgstr "Liste der verbundenen Mitarbeiter"
 
-#: inc/notificationtargetresource.class.php:813 inc/notificationtargetresource.class.php:1271 inc/resource.class.php:354 inc/resource.class.php:1227
-#: inc/resource.class.php:1920
+#: inc/notificationtargetresource.class.php:813
+#: inc/notificationtargetresource.class.php:1271 inc/resource.class.php:373
+#: inc/resource.class.php:1290 inc/resource.class.php:1983
 msgid "Sensitized to security"
 msgstr "Sicherheitsbelehrung"
 
-#: inc/notificationtargetresource.class.php:816 inc/notificationtargetresource.class.php:1272 inc/resource.class.php:348 inc/resource.class.php:1236
-#: inc/resource.class.php:1930
+#: inc/notificationtargetresource.class.php:816
+#: inc/notificationtargetresource.class.php:1272 inc/resource.class.php:367
+#: inc/resource.class.php:1299 inc/resource.class.php:1993
 msgid "Reading the security charter"
 msgstr "Sicherheithandbuch lesen "
 
-#: inc/notificationtargetresource.class.php:847 inc/notificationtargetresource.class.php:887
+#: inc/notificationtargetresource.class.php:847
+#: inc/notificationtargetresource.class.php:887
 msgid "Informations of the created user"
 msgstr "Angaben über den erstellten Benutzer"
 
-#: inc/notificationtargetresource.class.php:853 inc/notificationtargetresource.class.php:893 inc/notificationtargetresource.class.php:944
+#: inc/notificationtargetresource.class.php:853
+#: inc/notificationtargetresource.class.php:893
+#: inc/notificationtargetresource.class.php:944
 #: inc/notificationtargetresource.class.php:976
 msgid "Additional informations"
 msgstr "Zusatzinformationen"
@@ -743,47 +853,60 @@ msgstr "Zusatzinformationen"
 msgid "Transfer report of the human resource"
 msgstr "Transferbericht des Mitarbeiter "
 
-#: inc/notificationtargetresource.class.php:906 inc/notificationtargetresource.class.php:1310 inc/resource.class.php:2856
+#: inc/notificationtargetresource.class.php:906
+#: inc/notificationtargetresource.class.php:1310 inc/resource.class.php:2919
 msgid "Target entity"
 msgstr "Zielentität"
 
-#: inc/notificationtargetresource.class.php:907 inc/notificationtargetresource.class.php:1309
+#: inc/notificationtargetresource.class.php:907
+#: inc/notificationtargetresource.class.php:1309
 msgid "Source entity"
 msgstr "Quellentität"
 
-#: inc/notificationtargetresource.class.php:922 inc/notificationtargetresource.class.php:1265 inc/profile.class.php:204 inc/resource.class.php:1405
-#: inc/resource.class.php:1406 inc/resourceresting.class.php:246
+#: inc/notificationtargetresource.class.php:922
+#: inc/notificationtargetresource.class.php:1265 inc/profile.class.php:204
+#: inc/resource.class.php:1468 inc/resource.class.php:1469
+#: inc/resourceresting.class.php:246
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Verwaltung der vertragsfeien Zeit"
 msgstr[1] "Verwaltung der vertragsfeien Zeiten"
 
-#: inc/notificationtargetresource.class.php:924 inc/notificationtargetresource.class.php:1266 inc/resourceresting.class.php:306
+#: inc/notificationtargetresource.class.php:924
+#: inc/notificationtargetresource.class.php:1266
+#: inc/resourceresting.class.php:306
 msgid "Detail of non contract period"
 msgstr "Detail einer Vertragszwischenphase"
 
-#: inc/notificationtargetresource.class.php:931 inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
+#: inc/notificationtargetresource.class.php:931
+#: inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
 msgid "Agency concerned"
 msgstr "Betroffene Agentur"
 
-#: inc/notificationtargetresource.class.php:935 inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
+#: inc/notificationtargetresource.class.php:935
+#: inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
 msgid "At home"
 msgstr "Zu Hause"
 
-#: inc/notificationtargetresource.class.php:950 inc/notificationtargetresource.class.php:982
+#: inc/notificationtargetresource.class.php:950
+#: inc/notificationtargetresource.class.php:982
 msgid "Reported by"
 msgstr "Gemeldet von"
 
-#: inc/notificationtargetresource.class.php:961 inc/notificationtargetresource.class.php:1275 inc/resource.class.php:1414 inc/resource.class.php:1415
-#: inc/resourceholiday.class.php:178
+#: inc/notificationtargetresource.class.php:961
+#: inc/notificationtargetresource.class.php:1275 inc/resource.class.php:1477
+#: inc/resource.class.php:1478 inc/resourceholiday.class.php:178
 msgid "Forced holiday management"
 msgstr "Verwaltung der Zwangsurlaube"
 
-#: inc/notificationtargetresource.class.php:963 inc/notificationtargetresource.class.php:1276 inc/resourceholiday.class.php:223
+#: inc/notificationtargetresource.class.php:963
+#: inc/notificationtargetresource.class.php:1276
+#: inc/resourceholiday.class.php:223
 msgid "Detail of the forced holiday"
 msgstr "Detail eines Zwangsurlaubes"
 
-#: inc/notificationtargetresource.class.php:996 inc/notificationtargetresource.class.php:1322
+#: inc/notificationtargetresource.class.php:996
+#: inc/notificationtargetresource.class.php:1322
 msgid "Modified fields"
 msgstr "Geänderte Felder"
 
@@ -799,13 +922,15 @@ msgstr "Bei Erstellen, Ändern oder Löschen eines Mitarbeiters"
 msgid "At creation, update, removal of a task"
 msgstr "Bei Erstellen, Ändern oder Löschen einer Aufgabe"
 
-#: inc/professioncategory.class.php:40 inc/profession.class.php:71 inc/profession.class.php:174
+#: inc/professioncategory.class.php:40 inc/profession.class.php:71
+#: inc/profession.class.php:174
 msgid "Profession category"
 msgid_plural "Profession categories"
 msgstr[0] "Kategorie der Berufe"
 msgstr[1] "Kategorien der Berufe"
 
-#: inc/profession.class.php:67 inc/profession.class.php:169 inc/professionline.class.php:40
+#: inc/profession.class.php:67 inc/profession.class.php:169
+#: inc/professionline.class.php:40
 msgid "Profession line"
 msgid_plural "Profession lines"
 msgstr[0] "Berufszweig"
@@ -865,7 +990,8 @@ msgstr "Andere Benachrichtigung verschicken"
 msgid "Notification configuration"
 msgstr "Konfiguration der Benachrichtigungen"
 
-#: inc/resourcebadge.class.php:51 inc/resourcebadge.class.php:205 inc/resource.class.php:1432 inc/resource.class.php:1433
+#: inc/resourcebadge.class.php:51 inc/resourcebadge.class.php:205
+#: inc/resource.class.php:1495 inc/resource.class.php:1496
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Badge Verwaltung"
@@ -875,12 +1001,13 @@ msgstr[1] "Badges Verwaltung"
 msgid "Request new badge"
 msgstr "Neues Badge anfordern"
 
-#: inc/resourcebadge.class.php:225 inc/resourcebadge.class.php:226 inc/resourcebadge.class.php:257 inc/resourcebadge.class.php:419
-#: inc/resourcebadge.class.php:420 inc/resource_change.class.php:88
+#: inc/resourcebadge.class.php:225 inc/resourcebadge.class.php:226
+#: inc/resourcebadge.class.php:257 inc/resourcebadge.class.php:421
+#: inc/resourcebadge.class.php:422 inc/resource_change.class.php:88
 msgid "Badge restitution"
 msgstr "Badge entziehen"
 
-#: inc/resourcebadge.class.php:293
+#: inc/resourcebadge.class.php:295
 msgid "List of badges"
 msgstr "Liste der Badges"
 
@@ -996,177 +1123,189 @@ msgstr "Agentur andern für"
 msgid "Managing change actions"
 msgstr "Änderungen Verwalten"
 
-#: inc/resource.class.php:281 inc/resource.class.php:918
+#: inc/resource.class.php:300 inc/resource.class.php:981
 msgid "Photo"
 msgstr "Foto"
 
-#: inc/resource.class.php:704
+#: inc/resource.class.php:755
 msgid "End date was not completed. Please try again."
 msgstr "Das Austrittsdatum fehlt. Bitte geben Sie es an"
 
-#: inc/resource.class.php:1210 inc/resource.class.php:1907
+#: inc/resource.class.php:1273 inc/resource.class.php:1970
 msgid "Empty for non defined"
 msgstr "leer für nicht definiert"
 
-#: inc/resource.class.php:1338
+#: inc/resource.class.php:1401
 msgid "Menu"
 msgstr "Menü"
 
-#: inc/resource.class.php:1348
+#: inc/resource.class.php:1412
 msgid "Resources management"
 msgstr "Mitarbeiterverwaltung"
 
-#: inc/resource.class.php:1356 inc/resource.class.php:1357
+#: inc/resource.class.php:1420 inc/resource.class.php:1421
 msgid "Declare an arrival"
 msgstr "Eintritt melden"
 
-#: inc/resource.class.php:1363 inc/resource.class.php:1364 inc/resource.class.php:2746
+#: inc/resource.class.php:1427 inc/resource.class.php:1428
+#: inc/resource.class.php:2809
 msgid "Declare a change"
 msgstr "Änderungen festlegen "
 
-#: inc/resource.class.php:1370 inc/resource.class.php:1371 inc/resource.class.php:2677 inc/resource.class.php:2711
+#: inc/resource.class.php:1434 inc/resource.class.php:1435
+#: inc/resource.class.php:2740 inc/resource.class.php:2774
 msgid "Declare a departure"
 msgstr "Austritt melden"
 
-#: inc/resource.class.php:1381
+#: inc/resource.class.php:1444
 msgid "Others declarations"
 msgstr "Andere Meldungen"
 
-#: inc/resource.class.php:1443
+#: inc/resource.class.php:1506
 msgid "Others actions"
 msgstr "Andere Aktionen"
 
-#: inc/resource.class.php:1449 inc/resource.class.php:1450
+#: inc/resource.class.php:1512 inc/resource.class.php:1513
 msgid "Search resources"
 msgstr "Mitarbeiter suchen"
 
-#: inc/resource.class.php:1455 inc/resource.class.php:1456
+#: inc/resource.class.php:1518 inc/resource.class.php:1519
 msgid "See details of a resource"
 msgstr ""
 
-#: inc/resource.class.php:1470
+#: inc/resource.class.php:1533
 msgid "Employments / budgets management"
 msgstr "Stellen / Budgetverwaltung"
 
-#: inc/resource.class.php:1481 inc/resource.class.php:1482
+#: inc/resource.class.php:1544 inc/resource.class.php:1545
 msgid "Declare an employment"
 msgstr "Stelle erfassen"
 
-#: inc/resource.class.php:1490 inc/resource.class.php:1491 inc/resource.class.php:3801
+#: inc/resource.class.php:1553 inc/resource.class.php:1554
+#: inc/resource.class.php:3864
 msgid "Employment management"
 msgstr "Stellenverwaltung"
 
-#: inc/resource.class.php:1500 inc/resource.class.php:1501 inc/resource.class.php:3807
+#: inc/resource.class.php:1563 inc/resource.class.php:1564
+#: inc/resource.class.php:3870
 msgid "Budget management"
 msgstr "Budgetverwaltung"
 
-#: inc/resource.class.php:1511 inc/resource.class.php:1512 inc/resource.class.php:3802
+#: inc/resource.class.php:1574 inc/resource.class.php:1575
+#: inc/resource.class.php:3865
 msgid "List Employments / Resources"
 msgstr "Liste der Stellen / Mitarbeiter"
 
-#: inc/resource.class.php:1540
+#: inc/resource.class.php:1603
 msgid "Welcome to the wizard resource"
 msgstr "Willkommen zum Assistenten zur Anlage von Mitarbeitern"
 
-#: inc/resource.class.php:1544
+#: inc/resource.class.php:1607
 msgid "This wizard lets you create new resources in GLPI"
 msgstr "Mit diesem Assistenten können Sie neue Mitarbeiter in GLPI erstellen"
 
-#: inc/resource.class.php:1546
+#: inc/resource.class.php:1609
 msgid "To begin, select type of contract"
 msgstr "Zunächst bitte einen Vertragstyp wählen"
 
-#: inc/resource.class.php:1621
+#: inc/resource.class.php:1684
 msgid "Enter general information about the resource"
 msgstr "Bitte allgemeine Information über den Mitarbeiter erfassen"
 
-#: inc/resource.class.php:1688
+#: inc/resource.class.php:1751
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname"
+" of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr "Bitte achten Sie auf die Schreibweise von Vor- und Nachname des Mitarbeiters. Zusammengesetzte Namen trennen Sie bitte mit einem Bindestrich \"-\"."
 
-#: inc/resource.class.php:1968
+#: inc/resource.class.php:2031
 msgid "The fields in red must be completed"
 msgstr "Die roten Felder sind Pflichtfelder"
 
-#: inc/resource.class.php:2039
+#: inc/resource.class.php:2102
 msgid "Add the photo of the resource"
 msgstr "Foto des Mitarbeiters hinzufügen"
 
-#: inc/resource.class.php:2061
+#: inc/resource.class.php:2124
 msgid "Photo format : JPG"
 msgstr "Format des Fotos: JPG"
 
-#: inc/resource.class.php:2762
+#: inc/resource.class.php:2825
 msgid "Actions to be taken"
 msgstr "auszuführende Tätigkeiten"
 
-#: inc/resource.class.php:2779
+#: inc/resource.class.php:2842
 #, php-format
 msgid "Please correct: %s"
 msgstr "Bitte korrigieren: %s "
 
-#: inc/resource.class.php:2828 inc/resource.class.php:2875
+#: inc/resource.class.php:2891 inc/resource.class.php:2938
 msgid "Declare a transfer"
 msgstr "Transfer einleiten"
 
-#: inc/resource.class.php:2843
+#: inc/resource.class.php:2906
 msgid "Current entity"
 msgstr "Derzeitige Entität"
 
-#: inc/resource.class.php:2899 inc/resource_item.class.php:673
+#: inc/resource.class.php:2962 inc/resource_item.class.php:673
 msgid "Associate a resource"
 msgstr "Mitarbeiter zuweisen"
 
-#: inc/resource.class.php:2901
+#: inc/resource.class.php:2964
 msgid "Generate resources"
 msgstr "Mitarbeiter erzeugen"
 
-#: inc/resource.class.php:3028 inc/resource.class.php:3054
+#: inc/resource.class.php:3091 inc/resource.class.php:3117
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Dieser Mitarbeiter wurde hinzugefügt"
 msgstr[1] "Diese Mitarbeiter wurden hinzugefügt"
 
-#: inc/resource.class.php:3031 inc/resource.class.php:3051
+#: inc/resource.class.php:3094 inc/resource.class.php:3114
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Dieser Mitarbeiter existiert bereits"
 msgstr[1] "Diese Mitarbeiter existieren bereits"
 
-#: inc/resource.class.php:3320
+#: inc/resource.class.php:3383
 msgid "Declaration of resource transfer OK"
 msgstr "Einleitung des Mitarbeiter Transfers OK"
 
-#: inc/resource.class.php:3336
+#: inc/resource.class.php:3399
 msgid "Resources not declaring leaving"
 msgstr "Mitarbeiter ohne bestätigten Austritt"
 
-#: inc/resource.class.php:3489 inc/resource.class.php:3493
+#: inc/resource.class.php:3552 inc/resource.class.php:3556
 msgid "Send alert to the commercial manager"
 msgstr "Sende Alarm an den kaufmännischen Leiter"
 
-#: inc/resource.class.php:3499 inc/resource.class.php:3502
+#: inc/resource.class.php:3562 inc/resource.class.php:3565
 msgid "Failed to Send alert to the commercial manager"
 msgstr "Fehlgeschlagen: Alarm an den kaufmännischen Leiter"
 
-#: inc/resource.class.php:3521
+#: inc/resource.class.php:3584
 msgid "Select the contract type"
 msgstr "Wählen Sie den Anstellungstyp"
 
-#: inc/resource.class.php:3791 inc/resourceresting.class.php:269 inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
+#: inc/resource.class.php:3854 inc/resourceresting.class.php:269
+#: inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
 #: inc/resourceresting.class.php:445 inc/resourceresting.class.php:1258
 msgid "List of non contract periods"
 msgstr "Liste von Vertragszwischenphasen"
 
-#: inc/resource.class.php:3796 inc/resourceholiday.class.php:191 inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
+#: inc/resource.class.php:3859 inc/resourceholiday.class.php:191
+#: inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
 #: inc/resourceholiday.class.php:1034
 msgid "List of forced holidays"
 msgstr "Liste der Zwangsurlaube"
 
-#: inc/resource.class.php:3812 inc/taskplanning.class.php:42
+#: inc/resource.class.php:3875 inc/taskplanning.class.php:42
 msgid "Tasks list"
 msgstr "Liste der Aufgaben"
+
+#: inc/resource.class.php:3959
+msgid "Resources list"
+msgstr ""
 
 #: inc/resourcehabilitation.class.php:125
 msgid "Add additional habilitation"
@@ -1184,7 +1323,8 @@ msgstr "Enddatum eines Zwangsurlaubes ist erforderlich"
 msgid "Forced holiday declaration of a resource performed"
 msgstr "Zwangsurlaub für diesen Mitarbeiter festgelegt"
 
-#: inc/resourceholiday.class.php:186 inc/resourceholiday.class.php:187 inc/resourceholiday.class.php:221 inc/resourceholiday.class.php:263
+#: inc/resourceholiday.class.php:186 inc/resourceholiday.class.php:187
+#: inc/resourceholiday.class.php:221 inc/resourceholiday.class.php:263
 msgid "Declare a forced holiday"
 msgstr "Zwangsurlaub festlegen"
 
@@ -1210,11 +1350,13 @@ msgstr "Das Startdatum einer Vertragszwischenphase ist erforderlich"
 msgid "Non contract period declaration of a resource performed"
 msgstr "Vertragszwischenphase für diesen Mitarbeiter festgelegt"
 
-#: inc/resourceresting.class.php:255 inc/resourceresting.class.php:256 inc/resourceresting.class.php:304 inc/resourceresting.class.php:362
+#: inc/resourceresting.class.php:255 inc/resourceresting.class.php:256
+#: inc/resourceresting.class.php:304 inc/resourceresting.class.php:362
 msgid "Declare a non contract period"
 msgstr "Vertragszwischenphase festlegen"
 
-#: inc/resourceresting.class.php:262 inc/resourceresting.class.php:263 inc/resourceresting.class.php:409
+#: inc/resourceresting.class.php:262 inc/resourceresting.class.php:263
+#: inc/resourceresting.class.php:409
 msgid "Declaring the end of non contract periods"
 msgstr "Ende der vertragsfreien Zeit  festlegen."
 
@@ -1306,15 +1448,18 @@ msgstr "Entitäts Transfer"
 msgid "Entities allowed to transfer a resource"
 msgstr "Für mitarbeiter zum Transfer erlaubte Entitäten"
 
-#: report/budgetsummary/budgetsummary.php:198 report/budgetsummary/budgetsummary.php:388
+#: report/budgetsummary/budgetsummary.php:198
+#: report/budgetsummary/budgetsummary.php:388
 msgid "Budget volume(qty)"
 msgstr "Budgetvolumen (Menge)"
 
-#: report/budgetsummary/budgetsummary.php:199 report/budgetsummary/budgetsummary.php:389
+#: report/budgetsummary/budgetsummary.php:199
+#: report/budgetsummary/budgetsummary.php:389
 msgid "Employment volume (qty)"
 msgstr "Stellen Volumen (Menge)"
 
-#: report/budgetsummary/budgetsummary.php:200 report/budgetsummary/budgetsummary.php:390
+#: report/budgetsummary/budgetsummary.php:200
+#: report/budgetsummary/budgetsummary.php:390
 msgid "Resource volume (qty)"
 msgstr "Mitarbeitervolumen (Menge)"
 
@@ -1322,29 +1467,39 @@ msgstr "Mitarbeitervolumen (Menge)"
 msgid "Remaining budget - employment (qty)"
 msgstr "Übriges Budget - Stellen (Menge)"
 
-#: report/budgetsummary/budgetsummary.php:202 report/budgetsummary/budgetsummary.php:392
+#: report/budgetsummary/budgetsummary.php:202
+#: report/budgetsummary/budgetsummary.php:392
 msgid "Budget volume (€)"
 msgstr "Budgetvolumen (€)"
 
-#: report/budgetsummary/budgetsummary.php:203 report/budgetsummary/budgetsummary.php:393
+#: report/budgetsummary/budgetsummary.php:203
+#: report/budgetsummary/budgetsummary.php:393
 msgid "Employment volume (€)"
 msgstr "Stellen Volumen (€)"
 
-#: report/budgetsummary/budgetsummary.php:204 report/budgetsummary/budgetsummary.php:394
+#: report/budgetsummary/budgetsummary.php:204
+#: report/budgetsummary/budgetsummary.php:394
 msgid "Resource volume (€)"
 msgstr "Mitarbeitervolumen (€)"
 
-#: report/budgetsummary/budgetsummary.php:205 report/budgetsummary/budgetsummary.php:395
+#: report/budgetsummary/budgetsummary.php:205
+#: report/budgetsummary/budgetsummary.php:395
 msgid "Remaining budget - employment (€)"
 msgstr "Übriges Budget - Stellen (€)"
 
-#: report/budgetsummary/budgetsummary.php:388 report/budgetsummary/budgetsummary.php:389 report/budgetsummary/budgetsummary.php:390
-#: report/budgetsummary/budgetsummary.php:392 report/budgetsummary/budgetsummary.php:393 report/budgetsummary/budgetsummary.php:394
+#: report/budgetsummary/budgetsummary.php:388
+#: report/budgetsummary/budgetsummary.php:389
+#: report/budgetsummary/budgetsummary.php:390
+#: report/budgetsummary/budgetsummary.php:392
+#: report/budgetsummary/budgetsummary.php:393
+#: report/budgetsummary/budgetsummary.php:394
 #: report/budgetsummary/budgetsummary.php:395
 msgid "Total"
 msgstr "Total"
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:49 report/resourceemploymentdiff/resourceemploymentdiff.php:51
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:53 report/resourceemploymentdiff/resourceemploymentdiff.php:55
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:49
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:51
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:53
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:55
 msgid "Resource"
 msgstr "Mitarbeiter"
