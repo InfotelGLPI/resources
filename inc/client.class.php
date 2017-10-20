@@ -48,6 +48,7 @@ class PluginResourcesClient extends CommonDropdown {
 
    public function defineTabs($options = array()) {
       $ong = parent::defineTabs();
+      $this->addStandardTab('PluginResourcesResource', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options);
 
       return $ong;

@@ -58,7 +58,7 @@ class PluginResourcesResourceInjection extends PluginResourcesResource
 
       //$blacklist = PluginDatainjectionCommonInjectionLib::getBlacklistedOptions();
       //Remove some options because some fields cannot be imported
-      $notimportable = array(8,16,18,19,31,80);
+      $notimportable = array(8,16,18,19,31, 33, 34, 80);
       $options['ignore_fields'] = $notimportable;
       $options['displaytype'] = array("dropdown"       => array(3,11,12,17,21,22,23,24,25,26),
                                       "user"           => array(4,10,14,27),

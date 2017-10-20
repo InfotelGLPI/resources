@@ -117,6 +117,7 @@ function plugin_init_resources() {
                   && !Session::haveRight("plugin_servicecatalog", READ))) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = array('admin' => 'PluginResourcesResource');
       }
+
       // Resource menu
       if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
          

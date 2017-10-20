@@ -145,6 +145,25 @@ class PluginResourcesResource extends CommonDBTM {
                                        'items_id' => $item->getField('id')));
    }
 
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+
+      if ($item->getType()=='PluginResourcesClient'
+          && $this->canView()) {
+         return self::getTypeName(2);
+      }
+      return '';
+   }
+
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+
+      if ($item->getType()=='PluginResourcesClient') {
+         $self = new self();
+         $self->showListResourcesForClient($item->getField('id'));
+      }
+      return true;
+   }
+
    /**
     * Get the Search options for the given Type
     *
@@ -365,6 +384,28 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[32]['joinparams']    = array('beforejoin'
                                            => array('table'      => 'glpi_plugin_resources_resourcehabilitations',
                                                     'joinparams' => array('jointype'=>'child')));
+
+      $tab[33]['table']         = 'glpi_plugin_resources_employers';
+      $tab[33]['field']         = 'name';
+      $tab[33]['name']          = PluginResourcesEmployer::getTypeName();
+      $tab[33]['datatype']      = 'itemlink';
+      $tab[33]['massiveaction'] = false;
+      $tab[33]['injectable']    = false;
+      $tab[33]['joinparams']    = array('join'
+                                        => array('table'      => 'glpi_plugin_resources_employees',
+                                                 'joinparams' => array('jointype' => 'child')
+         ));
+
+      $tab[34]['table']         = 'glpi_plugin_resources_clients';
+      $tab[34]['field']         = 'name';
+      $tab[34]['name']          = PluginResourcesClient::getTypeName();
+      $tab[34]['datatype']      = 'itemlink';
+      $tab[34]['massiveaction'] = false;
+      $tab[34]['injectable']    = false;
+      $tab[34]['joinparams']    = array('join'
+                                        => array('table'      => 'glpi_plugin_resources_employees',
+                                                 'joinparams' => array('jointype' => 'child')
+         ) );
 
       $tab[31]['table']          = $this->getTable();
       $tab[31]['field']          = 'id';
@@ -3836,7 +3877,7 @@ class PluginResourcesResource extends CommonDBTM {
       $menu = PluginResourcesBudget::getMenuOptions($menu);
       $menu = PluginResourcesChecklist::getMenuOptions($menu);
       $menu = PluginResourcesEmployment::getMenuOptions($menu);
-      
+
       return $menu;
    }
    
@@ -3882,6 +3923,57 @@ class PluginResourcesResource extends CommonDBTM {
          return $CFG_GLPI["root_doc"]."/plugins/resources/pics/nobody.png";
       }
       return $CFG_GLPI["root_doc"]."/plugins/resources/pics/nobody.png";
+
+   }
+
+   function showListResourcesForClient($client_id) {
+      global $DB;
+
+      $query = "SELECT *  
+                FROM `glpi_plugin_resources_resources` 
+                LEFT JOIN `glpi_plugin_resources_employees` 
+                  ON `glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_resources_id`
+                WHERE `glpi_plugin_resources_employees`.`plugin_resources_clients_id` = $client_id
+                AND NOT `glpi_plugin_resources_resources`.`is_deleted`";
+      $result = $DB->query($query);
+
+      echo "<div align='center'>";
+
+      if($DB->numrows($result) == 0 ) {
+         echo __('No item to display');
+      } else {
+
+         echo "<table class='tab_cadre_fixe'>";
+         echo "<tr><th colspan='5'>" . __('Resources list', 'resources') . "</th></tr>";
+         echo "<tr><th>" . __('Surname') . "</th>";
+         echo "<th>" . __('First name') . "</th>";
+         echo "<th>" . PluginResourcesResourceState::getTypeName(1) . "</th>";
+         echo "<th>" . __('Location') . "</th>";
+         echo "<th>" . PluginResourcesDepartment::getTypeName(1) . "</th>";
+         echo "</tr>";
+
+         $resource = new PluginResourcesResource();
+
+         foreach ($DB->request($query) as $employee) {
+            if($resource->getFromDB($employee['plugin_resources_resources_id'])) {
+               if (!$resource->fields['is_deleted']) {
+                  echo "<tr class='tab_bg_1'>";
+                  echo "<td>" . $resource->getLink() . "</td>";
+                  echo "<td>" . $resource->fields['firstname'] . "</td>";
+                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesResourceState'),
+                                                          $resource->fields['plugin_resources_resourcestates_id']) . "</td>";
+                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('Location'),
+                                                          $resource->fields['locations_id']) . "</td>";
+                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesDepartment'),
+                                                          $resource->fields['plugin_resources_departments_id']) . "</td>";
+                  echo "</tr>";
+               }
+            }
+         }
+         echo "</table>";
+
+      }
+      echo "</div>";
 
    }
 

@@ -338,7 +338,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "</td><td style='color: green;'><div id='security_compliance'>";
          if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-            echo __('Security compliance', 'resources')."&nbsp;";$CFG_GLPI;
+            echo __('Security compliance', 'resources')."&nbsp;";
             echo "<img src='".$CFG_GLPI["root_doc"]."/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
          }
          echo "</td></tr>";
