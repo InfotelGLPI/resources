@@ -767,6 +767,18 @@ class PluginResourcesResource extends CommonDBTM {
                $PluginResourcesChecklistconfig->addChecklistsFromRules($this,PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
             }
          }
+      } else if (isset($this->input["is_leaving"])
+                 && $this->input["is_leaving"] == 0
+                 && in_array("is_leaving", $this->updates)) {
+         $this->fields["users_id_recipient_leaving"]         = 0;
+         $this->fields["date_declaration_leaving"]           = 'NULL';
+         $this->fields["date_end"]                           = 'NULL';
+         $this->fields["plugin_resources_leavingreasons_id"] = 0;
+         $this->updates[]                                    = "users_id_recipient_leaving";
+         $this->updates[]                                    = "date_declaration_leaving";
+         $this->updates[]                                    = "plugin_resources_leavingreasons_id";
+         $this->updates[]                                    = "date_end";
+
       }
 
       //if location field is updated
