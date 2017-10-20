@@ -82,7 +82,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<br>";
       echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='6'>" . self::getTypeName(2) . "</th></tr>";
+      echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
       echo "<a href=\"./resourcebadge.form.php?config\">" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</a>";
       echo "</td></tr></table></div>";

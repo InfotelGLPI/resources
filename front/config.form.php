@@ -42,10 +42,8 @@ if ($plugin->isActivated("resources")) {
       Html::back();
 
    } else if (isset($_POST["delete_ticket"])) {
-      foreach ($_POST["item"] as $key => $val) {
-         if ($val == 1) {
-            $cat->delete(array('id' => $key));
-         }
+      if (isset($_POST['id'])) {
+         $cat->delete(array('id' => $_POST['id']));
       }
       Html::back();
 

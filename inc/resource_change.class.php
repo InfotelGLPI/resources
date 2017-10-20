@@ -108,7 +108,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $resource->getFromDB($plugin_resources_resources_id);
 
       //Display for each action
-      switch ($action_id){
+      switch ($action_id) {
          case self::CHANGE_RESOURCEMANAGER :
 
             echo "<table>";
@@ -465,7 +465,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
       echo "<form name='form' method='post' action='".self::getFormURL()."'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='6'>" . __("Managing change actions", 'resources') . "</th></tr>";
+      echo "<tr><th>" . __("Managing change actions", 'resources') . "</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
       echo "<a href=\"./resource_change.form.php\">".__('Setup')."</a>";
       echo "</td></tr></table></div>";
@@ -675,6 +675,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             }
          }
       }
+
       // Set date to creation date
       $createtime    = date('Y-m-d H:i:s');
       $input['date'] = $createtime;
@@ -690,6 +691,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       if ($res->getFromDB($data['plugin_resources_resources_id'])) {
 
          $input['users_id_recipient']  = Session::getLoginUserID();
+//         $input['_users_id_requester_notif'] = ['use_notification'  => 0];
          $input['_users_id_requester'] = Session::getLoginUserID();
 
          $input["items_id"] = array('PluginResourcesResource' => array($data['plugin_resources_resources_id']));

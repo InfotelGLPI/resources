@@ -323,7 +323,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<table class='plugin_resources_wizard_table'>";
 
-         echo "<tr class='plugin_resources_wizard_right_area'><td colspan='2'>";
+         echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
@@ -332,6 +332,8 @@ class PluginResourcesEmployee extends CommonDBTM {
                                                          'entity' => $entity));
          echo "</td></tr>";
 
+         echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
+         echo PluginResourcesClient::getTypeName(1)."</td>";
          echo "<td>";
          Dropdown::show('PluginResourcesClient', array('name'      => "plugin_resources_clients_id",
                                                        'value'     => $this->fields["plugin_resources_clients_id"],
@@ -341,7 +343,6 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "</td><td style='color: green;'><div id='security_compliance'>";
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             echo __('Security compliance', 'resources') . "&nbsp;";
-            $CFG_GLPI;
             echo "<img src='" . $CFG_GLPI["root_doc"] . "/pics/ok.png' alt=\"" . __('OK') . "\" width='14' height='14'>";
          }
          echo "</td></tr>";

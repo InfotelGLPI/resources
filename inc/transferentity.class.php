@@ -74,7 +74,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          echo "<form name='form' method='post' action='$target'>";
 
          echo "<div align='center'><table class='tab_cadre_fixe'>";
-         echo "<tr><th colspan='6'>".self::getTypeName()."</th></tr>";
+         echo "<tr><th colspan='2'>".self::getTypeName()."</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          // Dropdown group
@@ -94,7 +94,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          echo "</tr>";
          
          echo "<tr>";
-         echo "<td class='tab_bg_2 center' colspan='6'>";
+         echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='submit' name='add_transferentity' class='submit' value='"._sx('button', 'Add')."' >";
          echo "</td>";
          echo "</tr>";

@@ -73,7 +73,7 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
 
          echo "<div align='center'><table class='tab_cadre_fixe'>";
-         echo "<tr><th colspan='6'>".self::getTypeName()."</th></tr>";
+         echo "<tr><th colspan='2'>".self::getTypeName()."</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
@@ -85,7 +85,7 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</tr>";
 
          echo "<tr>";
-         echo "<td class='tab_bg_2 center' colspan='6'>";
+         echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
          echo "<input type='submit' name='update_setup' class='submit' value='"._sx('button', 'Update')."' >";
          echo "</td>";

@@ -189,7 +189,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_2'>";
       echo "<td>";
-      echo __('Send resource creation notification', 'resources');
+      echo __('Send resource creation report notification', 'resources');
       echo "</td>";
       echo "<td>";
       Dropdown::showYesNo('send_report', $this->fields["send_report_notif"]);
@@ -268,7 +268,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
             echo "<tr class='tab_bg_2'>";
             echo "<td>";
-            echo __('Send resource creation notification', 'resources');
+            echo __('Send resource creation report notification', 'resources');
             echo "</td>";
             echo "<td>";
             Dropdown::showYesNo('send_report_notif', $data["send_report_notif"]);

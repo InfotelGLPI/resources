@@ -68,32 +68,25 @@ class PluginResourcesTicketCategory extends CommonDBTM {
    }
 
    function showForm($target) {
-      global $CFG_GLPI;
 
       $dbu = new DbUtils();
       $categories = $dbu->getAllDataFromTable($this->getTable());
       if (!empty($categories)) {
          echo "<div align='center'>";
-         $rand = mt_rand();
-         echo "<form method='post' name='massiveaction_form_ticket$rand' 
-                                    id='massiveaction_form_ticket$rand' action='".$target."'>";
+         echo "<form method='post' action='".$target."'>";
          echo "<table class='tab_cadre_fixe' cellpadding='5'>";
          echo "<tr>";
-         echo "<th></th><th>".__('Category of created tickets', 'resources')."</th>";
+         echo "<th colspan='2'>".__('Category of created tickets', 'resources')."</th>";
          echo "</tr>";
-         foreach ($categories as $categorie) {
-            $ID = $categorie["id"];
-            echo "<tr class='tab_bg_1'>";
-            echo "<td class='center' width='10'>";
-            echo "<input type='hidden' name='id' value='$ID'>";
-            echo "<input type='checkbox' name='item[$ID]' value='1'>";
-            echo "</td>";
-            echo "<td>".Dropdown::getDropdownName("glpi_itilcategories", $categorie["ticketcategories_id"])."</td>";
-            echo "</tr>";
-         }
-
-         Html::openArrowMassives("massiveaction_form_ticket$rand", true);
-         Html::closeArrowMassives(array('delete_ticket' => __s('Delete permanently')));
+         $categorie = reset($categories);
+         $ID        = $categorie["id"];
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>" . Dropdown::getDropdownName("glpi_itilcategories", $categorie["ticketcategories_id"]) . "</td>";
+         echo "<td class='center'>";
+         echo "<input type='hidden' name='id' value='$ID'>";
+         echo "<input type='submit' class='submit' name='delete_ticket' value='" . __('Delete permanently') . "'>";
+         echo "</td>";
+         echo "</tr>";
 
          echo "</table>";
          Html::closeForm();

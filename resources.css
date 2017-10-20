@@ -54,6 +54,10 @@
    text-align: justify;
 }
 
+.plugin_resources_wizard_explain td{
+   padding : 5px;
+}
+
 .plugin_resources_wizard_comment {
    font-size: 9px;
 }
