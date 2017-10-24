@@ -56,11 +56,28 @@ class PluginResourcesClient extends CommonDropdown {
 
    function getAdditionalFields() {
 
-      return array(array('name'  => 'security_compliance',
-                         'label' => __('Security compliance', 'resources'),
-                         'type'  => 'bool',
-                         'list'  => true),
-      );
+      $config = new PluginResourcesConfig();
+      if ($config->useSecurityCompliance()) {
+         return array(array('name'  => 'security_and',
+                            'label' => __('AND - Certificate of non-dissimulation', 'resources'),
+                            'type'  => 'bool',
+                            'list'  => true),
+                      array('name'  => 'security_fifour',
+                            'label' => __('FIFOUR - Supplier\'s sheet', 'resources'),
+                            'type'  => 'bool',
+                            'list'  => true),
+                      array('name'  => 'security_gisf',
+                            'label' => __('GISF - Supplier security incident management', 'resources'),
+                            'type'  => 'bool',
+                            'list'  => true),
+                      array('name'  => 'security_cfi',
+                            'label' => __('CFI - Supplier card', 'resources'),
+                            'type'  => 'bool',
+                            'list'  => true),
+         );
+      } else {
+         return array();
+      }
    }
    
    static function transfer($ID, $entity) {
@@ -98,10 +115,28 @@ class PluginResourcesClient extends CommonDropdown {
       $tab = parent::getSearchOptions();
 
       $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'security_compliance';
-      $tab[14]['name']          = __('Security compliance', 'resources');
+      $tab[14]['field']         = 'security_and';
+      $tab[14]['name']          = __('AND - Certificate of non-dissimulation', 'resources');
       $tab[14]['injectable']    = true;
       $tab[14]['datatype']      = 'bool';
+
+      $tab[15]['table']         = $this->getTable();
+      $tab[15]['field']         = 'security_fifour';
+      $tab[15]['name']          = __('FIFOUR - Supplier\'s sheet', 'resources');
+      $tab[15]['injectable']    = true;
+      $tab[15]['datatype']      = 'bool';
+
+      $tab[16]['table']         = $this->getTable();
+      $tab[16]['field']         = 'security_gisf';
+      $tab[16]['name']          = __('GISF - Supplier security incident management', 'resources');
+      $tab[16]['injectable']    = true;
+      $tab[16]['datatype']      = 'bool';
+
+      $tab[17]['table']         = $this->getTable();
+      $tab[17]['field']         = 'security_cfi';
+      $tab[17]['name']          = __('CFI - Supplier card', 'resources');
+      $tab[17]['injectable']    = true;
+      $tab[17]['datatype']      = 'bool';
 
       return $tab;
    }
@@ -109,8 +144,46 @@ class PluginResourcesClient extends CommonDropdown {
    static function isSecurityCompliance($id) {
       $client = new self();
 
+      return $client->isSecurityAND($id) && $client->isSecurityFIFOUR($id)
+             && $client->isSecurityGISF($id) && $client->isSecurityCFI($id);
+
+   }
+
+   static function isSecurityAND($id) {
+      $client = new self();
+
       if ($client->getFromDB($id)) {
-         return $client->fields['security_compliance'];
+         return $client->fields['security_and'];
+      }
+      return false;
+
+   }
+
+   static function isSecurityFIFOUR($id) {
+      $client = new self();
+
+      if ($client->getFromDB($id)) {
+         return $client->fields['security_fifour'];
+      }
+      return false;
+
+   }
+
+   static function isSecurityGISF($id) {
+      $client = new self();
+
+      if ($client->getFromDB($id)) {
+         return $client->fields['security_gisf'];
+      }
+      return false;
+
+   }
+
+   static function isSecurityCFI($id) {
+      $client = new self();
+
+      if ($client->getFromDB($id)) {
+         return $client->fields['security_cfi'];
       }
       return false;
 

@@ -224,11 +224,19 @@ class PluginResourcesEmployee extends CommonDBTM {
                            'entity' => $entity,
                            'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
 
-         echo "</td><td style='color: green;'><div id='security_compliance'>";
+
          if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-            echo __('Security compliance', 'resources')."&nbsp;";$CFG_GLPI;
-            echo "<img src='".$CFG_GLPI["root_doc"]."/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
+            $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
+            $color = "color: green;";
+         } else {
+            $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ko.png' alt=\"".__('KO')."\" width='14' height='14'>";
+            $color = "color: red;";
          }
+         echo "</td><td><div id='security_compliance'>";
+         echo "<span style='$color'>";
+         echo __('Security compliance', 'resources')."&nbsp;";
+         echo $img;
+         echo "</span>";
          echo "</div></td></tr>";
                
          echo "<tr>";

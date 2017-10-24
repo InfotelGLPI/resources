@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 10:52+0200\n"
-"PO-Revision-Date: 2017-10-20 09:07+0000\n"
+"POT-Creation-Date: 2017-10-24 17:09+0200\n"
+"PO-Revision-Date: 2017-10-24 15:23+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/tsmr/GLPI_resources/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -136,8 +136,7 @@ msgstr ""
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "La instalación de PHP es incompatible. Faltan los módulos"
 
-#: ajax/employee.php:36 inc/client.class.php:60 inc/client.class.php:102
-#: inc/employee.class.php:229 inc/employee.class.php:341
+#: ajax/employee.php:43 inc/employee.class.php:237 inc/employee.class.php:349
 msgid "Security compliance"
 msgstr ""
 
@@ -359,6 +358,7 @@ msgstr "Nuevo recurso - checklists que verificar"
 #: inc/resource_item.class.php:709 inc/resource_item.class.php:960
 #: inc/resource_item.class.php:970 inc/resourcepdf.class.php:70
 #: inc/rulecontracttype.class.php:204
+#: report/checkhabilitation/checkhabilitation.php:211
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:57
@@ -437,7 +437,7 @@ msgstr "Añadir una necesidad"
 msgid "Will be added to the resource comment area"
 msgstr "Se añadirá a la zona de descripción del recurso"
 
-#: inc/choice.class.php:345 inc/employee.class.php:359
+#: inc/choice.class.php:345 inc/employee.class.php:367
 #: inc/resource.class.php:1622 inc/resource.class.php:2056
 #: inc/resource.class.php:2067 inc/resource.class.php:2143
 msgctxt "button"
@@ -466,8 +466,37 @@ msgid_plural "Types of need"
 msgstr[0] "Tipo de necesidad"
 msgstr[1] "Tipos de necesidad"
 
+#: inc/client.class.php:62 inc/client.class.php:119
+msgid "AND - Certificate of non-dissimulation"
+msgstr ""
+
+#: inc/client.class.php:66 inc/client.class.php:125
+msgid "FIFOUR - Supplier's sheet"
+msgstr ""
+
+#: inc/client.class.php:70 inc/client.class.php:131
+msgid "GISF - Supplier security incident management"
+msgstr ""
+
+#: inc/client.class.php:74 inc/client.class.php:137
+msgid "CFI - Supplier card"
+msgstr ""
+
 #: inc/config.class.php:78
 msgid "Displaying the security block on the resource"
+msgstr ""
+
+#: inc/config.class.php:87
+msgid "Security compliance management"
+msgstr ""
+
+#: inc/config.class.php:88
+msgid "Display of four additional security fields in the clients"
+msgstr ""
+
+#: inc/config.class.php:89
+msgid ""
+"(If all four fields are enabled, the client is compliant with security)"
 msgstr ""
 
 #: inc/confighabilitation.class.php:54
@@ -511,7 +540,7 @@ msgid "Wizard resource creation"
 msgstr "Asistente de creación de recursos humanos"
 
 #: inc/contracttype.class.php:63 inc/contracttype.class.php:89
-#: inc/employee.class.php:314
+#: inc/employee.class.php:322
 msgid "Enter employer information about the resource"
 msgstr "Entra información del empleador"
 
@@ -557,13 +586,13 @@ msgstr[1] "Empleados"
 msgid "The resource is also created if not existent"
 msgstr "El recurso será tambien creado si no existe ya"
 
-#: inc/employee.class.php:356 inc/resource.class.php:2053
+#: inc/employee.class.php:364 inc/resource.class.php:2053
 #: inc/resource.class.php:2064
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Anterior"
 
-#: inc/employee.class.php:429
+#: inc/employee.class.php:437
 msgctxt "button"
 msgid "Next step"
 msgstr "Paso siguiente"
