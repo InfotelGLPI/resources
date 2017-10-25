@@ -84,6 +84,17 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
 
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Security compliance management', 'resources');
+         echo "<br><span class='red'>".sprintf(__('%1$s <br> %2$s'), __('Display of four additional security fields in the clients', 'resources'),
+                                               __('(If all four fields are enabled, the client is compliant with security)', 'resources'))."</span>";
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('security_compliance', $this->fields['security_compliance']);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
@@ -94,7 +105,6 @@ class PluginResourcesConfig extends CommonDBTM {
          Html::closeForm();
       }
 
-
    }
 
    /**
@@ -102,6 +112,13 @@ class PluginResourcesConfig extends CommonDBTM {
     */
    function useSecurity() {
       return $this->fields['security_display'];
+   }
+
+   /**
+    * @return mixed
+    */
+   function useSecurityCompliance() {
+      return $this->fields['security_compliance'];
    }
 
 
