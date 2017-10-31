@@ -589,7 +589,7 @@ class PluginResourcesResource extends CommonDBTM {
          PluginResourcesTask::cloneItem($this->input["_oldID"], $this->fields['id']);
       }
 
-      if (!isset($this->fields['is_template']) && $this->fields['plugin_resources_habilitations_id']) {
+      if (!isset($this->fields['is_template']) && isset($this->fields['plugin_resources_habilitations_id'])) {
          $ResourceHabilitation = new PluginResourcesResourceHabilitation();
          $ResourceHabilitation->add(array('plugin_resources_resources_id'     => $this->fields['id'],
                                           'plugin_resources_habilitations_id' => $this->fields['plugin_resources_habilitations_id']));
