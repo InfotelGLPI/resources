@@ -37,7 +37,6 @@ class PluginResourcesRuleContracttypeCollection extends RuleCollection {
 
    // From RuleCollection
    public $stop_on_first_match=true;
-   static public $right='rule_ticket';
    public $menu_option='contracttypes';
    
    function getTitle() {

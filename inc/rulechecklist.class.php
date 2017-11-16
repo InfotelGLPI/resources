@@ -43,7 +43,6 @@ class PluginResourcesRuleChecklist extends Rule {
    static $rightname = 'plugin_resources';
    
    // From Rule
-   static public $right='rule_ticket';
    public $can_sort=true;
 
    function getTitle() {

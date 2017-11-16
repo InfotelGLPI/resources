@@ -80,8 +80,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
           && $event != 'AlertLeavingResources'
           && $event != 'AlertLeavingChecklists'
           && $event != 'AlertLeavingChecklists'
-          && $event != 'AlertCommercialManager'
-      ) {
+          && $event != 'AlertCommercialManager') {
          $this->addTarget(self::RESOURCE_MANAGER, __('Resource manager', 'resources'));
          $this->addTarget(self::RESOURCE_SALES_MANAGER, __('Sales manager', 'resources'));
          $this->addTarget(self::RESOURCE_AUTHOR, __('Requester'));
@@ -89,8 +88,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->addTarget(self::RESOURCE_USER, __('Resource user', 'resources'));
          if ($event == 'newtask'
              || $event == 'updatetask'
-             || $event == 'deletetask'
-         ) {
+             || $event == 'deletetask') {
             $this->addTarget(self::RESOURCE_TASK_TECHNICIAN, __("Task's responsible technician", "resources"));
             $this->addTarget(self::RESOURCE_TASK_GROUP, __("Task's responsible group", "resources"));
          }
@@ -175,25 +173,25 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
 
       foreach ($DB->request($query) as $data) {
-         $this->addToAddressesList($data);
+         $this->addToRecipientsList($data);
       }
    }
 
    //Get recipient
    function getManagerAddress() {
-      return $this->getUserByField("users_id");
+      return $this->addUserByField("users_id");
    }
 
    function getSalesManagerAddress() {
-      return $this->getUserByField("users_id_sales");
+      return $this->addUserByField("users_id_sales");
    }
 
    function getAuthorAddress() {
-      return $this->getUserByField("users_id_recipient");
+      return $this->addUserByField("users_id_recipient");
    }
 
    function getAuthorLeavingAddress() {
-      return $this->getUserByField("users_id_recipient_leaving");
+      return $this->addUserByField("users_id_recipient_leaving");
    }
 
    function getRessourceAddress($options = array()) {
@@ -212,7 +210,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          foreach ($DB->request($query) as $data) {
             $data['email'] = UserEmail::getDefaultForUser($data['id']);
-            $this->addToAddressesList($data);
+            $this->addToRecipientsList($data);
          }
       }
    }
@@ -229,7 +227,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          foreach ($DB->request($query) as $data) {
             $data['email'] = UserEmail::getDefaultForUser($data['id']);
-            $this->addToAddressesList($data);
+            $this->addToRecipientsList($data);
          }
       }
    }
@@ -249,7 +247,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                     WHERE `glpi_plugin_resources_tasks`.`id` = '" . $options['tasks_id'] . "'";
 
          foreach ($DB->request($query) as $data) {
-            $this->addToAddressesList($data);
+            $this->addToRecipientsList($data);
          }
       }
    }

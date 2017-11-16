@@ -41,18 +41,14 @@ if (!defined('GLPI_ROOT')) {
 **/
 class PluginResourcesRuleContracttype extends Rule {
 
-   static $rightname = 'plugin_resources';
+   public static $rightname = 'plugin_resources';
    
-   // From Rule
-   static public $right='rule_ticket';
    public $can_sort=true;
-
 
    function getTitle() {
 
       return PluginResourcesResource::getTypeName(2)." ".__('Required Fields', 'resources');
    }
-   
    
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
@@ -66,26 +62,21 @@ class PluginResourcesRuleContracttype extends Rule {
       return true;
    }
 
-
    function isEntityAssign() {
       return true;
    }
 
-
    function canUnrecurs() {
       return true;
    }
-   
-   
+
    function maxCriteriasCount() {
       return 1;
    }
-   
-   
+
    function maxActionsCount() {
       return count($this->getActions());
    }
-   
    
    function addSpecificParamsForPreview($params) {
 
@@ -94,7 +85,6 @@ class PluginResourcesRuleContracttype extends Rule {
       }
       return $params;
    }
-
 
    /**
     * Function used to display type specific criterias during rule's preview
@@ -114,7 +104,6 @@ class PluginResourcesRuleContracttype extends Rule {
          echo "<input type='hidden' name='entities_id' value='".$_SESSION["glpiactive_entity"]."'>";
       }
    }
-   
    
    function getCriterias() {
       
