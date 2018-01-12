@@ -1026,6 +1026,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                         `glpi_plugin_resources_resources`.`date_begin`,
                         `glpi_plugin_resources_resources`.`date_end`,
                         `glpi_plugin_resources_resources`.`users_id_recipient_leaving`,
+                        `glpi_plugin_resources_resources`.`date_declaration_leaving`,
                         `glpi_plugin_resources_resources`.`is_leaving`,
                         `glpi_plugin_resources_resources`.`is_helpdesk_visible`,
                         `glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` ";
