@@ -80,11 +80,14 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          // Dropdown group
          echo "<td class='center'>";
          echo __('Entity').'&nbsp;';
-         $rand = Dropdown::show("Entity", array('name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()'));
+         $rand = Dropdown::show("Entity", array('name' => 'entities_id',
+                                                'used' => $used_entities,
+                                                'on_change' => 'entity_group()'));
          echo "<script type='text/javascript'>";
          echo "function entity_group(){";
          $params = array('action' => 'groupEntity', 'entities_id' => '__VALUE__');
-         Ajax::updateItemJsCode('entity_group',  $CFG_GLPI['root_doc'].'/plugins/resources/ajax/resourceinfo.php', $params, 'dropdown_entities_id'.$rand);
+         Ajax::updateItemJsCode('entity_group',
+                                $CFG_GLPI['root_doc'].'/plugins/resources/ajax/resourceinfo.php', $params, 'dropdown_entities_id'.$rand);
          echo "}";
          echo "</script>";
          echo "</td>";
