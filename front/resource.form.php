@@ -26,10 +26,10 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 if (!isset($_GET["id"]))
-   $_GET["id"]           = "";
+   $_GET["id"] = "";
 if (!isset($_GET["withtemplate"]))
    $_GET["withtemplate"] = "";
 
@@ -47,8 +47,8 @@ if (isset($_POST["resend"])) {
    $resource->reSendResourceCreation($_POST);
    $resource->redirectToList();
 
-//from helpdesk
-//add items needs of a resource
+   //from helpdesk
+   //add items needs of a resource
 } else if (isset($_POST["addhelpdeskitem"])) {
    if ($_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
       if ($resource->canCreate())
@@ -63,12 +63,12 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       $choice->delete(array('id' => $_POST["id"]));
    Html::back();
 
-///////////////////////////////employees///////////////////////////////
-//from central
-// add employee and resource if adding employee informations from user details form
+   ///////////////////////////////employees///////////////////////////////
+   //from central
+   // add employee and resource if adding employee informations from user details form
 } else if (isset($_POST["addressourceandemployee"])) {
    if ($employee->canCreate()) {
-      $User                                       = new user();
+      $User = new user();
       $User->getFromDB($_POST["users_id"]);
       //Check unicity by criteria control
       $_POST["name"]                              = $User->fields["realname"];
@@ -131,8 +131,8 @@ else if (isset($_POST["deletehelpdeskitem"])) {
 
    Html::back();
 
-//from central
-//add employee informations from user details form or resource form
+   //from central
+   //add employee informations from user details form or resource form
 } else if (isset($_POST["addemployee"])) {
    if ($_POST['plugin_resources_resources_id'] > 0) {
       if ($employee->canCreate()) {
@@ -165,8 +165,8 @@ else if (isset($_POST["deleteemployee"])) {
       $employee->delete($_POST, 1);
    Html::back();
 
-/////////////////////////////////resource from central///////////////////////////////
-//add resource
+   /////////////////////////////////resource from central///////////////////////////////
+   //add resource
 } else if (isset($_POST["add"])) {
    $resource->check(-1, UPDATE, $_POST);
    $newID = $resource->add($_POST);
@@ -189,7 +189,7 @@ else if (isset($_POST["delete"])) {
       $resource->delete($_POST);
 
    if (!empty($_POST["withtemplate"]))
-      Html::redirect($CFG_GLPI["root_doc"]."/plugins/resources/front/setup.templates.php?add=0");
+      Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
    else
       $resource->redirectToList();
 }
@@ -206,7 +206,7 @@ else if (isset($_POST["purge"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->delete($_POST, 1);
    if (!empty($_POST["withtemplate"]))
-      Html::redirect($CFG_GLPI["root_doc"]."/plugins/resources/front/setup.templates.php?add=0");
+      Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
    else
       $resource->redirectToList();
 }
@@ -229,7 +229,7 @@ else if (isset($_POST["additem"])) {
 //update comment of item of a resource
 else if (isset($_POST["updatecomment"])) {
    foreach ($_POST["updatecomment"] as $key => $val) {
-      $varcomment = "comment".$key;
+      $varcomment = "comment" . $key;
       $resource_item->updateItem($key, $_POST[$varcomment]);
    }
    Html::back();
@@ -260,7 +260,7 @@ else if (isset($_POST["deleteresources"])) {
 else if (isset($_POST["add_checklist_resources"])) {
    if ($checklist->canCreate()) {
       $resource->getFromDB($_POST["id"]);
-      
+
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
@@ -276,8 +276,8 @@ else if (isset($_POST["add_checklist"])) {
       $newID = $checklist->add($_POST);
    Html::back();
 
-//from central
-//close checklist		
+   //from central
+   //close checklist
 } else if (isset($_POST["close_checklist"])) {
    $isfinished = PluginResourcesChecklist::checkifChecklistFinished($_POST);
 
@@ -288,23 +288,23 @@ else if (isset($_POST["add_checklist"])) {
    }
    Html::back();
 
-//from central
-//open checklist		
+   //from central
+   //open checklist
 } else if (isset($_POST["open_checklist"])) {
    if ($checklist->canCreate()) {
       $checklist->openFinishedChecklist($_POST);
    }
    Html::back();
 
-//from central
-//up / down checklist		
+   //from central
+   //up / down checklist
 } else if (isset($_POST["move"])) {
    $checklist->changeRank($_POST);
    Html::back();
 
 } else if (isset($_POST["report"])) {
-   $restrict   = "`itemtype` = 'User' AND `plugin_resources_resources_id` = '".$_POST["id"]."'";
-   $dbu = new DbUtils();
+   $restrict   = "`itemtype` = 'User' AND `plugin_resources_resources_id` = '" . $_POST["id"] . "'";
+   $dbu        = new DbUtils();
    $linkeduser = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 
    if (!empty($linkeduser)) {
@@ -314,10 +314,10 @@ else if (isset($_POST["add_checklist"])) {
       Session::addMessageAfterRedirect(__('The notification is not sent because the resource is not linked with a user', 'resources'), true, ERROR);
    }
    Html::back();
-   
+
 } else if (isset($_POST["delete_picture"])) {
    if (isset($_POST['picture'])) {
-      $filename = GLPI_PLUGIN_DOC_DIR."/resources/".$_POST['picture'];
+      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $_POST['picture'];
       if (file_exists($filename)) {
          if (unlink($filename)) {
             $_POST['picture'] = 'NULL';
@@ -327,9 +327,9 @@ else if (isset($_POST["add_checklist"])) {
       }
    }
    Html::back();
-   
+
 } else {
-  $resource->checkGlobal(READ);
+   $resource->checkGlobal(READ);
 
    if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
       //from central

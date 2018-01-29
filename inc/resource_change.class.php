@@ -682,8 +682,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $input['type'] = Ticket::DEMAND_TYPE;
       $input['itilcategories_id'] = $data['itilcategories_id'];
       // Compute due_date if predefined based on create date
-      if (isset($predefined['due_date'])) {
-         $input['due_date'] = Html::computeGenericDateTimeSearch($predefined['due_date'], false, $createtime);
+      if (isset($predefined['time_to_resolve'])) {
+         $input['time_to_resolve'] = Html::computeGenericDateTimeSearch($predefined['time_to_resolve'], false,
+                                                                        strtotime($createtime));
       }
       // Set entity
       $input['entities_id'] = $data['entities_id'];

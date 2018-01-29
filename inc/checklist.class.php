@@ -188,17 +188,27 @@ class PluginResourcesChecklist extends CommonDBTM {
          $createtime    = date('Y-m-d H:i:s');
          $input['date'] = $createtime;
          // Compute due_date if predefined based on create date
-         if (isset($predefined['due_date'])) {
-            $input['due_date'] = Html::computeGenericDateTimeSearch($predefined['due_date'], false, $createtime);
+         if (isset($predefined['time_to_resolve'])) {
+            $input['time_to_resolve'] = Html::computeGenericDateTimeSearch($predefined['time_to_resolve'], false,
+                                                                           strtotime($createtime));
          }
          // Set entity
          $input['entities_id'] = $data['entities_id'];
          $input['actiontime']  = $data['actiontime'];
          $res                  = new PluginResourcesResource();
+
+         $default_use_notif                                      = Entity::getUsedConfig('is_notif_enable_default', $input['entities_id'], '', 1);
+
          if ($res->getFromDB($data['plugin_resources_resources_id'])) {
 
             $input['users_id_recipient']  = $res->fields['users_id_recipient'];
-            $input['_users_id_requester'] = $res->fields['users_id_recipient'];
+            $input['_users_id_requester'] = [$res->fields['users_id_recipient']];
+            $input['_users_id_requester_notif']['use_notification'] = [$default_use_notif];
+            $alternativeEmail = '';
+            if (filter_var(Session::getLoginUserID(), FILTER_VALIDATE_EMAIL) !== false) {
+               $alternativeEmail = Session::getLoginUserID();
+            }
+            $input['_users_id_requester_notif']['alternative_email'] = [$alternativeEmail];
 
             if (isset($res->fields['users_id'])) {
                $input['_users_id_observer'] = $res->fields['users_id'];
@@ -211,14 +221,14 @@ class PluginResourcesChecklist extends CommonDBTM {
          }
 
          //TODO : ADD checklist lists or add config into plugin ?
-         $input["content"].= addslashes("\n\n");
-         $input['status']     = Ticket::CLOSED;
-         $input['id'] = 0;
-         $ticket              = new Ticket();
-         $input               = Toolbox::addslashes_deep($input);
+         $input["content"] .= addslashes("\n\n");
+         $input['status']  = Ticket::CLOSED;
+         $input['id']      = 0;
+         $ticket           = new Ticket();
+         $input            = Toolbox::addslashes_deep($input);
 
-         if ($tid             = $ticket->add($input)) {
-            $msg    = __('Create a end treatment ticket', 'resources')." OK - ($tid)"; // Success
+         if ($tid = $ticket->add($input)) {
+            $msg    = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success
             $result = true;
          } else {
             $msg = __('Failed operation'); // Failure
