@@ -690,9 +690,16 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $res                  = new PluginResourcesResource();
       if ($res->getFromDB($data['plugin_resources_resources_id'])) {
 
-         $input['users_id_recipient']  = Session::getLoginUserID();
-//         $input['_users_id_requester_notif'] = ['use_notification'  => 0];
-         $input['_users_id_requester'] = Session::getLoginUserID();
+         $default_use_notif                                      = Entity::getUsedConfig('is_notif_enable_default', $input['entities_id'], '', 1);
+         $input['users_id_recipient']                            = Session::getLoginUserID();
+         $input['_users_id_requester']                           = [Session::getLoginUserID()];
+         $input['_users_id_requester_notif']['use_notification'] = [$default_use_notif];
+
+         $alternativeEmail = '';
+         if (filter_var(Session::getLoginUserID(), FILTER_VALIDATE_EMAIL) !== false) {
+            $alternativeEmail = Session::getLoginUserID();
+         }
+         $input['_users_id_requester_notif']['alternative_email'] = [$alternativeEmail];
 
          $input["items_id"] = array('PluginResourcesResource' => array($data['plugin_resources_resources_id']));
       }
