@@ -29,7 +29,7 @@
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+   global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['resources']   = true;
    $PLUGIN_HOOKS['change_profile']['resources']   = array('PluginResourcesProfile', 'initProfile');
@@ -176,7 +176,7 @@ function plugin_version_resources() {
 
    return array(
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.4.1',
+      'version'        => '2.4.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
