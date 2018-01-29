@@ -415,9 +415,10 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $input["items_id"]            = array('PluginResourcesResource' => array($plugin_resources_resources_id),
                                             'PluginBadgesBadge'       => array($options['badges_id']));
 
-      // Compute due_date if predefined based on create date
-      if (isset($predefined['due_date'])) {
-         $input['due_date'] = Html::computeGenericDateTimeSearch($predefined['due_date'], false, $createtime);
+      // Compute time_to_resolve if predefined based on create date
+      if (isset($predefined['time_to_resolve'])) {
+         $input['time_to_resolve'] = Html::computeGenericDateTimeSearch($predefined['time_to_resolve'], false,
+                                                                        strtotime($createtime));
       }
 
       $input["name"]    = __('Badge restitution', 'resources') . '&nbsp;:&nbsp;' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);

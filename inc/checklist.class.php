@@ -187,7 +187,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          // Set date to creation date
          $createtime    = date('Y-m-d H:i:s');
          $input['date'] = $createtime;
-         // Compute due_date if predefined based on create date
+         // Compute time_to_resolve if predefined based on create date
          if (isset($predefined['time_to_resolve'])) {
             $input['time_to_resolve'] = Html::computeGenericDateTimeSearch($predefined['time_to_resolve'], false,
                                                                            strtotime($createtime));
