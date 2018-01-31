@@ -45,8 +45,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getMenuLogo() {
       global $CFG_GLPI;
 
-      return "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>
-      <img class=\"bt-img-responsive\" src=\"" . $CFG_GLPI['root_doc'] . "/plugins/servicecatalog/img/resources.png\" alt=\"Advanced request\" width=\"190\" height=\"100\"></a>";
+      return "<a class='bt-resources' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'></a>";
 
    }
 
