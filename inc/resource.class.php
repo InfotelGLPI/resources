@@ -680,10 +680,6 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($input['date_end']) 
             && empty($input['date_end'])) $input['date_end']='NULL';
 
-      if (!isset($input['sensitize_security'])) $input['sensitize_security'] = 0;
-      if (!isset($input['read_chart'])) $input['read_chart'] = 0;
-
-      //unset($input['picture']);
       $this->getFromDB($input["id"]);
 
       if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size']>0) {
