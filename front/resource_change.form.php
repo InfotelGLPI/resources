@@ -29,12 +29,13 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
 $resource_change = new PluginResourcesResource_Change();
 
-if(isset($_POST['add_entity_category'])){
+if (isset($_POST['add_entity_category'])) {
    $resource_change->check(-1, UPDATE, $_POST);
    $resource_change->add($_POST);
    Html::back();

@@ -72,7 +72,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
@@ -97,10 +97,14 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     */
    function showFormBadge() {
 
-      if (!$this->canView()) return false;
-      if (!$this->canCreate()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
+      if (!$this->canCreate()) {
+         return false;
+      }
 
-      $used_data = array();
+      $used_data = [];
       $data      = $this->find();
 
       $is_present = false;
@@ -130,9 +134,9 @@ class PluginResourcesResourceBadge extends CommonDBTM {
             echo "<tr class='tab_bg_1'><th>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', array('name'   => 'plugin_metademands_metademands_id',
+            Dropdown::show('PluginMetademandsMetademand', ['name'   => 'plugin_metademands_metademands_id',
                                                                 'used'   => $used_data,
-                                                                'entity' => $_SESSION['glpiactive_entity']));
+                                                                'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
             value=\"" . _sx('button', 'Add') . "\" >";
@@ -159,7 +163,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
          echo "<div class='center'>";
          if ($canedit) {
             Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
@@ -253,7 +257,6 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
 
-
       echo "<div class='plugin_resources_wizard_title'>";
       echo __('Badge restitution', 'resources');
       echo "</div>";
@@ -264,17 +267,17 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<td>" . PluginResourcesResource::getTypeName(1) . "</td>";
 
       echo "<td class='left'>";
-      $rand = PluginResourcesResource::dropdown(array('name'      => 'plugin_resources_resources_id',
+      $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
                                                       'on_change' => 'plugin_resources_load_badge()',
-                                                      'entity'    => $_SESSION['glpiactiveentities']));
+                                                      'entity'    => $_SESSION['glpiactiveentities']]);
 
       //display list of badges
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_badge(){";
-      $params = array('action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__');
+      $params = ['action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_badge', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
                              $params, 'dropdown_plugin_resources_resources_id' . $rand);
-      $params = array('action' => 'cleanButtonRestitution');
+      $params = ['action' => 'cleanButtonRestitution'];
       Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
                              $params, 'dropdown_plugin_resources_resources_id' . $rand);
       echo "}";
@@ -318,7 +321,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $condition = "`plugin_resources_resources_id`= '" . $plugin_resources_resources_id . "' AND `itemtype` = 'User'";
       $dbu       = new DbUtils();
       $infos     = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
-      $users     = array();
+      $users     = [];
       if (!empty($infos)) {
          foreach ($infos as $info) {
             $users[] = $info['items_id'];
@@ -326,15 +329,15 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       }
 
       echo "<td class='left'>";
-      $rand = PluginBadgesBadge::dropdown(array('name'      => 'badges_id',
+      $rand = PluginBadgesBadge::dropdown(['name'      => 'badges_id',
                                                 'condition' => "`users_id` IN ('" . implode("','", $users) . "')",
                                                 'on_change' => 'plugin_resources_load_badge_restitution()'
-                                          ));
+                                          ]);
 
       //Button display
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_badge_restitution(){";
-      $params = array('action' => 'loadBadgeRestitution');
+      $params = ['action' => 'loadBadgeRestitution'];
       Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_badges_id' . $rand);
       echo "}";
 
@@ -357,16 +360,15 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     *
     * @return bool
     */
-   static function createTicket($plugin_resources_resources_id, $options = array()) {
+   static function createTicket($plugin_resources_resources_id, $options = []) {
 
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
       //Preparation of ticket data
-      $data                       = array();
+      $data                       = [];
       $data['itilcategories_id']  = 0;
       $data['tickettemplates_id'] = 0;
-
 
       //Search for the entity-related category for that action
       $resource_change = new PluginResourcesResource_Change();
@@ -379,7 +381,6 @@ class PluginResourcesResourceBadge extends CommonDBTM {
             $data['tickettemplates_id'] = $itil_category->fields['tickettemplates_id_demand'];
          }
       }
-
 
       $result = false;
       $tt     = new TicketTemplate();
@@ -412,8 +413,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       $input['users_id_recipient']  = Session::getLoginUserID();
       $input['_users_id_requester'] = Session::getLoginUserID();
-      $input["items_id"]            = array('PluginResourcesResource' => array($plugin_resources_resources_id),
-                                            'PluginBadgesBadge'       => array($options['badges_id']));
+      $input["items_id"]            = ['PluginResourcesResource' => [$plugin_resources_resources_id],
+                                            'PluginBadgesBadge'       => [$options['badges_id']]];
 
       // Compute time_to_resolve if predefined based on create date
       if (isset($predefined['time_to_resolve'])) {

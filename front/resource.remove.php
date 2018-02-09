@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -35,8 +35,9 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-if (empty($_POST["date_end"]))
+if (empty($_POST["date_end"])) {
    $_POST["date_end"] = date("Y-m-d");
+}
 
 $resource = new PluginResourcesResource();
 $checklistconfig = new PluginResourcesChecklistconfig();
@@ -72,7 +73,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
    Session::addMessageAfterRedirect(__('Declaration of resource leaving OK', 'resources'));
    Html::back();
-   
+
 } else {
    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //show remove resource form
@@ -85,4 +86,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

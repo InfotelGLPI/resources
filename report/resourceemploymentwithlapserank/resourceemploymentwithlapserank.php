@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -40,15 +40,15 @@ $report = new PluginReportsAutoReport($titre);
 //"Report listing resource or employment with lapse rank";
 
 //colname with sort allowed
-$columns = array('entity' => array('sorton' => 'entity'),
-   'name' => array('sorton' => 'name'),
-   'firstname' => array('sorton' => 'firstname'),
-   'registration_number' => array('sorton' => 'registration_number'),
-   'rank' => array('sorton' => 'rank'),
-   'date_begin' => array('sorton' => 'date_begin'),
-   'date_end' => array('sorton' => 'date_end'),
-   'begin_date' => array('sorton' => 'begin_date'),
-   'end_date' => array('sorton' => 'end_date'),);
+$columns = ['entity' => ['sorton' => 'entity'],
+   'name' => ['sorton' => 'name'],
+   'firstname' => ['sorton' => 'firstname'],
+   'registration_number' => ['sorton' => 'registration_number'],
+   'rank' => ['sorton' => 'rank'],
+   'date_begin' => ['sorton' => 'date_begin'],
+   'date_end' => ['sorton' => 'date_end'],
+   'begin_date' => ['sorton' => 'begin_date'],
+   'end_date' => ['sorton' => 'end_date'],];
 
 $output_type = Search::HTML_OUTPUT;
 
@@ -77,9 +77,9 @@ $title = $report->getFullTitle();
 
 //to verify if resources exist
 // SQL statement
-$condition = getEntitiesRestrictRequest('AND','glpi_plugin_resources_resources');
+$condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
 $date=date("Y-m-d");
-$dataAll=array();
+$dataAll=[];
 
 //case resource
 $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
@@ -124,12 +124,12 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
 //                  AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
 //                  AND `glpi_plugin_resources_resources`.`is_template` = '0')";
 
-$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources','','',true);
+$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 
 $query.=$conditionAll." ".getOrderBy('entity', $columns);
 
 $result = $DB->query($query);
-for ($row_num = 0 ; $data=$DB->fetch_assoc($result); $row_num++) {
+for ($row_num = 0; $data=$DB->fetch_assoc($result); $row_num++) {
    $dataAll[$row_num]=$data;
 }
 
@@ -165,11 +165,11 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
 //                            OR `glpi_plugin_resources_ranks`.`begin_date` > '".$date."'))
 //                  AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL)";
 
-$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments','','',true);
+$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
 
 $queryEmploy.=$conditionAll." ".getOrderBy('entity', $columns);
 
-foreach($DB->request($queryEmploy) as $dataEmploy) {
+foreach ($DB->request($queryEmploy) as $dataEmploy) {
    $dataAll[$row_num]=$dataEmploy;
    $row_num++;
 }
@@ -191,7 +191,7 @@ if ($nbtot == 0) {
    }
    echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
    Html::footer();
-} else if ($output_type == Search::PDF_OUTPUT_PORTRAIT 
+} else if ($output_type == Search::PDF_OUTPUT_PORTRAIT
                || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
    include (GLPI_ROOT . "/lib/ezpdf/class.ezpdf.php");
 } else if ($output_type == Search::HTML_OUTPUT) {
@@ -255,45 +255,45 @@ if ($nbtot >0) {
 
    echo Search::showEndLine($output_type);
 
-   if($limit){
-      $dataAll= array_slice($dataAll,$start,$limit);
+   if ($limit) {
+      $dataAll= array_slice($dataAll, $start, $limit);
    }
 
-   foreach($dataAll as $key=>$data) {
+   foreach ($dataAll as $key=>$data) {
 
       $num = 1;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_entities',$data['entity']), $num,$key);
-      if($data['typeName'] == 'Resource'){
+      echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_entities', $data['entity']), $num, $key);
+      if ($data['typeName'] == 'Resource') {
          $type = PluginResourcesResource::getTypeName(0);
          $link=Toolbox::getItemTypeFormURL("PluginResourcesResource");
-      } else if($data['typeName'] == 'Employment'){
+      } else if ($data['typeName'] == 'Employment') {
          $type = PluginResourcesEmployment::getTypeName(0);
          $link=Toolbox::getItemTypeFormURL("PluginResourcesEmployment");
       }
 
-      echo Search::showItem($output_type, $type, $num,$key);
+      echo Search::showItem($output_type, $type, $num, $key);
 
       $name = "<a href='".$link."?id=".$data["ID"]."' target='_blank'>";
-      if ($data["name"] == NULL){
+      if ($data["name"] == null) {
          $name.="(".$data["ID"].")";
       } else {
          $name.=$data["name"];
       }
       $name.="</a>";
-      echo Search::showItem($output_type, $name, $num,$key);
+      echo Search::showItem($output_type, $name, $num, $key);
 
-      echo Search::showItem($output_type, $data['firstname'], $num,$key);
-      echo Search::showItem($output_type, $data['registration_number'], $num,$key);
+      echo Search::showItem($output_type, $data['firstname'], $num, $key);
+      echo Search::showItem($output_type, $data['registration_number'], $num, $key);
 
       $link1=Toolbox::getItemTypeFormURL("PluginResourcesRank");
       $rankName = "<a href='".$link1."?id=".$data["rankID"]."' target='_blank'>".$data["rank"]."</a>";
-      echo Search::showItem($output_type, $rankName, $num,$key);
+      echo Search::showItem($output_type, $rankName, $num, $key);
 
-      echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num,$key);
-      echo Search::showItem($output_type, Html::convDate($data['date_end']), $num,$key);
-      echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num,$key);
-      echo Search::showItem($output_type, Html::convDate($data['end_date']), $num,$key);
+      echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);
+      echo Search::showItem($output_type, Html::convDate($data['date_end']), $num, $key);
+      echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
+      echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
       echo Search::showEndLine($output_type);
 
    }
@@ -315,7 +315,7 @@ if ($output_type == Search::HTML_OUTPUT) {
  * @param bool $sort
  * @return mixed
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
+function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
 
    if ($output_type != Search::HTML_OUTPUT ||$sort==false) {
       echo Search::showHeaderItem($output_type, $title, $num);
@@ -332,7 +332,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
    $link  = $_SERVER['PHP_SELF'];
    $first = true;
    foreach ($_REQUEST as $name => $value) {
-      if (!in_array($name,array('sort','order','PHPSESSID'))) {
+      if (!in_array($name, ['sort','order','PHPSESSID'])) {
          $link .= ($first ? '?' : '&amp;');
          $link .= $name .'='.urlencode($value);
          $first = false;
@@ -383,8 +383,7 @@ function getOrderByFields($default, $columns) {
          return $column['sorton'];
       }
    }
-   return array();
+   return [];
 }
 
 
-?>

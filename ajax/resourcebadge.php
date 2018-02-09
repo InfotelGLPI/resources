@@ -33,17 +33,17 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-if(isset($_POST['action'])){
+if (isset($_POST['action'])) {
     $badge = new PluginResourcesResourceBadge();
-   switch($_POST['action']){
-        case "loadBadge" :
-          $badge->loadBadge($_POST['plugin_resources_resources_id']);
+   switch ($_POST['action']) {
+      case "loadBadge" :
+         $badge->loadBadge($_POST['plugin_resources_resources_id']);
         break;
-        case "loadBadgeRestitution" :
-          $badge->loadBadgeRestitution();
+      case "loadBadgeRestitution" :
+         $badge->loadBadgeRestitution();
         break;
-        case "cleanButtonRestitution" :
-           echo "";
+      case "cleanButtonRestitution" :
+         echo "";
         break;
 
    }

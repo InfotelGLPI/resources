@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
@@ -62,9 +62,9 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
    }
 
    //define header form
-   function defineTabs($options = array()) {
+   function defineTabs($options = []) {
 
-      $ong = array();
+      $ong = [];
       $this->addStandardTab(__CLASS__, $ong, $options);
 
       return $ong;
@@ -72,7 +72,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
    function getSearchOptions() {
 
-      $tab = array();
+      $tab = [];
 
       $tab['common'] = self::getTypeName(2);
 
@@ -109,7 +109,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       return $tab;
    }
 
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
       $this->showTabs($options);
@@ -119,7 +119,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "<td >".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", array('size' => "40"));
+      Html::autocompletionTextField($this, "name", ['size' => "40"]);
       echo "</td>";
 
       echo "<td>";
@@ -133,7 +133,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "<td >".__('Link', 'resources')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "address", array('size' => "75"));
+      Html::autocompletionTextField($this, "address", ['size' => "75"]);
       echo "</td>";
 
       echo "<td></td>";
@@ -190,14 +190,15 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       $rulecollection = new PluginResourcesRuleChecklistCollection($resource->fields["entities_id"]);
 
       if (isset($resource->fields["plugin_resources_contracttypes_id"]) &&
-              $resource->fields["plugin_resources_contracttypes_id"] > 0)
+              $resource->fields["plugin_resources_contracttypes_id"] > 0) {
          $contract = $resource->fields["plugin_resources_contracttypes_id"];
-      else
+      } else {
          $contract = 0;
+      }
 
-      $checklists = array();
-      $checklists = $rulecollection->processAllRules(array("plugin_resources_contracttypes_id" => $contract,
-          "checklist_type"                    => $checklist_type), $checklists, array());
+      $checklists = [];
+      $checklists = $rulecollection->processAllRules(["plugin_resources_contracttypes_id" => $contract,
+          "checklist_type"                    => $checklist_type], $checklists, []);
 
       if (!empty($checklists)) {
 
@@ -264,13 +265,13 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
    /**
     * Get the specific massive actions
-    * 
+    *
     * @since version 0.84
     * @param $checkitem link item to check right   (default NULL)
-    * 
+    *
     * @return an array of massive actions
     * */
-   function getSpecificMassiveActions($checkitem = NULL) {
+   function getSpecificMassiveActions($checkitem = null) {
       $isadmin = static::canUpdate();
       $actions = parent::getSpecificMassiveActions($checkitem);
 
@@ -294,18 +295,18 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
          case "Generate_Rule" :
             $PluginResourcesChecklist->dropdownChecklistType("checklist_type", $_SESSION["glpiactive_entity"]);
             echo "&nbsp;";
-            RuleCriteria::dropdownConditions("PluginResourcesRuleChecklist", array('criterion'        => 'plugin_resources_contracttypes_id',
-                                                                                   'allow_conditions' => array(Rule::PATTERN_IS, Rule::PATTERN_IS_NOT)));
+            RuleCriteria::dropdownConditions("PluginResourcesRuleChecklist", ['criterion'        => 'plugin_resources_contracttypes_id',
+                                                                                   'allow_conditions' => [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT]]);
             echo "&nbsp;";
             $PluginResourcesContractType->dropdownContractType("plugin_resources_contracttypes_id");
             echo "&nbsp;";
             break;
-         
+
          case "Transfert" :
             Dropdown::show('Entity');
             break;
       }
-      
+
       return parent::showMassiveActionsSubForm($ma);
    }
    /**
@@ -314,10 +315,10 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
     * */
    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
-      
+
       $input    = $ma->getInput();
       $itemtype = $ma->getItemtype(false);
-      
+
       switch ($ma->getAction()) {
          case "Transfert" :
             if ($itemtype == 'PluginResourcesEmployment') {
@@ -338,7 +339,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
                $item->addRulesFromChecklists($input, $ma, $item);
             }
             break;
-            
+
          default :
             return parent::doSpecificMassiveActions($input);
       }
@@ -346,4 +347,3 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
 }
 
-?>

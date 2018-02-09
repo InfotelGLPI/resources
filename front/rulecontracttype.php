@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -33,4 +33,3 @@ $rulecollection = new PluginResourcesRuleContracttypeCollection($_SESSION['glpia
 
 include (GLPI_ROOT . "/front/rule.common.php");
 
-?>

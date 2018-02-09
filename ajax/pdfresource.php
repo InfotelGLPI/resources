@@ -32,7 +32,7 @@ include ('../../../inc/includes.php');
 $plugin = new Plugin();
 if ($plugin->isActivated("useditemsexport")) {
 
-   if(isset($_POST['plugin_resources_resources_id'])) {
+   if (isset($_POST['plugin_resources_resources_id'])) {
       $resource_item = new PluginResourcesResource_Item();
       $resource = $resource_item->find("`itemtype` = 'User' AND 
                            `plugin_resources_resources_id` = ".$_POST['plugin_resources_resources_id'],
@@ -67,7 +67,7 @@ if ($plugin->isActivated("useditemsexport")) {
          $total_numrows += $DB->numrows($result);
       }
 
-      if($total_numrows > 0 ){
+      if ($total_numrows > 0) {
 
          $rand = mt_rand();
 

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,7 +29,9 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
 
 $budget = new PluginResourcesBudget();
 
@@ -52,21 +54,20 @@ if (isset($_POST["add"])) {
    $budget->redirectToList();
 
 } else if (isset($_POST["purge"])) {
-   $budget->check($_POST['id'],UPDATE);
-   $budget->delete($_POST,1);
+   $budget->check($_POST['id'], UPDATE);
+   $budget->delete($_POST, 1);
 
    $budget->redirectToList();
 
 } else if (isset($_POST["restore"])) {
-   $budget->check($_POST["id"],UPDATE);
+   $budget->check($_POST["id"], UPDATE);
    $budget->restore($_POST);
 
    $budget->redirectToList();
 
-}else {
+} else {
    $budget->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourcesbudget");
-   $budget->display(array('id' => $_GET["id"]));
+   $budget->display(['id' => $_GET["id"]]);
    Html::footer();
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -40,7 +40,7 @@ $resting = new PluginResourcesResourceResting();
 
 if (($resting->canView() || Session::haveRight("config", UPDATE))) {
    Search::show("PluginResourcesResourceResting");
-   
+
 } else {
    Html::displayRightError();
 }
@@ -50,4 +50,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

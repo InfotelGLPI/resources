@@ -33,9 +33,9 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-if(isset($_POST['action'])){
+if (isset($_POST['action'])) {
    $resting = new PluginResourcesResourceResting();
-   switch($_POST['action']){
+   switch ($_POST['action']) {
       case "loadResting" :
          $resting->loadResting($_POST['plugin_resources_resources_id']);
          break;

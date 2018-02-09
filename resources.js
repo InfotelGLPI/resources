@@ -44,7 +44,7 @@ function plugin_resources_unMarkCheckboxes( container_id ) {
 function plugin_resources_show_item(id,img,new_src) {
    var el;
    var cur_src = img.src.substring(img.src.lastIndexOf("/")+1);
-   
+
    new_src_test = new_src.substring(new_src.lastIndexOf("/")+1);
    path=new_src.replace(new_src_test,"");
 
@@ -77,9 +77,12 @@ function plugin_resources_show_tab(id) {
 
 function First2UpperCase(texte) {
    var t = new Array();
-   for(j=0 ; j < texte.length ;j++) {
-      if(j == 0) t[j] = texte.substr(j,1).toUpperCase();
-      else t[j] = texte.substr(j,1).toLowerCase();
+   for (j=0; j < texte.length;j++) {
+      if (j == 0) {
+         t[j] = texte.substr(j,1).toUpperCase();
+      } else {
+         t[j] = texte.substr(j,1).toLowerCase();
+      }
    }
    return t.join('');
 }
@@ -93,17 +96,17 @@ function plugin_resources_change_action(root_doc, id){
     var resource_id = $("input[name='plugin_resources_resources_id']");
 
     $.ajax({
-        url: root_doc+'/plugins/resources/ajax/resourcechange.php',
-        type: 'POST',
-        data: '&id=' + id + '&plugin_resources_resources_id='+ resource_id.val(),
-        dataType: 'html',
-        success: function (code_html, statut) {
+         url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+         type: 'POST',
+         data: '&id=' + id + '&plugin_resources_resources_id='+ resource_id.val(),
+         dataType: 'html',
+         success: function (code_html, statut) {
 
             $('#plugin_resources_actions').html(code_html);
             $('#plugin_resources_buttonchangeresources').html("");
-        },
+         },
 
-    });
+      });
 }
 
 /**
@@ -115,16 +118,16 @@ function plugin_resources_change_resource(root_doc, id){
     var action_id = $("select[name='change_action']");
 
     $.ajax({
-        url: root_doc+'/plugins/resources/ajax/resourcechange.php',
-        type: 'POST',
-        data: '&id=' + action_id.val() + '&plugin_resources_resources_id='+ id,
-        dataType: 'html',
-        success: function (code_html, statut) {
+         url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+         type: 'POST',
+         data: '&id=' + action_id.val() + '&plugin_resources_resources_id='+ id,
+         dataType: 'html',
+         success: function (code_html, statut) {
             $('#plugin_resources_actions').html(code_html);
             $('#plugin_resources_buttonchangeresources').html("");
-        },
+         },
 
-    });
+      });
 }
 
 /**
@@ -134,15 +137,15 @@ function plugin_resources_change_resource(root_doc, id){
  */
 function plugin_resources_pdf_resource(root_doc, id) {
     $.ajax({
-        url: root_doc + '/plugins/resources/ajax/pdfresource.php',
-        type: 'POST',
-        data: '&plugin_resources_resources_id=' + id,
-        dataType: 'html',
-        success: function (code_html, statut) {
+         url: root_doc + '/plugins/resources/ajax/pdfresource.php',
+         type: 'POST',
+         data: '&plugin_resources_resources_id=' + id,
+         dataType: 'html',
+         success: function (code_html, statut) {
             $('#resource_pdf').html(code_html);
-        },
+         },
 
-    });
+      });
 }
 
 /**
@@ -152,13 +155,13 @@ function plugin_resources_pdf_resource(root_doc, id) {
  */
 function plugin_resources_security_compliance(root_doc, id) {
     $.ajax({
-        url: root_doc + '/plugins/resources/ajax/employee.php',
-        type: 'POST',
-        data: '&plugin_resources_clients_id=' + id,
-        dataType: 'html',
-        success: function (code_html, statut) {
+         url: root_doc + '/plugins/resources/ajax/employee.php',
+         type: 'POST',
+         data: '&plugin_resources_clients_id=' + id,
+         dataType: 'html',
+         success: function (code_html, statut) {
             $('#security_compliance').html(code_html);
-        },
+         },
 
-    });
+      });
 }

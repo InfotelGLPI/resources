@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ if (isset($_POST["begin"]) && !empty($_POST["begin"])) {
    $begin=$_POST["begin"];
 } else {
    $minute=(floor(date('i')/10)*10);
-   if ($minute<10){
+   if ($minute<10) {
       $minute='0'.$minute;
    }
 
@@ -52,7 +52,7 @@ if (isset($_POST["begin"]) && !empty($_POST["begin"])) {
 if (isset($_POST["end"]) && !empty($_POST["end"])) {
    $end=$_POST["end"];
 } else {
-   $end=date("Y-m-d H:i:s",strtotime($begin)+HOUR_TIMESTAMP);
+   $end=date("Y-m-d H:i:s", strtotime($begin)+HOUR_TIMESTAMP);
 }
 
 
@@ -68,23 +68,23 @@ echo "<tr class='tab_bg_2'><td>".__('Period')."&nbsp;</td><td>";
 
 $default_delay = floor((strtotime($end)-strtotime($begin))/15/MINUTE_TIMESTAMP)*15*MINUTE_TIMESTAMP;
 
-$rand = Dropdown::showTimeStamp("plan[_duration]", array('min'        => 0,
+$rand = Dropdown::showTimeStamp("plan[_duration]", ['min'        => 0,
                                                          'max'        => 50*HOUR_TIMESTAMP,
                                                          'value'      => $default_delay,
-                                                         'emptylabel' => __('Specify an end date')));
+                                                         'emptylabel' => __('Specify an end date')]);
 
 echo "<br><div id='date_end$rand'></div>";
 
-$params = array('duration'     => '__VALUE__',
+$params = ['duration'     => '__VALUE__',
                 'end'          => $end,
                 'name'         => "plan[end]",
                 'global_begin' => $CFG_GLPI["planning_begin"],
-                'global_end'   => $CFG_GLPI["planning_end"]);
-                
+                'global_end'   => $CFG_GLPI["planning_end"]];
+
 
 if ($default_delay == 0) {
    $params['duration'] = 0;
-  Ajax::updateItem("date_end$rand", $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planningend.php", $params);
+   Ajax::updateItem("date_end$rand", $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planningend.php", $params);
 }
 
 echo "</td></tr>\n";
@@ -92,4 +92,3 @@ echo "</table>\n";
 
 Html::ajaxFooter();
 
-?>

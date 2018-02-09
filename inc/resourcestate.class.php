@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,20 +32,20 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesResourceState extends CommonDropdown {
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Resource state', 'Resource states', $nb, 'resources');
    }
-   
+
    static function canCreate() {
-      return Session::haveRight('dropdown',UPDATE);
+      return Session::haveRight('dropdown', UPDATE);
    }
 
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
-   
+
    static function transfer($ID, $entity) {
       global $DB;
 
@@ -77,4 +77,3 @@ class PluginResourcesResourceState extends CommonDropdown {
    }
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -38,45 +38,45 @@ $titre = $LANG['plugin_resources']['resourceemploymentdiff'];
 $report = new PluginReportsAutoReport($titre);
 
 // Columns title (optional)
-$report->setColumns( array(new PluginReportsColumn('registration_number', __('Administrative number'),
-                                                   array('sorton' => 'registration_number')),
-                           new PluginReportsColumnLink('resource_id', __('Surname'),'PluginResourcesResource',
-                                                   array('sorton' => 'resource_name')),
+$report->setColumns( [new PluginReportsColumn('registration_number', __('Administrative number'),
+                                                   ['sorton' => 'registration_number']),
+                           new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
+                                                   ['sorton' => 'resource_name']),
                            new PluginReportsColumn('firstname', __('First name'),
-                                                   array('sorton' => 'firstname')),
+                                                   ['sorton' => 'firstname']),
                            new PluginReportsColumnInteger('quota', __('Quota', 'resources'),
-                                                   array('sorton' => 'quota')),
+                                                   ['sorton' => 'quota']),
                            new PluginReportsColumn('resource_rank', __('Resource', 'resources')." - ".PluginResourcesRank::getTypeName(1),
-                                                   array('sorton' => 'resource_rank')),
+                                                   ['sorton' => 'resource_rank']),
                            new PluginReportsColumn('resource_profession', __('Resource', 'resources')." - ".PluginResourcesProfession::getTypeName(1),
-                                                   array('sorton' => 'resource_profession')),
+                                                   ['sorton' => 'resource_profession']),
                            new PluginReportsColumn('resource_professionline', __('Resource', 'resources')." - ".PluginResourcesProfessionLine::getTypeName(1),
-                                                   array('sorton' => 'resource_professionline')),
+                                                   ['sorton' => 'resource_professionline']),
                            new PluginReportsColumn('resource_professioncategory', __('Resource', 'resources')." - ".PluginResourcesProfessionCategory::getTypeName(1),
-                                                   array('sorton' => 'resource_professioncategory')),
+                                                   ['sorton' => 'resource_professioncategory']),
                            new PluginReportsColumnLink('employment_id', __('Name')." - ".PluginResourcesEmployment::getTypeName(1),
-                                                   'PluginResourcesEmployment', array('sorton' => 'employment_name')),
+                                                   'PluginResourcesEmployment', ['sorton' => 'employment_name']),
                            new PluginReportsColumnFloat('ratio_employment_budget', __('Ratio Employment / Budget', 'resources'),
-                                                   array('sorton' => 'ratio_employment_budget')),
+                                                   ['sorton' => 'ratio_employment_budget']),
                            new PluginReportsColumn('employment_rank', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesRank::getTypeName(1),
-                                                   array('sorton' => 'employment_rank')),
+                                                   ['sorton' => 'employment_rank']),
                            new PluginReportsColumn('employment_profession', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfession::getTypeName(1),
-                                                   array('sorton' => 'employment_profession')),
+                                                   ['sorton' => 'employment_profession']),
                            new PluginReportsColumn('employment_professionline', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionLine::getTypeName(1),
-                                                   array('sorton' => 'employment_professionline')),
+                                                   ['sorton' => 'employment_professionline']),
                            new PluginReportsColumn('employment_professioncategory', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionCategory::getTypeName(1),
-                                                   array('sorton' => 'employment_professioncategory')),
+                                                   ['sorton' => 'employment_professioncategory']),
                            new PluginReportsColumnDate('begin_date', __('Begin date'),
-                                                   array('sorton' => 'begin_date')),
+                                                   ['sorton' => 'begin_date']),
                            new PluginReportsColumnDate('end_date', __('End date'),
-                                                   array('sorton' => 'end_date')),
+                                                   ['sorton' => 'end_date']),
                            new PluginReportsColumn('employment_state', PluginResourcesEmploymentState::getTypeName(1),
-                                                   array('sorton' => 'employment_state')),
+                                                   ['sorton' => 'employment_state']),
                            new PluginReportsColumn('employer_name', __('Name')." - ".PluginResourcesEmployer::getTypeName(1),
-                                                   array('sorton' => 'employer_name')),));
+                                                   ['sorton' => 'employer_name']),]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ',"glpi_plugin_resources_employments",'','',false);
+$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_employments", '', '', false);
 
 //display only resource which have rank and profession not equal to employment rank or profession
 $query = "SELECT `glpi_users`.`registration_number`,
@@ -142,4 +142,3 @@ $query = "SELECT `glpi_users`.`registration_number`,
 
 $report->setSqlRequest($query);
 $report->execute();
-?>

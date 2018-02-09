@@ -38,7 +38,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
    static $rightname = 'plugin_resources_habilitation';
    public $dohistory = true;
-   
+
    const ACTION_ADD    = 1;
    const ACTION_DELETE = 2;
 
@@ -74,20 +74,20 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
     * Get the name of the action
-    * 
+    *
     * @param type $action
     * @return type
     */
    static function getNameAction($action) {
       switch ($action) {
-         case self::ACTION_ADD : 
+         case self::ACTION_ADD :
             return __('Declare a super habilitation', 'resources');
-         case self::ACTION_DELETE : 
+         case self::ACTION_DELETE :
             return __('Remove a super habilitation', 'resources');
       }
    }
@@ -95,7 +95,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
    /**
     * Display of the link to configure the super habilitation interface
     */
-   function showFormConfig(){
+   function showFormConfig() {
       echo "<br>";
       echo "<form name='form' method='post' action='".self::getFormURL()."'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -112,12 +112,16 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
     *
     * @return bool
     */
-   function showFormHabilitation(){
+   function showFormHabilitation() {
 
-      if (!$this->canView())   return false;
-      if (!$this->canCreate())   return false;
+      if (!$this->canView()) {
+         return false;
+      }
+      if (!$this->canCreate()) {
+         return false;
+      }
 
-      $used_data = array();
+      $used_data = [];
       $data_entities = $this->find("`entities_id` = ".$_SESSION['glpiactive_entity']);
 
       $number_action = count($data_entities);
@@ -130,7 +134,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
       $canedit = $this->canCreate();
 
       if ($canedit) {
-         if($number_action == 2){
+         if ($number_action == 2) {
             echo "<div align='center'>";
             __('The current entity is already linked to a meta-demand', 'resources');
             echo "</div>";
@@ -143,16 +147,16 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             echo "<tr class='tab_bg_1'><th colspan='2'>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo __('Action', 'Actions', 1) . '&nbsp;';
-            Dropdown::showFromArray('action', 
-               array(self::ACTION_ADD => self::getNameAction(self::ACTION_ADD),
-                     self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)),
-               array('used' => $used_data));
+            Dropdown::showFromArray('action',
+               [self::ACTION_ADD => self::getNameAction(self::ACTION_ADD),
+                     self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)],
+               ['used' => $used_data]);
             echo "</td><td>";
             echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', array('name' => 'plugin_metademands_metademands_id',
-                                                                'entity' => $_SESSION['glpiactive_entity']));
+            Dropdown::show('PluginMetademandsMetademand', ['name' => 'plugin_metademands_metademands_id',
+                                                                'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
-            
+
             echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
             value=\"" . _sx('button', 'Add') . "\" >";
             echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
@@ -173,13 +177,13 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
     * @param $fields
     * @param $canedit
     */
-   private function listItems($fields, $canedit){
-      if(!empty($fields)){
+   private function listItems($fields, $canedit) {
+      if (!empty($fields)) {
          $rand = mt_rand();
          echo "<div class='center'>";
          if ($canedit) {
             Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand];
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
@@ -193,7 +197,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
          echo "<th>".__('Name')."</th>";
          echo "<th>".__('Action')."</th>";
          echo "<th>".__('Entity')."</th>";
-         foreach($fields as $field){
+         foreach ($fields as $field) {
             echo "<tr class='tab_bg_1'>";
             if ($canedit) {
                echo "<td width='10'>";
@@ -219,7 +223,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
    /**
     * Display Menu
     */
-   function showMenu(){
+   function showMenu() {
       global $CFG_GLPI;
 
       $plugin = new Plugin();

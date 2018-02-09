@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,18 +28,18 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 class PluginResourcesBudgetType extends CommonDropdown {
-   
+
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Budget type', 'Budget types', $nb, 'resources');
    }
-   
+
    static function canCreate() {
       return Session::haveRight('dropdown', UPDATE);
    }
@@ -50,11 +50,11 @@ class PluginResourcesBudgetType extends CommonDropdown {
 
    function getAdditionalFields() {
 
-      return array(array('name'  => 'code',
+      return [['name'  => 'code',
                          'label' => __('Code', 'resources'),
                          'type'  => 'text',
-                         'list'  => true),
-                  );
+                         'list'  => true],
+                  ];
    }
 
    /**
@@ -108,4 +108,3 @@ class PluginResourcesBudgetType extends CommonDropdown {
 
 }
 
-?>

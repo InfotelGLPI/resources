@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,40 +28,40 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 class PluginResourcesEmployer extends CommonTreeDropdown {
-   
+
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Employer', 'Employers', $nb, 'resources');
    }
-   
+
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
 
    static function canCreate() {
-      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    function getAdditionalFields() {
 
-      return array( array( 'name'  => $this->getForeignKeyField(),
+      return [ [ 'name'  => $this->getForeignKeyField(),
                            'label' => __('As child of'),
                            'type'  => 'parent',
-                           'list'  => false),
-                     array('name'  => 'short_name',
+                           'list'  => false],
+                     ['name'  => 'short_name',
                            'label' => __('Short name', 'resources'),
                            'type'  => 'text',
-                           'list'  => true),
-                     array('name'  => 'locations_id',
+                           'list'  => true],
+                     ['name'  => 'locations_id',
                            'label' => __('Location'),
                            'type'  => 'dropdownValue',
-                           'list'  => true));
+                           'list'  => true]];
    }
 
    function getSearchOptions() {
@@ -112,4 +112,3 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
    }
 }
 
-?>

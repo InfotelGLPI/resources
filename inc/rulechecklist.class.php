@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesRuleChecklist extends Rule {
 
    static $rightname = 'plugin_resources';
-   
+
    // From Rule
    public $can_sort=true;
 
@@ -49,15 +49,15 @@ class PluginResourcesRuleChecklist extends Rule {
 
       return PluginResourcesResource::getTypeName(2)." ".PluginResourcesChecklist::getTypeName(1);
    }
-   
+
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
-   
+
    function maybeRecursive() {
       return true;
    }
@@ -70,11 +70,11 @@ class PluginResourcesRuleChecklist extends Rule {
    function canUnrecurs() {
       return true;
    }
-   
+
    function maxActionsCount() {
       return count($this->getActions());
    }
-   
+
    function addSpecificParamsForPreview($params) {
 
       if (!isset($params["entities_id"])) {
@@ -82,29 +82,29 @@ class PluginResourcesRuleChecklist extends Rule {
       }
       return $params;
    }
-   
+
    function getCriterias() {
 
-      $criterias = array();
-      
+      $criterias = [];
+
       $criterias['plugin_resources_contracttypes_id']['name']  = PluginResourcesContractType::getTypeName(1);
       $criterias['plugin_resources_contracttypes_id']['type']  = 'dropdownContractType';
-      
-      $criterias['plugin_resources_contracttypes_id']['allow_condition'] = array(Rule::PATTERN_IS, Rule::PATTERN_IS_NOT);
-      
+
+      $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
       $criterias['checklist_type']['name']  = __('Checklist type', 'resources');
       $criterias['checklist_type']['type']  = 'dropdownChecklistType';
-      
-      $criterias['checklist_type']['allow_condition'] = array(Rule::PATTERN_IS, Rule::PATTERN_IS_NOT);
+
+      $criterias['checklist_type']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
       return $criterias;
    }
-   
-   function displayCriteriaSelectPattern($name, $ID, $condition, $value="", $test=false) {
-      
+
+   function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false) {
+
       $PluginResourcesChecklist = new PluginResourcesChecklist();
       $PluginResourcesContractType = new PluginResourcesContractType();
-      
+
       $crit    = $this->getCriteria($ID);
       $display = false;
       if (isset($crit['type'])
@@ -121,7 +121,7 @@ class PluginResourcesRuleChecklist extends Rule {
                break;
          }
       }
-      
+
       if ($condition == Rule::PATTERN_EXISTS || $condition == Rule::PATTERN_DOES_NOT_EXISTS) {
          echo "<input type='hidden' name='$name' value='1'>";
          $display=true;
@@ -129,12 +129,12 @@ class PluginResourcesRuleChecklist extends Rule {
 
       if (!$display) {
          $rc = new $this->rulecriteriaclass();
-         Html::autocompletionTextField($rc, "pattern", array('name'  => $name,
+         Html::autocompletionTextField($rc, "pattern", ['name'  => $name,
                                                        'value' => $value,
-                                                       'size'  => 70));
+                                                       'size'  => 70]);
       }
    }
-   
+
    /**
     * Return a value associated with a pattern associated to a criteria to display it
     *
@@ -163,15 +163,14 @@ class PluginResourcesRuleChecklist extends Rule {
 
    function getActions() {
 
-      $actions = array();
-      
+      $actions = [];
+
       $actions['checklists_id']['name']  = __('Checklist action', 'resources');
       $actions['checklists_id']['table'] = 'glpi_plugin_resources_checklistconfigs';
       $actions['checklists_id']['type'] = 'dropdown';
-      $actions['checklists_id']['force_actions'] = array('assign');
-      
+      $actions['checklists_id']['force_actions'] = ['assign'];
+
       return $actions;
    }
 }
 
-?>

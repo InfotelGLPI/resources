@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,40 +28,40 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 class PluginResourcesChoiceItem extends CommonTreeDropdown {
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Type of need', 'Types of need', $nb, 'resources');
    }
-      
+
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
 
    static function canCreate() {
-      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
-   
+
    function getAdditionalFields() {
 
-      return array(array('name'  => $this->getForeignKeyField(),
+      return [['name'  => $this->getForeignKeyField(),
                          'label' => __('As child of'),
                          'type'  => 'parent',
-                         'list'  => false),
-                     array('name'  => 'is_helpdesk_visible',
+                         'list'  => false],
+                     ['name'  => 'is_helpdesk_visible',
                          'label' => __('Last update'),
                          'type'  => 'bool',
-                         'list'  => true));
+                         'list'  => true]];
    }
-   
+
    function getSearchOptions () {
-      
+
       $tab = parent::getSearchOptions();
-      
+
       $tab[11]['table']    = $this->getTable();
       $tab[11]['field']    = 'is_helpdesk_visible';
       $tab[11]['name']     = __('Last update');
@@ -71,4 +71,3 @@ class PluginResourcesChoiceItem extends CommonTreeDropdown {
    }
 }
 
-?>

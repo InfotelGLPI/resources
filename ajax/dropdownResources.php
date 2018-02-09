@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@
  */
 
 // Direct access to file
-if (strpos($_SERVER['PHP_SELF'],"dropdownResources.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownResources.php")) {
    $AJAX_INCLUDE = 1;
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
@@ -49,7 +49,7 @@ if (!isset($_GET['all'])) {
    $_GET['all'] = 0;
 }
 
-$used  = array();
+$used  = [];
 
 if (isset($_GET['used'])) {
    if (is_array($_GET['used'])) {
@@ -69,23 +69,23 @@ if (isset($_GET["plugin_resources_contracttypes_id"])&&
 $result = PluginResourcesResource::getSqlSearchResult(false, $_GET["entity"],
                                    $_GET['value2'], $used, $_GET['searchText']);
 
-$users       = array();
-$logins      = array();
-$linkedUsers = array();
+$users       = [];
+$logins      = [];
+$linkedUsers = [];
 
 // Add linked resource users
 if ($DB->numrows($result)) {
    while ($data = $DB->fetch_array($result)) {
-      array_push($users, array('id'   => $data["id"],
-                               'text' => formatUserName($data["id"], $data["username"], $data["name"], $data["firstname"])));
-//      $logins[$data["id"]] = $data["name"];
+      array_push($users, ['id'   => $data["id"],
+                               'text' => formatUserName($data["id"], $data["username"], $data["name"], $data["firstname"])]);
+      //      $logins[$data["id"]] = $data["name"];
       $linkedUsers[]       = $data["userid"];
    }
 }
 
 // Add unlinked users
 if ($_GET['addUnlinkedUsers']) {
-//   ksort($logins);
+   //   ksort($logins);
    $query = "SELECT `glpi_users`.*
              FROM `glpi_users`
              WHERE `glpi_users`.`id` NOT IN ('".implode("','", $linkedUsers)."') 
@@ -100,9 +100,9 @@ if ($_GET['addUnlinkedUsers']) {
                   Search::makeTextSearch($_GET['searchText']).");";
    $result = $DB->query($query);
    while ($data  = $DB->fetch_array($result)) {
-      array_push($users, array('id'   => 'users-'.$data["id"],
-                               'text' => formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"])));
-//      $logins['users-'.$data["id"]] = $data["name"];
+      array_push($users, ['id'   => 'users-'.$data["id"],
+                               'text' => formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"])]);
+      //      $logins['users-'.$data["id"]] = $data["name"];
    }
 }
 
@@ -170,4 +170,3 @@ $ret['count']   = count($users);
 
 echo json_encode($ret);
 
-?>

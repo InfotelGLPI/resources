@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -36,15 +36,14 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (isset($_POST["action"])||isset($_POST["id"])) {
-	echo "<input type='hidden' name='action' value='".$_POST["action"]."'>";
-	echo "<input type='hidden' name='id' value='".$_POST["id"]."'>";
-	switch($_POST["action"]) {
+    echo "<input type='hidden' name='action' value='".$_POST["action"]."'>";
+    echo "<input type='hidden' name='id' value='".$_POST["id"]."'>";
+   switch ($_POST["action"]) {
 
-		case "delete":
-			echo "&nbsp;<input type=\"submit\" name=\"massiveaction_reports\" class=\"submit\" value=\""._sx('button', 'Post')."\" >";
-		break;
+      case "delete":
+          echo "&nbsp;<input type=\"submit\" name=\"massiveaction_reports\" class=\"submit\" value=\""._sx('button', 'Post')."\" >";
+        break;
 
-	}
+   }
 }
 
-?>

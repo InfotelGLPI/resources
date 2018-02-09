@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -44,18 +44,18 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //Have right to see all resources
       //Have not right to see all resources
       echo "<div align='center'>";
-//      echo "var account_window=new Ext.Window({
-//               layout:'fit',
-//               width:800,
-//               height:400,
-//               closeAction:'hide',
-//               modal: true,
-//               autoScroll: true,
-//               title: \"".__('View by contract type', 'resources')."\",
-//               autoLoad: '".$CFG_GLPI['root_doc']."/plugins/resources/ajax/resourcetree.php'
-//            });";
-//      echo "</script>";
-      
+      //      echo "var account_window=new Ext.Window({
+      //               layout:'fit',
+      //               width:800,
+      //               height:400,
+      //               closeAction:'hide',
+      //               modal: true,
+      //               autoScroll: true,
+      //               title: \"".__('View by contract type', 'resources')."\",
+      //               autoLoad: '".$CFG_GLPI['root_doc']."/plugins/resources/ajax/resourcetree.php'
+      //            });";
+      //      echo "</script>";
+
       $script =  "cleanhide('modal_resource_content');";
       $script .= "var account_window=$('<div />').dialog({
                width:800,
@@ -68,7 +68,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
                }
             });";
       echo Html::scriptBlock($script);
-      
+
       echo "<a onclick=\"account_window.dialog('open');\" href=\"#modal_resource_content\"title=\"".
       __('View by contract type', 'resources')."\">".
       __('View by contract type', 'resources')."</a>";
@@ -76,7 +76,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
    }
 
    Search::show("PluginResourcesResource", $_GET);
-   
+
 } else {
    Html::displayRightError();
 }
@@ -86,4 +86,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

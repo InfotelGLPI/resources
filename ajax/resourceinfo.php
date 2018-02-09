@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -33,15 +33,14 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-switch($_POST['action']){
+switch ($_POST['action']) {
    case 'groupEntity':
       if (isset($_POST["entities_id"])) {
          echo __('Group')."&nbsp;";
-         Dropdown::show('Group', array('entity' => $_POST["entities_id"], 'entity_sons' => true));
+         Dropdown::show('Group', ['entity' => $_POST["entities_id"], 'entity_sons' => true]);
       }
       break;
 }
 
 Html::ajaxFooter();
 
-?>

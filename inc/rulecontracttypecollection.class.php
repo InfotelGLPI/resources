@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -38,23 +38,22 @@ class PluginResourcesRuleContracttypeCollection extends RuleCollection {
    // From RuleCollection
    public $stop_on_first_match=true;
    public $menu_option='contracttypes';
-   
+
    function getTitle() {
 
       return __('Assignment rule of fields to a contract type', 'resources');
    }
-   
-   function __construct($entity=0) {
+
+   function __construct($entity = 0) {
       $this->entity = $entity;
    }
-   
+
    function showInheritedTab() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE)) && ($this->entity);
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
    }
 
    function showChildrensTab() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE)) && (count($_SESSION['glpiactiveentities']) > 1);
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count($_SESSION['glpiactiveentities']) > 1);
    }
 }
 
-?>

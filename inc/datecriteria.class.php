@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -30,11 +30,11 @@
 //Criteria which allows to select a date
 class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
 
-   function __construct($report, $name='date',$sql_field='', $label='') {
+   function __construct($report, $name = 'date', $sql_field = '', $label = '') {
 
       parent::__construct($report, $name, $sql_field, $label);
 
-      $this->addCriteriaLabel($this->getName(),($label ? $label : __('Date')));
+      $this->addCriteriaLabel($this->getName(), ($label ? $label : __('Date')));
    }
 
 
@@ -85,4 +85,3 @@ class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
    }
 
 }
-?>

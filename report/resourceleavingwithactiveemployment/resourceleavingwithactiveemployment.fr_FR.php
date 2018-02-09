@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,4 +29,3 @@
 
 $LANG['plugin_resources']['resourceleavingwithactiveemployment'] = "Rapport listant les ressources partantes ayant des emplois actifs";
 
-?>

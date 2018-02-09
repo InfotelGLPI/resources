@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     *
     * @param $nb
     **/
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
 
       return _n('Habilitation', 'Habilitations', $nb, 'resources');
    }
@@ -70,20 +70,20 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    function getAdditionalFields() {
 
-      $tab = array(array('name'  => $this->getForeignKeyField(),
+      $tab = [['name'  => $this->getForeignKeyField(),
                          'label' => __('As child of'),
                          'type'  => 'parent',
-                         'list'  => true),
-                   array('name'  => "allow_resource_creation",
+                         'list'  => true],
+                   ['name'  => "allow_resource_creation",
                          'label' => __('Allow when creating the resource', 'resources'),
                          'type'  => 'bool',
-                         'list'  => true)
-      );
+                         'list'  => true]
+      ];
 
       return $tab;
    }

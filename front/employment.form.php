@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,8 +29,12 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
-if(!isset($_GET["plugin_resources_resources_id"])) $_GET["plugin_resources_resources_id"] = 0;
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
+if (!isset($_GET["plugin_resources_resources_id"])) {
+   $_GET["plugin_resources_resources_id"] = 0;
+}
 
 $employment = new PluginResourcesEmployment();
 
@@ -50,12 +54,12 @@ if (isset($_POST["add"])) {
    $employment->redirectToList();
 
 } else if (isset($_POST["purge"])) {
-   $employment->check($_POST['id'],UPDATE);
-   $employment->delete($_POST,1);
+   $employment->check($_POST['id'], UPDATE);
+   $employment->delete($_POST, 1);
    $employment->redirectToList();
 
 } else if (isset($_POST["restore"])) {
-   $employment->check($_POST["id"],UPDATE);
+   $employment->check($_POST["id"], UPDATE);
    $employment->restore($_POST);
    $employment->redirectToList();
 
@@ -72,7 +76,6 @@ if (isset($_POST["add"])) {
 } else {
    $employment->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourcesemployment");
-   $employment->display(array('id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]));
+   $employment->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]);
    Html::footer();
 }
-?>

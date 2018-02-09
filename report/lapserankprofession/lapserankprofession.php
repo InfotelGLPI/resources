@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -38,25 +38,25 @@ $titre = $LANG['plugin_resources']['lapserankprofession'];
 $report = new PluginReportsAutoReport($titre);
 
 // Columns title (optional)
-$report->setColumns( array(new PluginReportsColumnLink('rank_id',PluginResourcesRank::getTypeName(1),'PluginResourcesRank',
-                                                   array('sorton' => 'rank_name')),
+$report->setColumns( [new PluginReportsColumnLink('rank_id', PluginResourcesRank::getTypeName(1), 'PluginResourcesRank',
+                                                   ['sorton' => 'rank_name']),
                            new PluginReportsColumn('rank_code', PluginResourcesRank::getTypeName(1)." - ".__('Code', 'resources'),
-                                                   array('sorton' => 'rank_code')),
+                                                   ['sorton' => 'rank_code']),
                            new PluginReportsColumnDate('rank_begin_date', PluginResourcesRank::getTypeName(1)." - ".__('Begin date'),
-                                                   array('sorton' => 'rank_begin_date')),
+                                                   ['sorton' => 'rank_begin_date']),
                            new PluginReportsColumnDate('rank_end_date', PluginResourcesRank::getTypeName(1)." - ".__('End date'),
-                                                   array('sorton' => 'rank_end_date')),
-                           new PluginReportsColumnLink('prof_id',PluginResourcesProfession::getTypeName(1),'PluginResourcesProfession',
-                                                   array('sorton' => 'prof_name')),
+                                                   ['sorton' => 'rank_end_date']),
+                           new PluginReportsColumnLink('prof_id', PluginResourcesProfession::getTypeName(1), 'PluginResourcesProfession',
+                                                   ['sorton' => 'prof_name']),
                            new PluginReportsColumn('prof_code', PluginResourcesProfession::getTypeName(1)." - ".__('Code', 'resources'),
-                                                   array('sorton' => 'prof_code')),
+                                                   ['sorton' => 'prof_code']),
                            new PluginReportsColumnDate('prof_begin_date', PluginResourcesProfession::getTypeName(1)." - ".__('Begin date'),
-                                                   array('sorton' => 'prof_begin_date')),
+                                                   ['sorton' => 'prof_begin_date']),
                            new PluginReportsColumnDate('prof_end_date', PluginResourcesProfession::getTypeName(1)." - ".__('End date'),
-                                                   array('sorton' => 'prof_end_date')),));
+                                                   ['sorton' => 'prof_end_date']),]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions','','',true);
+$condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
 $date=date("Y-m-d");
 
 //display only leaving resource with active employment
@@ -89,4 +89,3 @@ $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
 
 $report->setSqlRequest($query);
 $report->execute();
-?>

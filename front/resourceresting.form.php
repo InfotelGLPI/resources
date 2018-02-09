@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -37,40 +37,41 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
 $resting = new PluginResourcesResourceResting();
 
 if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $resting->add($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $resting->update($_POST);
    Html::back();
 
-} else if (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"]) ) {
-   $resting->fields = array('id' => $_POST['id'], 'date_end' => $_POST['date_end']);
-   $resting->updateInDB(array('date_end'));
+} else if (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {
+   $resting->fields = ['id' => $_POST['id'], 'date_end' => $_POST['date_end']];
+   $resting->updateInDB(['date_end']);
    Html::back();
 
 } else if (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $resting->delete($_POST, 1);
    $resting->redirectToList();
 
-} else if(isset($_GET['menu'])) {
-      if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-         $resting->showMenu();
-      }
-
-} else if(isset($_GET['end'])) {
+} else if (isset($_GET['menu'])) {
    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-      $resting->showFormEnd($_GET["id"], array());
+      $resting->showMenu();
+   }
+
+} else if (isset($_GET['end'])) {
+   if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+      $resting->showFormEnd($_GET["id"], []);
    }
 } else {
    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-      $resting->showForm($_GET["id"], array());
+      $resting->showForm($_GET["id"], []);
    }
 }
 
@@ -79,4 +80,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

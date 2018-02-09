@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -31,45 +31,49 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesTransferEntity extends CommonDBTM {
-   
+
    static $rightname = 'plugin_resources';
 
    /**
     * functions mandatory
     * getTypeName(), canCreate(), canView()
     * */
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __('Transfer entities', 'resources');
    }
-   
+
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
-   
 
-   
+
+
    function showForm($target) {
       global $CFG_GLPI;
-      
-      if (!$this->canView()) return false;
-      if (!$this->canCreate()) return false;
 
-      $used_entities = array();
-      
+      if (!$this->canView()) {
+         return false;
+      }
+      if (!$this->canCreate()) {
+         return false;
+      }
+
+      $used_entities = [];
+
       $dataEntity = $this->find();
 
       $canedit = true;
-      
-      if($dataEntity){
-         foreach($dataEntity as $field){
+
+      if ($dataEntity) {
+         foreach ($dataEntity as $field) {
             $used_entities[] = $field['entities_id'];
          }
       }
-      
+
       if ($canedit) {
          echo "<form name='form' method='post' action='$target'>";
 
@@ -80,11 +84,11 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          // Dropdown group
          echo "<td class='center'>";
          echo __('Entity').'&nbsp;';
-         $rand = Dropdown::show("Entity", array('name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()'));
+         $rand = Dropdown::show("Entity", ['name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()']);
          echo "<script type='text/javascript'>";
          echo "function entity_group(){";
-         $params = array('action' => 'groupEntity', 'entities_id' => '__VALUE__');
-         Ajax::updateItemJsCode('entity_group',  $CFG_GLPI['root_doc'].'/plugins/resources/ajax/resourceinfo.php', $params, 'dropdown_entities_id'.$rand);
+         $params = ['action' => 'groupEntity', 'entities_id' => '__VALUE__'];
+         Ajax::updateItemJsCode('entity_group', $CFG_GLPI['root_doc'].'/plugins/resources/ajax/resourceinfo.php', $params, 'dropdown_entities_id'.$rand);
          echo "}";
          echo "</script>";
          echo "</td>";
@@ -92,7 +96,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          echo "<span id='entity_group'></span>";
          echo "</td>";
          echo "</tr>";
-         
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='submit' name='add_transferentity' class='submit' value='"._sx('button', 'Add')."' >";
@@ -101,19 +105,20 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          echo "</table></div>";
          Html::closeForm();
       }
-      if($dataEntity)
+      if ($dataEntity) {
          $this->listItems($dataEntity, $canedit);
+      }
 
    }
-   
-   private function listItems($fields, $canedit){
-      
+
+   private function listItems($fields, $canedit) {
+
       $rand = mt_rand();
-      
+
       echo "<div class='center'>";
       if ($canedit) {
          Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
+         $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -129,7 +134,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       echo "<th>".__('Entity')."</th>";
       echo "<th>".__('Group')."</th>";
       echo "</tr>";
-      foreach($fields as $field){
+      foreach ($fields as $field) {
          echo "<tr class='tab_bg_1'>";
          echo "<td width='10'>";
          if ($canedit) {
@@ -141,19 +146,19 @@ class PluginResourcesTransferEntity extends CommonDBTM {
          echo "<td>".Dropdown::getDropdownName('glpi_groups', $field['groups_id'])."</td>";
          echo "</tr>";
       }
-      
+
       if ($canedit) {
          $massiveactionparams['ontop'] = false;
          Html::showMassiveActions($massiveactionparams);
-         Html::closeForm(); 
+         Html::closeForm();
       }
       echo "</table>";
       echo "</div>";
    }
-   
+
    function getSearchOptions() {
 
-      $tab = array();
+      $tab = [];
       $tab['common'] = self::getTypeName(1);
 
       $tab[1]['table']           = $this->getTable();
@@ -168,45 +173,45 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       $tab[2]['name']            = __('ID');
       $tab[2]['massiveaction']   = false;
       $tab[2]['datatype']        = 'number';
-      
+
       $tab[92]['table']           = 'glpi_entities';
       $tab[92]['field']           = 'name';
       $tab[92]['name']            = __('Entity');
       $tab[92]['massiveaction']   = true;
       $tab[92]['datatype']        = 'dropdown';
-      
+
       $tab[93]['table']           = 'glpi_groups';
       $tab[93]['field']           = 'name';
       $tab[93]['name']            = __('Group');
       $tab[93]['massiveaction']   = true;
       $tab[93]['datatype']        = 'dropdown';
-      
+
       return $tab;
    }
-  
+
    function prepareInputForAdd($input) {
-      if(!$this->checkMandatoryFields($input)){
+      if (!$this->checkMandatoryFields($input)) {
          return false;
       }
-      
+
       return $input;
    }
-   
+
    function prepareInputForUpdate($input) {
-      if(!$this->checkMandatoryFields($input)){
+      if (!$this->checkMandatoryFields($input)) {
          return false;
       }
-      
+
       return $input;
    }
-   
-   function checkMandatoryFields($input){
-      $msg     = array();
+
+   function checkMandatoryFields($input) {
+      $msg     = [];
       $checkKo = false;
-      
-      $mandatory_fields = array('entities_id'  => __('Entity'));
-      
-      foreach($input as $key => $value){
+
+      $mandatory_fields = ['entities_id'  => __('Entity')];
+
+      foreach ($input as $key => $value) {
          if (array_key_exists($key, $mandatory_fields)) {
             if (empty($value)) {
                $msg[] = $mandatory_fields[$key];
@@ -214,7 +219,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
             }
          }
       }
-      
+
       if ($checkKo) {
          Session::addMessageAfterRedirect(sprintf(__("Mandatory fields are not filled. Please correct: %s"), implode(', ', $msg)), false, ERROR);
          return false;
@@ -223,4 +228,3 @@ class PluginResourcesTransferEntity extends CommonDBTM {
    }
 
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,17 +26,21 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
-if (!isset($_GET["plugin_resources_contracttypes_id"]))
+}
+if (!isset($_GET["plugin_resources_contracttypes_id"])) {
    $_GET["plugin_resources_contracttypes_id"] = 0;
-if (!isset($_GET["checklist_type"]))
+}
+if (!isset($_GET["checklist_type"])) {
    $_GET["checklist_type"] = 0;
-if (!isset($_GET["plugin_resources_resources_id"]))
+}
+if (!isset($_GET["plugin_resources_resources_id"])) {
    $_GET["plugin_resources_resources_id"] = -1;
+}
 
 $checklist = new PluginResourcesChecklist();
 
@@ -45,21 +49,20 @@ $checklist = new PluginResourcesChecklist();
 if (isset($_POST["add"])) {
    $checklist->add($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["update"])) {
    if ($checklist->canCreate()) {
       $checklist->update($_POST);
    }
    Html::back();
-   
+
 } else {
    $checklist->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourceschecklist");
-   $options = array('id'                                => $_GET["id"],
+   $options = ['id'                                => $_GET["id"],
                     'checklist_type'                    => $_GET["checklist_type"],
                     'plugin_resources_contracttypes_id' => $_GET["plugin_resources_contracttypes_id"],
-                    'plugin_resources_resources_id'     => $_GET["plugin_resources_resources_id"]);
+                    'plugin_resources_resources_id'     => $_GET["plugin_resources_resources_id"]];
    $checklist->display($options);
    Html::footer();
 }
-?>

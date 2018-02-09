@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -46,32 +46,32 @@ class PluginResourcesContractType extends CommonDropdown {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    function getAdditionalFields() {
 
-      $tab = array(array('name'  => 'code',
+      $tab = [['name'  => 'code',
                          'label' => __('Code', 'resources'),
                          'type'  => 'text',
-                         'list'  => true),
-                   array('name'  => "",
+                         'list'  => true],
+                   ['name'  => "",
                          'label' => __('Wizard resource creation', 'resources'),
                          'type'  => '',
-                         'list'  => false),
-                   array('name'  => 'use_employee_wizard',
+                         'list'  => false],
+                   ['name'  => 'use_employee_wizard',
                          'label' => __('Enter employer information about the resource', 'resources'),
                          'type'  => 'bool',
-                         'list'  => true),
-                   array('name'  => 'use_need_wizard',
+                         'list'  => true],
+                   ['name'  => 'use_need_wizard',
                          'label' => __('Enter the computing needs of the resource', 'resources'),
                          'type'  => 'bool',
-                         'list'  => true),
-                   array('name'  => 'use_picture_wizard',
+                         'list'  => true],
+                   ['name'  => 'use_picture_wizard',
                          'label' => __('Add a picture', 'resources'),
                          'type'  => 'bool',
-                         'list'  => true)
-      );
+                         'list'  => true]
+      ];
 
       return $tab;
    }
@@ -111,8 +111,9 @@ class PluginResourcesContractType extends CommonDropdown {
 
          if ($resource->getFromDB($ID)) {
             if ($self->getFromDB($resource->fields["plugin_resources_contracttypes_id"])) {
-               if ($self->fields[$field] > 0)
+               if ($self->fields[$field] > 0) {
                   return true;
+               }
             }
          }
       }
@@ -166,7 +167,7 @@ class PluginResourcesContractType extends CommonDropdown {
          }
       }
 
-      return Dropdown::showFromArray($name, $option, array('value' => $value));
+      return Dropdown::showFromArray($name, $option, ['value' => $value]);
    }
 
    function getContractTypeName($value) {
@@ -187,4 +188,3 @@ class PluginResourcesContractType extends CommonDropdown {
 
 }
 
-?>

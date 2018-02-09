@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
@@ -84,7 +84,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       if (!isset($input["date_begin"]) || $input["date_begin"] == 'NULL') {
          Session::addMessageAfterRedirect(__('The begin date of the non contract period must be filled', 'resources'), false, ERROR);
-         return array();
+         return [];
       }
 
       return $input;
@@ -102,7 +102,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       $PluginResourcesResource = new PluginResourcesResource();
       if ($CFG_GLPI["notifications_mailing"]) {
-         $options = array('resting_id' => $this->fields["id"]);
+         $options = ['resting_id' => $this->fields["id"]];
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("newresting", $PluginResourcesResource, $options);
          }
@@ -120,10 +120,11 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       if (!isset($input["date_begin"]) || $input["date_begin"] == 'NULL') {
          Session::addMessageAfterRedirect(__('The begin date of the non contract period must be filled', 'resources'), false, ERROR);
-         return array();
+         return [];
       }
-      if (isset($input['date_end']) && empty($input['date_end']))
+      if (isset($input['date_end']) && empty($input['date_end'])) {
          $input['date_end'] = 'NULL';
+      }
 
       //unset($input['picture']);
       $this->getFromDB($input["id"]);
@@ -148,8 +149,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       if ($CFG_GLPI["notifications_mailing"] && count($this->updates)) {
-         $options = array('resting_id' => $this->fields["id"],
-             'oldvalues' => $this->oldvalues);
+         $options = ['resting_id' => $this->fields["id"],
+             'oldvalues' => $this->oldvalues];
          $PluginResourcesResource = new PluginResourcesResource();
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("updateresting", $PluginResourcesResource, $options);
@@ -168,7 +169,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       if ($CFG_GLPI["notifications_mailing"]) {
          $PluginResourcesResource = new PluginResourcesResource();
-         $options = array('resting_id' => $this->fields["id"]);
+         $options = ['resting_id' => $this->fields["id"]];
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("deleteresting", $PluginResourcesResource, $options);
          }
@@ -185,7 +186,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     * More information on https://forge.indepnet.net/wiki/glpi/SearchEngine
     **/
    function getSearchOptions() {
-      $tab = array();
+      $tab = [];
 
       $tab['common'] = self::getTypeName(2);
 
@@ -239,7 +240,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
    /**
     *Menu
     */
-   function showMenu(){
+   function showMenu() {
       global $CFG_GLPI;
 
       echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
@@ -283,7 +284,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     * @param $ID
     * @param array $options
     */
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
@@ -315,10 +316,9 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<td>".PluginResourcesResource::getTypeName(1)."</td>";
 
       echo "<td class='left'>";
-      PluginResourcesResource::dropdown(array('name'   => 'plugin_resources_resources_id',
+      PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
                                               'value'  => $this->fields["plugin_resources_resources_id"],
-                                              'entity' => $_SESSION['glpiactiveentities']));
-
+                                              'entity' => $_SESSION['glpiactiveentities']]);
 
       echo "</td></tr>";
       echo "<tr class='plugin_resources_wizard_explain'><td>";
@@ -334,7 +334,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<tr class='plugin_resources_wizard_explain'><td>";
       echo __('Agency concerned', 'resources')."</td>";
       echo "<td class='left'>";
-      Dropdown::show('Location', array('value' => $this->fields["locations_id"]));
+      Dropdown::show('Location', ['value' => $this->fields["locations_id"]]);
       echo "</td></tr>";
 
       echo "<tr class='plugin_resources_wizard_explain'><td>";
@@ -387,7 +387,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     * @param $ID
     * @param array $options
     */
-   function showFormEnd($ID, $options = array()) {
+   function showFormEnd($ID, $options = []) {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
@@ -415,18 +415,17 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       //List of resources
       echo "<td class='left'>";
-      $rand = PluginResourcesResource::dropdown(array('name'      => 'plugin_resources_resources_id',
+      $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
                                                       'on_change' => 'plugin_resources_load_user_resting()',
-                                                      'entity'    => $_SESSION['glpiactiveentities']));
+                                                      'entity'    => $_SESSION['glpiactiveentities']]);
 
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_user_resting(){";
-      $params = array('action' => 'loadResting', 'plugin_resources_resources_id' => '__VALUE__');
+      $params = ['action' => 'loadResting', 'plugin_resources_resources_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resources_id'.$rand);
       echo "}";
 
       echo "</script>";
-
 
       echo "</td></tr>";
       echo "<tr class='plugin_resources_wizard_explain' id='plugin_resources_resting'>";
@@ -446,7 +445,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "</a>";
       echo "</div>";
       echo "<div class='next' id='plugin_resources_button_resting'>";
-//      echo "<input type='submit' name='addenddaterestingresources' value='" . _sx('button', 'Save') . "' class='submit' />";
+      //      echo "<input type='submit' name='addenddaterestingresources' value='" . _sx('button', 'Save') . "' class='submit' />";
       echo "</div>";
       echo "</td></tr></table>";
       Html::closeForm();
@@ -466,7 +465,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       $restings = $resting->find("`plugin_resources_resources_id` = $plugin_resources_resources_id AND (`date_end` IS NULL OR `date_end` LIKE '0000-00-00')");
 
       //array of resting
-      $elements = array();
+      $elements = [];
       $elements[0] = Dropdown::EMPTY_VALUE;
       foreach ($restings as $data) {
          $elements[$data['id']] = PluginResourcesResource::getResourceName($plugin_resources_resources_id)." - ".Html::convDate($data['date_begin']);
@@ -475,15 +474,15 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<td>";
       echo __('Choosing the intercontrat', 'resources') . "</td>";
       echo "<td class='left'>";
-      $rand = Dropdown::showFromArray('plugin_resources_resting_id', $elements, array('on_change' => "plugin_resources_load_end_date_resting()"));
+      $rand = Dropdown::showFromArray('plugin_resources_resting_id', $elements, ['on_change' => "plugin_resources_load_end_date_resting()"]);
       echo "</td>";
 
       //script for display of end date
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_end_date_resting(){";
-      $params = array('action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__');
+      $params = ['action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_endate_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
-      $params = array('action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__');
+      $params = ['action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_button_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
       echo "}";
 
@@ -495,7 +494,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     *
     * @param $plugin_resources_resting_id
     */
-   function loadEndDateResting($plugin_resources_resting_id){
+   function loadEndDateResting($plugin_resources_resting_id) {
 
       echo "<td>".__('End date')."</td>";
       echo "<td class='left'>";
@@ -509,7 +508,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     *
     * @param $plugin_resources_resting_id
     */
-   function loadButtonResting($plugin_resources_resting_id){
+   function loadButtonResting($plugin_resources_resting_id) {
 
       echo "<input type='submit' name='addenddaterestingresources' value='" . _sx('button', 'Save') . "' class='submit' />";
    }
@@ -529,10 +528,10 @@ class PluginResourcesResourceResting extends CommonDBTM {
       $itemtable = $this->getTable();
 
       // Default values of parameters
-      $p['link'] = array(); //
-      $p['field'] = array();
-      $p['contains'] = array();
-      $p['searchtype'] = array();
+      $p['link'] = []; //
+      $p['field'] = [];
+      $p['contains'] = [];
+      $p['searchtype'] = [];
       $p['sort'] = '';
       $p['is_deleted'] = 0;
       $p['link2'] = ''; //
@@ -549,7 +548,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       //$target = Toolbox::getItemTypeSearchURL($itemtype);
       $target = $CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.php";
       // Instanciate an object to access method
-      $item = NULL;
+      $item = null;
       if (class_exists($itemtype)) {
          $item = new $itemtype();
       }
@@ -623,7 +622,6 @@ class PluginResourcesResourceResting extends CommonDBTM {
             echo "</select>&nbsp;";
          }
 
-
          // display select box to define serach item
          echo "<select id='Search$itemtype$i' name=\"field[$i]\" size='1'>";
          echo "<option value='view' ";
@@ -676,17 +674,17 @@ class PluginResourcesResourceResting extends CommonDBTM {
          include (GLPI_ROOT."/ajax/searchoption.php");
          echo "</div>\n";
 
-         $params = array('field' => '__VALUE__',
+         $params = ['field' => '__VALUE__',
              'itemtype' => $itemtype,
              'num' => $i,
              'value' => $_POST["value"],
-             'searchtype' => $_POST["searchtype"]);
+             'searchtype' => $_POST["searchtype"]];
          Ajax::updateItemOnSelectEvent("Search$itemtype$i", "SearchSpan$itemtype$i", $CFG_GLPI["root_doc"]."/ajax/searchoption.php", $params, false);
 
          echo "</td></tr>\n";
       }
 
-      $metanames = array();
+      $metanames = [];
 
       if (is_array($linked) && count($linked) > 0) {
          for ($i = 0; $i < $_SESSION["glpisearchcount2"][$itemtype]; $i++) {
@@ -735,11 +733,11 @@ class PluginResourcesResourceResting extends CommonDBTM {
             // Ajax script for display search met& item
             echo "<span id='show_".$itemtype."_".$i."_$rand'>&nbsp;</span>\n";
 
-            $params = array('itemtype' => '__VALUE__',
+            $params = ['itemtype' => '__VALUE__',
                 'num' => $i,
                 'field' => (is_array($p['field2']) && isset($p['field2'][$i]) ? $p['field2'][$i] : ""),
                 'value' => (is_array($p['contains2']) && isset($p['contains2'][$i]) ? $p['contains2'][$i] : ""),
-                'searchtype2' => (is_array($p['searchtype2']) && isset($p['searchtype2'][$i]) ? $p['searchtype2'][$i] : ""));
+                'searchtype2' => (is_array($p['searchtype2']) && isset($p['searchtype2'][$i]) ? $p['searchtype2'][$i] : "")];
 
             Ajax::updateItemOnSelectEvent("itemtype2_".$itemtype."_".$i."_$rand", "show_".$itemtype."_".
                     $i."_$rand", $CFG_GLPI["root_doc"]."/ajax/updateMetaSearch.php", $params, false);
@@ -795,7 +793,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $DB, $CFG_GLPI;
 
       // Instanciate an object to access method
-      $item = NULL;
+      $item = null;
 
       $itemtype = $this->getType();
       $itemtable = $this->getTable();
@@ -805,10 +803,10 @@ class PluginResourcesResourceResting extends CommonDBTM {
       }
 
       // Default values of parameters
-      $p['link'] = array(); //
-      $p['field'] = array(); //
-      $p['contains'] = array(); //
-      $p['searchtype'] = array(); //
+      $p['link'] = []; //
+      $p['field'] = []; //
+      $p['contains'] = []; //
+      $p['searchtype'] = []; //
       $p['sort'] = '1'; //
       $p['order'] = 'ASC'; //
       $p['start'] = 0; //
@@ -914,7 +912,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       $query.= " FROM `".$itemtable."`";
 
       // Init already linked tables array in order not to link a table several times
-      $already_link_tables = array();
+      $already_link_tables = [];
       // Put reference table
       array_push($already_link_tables, $itemtable);
 
@@ -922,7 +920,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       $COMMONLEFTJOIN = Search::addDefaultJoin($itemtype, $itemtable, $already_link_tables);
       $query .= $COMMONLEFTJOIN;
 
-      $searchopt = array();
+      $searchopt = [];
       $searchopt[$itemtype] = &Search::getOptions($itemtype);
       // Add all table for toview items
       foreach ($toview as $key => $val) {
@@ -1076,7 +1074,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
                   $WHERE.= " ( ";
                   $first2 = true;
 
-                  $items = array();
+                  $items = [];
                   if ($p['field'][$key] == "all") {
                      $items = $searchopt[$itemtype];
                   } else { // toview case : populate toview
@@ -1141,7 +1139,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       }
       $query.=$ORDER;
 
-      // Get it from database	
+      // Get it from database
 
       if ($result = $DB->query($query)) {
          $numrows = $DB->numrows($result);
@@ -1178,8 +1176,9 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
             //massive action
             $sel = "";
-            if (isset($_GET["select"]) && $_GET["select"] == "all")
+            if (isset($_GET["select"]) && $_GET["select"] == "all") {
                $sel = "checked";
+            }
 
             // Add toview elements
             $nbcols = $toview_count;
@@ -1217,7 +1216,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
                echo Search::showHeaderItem($output_type, $searchopt[$itemtype][$val]["name"], $header_num, $linkto, $p['sort'] == $val, $p['order']);
             }
 
-            // End Line for column headers		
+            // End Line for column headers
             echo Search::showEndLine($output_type);
 
             $DB->data_seek($result, $p['start']);

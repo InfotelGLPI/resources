@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
@@ -36,12 +36,12 @@ Session::checkLoginUser();
 $item = new PluginResourcesChecklist();
 
 if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklist_type"])) {
-   $options = array('id'                                => $_POST["id"],
+   $options = ['id'                                => $_POST["id"],
                     'target'                            => $_POST["target"],
                     'plugin_resources_contracttypes_id' => $_POST["plugin_resources_contracttypes_id"],
-                    'checklist_type'                    => $_POST["checklist_type"], 
-                    'plugin_resources_resources_id'     => $_POST["plugin_resources_resources_id"]);
-   
+                    'checklist_type'                    => $_POST["checklist_type"],
+                    'plugin_resources_resources_id'     => $_POST["plugin_resources_resources_id"]];
+
    echo "<table class='tab_cadre'>";
    echo "<tr class='tab_bg_1'>";
    echo "<td>";
@@ -49,10 +49,9 @@ if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklis
    echo "</td>";
    echo "</tr>";
    echo "</table>";
-   
+
 } else {
    echo __("You don't have permission to perform this action.");
 }
 
 Html::ajaxFooter();
-?>

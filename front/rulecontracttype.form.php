@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,11 +26,10 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 
 $rulecollection = new PluginResourcesRuleContracttypeCollection($_SESSION['glpiactive_entity']);
 
 include (GLPI_ROOT . "/front/rule.common.form.php");
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -27,14 +27,14 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'],"dropdownLocation.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownLocation.php")) {
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
 Session::checkLoginUser();
 
-if($_POST['plugin_resources_employers_id']>0){
+if ($_POST['plugin_resources_employers_id']>0) {
 
    $employer = new PluginResourcesEmployer();
    $employer->getFromDB($_POST['plugin_resources_employers_id']);
@@ -47,4 +47,3 @@ if($_POST['plugin_resources_employers_id']>0){
 
 }
 
-?>

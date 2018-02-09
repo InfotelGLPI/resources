@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,16 +32,16 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesEmploymentState extends CommonDropdown {
-   
+
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Employment state', 'Employment states', $nb, 'resources');
    }
-   
+
    static function canCreate() {
-      return Session::haveRight('dropdown',array(CREATE, UPDATE, DELETE));
+      return Session::haveRight('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    static function canView() {
@@ -50,17 +50,17 @@ class PluginResourcesEmploymentState extends CommonDropdown {
 
    function getAdditionalFields() {
 
-      return array(array('name'  => 'short_name',
-                        'label' => __('Short name',  'resources'),
+      return [['name'  => 'short_name',
+                        'label' => __('Short name', 'resources'),
                         'type'  => 'text',
-                        'list'  => true),
-                  array('name'  => 'is_active',
+                        'list'  => true],
+                  ['name'  => 'is_active',
                         'label' => __('Active'),
-                        'type'  => 'bool'),
-                  array('name'  => 'is_leaving_state',
+                        'type'  => 'bool'],
+                  ['name'  => 'is_leaving_state',
                         'label' => __("Employment state at leaving's resource", "resources"),
-                        'type'  => 'bool'),
-                  );
+                        'type'  => 'bool'],
+                  ];
    }
 
    /**
@@ -107,7 +107,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
 
       $tab[14]['table']         = $this->getTable();
       $tab[14]['field']         = 'short_name';
-      $tab[14]['name']          = __('Short name',  'resources');
+      $tab[14]['name']          = __('Short name', 'resources');
 
       $tab[15]['table']         = $this->getTable();
       $tab[15]['field']         = 'is_active';
@@ -146,10 +146,10 @@ class PluginResourcesEmploymentState extends CommonDropdown {
     * @param int $history
     * @return nothing|void
     */
-   function post_updateItem($history=1) {
+   function post_updateItem($history = 1) {
       global $DB;
 
-      if (in_array('is_leaving_state',$this->updates)) {
+      if (in_array('is_leaving_state', $this->updates)) {
 
          if ($this->input["is_leaving_state"]) {
             $query = "UPDATE `".$this->getTable()."`
@@ -182,11 +182,10 @@ class PluginResourcesEmploymentState extends CommonDropdown {
    static function getDefault() {
       global $DB;
 
-      foreach ($DB->request('glpi_plugin_resources_employmentstates', array('is_leaving_state' => 1)) as $data) {
+      foreach ($DB->request('glpi_plugin_resources_employmentstates', ['is_leaving_state' => 1]) as $data) {
          return $data['id'];
       }
       return 0;
    }
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@ Session::checkLoginUser();
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
    // Security
-   if (!$DB->tableExists($_REQUEST['table']) ) {
+   if (!$DB->tableExists($_REQUEST['table'])) {
       exit();
    }
 
@@ -48,7 +48,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             $tmpname['link']    = $CFG_GLPI['root_doc']."/plugins/resources/front/resource.php";
             $tmpname['comment'] = "";
          } else {
-            $tmpname = PluginResourcesResource::getResourceName($_REQUEST["value"],2);
+            $tmpname = PluginResourcesResource::getResourceName($_REQUEST["value"], 2);
          }
          echo $tmpname["comment"];
 
@@ -66,4 +66,3 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
          }
    }
 }
-?>

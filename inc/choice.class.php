@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -44,7 +44,7 @@ class PluginResourcesChoice extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
@@ -90,17 +90,17 @@ class PluginResourcesChoice extends CommonDBTM {
    static function countForResource(PluginResourcesResource $item) {
 
       $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "' ";
-      $nb       = countElementsInTable(array('glpi_plugin_resources_choices'), $restrict);
+      $nb       = countElementsInTable(['glpi_plugin_resources_choices'], $restrict);
 
       return $nb;
    }
 
    function addHelpdeskItem($values) {
 
-      $this->add(array(
+      $this->add([
                     'plugin_resources_resources_id'   => $values["plugin_resources_resources_id"],
                     'plugin_resources_choiceitems_id' => $values["plugin_resources_choiceitems_id"],
-                    'comment'                         => ''));
+                    'comment'                         => '']);
    }
 
    function addComment($values) {
@@ -117,9 +117,9 @@ class PluginResourcesChoice extends CommonDBTM {
 
       $comment = Html::cleanPostForTextArea($comment);
 
-      $resource->update(array(
+      $resource->update([
                            'id'      => $values['plugin_resources_resources_id'],
-                           'comment' => addslashes($comment)));
+                           'comment' => addslashes($comment)]);
 
       $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
    }
@@ -133,18 +133,18 @@ class PluginResourcesChoice extends CommonDBTM {
 
       $comment = Html::cleanPostForTextArea($comment);
 
-      $resource->update(array(
+      $resource->update([
                            'id'      => $values['plugin_resources_resources_id'],
-                           'comment' => addslashes($comment)));
+                           'comment' => addslashes($comment)]);
 
       $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
    }
 
    function addNeedComment($values) {
 
-      $this->update(array(
+      $this->update([
                        'id'      => $values['id'],
-                       'comment' => $values['commentneed']));
+                       'comment' => $values['commentneed']]);
    }
 
    function prepareInputForAdd($input) {
@@ -178,16 +178,18 @@ class PluginResourcesChoice extends CommonDBTM {
 
       foreach ($DB->request($query) as $data) {
          $choice = new self();
-         $choice->add(array('plugin_resources_resources_id'   => $newid,
+         $choice->add(['plugin_resources_resources_id'   => $newid,
                             'plugin_resources_choiceitems_id' => $data["plugin_resources_choiceitems_id"],
-                            'comment'                         => $data["comment"]));
+                            'comment'                         => $data["comment"]]);
       }
    }
 
    function wizardFourForm($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
-      if (!$this->canView()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $employer_spotted = false;
 
@@ -201,13 +203,18 @@ class PluginResourcesChoice extends CommonDBTM {
 
       $ID = 0;
       if (!empty($newchoices)) {
-         foreach ($newchoices as $newchoice)
+         foreach ($newchoices as $newchoice) {
             $ID = $newchoice["id"];
+         }
       }
       if (empty($ID)) {
-         if ($this->getEmpty()) $spotted = true;
+         if ($this->getEmpty()) {
+            $spotted = true;
+         }
       } else {
-         if ($this->getfromDB($ID)) $spotted = true;
+         if ($this->getfromDB($ID)) {
+            $spotted = true;
+         }
       }
 
       if ($spotted && $plugin_resources_resources_id) {
@@ -238,7 +245,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo __('IT needs identified', 'resources');
          echo "</th>";
          echo "</tr>";
-         $used = array();
+         $used = [];
 
          if (!empty($choices)) {
             foreach ($choices as $choice) {
@@ -266,7 +273,7 @@ class PluginResourcesChoice extends CommonDBTM {
                   Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/wizard.form.php',
                                        'deletechoice',
                                        _x('button', 'Delete permanently'),
-                                       array('id' => $choice["id"], 'plugin_resources_resources_id' => $plugin_resources_resources_id));
+                                       ['id' => $choice["id"], 'plugin_resources_resources_id' => $plugin_resources_resources_id]);
 
                   echo "</td>";
                }
@@ -282,10 +289,10 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<td class='center'>";
             echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
             Dropdown::show('PluginResourcesChoiceItem',
-                           array('name'      => 'plugin_resources_choiceitems_id',
+                           ['name'      => 'plugin_resources_choiceitems_id',
                                  'entity'    => $_SESSION['glpiactive_entity'],
                                  'condition' => '`is_helpdesk_visible` = 1',
-                                 'used'      => $used));
+                                 'used'      => $used]);
             echo "</td>";
             echo "<td class='center'>";
             echo "<input type='submit' name='addchoice' value=\"" . _sx('button', 'Post') . "\" class='submit'>";
@@ -302,7 +309,7 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<img alt='' name='commentimg$rand' src=\"" .
                  $CFG_GLPI["root_doc"] . "/pics/deplier_down.png\">&nbsp;";
             echo __('Others needs', 'resources') . "&nbsp;";
-            Html::showToolTip(__('Will be added to the resource comment area', 'resources'), array());
+            Html::showToolTip(__('Will be added to the resource comment area', 'resources'), []);
             echo "</a>";
             echo "</th>";
             echo "</tr>";
@@ -360,13 +367,12 @@ class PluginResourcesChoice extends CommonDBTM {
    static function showAddCommentForm($item, $rand) {
       global $CFG_GLPI;
 
-
       $items_id = $item['id'];
       echo "<div class='center' id='addneedcomment" . "$items_id$rand'></div>\n";
       echo "<script type='text/javascript' >\n";
       echo "function viewAddNeedComment" . "$items_id(){\n";
-      $params = array('id'   => $items_id,
-                      'rand' => $rand);
+      $params = ['id'   => $items_id,
+                      'rand' => $rand];
       Ajax::UpdateItemJsCode("addneedcomment" . "$items_id$rand",
                              $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/addneedcomment.php", $params, false);
       echo "};";
@@ -392,8 +398,8 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "$('#commentneed$items_id$rand').hide();";
       echo "$('#viewaccept$items_id$rand').show();";
 
-      $params = array('name' => 'commentneed' . $items_id,
-                      'data' => rawurlencode($item["comment"]));
+      $params = ['name' => 'commentneed' . $items_id,
+                      'data' => rawurlencode($item["comment"])];
       Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/inputtext.php",
                              $params, false);
       echo "}";
@@ -432,10 +438,11 @@ class PluginResourcesChoice extends CommonDBTM {
       $canedit = $resource->can($plugin_resources_resources_id, UPDATE)
                  && $withtemplate < 2
                  && $resource->fields["is_leaving"] != 1;
-      if ($exist == 0)
+      if ($exist == 0) {
          echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource_item.list.php\">";
-      else if ($exist == 1)
+      } else if ($exist == 1) {
          echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+      }
 
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr>";
@@ -445,11 +452,12 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "<th>" . __('Type') . "</th>";
       echo "<th>" . __('Description') . "</th>";
       echo "<th>" . __('Comments') . "</th>";
-      if ($canedit)
+      if ($canedit) {
          echo "<th>&nbsp;</th>";
+      }
       echo "</tr>";
 
-      $used = array();
+      $used = [];
       if (!empty($choices)) {
          foreach ($choices as $choice) {
 
@@ -482,7 +490,7 @@ class PluginResourcesChoice extends CommonDBTM {
                Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/resource_item.list.php',
                                     'deletehelpdeskitem',
                                     _x('button', 'Delete permanently'),
-                                    array('id' => $choice["id"]));
+                                    ['id' => $choice["id"]]);
                echo "</td>";
             }
             echo "</tr>";
@@ -497,14 +505,15 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
 
          $condition = "";
-         if ($_SESSION['glpiactiveprofile']['interface'] != 'central')
+         if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
             $condition = '`is_helpdesk_visible` = 1';
+         }
          Dropdown::show('PluginResourcesChoiceItem',
-                        array('name'      => 'plugin_resources_choiceitems_id',
+                        ['name'      => 'plugin_resources_choiceitems_id',
                               'entity'    => $_SESSION['glpiactive_entity'],
                               'condition' => $condition,
                               'used'      => $used,
-                              'addicon'   => true));
+                              'addicon'   => true]);
          echo "</td></tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='4'>";
@@ -528,4 +537,3 @@ class PluginResourcesChoice extends CommonDBTM {
    }
 }
 
-?>

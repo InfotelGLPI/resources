@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,28 +28,28 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 class PluginResourcesCost extends CommonDropdown {
-   
+
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Budget cost', 'Budget costs', $nb, 'resources');
    }
 
    static function canCreate() {
-      if (Session::haveRight('dropdown',UPDATE)
-         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)){
+      if (Session::haveRight('dropdown', UPDATE)
+         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
          return true;
       }
       return false;
    }
 
    static function canView() {
-      if (Session::haveRight('plugin_resources_dropdown_public', READ)){
+      if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
       }
       return false;
@@ -66,7 +66,7 @@ class PluginResourcesCost extends CommonDropdown {
       if (!isset ($input["plugin_resources_professions_id"])
          || $input["plugin_resources_professions_id"] == '0') {
          Session::addMessageAfterRedirect(__('The profession for the budget must be filled', 'resources'), false, ERROR);
-         return array ();
+         return  [];
       }
 
       return $input;
@@ -83,35 +83,35 @@ class PluginResourcesCost extends CommonDropdown {
       if (!isset ($input["plugin_resources_professions_id"])
          || $input["plugin_resources_professions_id"] == '0') {
          Session::addMessageAfterRedirect(__('The profession for the budget must be filled', 'resources'), false, ERROR);
-         return array ();
+         return  [];
       }
 
       return $input;
    }
 
    function getAdditionalFields() {
-   
-      return array(array('name' => 'plugin_resources_professions_id',
+
+      return [['name' => 'plugin_resources_professions_id',
                         'label' => __('Profession', 'resources'),
                         'type'  => 'dropdownValue',
-                        'list'  => true),
-                  array('name'  => 'plugin_resources_ranks_id',
+                        'list'  => true],
+                  ['name'  => 'plugin_resources_ranks_id',
                         'label' => __('Rank', 'resources'),
                         'type'  => 'dropdownValue',
-                        'list'  => true),
-                  array('name'  => 'begin_date',
+                        'list'  => true],
+                  ['name'  => 'begin_date',
                         'label' => __('Begin date'),
                         'type'  => 'date',
-                        'list'  => false),
-                  array('name'  => 'end_date',
+                        'list'  => false],
+                  ['name'  => 'end_date',
                         'label' => __('End date'),
                         'type'  => 'date',
-                        'list'  => false),
-                  array('name'  => 'cost',
+                        'list'  => false],
+                  ['name'  => 'cost',
                         'label' => __('Budget cost', 'resources'),
                         'type'  => 'decimal',
-                        'list'  => false),
-      );
+                        'list'  => false],
+      ];
    }
 
    function getSearchOptions() {
@@ -122,12 +122,12 @@ class PluginResourcesCost extends CommonDropdown {
       $tab[14]['field']         = 'name';
       $tab[14]['name']          = __('Profession', 'resources');
       $tab[14]['datatype']      = 'dropdown';
-      
+
       $tab[15]['table']         = 'glpi_plugin_resources_ranks';
       $tab[15]['field']         = 'name';
       $tab[15]['name']          = __('Rank', 'resources');
       $tab[15]['datatype']      = 'dropdown';
-      
+
       $tab[17]['table']         = $this->getTable();
       $tab[17]['field']         = 'begin_date';
       $tab[17]['name']          = __('Begin date');
@@ -154,7 +154,7 @@ class PluginResourcesCost extends CommonDropdown {
     * @param array $options
     * @return bool
     */
-   function showForm($ID, $options=array("")) {
+   function showForm($ID, $options = [""]) {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
@@ -166,7 +166,7 @@ class PluginResourcesCost extends CommonDropdown {
 
       echo "<tr class='tab_bg_1'><td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this,"name");
+      Html::autocompletionTextField($this, "name");
       echo "</td>";
 
       echo "<td rowspan='".($nb+1)."'>";
@@ -178,14 +178,14 @@ class PluginResourcesCost extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Profession', 'resources')."</td>";
       echo "<td>";
-      $params = array('name' => 'plugin_resources_professions_id',
+      $params = ['name' => 'plugin_resources_professions_id',
                     'value' => $this->fields['plugin_resources_professions_id'],
                     'entity' => $this->fields["entities_id"],
                     'action' => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
                     'span' => 'span_rank',
                      'sort' => false
-                  );
-      PluginResourcesResource::showGenericDropdown('PluginResourcesProfession',$params);
+                  ];
+      PluginResourcesResource::showGenericDropdown('PluginResourcesProfession', $params);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -266,4 +266,3 @@ class PluginResourcesCost extends CommonDropdown {
    }
 }
 
-?>

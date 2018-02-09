@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -43,4 +43,3 @@ if (isset($_POST['duration']) && $_POST['duration']==0) {
                                          'maxtime'    => $_POST['global_end']]);
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -30,20 +30,20 @@
 class PluginResourcesResourcePDF extends PluginPdfCommon {
 
 
-   function __construct(CommonGLPI $obj=NULL) {
+   function __construct(CommonGLPI $obj = null) {
 
       $this->obj = ($obj ? $obj : new PluginResourcesResource());
    }
-   
+
 
    static function pdfMain(PluginPdfSimplePDF $pdf, PluginResourcesResource $res) {
-      
+
       $ID = $res->getField('id');
       if (!$res->can($ID, READ)) {
          return false;
       }
-      
-      $pdf->setColumnsSize(50,50);
+
+      $pdf->setColumnsSize(50, 50);
       $col1 = '<b>'.__('ID').' '.$res->fields['id'].'</b>';
       if (isset($res->fields["date_declaration"])) {
          $users_id_recipient=new User();
@@ -58,12 +58,12 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
          '<b><i>'.__('Surname').' :</i></b> '.$res->fields['name'],
          '<b><i>'.__('First name').' :</i></b> '.$res->fields['firstname']);
       $pdf->displayLine(
-         '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations',$res->fields['locations_id'])),
-         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',$res->fields['plugin_resources_contracttypes_id'])));
+         '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations', $res->fields['locations_id'])),
+         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $res->fields['plugin_resources_contracttypes_id'])));
 
       $pdf->displayLine(
          '<b><i>'.__('Resource manager', 'resources').' :</i></b> '.Html::clean(getusername($res->fields["users_id"])),
-         '<b><i>'.PluginResourcesDepartment::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_departments',$res->fields["plugin_resources_departments_id"])));
+         '<b><i>'.PluginResourcesDepartment::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_departments', $res->fields["plugin_resources_departments_id"])));
 
       $pdf->displayLine(
          '<b><i>'.__('Arrival date', 'resources').' :</i></b> '.Html::convDate($res->fields["date_begin"]),
@@ -75,8 +75,8 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
 
       $pdf->displaySpace();
    }
-   
-   function defineAllTabs($options=array()) {
+
+   function defineAllTabs($options = []) {
 
       $onglets = parent::defineAllTabs($options);
       unset($onglets['PluginResourcesChoice####1']);
@@ -98,4 +98,3 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       return true;
    }
 }
-?>

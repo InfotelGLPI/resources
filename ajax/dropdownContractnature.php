@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'],"dropdownContractnature.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownContractnature.php")) {
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -36,11 +36,10 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownContractnature.php")) {
 Session::checkLoginUser();
 
 //allow ContractNature's display depending on resource situation
-$options =array(
+$options =[
    'plugin_resources_resourcesituations_id' =>$_POST['plugin_resources_resourcesituations_id'],
    'entity'                                  =>$_POST['entity_restrict'],
-   'rand'                                    =>$_POST['rand']);
+   'rand'                                    =>$_POST['rand']];
 
 PluginResourcesContractNature::showContractnature($options);
 
-?>

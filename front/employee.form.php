@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -39,11 +39,10 @@ $employee = new PluginResourcesEmployee();
 if (isset($_POST["add_helpdesk_employee"])) {
    $newID = $employee->add($_POST);
    Html::redirect("./resource_item.list.php?id=".$_POST["plugin_resources_resources_id"]."&exist=0");
-   
+
 } else {
    //show form employee informations from helpdesk
    $employee->showFormHelpdesk($_GET["id"], 0);
 }
 
 Html::helpFooter();
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -43,7 +43,7 @@ if ($plugin->isActivated("resources")) {
 
    } else if (isset($_POST["delete_ticket"])) {
       if (isset($_POST['id'])) {
-         $cat->delete(array('id' => $_POST['id']));
+         $cat->delete(['id' => $_POST['id']]);
       }
       Html::back();
 

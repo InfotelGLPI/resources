@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -40,7 +40,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -100,26 +100,27 @@ class PluginResourcesTask_Item extends CommonDBTM {
 
       $args = explode(",", $values['item_item']);
       if (isset($args[0]) && isset($args[1])) {
-         $this->add(array('plugin_resources_tasks_id' => $values["plugin_resources_tasks_id"],
+         $this->add(['plugin_resources_tasks_id' => $values["plugin_resources_tasks_id"],
              'items_id' => $args[0],
-             'itemtype' => $args[1]));
+             'itemtype' => $args[1]]);
       }
    }
 
    function deleteItemByTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype) {
 
       if ($this->getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)) {
-         return $this->delete(array('id' => $this->fields["id"]));
+         return $this->delete(['id' => $this->fields["id"]]);
       }
-      
+
       return false;
    }
 
    function showItemFromPlugin($instID, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
-      if (empty($withtemplate))
+      if (empty($withtemplate)) {
          $withtemplate = 0;
+      }
 
       $PluginResourcesTask = new PluginResourcesTask();
       if ($PluginResourcesTask->getFromDB($instID)) {
@@ -144,10 +145,11 @@ class PluginResourcesTask_Item extends CommonDBTM {
          echo "</th></tr>";
          echo "<tr><th>"._n('Type', 'Types', 2)."</th>";
          echo "<th>".__('Name')."</th>";
-         if ($canedit && $this->canCreate() && $withtemplate < 2)
+         if ($canedit && $this->canCreate() && $withtemplate < 2) {
             echo "<th>&nbsp;</th>";
+         }
          echo "</tr>";
-         $used = array();
+         $used = [];
          if ($number != "0") {
 
             for ($i = 0; $i < $number; $i++) {
@@ -174,11 +176,13 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         $ID = "";
                         $itemID = $data["id"];
                         $used[] = $itemID;
-                        if ($_SESSION["glpiis_ids_visible"] || empty($data["name"]))
+                        if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
                            $ID = " (".$data["id"].")";
+                        }
                         $itemname = $data["name"];
-                        if ($type == 'User')
+                        if ($type == 'User') {
                            $itemname = getUserName($itemID);
+                        }
 
                         $link = Toolbox::getItemTypeFormURL($type);
                         $name = "<a href=\"".$link."\">".$itemname."$ID</a>";
@@ -188,7 +192,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         echo "<td class='center' ".(isset($data['is_deleted']) && $data['is_deleted'] == '1' ? "class='tab_bg_2_2'" : "").">".$name."</td>";
                         if ($canedit && $this->canCreate() && $withtemplate < 2) {
                            echo "<td class='center' class='tab_bg_2'>";
-                           Html::showSimpleForm($CFG_GLPI['root_doc'].'/plugins/resources/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), array('id' => $data["items_id"]));
+                           Html::showSimpleForm($CFG_GLPI['root_doc'].'/plugins/resources/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), ['id' => $data["items_id"]]);
                            echo "</td>";
                         }
                         echo "</tr>";
@@ -218,4 +222,3 @@ class PluginResourcesTask_Item extends CommonDBTM {
 
 }
 
-?>

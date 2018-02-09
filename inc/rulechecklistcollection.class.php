@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 class PluginResourcesRuleChecklistCollection extends RuleCollection {
 
    static $rightname = 'plugin_resources';
-   
+
    // From RuleCollection
    //public $use_output_rule_process_as_next_input=true;
    public $menu_option='checklists';
@@ -38,19 +38,19 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
    function getTitle() {
       return __('Assignment rules of a checklist to a contract type', 'resources');
    }
-   
-   function __construct($entity=0) {
+
+   function __construct($entity = 0) {
       $this->entity = $entity;
    }
-   
+
    function showInheritedTab() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE)) && ($this->entity);
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
    }
 
    function showChildrensTab() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE)) && (count($_SESSION['glpiactiveentities']) > 1);
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count($_SESSION['glpiactiveentities']) > 1);
    }
-   
+
    /**
     * Process all the rules collection
     *
@@ -60,14 +60,14 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
     *
     * @return the output array updated by actions
    **/
-   function processAllRules($input=array() ,$output=array(), $params=array(),
-                            $force_no_cache=false) {
+   function processAllRules($input = [], $output = [], $params = [],
+                            $force_no_cache = false) {
 
       // Get Collection datas
-      $this->getCollectionDatas(1,1);
+      $this->getCollectionDatas(1, 1);
       $input = $this->prepareInputDataForProcess($input, $params);
       $output["_no_rule_matches"] = true;
-      $checklists = array();
+      $checklists = [];
 
       if (count($this->RuleList->list)) {
          foreach ($this->RuleList->list as $rule) {
@@ -76,9 +76,10 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
             if ($rule->fields["is_active"]) {
                $output["_rule_process"] = false;
                $rule->process($input, $output, $params);
-               
-               if ($output["_rule_process"]==1)
+
+               if ($output["_rule_process"]==1) {
                   $checklists[]=$output["checklists_id"];
+               }
             }
 
             if ($this->use_output_rule_process_as_next_input) {
@@ -89,7 +90,7 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
 
       return $checklists;
    }
-   
+
    function showTestResults($rule, array $output, $global_result) {
 
       $actions = $rule->getActions();
@@ -97,4 +98,3 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
    }
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -47,15 +47,15 @@ class PluginResourcesBudget extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
     * Display Tab for each budget
     * */
-   function defineTabs($options = array()) {
+   function defineTabs($options = []) {
 
-      $ong = array();
+      $ong = [];
 
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('Document', $ong, $options);
@@ -74,7 +74,7 @@ class PluginResourcesBudget extends CommonDBTM {
 
       if (!isset($input["plugin_resources_professions_id"]) || $input["plugin_resources_professions_id"] == '0') {
          Session::addMessageAfterRedirect(__('The profession for the budget must be filled', 'resources'), false, ERROR);
-         return array();
+         return [];
       }
 
       return $input;
@@ -90,7 +90,7 @@ class PluginResourcesBudget extends CommonDBTM {
 
       if (!isset($input["plugin_resources_professions_id"]) || $input["plugin_resources_professions_id"] == '0') {
          Session::addMessageAfterRedirect(__('The profession for the budget must be filled', 'resources'), false, ERROR);
-         return array();
+         return [];
       }
 
       return $input;
@@ -101,7 +101,7 @@ class PluginResourcesBudget extends CommonDBTM {
     */
    function getSearchOptions() {
 
-      $tab           = array();
+      $tab           = [];
       $tab['common'] = self::getTypeName(2);
 
       $tab[1]['table']         = $this->getTable();
@@ -177,7 +177,7 @@ class PluginResourcesBudget extends CommonDBTM {
     *
     * @return boolean item found
     * */
-   function showForm($ID, $options = array("")) {
+   function showForm($ID, $options = [""]) {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
@@ -186,25 +186,25 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", array('value' => $this->fields["name"]));
+      Html::autocompletionTextField($this, "name", ['value' => $this->fields["name"]]);
       echo "</td>";
 
       echo "<td>".__('Budget type', 'resources')."</td>";
       echo "<td>";
-      Dropdown::show('PluginResourcesBudgetType', array('value'  => $this->fields["plugin_resources_budgettypes_id"],
-          'entity' => $this->fields["entities_id"]));
+      Dropdown::show('PluginResourcesBudgetType', ['value'  => $this->fields["plugin_resources_budgettypes_id"],
+          'entity' => $this->fields["entities_id"]]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Profession', 'resources')."</td>";
       echo "<td>";
-      $params = array('name'    => 'plugin_resources_professions_id',
+      $params = ['name'    => 'plugin_resources_professions_id',
                       'value'   => $this->fields['plugin_resources_professions_id'],
                       'entityt' => $this->fields["entities_id"],
                       'action'  => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
                       'span'    => 'span_rank',
-                      'sort'    => true);
+                      'sort'    => true];
       PluginResourcesResource::showGenericDropdown('PluginResourcesProfession', $params);
 
       echo "</td>";
@@ -220,11 +220,11 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Budget volume', 'resources')."</td>";
       echo "<td>";
-      $options = array('value' => 0);
+      $options = ['value' => 0];
       Html::autocompletionTextField($this, 'volume', $options);
       echo "</td><td>".__('Type of budget volume', 'resources')."</td><td>";
-      Dropdown::show('PluginResourcesBudgetVolume', array('value'  => $this->fields["plugin_resources_budgetvolumes_id"],
-          'entity' => $this->fields["entities_id"]));
+      Dropdown::show('PluginResourcesBudgetVolume', ['value'  => $this->fields["plugin_resources_budgetvolumes_id"],
+          'entity' => $this->fields["entities_id"]]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -244,7 +244,6 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-
       if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $options['candel'] = false;
       }
@@ -257,7 +256,7 @@ class PluginResourcesBudget extends CommonDBTM {
 
       $plugin_page                                   = '/plugins/resources/front/budget.php';
       $itemtype                                      = strtolower(self::getType());
-      
+
       //Menu entry in admin
       $menu['options'][$itemtype]['title']           = self::getTypeName();
       $menu['options'][$itemtype]['page']            = $plugin_page;
@@ -272,4 +271,3 @@ class PluginResourcesBudget extends CommonDBTM {
 
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,17 +32,17 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesLeavingReason extends CommonDropdown {
-   
+
    static $rightname = 'plugin_resources';
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Leaving reason', 'Leaving reasons', $nb, 'resources');
    }
-   
+
    static function canCreate() {
-      return Session::haveRight('dropdown',array(CREATE, UPDATE, DELETE));
+      return Session::haveRight('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    static function canView() {
@@ -88,4 +88,3 @@ class PluginResourcesLeavingReason extends CommonDropdown {
    }
 }
 
-?>

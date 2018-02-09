@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -38,24 +38,24 @@ $titre = $LANG['plugin_resources']['budgetsummary'];
 $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
-$datecrit = new PluginResourcesDateCriteria($report,'date_budget','',PluginResourcesBudget::getTypeName(1)." - ".__('Date'));
+$datecrit = new PluginResourcesDateCriteria($report, 'date_budget', '', PluginResourcesBudget::getTypeName(1)." - ".__('Date'));
 $professioncategory = New PluginReportsDropdownCriteria($report, 'plugin_resources_professioncategories_id',
-   'glpi_plugin_resources_professioncategories',PluginResourcesProfessionCategory::getTypeName(1));
+   'glpi_plugin_resources_professioncategories', PluginResourcesProfessionCategory::getTypeName(1));
 $professionline = New PluginReportsDropdownCriteria($report, 'plugin_resources_professionlines_id',
-   'glpi_plugin_resources_professionlines',PluginResourcesProfessionLine::getTypeName(1));
+   'glpi_plugin_resources_professionlines', PluginResourcesProfessionLine::getTypeName(1));
 
 //Display criterias form is needed
 $report->displayCriteriasForm();
 
 //colname with sort allowed
-$columns = array('professioncategory' => array('sorton' => 'professioncategory'),
-                 'professionline' => array('sorton' => 'professionline'),
-                 'profession' => array('sorton' => 'profession'),
-                 'rank' => array('sorton' => 'rank'),
-                 'begin_date' => array('sorton' => 'begin_date'),
-                 'end_date' => array('sorton' => 'end_date'),
-                 'budget_type' => array('sorton' => 'budget_type'),
-                 'qt_vol_budg_vot' => array('sorton' => 'qt_vol_budg_vot'),);
+$columns = ['professioncategory' => ['sorton' => 'professioncategory'],
+                 'professionline' => ['sorton' => 'professionline'],
+                 'profession' => ['sorton' => 'profession'],
+                 'rank' => ['sorton' => 'rank'],
+                 'begin_date' => ['sorton' => 'begin_date'],
+                 'end_date' => ['sorton' => 'end_date'],
+                 'budget_type' => ['sorton' => 'budget_type'],
+                 'qt_vol_budg_vot' => ['sorton' => 'qt_vol_budg_vot'],];
 
 $output_type = Search::HTML_OUTPUT;
 
@@ -86,7 +86,7 @@ if ($report->criteriasValidated()) {
 
    //to verify if budget exist
    // SQL statement
-   $condition = getEntitiesRestrictRequest('',"glpi_plugin_resources_budgets",'','',false);
+   $condition = getEntitiesRestrictRequest('', "glpi_plugin_resources_budgets", '', '', false);
    $date = $datecrit->getDate();
    $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
    $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
@@ -215,18 +215,18 @@ if ($report->criteriasValidated()) {
       $totalbudgetemployment = 0;
 
       //For each budget
-      for ($row_num = 2 ; $data=$DB->fetch_assoc($res); $row_num++) {
+      for ($row_num = 2; $data=$DB->fetch_assoc($res); $row_num++) {
 
          $num = 1;
          echo Search::showNewLine($output_type);
-         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professioncategories',$data['professioncategory']), $num,$row_num);
-         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professionlines',$data['professionline']), $num,$row_num);
-         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professions',$data['profession']), $num,$row_num);
-         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_ranks',$data['rank']), $num,$row_num);
-         echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num,$row_num);
-         echo Search::showItem($output_type, Html::convDate($data['end_date']), $num,$row_num);
-         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_budgettypes',$data['budget_type']), $num,$row_num);
-         echo Search::showItem($output_type, Html::formatNumber($data['qt_vol_budg_vot'],'',0), $num,$row_num);
+         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professioncategories', $data['professioncategory']), $num, $row_num);
+         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professionlines', $data['professionline']), $num, $row_num);
+         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_professions', $data['profession']), $num, $row_num);
+         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_ranks', $data['rank']), $num, $row_num);
+         echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $row_num);
+         echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $row_num);
+         echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_plugin_resources_budgettypes', $data['budget_type']), $num, $row_num);
+         echo Search::showItem($output_type, Html::formatNumber($data['qt_vol_budg_vot'], '', 0), $num, $row_num);
 
          $totalvolbudget = $totalvolbudget + $data['qt_vol_budg_vot'];
 
@@ -237,7 +237,7 @@ if ($report->criteriasValidated()) {
                                  ON (`glpi_plugin_resources_employments`.`plugin_resources_employmentstates_id`
                                        = `glpi_plugin_resources_employmentstates`.`id`
                                        AND `glpi_plugin_resources_employmentstates`.`is_leaving_state` = 0) ";
-         if ($data['rank']!=0){
+         if ($data['rank']!=0) {
             $calqtvolbudguse.=" LEFT JOIN `glpi_plugin_resources_ranks`
                                  ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id`
                         = `glpi_plugin_resources_ranks`.`id`)";
@@ -250,7 +250,7 @@ if ($report->criteriasValidated()) {
                             AND `glpi_plugin_resources_employments`.`begin_date`
                                   <= '".$data['end_date']."'
                             AND `glpi_plugin_resources_employments`.`plugin_resources_professions_id` = '".$data['profession']."' ";
-         if ($data['rank']!=0){
+         if ($data['rank']!=0) {
             $calqtvolbudguse.= " AND `glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = '".$data['rank']."'
                                  AND `glpi_plugin_resources_ranks`.`is_active` = 1
                                  AND ((`glpi_plugin_resources_ranks`.`begin_date` <= '".$date."')
@@ -263,21 +263,21 @@ if ($report->criteriasValidated()) {
 
          //link to recap.php displaying only employments with same rank and profession
          $ratio ="";
-         if(!empty($data1['sum'])) {
+         if (!empty($data1['sum'])) {
             $ratio = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?employment_professions_id=".
                $data['profession'];
             $ratio.="&amp;date=".$date;
-            if ($data['rank']!=0){
+            if ($data['rank']!=0) {
                $ratio.="&amp;employment_ranks_id=".$data['rank'].
                   "&amp;glpisearchcount=5&amp;glpisearchcount5=0&amp;reset=reset";
             } else {
                $ratio.="&amp;glpisearchcount=4&amp;glpisearchcount4=0&amp;reset=reset";
             }
             $ratio.= "' target='_blank'>".
-               Html::formatNumber($data1['sum'],'',2)."</a>";
+               Html::formatNumber($data1['sum'], '', 2)."</a>";
          }
 
-         echo Search::showItem($output_type, $ratio, $num,$row_num);
+         echo Search::showItem($output_type, $ratio, $num, $row_num);
          $totalvolemployment = $totalvolemployment + $data1['sum'];
 
          //recover quota sum of resource for each budget depending on rank, profession and year
@@ -301,7 +301,7 @@ if ($report->criteriasValidated()) {
                             AND `glpi_plugin_resources_employments`.`begin_date`
                                   <= '".$data['end_date']."'
                        AND `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '".$data['profession']."'";
-         if ($data['rank']!=0){
+         if ($data['rank']!=0) {
             $calqtvolreal.=" AND `glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = '".$data['rank']."'
                              AND `glpi_plugin_resources_ranks`.`is_active` = 1
                              AND ((`glpi_plugin_resources_ranks`.`begin_date` <= '".$date."')
@@ -314,26 +314,26 @@ if ($report->criteriasValidated()) {
 
          //link to recap.php displaying only resource with same rank and profession
          $quota ="";
-         if(!empty($data2['sum'])) {
+         if (!empty($data2['sum'])) {
             $quota = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?resource_professions_id=".
                $data['profession'];
             $quota.="&amp;date=".$date;
-            if ($data['rank']!=0){
+            if ($data['rank']!=0) {
                $quota.="&amp;resource_ranks_id=".$data['rank'].
                "&amp;glpisearchcount=5&amp;glpisearchcount5=0&amp;reset=reset";
             } else {
                $quota.="&amp;glpisearchcount=4&amp;glpisearchcount4=0&amp;reset=reset";
             }
             $quota.="' target='_blank'>".
-               Html::formatNumber($data2['sum'],'',4)."</a>";
+               Html::formatNumber($data2['sum'], '', 4)."</a>";
          }
-         echo Search::showItem($output_type, $quota, $num,$row_num);
+         echo Search::showItem($output_type, $quota, $num, $row_num);
          $totalvolresource = $totalvolresource+$data2['sum'];
 
          //difference between quantity of budget voting and sum of resource quota using it
          $solde = $data['qt_vol_budg_vot'] - $data2['sum'];
 
-         echo Search::showItem($output_type, $solde, $num,$row_num);
+         echo Search::showItem($output_type, $solde, $num, $row_num);
 
          //recover cost allocated for each couple rank/profession/year
          $query3 = "SELECT `glpi_plugin_resources_costs`.`cost` AS cost
@@ -351,26 +351,26 @@ if ($report->criteriasValidated()) {
          $calvolbudgvot = $data3['cost'] * $data['qt_vol_budg_vot'];
          $totalamountbudget = $totalamountbudget + $calvolbudgvot;
 
-         echo Search::showItem($output_type, Html::formatNumber($calvolbudgvot,'',2), $num,$row_num);
+         echo Search::showItem($output_type, Html::formatNumber($calvolbudgvot, '', 2), $num, $row_num);
 
          //amount of budget used
          $calvolbudguse = $data3['cost'] * $data1['sum'];
          $totalamountemployment = $totalamountemployment + $calvolbudguse;
 
-         echo Search::showItem($output_type, Html::formatNumber($calvolbudguse,'',2), $num,$row_num);
+         echo Search::showItem($output_type, Html::formatNumber($calvolbudguse, '', 2), $num, $row_num);
 
          //amount of volume real
          $volreal = $data3['cost'] * $data2['sum'];
          $totalamountresource = $totalamountresource + $volreal;
 
-         echo Search::showItem($output_type, Html::formatNumber($volreal,'',2), $num,$row_num);
+         echo Search::showItem($output_type, Html::formatNumber($volreal, '', 2), $num, $row_num);
 
          //difference between amount of budget voting and and sum of resource quota using it
          $soldeamount = $calvolbudgvot - $volreal;
 
          $totalbudgetemployment = $totalbudgetemployment + $soldeamount;
 
-         echo Search::showItem($output_type, Html::formatNumber($soldeamount,'',2), $num,$row_num);
+         echo Search::showItem($output_type, Html::formatNumber($soldeamount, '', 2), $num, $row_num);
 
          echo Search::showEndLine($output_type);
       }
@@ -378,41 +378,41 @@ if ($report->criteriasValidated()) {
       $num = 1;
       $row_num++;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Budget volume(qty)', 'resources'), $num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Employment volume (qty)', 'resources'), $num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Resource volume (qty)', 'resources'), $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Budget volume (€)', 'resources'),$num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Employment volume (€)', 'resources'),$num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Resource volume (€)', 'resources'),$num,$row_num);
-      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Remaining budget - employment (€)', 'resources'),$num,$row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Budget volume(qty)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Employment volume (qty)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Resource volume (qty)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Budget volume (€)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Employment volume (€)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Resource volume (€)', 'resources'), $num, $row_num);
+      echo Search::showItem($output_type, __('Total', 'resources')." - ".__('Remaining budget - employment (€)', 'resources'), $num, $row_num);
       echo Search::showEndLine($output_type);
 
       $num = 1;
       $row_num++;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalvolbudget,'',0), $num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalvolemployment,'',2), $num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalvolresource,'',4), $num,$row_num);
-      echo Search::showItem($output_type, '', $num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalamountbudget,'',2),$num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalamountemployment,'',2),$num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalamountresource,'',2),$num,$row_num);
-      echo Search::showItem($output_type, Html::formatNumber($totalbudgetemployment,'',2),$num,$row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalvolbudget, '', 0), $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalvolemployment, '', 2), $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalvolresource, '', 4), $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalamountbudget, '', 2), $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalamountemployment, '', 2), $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalamountresource, '', 2), $num, $row_num);
+      echo Search::showItem($output_type, Html::formatNumber($totalbudgetemployment, '', 2), $num, $row_num);
       echo Search::showEndLine($output_type);
 
       echo Search::showFooter($output_type, $title);
@@ -432,7 +432,7 @@ if ($output_type == Search::HTML_OUTPUT) {
  * @param bool $sort
  * @return mixed
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
+function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
 
    if ($output_type != Search::HTML_OUTPUT ||$sort==false) {
       echo Search::showHeaderItem($output_type, $title, $num);
@@ -449,7 +449,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
    $link  = $_SERVER['PHP_SELF'];
    $first = true;
    foreach ($_REQUEST as $name => $value) {
-      if (!in_array($name,array('sort','order','PHPSESSID'))) {
+      if (!in_array($name, ['sort','order','PHPSESSID'])) {
          $link .= ($first ? '?' : '&amp;');
          $link .= $name .'='.urlencode($value);
          $first = false;
@@ -500,7 +500,6 @@ function getOrderByFields($default, $columns) {
          return $column['sorton'];
       }
    }
-   return array();
+   return [];
 }
 
-?>

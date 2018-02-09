@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ function plugin_init_resources() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['resources']   = true;
-   $PLUGIN_HOOKS['change_profile']['resources']   = array('PluginResourcesProfile', 'initProfile');
+   $PLUGIN_HOOKS['change_profile']['resources']   = ['PluginResourcesProfile', 'initProfile'];
    $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
 
    if (Session::getLoginUserID()) {
@@ -43,7 +43,7 @@ function plugin_init_resources() {
          $noupdate = true;
       }
 
-      Plugin::registerClass('PluginResourcesResource', array(
+      Plugin::registerClass('PluginResourcesResource', [
          'linkuser_types'               => true,
          'document_types'               => true,
          'ticket_types'                 => true,
@@ -52,46 +52,46 @@ function plugin_init_resources() {
          'unicity_types'                => true,
          'massiveaction_nodelete_types' => $noupdate,
          'massiveaction_noupdate_types' => $noupdate
-      ));
+      ]);
 
-      Plugin::registerClass('PluginResourcesDirectory', array(
+      Plugin::registerClass('PluginResourcesDirectory', [
          'massiveaction_nodelete_types' => true,
          'massiveaction_noupdate_types' => true
-      ));
+      ]);
 
-      Plugin::registerClass('PluginResourcesRecap', array(
+      Plugin::registerClass('PluginResourcesRecap', [
          'massiveaction_nodelete_types' => true,
          'massiveaction_noupdate_types' => true
-      ));
+      ]);
 
-      Plugin::registerClass('PluginResourcesTaskPlanning', array(
+      Plugin::registerClass('PluginResourcesTaskPlanning', [
          'planning_types' => true
-      ));
+      ]);
 
-      Plugin::registerClass('PluginResourcesRuleChecklistCollection', array(
+      Plugin::registerClass('PluginResourcesRuleChecklistCollection', [
          'rulecollections_types' => true
 
-      ));
+      ]);
 
-      Plugin::registerClass('PluginResourcesRuleContracttypeCollection', array(
+      Plugin::registerClass('PluginResourcesRuleContracttypeCollection', [
          'rulecollections_types' => true
 
-      ));
+      ]);
 
       Plugin::registerClass('PluginResourcesProfile',
-                            array('addtabon' => 'Profile'));
+                            ['addtabon' => 'Profile']);
 
-      Plugin::registerClass('PluginResourcesEmployment', array(
-         'massiveaction_nodelete_types' => true));
+      Plugin::registerClass('PluginResourcesEmployment', [
+         'massiveaction_nodelete_types' => true]);
 
       if (class_exists('PluginServicecatalogMain')) {
-         $PLUGIN_HOOKS['servicecatalog']['resources'] = array('PluginResourcesServicecatalog');
+         $PLUGIN_HOOKS['servicecatalog']['resources'] = ['PluginResourcesServicecatalog'];
       }
 
       if (Session::haveright("plugin_resources_checklist", READ)
           && class_exists('PluginMydashboardMenu')
       ) {
-         $PLUGIN_HOOKS['mydashboard']['resources'] = array("PluginResourcesDashboard");
+         $PLUGIN_HOOKS['mydashboard']['resources'] = ["PluginResourcesDashboard"];
       }
 
       if (class_exists('PluginPositionsPosition')) {
@@ -107,9 +107,8 @@ function plugin_init_resources() {
       if (class_exists('PluginTreeviewConfig')) {
          PluginTreeviewConfig::registerType('PluginResourcesResource');
          $PLUGIN_HOOKS['treeview']['PluginResourcesResource'] = '../resources/pics/miniresources.png';
-         $PLUGIN_HOOKS['treeview_params']['resources']        = array('PluginResourcesResource', 'showResourceTreeview');
+         $PLUGIN_HOOKS['treeview_params']['resources']        = ['PluginResourcesResource', 'showResourceTreeview'];
       }
-
 
       if ((Session::haveRight("plugin_resources", READ)
            || Session::haveright("plugin_resources_employee", UPDATE)
@@ -117,7 +116,7 @@ function plugin_init_resources() {
           || (class_exists('PluginServicecatalogMain')
               && !Session::haveRight("plugin_servicecatalog", READ))
       ) {
-         $PLUGIN_HOOKS['menu_toadd']['resources'] = array('admin' => 'PluginResourcesResource');
+         $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesResource'];
       }
       // Resource menu
       if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
@@ -140,28 +139,27 @@ function plugin_init_resources() {
          $PLUGIN_HOOKS['config_page']['resources'] = 'front/config.form.php';
       }
 
-
       // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_css']['resources']        = array("resources.css");
-      $PLUGIN_HOOKS['add_javascript']['resources'] = array("resources.js",
+      $PLUGIN_HOOKS['add_css']['resources']        = ["resources.css"];
+      $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
                                                            "lib/plugins/jquery.address.js",
                                                            "lib/plugins/jquery.mousewheel.js",
                                                            "lib/plugins/jquery.scroll.js",
                                                            "lib/resources_card.js",
-      );
+      ];
 
       //TODO : Check
       $PLUGIN_HOOKS['plugin_pdf']['PluginResourcesResource'] = 'PluginResourcesResourcePDF';
 
       //Clean Plugin on Profile delete
       if (class_exists('PluginResourcesResource_Item')) { // only if plugin activated
-         $PLUGIN_HOOKS['pre_item_purge']['resources']                = array('PluginResourcesResource' => array('PluginResourcesNotification', 'purgeNotification'));
+         $PLUGIN_HOOKS['pre_item_purge']['resources']                = ['PluginResourcesResource' => ['PluginResourcesNotification', 'purgeNotification']];
          $PLUGIN_HOOKS['plugin_datainjection_populate']['resources'] = 'plugin_datainjection_populate_resources';
       }
 
       //planning action
-      $PLUGIN_HOOKS['planning_populate']['resources'] = array('PluginResourcesTaskPlanning', 'populatePlanning');
-      $PLUGIN_HOOKS['display_planning']['resources']  = array('PluginResourcesTaskPlanning', 'displayPlanningItem');
+      $PLUGIN_HOOKS['planning_populate']['resources'] = ['PluginResourcesTaskPlanning', 'populatePlanning'];
+      $PLUGIN_HOOKS['display_planning']['resources']  = ['PluginResourcesTaskPlanning', 'displayPlanningItem'];
       $PLUGIN_HOOKS['migratetypes']['resources']      = 'plugin_datainjection_migratetypes_resources';
 
    }
@@ -174,14 +172,14 @@ function plugin_init_resources() {
 
 function plugin_version_resources() {
 
-   return array(
+   return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
       'version'        => '2.4.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
       'minGlpiVersion' => '9.2',
-   );
+   ];
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
@@ -207,4 +205,3 @@ function plugin_datainjection_migratetypes_resources($types) {
    return $types;
 }
 
-?>

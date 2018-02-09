@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -37,24 +37,25 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
 $holiday = new PluginResourcesResourceHoliday();
 
 if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $holiday->add($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $holiday->update($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
    $holiday->delete($_POST, 1);
    $holiday->redirectToList();
 
-} else if(isset($_GET['menu'])) {
+} else if (isset($_GET['menu'])) {
    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
       $holiday->showMenu();
    }
@@ -70,4 +71,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

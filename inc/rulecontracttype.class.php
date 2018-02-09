@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -42,22 +42,22 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesRuleContracttype extends Rule {
 
    public static $rightname = 'plugin_resources';
-   
+
    public $can_sort=true;
 
    function getTitle() {
 
       return PluginResourcesResource::getTypeName(2)." ".__('Required Fields', 'resources');
    }
-   
+
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
-   
+
    function maybeRecursive() {
       return true;
    }
@@ -77,7 +77,7 @@ class PluginResourcesRuleContracttype extends Rule {
    function maxActionsCount() {
       return count($this->getActions());
    }
-   
+
    function addSpecificParamsForPreview($params) {
 
       if (!isset($params["entities_id"])) {
@@ -104,20 +104,20 @@ class PluginResourcesRuleContracttype extends Rule {
          echo "<input type='hidden' name='entities_id' value='".$_SESSION["glpiactive_entity"]."'>";
       }
    }
-   
+
    function getCriterias() {
-      
-      $criterias = array();
-      
+
+      $criterias = [];
+
       $criterias['plugin_resources_contracttypes_id']['name']  = PluginResourcesContractType::getTypeName(1);
       $criterias['plugin_resources_contracttypes_id']['type']  = 'dropdownContractType';
-      $criterias['plugin_resources_contracttypes_id']['allow_condition'] = array(Rule::PATTERN_IS, Rule::PATTERN_IS_NOT);
-      
+      $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
       return $criterias;
    }
-   
-   function displayCriteriaSelectPattern($name, $ID, $condition, $value="", $test=false) {
-      
+
+   function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false) {
+
       $PluginResourcesContractType = new PluginResourcesContractType();
 
       $crit    = $this->getCriteria($ID);
@@ -133,7 +133,7 @@ class PluginResourcesRuleContracttype extends Rule {
          }
       }
    }
-   
+
    /**
     * Return a value associated with a pattern associated to a criteria to display it
     *
@@ -159,62 +159,61 @@ class PluginResourcesRuleContracttype extends Rule {
 
    function getActions() {
 
-      $actions = array();
-      
+      $actions = [];
+
       $actions['requiredfields_name']['name']  = __('Surname');
       $actions['requiredfields_name']['type']  = "yesonly";
-      $actions['requiredfields_name']['force_actions'] = array('assign');
+      $actions['requiredfields_name']['force_actions'] = ['assign'];
       $actions['requiredfields_name']['type']  = "yesonly";
 
       $actions['requiredfields_firstname']['name']  = __('First name');
       $actions['requiredfields_firstname']['type']  = "yesonly";
-      $actions['requiredfields_firstname']['force_actions'] = array('assign');
-      
+      $actions['requiredfields_firstname']['force_actions'] = ['assign'];
+
       $actions['requiredfields_locations_id']['name']  = __('Location');
       $actions['requiredfields_locations_id']['type']  = "yesonly";
-      $actions['requiredfields_locations_id']['force_actions'] = array('assign');
-      
+      $actions['requiredfields_locations_id']['force_actions'] = ['assign'];
+
       $actions['requiredfields_users_id']['name']  = __('Resource manager', 'resources');
       $actions['requiredfields_users_id']['type']  = "yesonly";
-      $actions['requiredfields_users_id']['force_actions'] = array('assign');
+      $actions['requiredfields_users_id']['force_actions'] = ['assign'];
 
       $actions['requiredfields_users_id_sales']['name']  = __('Sales manager', 'resources');
       $actions['requiredfields_users_id_sales']['type']  = "yesonly";
-      $actions['requiredfields_users_id_sales']['force_actions'] = array('assign');
-      
+      $actions['requiredfields_users_id_sales']['force_actions'] = ['assign'];
+
       $actions['requiredfields_plugin_resources_departments_id']['name']  = PluginResourcesDepartment::getTypeName(1);
       $actions['requiredfields_plugin_resources_departments_id']['type']  = "yesonly";
-      $actions['requiredfields_plugin_resources_departments_id']['force_actions'] = array('assign');
-      
+      $actions['requiredfields_plugin_resources_departments_id']['force_actions'] = ['assign'];
+
       $actions['requiredfields_date_begin']['name']  =  __('Arrival date', 'resources');
       $actions['requiredfields_date_begin']['type']  = "yesonly";
-      $actions['requiredfields_date_begin']['force_actions'] = array('assign');
-      
+      $actions['requiredfields_date_begin']['force_actions'] = ['assign'];
+
       $actions['requiredfields_date_end']['name']  = __('Departure date', 'resources');
       $actions['requiredfields_date_end']['type']  = "yesonly";
-      $actions['requiredfields_date_end']['force_actions'] = array('assign');
+      $actions['requiredfields_date_end']['force_actions'] = ['assign'];
 
       $actions['requiredfields_quota']['name']  = __('Quota', 'resources');
       $actions['requiredfields_quota']['type']  = "yesonly";
-      $actions['requiredfields_quota']['force_actions'] = array('assign');
+      $actions['requiredfields_quota']['force_actions'] = ['assign'];
 
       $actions['requiredfields_plugin_resources_habilitations_id']['name']  = PluginResourcesHabilitation::getTypeName(1);
       $actions['requiredfields_plugin_resources_habilitations_id']['type']  = "yesonly";
-      $actions['requiredfields_plugin_resources_habilitations_id']['force_actions'] = array('assign');
+      $actions['requiredfields_plugin_resources_habilitations_id']['force_actions'] = ['assign'];
 
-      if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)){
+      if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
 
          $actions['requiredfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);
          $actions['requiredfields_plugin_resources_resourcesituations_id']['type']  = "yesonly";
-         $actions['requiredfields_plugin_resources_resourcesituations_id']['force_actions'] = array('assign');
+         $actions['requiredfields_plugin_resources_resourcesituations_id']['force_actions'] = ['assign'];
 
          $actions['requiredfields_plugin_resources_ranks_id']['name']  = PluginResourcesRank::getTypeName(1);
          $actions['requiredfields_plugin_resources_ranks_id']['type']  = "yesonly";
-         $actions['requiredfields_plugin_resources_ranks_id']['force_actions'] = array('assign');
+         $actions['requiredfields_plugin_resources_ranks_id']['force_actions'] = ['assign'];
       }
 
       return $actions;
    }
 }
 
-?>

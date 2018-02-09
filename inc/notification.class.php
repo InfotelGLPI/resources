@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -34,27 +34,27 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesNotification extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
-   
+
    static function getTypeName($nb = 0) {
 
       return __('Notification history', 'resources');
    }
 
    static function canCreate() {
-      return Session::haveRight(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRight(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
-   
+
    /**
     * Function list items
-    * 
+    *
     * @param type $ID
     */
-   public function listItems($ID){
-      
+   public function listItems($ID) {
+
       $rand = mt_rand();
 
       // Start
@@ -62,7 +62,7 @@ class PluginResourcesNotification extends CommonDBTM {
       if (isset($_REQUEST["start"])) {
          $start = $_REQUEST["start"];
       }
-      
+
       // Get data
       $data = $this->getItems($ID, $start);
       if (!empty($data)) {
@@ -91,20 +91,20 @@ class PluginResourcesNotification extends CommonDBTM {
          echo "</div>";
       }
    }
-   
+
    /**
     * Function get items for resource
-    * 
+    *
     * @global type $DB
     * @param type $recordmodels_id
     * @param type $start
     * @return type
     */
-   function getItems($resources_id, $start=0){
+   function getItems($resources_id, $start = 0) {
       global $DB;
-      
-      $output = array();
-      
+
+      $output = [];
+
       $query = "SELECT `".$this->getTable()."`.`id`, 
                        `glpi_users`.`realname`,
                        `glpi_users`.`firstname`,
@@ -125,10 +125,10 @@ class PluginResourcesNotification extends CommonDBTM {
             $output[$data['id']] = $data;
          }
       }
-      
+
       return $output;
    }
-   
+
       /**
     * Function get the Status
     *
@@ -138,7 +138,7 @@ class PluginResourcesNotification extends CommonDBTM {
       $data = self::getAllStatusArray();
       return $data[$value];
    }
-    
+
    /**
     * Get the SNMP Status list
     *
@@ -147,18 +147,17 @@ class PluginResourcesNotification extends CommonDBTM {
    static function getAllStatusArray() {
 
       // To be overridden by class
-      $tab = array('report'  => __('Resource creation', 'resources'),
-                   'other'   => __('Other', 'resources'));
+      $tab = ['report'  => __('Resource creation', 'resources'),
+                   'other'   => __('Other', 'resources')];
 
       return $tab;
    }
-   
+
    //if profile deleted
    static function purgeNotification(PluginResourcesResource $resource) {
       $temp = new self();
-      $temp->deleteByCriteria(array('plugin_resources_resources_id' => $resource->getField("id")));
+      $temp->deleteByCriteria(['plugin_resources_resources_id' => $resource->getField("id")]);
    }
 
 }
 
-?>

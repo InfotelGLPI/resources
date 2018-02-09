@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -39,15 +39,16 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
 $habilitation = new PluginResourcesConfigHabilitation();
 
 if (isset($_POST['add_metademand'])) {
    $habilitation->check(-1, UPDATE, $_POST);
-   if($_POST['plugin_metademands_metademands_id'] 
-      && isset($_POST['action']) 
+   if ($_POST['plugin_metademands_metademands_id']
+      && isset($_POST['action'])
          && $_POST['action']) {
       $habilitation->add($_POST);
    }

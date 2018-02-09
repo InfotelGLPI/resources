@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -56,14 +56,14 @@ class PluginResourcesTicketCategory extends CommonDBTM {
 
       if ($this->getFromDBbyCategory($category)) {
 
-         $this->update(array(
+         $this->update([
              'id' => $this->fields['id'],
-             'ticketcategories_id' => $category));
+             'ticketcategories_id' => $category]);
       } else {
 
-         $this->add(array(
+         $this->add([
              'id' => 1,
-             'ticketcategories_id' => $category));
+             'ticketcategories_id' => $category]);
       }
    }
 
@@ -96,7 +96,7 @@ class PluginResourcesTicketCategory extends CommonDBTM {
          echo "<table class='tab_cadre_fixe' cellpadding='5'><tr ><th colspan='2'>";
          echo __('Category of created tickets', 'resources')."</th></tr>";
          echo "<tr class='tab_bg_1'><td>";
-         Dropdown::show('ITILCategory', array('name' => "ticketcategories_id"));
+         Dropdown::show('ITILCategory', ['name' => "ticketcategories_id"]);
          echo "</td>";
          echo "<td>";
          echo "<div align='center'>";
@@ -111,4 +111,3 @@ class PluginResourcesTicketCategory extends CommonDBTM {
 
 }
 
-?>

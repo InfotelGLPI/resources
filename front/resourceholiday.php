@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ $holiday = new PluginResourcesResourceHoliday();
 
 if (($holiday->canView() || Session::haveRight("config", UPDATE))) {
    Search::show("PluginResourcesResourceHoliday");
-   
+
 } else {
    Html::displayRightError();
 }
@@ -51,4 +51,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

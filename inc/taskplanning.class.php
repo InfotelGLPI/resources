@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -96,7 +96,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
          return false;
       }
       if (isset($fup->fields["users_id"])) {
-         Planning::checkAlreadyPlanned($fup->fields["users_id"], $input["begin"], $input["end"], array('PluginResourcesTask' => array($input["id"])));
+         Planning::checkAlreadyPlanned($fup->fields["users_id"], $input["begin"], $input["end"], ['PluginResourcesTask' => [$input["id"]]]);
       }
       // Restore fields
       $this->fields = $oldfields;
@@ -153,24 +153,25 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo "<script type='text/javascript' >\n";
             echo "function showPlan".$taskid."(){\n";
             echo "$('#plan').css({'display':'none'});";
-            $params = array(
+            $params = [
                'form'   => 'followups',
                'id'     => $this->fields["id"],
                'begin'  => $this->fields["begin"],
                'end'    => $this->fields["end"],
                'entity' => $PluginResourcesResource->fields["entities_id"]
-            );
+            ];
             Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planning.php", $params);
             echo "}";
             echo "</script>\n";
             echo "<div id='plan' onClick='showPlan".$taskid."()'>\n";
             echo "<span class='showplan'>";
          }
-         if ($this->fields["begin"] && $this->fields["end"])
+         if ($this->fields["begin"] && $this->fields["end"]) {
             echo Html::convDateTime($this->fields["begin"]).
             "&nbsp;->&nbsp;".Html::convDateTime($this->fields["end"]);
-         else
+         } else {
             echo __('Plan this task');
+         }
          if ($this->canCreate()) {
             echo "</span>";
             echo "</div>\n";
@@ -181,8 +182,8 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo "<script type='text/javascript' >\n";
             echo "function showPlanUpdate(){\n";
             echo "$('#plan').css({'display':'none'});";
-            $params = array('form'   => 'followups',
-                            'entity' => $_SESSION["glpiactive_entity"]);
+            $params = ['form'   => 'followups',
+                            'entity' => $_SESSION["glpiactive_entity"]];
             Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planning.php", $params);
             echo "};";
             echo "</script>";
@@ -261,7 +262,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
    static function populatePlanning($parm) {
       global $DB, $CFG_GLPI;
 
-      $output = array();
+      $output = [];
 
       if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
          return $parm;
@@ -390,16 +391,18 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       echo ">".$val["resource"]."</a>";
 
       echo "<div class='over_link' id='content_task_".$val["id"].$rand."'>";
-      if ($val["end"])
+      if ($val["end"]) {
          echo "<strong>".__('End date')."</strong> : ".Html::convdatetime($val["end"])."<br>";
-      if ($val["type"])
+      }
+      if ($val["type"]) {
          echo "<strong>".PluginResourcesTaskType::getTypeName(1)."</strong> : ".
          $val["type"]."<br>";
-      if ($val["content"])
+      }
+      if ($val["content"]) {
          echo "<strong>".__('Description')."</strong> : ".$val["content"];
+      }
       echo "</div>";
    }
 
 }
 
-?>

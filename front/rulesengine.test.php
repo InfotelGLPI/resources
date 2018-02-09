@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ if ($rulecollection->isRuleRecursive()) {
 }
 $rulecollection->checkGlobal(READ);
 
-Html::popHeader(__('Setup'),$_SERVER['PHP_SELF']);
+Html::popHeader(__('Setup'), $_SERVER['PHP_SELF']);
 
 // Need for RuleEngines
 foreach ($_POST as $key => $val) {
@@ -73,4 +73,3 @@ if (isset($_POST["test_all_rules"])) {
 }
 
 Html::popFooter();
-?>

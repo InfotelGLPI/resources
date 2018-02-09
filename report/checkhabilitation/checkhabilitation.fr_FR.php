@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -30,4 +30,3 @@
 $LANG['plugin_resources']['checkhabilitation'] = "Rapport listant les habilitations non présentes dans les groupes de l'utilisateur";
 $LANG['plugin_resources']['missinggroup'] = "Groupe manquant";
 
-?>

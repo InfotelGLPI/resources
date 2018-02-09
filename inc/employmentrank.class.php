@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,10 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesEmploymentRank extends CommonDropdown {
-   
+
    var $can_be_translated  = true;
    public $table ='glpi_plugin_resources_ranks';
 
 }
 
-?>

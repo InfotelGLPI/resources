@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -37,15 +37,14 @@ if ($employment->canView() || Session::haveRight("config", UPDATE)) {
    if (isset($_GET["plugin_resources_resources_id"])
            && !empty($_GET["plugin_resources_resources_id"])) {
 
-      $_GET["field"] = array(0 => "13");
-      $_GET["contains"] = array(0 => $_GET["plugin_resources_resources_id"]);
+      $_GET["field"] = [0 => "13"];
+      $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
    }
 
    Search::show("PluginResourcesEmployment");
-   
+
 } else {
    Html::displayRightError();
 }
 
 Html::footer();
-?>

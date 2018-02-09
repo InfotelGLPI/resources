@@ -36,7 +36,7 @@ Session::checkLoginUser();
 $resource_change = new PluginResourcesResource_Change();
 
 if (isset($_POST['plugin_resources_clients_id'])) {
-   if(PluginResourcesClient::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
+   if (PluginResourcesClient::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
       $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
       $color = "color: green;";
    } else {

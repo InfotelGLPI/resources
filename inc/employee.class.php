@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@ class PluginResourcesEmployee extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -135,16 +135,18 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       foreach ($DB->request($query) as $data) {
          $employee = new self();
-         $employee->add(array('plugin_resources_resources_id' => $newid,
+         $employee->add(['plugin_resources_resources_id' => $newid,
                               'plugin_resources_employers_id' => $data["plugin_resources_employers_id"],
-                              'plugin_resources_clients_id'   => $data["plugin_resources_clients_id"]));
+                              'plugin_resources_clients_id'   => $data["plugin_resources_clients_id"]]);
       }
    }
 
    function showForm($plugin_resources_resources_id, $users_id, $withtemplate = '') {
       global $CFG_GLPI;
 
-      if (!$this->canView()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $employee_spotted = false;
       $resource         = new PluginResourcesResource();
@@ -157,18 +159,25 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       $ID = 0;
       if (!empty($employees)) {
-         foreach ($employees as $employer)
+         foreach ($employees as $employer) {
             $ID = $employer["id"];
+         }
       }
       if (empty($ID)) {
-         if ($this->getEmpty()) $employee_spotted = true;
+         if ($this->getEmpty()) {
+            $employee_spotted = true;
+         }
       } else {
-         if ($this->getfromDB($ID)) $employee_spotted = true;
+         if ($this->getfromDB($ID)) {
+            $employee_spotted = true;
+         }
       }
       if ($employee_spotted) {
 
          echo "<div align='center'>";
-         if ($withtemplate < 2) echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+         if ($withtemplate < 2) {
+            echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+         }
          if (!empty($plugin_resources_resources_id)) {
             $resource->getFromDB($plugin_resources_resources_id);
             $entity = $resource->fields["entities_id"];
@@ -189,12 +198,12 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
 
-         $params = array('name'   => 'plugin_resources_employers_id',
+         $params = ['name'   => 'plugin_resources_employers_id',
                          'value'  => $this->fields['plugin_resources_employers_id'],
                          'entity' => $entity,
                          'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownLocation.php",
                          'span'   => 'span_location'
-         );
+         ];
          PluginResourcesResource::showGenericDropdown('PluginResourcesEmployer', $params);
          echo "</td></tr>";
 
@@ -222,11 +231,11 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo PluginResourcesClient::getTypeName(1) . "</td>";
          echo "<td>";
          Dropdown::show('PluginResourcesClient',
-                        array('value'     => $this->fields["plugin_resources_clients_id"],
+                        ['value'     => $this->fields["plugin_resources_clients_id"],
                               'entity'    => $entity,
-                              'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
+                              'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
-         if(PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
+         if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
             $color = "color: green;";
          } else {
@@ -285,7 +294,9 @@ class PluginResourcesEmployee extends CommonDBTM {
    function wizardThirdForm($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
-      if (!$this->canView()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $employee_spotted = false;
 
@@ -298,13 +309,18 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       $ID = 0;
       if (!empty($employees)) {
-         foreach ($employees as $employer)
+         foreach ($employees as $employer) {
             $ID = $employer["id"];
+         }
       }
       if (empty($ID)) {
-         if ($this->getEmpty()) $employee_spotted = true;
+         if ($this->getEmpty()) {
+            $employee_spotted = true;
+         }
       } else {
-         if ($this->getfromDB($ID)) $employee_spotted = true;
+         if ($this->getfromDB($ID)) {
+            $employee_spotted = true;
+         }
       }
 
       if ($employee_spotted && $plugin_resources_resources_id) {
@@ -333,18 +349,18 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
-         Dropdown::show('PluginResourcesEmployer', array('name'   => "plugin_resources_employers_id",
+         Dropdown::show('PluginResourcesEmployer', ['name'   => "plugin_resources_employers_id",
                                                          'value'  => $this->fields["plugin_resources_employers_id"],
-                                                         'entity' => $entity));
+                                                         'entity' => $entity]);
          echo "</td></tr>";
 
          echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
          echo PluginResourcesClient::getTypeName(1)."</td>";
          echo "<td>";
-         Dropdown::show('PluginResourcesClient', array('name'      => "plugin_resources_clients_id",
+         Dropdown::show('PluginResourcesClient', ['name'      => "plugin_resources_clients_id",
                                                        'value'     => $this->fields["plugin_resources_clients_id"],
                                                        'entity'    => $entity,
-                                                       'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"));
+                                                       'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
          echo "</td><td style='color: green;'><div id='security_compliance'>";
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
@@ -381,7 +397,9 @@ class PluginResourcesEmployee extends CommonDBTM {
    function showFormHelpdesk($plugin_resources_resources_id, $exist) {
       global $CFG_GLPI;
 
-      if (!$this->canView()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $employee_spotted = false;
 
@@ -394,21 +412,27 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       $ID = 0;
       if (!empty($employees)) {
-         foreach ($employees as $employer)
+         foreach ($employees as $employer) {
             $ID = $employer["id"];
+         }
       }
       if (empty($ID)) {
-         if ($this->getEmpty()) $employee_spotted = true;
+         if ($this->getEmpty()) {
+            $employee_spotted = true;
+         }
       } else {
-         if ($this->getfromDB($ID)) $employee_spotted = true;
+         if ($this->getfromDB($ID)) {
+            $employee_spotted = true;
+         }
       }
       if ($employee_spotted) {
 
          echo "<div align='center'><br>";
-         if ($exist == 0 || empty($ID))
+         if ($exist == 0 || empty($ID)) {
             echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/employee.form.php\">";
-         else
+         } else {
             echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+         }
 
          $entity = $resource->fields["entities_id"];
 
@@ -419,17 +443,17 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
-         Dropdown::show('PluginResourcesEmployer', array('name'   => "plugin_resources_employers_id",
+         Dropdown::show('PluginResourcesEmployer', ['name'   => "plugin_resources_employers_id",
                                                          'value'  => $this->fields["plugin_resources_employers_id"],
-                                                         'entity' => $entity));
+                                                         'entity' => $entity]);
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
          echo PluginResourcesClient::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
-         Dropdown::show('PluginResourcesClient', array('name'   => "plugin_resources_clients_id",
+         Dropdown::show('PluginResourcesClient', ['name'   => "plugin_resources_clients_id",
                                                        'value'  => $this->fields["plugin_resources_clients_id"],
-                                                       'entity' => $entity));
+                                                       'entity' => $entity]);
          echo "</td></tr>";
 
          if ($this->canCreate()) {
@@ -531,7 +555,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
    function getSearchOptions() {
 
-      $tab = array();
+      $tab = [];
 
       $tab['common'] = self::getTypeName(2);
 
@@ -561,4 +585,3 @@ class PluginResourcesEmployee extends CommonDBTM {
    }
 }
 
-?>

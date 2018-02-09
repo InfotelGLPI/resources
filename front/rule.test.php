@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -56,17 +56,17 @@ $rule->checkGlobal(READ);
 
 $test_rule_output = null;
 
-Html::popHeader(__('Setup'),$_SERVER['PHP_SELF']);
+Html::popHeader(__('Setup'), $_SERVER['PHP_SELF']);
 
 $rule->showRulePreviewCriteriasForm($_SERVER['PHP_SELF'], $rules_id);
 
 if (isset($_POST["test_rule"])) {
-   $params = array();
+   $params = [];
    //Unset values that must not be processed by the rule
    unset($_POST["test_rule"]);
    unset($_POST["rules_id"]);
    unset($_POST["sub_type"]);
-   $rule->getRuleWithCriteriasAndActions($rules_id,1,1);
+   $rule->getRuleWithCriteriasAndActions($rules_id, 1, 1);
 
    // Need for RuleEngines
    foreach ($_POST as $key => $val) {
@@ -82,4 +82,3 @@ if (isset($_POST["test_rule"])) {
 }
 
 Html::popFooter();
-?>

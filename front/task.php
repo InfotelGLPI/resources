@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -36,16 +36,15 @@ if (($task->canView() || Session::haveRight("config", UPDATE))) {
    //if $_GET["plugin_resources_resources_id"] exist this show list of tasks from a resource
    //else show all resources
    if (isset($_GET["plugin_resources_resources_id"]) && !empty($_GET["plugin_resources_resources_id"])) {
-      $_GET["field"] = array(0 => "13");
-      $_GET["contains"] = array(0 => $_GET["plugin_resources_resources_id"]);
+      $_GET["field"] = [0 => "13"];
+      $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
    }
 
    Search::show("PluginResourcesTask");
-   
-   
+
+
 } else {
    Html::displayRightError();
 }
 
 Html::footer();
-?>

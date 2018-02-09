@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -28,10 +28,12 @@
  */
 include('../../../inc/includes.php');
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
-if (!isset($_GET["withtemplate"]))
+}
+if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
+}
 
 $resource        = new PluginResourcesResource();
 $checklist       = new PluginResourcesChecklist();
@@ -51,16 +53,17 @@ if (isset($_POST["resend"])) {
    //add items needs of a resource
 } else if (isset($_POST["addhelpdeskitem"])) {
    if ($_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
-      if ($resource->canCreate())
+      if ($resource->canCreate()) {
          $choice->addHelpdeskItem($_POST);
+      }
    }
    Html::back();
-}
-//from helpdesk
+} //from helpdesk
 //delete items needs of a resource
 else if (isset($_POST["deletehelpdeskitem"])) {
-   if ($resource->canCreate())
-      $choice->delete(array('id' => $_POST["id"]));
+   if ($resource->canCreate()) {
+      $choice->delete(['id' => $_POST["id"]]);
+   }
    Html::back();
 
    ///////////////////////////////employees///////////////////////////////
@@ -93,10 +96,11 @@ else if (isset($_POST["deletehelpdeskitem"])) {
          unset($resource->fields["is_template"]);
          unset($resource->fields["date_mod"]);
 
-         $fields = array();
+         $fields = [];
          foreach ($resource->fields as $key => $value) {
-            if ($value != '' && (!isset($fields[$key]) || $fields[$key] == '' || $fields[$key] == 0))
+            if ($value != '' && (!isset($fields[$key]) || $fields[$key] == '' || $fields[$key] == 0)) {
                $_POST[$key] = $value;
+            }
          }
 
          $_POST["withtemplate"] = 1;
@@ -143,8 +147,7 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       }
    }
    Html::back();
-}
-//from central OR helpdesk
+} //from central OR helpdesk
 //update employee informations from user details form or resource form
 else if (isset($_POST["updateemployee"])) {
    if ($_POST['plugin_resources_resources_id'] > 0) {
@@ -157,12 +160,12 @@ else if (isset($_POST["updateemployee"])) {
       }
    }
    Html::back();
-}
-//from central
+} //from central
 //delete employee informations from user details form or resource form
 else if (isset($_POST["deleteemployee"])) {
-   if ($employee->canCreate())
+   if ($employee->canCreate()) {
       $employee->delete($_POST, 1);
+   }
    Html::back();
 
    /////////////////////////////////resource from central///////////////////////////////
@@ -171,61 +174,57 @@ else if (isset($_POST["deleteemployee"])) {
    $resource->check(-1, UPDATE, $_POST);
    $newID = $resource->add($_POST);
    Html::back();
-}
-//from central
+} //from central
 //update resource
 else if (isset($_POST["update"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->update($_POST);
    Html::back();
-}
-//from central
+} //from central
 //delete resource
 else if (isset($_POST["delete"])) {
    $resource->check($_POST['id'], UPDATE);
-   if (!empty($_POST["withtemplate"]))
+   if (!empty($_POST["withtemplate"])) {
       $resource->delete($_POST, 1);
-   else
+   } else {
       $resource->delete($_POST);
+   }
 
-   if (!empty($_POST["withtemplate"]))
+   if (!empty($_POST["withtemplate"])) {
       Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
-   else
+   } else {
       $resource->redirectToList();
-}
-//from central
+   }
+} //from central
 //restore resource
 else if (isset($_POST["restore"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->restore($_POST);
    $resource->redirectToList();
-}
-//from central
+} //from central
 //purge resource template
 else if (isset($_POST["purge"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->delete($_POST, 1);
-   if (!empty($_POST["withtemplate"]))
+   if (!empty($_POST["withtemplate"])) {
       Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
-   else
+   } else {
       $resource->redirectToList();
-}
-//from central
+   }
+} //from central
 //purge resource
 else if (isset($_POST["purge"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->delete($_POST, 1);
    $resource->redirectToList();
-}
-//from central
+} //from central
 //add items of a resource
 else if (isset($_POST["additem"])) {
    if (!empty($_POST['itemtype']) && !empty($_POST['items_id'])) {
       $resource_item->addItem($_POST);
    }
    Html::back();
-}
-//from central
+} //from central
 //update comment of item of a resource
 else if (isset($_POST["updatecomment"])) {
    foreach ($_POST["updatecomment"] as $key => $val) {
@@ -233,8 +232,7 @@ else if (isset($_POST["updatecomment"])) {
       $resource_item->updateItem($key, $_POST[$varcomment]);
    }
    Html::back();
-}
-//from central
+} //from central
 //delete item of a resource
 else if (isset($_POST["deleteitem"])) {
 
@@ -246,16 +244,14 @@ else if (isset($_POST["deleteitem"])) {
    }
 
    Html::back();
-}
-//from central
+} //from central
 //delete item of a resource form items detail
 else if (isset($_POST["deleteresources"])) {
-   $input = array('id' => $_POST["id"]);
+   $input = ['id' => $_POST["id"]];
    $resource_item->check($_POST["id"], UPDATE);
    $resource_item->deleteItem($_POST["id"]);
    Html::back();
-}
-//from central
+} //from central
 //add checklist from resource form
 else if (isset($_POST["add_checklist_resources"])) {
    if ($checklist->canCreate()) {
@@ -266,14 +262,13 @@ else if (isset($_POST["add_checklist_resources"])) {
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
    }
    Html::back();
-}
-
-///////////////////////////////checklists///////////////////////////////
+} ///////////////////////////////checklists///////////////////////////////
 //from central
 //add checklist
 else if (isset($_POST["add_checklist"])) {
-   if ($checklist->canCreate())
+   if ($checklist->canCreate()) {
       $newID = $checklist->add($_POST);
+   }
    Html::back();
 
    //from central
@@ -339,7 +334,7 @@ else if (isset($_POST["add_checklist"])) {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
 
-   $resource->display(array('id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]));
+   $resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
 
    /* if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
 
@@ -363,4 +358,3 @@ else if (isset($_POST["add_checklist"])) {
       Html::helpFooter();
    }
 }
-?>

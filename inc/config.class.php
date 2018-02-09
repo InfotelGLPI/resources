@@ -38,7 +38,7 @@ class PluginResourcesConfig extends CommonDBTM {
     * functions mandatory
     * getTypeName(), canCreate(), canView()
     * */
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __('Setup');
    }
 
@@ -47,7 +47,7 @@ class PluginResourcesConfig extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
@@ -63,8 +63,12 @@ class PluginResourcesConfig extends CommonDBTM {
 
    function showForm() {
 
-      if (!$this->canView()) return false;
-      if (!$this->canCreate()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
+      if (!$this->canCreate()) {
+         return false;
+      }
 
       $canedit = true;
 

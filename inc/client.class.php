@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -43,10 +43,10 @@ class PluginResourcesClient extends CommonDropdown {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr('dropdown', array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
-   public function defineTabs($options = array()) {
+   public function defineTabs($options = []) {
       $ong = parent::defineTabs();
       $this->addStandardTab('PluginResourcesResource', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options);
@@ -58,25 +58,25 @@ class PluginResourcesClient extends CommonDropdown {
 
       $config = new PluginResourcesConfig();
       if ($config->useSecurityCompliance()) {
-         return array(array('name'  => 'security_and',
+         return [['name'  => 'security_and',
                             'label' => __('AND - Certificate of non-dissimulation', 'resources'),
                             'type'  => 'bool',
-                            'list'  => true),
-                      array('name'  => 'security_fifour',
+                            'list'  => true],
+                      ['name'  => 'security_fifour',
                             'label' => __('FIFOUR - Supplier\'s sheet', 'resources'),
                             'type'  => 'bool',
-                            'list'  => true),
-                      array('name'  => 'security_gisf',
+                            'list'  => true],
+                      ['name'  => 'security_gisf',
                             'label' => __('GISF - Supplier security incident management', 'resources'),
                             'type'  => 'bool',
-                            'list'  => true),
-                      array('name'  => 'security_cfi',
+                            'list'  => true],
+                      ['name'  => 'security_cfi',
                             'label' => __('CFI - Supplier card', 'resources'),
                             'type'  => 'bool',
-                            'list'  => true),
-         );
+                            'list'  => true],
+         ];
       } else {
-         return array();
+         return [];
       }
    }
 
@@ -190,4 +190,3 @@ class PluginResourcesClient extends CommonDropdown {
    }
 }
 
-?>

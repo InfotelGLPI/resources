@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -40,23 +40,23 @@ $titre = $LANG['plugin_resources']['resourcewithoutuser'];
 $report = new PluginReportsAutoReport($titre);
 
 // Columns title (optional)
-$report->setColumns( array(new PluginReportsColumnLink('resource_id', __('Surname'),'PluginResourcesResource',
-                                                   array('sorton' => 'resource_name')),
+$report->setColumns( [new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
+                                                   ['sorton' => 'resource_name']),
                            new PluginReportsColumn('firstname', __('First name'),
-                                                   array('sorton' => 'firstname')),
+                                                   ['sorton' => 'firstname']),
                            new PluginReportsColumn('rank', PluginResourcesRank::getTypeName(1),
-                                                   array('sorton' => 'rank')),
+                                                   ['sorton' => 'rank']),
                            new PluginReportsColumn('situation', PluginResourcesResourceSituation::getTypeName(1),
-                                                   array('sorton' => 'situation')),
+                                                   ['sorton' => 'situation']),
                            new PluginReportsColumn('state', PluginResourcesResourceState::getTypeName(1),
-                                                   array('sorton' => 'state')),
+                                                   ['sorton' => 'state']),
                            new PluginReportsColumnDate('date_begin', __('Arrival date', 'resources'),
-                                                   array('sorton' => 'date_begin')),
+                                                   ['sorton' => 'date_begin']),
                            new PluginReportsColumnDate('date_end', __('Departure date', 'resources'),
-                                                   array('sorton' => 'date_end'))));
+                                                   ['sorton' => 'date_end'])]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ',"glpi_plugin_resources_resources",'','',false);
+$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
 $date=date("Y-m-d");
 
 //display only resource without user linked
@@ -91,4 +91,3 @@ $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
 
 $report->setSqlRequest($query);
 $report->execute();
-?>

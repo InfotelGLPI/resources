@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -39,15 +39,17 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 $directory = new PluginResourcesDirectory();
 
 if (($directory->canView() || Session::haveRight("config", UPDATE))) {
-   if (empty($_GET["sort"]))
+   if (empty($_GET["sort"])) {
       $_GET["sort"] = "34";
-   if (empty($_GET["order"]))
+   }
+   if (empty($_GET["order"])) {
       $_GET["order"] = "ASC";
-   
+   }
+
    $params = Search::manageParams("PluginResourcesDirectory", $_GET);
    Search::showGenericSearch("PluginResourcesDirectory", $params);
    $directory->showList("PluginResourcesDirectory", $params);
-   
+
 } else {
    Html::displayRightError();
 }
@@ -57,4 +59,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

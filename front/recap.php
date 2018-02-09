@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ if ($recap->canView() || Session::haveRight("config", UPDATE)) {
          $_GET["criteria"][4]["value"]      = $_GET["employment_ranks_id"];
       }
 
-//by resource rank and profession
+      //by resource rank and profession
    } else if (isset($_GET["resource_professions_id"]) && !empty($_GET["resource_professions_id"])) {
 
       $_GET["criteria"][0]["field"]      = "4375";
@@ -113,4 +113,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

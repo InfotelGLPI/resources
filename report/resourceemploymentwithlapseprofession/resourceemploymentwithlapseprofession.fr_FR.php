@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,4 +29,3 @@
 
 $LANG['plugin_resources']['resourceemploymentwithlapseprofession'] = "Rapport listant les ressources ou les emplois ayant un corps caduque";
 
-?>

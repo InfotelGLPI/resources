@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-if (strpos($_SERVER['PHP_SELF'],"dropdownSpeciality.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownSpeciality.php")) {
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -35,11 +35,10 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownSpeciality.php")) {
 Session::checkLoginUser();
 
 //allow speciality's display depending on rank
-$options =array(
+$options =[
    'plugin_resources_ranks_id' =>$_POST['plugin_resources_ranks_id'],
    'entity'                    =>$_POST['entity_restrict'],
-   'rand'                      =>$_POST['rand']);
+   'rand'                      =>$_POST['rand']];
 
 PluginResourcesResourceSpeciality::showSpeciality($options);
 
-?>

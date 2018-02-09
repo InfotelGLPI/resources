@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,46 +29,51 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
-if (!isset($_GET["withtemplate"]))
+if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
+}
 
-if (!isset($_GET["plugin_resources_resources_id"]))
+if (!isset($_GET["plugin_resources_resources_id"])) {
    $_GET["plugin_resources_resources_id"] = "";
+}
 
 $reportconfig = new PluginResourcesReportConfig();
 
 if (isset($_POST["add"])) {
-   if ($reportconfig->canCreate())
+   if ($reportconfig->canCreate()) {
       $reportconfig->add($_POST);
+   }
    Html::back();
-   
+
 } else if (isset($_POST["update"])) {
-   if ($reportconfig->canCreate())
+   if ($reportconfig->canCreate()) {
       $reportconfig->update($_POST);
+   }
    Html::back();
-   
+
 } else if (isset($_POST["delete"])) {
-   if ($reportconfig->canCreate())
+   if ($reportconfig->canCreate()) {
       $reportconfig->delete($_POST, 1);
+   }
 
    Html::redirect(Toolbox::getItemTypeFormURL('PluginResourcesResource').
            "?id=".$_POST["plugin_resources_resources_id"]);
-   
+
 } else if (isset($_POST["delete_report"])) {
    if ($reportconfig->canCreate()) {
       foreach ($_POST["check"] as $ID => $value) {
-         $reportconfig->delete(array("id" => $ID), 1);
+         $reportconfig->delete(["id" => $ID], 1);
       }
    }
    Html::back();
-   
+
 } else {
    $reportconfig->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-   $reportconfig->display(array('id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]));
+   $reportconfig->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]);
    Html::footer();
 }
-?>

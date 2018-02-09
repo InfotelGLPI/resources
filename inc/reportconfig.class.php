@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -64,13 +64,13 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
          if ($item->can($ID, UPDATE) && !self::checkIfReportsExist($ID)) {
             $self = new self();
-            $self->showForm("", array('plugin_resources_resources_id' => $ID,
-                                      'target'                        => $CFG_GLPI['root_doc'] . "/plugins/resources/front/reportconfig.form.php"));
+            $self->showForm("", ['plugin_resources_resources_id' => $ID,
+                                      'target'                        => $CFG_GLPI['root_doc'] . "/plugins/resources/front/reportconfig.form.php"]);
          }
 
          if ($item->can($ID, UPDATE) && self::checkIfReportsExist($ID) && !$withtemplate) {
-            PluginResourcesResource::showReportForm(array('id'     => $ID,
-                                                          'target' => $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.form.php"));
+            PluginResourcesResource::showReportForm(['id'     => $ID,
+                                                          'target' => $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.form.php"]);
          }
       }
       return true;
@@ -137,20 +137,21 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
       foreach ($DB->request($query) as $data) {
          $report = new self();
-         $report->add(array('plugin_resources_resources_id' => $newid,
+         $report->add(['plugin_resources_resources_id' => $newid,
                             'information'                   => addslashes($data["information"]),
                             'comment'                       => addslashes($data["comment"]),
                             'send_transfer_notif'           => $data["send_transfer_notif"],
                             'send_report_notif'             => $data["send_report_notif"],
-                            'send_other_notif'              => $data["send_other_notif"]));
+                            'send_other_notif'              => $data["send_other_notif"]]);
       }
    }
 
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
-      if (!$this->canview())
+      if (!$this->canview()) {
          return false;
+      }
 
       $plugin_resources_resources_id = -1;
       if (isset($options['plugin_resources_resources_id'])) {
@@ -163,7 +164,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
          $resource = new PluginResourcesResource();
          $resource->getFromDB($plugin_resources_resources_id);
          // Create item
-         $input = array('plugin_resources_resources_id' => $plugin_resources_resources_id);
+         $input = ['plugin_resources_resources_id' => $plugin_resources_resources_id];
          $this->check(-1, UPDATE, $input);
       }
 
@@ -246,8 +247,9 @@ class PluginResourcesReportConfig extends CommonDBTM {
       $i       = 0;
       $row_num = 1;
       if ($number != "0") {
-         if ($withtemplate < 2)
+         if ($withtemplate < 2) {
             echo "<form method='post' name='form_reports$rand' id='form_reports$rand' action=\"./reportconfig.form.php\">";
+         }
          echo "<div align='center'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='2'>" . __('Notification configuration', 'resources') . "</th></tr>";
 
@@ -320,4 +322,3 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
 }
 
-?>

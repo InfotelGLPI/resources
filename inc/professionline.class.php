@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,24 +32,24 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesProfessionLine extends CommonDropdown {
-   
+
    var $can_be_translated  = true;
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Profession line', 'Profession lines', $nb, 'resources');
    }
 
    static function canCreate() {
-      if (Session::haveRight('dropdown',UPDATE)
-         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)){
+      if (Session::haveRight('dropdown', UPDATE)
+         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
          return true;
       }
       return false;
    }
 
    static function canView() {
-      if (Session::haveRight('plugin_resources_dropdown_public', READ)){
+      if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
       }
       return false;
@@ -57,11 +57,11 @@ class PluginResourcesProfessionLine extends CommonDropdown {
 
    function getAdditionalFields() {
 
-      return array(array('name'  => 'code',
+      return [['name'  => 'code',
                          'label' => __('Code', 'resources'),
                          'type'  => 'text',
-                         'list'  => true),
-                  );
+                         'list'  => true],
+                  ];
    }
 
    /**
@@ -103,7 +103,7 @@ class PluginResourcesProfessionLine extends CommonDropdown {
    }
 
    function getSearchOptions() {
-   
+
       $tab = parent::getSearchOptions();
 
       $tab[14]['table']         = $this->getTable();
@@ -116,4 +116,3 @@ class PluginResourcesProfessionLine extends CommonDropdown {
 
 }
 
-?>

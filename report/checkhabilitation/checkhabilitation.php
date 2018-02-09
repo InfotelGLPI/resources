@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -40,15 +40,15 @@ $titre  = $LANG['plugin_resources']['checkhabilitation'];
 $report = new PluginReportsAutoReport($titre);
 
 //colname with sort allowed
-$columns = array('entity'              => array('sorton' => 'entity'),
-                 'name'                => array('sorton' => 'name'),
-                 'firstname'           => array('sorton' => 'firstname'),
-                 'registration_number' => array('sorton' => 'registration_number'),
-                 'rank'                => array('sorton' => 'rank'),
-                 'date_begin'          => array('sorton' => 'date_begin'),
-                 'date_end'            => array('sorton' => 'date_end'),
-                 'begin_date'          => array('sorton' => 'begin_date'),
-                 'end_date'            => array('sorton' => 'end_date'),);
+$columns = ['entity'              => ['sorton' => 'entity'],
+                 'name'                => ['sorton' => 'name'],
+                 'firstname'           => ['sorton' => 'firstname'],
+                 'registration_number' => ['sorton' => 'registration_number'],
+                 'rank'                => ['sorton' => 'rank'],
+                 'date_begin'          => ['sorton' => 'date_begin'],
+                 'date_end'            => ['sorton' => 'date_end'],
+                 'begin_date'          => ['sorton' => 'begin_date'],
+                 'end_date'            => ['sorton' => 'end_date'],];
 
 $output_type = Search::HTML_OUTPUT;
 
@@ -91,10 +91,10 @@ $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 
 $result_resource_user = $DB->query($query_resource_user);
 
-$dataAll = array();
+$dataAll = [];
 while ($data = $DB->fetch_assoc($result_resource_user)) {
-   $habilitations = array();
-   $groups        = array();
+   $habilitations = [];
+   $groups        = [];
    if (!empty($data['glpi_users_id'])) {
       $users_id     = $data['glpi_users_id'];
       $resources_id = $data['id'];
@@ -128,13 +128,13 @@ while ($data = $DB->fetch_assoc($result_resource_user)) {
       $array_diff = array_diff($habilitations, $groups);
 
       if (count($array_diff) > 0) {
-         $dataAll[] = array(
+         $dataAll[] = [
             'resources_id'       => $resources_id,
             'resources_date_end' => $date_end,
             'users_id'           => $users_id,
             'habilitations'      => $habilitations,
             'diff'               => $array_diff
-         );
+         ];
       }
 
    }
@@ -241,4 +241,3 @@ if ($nbtot > 0) {
 if ($output_type == Search::HTML_OUTPUT) {
    Html::footer();
 }
-?>

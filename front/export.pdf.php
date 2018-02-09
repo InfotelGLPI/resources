@@ -37,10 +37,10 @@ if (!isset($_SESSION["glpiactiveprofile"])
 }
 
 
-if(isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
+if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
    $PluginUseditemsexportExport = new PluginUseditemsexportExport();
    $users_id = $_GET['users_id'];
-   if($PluginUseditemsexportExport::generatePDF($users_id)) {
+   if ($PluginUseditemsexportExport::generatePDF($users_id)) {
 
       $table = getTableForItemType('PluginUseditemsexportExport');
       foreach ($DB->request("SELECT `documents_id` 
@@ -49,7 +49,7 @@ if(isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
                               ORDER BY `id` DESC
                               LIMIT 1") as $data) {
          $doc = new Document();
-         if($doc->getFromDB($data['documents_id'])) {
+         if ($doc->getFromDB($data['documents_id'])) {
 
             $file = GLPI_DOC_DIR . "/" . $doc->fields['filepath'];
 

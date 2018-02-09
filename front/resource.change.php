@@ -48,7 +48,7 @@ if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["pl
       Html::back();
    }
 
-}else if(isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0){
+} else if (isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0) {
 
    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //show remove resource form
@@ -67,4 +67,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,8 +29,9 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"]))
+if (!isset($_GET["id"])) {
    $_GET["id"] = "";
+}
 
 $checklistconfig = new PluginResourcesChecklistconfig();
 
@@ -38,32 +39,31 @@ if (isset($_POST["add"])) {
    $checklistconfig->check(-1, UPDATE, $_POST);
    $newID = $checklistconfig->add($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["delete"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
    $checklistconfig->delete($_POST);
    $checklistconfig->redirectToList();
-   
+
 } else if (isset($_POST["restore"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
    $checklistconfig->restore($_POST);
    $checklistconfig->redirectToList();
-   
+
 } else if (isset($_POST["purge"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
    $checklistconfig->delete($_POST, 1);
    $checklistconfig->redirectToList();
-   
+
 } else if (isset($_POST["update"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
    $checklistconfig->update($_POST);
    Html::back();
-   
+
 } else {
    $checklistconfig->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourceschecklist");
-   $options = array();
+   $options = [];
    $checklistconfig->showForm($_GET["id"], $options);
    Html::footer();
 }
-?>

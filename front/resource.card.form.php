@@ -48,16 +48,16 @@ if (isset($_POST['plugin_resources_resources_id'])) {
    $plugin_resources_resources_id = $resource['plugin_resources_resources_id'];
 }
 
-if (Session::haveRight("plugin_resources",UPDATE)) {
+if (Session::haveRight("plugin_resources", UPDATE)) {
    echo "<div align='center'>";
    echo "<form name='main' action=\"./resource.card.form.php\" method=\"post\">";
    echo "<table class='tab_cadre' width='31%'>";
    echo "<tr class='tab_bg_2 center'>";
    echo "<td>";
-   PluginResourcesResource::dropdown(array('name'      => 'plugin_resources_resources_id',
+   PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
                                            'entity' => $_SESSION['glpiactiveentities'],
                                            'value'     => $plugin_resources_resources_id,
-                                           'on_change' => 'main.submit();'));
+                                           'on_change' => 'main.submit();']);
    echo "</td>";
    echo "</tr>";
    echo "</table>";
@@ -69,7 +69,7 @@ if ($plugin_resources_resources_id > 0) {
    PluginResourcesResourceCard::resourceCard($plugin_resources_resources_id);
 } else {
    echo "<div class='center'><br><br>".
-        "<img src=\"".$CFG_GLPI["root_doc"]."/pics/info-big.png\" alt='information'>";
+        "<img src=\"".$CFG_GLPI["root_doc"]."/plugins/resources/pics/info-big.png\" alt='information'>";
    echo "&nbsp;<b>".__('Please select a user', 'resources')."</b></div>";
 }
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 $AJAX_INCLUDE = 1;
 
 include ('../../../inc/includes.php');
@@ -39,7 +39,7 @@ if (isset($_GET['node'])) {
 
    $target = "resource.php";
 
-   $nodes = array();
+   $nodes = [];
 
    // Root node
    if ($_GET['node'] == -1) {
@@ -55,28 +55,27 @@ if (isset($_GET['node'])) {
                   ORDER BY `name`";
       $dbu = new DbUtils();
       $contracts = $dbu->getAllDataFromTable("glpi_plugin_resources_contracttypes", $restrict);
-      
+
       if (!empty($contracts)) {
          foreach ($contracts as $contract) {
-            $path                         = array();
+            $path                         = [];
             $ID                           = $contract['id'];
 
             $path['data']['title']        = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID);
             $path['attr']['id']           = 'ent'.$ID;
-//            if ($entity == 0) {
-//               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=NULL&field[1]=80";
-//            } else {
-//               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=".Dropdown::getDropdownName("glpi_entities", $entity)."&field[1]=80";
-//            }
+            //            if ($entity == 0) {
+            //               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=NULL&field[1]=80";
+            //            } else {
+            //               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=".Dropdown::getDropdownName("glpi_entities", $entity)."&field[1]=80";
+            //            }
             $path['data']['attr']['href'] = $CFG_GLPI["root_doc"]."/plugins/resources/front/$target?criteria[0][field]=3&criteria[0][searchtype]=equals&criteria[0][value]=$ID&search=Rechercher&itemtype=PluginResourcesResource&start=0";
 
             $nodes[] = $path;
          }
       }
-   } 
-   
+   }
+
    echo json_encode($nodes);
 }
 
 
-?>

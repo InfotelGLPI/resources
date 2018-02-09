@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -32,22 +32,22 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginResourcesProfession extends CommonDropdown {
-   
-   static function getTypeName($nb=0) {
+
+   static function getTypeName($nb = 0) {
 
       return _n('Profession', 'Professions', $nb, 'resources');
    }
 
    static function canCreate() {
-      if (Session::haveRight('dropdown',UPDATE)
-         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)){
+      if (Session::haveRight('dropdown', UPDATE)
+         && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
          return true;
       }
       return false;
    }
 
    static function canView() {
-      if (Session::haveRight('plugin_resources_dropdown_public', READ)){
+      if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
       }
       return false;
@@ -55,35 +55,35 @@ class PluginResourcesProfession extends CommonDropdown {
 
    function getAdditionalFields() {
 
-      return array(array('name'  => 'code',
+      return [['name'  => 'code',
                          'label' => __('Code', 'resources'),
                          'type'  => 'text',
-                         'list'  => true),
-                  array('name'  => 'short_name',
+                         'list'  => true],
+                  ['name'  => 'short_name',
                         'label' => __('Short name', 'resources'),
                         'type'  => 'text',
-                        'list'  => true),
-                  array('name'  => 'plugin_resources_professionlines_id',
+                        'list'  => true],
+                  ['name'  => 'plugin_resources_professionlines_id',
                         'label' => __('Profession line', 'resources'),
                         'type'  => 'dropdownValue',
-                        'list'  => true),
-                  array('name'  => 'plugin_resources_professioncategories_id',
+                        'list'  => true],
+                  ['name'  => 'plugin_resources_professioncategories_id',
                         'label' => __('Profession category', 'resources'),
                         'type'  => 'dropdownValue',
-                        'list'  => true),
-                  array('name'  => 'begin_date',
+                        'list'  => true],
+                  ['name'  => 'begin_date',
                         'label' => __('Begin date'),
                         'type'  => 'date',
-                        'list'  => false),
-                  array('name'  => 'end_date',
+                        'list'  => false],
+                  ['name'  => 'end_date',
                         'label' => __('End date'),
                         'type'  => 'date',
-                        'list'  => false),
-                  array('name'  => 'is_active',
+                        'list'  => false],
+                  ['name'  => 'is_active',
                         'label' => __('Active'),
                         'type'  => 'bool',
-                        'list'  => true),
-                  );
+                        'list'  => true],
+                  ];
    }
 
    /**
@@ -145,10 +145,10 @@ class PluginResourcesProfession extends CommonDropdown {
     *
     * @return nothing|void
     */
-   function cleanDBonPurge(){
+   function cleanDBonPurge() {
 
       $temp = new PluginResourcesRank();
-      $temp->deleteByCriteria(array('plugin_resources_professions_id' => $this->fields['id']));
+      $temp->deleteByCriteria(['plugin_resources_professions_id' => $this->fields['id']]);
 
    }
 
@@ -168,7 +168,7 @@ class PluginResourcesProfession extends CommonDropdown {
       $tab[17]['field']         = 'name';
       $tab[17]['name']          = __('Profession line', 'resources');
       $tab[17]['datatype']      = 'dropdown';
-      
+
       $tab[18]['table']         = 'glpi_plugin_resources_professioncategories';
       $tab[18]['field']         = 'name';
       $tab[18]['name']          = __('Profession category', 'resources');
@@ -204,4 +204,3 @@ class PluginResourcesProfession extends CommonDropdown {
 
 }
 
-?>

@@ -71,10 +71,10 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType()=='PluginResourcesResource'
           && $this->canView()) {
@@ -87,7 +87,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    }
 
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType()=='PluginResourcesResource') {
 
@@ -101,20 +101,22 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       $restrict = "`plugin_resources_resources_id` = '".$item->getField('id')."' ";
       $dbu = new DbUtils();
-      $nb = $dbu->countElementsInTable(array('glpi_plugin_resources_resourcehabilitations'), $restrict);
+      $nb = $dbu->countElementsInTable(['glpi_plugin_resources_resourcehabilitations'], $restrict);
 
-      return $nb ;
+      return $nb;
    }
 
    function showItem($item) {
-      if (!$this->canView())   return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $canedit = $this->canCreate();
 
       $data = $this->find("`plugin_resources_resources_id` = ".$item->getField('id'));
 
       if ($canedit) {
-         $used = array();
+         $used = [];
          foreach ($data as $habilitation) {
             $used[] = $habilitation['plugin_resources_habilitations_id'];
          }
@@ -127,8 +129,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          echo "<tr class='tab_bg_1'><td class='center'>";
          echo self::getTypeName(1) . "</td>";
          echo "<td class='center'>";
-         Dropdown::show('PluginResourcesHabilitation', array('used'   => $used,
-                                                             'entity' => $item->getField("entities_id")));
+         Dropdown::show('PluginResourcesHabilitation', ['used'   => $used,
+                                                             'entity' => $item->getField("entities_id")]);
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add\" 
@@ -148,14 +150,14 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * @param $fields
     * @param $canedit
     */
-   private function listItems($fields, $canedit){
+   private function listItems($fields, $canedit) {
 
-      if(!empty($fields)){
+      if (!empty($fields)) {
          $rand = mt_rand();
          echo "<div class='center'>";
          if ($canedit) {
             Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand];
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
@@ -167,7 +169,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
          }
          echo "<th>".__('Name')."</th>";
-         foreach($fields as $field){
+         foreach ($fields as $field) {
             echo "<tr class='tab_bg_1'>";
             if ($canedit) {
                echo "<td width='10'>";
@@ -207,8 +209,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       foreach ($DB->request($query) as $data) {
          $habilitation = new self();
-         $habilitation->add(array('plugin_resources_resources_id'     => $newid,
-                                  'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]));
+         $habilitation->add(['plugin_resources_resources_id'     => $newid,
+                                  'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]]);
       }
    }
 

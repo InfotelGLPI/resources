@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -30,9 +30,8 @@
 include ('../../../inc/includes.php');
 
 if (isset($_GET["file"])) {
-   PluginResourcesResource::sendFile(GLPI_PLUGIN_DOC_DIR."/resources/".$_GET["file"],$_GET["file"]);
+   PluginResourcesResource::sendFile(GLPI_PLUGIN_DOC_DIR."/resources/".$_GET["file"], $_GET["file"]);
 } else {
    Html::displayRightError();
 }
 
-?>

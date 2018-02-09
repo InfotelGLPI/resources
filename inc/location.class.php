@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -35,4 +35,3 @@ class PluginResourcesLocation extends CommonDBTM {
 
 }
 
-?>

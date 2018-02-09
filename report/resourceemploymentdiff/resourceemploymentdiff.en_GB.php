@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -29,4 +29,3 @@
 
 $LANG['plugin_resources']['resourceemploymentdiff'] = "Report listing resource and employment differences between profession and rank";
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -46,15 +46,15 @@ class PluginResourcesResource_Item extends CommonDBTM {
    }
 
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, DELETE));
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    static function cleanForItem(CommonDBTM $item) {
 
       $temp = new self();
       $temp->deleteByCriteria(
-         array('itemtype' => $item->getType(),
-               'items_id' => $item->getField('id'))
+         ['itemtype' => $item->getType(),
+               'items_id' => $item->getField('id')]
       );
    }
 
@@ -152,9 +152,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
       ) {
          return false;
       } else {
-         $this->add(array('plugin_resources_resources_id' => $options["plugin_resources_resources_id"],
+         $this->add(['plugin_resources_resources_id' => $options["plugin_resources_resources_id"],
                           'items_id'                      => $options["items_id"],
-                          'itemtype'                      => $options["itemtype"]));
+                          'itemtype'                      => $options["itemtype"]]);
 
          if ($options["itemtype"] == 'User') {
 
@@ -184,13 +184,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
    function deleteItem($ID) {
 
-      $this->delete(array('id' => $ID));
+      $this->delete(['id' => $ID]);
    }
 
    function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype) {
 
       if ($this->getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)) {
-         return $this->delete(array('id' => $this->fields["id"]));
+         return $this->delete(['id' => $this->fields["id"]]);
       }
 
       return false;
@@ -215,10 +215,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
       foreach ($DB->request($query) as $data) {
          $item = new self();
-         $item->add(array('plugin_resources_resources_id' => $newid,
+         $item->add(['plugin_resources_resources_id' => $newid,
                           'itemtype'                      => $data["itemtype"],
                           'items_id'                      => $data["items_id"],
-                          'comment'                       => $data["comment"]));
+                          'comment'                       => $data["comment"]]);
       }
    }
 
@@ -245,10 +245,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
          $item                   = new User();
          $update["id"]           = $id;
          $update["locations_id"] = $values["locations_id"];
-         if ($itemtype == "PluginResourcesResource")
+         if ($itemtype == "PluginResourcesResource") {
             $update["_UpdateFromResource_"] = 1;
-         if ($item->update($update))
+         }
+         if ($item->update($update)) {
             Session::addMessageAfterRedirect(__("Modification of the associated user's location", "resources"), true);
+         }
       }
    }
 
@@ -272,8 +274,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $badges        = $dbu->getAllDataFromTable("glpi_plugin_badges_badges", $restrictbadge);
                //if the user have a linked badge, send email for his badge
                if (!empty($badges)) {
-                  foreach ($badges as $badge)
+                  foreach ($badges as $badge) {
                      return $badge["id"];
+                  }
                } else {
                   return 0;
                }
@@ -282,7 +285,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
-   function dropdownItems($ID, $used = array()) {
+   function dropdownItems($ID, $used = []) {
       global $DB, $CFG_GLPI;
 
       $restrict  = "`plugin_resources_resources_id` = '$ID'";
@@ -305,8 +308,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      AND `" . $this->getTable() . "`.`items_id` = '" . $resource["items_id"] . "' ";
             if (count($used)) {
                $query .= " AND `" . $table . "`.`id` NOT IN (0";
-               foreach ($used as $ID)
+               foreach ($used as $ID) {
                   $query .= ",$ID";
+               }
                $query .= ")";
             }
             $query .= " ORDER BY `" . $table . "`.`name`";
@@ -316,8 +320,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
                if ($data = $DB->fetch_assoc($result_linked)) {
                   $name = $data["name"];
-                  if ($resource["itemtype"] == 'User')
+                  if ($resource["itemtype"] == 'User') {
                      $name = getUserName($data["id"]);
+                  }
                   echo "<option value='" . $data["id"] . "," . $resource["itemtype"] . "'>" . $name;
                   if (empty($data["name"]) || $_SESSION["glpiis_ids_visible"] == 1) {
                      echo " (";
@@ -355,7 +360,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
       global $DB, $CFG_GLPI;
 
       $instID = $resource->fields['id'];
-      if (!$resource->can($instID, READ)) return false;
+      if (!$resource->can($instID, READ)) {
+         return false;
+      }
 
       $rand = mt_rand();
 
@@ -365,8 +372,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
       $types  = PluginResourcesResource::getTypes();
       $plugin = new Plugin();
-      if ($plugin->isActivated("badges"))
+      if ($plugin->isActivated("badges")) {
          $types[] = 'PluginBadgesBadge';
+      }
 
       $query  = "SELECT DISTINCT `itemtype` 
           FROM `glpi_plugin_resources_resources_items` 
@@ -416,7 +424,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       echo "<div class='spaced'>";
       if ($canedit && $number && $withtemplate < 2) {
          Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-         $massiveactionparams = array('item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand);
+         $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -481,8 +489,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      } else {
                         $format = $data["name"];
                      }
-                     if ($_SESSION["glpiis_ids_visible"] || empty($data["name"]))
+                     if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
                         $ID = " (" . $data["id"] . ")";
+                     }
 
                      $link = Toolbox::getItemTypeFormURL($itemType);
                      $name = "<a href=\"" . $link . "?id=" . $data["id"] . "\">"
@@ -518,15 +527,15 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      echo "</tr>";
                      /*TODO resolve IT or drop IT ?
                      echo "<tr class='tab_bg_1'>";
-                     
+
                      $class = "class='plugin_resources_show'";
-                     
+
                      if (!isset($data["comment"]) || empty($data["comment"])) {
                         $data["comment"]='';
                         $class = "class='plugin_resources_hide'";
                      }
                      echo "<td colspan='6' id='comment$items_id$rand' $class >";
-                     
+
                      echo "<form method='post' name='updatecomment$items_id$rand' id='updatecomment$items_id$rand' action='".Toolbox::getItemTypeFormURL("PluginResourcesResource")."'>";
                      echo "<table><tr><td>";
                      echo __('Comments');
@@ -536,7 +545,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      echo "<input type='hidden' name='items_id' value='".$data["items_id"]."'>";
                      if($canedit && $withtemplate<2) {
                         if (!isset($data["comment"]) || empty($data["comment"])) {
-                           
+
                            echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Add')."\" class='submit'>";
                         } else {
                            echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Update')."\" class='submit'>";
@@ -546,7 +555,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      echo "</tr>";
                      echo "</table>";
                      Html::closeForm();
-                     
+
                      echo "</td>";
                      echo "</tr>";*/
                   }
@@ -615,8 +624,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $number = $DB->numrows($result);
       $i      = 0;
 
-      $resources = array();
-      $used      = array();
+      $resources = [];
+      $used      = [];
       if ($numrows = $DB->numrows($result)) {
          while ($data = $DB->fetch_assoc($result)) {
             $resources[$data['assocID']] = $data;
@@ -659,7 +668,6 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
          echo "<div class='firstbloc'>";
 
-
          if (Session::haveRight('plugin_resources', READ)
              && ($nb > count($used))
          ) {
@@ -674,9 +682,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                echo "<input type='hidden' name='tickets_id' value='$ID'>";
             }
 
-            PluginResourcesResource::dropdown(array('name'   => 'plugin_resources_resources_id',
+            PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
                                                     'entity' => $entities,
-                                                    'used'   => $used));
+                                                    'used'   => $used]);
 
             echo "</td><td class='center' width='20%'>";
             echo "<input type='submit' name='additem' value=\"" .
@@ -693,7 +701,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       echo "<div class='spaced'>";
       if ($canedit && $number && ($withtemplate < 2)) {
          Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-         $massiveactionparams = array('num_displayed' => $number);
+         $massiveactionparams = ['num_displayed' => $number];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -719,7 +727,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       echo "<th>" . __('Departure date', 'resources') . "</th>";
       echo "</tr>";
 
-      $used       = array();
+      $used       = [];
       $resourceID = 0;
       if ($number) {
 
@@ -728,7 +736,6 @@ class PluginResourcesResource_Item extends CommonDBTM {
             //        %2$s is the name of the item (used for headings of a list)
                                         sprintf(__('%1$s = %2$s'),
                                                 $item->getTypeName(1), $item->getName()));
-
 
          foreach ($resources as $data) {
             $resourceID = $data["id"];
@@ -761,12 +768,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
             echo "</td>";
 
             echo "<td class='center'>";
-            echo Dropdown::getDropdownName("glpi_plugin_resources_contracttypes"
-               , $data["plugin_resources_contracttypes_id"]);
+            echo Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"]);
             echo "</td>";
             echo "<td class='center'>";
-            echo Dropdown::getDropdownName("glpi_plugin_resources_departments"
-               , $data["plugin_resources_departments_id"]);
+            echo Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"]);
             echo "</td>";
 
             echo "<td class='center'>" . Html::convDate($data["date_begin"]) . "</td>";
@@ -786,7 +791,6 @@ class PluginResourcesResource_Item extends CommonDBTM {
             $i++;
          }
       }
-
 
       echo "</table>";
       if ($canedit && $number && ($withtemplate < 2)) {
@@ -870,15 +874,16 @@ class PluginResourcesResource_Item extends CommonDBTM {
                         . " WHERE `" . $table . "`.`id` = `glpi_plugin_resources_resources_items`.`items_id` 
                   AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type' 
                   AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$ID' ";
-               if ($type != 'User')
+               if ($type != 'User') {
                   $query .= getEntitiesRestrictRequest(" AND ", $table, '', '', $items->maybeRecursive());
+               }
 
                if ($items->maybeTemplate()) {
                   $query .= " AND `" . $table . "`.`is_template` = '0'";
                }
                $query .= " ORDER BY `glpi_entities`.`completename`, `" . $table . "`.`$column`";
 
-               if ($result_linked = $DB->query($query))
+               if ($result_linked = $DB->query($query)) {
                   if ($DB->numrows($result_linked)) {
 
                      while ($data = $DB->fetch_assoc($result_linked)) {
@@ -887,11 +892,14 @@ class PluginResourcesResource_Item extends CommonDBTM {
                         }
                         $items_id_display = "";
 
-                        if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) $items_id_display = " (" . $data["id"] . ")";
-                        if ($type == 'User')
+                        if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
+                           $items_id_display = " (" . $data["id"] . ")";
+                        }
+                        if ($type == 'User') {
                            $name = Html::clean(getUserName($data["id"])) . $items_id_display;
-                        else
+                        } else {
                            $name = $data["name"] . $items_id_display;
+                        }
 
                         if ($type != 'User') {
                            $entity = Html::clean(Dropdown::getDropdownName("glpi_entities", $data['entity']));
@@ -902,23 +910,24 @@ class PluginResourcesResource_Item extends CommonDBTM {
                         if (Session::isMultiEntitiesMode()) {
                            $pdf->setColumnsSize(12, 27, 25, 18, 18);
                            $pdf->displayLine(
-                              $items->getTypeName(),
-                              $name,
-                              $entity,
-                              (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                              (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
+                           $items->getTypeName(),
+                           $name,
+                           $entity,
+                           (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
+                           (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
                            );
                         } else {
                            $pdf->setColumnsSize(25, 31, 22, 22);
                            $pdf->displayTitle(
-                              $items->getTypeName(),
-                              $name,
-                              (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                              (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
+                           $items->getTypeName(),
+                           $name,
+                           (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
+                           (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
                            );
                         }
                      } // Each device
                   } // numrows device
+               }
             } // type right
          } // each type
       } // numrows type
@@ -1010,4 +1019,3 @@ class PluginResourcesResource_Item extends CommonDBTM {
    }
 }
 
-?>

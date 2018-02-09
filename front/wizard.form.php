@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -44,13 +44,15 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 }
 
 if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
-   if (!isset($_POST["template"]))
+   if (!isset($_POST["template"])) {
       $_POST["template"]     = $_GET["template"];
-   if (!isset($_POST["withtemplate"]))
+   }
+   if (!isset($_POST["withtemplate"])) {
       $_POST["withtemplate"] = $_GET["withtemplate"];
+   }
 
    // Set default value...
-   $values = array('name'                                     => '',
+   $values = ['name'                                     => '',
                    'firstname'                                => '',
                    'comment'                                  => '',
                    'locations_id'                             => 0,
@@ -68,7 +70,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
                    'plugin_resources_habilitations_id'        => 0,
                    'sensitize_security'                       => 0,
                    'read_chart'                               => 0,
-   );
+   ];
 
    // Clean text fields
    $values['name']    = stripslashes($values['name']);
@@ -78,17 +80,17 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $values['withtemplate'] = $_POST["withtemplate"];
    $values['new']          = 1;
    $resource->wizardSecondForm($_POST["template"], $values);
-   
+
 } else if (isset($_POST["undo_first_step"])) {
    //if ($resource->getfromDB($_POST["id"]))
    //$resource->deleteByCriteria(array('id' => $_POST["id"]));
    $resource->wizardFirstForm($_SERVER['HTTP_REFERER']);
-   
+
 } else if (isset($_POST["second_step"]) || isset($_POST["second_step_update"])) {
    $required = $resource->checkRequiredFields($_POST);
    if (count($required) > 0) {
       // Set default value...
-      foreach($_POST as $key => $val){
+      foreach ($_POST as $key => $val) {
          $values[$key] = $val;
       }
 
@@ -99,20 +101,21 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
       $values['withtemplate'] = $_POST["withtemplate"];
 
-      if (isset($_POST["second_step"]))
+      if (isset($_POST["second_step"])) {
          $values['new'] = 1;
-      else if (isset($_POST["second_step_update"]))
+      } else if (isset($_POST["second_step_update"])) {
          $values['new'] = 0;
+      }
 
       $values["requiredfields"] = 1;
 
-      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = array("<h3><span class='red'>".
-              __('Required fields are not filled. Please try again.', 'resources')."</span></h3>");
+      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>".
+              __('Required fields are not filled. Please try again.', 'resources')."</span></h3>"];
 
       Html::displayMessageAfterRedirect();
 
       $resource->wizardSecondForm($_POST["id"], $values);
-      
+
    } else {
       if ($resource->canCreate() && isset($_POST["second_step"])) {
          $newID = $resource->add($_POST);
@@ -129,10 +132,10 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          if ($employee->canCreate()) {
             if ($wizard_employee) {
                $employee->wizardThirdForm($newID);
-            } elseif ($wizard_need) {
+            } else if ($wizard_need) {
                $choice->wizardFourForm($newID);
-            } elseif ($wizard_picture) {
-               $values           = array();
+            } else if ($wizard_picture) {
+               $values           = [];
                $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
                $resource->wizardFiveForm($newID, $values);
             } else {
@@ -143,8 +146,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          } else {
             if ($wizard_need) {
                $choice->wizardFourForm($newID);
-            } elseif ($wizard_picture) {
-               $values           = array();
+            } else if ($wizard_picture) {
+               $values           = [];
                $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
                $resource->wizardFiveForm($newID, $values);
             } else {
@@ -157,7 +160,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          Html::back();
       }
    }
-   
+
 } else if (isset($_POST["undo_second_step"])) {
    // Set default value...
    $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
@@ -165,7 +168,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $values['new']          = 0;
 
    $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
-   
+
 } else if (isset($_POST["third_step"])) {
    if (isset($_POST['id']) && $_POST['id'] > 0) {
       $employee->update($_POST);
@@ -178,8 +181,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
    if ($wizard_need) {
       $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   } elseif ($wizard_picture) {
-      $values           = array();
+   } else if ($wizard_picture) {
+      $values           = [];
       $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
       $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
    } else {
@@ -188,12 +191,12 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       Plugin::doHook('item_show', $resource);
       $resource->redirectToList();
    }
-   
+
 } else if (isset($_POST["four_step"])) {
    $wizard_picture = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_picture_wizard");
 
    if ($wizard_picture) {
-      $values           = array();
+      $values           = [];
       $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
       $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
    } else {
@@ -202,43 +205,48 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       Plugin::doHook('item_show', $resource);
       $resource->redirectToList();
    }
-   
+
 } else if (isset($_POST["updateneedcomment"])) {
-   if ($resource->canCreate())
+   if ($resource->canCreate()) {
       foreach ($_POST["updateneedcomment"] as $key => $val) {
          $varcomment            = "commentneed".$key;
          $values['id']          = $key;
          $values['commentneed'] = $_POST[$varcomment];
          $choice->addNeedComment($values);
       }
+   }
 
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   
+
 } else if (isset($_POST["addcomment"])) {
-   if ($resource->canCreate())
+   if ($resource->canCreate()) {
       $choice->addComment($_POST);
+   }
 
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   
+
 } else if (isset($_POST["updatecomment"])) {
-   if ($resource->canCreate())
+   if ($resource->canCreate()) {
       $choice->updateComment($_POST);
+   }
 
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   
+
 } else if (isset($_POST["addchoice"])) {
-   if ($resource->canCreate() && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0)
+   if ($resource->canCreate() && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
       $choice->addHelpdeskItem($_POST);
+   }
 
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   
+
 } else if (isset($_POST["deletechoice"])) {
-   if ($resource->canCreate())
-      $choice->delete(array('id' => $_POST["id"]));
+   if ($resource->canCreate()) {
+      $choice->delete(['id' => $_POST["id"]]);
+   }
 
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
 
-//next step : email and finish resource creation
+   //next step : email and finish resource creation
 } else if (isset($_POST["upload_five_step"])) {
    if (isset($_FILES) && isset($_FILES['picture'])) {
       if ($_FILES['picture']['type'] == "image/jpeg" || $_FILES['picture']['type'] == "image/pjpeg") {
@@ -260,18 +268,18 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       }
    }
 
-   $values           = array();
+   $values           = [];
    $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
 
    $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
-   
+
 } else if (isset($_POST["five_step"])) {
    $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
    $resource->fields['resources_step']                = 'five_step';
    Plugin::doHook('item_show', $resource);
 
    $resource->redirectToList();
-   
+
 } else {
    $resource->wizardFirstForm();
 }
@@ -281,4 +289,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

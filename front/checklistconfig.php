@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of resources.
 
  resources is free software; you can redistribute it and/or modify
@@ -34,10 +34,9 @@ Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresour
 $checklistconfig = new PluginResourcesChecklistconfig();
 if (($checklistconfig->canView() || Session::haveRight("config", UPDATE))) {
    Search::show("PluginResourcesChecklistconfig");
-   
+
 } else {
    Html::displayRightError();
 }
 
 Html::footer();
-?>

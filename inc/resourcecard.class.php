@@ -38,7 +38,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
-   static $types = array('Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge');
+   static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge'];
 
    static function resourceCard($ID) {
       global $CFG_GLPI;
@@ -56,7 +56,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       $users_id = $data['items_id'];
 
       $user = new User();
-      if($user->getFromDB($users_id)){
+      if ($user->getFromDB($users_id)) {
 
          echo "<div id='plugin_resources_container'>";
 
@@ -80,11 +80,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo "</div>"; //end plugin_resources_card-content
          echo "</div>"; //end plugin_resources_card
 
-
          echo "<div id='plugin_resources_card-footer'></div>";
 
          echo "</div>"; //end plugin_resources_container
-
 
          ///navigation
          echo "<nav>";
@@ -111,7 +109,6 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo "</div>"; //end plugin_resources_card-content-frame
          echo "</div>"; //end plugin_resources_card-content
          echo "</div>"; //end plugin_resources_card
-
 
          echo "<div id='plugin_resources_card-footer'></div>";
 
@@ -182,7 +179,6 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
       } else {
 
-
          echo "<div id='plugin_resources_about-image'>";
          echo "<img src='" . PluginResourcesResource::getThumbnailURLForPicture($resource->fields['picture']) . "' alt='' />";
          echo "</div>"; //end plugin_resources_about-image
@@ -249,7 +245,6 @@ class PluginResourcesResourceCard extends CommonDBTM {
       }
       echo "</div>"; //end plugin_resources_about
 
-
    }
 
    static function showItems($user) {
@@ -266,7 +261,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       $ID = $user->getID();
 
       $inv   = false;
-      $datas = array();
+      $datas = [];
       foreach ($type_user as $itemtype) {
 
          if (!($item = getItemForItemtype($itemtype)) || !in_array($itemtype, self::$types)) {
@@ -319,7 +314,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
             echo "<tr class='tab_bg_1'>";
             echo "<td class='center'  width='100'>";
-            if(file_exists("../pics/gallery/" . $type . ".jpg")) {
+            if (file_exists("../pics/gallery/" . $type . ".jpg")) {
                echo "<img src='../pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
             } else {
                echo "<img src='../pics/gallery/nothing.png' width = '50%' alt='' />";
@@ -344,9 +339,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
                echo $values["otherserial"];
                echo "</br>";
             }
-//            if (isset($values["states_id"])) {
-//               echo Dropdown::getDropdownName("glpi_states", $values['states_id']);
-//            }
+            //            if (isset($values["states_id"])) {
+            //               echo Dropdown::getDropdownName("glpi_states", $values['states_id']);
+            //            }
             echo "</td></tr>";
          }
 

@@ -40,7 +40,6 @@ function update231_232() {
       if ($DB->numrows($result) > 0) {
          while ($data = $DB->fetch_assoc($result)) {
 
-
             $query_add = "INSERT INTO `glpi_plugin_resources_habilitations` (entities_id, is_recursive, name, completename, 
                                                                               comment, allow_resource_creation) 
                           VALUES ('" . $data['entities_id'] . "', '" . $data['is_recursive'] . "', 
@@ -71,7 +70,6 @@ function update231_232() {
                                          WHERE `id` = '" . $data_resource['id'] . "'";
                            $DB->query($query_update);
                         }
-
 
                      }
                   }
