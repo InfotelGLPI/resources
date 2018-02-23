@@ -112,7 +112,6 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
    function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
-      $this->showTabs($options);
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_1'>";
