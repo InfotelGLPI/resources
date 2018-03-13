@@ -329,7 +329,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       if ($DB->numrows($result) > 0) {
          for ($i = 0; $data = $DB->fetch_array($result); $i++) {
 
-            $key                                           = $parm["begin"].$data["id"]."$$$"."plugin_resource";
+            $key                                           = $parm["begin"] . $data["id"] . "$$$" . "plugin_resource";
+            $output[$key]['color']                         = $parm['color'];
+            $output[$key]['event_type_color']              = $parm['event_type_color'];
             $output[$key]["id"]                            = $data["id"];
             $output[$key]["plugin_resources_resources_id"] = $data["plugin_resources_resources_id"];
             $output[$key]["users_id"]                      = $data["users_id"];
@@ -340,9 +342,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             $output[$key]["resource"]                      = $data["resource"];
             $output[$key]["content"]                       = Html::resume_text($data["comment"], $CFG_GLPI["cut"]);
             $output[$key]["itemtype"]                      = 'PluginResourcesTaskPlanning';
+            $output[$key]["url"]                           = $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $data['id'];;
          }
       }
-
       return $output;
    }
 
@@ -355,53 +357,57 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
    static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {
       global $CFG_GLPI;
 
-      $rand = mt_rand();
-      echo "<a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/task.form.php?id=".$val["id"]."'";
+      $html = "";
 
-      echo " onmouseout=\"cleanhide('content_task_".$val["id"].$rand."')\" 
+      $rand = mt_rand();
+      $html .= "<a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/task.form.php?id=".$val["id"]."'";
+
+      $html .= " onmouseout=\"cleanhide('content_task_".$val["id"].$rand."')\"
                onmouseover=\"cleandisplay('content_task_".$val["id"].$rand."')\"";
-      echo ">";
+      $html .= ">";
 
       switch ($type) {
          case "in" :
             //TRANS: %1$s is the start time of a planned item, %2$s is the end
-            $beginend = sprintf(__('From %1$s to %2$s :'), date("H:i", strtotime($val["begin"])), date("H:i", strtotime($val["end"])));
-            printf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
+            $beginend = sprintf(__('From %1$s to %2$s'), date("H:i", strtotime($val["begin"])), date("H:i", strtotime($val["end"])));
+            $html .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
 
             break;
          case "begin" :
             $start = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
-            printf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
+            $html .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
             break;
 
          case "end" :
             $end = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
-            printf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
+            $html .= sprintf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
             break;
       }
 
       if ($val["users_id"] && $who == 0) {
-         echo " - ".__('User')." ".getUserName($val["users_id"]);
+         $html .= " - ".__('User')." ".getUserName($val["users_id"]);
       }
-      echo "</a><br>";
+      $html .= "</a><br>";
 
-      echo PluginResourcesResource::getTypeName(1).
+      $html .= PluginResourcesResource::getTypeName(1).
       " : <a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/resource.form.php?id=".
       $val["plugin_resources_resources_id"]."'";
-      echo ">".$val["resource"]."</a>";
+      $html .= ">".$val["resource"]."</a>";
 
-      echo "<div class='over_link' id='content_task_".$val["id"].$rand."'>";
+      $html .= "<div class='over_link' id='content_task_".$val["id"].$rand."'>";
       if ($val["end"]) {
-         echo "<strong>".__('End date')."</strong> : ".Html::convdatetime($val["end"])."<br>";
+         $html .= "<strong>".__('End date')."</strong> : ".Html::convdatetime($val["end"])."<br>";
       }
       if ($val["type"]) {
-         echo "<strong>".PluginResourcesTaskType::getTypeName(1)."</strong> : ".
+         $html .= "<strong>".PluginResourcesTaskType::getTypeName(1)."</strong> : ".
          $val["type"]."<br>";
       }
       if ($val["content"]) {
-         echo "<strong>".__('Description')."</strong> : ".$val["content"];
+         $html .= "<strong>".__('Description')."</strong> : ".$val["content"];
       }
-      echo "</div>";
+      $html .= "</div>";
+
+      return $html;
    }
 
 }
