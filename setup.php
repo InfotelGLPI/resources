@@ -125,8 +125,11 @@ function plugin_init_resources() {
       }
 
       if ((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE))
-          && !class_exists('PluginServicecatalogMain')) {
+           || Session::haveright("plugin_resources_employee", UPDATE)
+              && !class_exists('PluginServicecatalogMain'))
+          || (class_exists('PluginServicecatalogMain')
+              && !Session::haveRight("plugin_servicecatalog", READ))
+      ) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
       }
 
