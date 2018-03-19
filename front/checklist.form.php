@@ -60,9 +60,9 @@ if (isset($_POST["add"])) {
    $checklist->checkGlobal(READ);
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourceschecklist");
    $options = ['id'                                => $_GET["id"],
-                    'checklist_type'                    => $_GET["checklist_type"],
-                    'plugin_resources_contracttypes_id' => $_GET["plugin_resources_contracttypes_id"],
-                    'plugin_resources_resources_id'     => $_GET["plugin_resources_resources_id"]];
+               'checklist_type'                    => $_GET["checklist_type"],
+               'plugin_resources_contracttypes_id' => $_GET["plugin_resources_contracttypes_id"],
+               'plugin_resources_resources_id'     => $_GET["plugin_resources_resources_id"]];
    $checklist->display($options);
    Html::footer();
 }

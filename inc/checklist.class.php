@@ -393,9 +393,6 @@ class PluginResourcesChecklist extends CommonDBTM {
          $this->check(-1, UPDATE, $input);
       }
 
-      if (!strpos($_SERVER['PHP_SELF'], "viewchecklisttask")) {
-         $this->showTabs($options);
-      }
       $this->showFormHeader($options);
 
       echo "<input type='hidden' name='plugin_resources_resources_id' value='".$plugin_resources_resources_id."'>";

@@ -61,15 +61,6 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       }
    }
 
-   //define header form
-   function defineTabs($options = []) {
-
-      $ong = [];
-      $this->addStandardTab(__CLASS__, $ong, $options);
-
-      return $ong;
-   }
-
    function getSearchOptions() {
 
       $tab = [];
