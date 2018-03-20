@@ -2975,14 +2975,15 @@ class PluginResourcesResource extends CommonDBTM {
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if ($isadmin && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-         $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Install'] = __('Associate');
-         $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Desinstall'] = __('Dissociate');
+         $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Install'] = _x('button', 'Associate');
+         $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Desinstall'] = _x('button', 'Dissociate');
 
          if (Session::haveRight('transfer', READ)
             && Session::isMultiEntitiesMode()) {
             $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Transfert'] = __('Transfer');
          }
        
+         $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'AddHabilitation'] = __('Add additional habilitation', 'resources');
          $actions['PluginResourcesResource'.MassiveAction::CLASS_ACTION_SEPARATOR.'Send'] = __('Send a notification');
       }
       return $actions;
@@ -3007,6 +3008,10 @@ class PluginResourcesResource extends CommonDBTM {
          case "plugin_resources_generate_resources":
             echo "<input type='hidden' name='itemtype' value='$itemtype'>";
             PluginResourcesResource::fastResourceAddForm();
+            break;
+         case "AddHabilitation":
+            Dropdown::show('PluginResourcesHabilitation',
+                           array('entity'    => $_SESSION['glpiactiveentities']));
             break;
       }
 
@@ -3115,6 +3120,37 @@ class PluginResourcesResource extends CommonDBTM {
                }
             }
             $ma->addMessage(implode("<br>", array_unique($messages)));
+            break;
+
+         case "AddHabilitation":
+            $habilitation = new PluginResourcesResourceHabilitation();
+            foreach ($ids as $key => $val) {
+               if ($item->can($key, UPDATE)) {
+
+                  //check if habilitation already added
+                  if(!$habilitation->getFromDBByQuery("WHERE `plugin_resources_resources_id` = $key 
+                  AND `plugin_resources_habilitations_id` = ".$input['plugin_resources_habilitations_id'])) {
+
+                     if ($resource->getFromDB($key)) {
+                        //TODO add verification entities
+                        $values = array('plugin_resources_resources_id'     => $key,
+                                        'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]);
+                        if ($habilitation->add($values)) {
+                           $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+                        } else {
+                           $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                        }
+                     } else {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                     }
+                  } else {
+                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                  }
+               } else {
+                  $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                  $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               }
+            }
             break;
 
          default :
