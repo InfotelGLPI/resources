@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Resources Development Team
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the GLPI - Resources plugin package.
 # 
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2013-2017
@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 17:46+0200\n"
-"PO-Revision-Date: 2017-10-25 06:04+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
+"POT-Creation-Date: 2018-03-20 11:47+0100\n"
+"PO-Revision-Date: 2018-03-20 10:49+0000\n"
+"Last-Translator: Amandine Manceau\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/tsmr/GLPI_resources/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr_TR\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: hook.php:53
 msgid "Long term contract"
@@ -46,90 +46,93 @@ msgstr "Özel güvenlik grupları"
 msgid "Specific distribution lists"
 msgstr "Özel dağıtım listeleri"
 
-#: hook.php:389 inc/choice.class.php:115 inc/choice.class.php:304
+#: hook.php:389 inc/choice.class.php:115 inc/choice.class.php:311
 msgid "Others needs"
 msgstr "Diğer gereksinimler"
 
-#: hook.php:841 inc/notificationtargetresource.class.php:336
-#: inc/notificationtargetresource.class.php:415
-#: inc/notificationtargetresource.class.php:581
+#: hook.php:842 inc/notificationtargetresource.class.php:334
+#: inc/notificationtargetresource.class.php:413
+#: inc/notificationtargetresource.class.php:580
 #: inc/notificationtargetresource.class.php:634
 #: inc/notificationtargetresource.class.php:797
-#: inc/notificationtargetresource.class.php:1274
-#: inc/notificationtargetresource.class.php:1300 inc/resource.class.php:266
-#: inc/resource.class.php:1256
+#: inc/notificationtargetresource.class.php:1298
+#: inc/notificationtargetresource.class.php:1324 inc/resource.class.php:266
+#: inc/resource.class.php:1284
 msgid "Declared as leaving"
 msgstr "Ayrılacağı bildirildi"
 
-#: hook.php:846 inc/employer.class.php:40 inc/employment.class.php:169
-#: inc/employment.class.php:239
+#: hook.php:847 inc/employer.class.php:40 inc/employment.class.php:169
+#: inc/employment.class.php:241
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:65
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşverenler"
+msgstr[1] "İşverenler"
 
-#: hook.php:850 inc/client.class.php:38
+#: hook.php:851 inc/client.class.php:38
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Etkilenen müşteriler"
+msgstr[1] "Etkilenen müşteriler"
 
-#: hook.php:855 inc/directory.class.php:125
-#: inc/notificationtargetresource.class.php:85
-#: inc/notificationtargetresource.class.php:324
-#: inc/notificationtargetresource.class.php:403
-#: inc/notificationtargetresource.class.php:556
+#: hook.php:856 inc/directory.class.php:125
+#: inc/notificationtargetresource.class.php:84
+#: inc/notificationtargetresource.class.php:322
+#: inc/notificationtargetresource.class.php:401
+#: inc/notificationtargetresource.class.php:555
 #: inc/notificationtargetresource.class.php:626
 #: inc/notificationtargetresource.class.php:749
-#: inc/notificationtargetresource.class.php:1262
-#: inc/notificationtargetresource.class.php:1290 inc/resource.class.php:205
-#: inc/resource.class.php:1168 inc/resource.class.php:1937
-#: inc/resource.class.php:2442 inc/resourcepdf.class.php:65
-#: inc/rulecontracttype.class.php:188 inc/task.class.php:646
-#: inc/task.class.php:988
+#: inc/notificationtargetresource.class.php:1286
+#: inc/notificationtargetresource.class.php:1314 inc/resource.class.php:205
+#: inc/resource.class.php:1192 inc/resource.class.php:1986
+#: inc/resource.class.php:2500 inc/resourcepdf.class.php:65
+#: inc/rulecontracttype.class.php:177 inc/task.class.php:651
+#: inc/task.class.php:998
 msgid "Resource manager"
 msgstr "Kaynak yönetimi"
 
-#: hook.php:867 inc/notificationtargetresource.class.php:88
-#: inc/notificationtargetresource.class.php:335
-#: inc/notificationtargetresource.class.php:414
-#: inc/notificationtargetresource.class.php:588
+#: hook.php:868 inc/notificationtargetresource.class.php:87
+#: inc/notificationtargetresource.class.php:333
+#: inc/notificationtargetresource.class.php:412
+#: inc/notificationtargetresource.class.php:587
 #: inc/notificationtargetresource.class.php:636
 #: inc/notificationtargetresource.class.php:791
-#: inc/notificationtargetresource.class.php:1273
-#: inc/notificationtargetresource.class.php:1299 inc/resource.class.php:272
+#: inc/notificationtargetresource.class.php:1297
+#: inc/notificationtargetresource.class.php:1323 inc/resource.class.php:272
 msgid "Informant of leaving"
 msgstr "Ayrılma bilgileri"
 
-#: hook.php:873 inc/notificationtargetresource.class.php:86
-#: inc/notificationtargetresource.class.php:111
-#: inc/notificationtargetresource.class.php:325
-#: inc/notificationtargetresource.class.php:404
-#: inc/notificationtargetresource.class.php:559
+#: hook.php:874 inc/notificationtargetresource.class.php:85
+#: inc/notificationtargetresource.class.php:109
+#: inc/notificationtargetresource.class.php:323
+#: inc/notificationtargetresource.class.php:402
+#: inc/notificationtargetresource.class.php:558
 #: inc/notificationtargetresource.class.php:627
 #: inc/notificationtargetresource.class.php:752 inc/resource.class.php:351
-#: inc/resource.class.php:1190 inc/resource.class.php:1951
-#: inc/rulecontracttype.class.php:192
+#: inc/resource.class.php:1216 inc/resource.class.php:2001
+#: inc/rulecontracttype.class.php:181
 msgid "Sales manager"
 msgstr "Satış sorumlusu"
 
-#: hook.php:1268 inc/resource_item.class.php:780
+#: hook.php:1273 inc/resource_item.class.php:785
 msgid "Not defined"
 msgstr "Belirtilmemiş"
 
-#: hook.php:1499
+#: hook.php:1511
 msgid "Modification of the associated resource's location"
 msgstr "İlgili kaynak konumunda değişiklik"
 
-#: setup.php:178
+#: setup.php:179
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "İnsan Kaynakları"
+msgstr[1] "İnsan Kaynakları"
 
-#: setup.php:194
+#: setup.php:195
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "Uyumsuz PHP sürümü. Modül gerekiyor"
 
-#: ajax/employee.php:47 inc/employee.class.php:238 inc/employee.class.php:351
+#: ajax/employee.php:47 inc/employee.class.php:247 inc/employee.class.php:367
 msgid "Security compliance"
 msgstr "Güvenlik uygunluğu"
 
@@ -145,18 +148,18 @@ msgstr "İade formunu indir"
 msgid "Please activate the plugin"
 msgstr "Lütfen uygulama ekini etkinleştirin"
 
-#: front/confighabilitation.form.php:70 front/confighabilitation.form.php:89
-#: front/confighabilitation.form.php:109 front/resourcebadge.form.php:68
-#: front/resourcebadge.form.php:87
+#: front/confighabilitation.form.php:71 front/confighabilitation.form.php:90
+#: front/confighabilitation.form.php:110 front/resourcebadge.form.php:69
+#: front/resourcebadge.form.php:88
 msgid "Please activate the plugin metademand"
 msgstr "Lütfen metademand uygulama ekini etkinleştirin"
 
-#: front/confighabilitation.form.php:81 front/confighabilitation.form.php:102
-#: front/resourcebadge.form.php:79
+#: front/confighabilitation.form.php:82 front/confighabilitation.form.php:103
+#: front/resourcebadge.form.php:80
 msgid "No advanced request found"
 msgstr "Henüz gelişmiş bir istek yok"
 
-#: front/resourcebadge.form.php:109
+#: front/resourcebadge.form.php:110
 msgid "Please activate the plugin badge"
 msgstr "Lütfen yaka kartı uygulama ekini etkinleştirin"
 
@@ -164,15 +167,15 @@ msgstr "Lütfen yaka kartı uygulama ekini etkinleştirin"
 msgid "Please select a user"
 msgstr "Lütfen bir kullanıcı seçin"
 
-#: front/resource.form.php:287
+#: front/resource.form.php:282
 msgid "The checklist is not finished"
 msgstr "Kontrol listesi tamamlanmamış"
 
-#: front/resource.form.php:312
+#: front/resource.form.php:307
 msgid "Notification sent"
 msgstr "Bildirim gönderildi"
 
-#: front/resource.form.php:314 inc/resource.class.php:3416
+#: front/resource.form.php:309 inc/resource.class.php:3510
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr "Kaynak bir kullanıcı ile ilişkilendirilmemiş olduğundan bildirim gönderilemedi"
@@ -181,11 +184,11 @@ msgstr "Kaynak bir kullanıcı ile ilişkilendirilmemiş olduğundan bildirim g�
 msgid "View by contract type"
 msgstr "Sözleşme türüne göre bakın"
 
-#: front/resource.remove.php:73
+#: front/resource.remove.php:74
 msgid "Declaration of resource leaving OK"
 msgstr "Kaynağın ayrılacağı bildirildi"
 
-#: front/wizard.form.php:110 inc/resource.class.php:519
+#: front/wizard.form.php:113 inc/resource.class.php:521
 msgid "Required fields are not filled. Please try again."
 msgstr "Zorunlu alanlar doldurulmamış. Lütfen yeniden deneyin."
 
@@ -196,26 +199,29 @@ msgstr "Bütçenin mesleği doldurulmalıdır"
 
 #: inc/budget.class.php:122 inc/budget.class.php:211 inc/cost.class.php:99
 #: inc/cost.class.php:128 inc/cost.class.php:192 inc/employment.class.php:142
-#: inc/employment.class.php:259 inc/rank.class.php:38
+#: inc/employment.class.php:261 inc/rank.class.php:38
 #: inc/resourcespeciality.class.php:62 inc/resourcespeciality.class.php:138
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Dilim"
+msgstr[1] "Dilim"
 
 #: inc/budget.class.php:128 inc/budget.class.php:200 inc/cost.class.php:95
 #: inc/cost.class.php:123 inc/cost.class.php:179 inc/employment.class.php:148
-#: inc/employment.class.php:248 inc/profession.class.php:38
+#: inc/employment.class.php:250 inc/profession.class.php:38
 #: inc/rank.class.php:67 inc/rank.class.php:99
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] "Meslek"
+msgstr[1] "Meslek"
 
 #: inc/budget.class.php:134 inc/budget.class.php:192
 #: inc/budgettype.class.php:40
 msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] "Bütçe türü"
+msgstr[1] "Bütçe türü"
 
 #: inc/budget.class.php:149 inc/budget.class.php:221
 msgid "Budget volume"
@@ -226,6 +232,7 @@ msgstr "Bütçe hacmi"
 msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
 msgstr[0] "Bütçe hacmi türü"
+msgstr[1] "Bütçe hacmi türü"
 
 #: inc/budgettype.class.php:54 inc/budgettype.class.php:104
 #: inc/budgetvolume.class.php:54 inc/budgetvolume.class.php:104
@@ -245,107 +252,108 @@ msgstr[0] "Bütçe hacmi türü"
 msgid "Code"
 msgstr "Kod"
 
-#: inc/checklist.class.php:43 inc/profile.class.php:194
-#: inc/resource.class.php:3924
+#: inc/checklist.class.php:43 inc/profile.class.php:193
+#: inc/resource.class.php:4019
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Kontrol listesi"
+msgstr[1] "Kontrol listesi"
 
-#: inc/checklist.class.php:221 inc/checklist.class.php:559
-#: inc/resourcebadge.class.php:432 inc/resource_change.class.php:707
+#: inc/checklist.class.php:231 inc/checklist.class.php:568
+#: inc/resourcebadge.class.php:434 inc/resource_change.class.php:714
 msgid "Create a end treatment ticket"
 msgstr "Onarım sonu çağrısı ekleyin"
 
-#: inc/checklist.class.php:240 inc/checklist.class.php:256
+#: inc/checklist.class.php:250 inc/checklist.class.php:265
 msgid "At the arriving of a resource"
 msgstr "Kaynak geldiğinde"
 
-#: inc/checklist.class.php:241 inc/checklist.class.php:258
+#: inc/checklist.class.php:251 inc/checklist.class.php:267
 msgid "At the leaving of a resource"
 msgstr "Kaynak ayrıldığında"
 
-#: inc/checklist.class.php:242 inc/checklist.class.php:260
+#: inc/checklist.class.php:252 inc/checklist.class.php:269
 msgid "At the transfer of a resource"
 msgstr "Bir kaynak aktarıldığında"
 
-#: inc/checklist.class.php:288
+#: inc/checklist.class.php:297
 msgid "Create checklists"
 msgstr "Kontrol listeleri oluşturun"
 
-#: inc/checklist.class.php:407 inc/checklist.class.php:592
-#: inc/checklistconfig.class.php:95 inc/checklistconfig.class.php:126
+#: inc/checklist.class.php:416 inc/checklist.class.php:601
+#: inc/checklistconfig.class.php:86 inc/checklistconfig.class.php:116
 msgid "Important"
 msgstr "Önemli"
 
-#: inc/checklist.class.php:416 inc/checklistconfig.class.php:86
-#: inc/checklistconfig.class.php:134
+#: inc/checklist.class.php:425 inc/checklistconfig.class.php:77
+#: inc/checklistconfig.class.php:124
 msgid "Link"
 msgstr "Bağlantı"
 
-#: inc/checklist.class.php:463
+#: inc/checklist.class.php:472
 msgid "Add a task at the arriving checklist"
 msgstr "Gelme kontrol listesine görev ekleyin"
 
-#: inc/checklist.class.php:467
+#: inc/checklist.class.php:476
 msgid "Add a task at the leaving checklist"
 msgstr "Ayrılma kontrol listesine görev ekleyin"
 
-#: inc/checklist.class.php:471
+#: inc/checklist.class.php:480
 msgid "Add a task at the transfer checklist"
 msgstr "Aktarım kontrol listesine görev ekleyin"
 
-#: inc/checklist.class.php:488
+#: inc/checklist.class.php:497
 msgid "Check list done"
 msgstr "Kontrol listesi tamamlandı"
 
-#: inc/checklist.class.php:560
+#: inc/checklist.class.php:569
 msgid "Reset the checklist"
 msgstr "Kontrol listesini sıfırlayın"
 
-#: inc/checklist.class.php:594 inc/checklist.class.php:1175
+#: inc/checklist.class.php:603 inc/checklist.class.php:1191
 msgid "Linked task"
 msgstr "Bağlantılı görev"
 
-#: inc/checklist.class.php:725
+#: inc/checklist.class.php:734
 msgid "Modify state"
 msgstr "Durumu değiştirin"
 
-#: inc/checklist.class.php:729
+#: inc/checklist.class.php:738
 msgid "Link a task"
 msgstr "Görevle ilişkilendirin"
 
-#: inc/checklist.class.php:733
+#: inc/checklist.class.php:742
 msgid "Add ticket"
 msgstr "Çağrı ekleyin"
 
-#: inc/checklist.class.php:786 inc/checklist.class.php:829
-#: inc/checklist.class.php:859
+#: inc/checklist.class.php:796 inc/checklist.class.php:839
+#: inc/checklist.class.php:869
 msgid "The checklist is finished"
 msgstr "Kontol listesi tamamlanmış"
 
-#: inc/checklist.class.php:899 inc/dashboard.class.php:44
-#: inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:395
+#: inc/checklist.class.php:910 inc/dashboard.class.php:44
+#: inc/dashboard.class.php:128 inc/notificationtargetresource.class.php:393
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Ayrılan kaynak - kontrol listesi doğrulanmalıdır"
 
-#: inc/checklist.class.php:901 inc/dashboard.class.php:43
-#: inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:391
+#: inc/checklist.class.php:912 inc/dashboard.class.php:43
+#: inc/dashboard.class.php:89 inc/notificationtargetresource.class.php:389
 msgid "New resource - checklist needs to verificated"
 msgstr "Yeni kaynak - kontrol listesi doğrulanmalıdır"
 
-#: inc/checklist.class.php:906 inc/dashboard.class.php:122
-#: inc/directory.class.php:136 inc/notificationtargetresource.class.php:329
-#: inc/notificationtargetresource.class.php:408
-#: inc/notificationtargetresource.class.php:571
+#: inc/checklist.class.php:917 inc/dashboard.class.php:121
+#: inc/directory.class.php:136 inc/notificationtargetresource.class.php:327
+#: inc/notificationtargetresource.class.php:406
+#: inc/notificationtargetresource.class.php:570
 #: inc/notificationtargetresource.class.php:631
 #: inc/notificationtargetresource.class.php:764
-#: inc/notificationtargetresource.class.php:1266
-#: inc/notificationtargetresource.class.php:1294 inc/recap.class.php:144
-#: inc/resource.class.php:219 inc/resource.class.php:1291
-#: inc/resource.class.php:1990 inc/resource.class.php:2780
-#: inc/resource_item.class.php:719 inc/resource_item.class.php:970
-#: inc/resource_item.class.php:980 inc/resourcepdf.class.php:70
-#: inc/rulecontracttype.class.php:204
+#: inc/notificationtargetresource.class.php:1290
+#: inc/notificationtargetresource.class.php:1318 inc/recap.class.php:144
+#: inc/resource.class.php:219 inc/resource.class.php:1322
+#: inc/resource.class.php:2043 inc/resource.class.php:2839
+#: inc/resource_item.class.php:727 inc/resource_item.class.php:979
+#: inc/resource_item.class.php:989 inc/resourcepdf.class.php:70
+#: inc/rulecontracttype.class.php:193
 #: report/checkhabilitation/checkhabilitation.php:211
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
@@ -355,19 +363,19 @@ msgstr "Yeni kaynak - kontrol listesi doğrulanmalıdır"
 msgid "Departure date"
 msgstr "Gidiş tarihi"
 
-#: inc/checklist.class.php:908 inc/dashboard.class.php:82
-#: inc/directory.class.php:131 inc/notificationtargetresource.class.php:328
-#: inc/notificationtargetresource.class.php:407
-#: inc/notificationtargetresource.class.php:568
+#: inc/checklist.class.php:919 inc/dashboard.class.php:82
+#: inc/directory.class.php:131 inc/notificationtargetresource.class.php:326
+#: inc/notificationtargetresource.class.php:405
+#: inc/notificationtargetresource.class.php:567
 #: inc/notificationtargetresource.class.php:630
 #: inc/notificationtargetresource.class.php:761
-#: inc/notificationtargetresource.class.php:1265
-#: inc/notificationtargetresource.class.php:1293 inc/recap.class.php:139
-#: inc/resourcecard.class.php:152 inc/resourcecard.class.php:218
-#: inc/resource.class.php:214 inc/resource.class.php:1179
-#: inc/resource.class.php:1978 inc/resource_item.class.php:718
-#: inc/resource_item.class.php:969 inc/resource_item.class.php:979
-#: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:200
+#: inc/notificationtargetresource.class.php:1289
+#: inc/notificationtargetresource.class.php:1317 inc/recap.class.php:139
+#: inc/resourcecard.class.php:149 inc/resourcecard.class.php:214
+#: inc/resource.class.php:214 inc/resource.class.php:1204
+#: inc/resource.class.php:2030 inc/resource_item.class.php:726
+#: inc/resource_item.class.php:978 inc/resource_item.class.php:988
+#: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:189
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:251
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:55
@@ -376,19 +384,19 @@ msgstr "Gidiş tarihi"
 msgid "Arrival date"
 msgstr "Geliş tarihi"
 
-#: inc/checklist.class.php:914 inc/notificationtargetresource.class.php:397
+#: inc/checklist.class.php:926 inc/notificationtargetresource.class.php:395
 msgid "Checklist needs to verificated"
 msgstr "Kontrol listesi doğrulanmalıdır"
 
-#: inc/checklist.class.php:995 inc/checklist.class.php:1094
+#: inc/checklist.class.php:1010 inc/checklist.class.php:1110
 msgid "Checklists Verification"
 msgstr "Kontrol Listesi Doğrulama"
 
-#: inc/checklist.class.php:1175
+#: inc/checklist.class.php:1191
 msgid "Checked"
 msgstr "Tamamlandı"
 
-#: inc/checklist.class.php:1196
+#: inc/checklist.class.php:1213
 msgid "No checklist found"
 msgstr "Henüz bir kontrol listesi yok"
 
@@ -396,8 +404,9 @@ msgstr "Henüz bir kontrol listesi yok"
 msgid "Checklist setup"
 msgid_plural "Checklists setup"
 msgstr[0] "Kontrol listesi ayarları"
+msgstr[1] "Kontrol listesi ayarları"
 
-#: inc/checklistconfig.class.php:278
+#: inc/checklistconfig.class.php:269
 msgid "Generate a rule"
 msgstr "Bir kural oluşturun"
 
@@ -405,44 +414,45 @@ msgstr "Bir kural oluşturun"
 msgid "Need"
 msgid_plural "Needs"
 msgstr[0] "Gereksinim"
+msgstr[1] "Gereksinim"
 
-#: inc/choice.class.php:227 inc/contracttype.class.php:67
+#: inc/choice.class.php:234 inc/contracttype.class.php:67
 #: inc/contracttype.class.php:94
 msgid "Enter the computing needs of the resource"
 msgstr "Kaynağın bilişim gereksinimlerini yazın"
 
-#: inc/choice.class.php:238
+#: inc/choice.class.php:245
 msgid "IT needs identified"
 msgstr "Belirlenen bilişim gereksinimleri"
 
-#: inc/choice.class.php:281 inc/choice.class.php:493
+#: inc/choice.class.php:288 inc/choice.class.php:501
 msgid "Add a need"
 msgstr "Gereksinim ekleyin"
 
-#: inc/choice.class.php:305
+#: inc/choice.class.php:312
 msgid "Will be added to the resource comment area"
 msgstr "Kaynak açıklamaları alanına eklenecek"
 
-#: inc/choice.class.php:348 inc/employee.class.php:369
-#: inc/resource.class.php:1644 inc/resource.class.php:2078
-#: inc/resource.class.php:2089 inc/resource.class.php:2166
+#: inc/choice.class.php:355 inc/employee.class.php:385
+#: inc/resource.class.php:1680 inc/resource.class.php:2135
+#: inc/resource.class.php:2146 inc/resource.class.php:2225
 msgctxt "button"
 msgid "Next >"
 msgstr "Sonraki >"
 
-#: inc/choice.class.php:375
+#: inc/choice.class.php:381
 msgid "Add a comment"
 msgstr "Açıklama ekleyin"
 
-#: inc/choice.class.php:442
+#: inc/choice.class.php:449
 msgid "Element(s) to be affected"
 msgstr "Etkilenen bileşenler"
 
-#: inc/choice.class.php:516
+#: inc/choice.class.php:525
 msgid "Terminate the declaration"
 msgstr "Duyuruyu kaldırın"
 
-#: inc/choice.class.php:518
+#: inc/choice.class.php:527
 msgid "Resend the declaration"
 msgstr "Duyuruyu yeniden gönderin"
 
@@ -450,6 +460,7 @@ msgstr "Duyuruyu yeniden gönderin"
 msgid "Type of need"
 msgid_plural "Types of need"
 msgstr[0] "Gereksinim türü"
+msgstr[1] "Gereksinim türü"
 
 #: inc/client.class.php:62 inc/client.class.php:119
 msgid "AND - Certificate of non-dissimulation"
@@ -467,19 +478,19 @@ msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 msgid "CFI - Supplier card"
 msgstr "CFI - Hizmet sağlayıcı kartı"
 
-#: inc/config.class.php:80
+#: inc/config.class.php:84
 msgid "Displaying the security block on the resource"
 msgstr "Kaynak üzerindeki güvenlik bloğu görüntüleniyor"
 
-#: inc/config.class.php:89
+#: inc/config.class.php:93
 msgid "Security compliance management"
 msgstr "Güvenlik uygunluğu yönetimi"
 
-#: inc/config.class.php:90
+#: inc/config.class.php:94
 msgid "Display of four additional security fields in the clients"
 msgstr "İstemcilere dört ek güvenlik alanı görüntülensin"
 
-#: inc/config.class.php:91
+#: inc/config.class.php:95
 msgid ""
 "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
@@ -488,22 +499,23 @@ msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygund
 msgid "Super habilitation management"
 msgid_plural "Super habilitations management"
 msgstr[0] "Süper güç yönetimi"
+msgstr[1] "Süper güç yönetimi"
 
-#: inc/confighabilitation.class.php:89 inc/confighabilitation.class.php:240
-#: inc/confighabilitation.class.php:241
+#: inc/confighabilitation.class.php:89 inc/confighabilitation.class.php:244
+#: inc/confighabilitation.class.php:245
 msgid "Declare a super habilitation"
 msgstr "Süper güç ata"
 
-#: inc/confighabilitation.class.php:91 inc/confighabilitation.class.php:248
-#: inc/confighabilitation.class.php:249
+#: inc/confighabilitation.class.php:91 inc/confighabilitation.class.php:252
+#: inc/confighabilitation.class.php:253
 msgid "Remove a super habilitation"
 msgstr "Süper gücü geri al"
 
-#: inc/confighabilitation.class.php:135 inc/resourcebadge.class.php:122
+#: inc/confighabilitation.class.php:139 inc/resourcebadge.class.php:126
 msgid "The current entity is already linked to a meta-demand"
 msgstr "Geçerli varlık zaten bir meta-demand ile bağlantılı"
 
-#: inc/confighabilitation.class.php:187 inc/resourcebadge.class.php:167
+#: inc/confighabilitation.class.php:191 inc/resourcebadge.class.php:171
 msgid "Meta-demands linked"
 msgstr "Bağlantılı meta-demands"
 
@@ -511,18 +523,20 @@ msgstr "Bağlantılı meta-demands"
 msgid "Contract nature"
 msgid_plural "Contract natures"
 msgstr[0] "Sözleşme içerikleri"
+msgstr[1] "Sözleşme içerikleri"
 
 #: inc/contracttype.class.php:41
 msgid "Type of contract"
 msgid_plural "Types of contract"
 msgstr[0] "Sözleşme türü"
+msgstr[1] "Sözleşme türü"
 
 #: inc/contracttype.class.php:59
 msgid "Wizard resource creation"
 msgstr "Kaynak oluşturma yardımcısı"
 
 #: inc/contracttype.class.php:63 inc/contracttype.class.php:89
-#: inc/employee.class.php:324
+#: inc/employee.class.php:340
 msgid "Enter employer information about the resource"
 msgstr "Kaynakla ilgili işveren bilgilerini yazın"
 
@@ -530,8 +544,8 @@ msgstr "Kaynakla ilgili işveren bilgilerini yazın"
 msgid "Add a picture"
 msgstr "Görsel ekleyin"
 
-#: inc/contracttype.class.php:160 inc/contracttype.class.php:176
-#: inc/resource.class.php:924 inc/resource.class.php:1719
+#: inc/contracttype.class.php:161 inc/contracttype.class.php:177
+#: inc/resource.class.php:936 inc/resource.class.php:1758
 msgid "Without contract"
 msgstr "Sözleşmesiz"
 
@@ -540,37 +554,41 @@ msgstr "Sözleşmesiz"
 msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Bütçe masrafları"
+msgstr[1] "Bütçe masrafları"
 
 #: inc/department.class.php:40
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] "Bölüm"
+msgstr[1] "Bölüm"
 
-#: inc/directory.class.php:42 inc/resource.class.php:3894
+#: inc/directory.class.php:42 inc/resource.class.php:3989
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Klasör"
+msgstr[1] "Klasör"
 
-#: inc/directory.class.php:963 inc/resource.class.php:3766
+#: inc/directory.class.php:958 inc/resource.class.php:3861
 msgid "Click here to send your email"
 msgstr "E-postanızı göndermek için buraya tıklayın"
 
-#: inc/employee.class.php:40 inc/profile.class.php:199
+#: inc/employee.class.php:40 inc/profile.class.php:198
 msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] "İşçiler"
+msgstr[1] "İşçiler"
 
-#: inc/employee.class.php:182
+#: inc/employee.class.php:191
 msgid "The resource is also created if not existent"
 msgstr "Kaynak yoksa oluşturulacak"
 
-#: inc/employee.class.php:366 inc/resource.class.php:2075
-#: inc/resource.class.php:2086
+#: inc/employee.class.php:382 inc/resource.class.php:2132
+#: inc/resource.class.php:2143
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Önceki"
 
-#: inc/employee.class.php:440
+#: inc/employee.class.php:464
 msgctxt "button"
 msgid "Next step"
 msgstr "Sonraki adım"
@@ -583,42 +601,45 @@ msgstr "Sonraki adım"
 msgid "Short name"
 msgstr "Kısa ad"
 
-#: inc/employment.class.php:46 inc/profile.class.php:219
+#: inc/employment.class.php:46 inc/profile.class.php:218
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
 msgid_plural "Employments"
 msgstr[0] "İşler"
+msgstr[1] "İşler"
 
 #: inc/employment.class.php:136 inc/employment.class.php:179
-#: inc/employment.class.php:293 inc/profile.class.php:179
+#: inc/employment.class.php:295 inc/profile.class.php:178
 #: inc/resource.class.php:56 inc/taskplanning.class.php:42
 msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "İnsan kaynakları"
+msgstr[1] "İnsan kaynakları"
 
-#: inc/employment.class.php:164 inc/employment.class.php:270
+#: inc/employment.class.php:164 inc/employment.class.php:272
 #: inc/employmentstate.class.php:40
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:63
 msgid "Employment state"
 msgid_plural "Employment states"
 msgstr[0] "İş durumları"
+msgstr[1] "İş durumları"
 
-#: inc/employment.class.php:174 inc/employment.class.php:276
+#: inc/employment.class.php:174 inc/employment.class.php:278
 #: inc/recap.class.php:156
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:59
 msgid "Ratio Employment / Budget"
 msgstr "İş / Bütçe Oranı"
 
-#: inc/employment.class.php:338
+#: inc/employment.class.php:339
 msgid "Declare a new employment"
 msgstr "Yeni bir iş bildirin"
 
-#: inc/employment.class.php:349
+#: inc/employment.class.php:350
 msgid "To affect an employment"
 msgstr "Bir işi etkilemek için"
 
-#: inc/employment.class.php:418
+#: inc/employment.class.php:419
 msgid "Updating leaving resources (declaring leaving, state of employment)"
 msgstr "Ayrılan kaynaklar güncelleniyor (ayrılma bildirimi, iş durumu)"
 
@@ -636,6 +657,7 @@ msgstr "Ayrılan kaynağın iş durumu"
 msgid "Habilitation"
 msgid_plural "Habilitations"
 msgstr[0] "Güçler"
+msgstr[1] "Güçler"
 
 #: inc/habilitation.class.php:83 inc/habilitation.class.php:97
 msgid "Allow when creating the resource"
@@ -645,6 +667,7 @@ msgstr "Kaynak oluşturulurken izin ver"
 msgid "Leaving reason"
 msgid_plural "Leaving reasons"
 msgstr[0] "Ayrılma nedeni"
+msgstr[1] "Ayrılma nedeni"
 
 #: inc/notification.class.php:40
 msgid "Notification history"
@@ -683,33 +706,33 @@ msgid "A task has been removed by"
 msgstr "Şu kişi tarafından bir görev silindi"
 
 #: inc/notificationtargetresource.class.php:56
-#: inc/notificationtargetresource.class.php:266
-#: inc/notificationtargetresource.class.php:1254
+#: inc/notificationtargetresource.class.php:264
+#: inc/notificationtargetresource.class.php:1278
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
 
 #: inc/notificationtargetresource.class.php:57
-#: inc/notificationtargetresource.class.php:318 inc/resource.class.php:3510
+#: inc/notificationtargetresource.class.php:316 inc/resource.class.php:3604
 msgid "These resources have normally left the company"
 msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
 #: inc/notificationtargetresource.class.php:58
-#: inc/notificationtargetresource.class.php:390
+#: inc/notificationtargetresource.class.php:388
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
 #: inc/notificationtargetresource.class.php:59
-#: inc/notificationtargetresource.class.php:394
+#: inc/notificationtargetresource.class.php:392
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
 #: inc/notificationtargetresource.class.php:60
-#: inc/notificationtargetresource.class.php:503
+#: inc/notificationtargetresource.class.php:502
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
 #: inc/notificationtargetresource.class.php:61
-#: inc/notificationtargetresource.class.php:830
+#: inc/notificationtargetresource.class.php:829
 msgid "Creation report of the human resource"
 msgstr "İnsan kaynaklarına rapor oluşturulması"
 
@@ -746,79 +769,79 @@ msgid "Transfer resource notification"
 msgstr "Kaynak aktarımı bildirimi"
 
 #: inc/notificationtargetresource.class.php:70
-#: inc/notificationtargetresource.class.php:1337 inc/resource.class.php:3438
+#: inc/notificationtargetresource.class.php:1361 inc/resource.class.php:3532
 msgid "Resources list of commercial manager"
 msgstr "Ticari sorumlunun kaynak listesi"
 
-#: inc/notificationtargetresource.class.php:89
+#: inc/notificationtargetresource.class.php:88
 msgid "Resource user"
 msgstr "Kaynak kullanıcısı"
 
-#: inc/notificationtargetresource.class.php:94
+#: inc/notificationtargetresource.class.php:92
 msgid "Task's responsible technician"
 msgstr "Görevden sorumlu teknisyen"
 
-#: inc/notificationtargetresource.class.php:95
+#: inc/notificationtargetresource.class.php:93
 msgid "Task's responsible group"
 msgstr "Görevden sorumlu grup"
 
-#: inc/notificationtargetresource.class.php:104
+#: inc/notificationtargetresource.class.php:102
 msgid "Target entity group"
 msgstr "Hedef varlık grubu"
 
-#: inc/notificationtargetresource.class.php:105
+#: inc/notificationtargetresource.class.php:103
 msgid "Source entity group"
 msgstr "Kaynak varlık grubu"
 
-#: inc/notificationtargetresource.class.php:106
+#: inc/notificationtargetresource.class.php:104
 msgid "Source entity group manager"
 msgstr "Kaynak varlık grubu yönetimi"
 
-#: inc/notificationtargetresource.class.php:107
+#: inc/notificationtargetresource.class.php:105
 msgid "Target entity group manager"
 msgstr "Hedef varlık grubu yönetimi"
 
-#: inc/notificationtargetresource.class.php:274
-#: inc/notificationtargetresource.class.php:1211
-#: inc/notificationtargetresource.class.php:1309
+#: inc/notificationtargetresource.class.php:272
+#: inc/notificationtargetresource.class.php:1236
+#: inc/notificationtargetresource.class.php:1333
 msgid "Used for planning"
 msgstr "Planlamada kullanılacak"
 
-#: inc/notificationtargetresource.class.php:275
-#: inc/notificationtargetresource.class.php:1212
-#: inc/notificationtargetresource.class.php:1310 inc/task.class.php:292
-#: inc/task.class.php:493
+#: inc/notificationtargetresource.class.php:273
+#: inc/notificationtargetresource.class.php:1237
+#: inc/notificationtargetresource.class.php:1334 inc/task.class.php:292
+#: inc/task.class.php:497
 msgid "Effective duration"
 msgstr "Etkin süre"
 
-#: inc/notificationtargetresource.class.php:276
-#: inc/notificationtargetresource.class.php:1213
-#: inc/notificationtargetresource.class.php:1311 inc/task.class.php:304
-#: inc/task.class.php:488
+#: inc/notificationtargetresource.class.php:274
+#: inc/notificationtargetresource.class.php:1238
+#: inc/notificationtargetresource.class.php:1335 inc/task.class.php:304
+#: inc/task.class.php:492
 msgid "Carried out task"
 msgstr "Yapılan görev"
 
-#: inc/notificationtargetresource.class.php:505
+#: inc/notificationtargetresource.class.php:504
 msgid "Please check the leaving checklist of the resource"
 msgstr "Lütfen kaynağın ayrılma kontrol listesini gözden geçirin"
 
-#: inc/notificationtargetresource.class.php:527
+#: inc/notificationtargetresource.class.php:526
 #: inc/notificationtargetresource.class.php:620
 #: inc/notificationtargetresource.class.php:746
-#: inc/notificationtargetresource.class.php:1257
-#: inc/notificationtargetresource.class.php:1285 inc/recap.class.php:94
-#: inc/resource.class.php:313 inc/resource.class.php:1046
-#: inc/resource.class.php:1818 inc/rulecontracttype.class.php:208
+#: inc/notificationtargetresource.class.php:1281
+#: inc/notificationtargetresource.class.php:1309 inc/recap.class.php:94
+#: inc/resource.class.php:313 inc/resource.class.php:1062
+#: inc/resource.class.php:1862 inc/rulecontracttype.class.php:197
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Kota"
 
-#: inc/notificationtargetresource.class.php:591
+#: inc/notificationtargetresource.class.php:590
 #: inc/notificationtargetresource.class.php:794 inc/resource.class.php:360
 msgid "Declaration of departure date"
 msgstr "Ayrılma tarihi bildirimi"
 
-#: inc/notificationtargetresource.class.php:605
+#: inc/notificationtargetresource.class.php:604
 msgid "Thanks to recover his badges"
 msgstr "Kimlik kartlarını geri verdiği için teşekkür"
 
@@ -826,99 +849,100 @@ msgstr "Kimlik kartlarını geri verdiği için teşekkür"
 msgid "List of your associated resources"
 msgstr "Atanmış kaynaklarınızın listesi"
 
-#: inc/notificationtargetresource.class.php:815
-#: inc/notificationtargetresource.class.php:1276 inc/resource.class.php:374
-#: inc/resource.class.php:1310 inc/resource.class.php:2005
+#: inc/notificationtargetresource.class.php:814
+#: inc/notificationtargetresource.class.php:1300 inc/resource.class.php:374
+#: inc/resource.class.php:1342 inc/resource.class.php:2059
 msgid "Sensitized to security"
 msgstr "Güvenliğe duyarlı"
 
-#: inc/notificationtargetresource.class.php:818
-#: inc/notificationtargetresource.class.php:1277 inc/resource.class.php:368
-#: inc/resource.class.php:1319 inc/resource.class.php:2015
+#: inc/notificationtargetresource.class.php:817
+#: inc/notificationtargetresource.class.php:1301 inc/resource.class.php:368
+#: inc/resource.class.php:1351 inc/resource.class.php:2069
 msgid "Reading the security charter"
 msgstr "Güvenlik ilkesi okunuyor"
 
-#: inc/notificationtargetresource.class.php:849
-#: inc/notificationtargetresource.class.php:889
+#: inc/notificationtargetresource.class.php:848
+#: inc/notificationtargetresource.class.php:888
 msgid "Informations of the created user"
 msgstr "Oluşturulan bu kullanıcı hakkındaki bilgiler"
 
-#: inc/notificationtargetresource.class.php:855
-#: inc/notificationtargetresource.class.php:895
-#: inc/notificationtargetresource.class.php:947
+#: inc/notificationtargetresource.class.php:854
+#: inc/notificationtargetresource.class.php:894
+#: inc/notificationtargetresource.class.php:946
 #: inc/notificationtargetresource.class.php:980
 msgid "Additional informations"
 msgstr "Ek bilgiler"
 
-#: inc/notificationtargetresource.class.php:870
+#: inc/notificationtargetresource.class.php:869
 msgid "Transfer report of the human resource"
 msgstr "İnsan kaynağının aktarımı raporu"
 
-#: inc/notificationtargetresource.class.php:908
-#: inc/notificationtargetresource.class.php:1315 inc/resource.class.php:2947
+#: inc/notificationtargetresource.class.php:907
+#: inc/notificationtargetresource.class.php:1339 inc/resource.class.php:3006
 msgid "Target entity"
 msgstr "Hedef varlık"
 
-#: inc/notificationtargetresource.class.php:909
-#: inc/notificationtargetresource.class.php:1314
+#: inc/notificationtargetresource.class.php:908
+#: inc/notificationtargetresource.class.php:1338
 msgid "Source entity"
 msgstr "Kaynak varlık"
 
-#: inc/notificationtargetresource.class.php:925
-#: inc/notificationtargetresource.class.php:1270 inc/profile.class.php:204
-#: inc/resource.class.php:1490 inc/resource.class.php:1491
-#: inc/resourceresting.class.php:246
+#: inc/notificationtargetresource.class.php:924
+#: inc/notificationtargetresource.class.php:1294 inc/profile.class.php:203
+#: inc/resource.class.php:1526 inc/resource.class.php:1527
+#: inc/resourceresting.class.php:247
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Sözleşmesiz dönem yönetimi"
+msgstr[1] "Sözleşmesiz dönem yönetimi"
 
-#: inc/notificationtargetresource.class.php:927
-#: inc/notificationtargetresource.class.php:1271
-#: inc/resourceresting.class.php:306
+#: inc/notificationtargetresource.class.php:926
+#: inc/notificationtargetresource.class.php:1295
+#: inc/resourceresting.class.php:307
 msgid "Detail of non contract period"
 msgstr "Sözleşmesiz dönem ayrıntıları"
 
-#: inc/notificationtargetresource.class.php:934
-#: inc/resourceresting.class.php:217 inc/resourceresting.class.php:335
+#: inc/notificationtargetresource.class.php:933
+#: inc/resourceresting.class.php:218 inc/resourceresting.class.php:335
 msgid "Agency concerned"
 msgstr "Sorumlu temsilci"
 
-#: inc/notificationtargetresource.class.php:938
-#: inc/resourceresting.class.php:222 inc/resourceresting.class.php:341
+#: inc/notificationtargetresource.class.php:937
+#: inc/resourceresting.class.php:223 inc/resourceresting.class.php:341
 msgid "At home"
 msgstr "Evde"
 
-#: inc/notificationtargetresource.class.php:953
+#: inc/notificationtargetresource.class.php:952
 #: inc/notificationtargetresource.class.php:986
 msgid "Reported by"
 msgstr "Bildiren"
 
 #: inc/notificationtargetresource.class.php:965
-#: inc/notificationtargetresource.class.php:1280 inc/resource.class.php:1499
-#: inc/resource.class.php:1500 inc/resourceholiday.class.php:178
+#: inc/notificationtargetresource.class.php:1304 inc/resource.class.php:1535
+#: inc/resource.class.php:1536 inc/resourceholiday.class.php:177
 msgid "Forced holiday management"
 msgstr "Zorunlu tatil yönetimi"
 
 #: inc/notificationtargetresource.class.php:967
-#: inc/notificationtargetresource.class.php:1281
-#: inc/resourceholiday.class.php:223
+#: inc/notificationtargetresource.class.php:1305
+#: inc/resourceholiday.class.php:222
 msgid "Detail of the forced holiday"
 msgstr "Zorunlu tatil ayrıntıları"
 
-#: inc/notificationtargetresource.class.php:1001
-#: inc/notificationtargetresource.class.php:1327
+#: inc/notificationtargetresource.class.php:1002
+#: inc/notificationtargetresource.class.php:1351
 msgid "Modified fields"
 msgstr "Değiştirilen alanlar"
 
-#: inc/notificationtargetresource.class.php:1203
+#: inc/notificationtargetresource.class.php:1228
 msgid "Associated tasks"
 msgstr "Verilen görevler"
 
-#: inc/notificationtargetresource.class.php:1322
+#: inc/notificationtargetresource.class.php:1346
 msgid "At creation, update, removal of a resource"
 msgstr "Kaynak oluşturulduğunda, güncellendiğinde, silindiğinde"
 
-#: inc/notificationtargetresource.class.php:1332
+#: inc/notificationtargetresource.class.php:1356
 msgid "At creation, update, removal of a task"
 msgstr "Görev oluşturulduğunda, güncellendiğinde, silindiğinde"
 
@@ -927,14 +951,16 @@ msgstr "Görev oluşturulduğunda, güncellendiğinde, silindiğinde"
 msgid "Profession category"
 msgid_plural "Profession categories"
 msgstr[0] "Meslek kategorileri"
+msgstr[1] "Meslek kategorileri"
 
 #: inc/profession.class.php:67 inc/profession.class.php:169
 #: inc/professionline.class.php:40
 msgid "Profession line"
 msgid_plural "Profession lines"
 msgstr[0] "Uzmanlık"
+msgstr[1] "Uzmanlık"
 
-#: inc/profile.class.php:142 inc/profile.class.php:232
+#: inc/profile.class.php:142 inc/profile.class.php:231
 msgid "All resources access"
 msgstr "Tüm kaynaklara erişim"
 
@@ -946,17 +972,19 @@ msgstr "Hizmet sağlayıcı yönetimi"
 msgid "Public service management"
 msgstr "Herkese açık hizmet yönetimi"
 
-#: inc/profile.class.php:209 inc/resourceholiday.class.php:42
+#: inc/profile.class.php:208 inc/resourceholiday.class.php:42
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] "Tatiller"
+msgstr[1] "Tatiller"
 
-#: inc/profile.class.php:214
+#: inc/profile.class.php:213
 msgid "Super habilitation"
 msgid_plural "Super habilitations"
 msgstr[0] "Super güç"
+msgstr[1] "Super güç"
 
-#: inc/profile.class.php:224
+#: inc/profile.class.php:223
 msgid "Dropdown management"
 msgstr "Açılan kutu yönetimi"
 
@@ -964,56 +992,58 @@ msgstr "Açılan kutu yönetimi"
 msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
 msgstr[0] "İş / Kaynak Listesi"
+msgstr[1] "İş / Kaynak Listesi"
 
 #: inc/recap.class.php:203
 msgid "Employer address"
 msgstr "İşveren adresi"
 
-#: inc/reportconfig.class.php:192 inc/reportconfig.class.php:271
+#: inc/reportconfig.class.php:193 inc/reportconfig.class.php:273
 msgid "Send resource creation report notification"
 msgstr "Kaynak oluşturma raporu bildirimi gönderilsin"
 
-#: inc/reportconfig.class.php:201 inc/reportconfig.class.php:280
+#: inc/reportconfig.class.php:202 inc/reportconfig.class.php:282
 msgid "Send resource transfer notification"
 msgstr "Kaynak aktarımı bildirimi gönderilsin"
 
-#: inc/reportconfig.class.php:210 inc/reportconfig.class.php:289
+#: inc/reportconfig.class.php:211 inc/reportconfig.class.php:291
 msgid "Send other notification"
 msgstr "Diğer bildirim gönderilsin"
 
-#: inc/reportconfig.class.php:252
+#: inc/reportconfig.class.php:254
 msgid "Notification configuration"
 msgstr "Bildirim ayarları"
 
-#: inc/resourcebadge.class.php:52 inc/resourcebadge.class.php:206
-#: inc/resource.class.php:1517 inc/resource.class.php:1518
+#: inc/resourcebadge.class.php:52 inc/resourcebadge.class.php:210
+#: inc/resource.class.php:1553 inc/resource.class.php:1554
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Yaka kartı yönetimi"
+msgstr[1] "Yaka kartı yönetimi"
 
-#: inc/resourcebadge.class.php:217 inc/resourcebadge.class.php:218
+#: inc/resourcebadge.class.php:221 inc/resourcebadge.class.php:222
 msgid "Request new badge"
 msgstr "Yeni yaka kartı iste"
 
-#: inc/resourcebadge.class.php:226 inc/resourcebadge.class.php:227
-#: inc/resourcebadge.class.php:258 inc/resourcebadge.class.php:423
-#: inc/resourcebadge.class.php:424 inc/resource_change.class.php:88
+#: inc/resourcebadge.class.php:230 inc/resourcebadge.class.php:231
+#: inc/resourcebadge.class.php:261 inc/resourcebadge.class.php:425
+#: inc/resourcebadge.class.php:426 inc/resource_change.class.php:88
 msgid "Badge restitution"
 msgstr "Yaka kartı iadesi"
 
-#: inc/resourcebadge.class.php:296
+#: inc/resourcebadge.class.php:299
 msgid "List of badges"
 msgstr "Yaka kartı listesi"
 
-#: inc/resourcecard.class.php:92
+#: inc/resourcecard.class.php:90
 msgid "About"
 msgstr "Hakkında"
 
-#: inc/resourcecard.class.php:93 inc/resourcecard.class.php:259
+#: inc/resourcecard.class.php:91 inc/resourcecard.class.php:254
 msgid "Inventory"
 msgstr "Envanter"
 
-#: inc/resourcecard.class.php:135
+#: inc/resourcecard.class.php:132
 msgid "Information, this resource is not linked to a user"
 msgstr "Bilgi, bu kaynak bir kullanıcı ile ilişkilendirilmemiş"
 
@@ -1113,195 +1143,207 @@ msgstr "Şunun sözleşme türünü değiştir"
 msgid "Change of agency for"
 msgstr "Şunun temsilcsini değiştir"
 
-#: inc/resource_change.class.php:468 inc/resource_change.class.php:489
+#: inc/resource_change.class.php:468 inc/resource_change.class.php:493
 msgid "Managing change actions"
 msgstr "Değişiklik işlemleri yönetimi"
 
-#: inc/resource.class.php:301 inc/resource.class.php:998
+#: inc/resource.class.php:301 inc/resource.class.php:1012
 msgid "Photo"
 msgstr "Fotoğraf"
 
-#: inc/resource.class.php:764
+#: inc/resource.class.php:774
 msgid "End date was not completed. Please try again."
 msgstr "Bitiş tarihi yazılmamış. Lütfen yeniden deneyin."
 
-#: inc/resource.class.php:1293 inc/resource.class.php:1992
+#: inc/resource.class.php:1324 inc/resource.class.php:2045
 msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
 
-#: inc/resource.class.php:1423
+#: inc/resource.class.php:1460
 msgid "Menu"
 msgstr "Menü"
 
-#: inc/resource.class.php:1434
+#: inc/resource.class.php:1471
 msgid "Resources management"
 msgstr "Kaynak yönetimi"
 
-#: inc/resource.class.php:1442 inc/resource.class.php:1443
+#: inc/resource.class.php:1478 inc/resource.class.php:1479
 msgid "Declare an arrival"
 msgstr "Geliş bildirin"
 
-#: inc/resource.class.php:1449 inc/resource.class.php:1450
-#: inc/resource.class.php:2835
+#: inc/resource.class.php:1485 inc/resource.class.php:1486
+#: inc/resource.class.php:2894
 msgid "Declare a change"
 msgstr "Değişiklik bildirin"
 
-#: inc/resource.class.php:1456 inc/resource.class.php:1457
-#: inc/resource.class.php:2766 inc/resource.class.php:2800
+#: inc/resource.class.php:1492 inc/resource.class.php:1493
+#: inc/resource.class.php:2825 inc/resource.class.php:2859
 msgid "Declare a departure"
 msgstr "Ayrılış bildirin"
 
-#: inc/resource.class.php:1466
+#: inc/resource.class.php:1502
 msgid "Others declarations"
 msgstr "Diğer bildirimler"
 
-#: inc/resource.class.php:1528
+#: inc/resource.class.php:1564
 msgid "Others actions"
 msgstr "Diğer işlemler"
 
-#: inc/resource.class.php:1534 inc/resource.class.php:1535
+#: inc/resource.class.php:1570 inc/resource.class.php:1571
 msgid "Search resources"
 msgstr "Kaynak arayın"
 
-#: inc/resource.class.php:1540 inc/resource.class.php:1541
+#: inc/resource.class.php:1576 inc/resource.class.php:1577
 msgid "See details of a resource"
 msgstr "Bir kaynağın ayrıntılarına bakın"
 
-#: inc/resource.class.php:1555
+#: inc/resource.class.php:1591
 msgid "Employments / budgets management"
 msgstr "İş / Bütçe yönetimi"
 
-#: inc/resource.class.php:1566 inc/resource.class.php:1567
+#: inc/resource.class.php:1602 inc/resource.class.php:1603
 msgid "Declare an employment"
 msgstr "Bir iş bildirin"
 
-#: inc/resource.class.php:1575 inc/resource.class.php:1576
-#: inc/resource.class.php:3908
+#: inc/resource.class.php:1611 inc/resource.class.php:1612
+#: inc/resource.class.php:4003
 msgid "Employment management"
 msgstr "İş yönetimi"
 
-#: inc/resource.class.php:1585 inc/resource.class.php:1586
-#: inc/resource.class.php:3914
+#: inc/resource.class.php:1621 inc/resource.class.php:1622
+#: inc/resource.class.php:4009
 msgid "Budget management"
 msgstr "Bütçe yönetimi"
 
-#: inc/resource.class.php:1596 inc/resource.class.php:1597
-#: inc/resource.class.php:3909
+#: inc/resource.class.php:1632 inc/resource.class.php:1633
+#: inc/resource.class.php:4004
 msgid "List Employments / Resources"
 msgstr "İş / Kaynak Listesi"
 
-#: inc/resource.class.php:1625
+#: inc/resource.class.php:1661
 msgid "Welcome to the wizard resource"
 msgstr "Kaynak yardımcısına hoş geldiniz"
 
-#: inc/resource.class.php:1629
+#: inc/resource.class.php:1665
 msgid "This wizard lets you create new resources in GLPI"
 msgstr "Bu yardımcı yeni GLPI kaynakları oluşturulmasını sağlar"
 
-#: inc/resource.class.php:1631
+#: inc/resource.class.php:1667
 msgid "To begin, select type of contract"
 msgstr "Sözleşme türünü seçerek başlayın"
 
-#: inc/resource.class.php:1706
+#: inc/resource.class.php:1743
 msgid "Enter general information about the resource"
 msgstr "Kaynakla ilgili genel bilgileri yazın"
 
-#: inc/resource.class.php:1773
+#: inc/resource.class.php:1814
 msgid ""
 "Thank you for paying attention to the spelling of the name and the firstname"
 " of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken aralarına tire \"-\" koyun."
 
-#: inc/resource.class.php:2053
+#: inc/resource.class.php:2109
 msgid "The fields in red must be completed"
 msgstr "Kırmızı ile işaretlenmiş alanlar doldurulmalıdır"
 
-#: inc/resource.class.php:2125
+#: inc/resource.class.php:2182
 msgid "Add the photo of the resource"
 msgstr "Kaynağın fotoğrafını ekleyin"
 
-#: inc/resource.class.php:2147
+#: inc/resource.class.php:2206
 msgid "Photo format : JPG"
 msgstr "Fotoğraf biçimi : JPG"
 
-#: inc/resource.class.php:2851
+#: inc/resource.class.php:2910
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: inc/resource.class.php:2870
+#: inc/resource.class.php:2929
 #, php-format
 msgid "Please correct: %s"
 msgstr "Lütfen düzeltin: %s"
 
-#: inc/resource.class.php:2919 inc/resource.class.php:2966
+#: inc/resource.class.php:2978 inc/resource.class.php:3025
 msgid "Declare a transfer"
 msgstr "Aktarım bildirin"
 
-#: inc/resource.class.php:2934
+#: inc/resource.class.php:2993
 msgid "Current entity"
 msgstr "Geçerli varlık"
 
-#: inc/resource.class.php:2991 inc/resource_item.class.php:683
+#: inc/resource.class.php:3050 inc/resource_item.class.php:691
 msgid "Associate a resource"
 msgstr "Bir kaynakla ilişkilendirin"
 
-#: inc/resource.class.php:2993
+#: inc/resource.class.php:3052
 msgid "Generate resources"
 msgstr "Kaynakları oluşturun"
 
-#: inc/resource.class.php:3124 inc/resource.class.php:3150
+#: inc/resource.class.php:3079 inc/resourcehabilitation.class.php:128
+msgid "Add additional habilitation"
+msgstr "Ek güçler ekle"
+
+#: inc/resource.class.php:3187 inc/resource.class.php:3213
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Şu kaynaklar eklendi"
+msgstr[1] "Şu kaynaklar eklendi"
 
-#: inc/resource.class.php:3127 inc/resource.class.php:3147
+#: inc/resource.class.php:3190 inc/resource.class.php:3210
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Şu kaynaklar zaten var"
+msgstr[1] "Şu kaynaklar zaten var"
 
-#: inc/resource.class.php:3419
+#: inc/resource.class.php:3513
 msgid "Declaration of resource transfer OK"
 msgstr "Kaynak aktarımı bildirildi"
 
-#: inc/resource.class.php:3434
+#: inc/resource.class.php:3528
 msgid "Resources not declaring leaving"
 msgstr "Ayrılmayacağı söylenen kaynaklar"
 
-#: inc/resource.class.php:3594 inc/resource.class.php:3598
+#: inc/resource.class.php:3688 inc/resource.class.php:3692
 msgid "Send alert to the commercial manager"
 msgstr "Ticari sorumluya uyarı gönder"
 
-#: inc/resource.class.php:3604 inc/resource.class.php:3607
+#: inc/resource.class.php:3698 inc/resource.class.php:3701
 msgid "Failed to Send alert to the commercial manager"
 msgstr "Ticari sorumluya uyarı gönderilemedi"
 
-#: inc/resource.class.php:3626
+#: inc/resource.class.php:3720
 msgid "Select the contract type"
 msgstr "Sözleşme türünü seçin"
 
-#: inc/resource.class.php:3898 inc/resourceresting.class.php:269
-#: inc/resourceresting.class.php:270 inc/resourceresting.class.php:365
-#: inc/resourceresting.class.php:445 inc/resourceresting.class.php:1258
+#: inc/resource.class.php:3993 inc/resourceresting.class.php:270
+#: inc/resourceresting.class.php:271 inc/resourceresting.class.php:365
+#: inc/resourceresting.class.php:444 inc/resourceresting.class.php:1257
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: inc/resource.class.php:3903 inc/resourceholiday.class.php:191
-#: inc/resourceholiday.class.php:192 inc/resourceholiday.class.php:266
+#: inc/resource.class.php:3998 inc/resourceholiday.class.php:190
+#: inc/resourceholiday.class.php:191 inc/resourceholiday.class.php:265
 #: inc/resourceholiday.class.php:1034
 msgid "List of forced holidays"
 msgstr "Zorunlu tatil günleri"
 
-#: inc/resource.class.php:3919 inc/taskplanning.class.php:42
+#: inc/resource.class.php:4014 inc/taskplanning.class.php:42
 msgid "Tasks list"
 msgstr "Görev listesi"
 
-#: inc/resource.class.php:4009
+#: inc/resource.class.php:4104
 msgid "Resources list"
 msgstr "Kaynak listesi"
 
-#: inc/resourcehabilitation.class.php:126
-msgid "Add additional habilitation"
-msgstr "Ek güçler ekle"
+#: inc/resourcehabilitation.class.php:220
+#, php-format
+msgid "Adding the habilitation: %s"
+msgstr ""
+
+#: inc/resourcehabilitation.class.php:230
+#, php-format
+msgid "Suppression of the habilitation: %s"
+msgstr ""
 
 #: inc/resourceholiday.class.php:56 inc/resourceholiday.class.php:83
 msgid "The begin date of the forced holiday period must be filled"
@@ -1315,16 +1357,16 @@ msgstr "Zorunlu tatil döneminin bitiş tarihi yazılmalıdır"
 msgid "Forced holiday declaration of a resource performed"
 msgstr "Zorunlu tatil kaynağa bildirildi"
 
-#: inc/resourceholiday.class.php:186 inc/resourceholiday.class.php:187
-#: inc/resourceholiday.class.php:221 inc/resourceholiday.class.php:263
+#: inc/resourceholiday.class.php:185 inc/resourceholiday.class.php:186
+#: inc/resourceholiday.class.php:220 inc/resourceholiday.class.php:262
 msgid "Declare a forced holiday"
 msgstr "Zorunlu tatil bildirin"
 
-#: inc/resource_item.class.php:251
+#: inc/resource_item.class.php:252
 msgid "Modification of the associated user's location"
 msgstr "İlgili kullanıcı konumunda değişiklik"
 
-#: inc/resource_item.class.php:938
+#: inc/resource_item.class.php:947
 msgid "Associated Human Resource"
 msgstr "İlgili İnsan Kaynağı"
 
@@ -1332,6 +1374,7 @@ msgstr "İlgili İnsan Kaynağı"
 msgid "Non contract period"
 msgid_plural "Non contract periods"
 msgstr[0] "Sözleşmesiz dönemler"
+msgstr[1] "Sözleşmesiz dönemler"
 
 #: inc/resourceresting.class.php:86 inc/resourceresting.class.php:122
 msgid "The begin date of the non contract period must be filled"
@@ -1341,17 +1384,17 @@ msgstr "Sözleşmesiz dönemin başlangıcı yazılmalıdır"
 msgid "Non contract period declaration of a resource performed"
 msgstr "Kaynağa sözleşmesiz dönemin başladığı bildirildi"
 
-#: inc/resourceresting.class.php:255 inc/resourceresting.class.php:256
-#: inc/resourceresting.class.php:304 inc/resourceresting.class.php:362
+#: inc/resourceresting.class.php:256 inc/resourceresting.class.php:257
+#: inc/resourceresting.class.php:305 inc/resourceresting.class.php:362
 msgid "Declare a non contract period"
 msgstr "Sözleşmesiz dönemi bildirin"
 
-#: inc/resourceresting.class.php:262 inc/resourceresting.class.php:263
+#: inc/resourceresting.class.php:263 inc/resourceresting.class.php:264
 #: inc/resourceresting.class.php:409
 msgid "Declaring the end of non contract periods"
 msgstr "Sözleşmesiz dönemlerin sonu bildiriliyor"
 
-#: inc/resourceresting.class.php:476
+#: inc/resourceresting.class.php:475
 msgid "Choosing the intercontrat"
 msgstr "Ara sözleşme seçimi"
 
@@ -1359,6 +1402,7 @@ msgstr "Ara sözleşme seçimi"
 msgid "Public status"
 msgid_plural "Public statuses"
 msgstr[0] "Herkese açık durumlar"
+msgstr[1] "Herkese açık durumlar"
 
 #: inc/resourcesituation.class.php:69 inc/resourcesituation.class.php:127
 msgid "Is linked to a contract"
@@ -1368,53 +1412,55 @@ msgstr "sözleşmeli"
 msgid "Speciality"
 msgid_plural "Specialities"
 msgstr[0] "Özellikleri"
+msgstr[1] "Özellikleri"
 
 #: inc/resourcestate.class.php:38
 msgid "Resource state"
 msgid_plural "Resource states"
 msgstr[0] "Kaynak durumu"
+msgstr[1] "Kaynak durumu"
 
-#: inc/rulechecklist.class.php:96
+#: inc/rulechecklist.class.php:95
 msgid "Checklist type"
 msgstr "Kontrol listesi türü"
 
-#: inc/rulechecklist.class.php:169
+#: inc/rulechecklist.class.php:168
 msgid "Checklist action"
 msgstr "Kontrol listesi eylemi"
 
-#: inc/rulechecklistcollection.class.php:40
+#: inc/rulechecklistcollection.class.php:39
 msgid "Assignment rules of a checklist to a contract type"
 msgstr "Bir kontrol listesiyle sözleşme türünü ilişkilendirme kuralları"
 
-#: inc/rulecontracttype.class.php:53
+#: inc/rulecontracttype.class.php:50
 msgid "Required Fields"
 msgstr "Zorunlu Alanlar"
 
-#: inc/rulecontracttypecollection.class.php:45
+#: inc/rulecontracttypecollection.class.php:44
 msgid "Assignment rule of fields to a contract type"
 msgstr "Alanların sözleşme türüyle ilişkilendirilmesi kuralları"
 
-#: inc/servicecatalog.class.php:57
+#: inc/servicecatalog.class.php:56
 msgid "Manage"
 msgstr "Yönetim"
 
-#: inc/servicecatalog.class.php:57
+#: inc/servicecatalog.class.php:56
 msgid "human resources"
 msgstr "insan kaynakları"
 
-#: inc/servicecatalog.class.php:64
+#: inc/servicecatalog.class.php:63
 msgid "Manage human resources"
 msgstr "İnsan kaynakları yönetimi"
 
-#: inc/task.class.php:639
+#: inc/task.class.php:643
 msgid "Tasks in progress"
 msgstr "Yapılan görev"
 
-#: inc/task.class.php:705 inc/task.class.php:744
+#: inc/task.class.php:715 inc/task.class.php:754
 msgid "Not finished tasks"
 msgstr "Bitmemiş görevler"
 
-#: inc/task.class.php:820
+#: inc/task.class.php:830
 msgid "Duplicate"
 msgstr "Çoğaltın"
 
@@ -1422,6 +1468,7 @@ msgstr "Çoğaltın"
 msgid "Type of task"
 msgid_plural "Types of task"
 msgstr[0] "Görev türü"
+msgstr[1] "Görev türü"
 
 #: inc/ticketcategory.class.php:79 inc/ticketcategory.class.php:97
 msgid "Category of created tickets"
@@ -1431,7 +1478,7 @@ msgstr "Oluşturulmuş çağrıların kategorisi"
 msgid "Transfer entities"
 msgstr "Varlıkları aktarın"
 
-#: inc/transferentity.class.php:121
+#: inc/transferentity.class.php:126
 msgid "Entities allowed to transfer a resource"
 msgstr "Bir kaynağa aktarılabilecek varlıklar"
 

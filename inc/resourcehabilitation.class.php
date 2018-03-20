@@ -214,4 +214,24 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       }
    }
 
+   function post_addItem() {
+      $changes[0] = 0;
+      $changes[1] = '';
+      $changes[2] = addslashes(sprintf(__('Adding the habilitation: %s', 'resources'),
+                                       Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                                 $this->input['plugin_resources_habilitations_id'])));
+      Log::history($this->input['plugin_resources_resources_id'], "PluginResourcesResource", $changes, '',
+                   Log::HISTORY_LOG_SIMPLE_MESSAGE);
+   }
+
+   function post_deleteFromDB() {
+      $changes[0] = 0;
+      $changes[1] = '';
+      $changes[2] = addslashes(sprintf(__('Suppression of the habilitation: %s', 'resources'),
+                                       Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                                 $this->fields['plugin_resources_habilitations_id'])));
+      Log::history($this->fields['plugin_resources_resources_id'], "PluginResourcesResource", $changes, '',
+                   Log::HISTORY_LOG_SIMPLE_MESSAGE);
+   }
+
 }
