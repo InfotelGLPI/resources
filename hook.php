@@ -1335,9 +1335,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
                return $out;
                break;
             case 'glpi_plugin_resources_tasks.is_finished':
-               $status = PluginResourcesTask::getStatus($data['raw']["ITEM_$num"]);
-               return "<img src=\"".$CFG_GLPI["root_doc"]."/plugins/resources/pics/".$data['raw']["ITEM_$num"].".png\"
-                        alt='$status' title='$status'>&nbsp;$status";
+               return PluginResourcesTask::getStatusImg($data['raw']["ITEM_$num"]);
+
                break;
             case "glpi_plugin_resources_tasks_items.items_id" :
                $restrict = "`plugin_resources_tasks_id` = '".$data['id']."'

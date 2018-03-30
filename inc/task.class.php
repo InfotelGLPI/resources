@@ -38,6 +38,9 @@ class PluginResourcesTask extends CommonDBTM {
    public $items_id  = 'plugin_resources_resources_id';
    public $dohistory = true;
 
+   CONST STATE_KO = 0;
+   CONST STATE_OK = 1;
+
    static function getTypeName($nb = 0) {
 
       return _n('Task', 'Tasks', $nb);
@@ -531,10 +534,29 @@ class PluginResourcesTask extends CommonDBTM {
     */
    static function getAllStatusArray() {
 
-      $tab = ['1' => __('Yes'),
-                   '0' => __('No')];
+      $tab = [self::STATE_OK => __('Yes'),
+              self::STATE_KO => __('No')];
 
       return $tab;
+   }
+
+   /**
+    * @param $state
+    *
+    * @return string
+    */
+   static function getStatusImg($state) {
+
+      $img = "";
+      switch ($state) {
+         case self::STATE_OK:
+            $img = "<i style='color:green' class='fa fa-check-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            break;
+         case self::STATE_KO:
+            $img = "<i style='color:red' class='fa fa-times-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            break;
+      }
+      return $img;
    }
 
    /**
