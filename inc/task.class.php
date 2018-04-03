@@ -119,9 +119,14 @@ class PluginResourcesTask extends CommonDBTM {
 
       $PluginResourcesResource = new PluginResourcesResource();
       if ($CFG_GLPI["notifications_mailing"]) {
-         $options = ['tasks_id' => $this->fields["id"]];
-         if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
-            NotificationEvent::raiseEvent("newtask", $PluginResourcesResource, $options);
+         //no notification when adding a task if created by checklist
+         if (!isset($this->input['container'])
+             || (isset($this->input['container'])
+                 && (strpos($this->input['container'], 'massPluginResourcesChecklist') === false))) {
+            $options = ['tasks_id' => $this->fields["id"]];
+            if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
+               NotificationEvent::raiseEvent("newtask", $PluginResourcesResource, $options);
+            }
          }
       }
    }

@@ -845,6 +845,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                unset($input["id"]);
                $task = new PluginResourcesTask();
                if ($task->canCreate()) {
+                  $tasks_id = [];
                   foreach ($ids as $key => $val) {
                      $item->getFromDB($key);
                      if (empty($item->fields["plugin_resources_tasks_id"])) {
@@ -853,12 +854,20 @@ class PluginResourcesChecklist extends CommonDBTM {
                         $input2["comment"]     = addslashes($item->fields["comment"]);
                         $input2["entities_id"] = $item->fields["entities_id"];
                         $newID                 = $task->add($input2);
+                        $tasks_id[$newID]      = $newID;
                         if ($item->update(["id"                        => $key,
                                                 "plugin_resources_tasks_id" => $newID])) {
                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                         }
+                     }
+                  }
+                  //send notifications
+                  $PluginResourcesResource = new PluginResourcesResource();
+                  if ($CFG_GLPI["notifications_mailing"]) {
+                     if ($PluginResourcesResource->getFromDB($item->fields["plugin_resources_resources_id"])) {
+                        NotificationEvent::raiseEvent("newtask", $PluginResourcesResource, ['tasks_id' => $tasks_id]);
                      }
                   }
                } else {
