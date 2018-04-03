@@ -219,6 +219,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       if (isset($options['tasks_id'])) {
+         if (is_array($options['tasks_id'])) {
+            $options['tasks_id'] = reset($options['tasks_id']);
+         }
          $query = "SELECT DISTINCT `glpi_users`.`id` AS id,
                           `glpi_users`.`language` AS language
                    FROM `glpi_plugin_resources_tasks`
@@ -237,9 +240,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if (isset($options['groups_id'])
           && $options['groups_id'] > 0
-          && isset($options['tasks_id'])
-      ) {
+          && isset($options['tasks_id'])) {
 
+         if (is_array($options['tasks_id'])) {
+            $options['tasks_id'] = reset($options['tasks_id']);
+         }
          $query = $this->getDistinctUserSql() .
                   " FROM `glpi_users`
                     LEFT JOIN `glpi_groups_users` ON (`glpi_groups_users`.`users_id` = `glpi_users`.`id`) 
