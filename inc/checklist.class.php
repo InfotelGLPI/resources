@@ -490,7 +490,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $isfinished                                  = self::checkifChecklistFinished($values);
 
       if ($isfinished) {
-         $title = "<img src='".$CFG_GLPI['root_doc']."/plugins/resources/pics/ok.png'>&nbsp;&nbsp;";
+         $title = "<i style='color:green' class='fa fa-check-circle fa-2x' ></i>";
       }
       $title .= self::getChecklistType($checklist_type);
       if ($isfinished) {

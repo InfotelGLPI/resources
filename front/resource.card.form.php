@@ -69,7 +69,7 @@ if ($plugin_resources_resources_id > 0) {
    PluginResourcesResourceCard::resourceCard($plugin_resources_resources_id);
 } else {
    echo "<div class='center'><br><br>".
-        "<img src=\"".$CFG_GLPI["root_doc"]."/plugins/resources/pics/info-big.png\" alt='information'>";
+        "<i  class='fa fa-info-circle' alt='information'></i>";
    echo "&nbsp;<b>".__('Please select a user', 'resources')."</b></div>";
 }
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {

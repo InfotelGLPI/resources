@@ -236,10 +236,10 @@ class PluginResourcesEmployee extends CommonDBTM {
                               'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-            $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ok.png' alt=\"".__('OK')."\" width='14' height='14'>";
+            $img = "<i style='color:green' class='fa fa-check-circle' alt=\"".__('OK')."\"></i>";
             $color = "color: green;";
          } else {
-            $img = "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/ko.png' alt=\"".__('KO')."\" width='14' height='14'>";
+            $img = "<i style='color:red' class='fa fa-times-circle' alt=\"".__('KO')."\"></i>";
             $color = "color: red;";
          }
          echo "</td><td><div id='security_compliance'>";
@@ -365,7 +365,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "</td><td style='color: green;'><div id='security_compliance'>";
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             echo __('Security compliance', 'resources') . "&nbsp;";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/pics/ok.png' alt=\"" . __('OK') . "\" width='14' height='14'>";
+            echo "<i style='color:green' class='fa fa-check-circle' alt=\"" . __('OK') . "\"></i>";
          }
          echo "</td></tr>";
 
