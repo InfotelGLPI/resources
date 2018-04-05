@@ -2274,7 +2274,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
 ##IFresource.informations####lang.resource.informations## : ##resource.informations####ENDIFresource.informations##';
             $tmp['content_html']             = self::getContentHtmlResourceReport();
-
+            $translation->add($tmp);
          }
 
          $notifs               = [
