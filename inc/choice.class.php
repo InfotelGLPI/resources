@@ -97,10 +97,9 @@ class PluginResourcesChoice extends CommonDBTM {
 
    function addHelpdeskItem($values) {
 
-      $this->add([
-                    'plugin_resources_resources_id'   => $values["plugin_resources_resources_id"],
-                    'plugin_resources_choiceitems_id' => $values["plugin_resources_choiceitems_id"],
-                    'comment'                         => '']);
+      $this->add(['plugin_resources_resources_id'   => $values["plugin_resources_resources_id"],
+                  'plugin_resources_choiceitems_id' => $values["plugin_resources_choiceitems_id"],
+                  'comment'                         => '']);
    }
 
    function addComment($values) {
@@ -153,6 +152,7 @@ class PluginResourcesChoice extends CommonDBTM {
       $choice_item->getfromDB($input['plugin_resources_choiceitems_id']);
       $childs = $choice_item->haveChildren();
       if ($childs) {
+         Session::addMessageAfterRedirect(__("Cannot add a choice that contains children", "resources"), true, ERROR);
          return false;
       }
 
@@ -510,19 +510,19 @@ class PluginResourcesChoice extends CommonDBTM {
          }
          Dropdown::show('PluginResourcesChoiceItem',
                         ['name'      => 'plugin_resources_choiceitems_id',
-                              'entity'    => $_SESSION['glpiactive_entity'],
-                              'condition' => $condition,
-                              'used'      => $used,
-                              'addicon'   => true]);
+                         'entity'    => $resource->getEntityID(),
+                         'condition' => $condition,
+                         'used'      => $used,
+                         'addicon'   => true]);
          echo "</td></tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='4'>";
-         echo "<input type='submit' name='addhelpdeskitem' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
-         echo "<input type='hidden' name='id' value=\"$plugin_resources_resources_id\">";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem']);
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
          if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
             if ($exist != 1) {
-               echo "<input type='submit' name='finish' value=\"" . __('Terminate the declaration', 'resources') . "\" class='submit'>";
+               echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish']);
             } else {
                echo "<input type='submit' name='resend' value=\"" . __('Resend the declaration', 'resources') . "\" class='submit'>";
             }

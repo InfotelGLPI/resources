@@ -49,13 +49,13 @@ class PluginResourcesChoiceItem extends CommonTreeDropdown {
    function getAdditionalFields() {
 
       return [['name'  => $this->getForeignKeyField(),
-                         'label' => __('As child of'),
-                         'type'  => 'parent',
-                         'list'  => false],
-                     ['name'  => 'is_helpdesk_visible',
-                         'label' => __('Last update'),
-                         'type'  => 'bool',
-                         'list'  => true]];
+               'label' => __('As child of'),
+               'type'  => 'parent',
+               'list'  => false],
+              ['name'  => 'is_helpdesk_visible',
+               'label' => __('Visible in the simplified interface'),
+               'type'  => 'bool',
+               'list'  => true]];
    }
 
    function getSearchOptions () {
@@ -64,7 +64,7 @@ class PluginResourcesChoiceItem extends CommonTreeDropdown {
 
       $tab[11]['table']    = $this->getTable();
       $tab[11]['field']    = 'is_helpdesk_visible';
-      $tab[11]['name']     = __('Last update');
+      $tab[11]['name']     = __('Visible in the simplified interface');
       $tab[11]['datatype'] = 'bool';
 
       return $tab;

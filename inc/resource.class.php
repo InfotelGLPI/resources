@@ -1513,7 +1513,11 @@ class PluginResourcesResource extends CommonDBTM {
          if ($canbadges && $plugin->isActivated("badges")) {
             $num_col += 1;
          }
-         $colspan = floor(6 / $num_col);
+         if ($num_col == 0) {
+            $colspan = 0;
+         } else {
+            $colspan = floor(6 / $num_col);
+         }
 
          echo "<tr class='tab_bg_1'>";
          if ($colspan == 1) {
