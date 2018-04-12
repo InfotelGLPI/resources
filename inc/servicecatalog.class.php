@@ -45,7 +45,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getMenuLogo() {
       global $CFG_GLPI;
 
-      return "<a class='bt-resources' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'></a>";
+      return "<a class='bt-interface bt-resources' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'></a>";
 
    }
 
@@ -60,7 +60,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
 
    static function getMenuComment() {
 
-      echo __('Manage human resources', 'resources');
+      return __('Manage human resources', 'resources');
    }
 
    static function getLinkList() {
