@@ -49,18 +49,18 @@ function plugin_resources_install() {
       $install = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.3.3.sql");
 
-      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
-         VALUES (1, '".__('Long term contract', 'resources')."', '')";
+      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
+         VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
 
       $DB->query($query) or die($DB->error());
 
-      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
-               VALUES (2, '".__('Fixed term contract', 'resources')."', '')";
+      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
+               VALUES (2, '".__('Fixed term contract', 'resources')."', 0, 1)";
 
       $DB->query($query) or die($DB->error());
 
-      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`,`comment`)
-               VALUES (3, '".__('Trainee', 'resources')."', '')";
+      $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
+               VALUES (3, '".__('Trainee', 'resources')."', 0, 1)";
 
       $DB->query($query) or die($DB->error());
 
