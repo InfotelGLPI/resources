@@ -35,6 +35,7 @@ class PluginResourcesDashboard extends CommonGLPI {
 
    function __construct($options = []) {
       $this->options = $options;
+      $this->interfaces = ["central"];
    }
 
 

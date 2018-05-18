@@ -84,7 +84,7 @@ function plugin_init_resources() {
       Plugin::registerClass('PluginResourcesEmployment', [
          'massiveaction_nodelete_types' => true]);
 
-      if (class_exists('PluginServicecatalogMain')) {
+      if (class_exists('PluginServicecatalogDashboard')) {
          $PLUGIN_HOOKS['servicecatalog']['resources'] = ['PluginResourcesServicecatalog'];
       }
 
@@ -110,10 +110,10 @@ function plugin_init_resources() {
          $PLUGIN_HOOKS['treeview_params']['resources']        = ['PluginResourcesResource', 'showResourceTreeview'];
       }
 
-      if ((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE)
-              && !class_exists('PluginServicecatalogMain'))
-          || (class_exists('PluginServicecatalogMain')
+      if (((Session::haveRight("plugin_resources", READ)
+           || Session::haveright("plugin_resources_employee", UPDATE))
+              && !class_exists('PluginServicecatalogDashboard'))
+          || (class_exists('PluginServicecatalogDashboard')
               && !Session::haveRight("plugin_servicecatalog", READ))
       ) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesResource'];
@@ -124,10 +124,10 @@ function plugin_init_resources() {
          $PLUGIN_HOOKS['redirect_page']['resources'] = "front/resource.form.php";
       }
 
-      if ((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE)
-              && !class_exists('PluginServicecatalogMain'))
-          || (class_exists('PluginServicecatalogMain')
+      if (((Session::haveRight("plugin_resources", READ)
+           || Session::haveright("plugin_resources_employee", UPDATE))
+              && !class_exists('PluginServicecatalogDashboard'))
+          || (class_exists('PluginServicecatalogDashboard')
               && !Session::haveRight("plugin_servicecatalog", READ))
       ) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';

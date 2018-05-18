@@ -236,7 +236,6 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    if ($resource->canCreate() && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
       $choice->addHelpdeskItem($_POST);
    }
-
    $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
 
 } else if (isset($_POST["deletechoice"])) {

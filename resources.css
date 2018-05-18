@@ -40,7 +40,7 @@
 
 .plugin_resources_wizard_button {
    height: 35px;
-   border-top: 2px outset black;
+   border-top: 2px outset #CCC dashed;
 }
 
 .plugin_resources_wizard_title {
@@ -326,3 +326,27 @@ nav ul li.active a:link, nav ul li a:hover {
 .jspHorizontalBar .jspArrow { width: 16px; float: left; height: 100%; }
 .jspVerticalBar .jspArrow:focus { outline: none }
 .jspCorner { background: #eeeef4; float: left; height: 100%; }
+
+
+/*****/
+.resources_wizard_resp{
+   margin: 0 auto;
+   padding: 5px;
+   border: 1px solid #ccc;
+   z-index:1;
+   text-align: left;
+   font-size: 14px;
+   background-color: #ffffff;
+
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+   border-radius: 5px;
+
+   /*-moz-box-shadow: 0px 2px 5px #666;*/
+   /*-webkit-box-shadow: 0px 2px 5px #666;*/
+   /*box-shadow: 0px 2px 5px #666;*/
+}
+
+.resources_wizard_resp_img{
+   vertical-align : middle;
+}

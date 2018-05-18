@@ -325,56 +325,55 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       if ($employee_spotted && $plugin_resources_resources_id) {
 
-         echo "<div align='center'>";
+         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
+         echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+         echo "<div id ='content'>";
+         echo "<div class='bt-container resources_wizard_resp'> ";
+         echo "<div class='bt-block bt-features' > ";
 
          echo "<form action='" . Toolbox::getItemTypeFormURL('PluginResourcesWizard') . "' method='post'>";
-         echo "<table class='plugin_resources_wizard'>";
-         echo "<tr>";
-         echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
-         echo "</td>";
 
-         echo "<td class='plugin_resources_wizard_right_area' valign='top'>";
-
-         echo "<div class='plugin_resources_wizard_title'><p>";
-         echo "<img class='plugin_resource_wizard_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
-         echo __('Enter employer information about the resource', 'resources') . "</p></div>";
-
-         echo "<div class='center'>";
+         echo "<div class=\"bt-row\">";
+         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+         echo "<h4 class=\"bt-title-divider\">";
+         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo __('Enter employer information about the resource', 'resources');
+         echo "</h4></div></div>";
 
          $entity = $resource->fields["entities_id"];
 
-         echo "<table class='plugin_resources_wizard_table'>";
-
-         echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
+         echo "<div class=\"bt-row\">";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
          echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
-         echo PluginResourcesEmployer::getTypeName(1) . "</td>";
-         echo "<td colspan='2'>";
+         echo PluginResourcesEmployer::getTypeName(1);
+         echo "</div>";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
          Dropdown::show('PluginResourcesEmployer', ['name'   => "plugin_resources_employers_id",
                                                          'value'  => $this->fields["plugin_resources_employers_id"],
                                                          'entity' => $entity]);
-         echo "</td></tr>";
-
-         echo "<tr class='plugin_resources_wizard_explain'><td colspan='2'>";
-         echo PluginResourcesClient::getTypeName(1)."</td>";
-         echo "<td>";
+         echo "</div>";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
+         echo PluginResourcesClient::getTypeName(1);
+         echo "</div>";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
          Dropdown::show('PluginResourcesClient', ['name'      => "plugin_resources_clients_id",
                                                        'value'     => $this->fields["plugin_resources_clients_id"],
                                                        'entity'    => $entity,
                                                        'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
-         echo "</td><td style='color: green;'><div id='security_compliance'>";
+         echo "<div style='color: green;' id='security_compliance'>";
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             echo __('Security compliance', 'resources') . "&nbsp;";
             echo "<i style='color:green' class='fa fa-check-circle' alt=\"" . __('OK') . "\"></i>";
          }
-         echo "</td></tr>";
-
-         echo "</table>";
-         echo "</div></td>";
-         echo "</tr>";
-
+         echo "</div>";
+         echo "</div>";
+         echo "</div>";
          if ($this->canCreate()) {
-            echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
+            echo "<div class=\"bt-row\">";
+            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
             echo "<div class='preview'>";
             echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
             echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
@@ -384,12 +383,14 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo "<div class='next'>";
             echo "<input type='submit' name='third_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
             echo "</div>";
-            echo "</td></tr>";
+            echo "</div>";
+            echo "</div>";
          }
 
-         echo "</table>";
          Html::closeForm();
 
+         echo "</div>";
+         echo "</div>";
          echo "</div>";
       }
    }

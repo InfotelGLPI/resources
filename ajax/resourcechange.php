@@ -32,7 +32,7 @@ include ('../../../inc/includes.php');
 $resource_change = new PluginResourcesResource_Change();
 
 if (isset($_POST['load_button_changeresources'])) {
-   $resource_change->loadButonChangeResources($_POST['action'], $_POST);
+   $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
 } else if (isset($_POST['action'])) {
 
    switch ($_POST['action']) {
