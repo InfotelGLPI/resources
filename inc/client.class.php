@@ -143,6 +143,7 @@ class PluginResourcesClient extends CommonDropdown {
 
    static function isSecurityCompliance($id) {
       $client = new self();
+
       return $client->isSecurityAND($id) && $client->isSecurityFIFOUR($id)
              && $client->isSecurityGISF($id) && $client->isSecurityCFI($id);
 
