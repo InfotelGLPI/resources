@@ -408,15 +408,16 @@ class PluginResourcesResource extends CommonDBTM {
                                                  'joinparams' => ['jointype' => 'child']]];
 
 
-
-      $tab[35]['table']           = 'glpi_plugin_resources_employers';
-      $tab[35]['field']           = 'id';
-      $tab[35]['name']            = __('Client Sensitized to security', 'resources');
-      $tab[35]['datatype']        = 'specific';
-      $tab[35]['massiveaction']   = false;
-      $tab[35]['joinparams']    = ['join'
-                                   => ['table'      => 'glpi_plugin_resources_employees',
-                                       'joinparams' => ['jointype' => 'child']]];
+      if ($config->useSecurityCompliance()) {
+         $tab[35]['table']         = 'glpi_plugin_resources_employers';
+         $tab[35]['field']         = 'id';
+         $tab[35]['name']          = __('Client Sensitized to security', 'resources');
+         $tab[35]['datatype']      = 'specific';
+         $tab[35]['massiveaction'] = false;
+         $tab[35]['joinparams']    = ['join'
+                                      => ['table'      => 'glpi_plugin_resources_employees',
+                                          'joinparams' => ['jointype' => 'child']]];
+      }
 
 
       $tab[31]['table']         = $this->getTable();
