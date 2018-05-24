@@ -28,7 +28,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+   die("Sorry. You can't access directly to this file");
 }
 
 class PluginResourcesEmployer extends CommonTreeDropdown {
@@ -51,17 +51,17 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
    function getAdditionalFields() {
 
       return [ [ 'name'  => $this->getForeignKeyField(),
-                           'label' => __('As child of'),
-                           'type'  => 'parent',
-                           'list'  => false],
-                     ['name'  => 'short_name',
-                           'label' => __('Short name', 'resources'),
-                           'type'  => 'text',
-                           'list'  => true],
-                     ['name'  => 'locations_id',
-                           'label' => __('Location'),
-                           'type'  => 'dropdownValue',
-                           'list'  => true]];
+                 'label' => __('As child of'),
+                 'type'  => 'parent',
+                 'list'  => false],
+               ['name'  => 'short_name',
+                'label' => __('Short name', 'resources'),
+                'type'  => 'text',
+                'list'  => true],
+               ['name'  => 'locations_id',
+                'label' => __('Location'),
+                'type'  => 'dropdownValue',
+                'list'  => true]];
    }
 
    function getSearchOptions() {
@@ -79,6 +79,25 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
 
       return $tab;
    }
+
+   /**
+    * @param $field
+    * @param $values
+    * @param $options   array
+    *
+    * @return return|status|string
+    */
+   static function getSpecificValueToDisplay($field, $values, array $options = []) {
+      if (!is_array($values)) {
+         $values = [$field => $values];
+      }
+      switch ($field) {
+         case 'id':
+           return dropdown::getYesNo(PluginResourcesClient::isSecurityCompliance($values[$field]));
+      }
+      return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
+
 
 
    static function transfer($ID, $entity) {
