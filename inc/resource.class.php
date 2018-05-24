@@ -191,6 +191,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[2]['table'] = $this->getTable();
       $tab[2]['field'] = 'firstname';
       $tab[2]['name']  = __('First name');
+      $tab[2]['datatype']      = 'itemlink';
       if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
          $tab[2]['searchtype'] = 'contains';
       }
@@ -405,6 +406,18 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[34]['joinparams']    = ['join'
                                         => ['table'      => 'glpi_plugin_resources_employees',
                                                  'joinparams' => ['jointype' => 'child']]];
+
+
+
+      $tab[35]['table']           = 'glpi_plugin_resources_employers';
+      $tab[35]['field']           = 'id';
+      $tab[35]['name']            = __('Client Sensitized to security', 'resources');
+      $tab[35]['datatype']        = 'specific';
+      $tab[35]['massiveaction']   = false;
+      $tab[35]['joinparams']    = ['join'
+                                   => ['table'      => 'glpi_plugin_resources_employees',
+                                       'joinparams' => ['jointype' => 'child']]];
+
 
       $tab[31]['table']         = $this->getTable();
       $tab[31]['field']         = 'id';
