@@ -39,22 +39,22 @@ $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
 $professioncategory = New PluginReportsDropdownCriteria($report, 'plugin_resources_professioncategories_id',
-   'glpi_plugin_resources_professioncategories', PluginResourcesProfessionCategory::getTypeName(1));
+                                                        'glpi_plugin_resources_professioncategories', PluginResourcesProfessionCategory::getTypeName(1));
 $professionline = New PluginReportsDropdownCriteria($report, 'plugin_resources_professionlines_id',
-   'glpi_plugin_resources_professionlines', PluginResourcesProfessionLine::getTypeName(1));
+                                                    'glpi_plugin_resources_professionlines', PluginResourcesProfessionLine::getTypeName(1));
 
 //Display criterias form is needed
 $report->displayCriteriasForm();
 
 //colname with sort allowed
 $columns = ['professioncategory' => ['sorton' => 'professioncategory'],
-                 'professionline' => ['sorton' => 'professionline'],
-                 'profession' => ['sorton' => 'profession'],
-                 'profession_code' => ['sorton' => 'profession_code'],
-                 'rank_name' => ['sorton' => 'rank'],
-                 'rank_code' => ['sorton' => 'rank_code'],
-                 'begin_date' => ['sorton' => 'begin_date'],
-                 'end_date' => ['sorton' => 'end_date'],];
+            'professionline' => ['sorton' => 'professionline'],
+            'profession' => ['sorton' => 'profession'],
+            'profession_code' => ['sorton' => 'profession_code'],
+            'rank_name' => ['sorton' => 'rank'],
+            'rank_code' => ['sorton' => 'rank_code'],
+            'begin_date' => ['sorton' => 'begin_date'],
+            'end_date' => ['sorton' => 'end_date'],];
 
 
 $output_type = Search::HTML_OUTPUT;
@@ -102,8 +102,8 @@ if ($report->criteriasValidated()) {
                WHERE `glpi_plugin_resources_resources`.`date_begin` <= '".$date."'
                   AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
                         OR `glpi_plugin_resources_resources`.`date_end` >= '".$date."')".
-                  $condition.
-               "ORDER BY `plugin_resources_professions_id`";
+                      $condition.
+                      "ORDER BY `plugin_resources_professions_id`";
 
    $professionsResourceList = '0';
    foreach ($DB->request($requestResource) as $data) {
@@ -140,7 +140,7 @@ if ($report->criteriasValidated()) {
                      AND `glpi_plugin_resources_budgets`.`begin_date` > '".$date."')
                   OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
                         AND `glpi_plugin_resources_budgets`.`end_date` < '".$date."')) ".
-      $sqlprofessioncategory.$sqlprofessionline;
+            $sqlprofessioncategory.$sqlprofessionline;
 
    $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
 
@@ -197,7 +197,7 @@ if ($report->criteriasValidated()) {
                                  AND `glpi_plugin_resources_budgets`.`begin_date` > '".$date."')
                               OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
                                  AND `glpi_plugin_resources_budgets`.`end_date` < '".$date."')) ".
-            $sqlprofessioncategory.$sqlprofessionline;
+                  $sqlprofessioncategory.$sqlprofessionline;
 
          $qRank.=$conditionAll." ".getOrderBy('profession', $columns);
 
@@ -232,7 +232,7 @@ if ($report->criteriasValidated()) {
       echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
       Html::footer();
    } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-      include (GLPI_ROOT . "/lib/ezpdf/class.ezpdf.php");
+      include (GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
    } else if ($output_type == Search::HTML_OUTPUT) {
       if (!$HEADER_LOADED) {
          Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
@@ -374,7 +374,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
    $link .= ($first ? '?' : '&amp;').'sort='.urlencode($columnname);
    $link .= '&amp;order='.$order;
    echo Search::showHeaderItem($output_type, $title, $num,
-      $link, $issort, ($order=='ASC'?'DESC':'ASC'));
+                               $link, $issort, ($order=='ASC'?'DESC':'ASC'));
 }
 
 /**
@@ -390,9 +390,11 @@ function getOrderBy($default, $columns) {
    }
    $order   = $_REQUEST['order'];
 
-   $tab = getOrderByFields($default, $columns);
-   if (count($tab)>0) {
-      return " ORDER BY ". $tab ." ". $order;
+   $tabs[] = getOrderByFields($default, $columns);
+   if (count($tabs) > 0) {
+      foreach ($tabs as $tab) {
+         return " ORDER BY " . $tab . " " . $order;
+      }
    }
    return '';
 }
