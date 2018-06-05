@@ -39,22 +39,22 @@ $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
 $professioncategory = New PluginReportsDropdownCriteria($report, 'plugin_resources_professioncategories_id',
-                                                        'glpi_plugin_resources_professioncategories', PluginResourcesProfessionCategory::getTypeName(1));
+   'glpi_plugin_resources_professioncategories', PluginResourcesProfessionCategory::getTypeName(1));
 $professionline = New PluginReportsDropdownCriteria($report, 'plugin_resources_professionlines_id',
-                                                    'glpi_plugin_resources_professionlines', PluginResourcesProfessionLine::getTypeName(1));
+   'glpi_plugin_resources_professionlines', PluginResourcesProfessionLine::getTypeName(1));
 
 //Display criterias form is needed
 $report->displayCriteriasForm();
 
 //colname with sort allowed
 $columns = ['professioncategory' => ['sorton' => 'professioncategory'],
-            'professionline' => ['sorton' => 'professionline'],
-            'profession' => ['sorton' => 'profession'],
-            'profession_code' => ['sorton' => 'profession_code'],
-            'rank_name' => ['sorton' => 'rank'],
-            'rank_code' => ['sorton' => 'rank_code'],
-            'begin_date' => ['sorton' => 'begin_date'],
-            'end_date' => ['sorton' => 'end_date'],];
+               'professionline' => ['sorton' => 'professionline'],
+               'profession' => ['sorton' => 'profession'],
+               'profession_code' => ['sorton' => 'profession_code'],
+               'rank_name' => ['sorton' => 'rank'],
+               'rank_code' => ['sorton' => 'rank_code'],
+               'begin_date' => ['sorton' => 'begin_date'],
+               'end_date' => ['sorton' => 'end_date'],];
 
 
 $output_type = Search::HTML_OUTPUT;
