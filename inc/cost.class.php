@@ -158,7 +158,6 @@ class PluginResourcesCost extends CommonDropdown {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-      $this->showTabs($options);
       $this->showFormHeader($options);
 
       $fields = $this->getAdditionalFields();
@@ -222,7 +221,6 @@ class PluginResourcesCost extends CommonDropdown {
          $options['candel'] = false;
       }
       $this->showFormButtons($options);
-      $this->addDivForTabs();
       return true;
 
    }

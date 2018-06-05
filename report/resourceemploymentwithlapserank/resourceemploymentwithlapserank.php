@@ -192,8 +192,8 @@ if ($nbtot == 0) {
    echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
    Html::footer();
 } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT
-               || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-   include (GLPI_ROOT . "/lib/ezpdf/class.ezpdf.php");
+           || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
+   include (GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
 } else if ($output_type == Search::HTML_OUTPUT) {
    if (!$HEADER_LOADED) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
@@ -357,9 +357,11 @@ function getOrderBy($default, $columns) {
    }
    $order   = $_REQUEST['order'];
 
-   $tab = getOrderByFields($default, $columns);
-   if (count($tab)>0) {
-      return " ORDER BY ". $tab ." ". $order;
+   $tabs[] = getOrderByFields($default, $columns);
+   if (count($tabs) > 0) {
+      foreach ($tabs as $tab) {
+         return " ORDER BY " . $tab . " " . $order;
+      }
    }
    return '';
 }
