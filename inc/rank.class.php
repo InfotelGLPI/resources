@@ -137,7 +137,11 @@ class PluginResourcesRank extends CommonDropdown {
          if ($sort) {
             $query = "SELECT `glpi_plugin_resources_ranks`.*
                      FROM `glpi_plugin_resources_ranks`
-                     WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '" . $professionId . "'";
+                     INNER JOIN `glpi_plugin_resources_costs`
+                        ON (`glpi_plugin_resources_ranks`.`id`
+                            = `glpi_plugin_resources_costs`.`plugin_resources_ranks_id`)
+                     WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '".$professionId."'
+                     AND `glpi_plugin_resources_costs`.`cost` <> '0.00'";
 
             $values[0] = Dropdown::EMPTY_VALUE;
             if ($result = $DB->query($query)) {
