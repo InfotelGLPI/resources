@@ -48,13 +48,13 @@ $report->displayCriteriasForm();
 
 //colname with sort allowed
 $columns = ['professioncategory' => ['sorton' => 'professioncategory'],
-               'professionline' => ['sorton' => 'professionline'],
-               'profession' => ['sorton' => 'profession'],
-               'profession_code' => ['sorton' => 'profession_code'],
-               'rank_name' => ['sorton' => 'rank'],
-               'rank_code' => ['sorton' => 'rank_code'],
-               'begin_date' => ['sorton' => 'begin_date'],
-               'end_date' => ['sorton' => 'end_date'],];
+                 'professionline' => ['sorton' => 'professionline'],
+                 'profession' => ['sorton' => 'profession'],
+                 'profession_code' => ['sorton' => 'profession_code'],
+                 'rank_name' => ['sorton' => 'rank'],
+                 'rank_code' => ['sorton' => 'rank_code'],
+                 'begin_date' => ['sorton' => 'begin_date'],
+                 'end_date' => ['sorton' => 'end_date'],];
 
 
 $output_type = Search::HTML_OUTPUT;
@@ -102,8 +102,8 @@ if ($report->criteriasValidated()) {
                WHERE `glpi_plugin_resources_resources`.`date_begin` <= '".$date."'
                   AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
                         OR `glpi_plugin_resources_resources`.`date_end` >= '".$date."')".
-                      $condition.
-                      "ORDER BY `plugin_resources_professions_id`";
+                  $condition.
+               "ORDER BY `plugin_resources_professions_id`";
 
    $professionsResourceList = '0';
    foreach ($DB->request($requestResource) as $data) {
@@ -140,7 +140,7 @@ if ($report->criteriasValidated()) {
                      AND `glpi_plugin_resources_budgets`.`begin_date` > '".$date."')
                   OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
                         AND `glpi_plugin_resources_budgets`.`end_date` < '".$date."')) ".
-            $sqlprofessioncategory.$sqlprofessionline;
+      $sqlprofessioncategory.$sqlprofessionline;
 
    $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
 
@@ -197,7 +197,7 @@ if ($report->criteriasValidated()) {
                                  AND `glpi_plugin_resources_budgets`.`begin_date` > '".$date."')
                               OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
                                  AND `glpi_plugin_resources_budgets`.`end_date` < '".$date."')) ".
-                  $sqlprofessioncategory.$sqlprofessionline;
+            $sqlprofessioncategory.$sqlprofessionline;
 
          $qRank.=$conditionAll." ".getOrderBy('profession', $columns);
 
@@ -374,7 +374,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
    $link .= ($first ? '?' : '&amp;').'sort='.urlencode($columnname);
    $link .= '&amp;order='.$order;
    echo Search::showHeaderItem($output_type, $title, $num,
-                               $link, $issort, ($order=='ASC'?'DESC':'ASC'));
+      $link, $issort, ($order=='ASC'?'DESC':'ASC'));
 }
 
 /**
