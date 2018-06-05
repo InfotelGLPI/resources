@@ -400,8 +400,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       $this->showFormHeader($options);
 
-      echo "<input type='hidden' name='plugin_resources_resources_id' value='" . $plugin_resources_resources_id . "'>";
-
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
       if ($ID > 0) {
          echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='" . $this->fields["plugin_resources_contracttypes_id"] . "'>";
          echo "<input type='hidden' name='checklist_type' value='" . $this->fields["checklist_type"] . "'>";

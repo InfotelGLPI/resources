@@ -193,7 +193,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          }
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
 
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
 
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
@@ -254,7 +254,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          if ($withtemplate < 2) {
             if (empty($ID)) {
                if ($this->canCreate() && $canedit) {
-                  echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+                  echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                   if (!empty($plugin_resources_resources_id)) {
                      echo "<div align='center'>";
                      echo "<input type='submit' name='addemployee' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
@@ -272,7 +272,7 @@ class PluginResourcesEmployee extends CommonDBTM {
                if ($this->canCreate() && $canedit) {
 
                   echo "<input type='hidden' name='id' value=\"$ID\">";
-                  echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $this->fields["plugin_resources_resources_id"] . "\">";
+                  echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
                   echo "<div align='center'>";
                   echo "<input type='submit' name='updateemployee' value=\"" . _sx('button', 'Update') . "\" class='submit' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='submit' name='deleteemployee' value=\"" . _sx('button', 'Delete permanently') . "\" class='submit'>";
@@ -346,7 +346,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<div class=\"bt-row\">";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo PluginResourcesEmployer::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -376,7 +376,7 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
             echo "<div class='preview'>";
             echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
-            echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "<input type='hidden' name='withtemplate' value=\"0\">";
             echo "<input type='submit' name='undo_second_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
             echo "</div>";
@@ -441,7 +441,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<tr><th colspan='4'>" . self::getTypeName(1) . "</th></tr>";
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo PluginResourcesEmployer::getTypeName(1) . "</td>";
          echo "<td colspan='2'>";
          Dropdown::show('PluginResourcesEmployer', ['name'   => "plugin_resources_employers_id",
@@ -461,14 +461,14 @@ class PluginResourcesEmployee extends CommonDBTM {
             if ($exist == 0) {
 
                echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-               echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+               echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                echo "<div align='center'><input type='submit' name='add_helpdesk_employee' value=\"" . _sx('button', 'Next step', 'resources') . "\" class='submit'>";
                echo "</td></tr>";
 
             } else if (empty($ID)) {
 
                echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-               echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+               echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                echo "<div align='center'><input type='submit' name='add_helpdesk_employee' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
                echo "</td></tr>";
 
@@ -477,7 +477,7 @@ class PluginResourcesEmployee extends CommonDBTM {
                if ($resource->fields["is_leaving"] != 1) {
                   echo "<tr><td class='tab_bg_2 top' colspan='4'>";
                   echo "<input type='hidden' name='id' value=\"$ID\">";
-                  echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+                  echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                   echo "<div align='center'><input type='submit' name='updateemployee' value=\"" . _sx('button', 'Update') . "\" class='submit' >";
                   echo "</div>";
                   echo "</td></tr>";

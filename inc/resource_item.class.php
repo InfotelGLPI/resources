@@ -403,7 +403,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
          echo __('Add an item');
          echo "</th></tr>";
          echo "<tr class='tab_bg_1'><td colspan='" . (3 + $colsup) . "' class='center'>";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$instID'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $instID]);
          //echo "<input type='hidden' name='itemtype' value='User'>";
          Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
                                                 'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),

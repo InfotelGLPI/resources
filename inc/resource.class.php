@@ -2169,7 +2169,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div class='next'>";
          echo "<input type='submit' name='second_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='" . $this->fields["id"] . "'/>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
          echo "</div>";
@@ -2182,7 +2182,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div class='next'>";
          echo "<input type='submit' name='second_step_update' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='" . $this->fields["id"] . "'/>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
          echo "</div>";
@@ -2259,17 +2259,17 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
       echo "<input type='submit' name='upload_five_step' value='" . _sx('button', 'Add') . "' class='submit' />";
-      echo "<input type='hidden' name='plugin_resources_resources_id' value='" . $this->fields["id"] . "'/>";
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
       echo "</div></div>";
 
-      echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $ID . "\">";
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
 
       if ($this->canCreate() && (!empty($ID))) {
          echo "<div class=\"bt-row\">";
          echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
          echo "<div class='next'>";
          echo "<input type='submit' name='five_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='" . $this->fields["id"] . "'/>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div></div>";
       }
@@ -3071,7 +3071,7 @@ class PluginResourcesResource extends CommonDBTM {
                echo "<div class=\"bt-row\">";
                echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
                echo "<div class='next'>";
-               echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+               echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                echo "<input type='submit' name='transferresources' value=\"" . __s('Declare a transfer', 'resources') . "\" class='submit'>";
                echo "</div>";
                echo "</div></div>";

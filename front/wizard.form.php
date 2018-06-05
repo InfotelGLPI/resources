@@ -29,9 +29,9 @@
 
 include ('../../../inc/includes.php');
 
-$resource = new PluginResourcesResource();
-$employee = new PluginResourcesEmployee();
-$choice   = new PluginResourcesChoice();
+$resource             = new PluginResourcesResource();
+$employee             = new PluginResourcesEmployee();
+$choice               = new PluginResourcesChoice();
 
 $resource->checkGlobal(READ);
 
@@ -53,23 +53,23 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
    // Set default value...
    $values = ['name'                                     => '',
-                   'firstname'                                => '',
-                   'comment'                                  => '',
-                   'locations_id'                             => 0,
-                   'users_id'                                 => 0,
-                   'users_id_sales'                           => 0,
-                   'plugin_resources_departments_id'          => 0,
-                   'date_begin'                               => 'NULL',
-                   'date_end'                                 => 'NULL',
-                   'quota'                                    => 1.0000,
-                   'plugin_resources_resourcesituations_id'   => 0,
-                   'plugin_resources_contractnatures_id'      => 0,
-                   'plugin_resources_ranks_id'                => 0,
-                   'plugin_resources_resourcespecialities_id' => 0,
-                   'plugin_resources_leavingreasons_id'       => 0,
-                   'plugin_resources_habilitations_id'        => 0,
-                   'sensitize_security'                       => 0,
-                   'read_chart'                               => 0,
+              'firstname'                                => '',
+              'comment'                                  => '',
+              'locations_id'                             => 0,
+              'users_id'                                 => 0,
+              'users_id_sales'                           => 0,
+              'plugin_resources_departments_id'          => 0,
+              'date_begin'                               => 'NULL',
+              'date_end'                                 => 'NULL',
+              'quota'                                    => 1.0000,
+              'plugin_resources_resourcesituations_id'   => 0,
+              'plugin_resources_contractnatures_id'      => 0,
+              'plugin_resources_ranks_id'                => 0,
+              'plugin_resources_resourcespecialities_id' => 0,
+              'plugin_resources_leavingreasons_id'       => 0,
+              'plugin_resources_habilitations_id'        => 0,
+              'sensitize_security'                       => 0,
+              'read_chart'                               => 0,
    ];
 
    // Clean text fields

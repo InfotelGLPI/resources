@@ -280,7 +280,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<div class='next'>";
       if ($ID > 0) {
          echo "<input type='hidden' name='id' value='".$ID."' />";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='".$this->fields["plugin_resources_resources_id"]."' />";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
          echo "<input type='submit' name='updateholidayresources' value=\""._sx('button', 'Update')."\" class='submit' />";
          echo "&nbsp;&nbsp;<input type='submit' name='deleteholidayresources' value=\""._sx('button', 'Delete permanently')."\" class='submit' />";
       } else {

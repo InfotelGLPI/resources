@@ -363,7 +363,7 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<div class=\"bt-row\">";
             echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
             echo "<div class='next'>";
-            echo "<input type='hidden' name='plugin_resources_resources_id' value=\"" . $plugin_resources_resources_id . "\">";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "<input type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
             echo "</div>";
             echo "</div></div>";
@@ -515,7 +515,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4' class='center'>";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
 
          $condition = "";
          if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {

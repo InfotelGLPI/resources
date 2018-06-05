@@ -172,7 +172,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
       //$this->showTabs($options);
       $this->showFormHeader($options);
 
-      echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo __('Comments');
@@ -306,7 +306,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
                echo "<td colspan='2' class='right'>";
                echo "<input type='submit' name='delete' value='" . _sx('button', 'Delete permanently') . "' class='submit' />";
                echo "<input type='hidden' name='id' value='" . $data["id"] . "' />";
-               echo "<input type='hidden' name='plugin_resources_resources_id' value='$ID' />";
+               echo Html::hidden('plugin_resources_resources_id', ['value' => $ID]);
                echo "</td>";
                echo "</tr>";
             }

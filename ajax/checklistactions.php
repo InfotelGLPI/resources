@@ -47,12 +47,12 @@ if (isset($_POST["action"])) {
          break;
       case "open_checklist":
          echo "<input type='hidden' name='checklist_type' value='".$_POST['checklist_type']."'>";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='".$_POST['plugin_resources_resources_id']."'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $_POST['plugin_resources_resources_id']]);
          echo "&nbsp;<input type='submit' name='open_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
          break;
       case "close_checklist":
          echo "<input type='hidden' name='checklist_type' value='".$_POST['checklist_type']."'>";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='".$_POST['plugin_resources_resources_id']."'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $_POST['plugin_resources_resources_id']]);
          echo "<input type='hidden' name='entities_id' value='".$_POST['entities_id']."'>";
          echo "&nbsp;";
          echo __('Templates');
