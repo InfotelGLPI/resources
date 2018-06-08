@@ -127,6 +127,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $temp = new PluginResourcesResourceHoliday();
       $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
+
+      $temp = new PluginResourcesResourceHabilitation();
+      $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
    }
 
    /**
@@ -618,12 +621,6 @@ class PluginResourcesResource extends CommonDBTM {
          PluginResourcesTask::cloneItem($this->input["_oldID"], $this->fields['id']);
       }
 
-      if (!isset($this->fields['is_template']) && isset($this->fields['plugin_resources_habilitations_id'])) {
-         $ResourceHabilitation = new PluginResourcesResourceHabilitation();
-         $ResourceHabilitation->add(['plugin_resources_resources_id'     => $this->fields['id'],
-                                          'plugin_resources_habilitations_id' => $this->fields['plugin_resources_habilitations_id']]);
-      }
-
       //Launch notification
 
       if (isset($this->input['withtemplate'])
@@ -1079,23 +1076,6 @@ class PluginResourcesResource extends CommonDBTM {
            "' size='14'>";
       echo "</td>";
       echo "</tr>";
-
-      if (isset($options['withtemplate']) && $options['withtemplate']) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td";
-         if (in_array("plugin_resources_habilitations_id", $required)) {
-            echo $alert;
-         }
-         echo ">";
-         echo PluginResourcesHabilitation::getTypeName(1) . "</td>";
-         echo "<td>";
-         Dropdown::show('PluginResourcesHabilitation',
-                        ['value'     => $this->fields["plugin_resources_habilitations_id"],
-                              'entity'    => $this->fields["entities_id"],
-                              'condition' => 'allow_resource_creation']);
-         echo "</td>";
-         echo "</tr>";
-      }
 
       echo "</table><table class='tab_cadre_fixe'>";
       $rank = new PluginResourcesRank();
@@ -1747,7 +1727,6 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
          $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
-         $options["plugin_resources_habilitations_id"]        = $this->fields["plugin_resources_habilitations_id"];
          $options["sensitize_security"]                       = $this->fields["sensitize_security"];
          $options["read_chart"]                               = $this->fields["read_chart"];
 
@@ -1886,22 +1865,6 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       echo "<input type='text' name='quota' value='" . Html::formatNumber($options["quota"], true, 4) .
            "' size='14'>";
-      echo "</div>";
-
-      echo "</div>";
-      echo "<div class=\"bt-row\">";
-
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("plugin_resources_habilitations_id", $required)) echo " red";
-      echo " \" >";
-      echo PluginResourcesHabilitation::getTypeName(1);
-      echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      Dropdown::show('PluginResourcesHabilitation',
-                     ['name'      => "plugin_resources_habilitations_id",
-                           'value'     => $options["plugin_resources_habilitations_id"],
-                           'entity'    => $this->fields["entities_id"],
-                           'condition' => 'allow_resource_creation']);
       echo "</div>";
 
       echo "</div>";
@@ -2605,7 +2568,6 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['date_end']         = null;
 
             $resource->fields['plugin_resources_departments_id']   = $params['plugin_resources_departments_id'];
-            $resource->fields['plugin_resources_habilitations_id'] = 0;
             $resource->fields['locations_id']                      = 0;
             $resource->fields['is_leaving']                        = 0;
             $resource->fields['users_id_recipient_leaving']        = 0;

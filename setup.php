@@ -114,8 +114,7 @@ function plugin_init_resources() {
            || Session::haveright("plugin_resources_employee", UPDATE))
               && !class_exists('PluginServicecatalogDashboard'))
           || (class_exists('PluginServicecatalogDashboard')
-              && !Session::haveRight("plugin_servicecatalog", READ))
-      ) {
+              && !Session::haveRight("plugin_servicecatalog", READ))) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesResource'];
       }
       // Resource menu
@@ -177,7 +176,7 @@ function plugin_version_resources() {
 
    return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.4.3',
+      'version'        => '2.4.4',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',

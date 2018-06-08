@@ -198,10 +198,6 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_quota']['type']  = "yesonly";
       $actions['requiredfields_quota']['force_actions'] = ['assign'];
 
-      $actions['requiredfields_plugin_resources_habilitations_id']['name']  = PluginResourcesHabilitation::getTypeName(1);
-      $actions['requiredfields_plugin_resources_habilitations_id']['type']  = "yesonly";
-      $actions['requiredfields_plugin_resources_habilitations_id']['force_actions'] = ['assign'];
-
       if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
 
          $actions['requiredfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);

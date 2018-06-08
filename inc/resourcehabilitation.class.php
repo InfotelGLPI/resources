@@ -36,7 +36,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesResourceHabilitation extends CommonDBTM {
 
-   static $rightname = 'plugin_resources_habilitation';
+   static $rightname = 'plugin_resources';
    public $dohistory = true;
 
    /**
@@ -76,7 +76,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-      if ($item->getType()=='PluginResourcesResource'
+      if ($item->getType() == 'PluginResourcesResource'
           && $this->canView()) {
          if ($_SESSION['glpishow_count_on_tabs']) {
             return self::createTabEntry(self::getTypeName(2), self::countForResource($item));
@@ -89,7 +89,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
-      if ($item->getType()=='PluginResourcesResource') {
+      if ($item->getType() == 'PluginResourcesResource') {
 
          $self = new self();
          $self->showItem($item);
@@ -97,15 +97,25 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginResourcesResource $item
+    *
+    * @return int
+    */
    static function countForResource(PluginResourcesResource $item) {
 
-      $restrict = "`plugin_resources_resources_id` = '".$item->getField('id')."' ";
-      $dbu = new DbUtils();
-      $nb = $dbu->countElementsInTable(['glpi_plugin_resources_resourcehabilitations'], $restrict);
+      $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "' ";
+      $dbu      = new DbUtils();
+      $nb       = $dbu->countElementsInTable(['glpi_plugin_resources_resourcehabilitations'], $restrict);
 
       return $nb;
    }
 
+   /**
+    * @param $item
+    *
+    * @return bool
+    */
    function showItem($item) {
       if (!$this->canView()) {
          return false;
@@ -120,7 +130,6 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          foreach ($data as $habilitation) {
             $used[] = $habilitation['plugin_resources_habilitations_id'];
          }
-         //form to choose the metademand
          echo "<form name='form' method='post' action='" .
               Toolbox::getItemTypeFormURL('PluginResourcesResourceHabilitation') . "'>";
 
@@ -135,7 +144,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add\" 
                     class=\"submit\" value=\"" . _sx('button', 'Add') . "\" >";
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='".$item->getField('id')."'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $item->getField('id')]);
 
          echo "</td></tr>";
          echo "</table></div>";
@@ -210,7 +219,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       foreach ($DB->request($query) as $data) {
          $habilitation = new self();
          $habilitation->add(['plugin_resources_resources_id'     => $newid,
-                                  'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]]);
+                             'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]]);
       }
    }
 
@@ -224,6 +233,9 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                    Log::HISTORY_LOG_SIMPLE_MESSAGE);
    }
 
+   /**
+    * @return \nothing|void
+    */
    function post_deleteFromDB() {
       $changes[0] = 0;
       $changes[1] = '';
@@ -234,4 +246,178 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                    Log::HISTORY_LOG_SIMPLE_MESSAGE);
    }
 
+   /**
+    * Wizard for habilitations
+    *
+    * @param $plugin_resources_resources_id
+    *
+    * @return bool
+    */
+   function wizardSixForm($plugin_resources_resources_id) {
+      global $CFG_GLPI;
+
+      if (!$this->canView()) {
+         return false;
+      }
+
+      $resource = new PluginResourcesResource();
+      $resource->getFromDB($plugin_resources_resources_id);
+
+      if ($plugin_resources_resources_id) {
+
+         $habilitation_level = new PluginResourcesHabilitationLevel();
+         $habilitation       = new PluginResourcesHabilitation();
+
+         $condition = getEntitiesRestrictRequest("", $habilitation_level->getTable(),
+                                                 "entities_id",
+                                                 $resource->getEntityID(),
+                                                 $habilitation_level->maybeRecursive());
+         $levels = $habilitation_level->find($condition, "name");
+
+         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
+         echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+
+         echo "<div id ='content'>";
+
+         echo "<div class='bt-container resources_wizard_resp'>";
+         echo "<div class='bt-block bt-features' >";
+
+         echo "<form action='" . Toolbox::getItemTypeFormURL('PluginResourcesWizard') . "' method='post'>";
+
+         echo "<div class=\"bt-row\">";
+         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\" style=\"border-bottom: #CCC;border-bottom-style: solid;\">";
+         echo "<h4 class=\"bt-title-divider\">";
+         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] .
+              "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo __('Enter habilitations about the resource', 'resources');
+         echo "</h4></div></div>";
+
+         if (count($levels) > 0) {
+
+            //One line per level
+            foreach ($levels as $level) {
+               echo "<div class=\"bt-row\">";
+               echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
+
+               if ($habilitation_level->getFromDB($level['id'])) {
+
+                  $mandatory = "";
+                  if ($habilitation_level->getField('is_mandatory_creating_resource')) {
+                     $mandatory = "red";
+                  }
+                  //list of habilitations according to level
+                  $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
+                                                                            $resource->fields["entities_id"]);
+                  echo "<div class=\"bt-row\">";
+                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 $mandatory\">";
+                  echo $habilitation_level->getName();
+                  echo "</div>";
+                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+                  if ($habilitation_level->getField('number')) {
+                     Dropdown::showFromArray($habilitation_level->getName(), $habilitations,
+                                             ['multiple' => true,
+                                              'width'    => 100]);
+                  } else {
+                     Dropdown::showFromArray($habilitation_level->getName(), $habilitations);
+                  }
+                  echo "</div></div>";
+               }
+               echo "</div></div>";
+            }
+
+         } else {
+
+            //No level of habilitations no addition of authorizations to the resource
+            echo "<div class=\"bt-row\">";
+            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
+            echo __('No habilitation level, you cannot add habilitation for this resource.', 'resources');
+            echo "</div></div>";
+
+         }
+
+         if ($this->canCreate()) {
+            echo "<div class=\"bt-row\">";
+            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class='next'>";
+            echo "<input type='submit' name='six_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+            echo "</div>";
+            echo "</div>";
+            echo "</div>";
+         }
+
+         Html::closeForm();
+         echo "</div></div>";
+         echo "</div>";
+
+      }
+   }
+
+   /**
+    * Adding habilitations to the resource via the wizard
+    *
+    * @param $params
+    */
+   function addResourceHabilitation($params) {
+      $habilitation_level = new PluginResourcesHabilitationLevel();
+
+      foreach ($params as $key => $val) {
+         if (is_array($val)
+             && $habilitation_level->getFromDBByCrit(["name = '" . $key . "' AND number"])) {
+            foreach ($val as $v) {
+               $this->addResourceHabilitationInDb($v, $params);
+            }
+         } else if ($habilitation_level->getFromDBByCrit(["name = '" . $key . "' AND !number"])) {
+            $this->addResourceHabilitationInDb($val, $params);
+         }
+      }
+   }
+
+   /**
+    * @param $id
+    * @param $params
+    */
+   function addResourceHabilitationInDb($id, $params) {
+      $resourceHabilitation = new self();
+      $habilitation         = new PluginResourcesHabilitation();
+
+      if ($habilitation->getFromDB($id)) {
+         $params["plugin_resources_habilitations_id"] = $id;
+         $resourceHabilitation->add($params);
+      }
+   }
+
+   /**
+    * Verification if level of mandatory habilitations
+    * return true if required fields are completed correctly
+    * false if not
+    *
+    * @param array $params
+    *
+    * @return bool
+    */
+   function checkRequiredFields($params = []) {
+
+      $resource = new PluginResourcesResource();
+      $resource->getFromDB($params['plugin_resources_resources_id']);
+
+      $habilitation_level = new PluginResourcesHabilitationLevel();
+      $condition          = getEntitiesRestrictRequest("AND", $habilitation_level->getTable(),
+                                                       "entities_id",
+                                                       $resource->getEntityID(),
+                                                       $habilitation_level->maybeRecursive());
+      $levels             = $habilitation_level->find("`is_mandatory_creating_resource` $condition", "name");
+
+      foreach ($levels as $level) {
+         if (!isset($params[$level['name']])
+             || (isset($params[$level['name']]) && empty($params[$level['name']]))) {
+            return false;
+
+         }
+
+      }
+      return true;
+   }
 }

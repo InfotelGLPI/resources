@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-24 16:25+0200\n"
-"PO-Revision-Date: 2018-05-24 14:36+0000\n"
+"POT-Creation-Date: 2018-06-08 10:20+0200\n"
+"PO-Revision-Date: 2018-06-08 08:22+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/tsmr/GLPI_resources/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -31,38 +31,38 @@ msgstr "Smlouva na dobu určitou"
 msgid "Trainee"
 msgstr "Nováček"
 
-#: hook.php:385
+#: hook.php:394
 msgid "Specific network rights"
 msgstr "Zvláštní síťová oprávnění"
 
-#: hook.php:386
+#: hook.php:395
 msgid "Access to the applications"
 msgstr "Přístup k aplikacím"
 
-#: hook.php:387
+#: hook.php:396
 msgid "Specific securities groups"
 msgstr "Konkrétní skupiny zabezpečení"
 
-#: hook.php:388
+#: hook.php:397
 msgid "Specific distribution lists"
 msgstr "Konkrétní distribuční seznamy"
 
-#: hook.php:389 inc/choice.class.php:114 inc/choice.class.php:333
+#: hook.php:398 inc/choice.class.php:114 inc/choice.class.php:333
 msgid "Others needs"
 msgstr "Ostatní potřeby"
 
-#: hook.php:842 inc/notificationtargetresource.class.php:339
+#: hook.php:852 inc/notificationtargetresource.class.php:339
 #: inc/notificationtargetresource.class.php:418
 #: inc/notificationtargetresource.class.php:561
 #: inc/notificationtargetresource.class.php:615
 #: inc/notificationtargetresource.class.php:778
 #: inc/notificationtargetresource.class.php:1281
-#: inc/notificationtargetresource.class.php:1307 inc/resource.class.php:267
-#: inc/resource.class.php:1297
+#: inc/notificationtargetresource.class.php:1307 inc/resource.class.php:270
+#: inc/resource.class.php:1278
 msgid "Declared as leaving"
 msgstr "Deklarován jako odcházející"
 
-#: hook.php:847 inc/employer.class.php:40 inc/employment.class.php:169
+#: hook.php:857 inc/employer.class.php:40 inc/employment.class.php:169
 #: inc/employment.class.php:241
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:65
 msgid "Employer"
@@ -70,9 +70,9 @@ msgid_plural "Employers"
 msgstr[0] "Zaměstnavatel"
 msgstr[1] "Zaměstnavatelé"
 msgstr[2] "Zaměstnavatelů"
-msgstr[3] "Zaměstnavatelů"
+msgstr[3] "Zaměstnavatelé"
 
-#: hook.php:851 inc/client.class.php:38
+#: hook.php:861 inc/client.class.php:38
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Klient kterého se týká"
@@ -80,7 +80,7 @@ msgstr[1] "Klienti kterých se týká"
 msgstr[2] "Klientů kterých se týká"
 msgstr[3] "Klientů kterých se týká"
 
-#: hook.php:856 inc/directory.class.php:125
+#: hook.php:866 inc/directory.class.php:125
 #: inc/notificationtargetresource.class.php:84
 #: inc/notificationtargetresource.class.php:327
 #: inc/notificationtargetresource.class.php:406
@@ -88,46 +88,46 @@ msgstr[3] "Klientů kterých se týká"
 #: inc/notificationtargetresource.class.php:607
 #: inc/notificationtargetresource.class.php:730
 #: inc/notificationtargetresource.class.php:1269
-#: inc/notificationtargetresource.class.php:1297 inc/resource.class.php:206
-#: inc/resource.class.php:1205 inc/resource.class.php:2007
-#: inc/resource.class.php:2547 inc/resourcepdf.class.php:65
+#: inc/notificationtargetresource.class.php:1297 inc/resource.class.php:209
+#: inc/resource.class.php:1186 inc/resource.class.php:1971
+#: inc/resource.class.php:2511 inc/resourcepdf.class.php:65
 #: inc/rulecontracttype.class.php:177 inc/task.class.php:678
 #: inc/task.class.php:1025
 msgid "Resource manager"
 msgstr "Správce zdrojů"
 
-#: hook.php:868 inc/notificationtargetresource.class.php:87
+#: hook.php:878 inc/notificationtargetresource.class.php:87
 #: inc/notificationtargetresource.class.php:338
 #: inc/notificationtargetresource.class.php:417
 #: inc/notificationtargetresource.class.php:568
 #: inc/notificationtargetresource.class.php:617
 #: inc/notificationtargetresource.class.php:772
 #: inc/notificationtargetresource.class.php:1280
-#: inc/notificationtargetresource.class.php:1306 inc/resource.class.php:273
+#: inc/notificationtargetresource.class.php:1306 inc/resource.class.php:276
 msgid "Informant of leaving"
 msgstr "Oznamovatel odchodu"
 
-#: hook.php:874 inc/notificationtargetresource.class.php:85
+#: hook.php:884 inc/notificationtargetresource.class.php:85
 #: inc/notificationtargetresource.class.php:109
 #: inc/notificationtargetresource.class.php:328
 #: inc/notificationtargetresource.class.php:407
 #: inc/notificationtargetresource.class.php:539
 #: inc/notificationtargetresource.class.php:608
-#: inc/notificationtargetresource.class.php:733 inc/resource.class.php:352
-#: inc/resource.class.php:1229 inc/resource.class.php:2019
+#: inc/notificationtargetresource.class.php:733 inc/resource.class.php:355
+#: inc/resource.class.php:1210 inc/resource.class.php:1983
 #: inc/rulecontracttype.class.php:181
 msgid "Sales manager"
 msgstr "Obchodní ředitel"
 
-#: hook.php:1273 inc/resource_item.class.php:785
+#: hook.php:1283 inc/resource_item.class.php:785
 msgid "Not defined"
 msgstr "Neurčen"
 
-#: hook.php:1510
+#: hook.php:1520
 msgid "Modification of the associated resource's location"
 msgstr "Změna umístění přiřazeného zdroje"
 
-#: setup.php:179
+#: setup.php:178
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Lidský zdroj"
@@ -135,7 +135,7 @@ msgstr[1] "Lidské zdroje"
 msgstr[2] "Lidské zdroje"
 msgstr[3] "Lidské zdroje"
 
-#: setup.php:195
+#: setup.php:194
 msgid "Incompatible PHP Installation. Requires module"
 msgstr "Nekompatibilní PHP instalace. Je vyžadován modul"
 
@@ -182,7 +182,7 @@ msgstr "Kontrolní seznam není dokončen"
 msgid "Notification sent"
 msgstr "Oznámení odesláno"
 
-#: front/resource.form.php:309 inc/resource.class.php:3560
+#: front/resource.form.php:309 inc/resource.class.php:3523
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr "Oznámení nebylo odesláno, protože zdroj není propojen s uživatelem"
@@ -195,7 +195,8 @@ msgstr "Zobrazení dle typu smlouvy"
 msgid "Declaration of resource leaving OK"
 msgstr "Deklarace opuštění prostředku OK"
 
-#: front/wizard.form.php:113 inc/resource.class.php:534
+#: front/wizard.form.php:114 front/wizard.form.php:312
+#: inc/resource.class.php:538
 msgid "Required fields are not filled. Please try again."
 msgstr "Povinné kolonky nejsou vyplněné. Zkuste to znovu."
 
@@ -205,7 +206,7 @@ msgid "The profession for the budget must be filled"
 msgstr "Pro rozpočet je třeba vyplnit povolání"
 
 #: inc/budget.class.php:122 inc/budget.class.php:211 inc/cost.class.php:99
-#: inc/cost.class.php:128 inc/cost.class.php:192 inc/employment.class.php:142
+#: inc/cost.class.php:128 inc/cost.class.php:191 inc/employment.class.php:142
 #: inc/employment.class.php:261 inc/rank.class.php:38
 #: inc/resourcespeciality.class.php:62 inc/resourcespeciality.class.php:138
 msgid "Rank"
@@ -216,7 +217,7 @@ msgstr[2] "Pořadí"
 msgstr[3] "Pořadí"
 
 #: inc/budget.class.php:128 inc/budget.class.php:200 inc/cost.class.php:95
-#: inc/cost.class.php:123 inc/cost.class.php:179 inc/employment.class.php:148
+#: inc/cost.class.php:123 inc/cost.class.php:178 inc/employment.class.php:148
 #: inc/employment.class.php:250 inc/profession.class.php:38
 #: inc/rank.class.php:67 inc/rank.class.php:99
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
@@ -234,7 +235,7 @@ msgid_plural "Budget types"
 msgstr[0] "Typ rozpočtu"
 msgstr[1] "Typy rozpočtu"
 msgstr[2] "Typů rozpočtu"
-msgstr[3] "Typů rozpočtu"
+msgstr[3] "Typy rozpočtu"
 
 #: inc/budget.class.php:149 inc/budget.class.php:221
 msgid "Budget volume"
@@ -247,12 +248,12 @@ msgid_plural "Types of Budget volume"
 msgstr[0] "Typ výše rozpočtu"
 msgstr[1] "Typy výše rozpočtu"
 msgstr[2] "Typů výše rozpočtu"
-msgstr[3] "Typů výše rozpočtu"
+msgstr[3] "Typy výše rozpočtu"
 
 #: inc/budgettype.class.php:54 inc/budgettype.class.php:104
 #: inc/budgetvolume.class.php:54 inc/budgetvolume.class.php:104
 #: inc/contractnature.class.php:62 inc/contractnature.class.php:145
-#: inc/contracttype.class.php:55 inc/contracttype.class.php:85
+#: inc/contracttype.class.php:55 inc/contracttype.class.php:89
 #: inc/professioncategory.class.php:61 inc/professioncategory.class.php:111
 #: inc/profession.class.php:59 inc/profession.class.php:161
 #: inc/professionline.class.php:61 inc/professionline.class.php:111
@@ -267,16 +268,16 @@ msgstr[3] "Typů výše rozpočtu"
 msgid "Code"
 msgstr "Kód"
 
-#: inc/checklist.class.php:43 inc/profile.class.php:193
-#: inc/resource.class.php:4069
+#: inc/checklist.class.php:43 inc/profile.class.php:192
+#: inc/resource.class.php:4032
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Kontrolní seznam"
 msgstr[1] "Kontrolní seznamy"
 msgstr[2] "Kontrolních seznamů"
-msgstr[3] "Kontrolních seznamů"
+msgstr[3] "Kontrolní seznamy"
 
-#: inc/checklist.class.php:236 inc/checklist.class.php:576
+#: inc/checklist.class.php:236 inc/checklist.class.php:575
 #: inc/resourcebadge.class.php:434 inc/resource_change.class.php:731
 msgid "Create a end treatment ticket"
 msgstr "Ukončení neschopenky"
@@ -297,68 +298,68 @@ msgstr "Po přenesení prostředku"
 msgid "Create checklists"
 msgstr "Vytvořit kontrolní seznamy"
 
-#: inc/checklist.class.php:421 inc/checklist.class.php:645
+#: inc/checklist.class.php:420 inc/checklist.class.php:644
 #: inc/checklistconfig.class.php:86 inc/checklistconfig.class.php:116
 msgid "Important"
 msgstr "Důležitý"
 
-#: inc/checklist.class.php:430 inc/checklistconfig.class.php:77
+#: inc/checklist.class.php:429 inc/checklistconfig.class.php:77
 #: inc/checklistconfig.class.php:124
 msgid "Link"
 msgstr "Odkaz"
 
-#: inc/checklist.class.php:478
+#: inc/checklist.class.php:477
 msgid "Add a task at the arriving checklist"
 msgstr "Přidat úkol na kontrolní seznam při nástupu"
 
-#: inc/checklist.class.php:483
+#: inc/checklist.class.php:482
 msgid "Add a task at the leaving checklist"
 msgstr "Přidat úkol do kontrolního seznamu při výstupu"
 
-#: inc/checklist.class.php:488
+#: inc/checklist.class.php:487
 msgid "Add a task at the transfer checklist"
 msgstr "Přidat úkol do kontrolního seznamu při přechodu"
 
-#: inc/checklist.class.php:505
+#: inc/checklist.class.php:504
 msgid "Check list done"
 msgstr "Kontrolní seznam dokončen"
 
-#: inc/checklist.class.php:602
+#: inc/checklist.class.php:601
 msgid "Reset the checklist"
 msgstr "Resetovat kontrolní seznam"
 
-#: inc/checklist.class.php:647 inc/checklist.class.php:1238
+#: inc/checklist.class.php:646 inc/checklist.class.php:1236
 msgid "Linked task"
 msgstr "Připojený úkol"
 
-#: inc/checklist.class.php:772
+#: inc/checklist.class.php:771
 msgid "Modify state"
 msgstr "Změnit stav"
 
-#: inc/checklist.class.php:776
+#: inc/checklist.class.php:775
 msgid "Link a task"
 msgstr "Připojit úkol"
 
-#: inc/checklist.class.php:780
+#: inc/checklist.class.php:779
 msgid "Add ticket"
 msgstr "Přidat požadavek"
 
-#: inc/checklist.class.php:834 inc/checklist.class.php:877
-#: inc/checklist.class.php:916
+#: inc/checklist.class.php:833 inc/checklist.class.php:876
+#: inc/checklist.class.php:915
 msgid "The checklist is finished"
 msgstr "Kontrolní seznam je dokončen"
 
-#: inc/checklist.class.php:957 inc/dashboard.class.php:45
+#: inc/checklist.class.php:956 inc/dashboard.class.php:45
 #: inc/dashboard.class.php:129 inc/notificationtargetresource.class.php:398
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Odcházející zdroj – je třeba zkontrolovat kontrolní seznam"
 
-#: inc/checklist.class.php:959 inc/dashboard.class.php:44
+#: inc/checklist.class.php:958 inc/dashboard.class.php:44
 #: inc/dashboard.class.php:90 inc/notificationtargetresource.class.php:394
 msgid "New resource - checklist needs to verificated"
 msgstr "Nový zdroj – je třeba zkontrolovat kontrolní seznam"
 
-#: inc/checklist.class.php:964 inc/dashboard.class.php:122
+#: inc/checklist.class.php:963 inc/dashboard.class.php:122
 #: inc/directory.class.php:136 inc/notificationtargetresource.class.php:332
 #: inc/notificationtargetresource.class.php:411
 #: inc/notificationtargetresource.class.php:551
@@ -366,8 +367,8 @@ msgstr "Nový zdroj – je třeba zkontrolovat kontrolní seznam"
 #: inc/notificationtargetresource.class.php:745
 #: inc/notificationtargetresource.class.php:1273
 #: inc/notificationtargetresource.class.php:1301 inc/recap.class.php:144
-#: inc/resource.class.php:220 inc/resource.class.php:1335
-#: inc/resource.class.php:2060 inc/resource.class.php:2889
+#: inc/resource.class.php:223 inc/resource.class.php:1316
+#: inc/resource.class.php:2024 inc/resource.class.php:2852
 #: inc/resource_item.class.php:727 inc/resource_item.class.php:979
 #: inc/resource_item.class.php:989 inc/resourcepdf.class.php:70
 #: inc/rulecontracttype.class.php:193
@@ -380,7 +381,7 @@ msgstr "Nový zdroj – je třeba zkontrolovat kontrolní seznam"
 msgid "Departure date"
 msgstr "Datum odchodu"
 
-#: inc/checklist.class.php:966 inc/dashboard.class.php:83
+#: inc/checklist.class.php:965 inc/dashboard.class.php:83
 #: inc/directory.class.php:131 inc/notificationtargetresource.class.php:331
 #: inc/notificationtargetresource.class.php:410
 #: inc/notificationtargetresource.class.php:548
@@ -389,8 +390,8 @@ msgstr "Datum odchodu"
 #: inc/notificationtargetresource.class.php:1272
 #: inc/notificationtargetresource.class.php:1300 inc/recap.class.php:139
 #: inc/resourcecard.class.php:149 inc/resourcecard.class.php:214
-#: inc/resource.class.php:215 inc/resource.class.php:1217
-#: inc/resource.class.php:2051 inc/resource_item.class.php:726
+#: inc/resource.class.php:218 inc/resource.class.php:1198
+#: inc/resource.class.php:2015 inc/resource_item.class.php:726
 #: inc/resource_item.class.php:978 inc/resource_item.class.php:988
 #: inc/resourcepdf.class.php:69 inc/rulecontracttype.class.php:189
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
@@ -401,19 +402,19 @@ msgstr "Datum odchodu"
 msgid "Arrival date"
 msgstr "Datum nástupu"
 
-#: inc/checklist.class.php:973 inc/notificationtargetresource.class.php:400
+#: inc/checklist.class.php:972 inc/notificationtargetresource.class.php:400
 msgid "Checklist needs to verificated"
 msgstr "Je třeba zkontrolovat kontrolní seznam"
 
-#: inc/checklist.class.php:1057 inc/checklist.class.php:1157
+#: inc/checklist.class.php:1056 inc/checklist.class.php:1155
 msgid "Checklists Verification"
 msgstr "Ověřování kontrolních seznamů"
 
-#: inc/checklist.class.php:1238
+#: inc/checklist.class.php:1236
 msgid "Checked"
 msgstr "Zkontrolovaný"
 
-#: inc/checklist.class.php:1260
+#: inc/checklist.class.php:1258
 msgid "No checklist found"
 msgstr "Nenalezen kontrolní seznam ke kontrole"
 
@@ -442,7 +443,7 @@ msgid "Cannot add a choice that contains children"
 msgstr "Není možné přidat volbu která obsahuje podvolbu"
 
 #: inc/choice.class.php:236 inc/contracttype.class.php:67
-#: inc/contracttype.class.php:94
+#: inc/contracttype.class.php:98
 msgid "Enter the computing needs of the resource"
 msgstr "Zadejte výpočetní potřeby zdroje"
 
@@ -459,8 +460,9 @@ msgid "Will be added to the resource comment area"
 msgstr "Bude přidán komentář do prostoru zdroje"
 
 #: inc/choice.class.php:367 inc/employee.class.php:384
-#: inc/resource.class.php:1699 inc/resource.class.php:2170
-#: inc/resource.class.php:2183 inc/resource.class.php:2270
+#: inc/resource.class.php:1680 inc/resource.class.php:2134
+#: inc/resource.class.php:2147 inc/resource.class.php:2234
+#: inc/resourcehabilitation.class.php:344
 msgctxt "button"
 msgid "Next >"
 msgstr "Následující >"
@@ -486,7 +488,7 @@ msgid "Type of need"
 msgid_plural "Types of need"
 msgstr[0] "Typ potřeby"
 msgstr[1] "Typy potřeb"
-msgstr[2] "Typy potřeb"
+msgstr[2] "Typů potřeb"
 msgstr[3] "Typy potřeb"
 
 #: inc/client.class.php:62 inc/client.class.php:119
@@ -554,7 +556,7 @@ msgid_plural "Contract natures"
 msgstr[0] "Povaha smlouvy"
 msgstr[1] "Povahy smluv"
 msgstr[2] "Povah smluv"
-msgstr[3] "Povah smluv"
+msgstr[3] "Povahy smluv"
 
 #: inc/contracttype.class.php:41
 msgid "Type of contract"
@@ -562,28 +564,32 @@ msgid_plural "Types of contract"
 msgstr[0] "Typ smlouvy"
 msgstr[1] "Typy smluv"
 msgstr[2] "Typů smluv"
-msgstr[3] "Typů smluv"
+msgstr[3] "Typy smluv"
 
 #: inc/contracttype.class.php:59
 msgid "Wizard resource creation"
 msgstr "Průvodce vytvořením zdroje"
 
-#: inc/contracttype.class.php:63 inc/contracttype.class.php:89
+#: inc/contracttype.class.php:63 inc/contracttype.class.php:93
 #: inc/employee.class.php:342
 msgid "Enter employer information about the resource"
 msgstr "Zadejte informace zaměstnavatele o zdroji"
 
-#: inc/contracttype.class.php:71 inc/contracttype.class.php:99
+#: inc/contracttype.class.php:71 inc/contracttype.class.php:103
 msgid "Add a picture"
 msgstr "Přidat obrázek"
 
-#: inc/contracttype.class.php:161 inc/contracttype.class.php:177
-#: inc/resource.class.php:949 inc/resource.class.php:1810
+#: inc/contracttype.class.php:75 inc/contracttype.class.php:108
+msgid "Enter habilitation information "
+msgstr ""
+
+#: inc/contracttype.class.php:168 inc/contracttype.class.php:184
+#: inc/resource.class.php:947 inc/resource.class.php:1790
 msgid "Without contract"
 msgstr "Bez smlouvy"
 
 #: inc/cost.class.php:40 inc/cost.class.php:111 inc/cost.class.php:143
-#: inc/cost.class.php:216
+#: inc/cost.class.php:215
 msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Rozpočtový náklad"
@@ -599,32 +605,32 @@ msgstr[1] "Oddělení"
 msgstr[2] "Oddělení"
 msgstr[3] "Oddělení"
 
-#: inc/directory.class.php:42 inc/resource.class.php:4039
+#: inc/directory.class.php:42 inc/resource.class.php:4002
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Adresář"
 msgstr[1] "Adresáře"
 msgstr[2] "Adresářů"
-msgstr[3] "Adresářů"
+msgstr[3] "Adresáře"
 
-#: inc/directory.class.php:958 inc/resource.class.php:3911
+#: inc/directory.class.php:958 inc/resource.class.php:3874
 msgid "Click here to send your email"
 msgstr "Klikněte sem pro odeslání emailu"
 
-#: inc/employee.class.php:40 inc/profile.class.php:198
+#: inc/employee.class.php:40 inc/profile.class.php:197
 msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] "Zaměstnanec"
 msgstr[1] "Zaměstnanci"
-msgstr[2] "Zaměstnanci"
+msgstr[2] "Zaměstnanců"
 msgstr[3] "Zaměstnanci"
 
 #: inc/employee.class.php:191
 msgid "The resource is also created if not existent"
 msgstr "Pokud neexistuje je zdroj také vytvořen"
 
-#: inc/employee.class.php:381 inc/resource.class.php:2167
-#: inc/resource.class.php:2180
+#: inc/employee.class.php:381 inc/resource.class.php:2131
+#: inc/resource.class.php:2144
 msgctxt "button"
 msgid "< Previous"
 msgstr "< Předchozí"
@@ -642,7 +648,7 @@ msgstr "Následující krok"
 msgid "Short name"
 msgstr "Krátký název"
 
-#: inc/employment.class.php:46 inc/profile.class.php:218
+#: inc/employment.class.php:46 inc/profile.class.php:217
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:59
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:61
 msgid "Employment"
@@ -650,10 +656,10 @@ msgid_plural "Employments"
 msgstr[0] "Zaměstnanost"
 msgstr[1] "Zaměstnanosti"
 msgstr[2] "Zaměstnaností"
-msgstr[3] "Zaměstnaností"
+msgstr[3] "Zaměstnanosti"
 
 #: inc/employment.class.php:136 inc/employment.class.php:179
-#: inc/employment.class.php:295 inc/profile.class.php:178
+#: inc/employment.class.php:295 inc/profile.class.php:177
 #: inc/resource.class.php:56 inc/taskplanning.class.php:42
 msgid "Human resource"
 msgid_plural "Human resources"
@@ -670,7 +676,7 @@ msgid_plural "Employment states"
 msgstr[0] "Stav zaměstnanosti"
 msgstr[1] "Stavy zaměstnanosti"
 msgstr[2] "Stavů zaměstnanosti"
-msgstr[3] "Stavů zaměstnanosti"
+msgstr[3] "Stavy zaměstnanosti"
 
 #: inc/employment.class.php:174 inc/employment.class.php:278
 #: inc/recap.class.php:156
@@ -706,11 +712,24 @@ msgid_plural "Habilitations"
 msgstr[0] "Docentura"
 msgstr[1] "Docentury"
 msgstr[2] "Docentur"
-msgstr[3] "Docentur"
+msgstr[3] "Docentury"
 
 #: inc/habilitation.class.php:83 inc/habilitation.class.php:97
-msgid "Allow when creating the resource"
-msgstr "Umožnit vytváření prostředku"
+#: inc/habilitationlevel.class.php:50
+msgid "Habilitation level"
+msgid_plural "Habilitations level"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: inc/habilitationlevel.class.php:79 inc/habilitationlevel.class.php:97
+msgid "Mandatory when creating the resource"
+msgstr ""
+
+#: inc/habilitationlevel.class.php:83 inc/habilitationlevel.class.php:102
+msgid "Unlimited number of selectable habilitations "
+msgstr ""
 
 #: inc/leavingreason.class.php:41
 msgid "Leaving reason"
@@ -763,7 +782,7 @@ msgid "List of not finished tasks"
 msgstr "Seznam nedokončených úkolů"
 
 #: inc/notificationtargetresource.class.php:57
-#: inc/notificationtargetresource.class.php:321 inc/resource.class.php:3654
+#: inc/notificationtargetresource.class.php:321 inc/resource.class.php:3617
 msgid "These resources have normally left the company"
 msgstr "Tyto zdroje normálně opustily společnost"
 
@@ -820,7 +839,7 @@ msgid "Transfer resource notification"
 msgstr "Přenést oznámení zdroje"
 
 #: inc/notificationtargetresource.class.php:70
-#: inc/notificationtargetresource.class.php:1345 inc/resource.class.php:3582
+#: inc/notificationtargetresource.class.php:1345 inc/resource.class.php:3545
 msgid "Resources list of commercial manager"
 msgstr "Seznam prostředků obchodního ředitele"
 
@@ -881,14 +900,14 @@ msgstr "Prosím zkontrolujte seznam odcházejících zdrojů"
 #: inc/notificationtargetresource.class.php:727
 #: inc/notificationtargetresource.class.php:1264
 #: inc/notificationtargetresource.class.php:1292 inc/recap.class.php:94
-#: inc/resource.class.php:314 inc/resource.class.php:1075
-#: inc/resource.class.php:1883 inc/rulecontracttype.class.php:197
+#: inc/resource.class.php:317 inc/resource.class.php:1073
+#: inc/resource.class.php:1863 inc/rulecontracttype.class.php:197
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:47
 msgid "Quota"
 msgstr "Kvóta"
 
 #: inc/notificationtargetresource.class.php:571
-#: inc/notificationtargetresource.class.php:775 inc/resource.class.php:361
+#: inc/notificationtargetresource.class.php:775 inc/resource.class.php:364
 msgid "Declaration of departure date"
 msgstr "Deklarace datumu příchodu"
 
@@ -901,14 +920,14 @@ msgid "List of your associated resources"
 msgstr "Seznam souvisejících prostředků"
 
 #: inc/notificationtargetresource.class.php:795
-#: inc/notificationtargetresource.class.php:1283 inc/resource.class.php:375
-#: inc/resource.class.php:1355 inc/resource.class.php:2083
+#: inc/notificationtargetresource.class.php:1283 inc/resource.class.php:378
+#: inc/resource.class.php:1336 inc/resource.class.php:2047
 msgid "Sensitized to security"
 msgstr "Citlivé na bezpečnost"
 
 #: inc/notificationtargetresource.class.php:798
-#: inc/notificationtargetresource.class.php:1284 inc/resource.class.php:369
-#: inc/resource.class.php:1364 inc/resource.class.php:2094
+#: inc/notificationtargetresource.class.php:1284 inc/resource.class.php:372
+#: inc/resource.class.php:1345 inc/resource.class.php:2058
 msgid "Reading the security charter"
 msgstr "Čtení charty zabezpečení"
 
@@ -929,7 +948,7 @@ msgid "Transfer report of the human resource"
 msgstr "Výkaz o přechodech v lidských zdrojích"
 
 #: inc/notificationtargetresource.class.php:888
-#: inc/notificationtargetresource.class.php:1322 inc/resource.class.php:3057
+#: inc/notificationtargetresource.class.php:1322 inc/resource.class.php:3020
 msgid "Target entity"
 msgstr "Cílová entita"
 
@@ -939,8 +958,8 @@ msgid "Source entity"
 msgstr "Zdrojová entita"
 
 #: inc/notificationtargetresource.class.php:905
-#: inc/notificationtargetresource.class.php:1277 inc/profile.class.php:203
-#: inc/resource.class.php:1543 inc/resource.class.php:1544
+#: inc/notificationtargetresource.class.php:1277 inc/profile.class.php:202
+#: inc/resource.class.php:1524 inc/resource.class.php:1525
 #: inc/resourceresting.class.php:247
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
@@ -971,8 +990,8 @@ msgid "Reported by"
 msgstr "Nahlášeno (kým)"
 
 #: inc/notificationtargetresource.class.php:946
-#: inc/notificationtargetresource.class.php:1287 inc/resource.class.php:1552
-#: inc/resource.class.php:1553 inc/resourceholiday.class.php:177
+#: inc/notificationtargetresource.class.php:1287 inc/resource.class.php:1533
+#: inc/resource.class.php:1534 inc/resourceholiday.class.php:177
 msgid "Forced holiday management"
 msgstr "Správa nařízených dovolených"
 
@@ -1006,7 +1025,7 @@ msgid_plural "Profession categories"
 msgstr[0] "Kategorie profese"
 msgstr[1] "Kategorie profese"
 msgstr[2] "Kategorií profese"
-msgstr[3] "Kategorií profese"
+msgstr[3] "Kategorie profese"
 
 #: inc/profession.class.php:67 inc/profession.class.php:169
 #: inc/professionline.class.php:40
@@ -1015,37 +1034,37 @@ msgid_plural "Profession lines"
 msgstr[0] "Profesní linie"
 msgstr[1] "Profesní linie"
 msgstr[2] "Profesních linií"
-msgstr[3] "Profesních linií"
+msgstr[3] "Profesní linie"
 
-#: inc/profile.class.php:142 inc/profile.class.php:231
+#: inc/profile.class.php:141 inc/profile.class.php:230
 msgid "All resources access"
 msgstr "Přístup ke všem zdrojům"
 
-#: inc/profile.class.php:153
+#: inc/profile.class.php:152
 msgid "Service company management"
 msgstr "Správa firemních služeb"
 
-#: inc/profile.class.php:158
+#: inc/profile.class.php:157
 msgid "Public service management"
 msgstr "Správa veřejných služeb"
 
-#: inc/profile.class.php:208 inc/resourceholiday.class.php:42
+#: inc/profile.class.php:207 inc/resourceholiday.class.php:42
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] "Dovolená"
 msgstr[1] "Dovolené"
-msgstr[2] "Dovolené"
+msgstr[2] "Dovolených"
 msgstr[3] "Dovolené"
 
-#: inc/profile.class.php:213
+#: inc/profile.class.php:212
 msgid "Super habilitation"
 msgid_plural "Super habilitations"
 msgstr[0] "Super docentura"
 msgstr[1] "Super docentury"
 msgstr[2] "Super docentur"
-msgstr[3] "Super docentur"
+msgstr[3] "Super docentury"
 
-#: inc/profile.class.php:223
+#: inc/profile.class.php:222
 msgid "Dropdown management"
 msgstr "Správa rozbalovací nabídky"
 
@@ -1078,7 +1097,7 @@ msgid "Notification configuration"
 msgstr "Nastavení oznámení"
 
 #: inc/resourcebadge.class.php:52 inc/resourcebadge.class.php:210
-#: inc/resource.class.php:1570 inc/resource.class.php:1571
+#: inc/resource.class.php:1551 inc/resource.class.php:1552
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Správa jmenovky"
@@ -1212,147 +1231,147 @@ msgstr "Změnit agenturu pro"
 msgid "Managing change actions"
 msgstr "Akce správy změny"
 
-#: inc/resource.class.php:302 inc/resource.class.php:1025
+#: inc/resource.class.php:305 inc/resource.class.php:1023
 msgid "Photo"
 msgstr "Fotografie"
 
-#: inc/resource.class.php:414
+#: inc/resource.class.php:417
 msgid "Client Sensitized to security"
-msgstr ""
+msgstr "Klient citlivý na zabezpečení"
 
-#: inc/resource.class.php:787
+#: inc/resource.class.php:785
 msgid "End date was not completed. Please try again."
 msgstr "Datum ukončení není vyplněno. Zkuste to znovu."
 
-#: inc/resource.class.php:1337 inc/resource.class.php:2062
+#: inc/resource.class.php:1318 inc/resource.class.php:2026
 msgid "Empty for non defined"
 msgstr "Prázdné pro neurčené"
 
-#: inc/resource.class.php:1473
+#: inc/resource.class.php:1454
 msgid "Menu"
 msgstr "Nabídka"
 
-#: inc/resource.class.php:1484
+#: inc/resource.class.php:1465
 msgid "Resources management"
 msgstr "Správa zdrojů"
 
-#: inc/resource.class.php:1491 inc/resource.class.php:1492
+#: inc/resource.class.php:1472 inc/resource.class.php:1473
 msgid "Declare an arrival"
 msgstr "Nastavit příchod"
 
-#: inc/resource.class.php:1498 inc/resource.class.php:1499
-#: inc/resource.class.php:2949
+#: inc/resource.class.php:1479 inc/resource.class.php:1480
+#: inc/resource.class.php:2912
 msgid "Declare a change"
 msgstr "Nastavit změnu"
 
-#: inc/resource.class.php:1505 inc/resource.class.php:1506
-#: inc/resource.class.php:2872 inc/resource.class.php:2911
+#: inc/resource.class.php:1486 inc/resource.class.php:1487
+#: inc/resource.class.php:2835 inc/resource.class.php:2874
 msgid "Declare a departure"
 msgstr "Nastavit odchod"
 
-#: inc/resource.class.php:1515
+#: inc/resource.class.php:1496
 msgid "Others declarations"
 msgstr "Ostatní nastavení"
 
-#: inc/resource.class.php:1581
+#: inc/resource.class.php:1562
 msgid "Others actions"
 msgstr "Další akce"
 
-#: inc/resource.class.php:1587 inc/resource.class.php:1588
+#: inc/resource.class.php:1568 inc/resource.class.php:1569
 msgid "Search resources"
 msgstr "Hledání zdrojů"
 
-#: inc/resource.class.php:1593 inc/resource.class.php:1594
+#: inc/resource.class.php:1574 inc/resource.class.php:1575
 msgid "See details of a resource"
 msgstr "Viz podrobnosti o zdroji"
 
-#: inc/resource.class.php:1608
+#: inc/resource.class.php:1589
 msgid "Employments / budgets management"
 msgstr "Správa zaměstnání/rozpočtů"
 
-#: inc/resource.class.php:1619 inc/resource.class.php:1620
+#: inc/resource.class.php:1600 inc/resource.class.php:1601
 msgid "Declare an employment"
 msgstr "Deklarovat zaměstnání"
 
-#: inc/resource.class.php:1628 inc/resource.class.php:1629
-#: inc/resource.class.php:4053
+#: inc/resource.class.php:1609 inc/resource.class.php:1610
+#: inc/resource.class.php:4016
 msgid "Employment management"
 msgstr "Řízení zaměstnanosti"
 
-#: inc/resource.class.php:1638 inc/resource.class.php:1639
-#: inc/resource.class.php:4059
+#: inc/resource.class.php:1619 inc/resource.class.php:1620
+#: inc/resource.class.php:4022
 msgid "Budget management"
 msgstr "Správa rozpočtu"
 
-#: inc/resource.class.php:1649 inc/resource.class.php:1650
-#: inc/resource.class.php:4054
+#: inc/resource.class.php:1630 inc/resource.class.php:1631
+#: inc/resource.class.php:4017
 msgid "List Employments / Resources"
 msgstr "Seznam zaměstnání/zdrojů"
 
-#: inc/resource.class.php:1681
+#: inc/resource.class.php:1662
 msgid "Welcome to the wizard resource"
 msgstr "Vítejte v průvodci zdroje"
 
-#: inc/resource.class.php:1686
+#: inc/resource.class.php:1667
 msgid "This wizard lets you create new resources in GLPI"
 msgstr "Tento průvodce vám umožní vytvořit nové zdroje v GLPI"
 
-#: inc/resource.class.php:1688
+#: inc/resource.class.php:1669
 msgid "To begin, select type of contract"
 msgstr "Chcete-li začít, vyberte typ smlouvy"
 
-#: inc/resource.class.php:1769
+#: inc/resource.class.php:1749
 msgid "Enter general information about the resource"
 msgstr "Zadejte obecné informace o zdroji"
 
-#: inc/resource.class.php:1849
+#: inc/resource.class.php:1829
 msgid ""
 "Thank you for paying attention to the spelling of the name and the firstname"
 " of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr "Děkujeme že dáváte pozor na hláskování příjmení a jména zdroje. U složených příjmení jejich části prokládejte spojovníkem „-“."
 
-#: inc/resource.class.php:2143
+#: inc/resource.class.php:2107
 msgid "The fields in red must be completed"
 msgstr "Je třeba, aby červeně označená pole byla vyplněná"
 
-#: inc/resource.class.php:2223
+#: inc/resource.class.php:2187
 msgid "Add the photo of the resource"
 msgstr "Přidejte fotografii zdroje"
 
-#: inc/resource.class.php:2251
+#: inc/resource.class.php:2215
 msgid "Photo format : JPG"
 msgstr "Formát fotografie: JPG"
 
-#: inc/resource.class.php:2967
+#: inc/resource.class.php:2930
 msgid "Actions to be taken"
 msgstr "Akce které podniknout"
 
-#: inc/resource.class.php:2987
+#: inc/resource.class.php:2950
 #, php-format
 msgid "Please correct: %s"
 msgstr "Opravte: %s"
 
-#: inc/resource.class.php:3034 inc/resource.class.php:3074
+#: inc/resource.class.php:2997 inc/resource.class.php:3037
 msgid "Declare a transfer"
 msgstr "Deklarovat přechod"
 
-#: inc/resource.class.php:3048
+#: inc/resource.class.php:3011
 msgid "Current entity"
 msgstr "Stávající entita"
 
-#: inc/resource.class.php:3100 inc/resource_item.class.php:691
+#: inc/resource.class.php:3063 inc/resource_item.class.php:691
 msgid "Associate a resource"
 msgstr "Přiřadit zdroj"
 
-#: inc/resource.class.php:3102
+#: inc/resource.class.php:3065
 msgid "Generate resources"
 msgstr "Vytvořit zdroje"
 
-#: inc/resource.class.php:3129 inc/resourcehabilitation.class.php:128
+#: inc/resource.class.php:3092 inc/resourcehabilitation.class.php:137
 msgid "Add additional habilitation"
 msgstr "Přidat další docenturu"
 
-#: inc/resource.class.php:3237 inc/resource.class.php:3263
+#: inc/resource.class.php:3200 inc/resource.class.php:3226
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Tento zdroj byl přidán"
@@ -1360,7 +1379,7 @@ msgstr[1] "Tyto zdroje byly přidány"
 msgstr[2] "Těchto zdrojů bylo přidáno"
 msgstr[3] "Těchto zdrojů bylo přidáno"
 
-#: inc/resource.class.php:3240 inc/resource.class.php:3260
+#: inc/resource.class.php:3203 inc/resource.class.php:3223
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Tento zdroj už existuje"
@@ -1368,55 +1387,63 @@ msgstr[1] "Tyto zdroje už existují"
 msgstr[2] "Těchto zdrojů už existuje"
 msgstr[3] "Těchto zdrojů už existuje"
 
-#: inc/resource.class.php:3563
+#: inc/resource.class.php:3526
 msgid "Declaration of resource transfer OK"
 msgstr "Deklarace přechodu zdroje je v pořádku"
 
-#: inc/resource.class.php:3578
+#: inc/resource.class.php:3541
 msgid "Resources not declaring leaving"
 msgstr "Zdroj nedeklaruje dochod"
 
-#: inc/resource.class.php:3738 inc/resource.class.php:3742
+#: inc/resource.class.php:3701 inc/resource.class.php:3705
 msgid "Send alert to the commercial manager"
 msgstr "Poslat upozornění obchodnímu řediteli"
 
-#: inc/resource.class.php:3748 inc/resource.class.php:3751
+#: inc/resource.class.php:3711 inc/resource.class.php:3714
 msgid "Failed to Send alert to the commercial manager"
 msgstr "Nepodařilo se poslat upozornění obchodnímu řediteli"
 
-#: inc/resource.class.php:3770
+#: inc/resource.class.php:3733
 msgid "Select the contract type"
 msgstr "Vyberte typ smlouvy"
 
-#: inc/resource.class.php:4043 inc/resourceresting.class.php:270
+#: inc/resource.class.php:4006 inc/resourceresting.class.php:270
 #: inc/resourceresting.class.php:271 inc/resourceresting.class.php:378
 #: inc/resourceresting.class.php:462 inc/resourceresting.class.php:1285
 msgid "List of non contract periods"
 msgstr "Seznam období bez smlouvy"
 
-#: inc/resource.class.php:4048 inc/resourceholiday.class.php:190
+#: inc/resource.class.php:4011 inc/resourceholiday.class.php:190
 #: inc/resourceholiday.class.php:191 inc/resourceholiday.class.php:273
 #: inc/resourceholiday.class.php:1049
 msgid "List of forced holidays"
 msgstr "Seznam plánovaných dovolených"
 
-#: inc/resource.class.php:4064 inc/taskplanning.class.php:42
+#: inc/resource.class.php:4027 inc/taskplanning.class.php:42
 msgid "Tasks list"
 msgstr "Seznam úkolů"
 
-#: inc/resource.class.php:4154
+#: inc/resource.class.php:4117
 msgid "Resources list"
 msgstr "Seznam prostředků"
 
-#: inc/resourcehabilitation.class.php:220
+#: inc/resourcehabilitation.class.php:229
 #, php-format
 msgid "Adding the habilitation: %s"
 msgstr "Přidání docentury: %s"
 
-#: inc/resourcehabilitation.class.php:230
+#: inc/resourcehabilitation.class.php:242
 #, php-format
 msgid "Suppression of the habilitation: %s"
 msgstr "Potlačení docentury: %s"
+
+#: inc/resourcehabilitation.class.php:294
+msgid "Enter habilitations about the resource"
+msgstr ""
+
+#: inc/resourcehabilitation.class.php:335
+msgid "No habilitation level, you cannot add habilitation for this resource."
+msgstr ""
 
 #: inc/resourceholiday.class.php:56 inc/resourceholiday.class.php:83
 msgid "The begin date of the forced holiday period must be filled"
@@ -1479,7 +1506,7 @@ msgid_plural "Public statuses"
 msgstr[0] "Veřejný stav"
 msgstr[1] "Veřejné stavy"
 msgstr[2] "Veřejných stavů"
-msgstr[3] "Veřejných stavů"
+msgstr[3] "Veřejné stavy"
 
 #: inc/resourcesituation.class.php:69 inc/resourcesituation.class.php:127
 msgid "Is linked to a contract"
@@ -1491,7 +1518,7 @@ msgid_plural "Specialities"
 msgstr[0] "Specialita"
 msgstr[1] "Speciality"
 msgstr[2] "Specialit"
-msgstr[3] "Specialit"
+msgstr[3] "Speciality"
 
 #: inc/resourcestate.class.php:38
 msgid "Resource state"
@@ -1499,7 +1526,7 @@ msgid_plural "Resource states"
 msgstr[0] "Stav zdroje"
 msgstr[1] "Stavy zdroje"
 msgstr[2] "Stavů zdroje"
-msgstr[3] "Stavů zdroje"
+msgstr[3] "Stavy zdroje"
 
 #: inc/rulechecklist.class.php:95
 msgid "Checklist type"

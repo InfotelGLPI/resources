@@ -47,7 +47,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.3.3.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.4.4.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -167,10 +167,10 @@ function plugin_resources_install() {
 
       Plugin::migrateItemType(
          [4300 => 'PluginResourcesResource',
-               4301 => 'PluginResourcesTask',
-               4303 => 'PluginResourcesDirectory'],
+          4301 => 'PluginResourcesTask',
+          4303 => 'PluginResourcesDirectory'],
          ["glpi_savedsearches", "glpi_savedsearches_users", "glpi_displaypreferences",
-               "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"],
+          "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"],
          ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
 
       Plugin::migrateItemType(
@@ -259,6 +259,15 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.3.3.sql");
 
    }
+
+   //Version 2.4.4
+   if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.4.4.sql");
+
+   }
+
+
+
 
    if ($update80) {
 
@@ -375,19 +384,19 @@ function plugin_resources_install() {
             $choice_item = new PluginResourcesChoiceItem();
 
             $types = [__('Computer') => 'Computer',
-                           __('Monitor') => 'Monitor',
-                           __('Software') => 'Software',
-                           __('Network device') => 'NetworkEquipment',
-                           __('Printer') => 'Printer',
-                           __('Peripheral') => 'Peripheral',
-                           __('Phone') => 'Phone',
-                           __('Consumable model') => 'ConsumableItem',
-                           __('Specific network rights', 'resources') => '4303',
-                           __('Access to the applications', 'resources') => '4304',
-                           __('Specific securities groups', 'resources') => '4305',
-                           __('Specific distribution lists', 'resources') => '4306',
-                           __('Others needs', 'resources') => '4307',
-                           'PluginBadgesBadge' => 'PluginBadgesBadge'];
+                      __('Monitor') => 'Monitor',
+                      __('Software') => 'Software',
+                      __('Network device') => 'NetworkEquipment',
+                      __('Printer') => 'Printer',
+                      __('Peripheral') => 'Peripheral',
+                      __('Phone') => 'Phone',
+                      __('Consumable model') => 'ConsumableItem',
+                      __('Specific network rights', 'resources') => '4303',
+                      __('Access to the applications', 'resources') => '4304',
+                      __('Specific securities groups', 'resources') => '4305',
+                      __('Specific distribution lists', 'resources') => '4306',
+                      __('Others needs', 'resources') => '4307',
+                      'PluginBadgesBadge' => 'PluginBadgesBadge'];
 
             if ($choice->getFromDB($key)) {
                $key = array_search($choice->fields["itemtype"], $types);
@@ -520,49 +529,49 @@ function plugin_resources_uninstall() {
    global $DB;
 
    $tables = ["glpi_plugin_resources_resources",
-                   "glpi_plugin_resources_resources_items",
-                   "glpi_plugin_resources_employees",
-                   "glpi_plugin_resources_employers",
-                   "glpi_plugin_resources_clients",
-                   "glpi_plugin_resources_choices",
-                   "glpi_plugin_resources_choiceitems",
-                   "glpi_plugin_resources_departments",
-                   "glpi_plugin_resources_contracttypes",
-                   "glpi_plugin_resources_resourcestates",
-                   "glpi_plugin_resources_tasktypes",
-                   "glpi_plugin_resources_profiles",
-                   "glpi_plugin_resources_tasks",
-                   "glpi_plugin_resources_taskplannings",
-                   "glpi_plugin_resources_tasks_items",
-                   "glpi_plugin_resources_checklists",
-                   "glpi_plugin_resources_checklistconfigs",
-                   "glpi_plugin_resources_reportconfigs",
-                   "glpi_plugin_resources_resourcerestings",
-                   "glpi_plugin_resources_resourceholidays",
-                   "glpi_plugin_resources_ticketcategories",
-                   "glpi_plugin_resources_resourcesituations",
-                   "glpi_plugin_resources_contractnatures",
-                   "glpi_plugin_resources_ranks",
-                   "glpi_plugin_resources_resourcespecialities",
-                   "glpi_plugin_resources_leavingreasons",
-                   "glpi_plugin_resources_professions",
-                   "glpi_plugin_resources_professionlines",
-                   "glpi_plugin_resources_professioncategories",
-                   "glpi_plugin_resources_employments",
-                   "glpi_plugin_resources_employmentstates",
-                   "glpi_plugin_resources_budgets",
-                   "glpi_plugin_resources_costs",
-                   "glpi_plugin_resources_budgettypes",
-                   "glpi_plugin_resources_budgetvolumes",
-                   "glpi_plugin_resources_configs",
-                   "glpi_plugin_resources_notifications",
-                   "glpi_plugin_resources_resourcebadges",
-                   "glpi_plugin_resources_resourcehabilitations",
-                   "glpi_plugin_resources_transferentities",
-                   "glpi_plugin_resources_resources_changes",
-                   "glpi_plugin_resources_confighabilitations",
-                   "glpi_plugin_resources_habilitations",
-                   ];
+              "glpi_plugin_resources_resources_items",
+              "glpi_plugin_resources_employees",
+              "glpi_plugin_resources_employers",
+              "glpi_plugin_resources_clients",
+              "glpi_plugin_resources_choices",
+              "glpi_plugin_resources_choiceitems",
+              "glpi_plugin_resources_departments",
+              "glpi_plugin_resources_contracttypes",
+              "glpi_plugin_resources_resourcestates",
+              "glpi_plugin_resources_tasktypes",
+              "glpi_plugin_resources_profiles",
+              "glpi_plugin_resources_tasks",
+              "glpi_plugin_resources_taskplannings",
+              "glpi_plugin_resources_tasks_items",
+              "glpi_plugin_resources_checklists",
+              "glpi_plugin_resources_checklistconfigs",
+              "glpi_plugin_resources_reportconfigs",
+              "glpi_plugin_resources_resourcerestings",
+              "glpi_plugin_resources_resourceholidays",
+              "glpi_plugin_resources_ticketcategories",
+              "glpi_plugin_resources_resourcesituations",
+              "glpi_plugin_resources_contractnatures",
+              "glpi_plugin_resources_ranks",
+              "glpi_plugin_resources_resourcespecialities",
+              "glpi_plugin_resources_leavingreasons",
+              "glpi_plugin_resources_professions",
+              "glpi_plugin_resources_professionlines",
+              "glpi_plugin_resources_professioncategories",
+              "glpi_plugin_resources_employments",
+              "glpi_plugin_resources_employmentstates",
+              "glpi_plugin_resources_budgets",
+              "glpi_plugin_resources_costs",
+              "glpi_plugin_resources_budgettypes",
+              "glpi_plugin_resources_budgetvolumes",
+              "glpi_plugin_resources_configs",
+              "glpi_plugin_resources_notifications",
+              "glpi_plugin_resources_resourcebadges",
+              "glpi_plugin_resources_resourcehabilitations",
+              "glpi_plugin_resources_transferentities",
+              "glpi_plugin_resources_resources_changes",
+              "glpi_plugin_resources_confighabilitations",
+              "glpi_plugin_resources_habilitations",
+   ];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -570,16 +579,16 @@ function plugin_resources_uninstall() {
 
    //old versions
    $tables = ["glpi_plugin_resources",
-                   "glpi_plugin_resources_device",
-                   "glpi_plugin_resources_needs",
-                   "glpi_plugin_resources_employee",
-                   "glpi_dropdown_plugin_resources_employer",
-                   "glpi_dropdown_plugin_resources_client",
-                   "glpi_dropdown_plugin_resources_type",
-                   "glpi_dropdown_plugin_resources_department",
-                   "glpi_dropdown_plugin_resources_tasks_type",
-                   "glpi_plugin_resources_mailingsettings",
-                   "glpi_plugin_resources_mailing"];
+              "glpi_plugin_resources_device",
+              "glpi_plugin_resources_needs",
+              "glpi_plugin_resources_employee",
+              "glpi_dropdown_plugin_resources_employer",
+              "glpi_dropdown_plugin_resources_client",
+              "glpi_dropdown_plugin_resources_type",
+              "glpi_dropdown_plugin_resources_department",
+              "glpi_dropdown_plugin_resources_tasks_type",
+              "glpi_plugin_resources_mailingsettings",
+              "glpi_plugin_resources_mailing"];
 
    foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -621,7 +630,7 @@ function plugin_resources_uninstall() {
    $notif = new Notification();
 
    $options = ['itemtype' => 'PluginResourcesResource',
-                    'FIELDS' => 'id'];
+               'FIELDS' => 'id'];
    foreach ($DB->request('glpi_notifications', $options) as $data) {
       $notif->delete($data);
    }
@@ -630,10 +639,10 @@ function plugin_resources_uninstall() {
    $template = new NotificationTemplate();
    $translation = new NotificationTemplateTranslation();
    $options = ['itemtype' => 'PluginResourcesResource',
-                    'FIELDS' => 'id'];
+               'FIELDS' => 'id'];
    foreach ($DB->request('glpi_notificationtemplates', $options) as $data) {
       $options_template = ['notificationtemplates_id' => $data['id'],
-                                'FIELDS' => 'id'];
+                           'FIELDS' => 'id'];
 
       foreach ($DB->request('glpi_notificationtemplatetranslations', $options_template) as $data_template) {
          $translation->delete($data_template);
@@ -690,80 +699,80 @@ function plugin_resources_getDatabaseRelations() {
    if ($plugin->isActivated("resources")) {
       return [
          "glpi_entities"                                   => ["glpi_plugin_resources_resources"               => "entities_id",
-                                                                    "glpi_plugin_resources_resourcestates"          => "entities_id",
-                                                                    "glpi_plugin_resources_choiceitems"             => "entities_id",
-                                                                    "glpi_plugin_resources_employers"               => "entities_id",
-                                                                    "glpi_plugin_resources_clients"                 => "entities_id",
-                                                                    "glpi_plugin_resources_contracttypes"           => "entities_id",
-                                                                    "glpi_plugin_resources_departments"             => "entities_id",
-                                                                    "glpi_plugin_resources_tasks"                   => "entities_id",
-                                                                    "glpi_plugin_resources_tasktypes"               => "entities_id",
-                                                                    "glpi_plugin_resources_checklists"              => "entities_id",
-                                                                    "glpi_plugin_resources_checklistconfigs"        => "entities_id",
-                                                                    "glpi_plugin_resources_resourcesituations"      => "entities_id",
-                                                                    "glpi_plugin_resources_contractnatures"         => "entities_id",
-                                                                    "glpi_plugin_resources_ranks"                   => "entities_id",
-                                                                    "glpi_plugin_resources_resourcespecialities"    => "entities_id",
-                                                                    "glpi_plugin_resources_leavingreasons"          => "entities_id",
-                                                                    "glpi_plugin_resources_professions"             => "entities_id",
-                                                                    "glpi_plugin_resources_professionlines"         => "entities_id",
-                                                                    "glpi_plugin_resources_professioncategories"    => "entities_id",
-                                                                    "glpi_plugin_resources_employments"             => "entities_id",
-                                                                    "glpi_plugin_resources_employmentstates"        => "entities_id",
-                                                                    "glpi_plugin_resources_budgets"                 => "entities_id",
-                                                                    "glpi_plugin_resources_costs"                   => "entities_id",
-                                                                    "glpi_plugin_resources_budgettypes"             => "entities_id",
-                                                                    "glpi_plugin_resources_budgetvolumes"           => "entities_id",
-                                                                    "glpi_plugin_resources_transferentities"        => "entities_id"],
+                                                               "glpi_plugin_resources_resourcestates"          => "entities_id",
+                                                               "glpi_plugin_resources_choiceitems"             => "entities_id",
+                                                               "glpi_plugin_resources_employers"               => "entities_id",
+                                                               "glpi_plugin_resources_clients"                 => "entities_id",
+                                                               "glpi_plugin_resources_contracttypes"           => "entities_id",
+                                                               "glpi_plugin_resources_departments"             => "entities_id",
+                                                               "glpi_plugin_resources_tasks"                   => "entities_id",
+                                                               "glpi_plugin_resources_tasktypes"               => "entities_id",
+                                                               "glpi_plugin_resources_checklists"              => "entities_id",
+                                                               "glpi_plugin_resources_checklistconfigs"        => "entities_id",
+                                                               "glpi_plugin_resources_resourcesituations"      => "entities_id",
+                                                               "glpi_plugin_resources_contractnatures"         => "entities_id",
+                                                               "glpi_plugin_resources_ranks"                   => "entities_id",
+                                                               "glpi_plugin_resources_resourcespecialities"    => "entities_id",
+                                                               "glpi_plugin_resources_leavingreasons"          => "entities_id",
+                                                               "glpi_plugin_resources_professions"             => "entities_id",
+                                                               "glpi_plugin_resources_professionlines"         => "entities_id",
+                                                               "glpi_plugin_resources_professioncategories"    => "entities_id",
+                                                               "glpi_plugin_resources_employments"             => "entities_id",
+                                                               "glpi_plugin_resources_employmentstates"        => "entities_id",
+                                                               "glpi_plugin_resources_budgets"                 => "entities_id",
+                                                               "glpi_plugin_resources_costs"                   => "entities_id",
+                                                               "glpi_plugin_resources_budgettypes"             => "entities_id",
+                                                               "glpi_plugin_resources_budgetvolumes"           => "entities_id",
+                                                               "glpi_plugin_resources_transferentities"        => "entities_id"],
          "glpi_plugin_resources_contracttypes"             => ["glpi_plugin_resources_resources"               => "plugin_resources_contracttypes_id",
-                                                                    "glpi_plugin_resources_checklists"              => "plugin_resources_contracttypes_id"],
+                                                               "glpi_plugin_resources_checklists"              => "plugin_resources_contracttypes_id"],
          "glpi_users"                                      => ["glpi_plugin_resources_resources"               => ['users_id', 'users_id_recipient', 'users_id_recipient_leaving', 'users_id_sales'],"glpi_plugin_resources_tasks" => "users_id"],
          "glpi_plugin_resources_departments"               => ["glpi_plugin_resources_resources"               => "plugin_resources_departments_id"],
-         "glpi_plugin_resources_habilitations"             => ["glpi_plugin_resources_resources"               => "plugin_resources_habilitations_id",
-                                                                    "glpi_plugin_resources_resourcehabilitations"   => "plugin_resources_habilitations_id"],
+         "glpi_plugin_resources_habilitations"             => ["glpi_plugin_resources_resourcehabilitations"   => "plugin_resources_habilitations_id"],
          "glpi_plugin_resources_resourcestates"            => ["glpi_plugin_resources_resources"               => "plugin_resources_resourcestates_id"],
          "glpi_plugin_resources_resourcesituations"        => ["glpi_plugin_resources_resources"               => "plugin_resources_resourcesituations_id"],
          "glpi_plugin_resources_contractnatures"           => ["glpi_plugin_resources_resources"               => "plugin_resources_contractnatures_id"],
          "glpi_plugin_resources_ranks"                     => ["glpi_plugin_resources_resources"               => "plugin_resources_ranks_id"],
          "glpi_plugin_resources_resourcespecialities"      => ["glpi_plugin_resources_resources"               => "plugin_resources_resourcespecialities_id"],
          "glpi_locations"                                  => ["glpi_plugin_resources_resources"               => "locations_id",
-                                                                    "glpi_plugin_resources_employers"               => "locations_id",
-                                                                    "glpi_plugin_resources_resourcerestings"        => "locations_id"],
+                                                               "glpi_plugin_resources_employers"               => "locations_id",
+                                                               "glpi_plugin_resources_resourcerestings"        => "locations_id"],
          "glpi_plugin_resources_leavingreasons"            => ["glpi_plugin_resources_resources"               => "plugin_resources_leavingreasons_id"],
          "glpi_plugin_resources_resources"                 => ["glpi_plugin_resources_choices"                 => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_resources_items"         => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_employees"               => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_tasks"                   => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_checklists"              => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_reportconfigs"           => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_resourcerestings"        => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_resourceholidays"        => "plugin_resources_resources_id",
-                                                                    "glpi_plugin_resources_employments"             => "plugin_resources_resources_id"],
+                                                               "glpi_plugin_resources_resources_items"         => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_employees"               => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_tasks"                   => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_checklists"              => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_reportconfigs"           => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_resourcerestings"        => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_resourceholidays"        => "plugin_resources_resources_id",
+                                                               "glpi_plugin_resources_employments"             => "plugin_resources_resources_id"],
          "glpi_plugin_resources_choiceitems"               => ["glpi_plugin_resources_choices"                 => "plugin_resources_choiceitems_id",
-                                                                    "glpi_plugin_resources_choiceitems"             => "plugin_resources_choiceitems_id"],
+                                                               "glpi_plugin_resources_choiceitems"             => "plugin_resources_choiceitems_id"],
          "glpi_plugin_resources_employers"                 => ["glpi_plugin_resources_employees"               => "plugin_resources_employers_id",
-                                                                    "glpi_plugin_resources_employers"               => "plugin_resources_employers_id",
-                                                                    "glpi_plugin_resources_employments"             => "plugin_resources_employers_id"],
+                                                               "glpi_plugin_resources_employers"               => "plugin_resources_employers_id",
+                                                               "glpi_plugin_resources_employments"             => "plugin_resources_employers_id"],
          "glpi_plugin_resources_clients"                   => ["glpi_plugin_resources_employees"               => "plugin_resources_clients_id"],
          "glpi_plugin_resources_tasktypes"                 => ["glpi_plugin_resources_tasks"                   => "plugin_resources_tasktypes_id"],
          "glpi_groups"                                     => ["glpi_plugin_resources_tasks"                   => "groups_id"],
          "glpi_plugin_resources_tasks"                     => ["glpi_plugin_resources_tasks_items"             => "plugin_resources_tasks_id",
-                                                                    "glpi_plugin_resources_checklists"              => "plugin_resources_tasks_id",
-                                                                    "glpi_plugin_resources_taskplannings"           => "plugin_resources_tasks_id"],
+                                                               "glpi_plugin_resources_checklists"              => "plugin_resources_tasks_id",
+                                                               "glpi_plugin_resources_taskplannings"           => "plugin_resources_tasks_id"],
          "glpi_ticketcategories"                           => ["glpi_plugin_resources_ticketcategories"        => "ticketcategories_id"],
          "glpi_plugin_resources_professions"               => ["glpi_plugin_resources_ranks"                   => "plugin_resources_professions_id",
-                                                                    "glpi_plugin_resources_employments"             => "plugin_resources_professions_id",
-                                                                    "glpi_plugin_resources_budgets"                 => "plugin_resources_professions_id",
-                                                                    "glpi_plugin_resources_costs"                   => "plugin_resources_professions_id"],
+                                                               "glpi_plugin_resources_employments"             => "plugin_resources_professions_id",
+                                                               "glpi_plugin_resources_budgets"                 => "plugin_resources_professions_id",
+                                                               "glpi_plugin_resources_costs"                   => "plugin_resources_professions_id"],
          "glpi_plugin_resources_ranks"                     => ["glpi_plugin_resources_resourcespecialities"    => "plugin_resources_ranks_id",
-                                                                    "glpi_plugin_resources_employments"             => "plugin_resources_ranks_id",
-                                                                    "glpi_plugin_resources_budgets"                 => "plugin_resources_ranks_id",
-                                                                    "glpi_plugin_resources_costs"                   => "plugin_resources_ranks_id"],
+                                                               "glpi_plugin_resources_employments"             => "plugin_resources_ranks_id",
+                                                               "glpi_plugin_resources_budgets"                 => "plugin_resources_ranks_id",
+                                                               "glpi_plugin_resources_costs"                   => "plugin_resources_ranks_id"],
          "glpi_plugin_resources_professionlines"           => ["glpi_plugin_resources_professions"             => "plugin_resources_professionlines_id"],
          "glpi_plugin_resources_professioncategories"      => ["glpi_plugin_resources_professions"             => "plugin_resources_professioncategories_id"],
          "glpi_plugin_resources_employmentstates"          => ["glpi_plugin_resources_employments"             => "plugin_resources_employmentstates_id"],
          "glpi_plugin_resources_budgettypes"               => ["glpi_plugin_resources_budgets"                 => "plugin_resources_budgettypes_id"],
          "glpi_plugin_resources_budgetvolumes"             => ["glpi_plugin_resources_budgets"                 => "plugin_resources_budgetvolumes_id"],
+         "glpi_plugin_resources_habilitationlevels"        => ["glpi_plugin_resources_habilitations"           => "plugin_resources_habilitationlevels_id"],
       ];
    } else {
       return [];
@@ -775,26 +784,27 @@ function plugin_resources_getDropdown() {
 
    $plugin = new Plugin();
    if ($plugin->isActivated("resources")) {
-      return ['PluginResourcesContractType'         => PluginResourcesContractType::getTypeName(2),
-                   'PluginResourcesTaskType'             => PluginResourcesTaskType::getTypeName(2),
-                   'PluginResourcesResourceState'        => PluginResourcesResource::getTypeName(2)." - ".PluginResourcesResourceSituation::getTypeName(2),
-                   'PluginResourcesDepartment'           => PluginResourcesDepartment::getTypeName(2),
-                   'PluginResourcesEmployer'             => PluginResourcesEmployer::getTypeName(2),
-                   'PluginResourcesClient'               => PluginResourcesClient::getTypeName(2),
-                   'PluginResourcesChoiceItem'           => PluginResourcesChoiceItem::getTypeName(2),
-                   'PluginResourcesResourceSituation'    => PluginResourcesEmployer::getTypeName(2)." - ".PluginResourcesResourceSituation::getTypeName(2),
-                   'PluginResourcesContractNature'       => PluginResourcesContractNature::getTypeName(2),
-                   'PluginResourcesRank'                 => PluginResourcesRank::getTypeName(2),
-                   'PluginResourcesResourceSpeciality'   => PluginResourcesResourceSpeciality::getTypeName(2),
-                   'PluginResourcesLeavingReason'        => PluginResourcesLeavingReason::getTypeName(2),
-                   'PluginResourcesProfession'           => PluginResourcesProfession::getTypeName(2),
-                   'PluginResourcesProfessionLine'       => PluginResourcesProfessionLine::getTypeName(2),
-                   'PluginResourcesProfessionCategory'   => PluginResourcesProfessionCategory::getTypeName(2),
-                   'PluginResourcesEmploymentState'      => PluginResourcesEmploymentState::getTypeName(2),
-                   'PluginResourcesBudgetType'           => PluginResourcesBudgetType::getTypeName(2),
-                   'PluginResourcesBudgetVolume'         => PluginResourcesBudgetVolume::getTypeName(2),
-                   'PluginResourcesHabilitation'         => PluginResourcesHabilitation::getTypeName(2),
-                   'PluginResourcesCost'                 => PluginResourcesCost::getTypeName(2)];
+      return ['PluginResourcesContractType'       => PluginResourcesContractType::getTypeName(2),
+              'PluginResourcesTaskType'           => PluginResourcesTaskType::getTypeName(2),
+              'PluginResourcesResourceState'      => PluginResourcesResource::getTypeName(2) . " - " . PluginResourcesResourceSituation::getTypeName(2),
+              'PluginResourcesDepartment'         => PluginResourcesDepartment::getTypeName(2),
+              'PluginResourcesEmployer'           => PluginResourcesEmployer::getTypeName(2),
+              'PluginResourcesClient'             => PluginResourcesClient::getTypeName(2),
+              'PluginResourcesChoiceItem'         => PluginResourcesChoiceItem::getTypeName(2),
+              'PluginResourcesResourceSituation'  => PluginResourcesEmployer::getTypeName(2) . " - " . PluginResourcesResourceSituation::getTypeName(2),
+              'PluginResourcesContractNature'     => PluginResourcesContractNature::getTypeName(2),
+              'PluginResourcesRank'               => PluginResourcesRank::getTypeName(2),
+              'PluginResourcesResourceSpeciality' => PluginResourcesResourceSpeciality::getTypeName(2),
+              'PluginResourcesLeavingReason'      => PluginResourcesLeavingReason::getTypeName(2),
+              'PluginResourcesProfession'         => PluginResourcesProfession::getTypeName(2),
+              'PluginResourcesProfessionLine'     => PluginResourcesProfessionLine::getTypeName(2),
+              'PluginResourcesProfessionCategory' => PluginResourcesProfessionCategory::getTypeName(2),
+              'PluginResourcesEmploymentState'    => PluginResourcesEmploymentState::getTypeName(2),
+              'PluginResourcesBudgetType'         => PluginResourcesBudgetType::getTypeName(2),
+              'PluginResourcesBudgetVolume'       => PluginResourcesBudgetVolume::getTypeName(2),
+              'PluginResourcesHabilitation'       => PluginResourcesHabilitation::getTypeName(2),
+              'PluginResourcesHabilitationLevel'  => PluginResourcesHabilitationLevel::getTypeName(2),
+              'PluginResourcesCost'               => PluginResourcesCost::getTypeName(2)];
    } else {
       return [];
    }
@@ -1520,39 +1530,3 @@ function plugin_datainjection_populate_resources() {
    $INJECTABLE_TYPES['PluginResourcesResourceInjection']             = 'resources';
    $INJECTABLE_TYPES['PluginResourcesClientInjection']               = 'resources';
 }
-
-/*
-  function plugin_resources_positions_pics($itemclass,$ID) {
-  global $CFG_GLPI;
-
-  $params["height"] = 30;
-  $params["pic"] = GLPI_ROOT."/plugins/resources/pics/nobody.png";
-  $params["picname"] = "nobody.png";
-  $pathpics = GLPI_ROOT."/plugins/resources/pics/nobody.png";
-
-  if (isset($itemclass->fields["picture"])) {
-  $pathpics = GLPI_PLUGIN_DOC_DIR."/resources/".$itemclass->fields["picture"];
-  $params["height"] = 35;
-  if (file_exists($pathpics)) {
-  $pic = $itemclass->fields["picture"];
-
-  if (isset($pic) && !empty($pic)) {
-
-  $params["picdata"] = "<a ref='#' rel='#tip$ID'>";
-  $params["picdata"] .= "<object  width='30' height='35'
-  data='".$CFG_GLPI['root_doc']."/plugins/resources/front/picture.send.php?file=".$pic."' class='pics'>
-  <param name='src' value='".$CFG_GLPI['root_doc'].
-  "/plugins/resources/front/picture.send.php?file=".$pic."'>
-  </object></a>";
-
-  $params["picname"] = $pic;
-  $params["pic"] = $pathpics;
-  }
-  } else {
-  $params["pic"] = GLPI_ROOT."/plugins/resources/pics/nobody.png";
-  $params["picname"] = "nobody.png";
-  }
-  }
-
-  return $params;
-  } */
