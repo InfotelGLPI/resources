@@ -305,7 +305,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
    if ($wizard_habilitation
        && $_POST['plugin_resources_resources_id'] > 0) {
-      if($resourcehabilitation->checkRequiredFields($_POST)) {
+      if ($resourcehabilitation->checkRequiredFields($_POST)) {
          $resourcehabilitation->addResourceHabilitation($_POST);
       } else {
          $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>".
@@ -318,7 +318,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
    }
 
-   if($continue) {
+   if ($continue) {
       $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
       $resource->fields['resources_step']                = 'six_step';
       Plugin::doHook('item_show', $resource);

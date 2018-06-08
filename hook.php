@@ -266,9 +266,6 @@ function plugin_resources_install() {
 
    }
 
-
-
-
    if ($update80) {
 
       $restrict = "`plugin_resources_resources_id` ='-1'";
