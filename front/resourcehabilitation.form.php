@@ -46,8 +46,12 @@ if (!isset($_GET["id"])) {
 $habilitation = new PluginResourcesResourceHabilitation();
 
 if (isset($_POST['add'])) {
-   $habilitation->check(-1, UPDATE, $_POST);
-   $habilitation->add($_POST);
+   if (isset($_POST['plugin_resources_habilitations_id']) &&
+       !empty($_POST['plugin_resources_habilitations_id']) &&
+       $_POST['plugin_resources_habilitations_id']) {
+      $habilitation->check(-1, UPDATE, $_POST);
+      $habilitation->add($_POST);
+   }
    Html::back();
 
 } else if (isset($_POST["delete"])) {
