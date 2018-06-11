@@ -32,9 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesHabilitation
+ * Class PluginResourcesHabilitationLevel
  */
-class PluginResourcesHabilitation extends CommonTreeDropdown {
+class PluginResourcesHabilitationLevel extends CommonDropdown {
 
    // From CommonDBTM
    public $dohistory          = true;
@@ -47,7 +47,7 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     **/
    static function getTypeName($nb = 0) {
 
-      return _n('Habilitation', 'Habilitations', $nb, 'resources');
+      return _n('Habilitation level', 'Habilitations level', $nb, 'resources');
    }
 
    /**
@@ -75,13 +75,13 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
 
    function getAdditionalFields() {
 
-      $tab = [['name'  => $this->getForeignKeyField(),
-               'label' => __('As child of'),
-               'type'  => 'parent',
+      $tab = [['name'  => 'is_mandatory_creating_resource',
+               'label' => __('Mandatory when creating the resource', 'resources'),
+               'type'  => 'bool',
                'list'  => true],
-              ['name'  => "plugin_resources_habilitationlevels_id",
-               'label' => __('Habilitation level', 'resources'),
-               'type'  => 'dropdownValue',
+              ['name'  => "number",
+               'label' => __('Unlimited number of selectable habilitations ', 'resources'),
+               'type'  => 'bool',
                'list'  => true]
       ];
 
@@ -92,10 +92,15 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
 
       $tab = parent::getSearchOptions();
 
-      $tab[15]['table']    = 'glpi_plugin_resources_habilitationlevels';
-      $tab[15]['field']    = 'name';
-      $tab[15]['name']     = __('Habilitation level', 'resources');
-      $tab[15]['datatype'] = 'dropdown';
+      $tab[15]['table']    = $this->getTable();
+      $tab[15]['field']    = 'is_mandatory_creating_resource';
+      $tab[15]['name']     = __('Mandatory when creating the resource', 'resources');
+      $tab[15]['datatype'] = 'bool';
+
+      $tab[16]['table']    = $this->getTable();
+      $tab[16]['field']    = 'number';
+      $tab[16]['name']     = __('Unlimited number of selectable habilitations ', 'resources');
+      $tab[16]['datatype'] = 'bool';
 
       return $tab;
    }
@@ -114,7 +119,7 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
          // Not already transfer
          // Search init item
          $query = "SELECT *
-                   FROM `glpi_plugin_resources_habilitations`
+                   FROM `glpi_plugin_resources_habilitationlevels`
                    WHERE `id` = '$ID'";
 
          if ($result=$DB->query($query)) {
@@ -135,38 +140,6 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
          }
       }
       return 0;
-   }
-
-   /**
-    * Returns habilitations according to level
-    *
-    * @param \PluginResourcesHabilitationLevel $habilitationlevels
-    * @param                                   $entity
-    *
-    * @return array list of habilitations
-    */
-   function getHabilitationsWithLevel(PluginResourcesHabilitationLevel $habilitationlevels, $entity) {
-      global $DB;
-
-      $plugin_habilitation = new self();
-      $plugin_resources_habilitationlevels_id = $habilitationlevels->getID();
-      $habilitations = [];
-
-      //add an empty value for the non multiple dropdown list
-      if (!$habilitationlevels->getField('number')) {
-         $habilitations[''] = Dropdown::EMPTY_VALUE;
-      }
-      $query = "SELECT *
-                FROM `".$plugin_habilitation->getTable()."`
-                WHERE `plugin_resources_habilitationlevels_id` = '$plugin_resources_habilitationlevels_id'
-                 ".getEntitiesRestrictRequest("AND", $plugin_habilitation->getTable(), "entities_id",
-                                              $entity, $plugin_habilitation->maybeRecursive());
-
-      foreach ($DB->request($query) as $habilitation) {
-         $habilitations[$habilitation['id']] = $habilitation['name'];
-      }
-
-      return $habilitations;
    }
 
 }

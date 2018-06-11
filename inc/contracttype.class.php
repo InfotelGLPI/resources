@@ -52,25 +52,29 @@ class PluginResourcesContractType extends CommonDropdown {
    function getAdditionalFields() {
 
       $tab = [['name'  => 'code',
-                         'label' => __('Code', 'resources'),
-                         'type'  => 'text',
-                         'list'  => true],
-                   ['name'  => "",
-                         'label' => __('Wizard resource creation', 'resources'),
-                         'type'  => '',
-                         'list'  => false],
-                   ['name'  => 'use_employee_wizard',
-                         'label' => __('Enter employer information about the resource', 'resources'),
-                         'type'  => 'bool',
-                         'list'  => true],
-                   ['name'  => 'use_need_wizard',
-                         'label' => __('Enter the computing needs of the resource', 'resources'),
-                         'type'  => 'bool',
-                         'list'  => true],
-                   ['name'  => 'use_picture_wizard',
-                         'label' => __('Add a picture', 'resources'),
-                         'type'  => 'bool',
-                         'list'  => true]
+               'label' => __('Code', 'resources'),
+               'type'  => 'text',
+               'list'  => true],
+              ['name'  => "",
+               'label' => __('Wizard resource creation', 'resources'),
+               'type'  => '',
+               'list'  => false],
+              ['name'  => 'use_employee_wizard',
+               'label' => __('Enter employer information about the resource', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_need_wizard',
+               'label' => __('Enter the computing needs of the resource', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_picture_wizard',
+               'label' => __('Add a picture', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_habilitation_wizard',
+               'label' => __('Enter habilitation information ', 'resources'),
+               'type'  => 'bool',
+               'list'  => true]
       ];
 
       return $tab;
@@ -99,12 +103,15 @@ class PluginResourcesContractType extends CommonDropdown {
       $tab[17]['name']     = __('Add a picture', 'resources');
       $tab[17]['datatype'] = 'bool';
 
+      $tab[18]['table']    = $this->getTable();
+      $tab[18]['field']    = 'use_habilitation_wizard';
+      $tab[18]['name']     = __('Enter habilitation information ', 'resources');
+      $tab[18]['datatype'] = 'bool';
+
       return $tab;
    }
 
    static function checkWizardSetup($ID, $field) {
-      global $DB;
-
       if ($ID > 0) {
          $resource = new PluginResourcesResource();
          $self     = new self();

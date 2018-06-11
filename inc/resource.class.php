@@ -127,6 +127,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $temp = new PluginResourcesResourceHoliday();
       $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
+
+      $temp = new PluginResourcesResourceHabilitation();
+      $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
    }
 
    /**
@@ -407,7 +410,6 @@ class PluginResourcesResource extends CommonDBTM {
                                         => ['table'      => 'glpi_plugin_resources_employees',
                                                  'joinparams' => ['jointype' => 'child']]];
 
-
       if ($config->useSecurityCompliance()) {
          $tab[35]['table']         = 'glpi_plugin_resources_employers';
          $tab[35]['field']         = 'id';
@@ -418,7 +420,6 @@ class PluginResourcesResource extends CommonDBTM {
                                       => ['table'      => 'glpi_plugin_resources_employees',
                                           'joinparams' => ['jointype' => 'child']]];
       }
-
 
       $tab[31]['table']         = $this->getTable();
       $tab[31]['field']         = 'id';
@@ -616,12 +617,6 @@ class PluginResourcesResource extends CommonDBTM {
 
          // ADD tasks
          PluginResourcesTask::cloneItem($this->input["_oldID"], $this->fields['id']);
-      }
-
-      if (!isset($this->fields['is_template']) && isset($this->fields['plugin_resources_habilitations_id'])) {
-         $ResourceHabilitation = new PluginResourcesResourceHabilitation();
-         $ResourceHabilitation->add(['plugin_resources_resources_id'     => $this->fields['id'],
-                                          'plugin_resources_habilitations_id' => $this->fields['plugin_resources_habilitations_id']]);
       }
 
       //Launch notification
@@ -1079,23 +1074,6 @@ class PluginResourcesResource extends CommonDBTM {
            "' size='14'>";
       echo "</td>";
       echo "</tr>";
-
-      if (isset($options['withtemplate']) && $options['withtemplate']) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td";
-         if (in_array("plugin_resources_habilitations_id", $required)) {
-            echo $alert;
-         }
-         echo ">";
-         echo PluginResourcesHabilitation::getTypeName(1) . "</td>";
-         echo "<td>";
-         Dropdown::show('PluginResourcesHabilitation',
-                        ['value'     => $this->fields["plugin_resources_habilitations_id"],
-                              'entity'    => $this->fields["entities_id"],
-                              'condition' => 'allow_resource_creation']);
-         echo "</td>";
-         echo "</tr>";
-      }
 
       echo "</table><table class='tab_cadre_fixe'>";
       $rank = new PluginResourcesRank();
@@ -1747,7 +1725,6 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
          $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
-         $options["plugin_resources_habilitations_id"]        = $this->fields["plugin_resources_habilitations_id"];
          $options["sensitize_security"]                       = $this->fields["sensitize_security"];
          $options["read_chart"]                               = $this->fields["read_chart"];
 
@@ -1839,7 +1816,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("name", $required)) echo " red";
+      if (in_array("name", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Surname');
       echo "</div>";
@@ -1851,12 +1830,14 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</span>";
       echo "</div>";
 
-//      echo "<td rowspan='2' class='plugin_resources_wizard_comment red'>";
-//      echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
-//      echo "</td>";
+      //      echo "<td rowspan='2' class='plugin_resources_wizard_comment red'>";
+      //      echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
+      //      echo "</td>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("firstname", $required)) echo " red";
+      if (in_array("firstname", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('First name');
       echo "</div>";
@@ -1871,7 +1852,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("locations_id", $required)) echo " red";
+      if (in_array("locations_id", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Location');
       echo "</div>";
@@ -1880,28 +1863,14 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      if (in_array("quota", $required)) echo "<span class='red'>*</span>";
+      if (in_array("quota", $required)) {
+         echo "<span class='red'>*</span>";
+      }
       echo __('Quota', 'resources');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       echo "<input type='text' name='quota' value='" . Html::formatNumber($options["quota"], true, 4) .
            "' size='14'>";
-      echo "</div>";
-
-      echo "</div>";
-      echo "<div class=\"bt-row\">";
-
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("plugin_resources_habilitations_id", $required)) echo " red";
-      echo " \" >";
-      echo PluginResourcesHabilitation::getTypeName(1);
-      echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      Dropdown::show('PluginResourcesHabilitation',
-                     ['name'      => "plugin_resources_habilitations_id",
-                           'value'     => $options["plugin_resources_habilitations_id"],
-                           'entity'    => $this->fields["entities_id"],
-                           'condition' => 'allow_resource_creation']);
       echo "</div>";
 
       echo "</div>";
@@ -1914,11 +1883,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"bt-row\">";
          echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
 
-
          echo "<div class=\"bt-row\">";
 
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-         if (in_array("plugin_resources_resourcesituations_id", $required)) echo " red";
+         if (in_array("plugin_resources_resourcesituations_id", $required)) {
+            echo " red";
+         }
          echo " \" >";
          echo PluginResourcesResourceSituation::getTypeName(1);
          echo "</div>";
@@ -1933,7 +1903,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
 
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-         if (in_array("plugin_resources_contractnatures_id", $required)) echo " red";
+         if (in_array("plugin_resources_contractnatures_id", $required)) {
+            echo " red";
+         }
          echo " \" >";
          echo PluginResourcesContractNature::getTypeName(1);
          echo "</div>";
@@ -1954,7 +1926,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"bt-row\">";
 
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-         if (in_array("plugin_resources_ranks_id", $required)) echo " red";
+         if (in_array("plugin_resources_ranks_id", $required)) {
+            echo " red";
+         }
          echo " \" >";
          echo PluginResourcesRank::getTypeName(1);
          echo "</div>";
@@ -1970,7 +1944,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
 
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-         if (in_array("plugin_resources_resourcespecialities_id", $required)) echo " red";
+         if (in_array("plugin_resources_resourcespecialities_id", $required)) {
+            echo " red";
+         }
          echo " \" >";
          echo PluginResourcesResourceSpeciality::getTypeName(1);
          echo "</div>";
@@ -2003,7 +1979,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("users_id", $required)) echo " red";
+      if (in_array("users_id", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Resource manager', 'resources');
       echo "</div>";
@@ -2015,7 +1993,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("users_id_sales", $required)) echo " red";
+      if (in_array("users_id_sales", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Sales manager', 'resources');
       echo "</div>";
@@ -2027,11 +2007,12 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "</div>";
 
-
       echo "<div class=\"bt-row\">";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("plugin_resources_departments_id", $required)) echo " red";
+      if (in_array("plugin_resources_departments_id", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo PluginResourcesDepartment::getTypeName(1);
       echo "</div>";
@@ -2047,7 +2028,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("date_begin", $required)) echo " red";
+      if (in_array("date_begin", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Arrival date', 'resources');
       echo "</div>";
@@ -2056,7 +2039,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
-      if (in_array("date_end", $required)) echo " red";
+      if (in_array("date_end", $required)) {
+         echo " red";
+      }
       echo " \" >";
       echo __('Departure date', 'resources') . "&nbsp;";
       if (!in_array("date_end", $required)) {
@@ -2071,7 +2056,6 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "</div>";
       echo "</div>";
-
 
       $config = new PluginResourcesConfig();
       if ($config->useSecurity()) {
@@ -2605,7 +2589,6 @@ class PluginResourcesResource extends CommonDBTM {
             $resource->fields['date_end']         = null;
 
             $resource->fields['plugin_resources_departments_id']   = $params['plugin_resources_departments_id'];
-            $resource->fields['plugin_resources_habilitations_id'] = 0;
             $resource->fields['locations_id']                      = 0;
             $resource->fields['is_leaving']                        = 0;
             $resource->fields['users_id_recipient_leaving']        = 0;
@@ -3157,7 +3140,7 @@ class PluginResourcesResource extends CommonDBTM {
             break;
          case "AddHabilitation":
             Dropdown::show('PluginResourcesHabilitation',
-                           array('entity' => $_SESSION['glpiactiveentities']));
+                           ['entity' => $_SESSION['glpiactiveentities']]);
             break;
       }
 
@@ -3279,8 +3262,8 @@ class PluginResourcesResource extends CommonDBTM {
 
                      if ($resource->getFromDB($key)) {
                         //TODO add verification entities
-                        $values = array('plugin_resources_resources_id'     => $key,
-                                        'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]);
+                        $values = ['plugin_resources_resources_id'     => $key,
+                                        'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]];
                         if ($habilitation->add($values)) {
                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
