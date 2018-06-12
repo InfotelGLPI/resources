@@ -30,7 +30,7 @@
 include ('../../../inc/includes.php');
 
 //central or helpdesk access
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -43,7 +43,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
    Html::displayRightError();
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

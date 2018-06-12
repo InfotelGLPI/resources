@@ -310,7 +310,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          $options['candel'] = false;
       }
       $this->showFormButtons($options);
@@ -529,7 +529,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if ($isadmin
-          && $_SESSION['glpiactiveprofile']['interface'] == 'central'
+          && Session::getCurrentInterface() == 'central'
       ) {
          if (strpos($_SERVER['PHP_SELF'], "employment.php")) {
             $actions['Delete'] = __('Delete permanently');
@@ -539,7 +539,7 @@ class PluginResourcesEmployment extends CommonDBTM {
          ) {
             $actions['Transfert'] = __('Transfer');
          }
-      } else if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      } else if (Session::getCurrentInterface() == 'central') {
          if (strpos($_SERVER['PHP_SELF'], "employment.php")) {
             $actions['Delete_Item'] = __('Delete permanently');
          }

@@ -304,7 +304,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
             $cansee = $obj->can($values["id"], READ);
             $link   = $values["name"];
-            if ($cansee && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+            if ($cansee && Session::getCurrentInterface() == 'central') {
                $link_item = Toolbox::getItemTypeFormURL($type);
                if ($_SESSION["glpiis_ids_visible"] || empty($link)) {
                   $link = sprintf(__('%1$s (%2$s)'), $link, $values["id"]);

@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -62,7 +62,7 @@ if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["pl
    }
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

@@ -33,7 +33,7 @@ $plugin = new Plugin();
 
 if ($plugin->isActivated("badges")) {
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       //from central
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
    } else {
@@ -97,7 +97,7 @@ if ($plugin->isActivated("badges")) {
       }
    }
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       Html::footer();
    } else {
       Html::helpFooter();

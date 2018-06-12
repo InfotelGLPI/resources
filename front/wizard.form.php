@@ -36,7 +36,7 @@ $resourcehabilitation = new PluginResourcesResourceHabilitation();
 
 $resource->checkGlobal(READ);
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
@@ -329,7 +329,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $resource->wizardFirstForm();
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

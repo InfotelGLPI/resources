@@ -32,7 +32,7 @@ include ('../../../inc/includes.php');
 $resource = new PluginResourcesResource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -40,7 +40,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
 
    $resource->listOfTemplates($CFG_GLPI["root_doc"]."/plugins/resources/front/resource.form.php", $_GET["add"]);
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       Html::footer();
    } else {
       Html::helpFooter();

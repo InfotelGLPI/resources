@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
@@ -46,7 +46,7 @@ if (($holiday->canView() || Session::haveRight("config", UPDATE))) {
    Html::displayRightError();
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

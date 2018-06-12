@@ -518,7 +518,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
 
          $condition = "";
-         if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+         if (Session::getCurrentInterface() != 'central') {
             $condition = '`is_helpdesk_visible` = 1';
          }
          Dropdown::show('PluginResourcesChoiceItem',
@@ -533,7 +533,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-         if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+         if (Session::getCurrentInterface() != 'central') {
             if ($exist != 1) {
                echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish']);
             } else {

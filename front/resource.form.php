@@ -326,7 +326,7 @@ else if (isset($_POST["add_checklist"])) {
 } else {
    $resource->checkGlobal(READ);
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       //from central
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
    } else {
@@ -336,7 +336,7 @@ else if (isset($_POST["add_checklist"])) {
 
    $resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
 
-   /* if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+   /* if (Session::getCurrentInterface() != 'central') {
 
      //with no template
      if ($_GET["withtemplate"]<2 && (isset($_GET['id'])&&$_GET['id']!=-1)) {
@@ -352,7 +352,7 @@ else if (isset($_POST["add_checklist"])) {
 
      } */
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+   if (Session::getCurrentInterface() == 'central') {
       Html::footer();
    } else {
       Html::helpFooter();

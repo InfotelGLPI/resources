@@ -244,7 +244,7 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          $options['candel'] = false;
       }
       $this->showFormButtons($options);

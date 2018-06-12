@@ -30,7 +30,7 @@
 include ('../../../inc/includes.php');
 
 //show list of employment linked with a resource
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -108,7 +108,7 @@ if ($recap->canView() || Session::haveRight("config", UPDATE)) {
    Html::displayRightError();
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

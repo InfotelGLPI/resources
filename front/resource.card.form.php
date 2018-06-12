@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
 } else {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -72,7 +72,7 @@ if ($plugin_resources_resources_id > 0) {
         "<i  class='fa fa-info-circle' alt='information'></i>";
    echo "&nbsp;<b>".__('Please select a user', 'resources')."</b></div>";
 }
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

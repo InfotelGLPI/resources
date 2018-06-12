@@ -187,7 +187,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[1]['name']          = __('Surname');
       $tab[1]['datatype']      = 'itemlink';
       $tab[1]['itemlink_type'] = $this->getType();
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[1]['searchtype'] = 'contains';
       }
 
@@ -195,7 +195,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[2]['field'] = 'firstname';
       $tab[2]['name']  = __('First name');
       $tab[2]['datatype']      = 'itemlink';
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[2]['searchtype'] = 'contains';
       }
 
@@ -209,7 +209,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[4]['name']     = __('Resource manager', 'resources');
       $tab[4]['datatype'] = 'dropdown';
       $tab[4]['right']    = 'all';
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[4]['searchtype'] = 'contains';
       }
 
@@ -228,7 +228,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[7]['name']     = __('Description');
       $tab[7]['datatype'] = 'text';
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() == 'central') {
          $tab[8]['table']         = 'glpi_plugin_resources_resources_items';
          $tab[8]['field']         = 'items_id';
          $tab[8]['name']          = _n('Associated item', 'Associated items', 2);
@@ -251,7 +251,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[10]['datatype']      = 'dropdown';
       $tab[10]['right']         = 'all';
       $tab[10]['massiveaction'] = false;
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[10]['searchtype'] = 'contains';
       }
 
@@ -277,11 +277,11 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[14]['datatype']      = 'dropdown';
       $tab[14]['right']         = 'all';
       $tab[14]['massiveaction'] = false;
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[14]['searchtype'] = 'contains';
       }
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() == 'central') {
          $tab[15]['table']    = $this->getTable();
          $tab[15]['field']    = 'is_helpdesk_visible';
          $tab[15]['name']     = __('Associable to a ticket');
@@ -299,7 +299,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[17]['name']     = PluginResourcesResourceState::getTypeName(1);
       $tab[17]['datatype'] = 'dropdown';
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() == 'central') {
          $tab[18]['table']         = $this->getTable();
          $tab[18]['field']         = 'picture';
          $tab[18]['name']          = __('Photo', 'resources');
@@ -317,7 +317,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[20]['name']     = __('Quota', 'resources');
       $tab[20]['datatype'] = 'decimal';
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && Session::haveRight('plugin_resources_dropdown_public', READ)) {
+      if (isset(Session::getCurrentInterface()) && Session::haveRight('plugin_resources_dropdown_public', READ)) {
 
          $tab[21]['table']         = 'glpi_plugin_resources_resourcesituations';
          $tab[21]['field']         = 'name';
@@ -355,7 +355,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[27]['name']      = __('Sales manager', 'resources');
       $tab[27]['datatype']  = 'dropdown';
       $tab[27]['right']     = 'all';
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() != 'central') {
          $tab[27]['searchtype'] = 'contains';
       }
 
@@ -427,7 +427,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab[31]['massiveaction'] = false;
       $tab[31]['datatype']      = 'number';
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (isset(Session::getCurrentInterface()) && Session::getCurrentInterface() == 'central') {
          $tab[80]['table']    = 'glpi_entities';
          $tab[80]['field']    = 'completename';
          $tab[80]['name']     = __('Entity');
@@ -459,7 +459,7 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addStandardTab('PluginResourcesChecklist', $ong, $options);
       $this->addStandardTab('PluginResourcesTask', $ong, $options);
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (Session::getCurrentInterface() == 'central') {
 
          $this->addStandardTab('PluginResourcesReportConfig', $ong, $options);
          $this->addStandardTab('Document_Item', $ong, $options);
@@ -1046,7 +1046,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . PluginResourcesResourceState::getTypeName(1) . "</td>";
       echo "<td>";
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (Session::getCurrentInterface() == 'central') {
          Dropdown::show('PluginResourcesResourceState',
                         ['value'  => $this->fields["plugin_resources_resourcestates_id"],
                               'entity' => $this->fields["entities_id"]]);
@@ -1231,7 +1231,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "&nbsp;" . __('By') . "&nbsp;";
          $users_id_recipient = new User();
          $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
-         if ($this->canCreate() && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+         if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
 
             User::dropdown(['value'  => $this->fields["users_id_recipient"],
                                  'name'   => "users_id_recipient",
@@ -1248,7 +1248,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<td>" . __('Associable to a ticket') . "</td><td>";
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if (Session::getCurrentInterface() == 'central') {
          Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible']);
       } else {
          echo Dropdown::getDropdownName($this->getTable(), $this->fields["is_helpdesk_visible"]);
@@ -1258,13 +1258,13 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td></td><td></td><td>" . __('Send a notification') . "</td><td>";
       echo "<input type='checkbox' name='send_notification' checked = true";
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central'
+      if (Session::getCurrentInterface() != 'central'
           || (isset($options['withtemplate']) && $options['withtemplate'])
       ) {
          echo " disabled='true' ";
       }
       echo " value='1'>";
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          echo "<input type='hidden' name='send_notification' value=\"1\">";
       }
       echo "</td>";
@@ -1355,7 +1355,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "</table><table class='tab_cadre_fixe'>";
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          $options['candel'] = false;
       }
       $this->showFormButtons($options);
@@ -2112,11 +2112,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
       echo __('Send a notification');
       echo "<input type='checkbox' name='send_notification' checked = true";
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          echo " disabled='true' ";
       }
       echo " value='1'>";
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          echo "<input type='hidden' name='send_notification' value=\"1\">";
       }
       echo "</div>";
@@ -3101,7 +3101,7 @@ class PluginResourcesResource extends CommonDBTM {
       $isadmin = static::canUpdate();
       $actions = parent::getSpecificMassiveActions($checkitem);
 
-      if ($isadmin && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+      if ($isadmin && Session::getCurrentInterface() == 'central') {
          $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install']    = _x('button', 'Associate');
          $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = _x('button', 'Dissociate');
 

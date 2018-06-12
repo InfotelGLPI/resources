@@ -38,8 +38,8 @@ function plugin_init_resources() {
    if (Session::getLoginUserID()) {
 
       $noupdate = false;
-      if (isset ($_SESSION['glpiactiveprofile']['interface'])
-          && $_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (isset (Session::getCurrentInterface())
+          && Session::getCurrentInterface() != 'central') {
          $noupdate = true;
       }
 
