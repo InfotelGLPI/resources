@@ -38,8 +38,7 @@ function plugin_init_resources() {
    if (Session::getLoginUserID()) {
 
       $noupdate = false;
-      if (isset (Session::getCurrentInterface())
-          && Session::getCurrentInterface() != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          $noupdate = true;
       }
 
