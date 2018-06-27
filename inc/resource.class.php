@@ -2667,9 +2667,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $joinprofile = false;
 
-      $where = " `glpi_plugin_resources_resources`.`is_deleted` = '0'
-                  AND `glpi_plugin_resources_resources`.`is_leaving` = '0'
-                  AND `glpi_plugin_resources_resources`.`is_template` = '0' ";
+      $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0
+                  AND `glpi_plugin_resources_resources`.`is_leaving` = 0
+                  AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
 
       $where .= getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', $entity_restrict, true);
       if ((is_numeric($value) && $value)
@@ -2760,7 +2760,7 @@ class PluginResourcesResource extends CommonDBTM {
 
    function listOfTemplates($target, $add = 0) {
 
-      $restrict = "`is_template` = '1'";
+      $restrict = "`is_template` = 1";
       $restrict .= getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
       $restrict .= " ORDER BY `name`";
       $dbu       = new DbUtils();
@@ -3577,7 +3577,7 @@ class PluginResourcesResource extends CommonDBTM {
             FROM `" . $this->getTable() . "`
             WHERE `date_end` IS NOT NULL
             AND `date_end` <= '" . $date . "'
-            AND `is_leaving` != '1'";
+            AND `is_leaving` != 1";
 
       // Add Restrict templates
       if ($this->maybeTemplate()) {
@@ -3586,7 +3586,7 @@ class PluginResourcesResource extends CommonDBTM {
             $LINK  = " ";
             $first = false;
          }
-         $query .= $LINK . "`" . $this->getTable() . "`.`is_template` = '0' ";
+         $query .= $LINK . "`" . $this->getTable() . "`.`is_template` = 0 ";
       }
       // Add is_deleted if item have it
       if ($this->maybeDeleted()) {
@@ -3595,7 +3595,7 @@ class PluginResourcesResource extends CommonDBTM {
             $LINK  = " ";
             $first = false;
          }
-         $query .= $LINK . "`" . $this->getTable() . "`.`is_deleted` = '0' ";
+         $query .= $LINK . "`" . $this->getTable() . "`.`is_deleted` = 0 ";
       }
 
       return $query;
@@ -3696,13 +3696,13 @@ class PluginResourcesResource extends CommonDBTM {
       $query_commercial = $query = "SELECT DISTINCT(`users_id_sales`) 
                                      FROM `glpi_plugin_resources_resources` 
                                      WHERE `users_id_sales` != 0
-                                     AND !`is_deleted`";
+                                     AND `is_deleted` = 0";
 
       foreach ($DB->request($query_commercial) as $commercial) {
          $query = "SELECT * 
                   FROM `glpi_plugin_resources_resources` 
                   WHERE `users_id_sales` = " . $commercial['users_id_sales'] . " 
-                  AND !`is_deleted`";
+                  AND `is_deleted` = 0";
 
          $resources = [];
          foreach ($DB->request($query) as $data) {
@@ -4125,7 +4125,7 @@ class PluginResourcesResource extends CommonDBTM {
                 LEFT JOIN `glpi_plugin_resources_employees` 
                   ON `glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_resources_id`
                 WHERE `glpi_plugin_resources_employees`.`plugin_resources_clients_id` = $client_id
-                AND NOT `glpi_plugin_resources_resources`.`is_deleted`";
+                AND `glpi_plugin_resources_resources`.`is_deleted` = 0";
       $result = $DB->query($query);
 
       echo "<div align='center'>";

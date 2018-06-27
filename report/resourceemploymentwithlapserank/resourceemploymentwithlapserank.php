@@ -106,9 +106,9 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
                      AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
                            OR `glpi_plugin_resources_resources`.`date_end` > '".$date."'))
                      AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL
-                     AND `glpi_plugin_resources_resources`.`is_leaving` = '0'
-                     AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
-                     AND `glpi_plugin_resources_resources`.`is_template` = '0')
+                     AND `glpi_plugin_resources_resources`.`is_leaving` = 0
+                     AND `glpi_plugin_resources_resources`.`is_deleted` = 0
+                     AND `glpi_plugin_resources_resources`.`is_template` = 0)
                      AND ((`glpi_plugin_resources_resources`.`date_begin` > `glpi_plugin_resources_ranks`.`end_date`
                           OR `glpi_plugin_resources_resources`.`date_end` < `glpi_plugin_resources_ranks`.`begin_date`)
                         OR (`glpi_plugin_resources_ranks`.`end_date` < '".$date."'

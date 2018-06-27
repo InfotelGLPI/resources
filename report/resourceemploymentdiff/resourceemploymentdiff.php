@@ -131,8 +131,8 @@ $query = "SELECT `glpi_users`.`registration_number`,
                    WHERE (`glpi_plugin_resources_resources`.`is_leaving` = 0
                           AND `glpi_users`.`is_active` = 1
                           AND `glpi_plugin_resources_employments`.`plugin_resources_resources_id` <> 0
-                          AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
-                          AND `glpi_plugin_resources_resources`.`is_template` = '0'
+                          AND `glpi_plugin_resources_resources`.`is_deleted` = 0
+                          AND `glpi_plugin_resources_resources`.`is_template` = 0
                           ".$condition." )
                    GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`
                    HAVING (resource_profession <> employment_profession

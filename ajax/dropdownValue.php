@@ -93,10 +93,10 @@ if (!isset($_GET["limit"])) {
 $where = "WHERE 1 ";
 
 if ($item->maybeDeleted()) {
-   $where .= " AND `is_deleted` = '0' ";
+   $where .= " AND `is_deleted` = 0 ";
 }
 if ($item->maybeTemplate()) {
-   $where .= " AND `is_template` = '0' ";
+   $where .= " AND `is_template` = 0 ";
 }
 
 $NBMAX = $CFG_GLPI["dropdown_max"];

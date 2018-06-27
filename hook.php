@@ -919,14 +919,23 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
          return $out;
          break;
       case "PluginResourcesRecap" :
-         $out = " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` ".
-                "AND `glpi_plugin_resources_resources`.`is_deleted` = '0' AND `glpi_plugin_resources_resources`.`is_template` = '0') ";
-         $out.= " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')";
-         $out.= " LEFT JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_users`.`is_active` = 1)";
-         $out.= " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-         $out.= " LEFT JOIN `glpi_plugin_resources_professions` ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
-         $out.= " LEFT JOIN `glpi_plugin_resources_professions` AS `glpi_plugin_resources_employmentprofessions` ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_employmentprofessions`.`id`) ";
-         $out.= " LEFT JOIN `glpi_plugin_resources_employers` ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
+         $out = " LEFT JOIN `glpi_plugin_resources_resources` 
+                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` ".
+                "AND `glpi_plugin_resources_resources`.`is_deleted` = 0 
+                AND `glpi_plugin_resources_resources`.`is_template` = 0) ";
+         $out.= " LEFT JOIN `glpi_plugin_resources_resources_items` 
+                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` 
+                  AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')";
+         $out.= " LEFT JOIN `glpi_users` 
+                  ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_users`.`is_active` = 1)";
+         $out.= " LEFT JOIN `glpi_plugin_resources_ranks` 
+                   ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
+         $out.= " LEFT JOIN `glpi_plugin_resources_professions` 
+                  ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
+         $out.= " LEFT JOIN `glpi_plugin_resources_professions` AS `glpi_plugin_resources_employmentprofessions` 
+                  ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_employmentprofessions`.`id`) ";
+         $out.= " LEFT JOIN `glpi_plugin_resources_employers` 
+                  ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
          return $out;
          break;
    }
@@ -1256,8 +1265,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
 
                      $query_tasks = "SELECT COUNT(`id`) AS nb_tasks,SUM(`is_finished`) AS is_finished
                                  FROM `glpi_plugin_resources_tasks`
-                                 WHERE `plugin_resources_resources_id` = '".$data['id']."'
-                                 AND `is_deleted` = '0'";
+                                 WHERE `plugin_resources_resources_id` = ".$data['id']."
+                                 AND `is_deleted` = 0";
                      $result_tasks = $DB->query($query_tasks);
                      $nb_tasks = $DB->result($result_tasks, 0, "nb_tasks");
                      $is_finished = $DB->result($result_tasks, 0, "is_finished");

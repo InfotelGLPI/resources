@@ -133,7 +133,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
 
       if (isset($this->input["is_leaving_state"]) && $this->input["is_leaving_state"]) {
          $query = "UPDATE `".$this->getTable()."`
-                   SET `is_leaving_state` = '0'
+                   SET `is_leaving_state` = 0
                    WHERE `id` <> '".$this->fields['id']."'";
          $DB->query($query);
       }
@@ -153,7 +153,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
 
          if ($this->input["is_leaving_state"]) {
             $query = "UPDATE `".$this->getTable()."`
-                      SET `is_leaving_state` = '0'
+                      SET `is_leaving_state` = 0
                       WHERE `id` <> '".$this->input['id']."'";
             $DB->query($query);
 

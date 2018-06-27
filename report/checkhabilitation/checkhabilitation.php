@@ -81,8 +81,8 @@ $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id 
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'
                         LEFT JOIN glpi_users ON glpi_plugin_resources_resources_items.items_id = glpi_users.id
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'
-                        WHERE `glpi_plugin_resources_resources`.`is_deleted` = '0'
-                        AND `glpi_plugin_resources_resources`.`is_template` = '0' ";
+                        WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
+                        AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
 
 $query_resource_user .= getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";

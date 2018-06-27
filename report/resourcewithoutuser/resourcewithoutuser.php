@@ -79,8 +79,8 @@ $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
              AND `glpi_plugin_resources_resources`.`id` NOT IN (SELECT `plugin_resources_resources_id`
                FROM `glpi_plugin_resources_resources_items`
                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
-             AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
-             AND `glpi_plugin_resources_resources`.`is_template` = '0'
+             AND `glpi_plugin_resources_resources`.`is_deleted` = 0
+             AND `glpi_plugin_resources_resources`.`is_template` = 0
              ".$condition.")
              AND ((`glpi_plugin_resources_resources`.`date_end` IS NULL )
                   OR (`glpi_plugin_resources_resources`.`date_end` > '".$date."' ))

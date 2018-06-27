@@ -573,12 +573,12 @@ class PluginResourcesDirectory extends CommonDBTM {
 
                   // Add deleted if item have it
                   if ($citem && $citem->maybeDeleted()) {
-                     $tmpquery .= " AND `$ctable`.`is_deleted` = '0' ";
+                     $tmpquery .= " AND `$ctable`.`is_deleted` = 0 ";
                   }
 
                   // Remove template items
                   if ($citem && $citem->maybeTemplate()) {
-                     $tmpquery .= " AND `$ctable`.`is_template` = '0' ";
+                     $tmpquery .= " AND `$ctable`.`is_template` = 0 ";
                   }
 
                   $tmpquery.= $GROUPBY.

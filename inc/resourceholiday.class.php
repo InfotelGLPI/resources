@@ -748,7 +748,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
             $LINK=" ";
             $first=false;
          }
-         $COMMONWHERE .= $LINK."`$itemtable`.`is_template` = '0' ";
+         $COMMONWHERE .= $LINK."`$itemtable`.`is_template` = 0 ";
       }
 
       // Add Restrict to current entities

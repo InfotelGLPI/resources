@@ -361,7 +361,7 @@ class PluginResourcesRecap extends CommonDBTM {
             $LINK  = " ";
             $first = false;
          }
-         $COMMONWHERE .= $LINK."`$itemtable`.`is_template` = '0' ";
+         $COMMONWHERE .= $LINK."`$itemtable`.`is_template` = 0 ";
       }
 
       // Add Restrict to current entities
@@ -668,12 +668,12 @@ class PluginResourcesRecap extends CommonDBTM {
 
                   // Add deleted if item have it
                   if ($citem && $citem->maybeDeleted()) {
-                     $tmpquery .= " AND `$ctable`.`is_deleted` = '0' ";
+                     $tmpquery .= " AND `$ctable`.`is_deleted` = 0 ";
                   }
 
                   // Remove template items
                   if ($citem && $citem->maybeTemplate()) {
-                     $tmpquery .= " AND `$ctable`.`is_template` = '0' ";
+                     $tmpquery .= " AND `$ctable`.`is_template` = 0 ";
                   }
 
                   $tmpquery.= $GROUPBY.

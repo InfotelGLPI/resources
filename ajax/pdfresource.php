@@ -58,10 +58,10 @@ if ($plugin->isActivated("useditemsexport")) {
                       WHERE `".$field_user."` = '$users_id'";
 
          if ($item->maybeTemplate()) {
-            $query .= " AND `is_template` = '0' ";
+            $query .= " AND `is_template` = 0 ";
          }
          if ($item->maybeDeleted()) {
-            $query .= " AND `is_deleted` = '0' ";
+            $query .= " AND `is_deleted` = 0 ";
          }
          $result    = $DB->query($query);
          $total_numrows += $DB->numrows($result);

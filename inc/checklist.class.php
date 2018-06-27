@@ -1091,11 +1091,11 @@ class PluginResourcesChecklist extends CommonDBTM {
                         `glpi_plugin_resources_resources`.`is_helpdesk_visible`,
                         `glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` ";
       $query .= " FROM `glpi_plugin_resources_checklists`,`glpi_plugin_resources_resources` ";
-      $query .= " WHERE `glpi_plugin_resources_resources`.`is_template` = '0' 
-                  AND `glpi_plugin_resources_resources`.`is_leaving` = '" . $is_leaving . "' 
-                  AND `glpi_plugin_resources_resources`.`is_deleted` = '0' 
+      $query .= " WHERE `glpi_plugin_resources_resources`.`is_template` = 0 
+                  AND `glpi_plugin_resources_resources`.`is_leaving` = " . $is_leaving . " 
+                  AND `glpi_plugin_resources_resources`.`is_deleted` = 0 
                   AND `glpi_plugin_resources_checklists`.`checklist_type` = '" . $checklist_type . "' 
-                  AND `glpi_plugin_resources_checklists`.`is_checked` = '0' 
+                  AND `glpi_plugin_resources_checklists`.`is_checked` = 0 
                   AND `glpi_plugin_resources_checklists`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` ";
 
       if ($entity_restrict && $resource->isEntityAssign()) {
@@ -1112,9 +1112,9 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       $query = "SELECT `glpi_plugin_resources_checklists`.*  ";
       $query .= " FROM `glpi_plugin_resources_checklists`,`glpi_plugin_resources_resources` ";
-      $query .= " WHERE `glpi_plugin_resources_resources`.`id` = '" . $ID . "' 
+      $query .= " WHERE `glpi_plugin_resources_resources`.`id` = " . $ID . " 
                         AND `glpi_plugin_resources_checklists`.`checklist_type` = '" . $checklist_type . "' 
-                        AND `glpi_plugin_resources_checklists`.`is_checked` = '0' 
+                        AND `glpi_plugin_resources_checklists`.`is_checked` = 0 
                         AND `glpi_plugin_resources_checklists`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` ";
       $query .= "  ORDER BY `glpi_plugin_resources_checklists`.`rank` ASC;";
 

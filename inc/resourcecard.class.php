@@ -274,10 +274,10 @@ class PluginResourcesResourceCard extends CommonDBTM {
                       WHERE `" . $field_user . "` = '$ID'";
 
          if ($item->maybeTemplate()) {
-            $query .= " AND `is_template` = '0' ";
+            $query .= " AND `is_template` = 0 ";
          }
          if ($item->maybeDeleted()) {
-            $query .= " AND `is_deleted` = '0' ";
+            $query .= " AND `is_deleted` = 0 ";
          }
          $query .= getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
          $result = $DB->query($query);

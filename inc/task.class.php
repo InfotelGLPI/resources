@@ -643,10 +643,10 @@ class PluginResourcesTask extends CommonDBTM {
          $query = "SELECT `" . $this->getTable() . "`.`id` AS plugin_resources_tasks_id, `" . $this->getTable() . "`.`name` AS name_task, `" . $this->getTable() . "`.`plugin_resources_tasktypes_id` AS plugin_resources_tasktypes_id,`" . $this->getTable() . "`.`is_deleted` AS is_deleted, ";
          $query .= "`" . $this->getTable() . "`.`users_id` AS users_id_task, `glpi_plugin_resources_resources`.`id` as id, `glpi_plugin_resources_resources`.`name` AS name, `glpi_plugin_resources_resources`.`firstname` AS firstname, `glpi_plugin_resources_resources`.`entities_id`, `glpi_plugin_resources_resources`.`users_id` as users_id ";
          $query .= " FROM `" . $this->getTable() . "`,`glpi_plugin_resources_resources` ";
-         $query .= " WHERE `glpi_plugin_resources_resources`.`is_template` = '0' 
-                  AND `glpi_plugin_resources_resources`.`is_deleted` = '0' 
-                  AND `" . $this->getTable() . "`.`is_deleted` = '0' 
-                  AND `" . $this->getTable() . "`.`is_finished` = '0' 
+         $query .= " WHERE `glpi_plugin_resources_resources`.`is_template` = 0 
+                  AND `glpi_plugin_resources_resources`.`is_deleted` = 0 
+                  AND `" . $this->getTable() . "`.`is_deleted` = 0 
+                  AND `" . $this->getTable() . "`.`is_finished` = 0 
                   AND `" . $this->getTable() . "`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` 
                   $ASSIGN ) ";
 
@@ -830,10 +830,10 @@ class PluginResourcesTask extends CommonDBTM {
             LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `" . $this->getTable() . "`.`plugin_resources_resources_id`)
             WHERE `glpi_plugin_resources_taskplannings`.`end` IS NOT NULL 
             AND `glpi_plugin_resources_taskplannings`.`end` <= '" . $date . "' 
-            AND `glpi_plugin_resources_resources`.`is_template` = '0' 
-            AND `glpi_plugin_resources_resources`.`is_deleted` = '0' 
-            AND `" . $this->getTable() . "`.`is_deleted` = '0' 
-            AND `" . $this->getTable() . "`.`is_finished` = '0'";
+            AND `glpi_plugin_resources_resources`.`is_template` = 0 
+            AND `glpi_plugin_resources_resources`.`is_deleted` = 0 
+            AND `" . $this->getTable() . "`.`is_deleted` = 0 
+            AND `" . $this->getTable() . "`.`is_finished` = 0";
 
       return $query;
    }
@@ -1002,8 +1002,8 @@ class PluginResourcesTask extends CommonDBTM {
 
       $query  = "SELECT * 
                FROM `glpi_plugin_resources_tasks` 
-               WHERE `plugin_resources_resources_id` = '$ID'
-               AND `is_deleted` ='0'";
+               WHERE `plugin_resources_resources_id` = $ID
+               AND `is_deleted` = 0";
       $result = $DB->query($query);
       $number = $DB->numrows($result);
 
