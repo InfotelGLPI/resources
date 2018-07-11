@@ -29,8 +29,8 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_SESSION["glpiactiveprofile"])
-    || ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk")) {
+if (Session::getCurrentInterface()
+    && (Session::getCurrentInterface() == "helpdesk")) {
    Session::checkHelpdeskAccess();
 } else {
    Session::checkCentralAccess();

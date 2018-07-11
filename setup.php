@@ -175,22 +175,20 @@ function plugin_version_resources() {
 
    return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.4.4',
+      'version'        => '2.5.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
-      'minGlpiVersion' => '9.2',
+      'minGlpiVersion' => '9.3',
    ];
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_resources_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION, '9.2', 'lt') || version_compare(GLPI_VERSION, '9.3', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.2');
-      return false;
-   } else if (!extension_loaded("gd")) {
-      echo __('Incompatible PHP Installation. Requires module', 'resources') . " gd";
+   if (version_compare(GLPI_VERSION, '9.3', 'lt')
+       || version_compare(GLPI_VERSION, '9.4', 'ge')) {
+      echo __('This plugin requires GLPI >= 9.3');
       return false;
    }
    return true;

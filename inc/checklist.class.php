@@ -553,7 +553,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
       $numrows    = countElementsInTable("glpi_plugin_resources_checklists", $restrict);
       if (!empty($checklists)) {
-         if (!$isfinished && self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
+         if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
             Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
             $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
             Html::showMassiveActions($massiveactionparams);
@@ -635,7 +635,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          echo "<tr>";
          if (!$isfinished) {
             echo "<th width='10'>";
-            if (self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
+            if (self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
                echo Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
             }
             echo "</th>";
@@ -661,7 +661,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo "<tr class='tab_bg_1'>";
             if (!$isfinished) {
                echo "<td width='10'>";
-               if (self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
+               if (self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
                   Html::showMassiveActionCheckBox(__CLASS__, $ID);
                }
                echo "</td>";
@@ -741,7 +741,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          }
          echo "</table>";
          echo "</div>";
-         if (!$isfinished && self::canCreate() && $canedit && $_SESSION["glpiactiveprofile"]["interface"] == "central") {
+         if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
             $massiveactionparams['ontop'] = false;
             Html::showMassiveActions($massiveactionparams);
          }

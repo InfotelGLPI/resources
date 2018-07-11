@@ -47,7 +47,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.4.4.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.5.0.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -1506,7 +1506,7 @@ function plugin_resources_dynamicReport($parm) {
 // Hook done on before add item case
 function plugin_pre_item_update_resources($item) {
 
-   if (isset ($_SESSION['glpiactiveprofile'])
+   if (Session::getCurrentInterface()
        &&!isset($item->input["_UpdateFromResource_"])) {
       $restrict = "`itemtype` = '".get_class($item)."'
                AND `items_id` = '".$item->getField('id')."'";

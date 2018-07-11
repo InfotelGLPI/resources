@@ -44,6 +44,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * Should be overloaded in each new class
     *
     * @param int $nb
+    *
     * @return string
     */
    static function getTypeName($nb = 0) {
@@ -123,7 +124,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       $canedit = $this->canCreate();
 
-      $data = $this->find("`plugin_resources_resources_id` = ".$item->getField('id'));
+      $data = $this->find("`plugin_resources_resources_id` = " . $item->getField('id'));
 
       if ($canedit) {
          $used = [];
@@ -139,7 +140,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          echo self::getTypeName(1) . "</td>";
          echo "<td class='center'>";
          Dropdown::show('PluginResourcesHabilitation', ['used'   => $used,
-                                                             'entity' => $item->getField("entities_id")]);
+                                                        'entity' => $item->getField("entities_id")]);
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add\" 
@@ -165,19 +166,19 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          $rand = mt_rand();
          echo "<div class='center'>";
          if ($canedit) {
-            Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass'.__CLASS__.$rand];
+            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";
-         echo "<th colspan='2'>".self::getTypeName()."</th>";
+         echo "<th colspan='2'>" . self::getTypeName() . "</th>";
          echo "</tr>";
          echo "<tr>";
          if ($canedit) {
-            echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
          }
-         echo "<th>".__('Name')."</th>";
+         echo "<th>" . __('Name') . "</th>";
          foreach ($fields as $field) {
             echo "<tr class='tab_bg_1'>";
             if ($canedit) {
@@ -186,7 +187,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                echo "</td>";
             }
             //DATA LINE
-            echo "<td class='center'>".Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $field['plugin_resources_habilitations_id'])."</td>";
+            echo "<td class='center'>" . Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $field['plugin_resources_habilitations_id']) . "</td>";
             echo "</tr>";
          }
 
@@ -212,7 +213,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query  = "SELECT *
+      $query = "SELECT *
                  FROM `glpi_plugin_resources_resourcehabilitations`
                  WHERE `plugin_resources_resources_id` = '$oldid';";
 
@@ -272,7 +273,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                                                  "entities_id",
                                                  $resource->getEntityID(),
                                                  $habilitation_level->maybeRecursive());
-         $levels = $habilitation_level->find($condition, "name");
+         $levels    = $habilitation_level->find($condition, "name");
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
@@ -365,11 +366,11 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       foreach ($params as $key => $val) {
          if (is_array($val)
-             && $habilitation_level->getFromDBByCrit(["name = '" . $key . "' AND number"])) {
+             && $habilitation_level->getFromDBByCrit(['name' => $key, 'number' => 1])) {
             foreach ($val as $v) {
                $this->addResourceHabilitationInDb($v, $params);
             }
-         } else if ($habilitation_level->getFromDBByCrit(["name = '" . $key . "' AND !number"])) {
+         } else if ($habilitation_level->getFromDBByCrit(['name' => $key, 'number' => 0])) {
             $this->addResourceHabilitationInDb($val, $params);
          }
       }

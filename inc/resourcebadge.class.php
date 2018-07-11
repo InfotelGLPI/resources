@@ -135,8 +135,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
             Dropdown::show('PluginMetademandsMetademand', ['name'   => 'plugin_metademands_metademands_id',
-                                                                'used'   => $used_data,
-                                                                'entity' => $_SESSION['glpiactive_entity']]);
+                                                           'used'   => $used_data,
+                                                           'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
             value=\"" . _sx('button', 'Add') . "\" >";
@@ -268,8 +268,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td class='left'>";
       $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
-                                                      'on_change' => 'plugin_resources_load_badge()',
-                                                      'entity'    => $_SESSION['glpiactiveentities']]);
+                                                 'on_change' => 'plugin_resources_load_badge()',
+                                                 'entity'    => $_SESSION['glpiactiveentities']]);
 
       //display list of badges
       echo "<script type='text/javascript'>";
@@ -330,8 +330,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td class='left'>";
       $rand = PluginBadgesBadge::dropdown(['name'      => 'badges_id',
-                                                'condition' => "`users_id` IN ('" . implode("','", $users) . "')",
-                                                'on_change' => 'plugin_resources_load_badge_restitution()'
+                                           'condition' => "`users_id` IN ('" . implode("','", $users) . "')",
+                                           'on_change' => 'plugin_resources_load_badge_restitution()'
                                           ]);
 
       //Button display
@@ -372,7 +372,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       //Search for the entity-related category for that action
       $resource_change = new PluginResourcesResource_Change();
-      if ($resource_change->getFromDBByQuery("WHERE `actions_id` = " . PluginResourcesResource_Change::BADGE_RESTITUTION . " AND `entities_id` = " . $resource->fields['entities_id'])) {
+      if ($resource_change->getFromDBByCrit(['actions_id'  => PluginResourcesResource_Change::BADGE_RESTITUTION,
+                                             'entities_id' => $resource->fields['entities_id']])) {
          $data['itilcategories_id'] = $resource_change->fields['itilcategories_id'];
 
          //Search of the ticket template
@@ -414,7 +415,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $input['users_id_recipient']  = Session::getLoginUserID();
       $input['_users_id_requester'] = Session::getLoginUserID();
       $input["items_id"]            = ['PluginResourcesResource' => [$plugin_resources_resources_id],
-                                            'PluginBadgesBadge'       => [$options['badges_id']]];
+                                       'PluginBadgesBadge'       => [$options['badges_id']]];
 
       // Compute time_to_resolve if predefined based on create date
       if (isset($predefined['time_to_resolve'])) {
@@ -426,9 +427,9 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $input["content"] = __('Badge restitution', 'resources') . '&nbsp;:&nbsp;' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
       $input["content"] .= PluginBadgesBadge::getTypeName(1) . '&nbsp;:&nbsp;' . " " . Dropdown::getDropdownName('glpi_plugin_badges_badges', $options['badges_id']);
       $input["content"] .= addslashes("\n\n");
-      $input['id'] = 0;
-      $ticket      = new Ticket();
-      $input       = Toolbox::addslashes_deep($input);
+      $input['id']      = 0;
+      $ticket           = new Ticket();
+      $input            = Toolbox::addslashes_deep($input);
 
       if ($tid = $ticket->add($input)) {
          $msg    = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success
