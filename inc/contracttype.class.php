@@ -82,12 +82,7 @@ class PluginResourcesContractType extends CommonDropdown {
 
    function rawSearchOptions() {
 
-      $tab = [];
-
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'    => '14',
@@ -104,7 +99,7 @@ class PluginResourcesContractType extends CommonDropdown {
          'datatype' => 'bool'
       ];
       $tab[] = [
-         'id'       => '16',
+         'id'       => '20',
          'table'    => $this->getTable(),
          'field'    => 'use_need_wizard',
          'name'     => __('Enter the computing needs of the resource', 'resources'),

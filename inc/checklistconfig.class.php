@@ -63,27 +63,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
    function rawSearchOptions() {
 
-      $tab = [];
-
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-
-      $tab[] = [
-         'id'       => '1',
-         'table'    => $this->getTable(),
-         'field'    => 'name',
-         'name'     => __('Name'),
-         'datatype' => 'itemlink'
-      ];
-
-      $tab[] = [
-         'id'    => '2',
-         'table' => $this->getTable(),
-         'field' => 'address',
-         'name'  => __('Link', 'resources')
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'       => '3',
@@ -108,14 +88,6 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
          'name'          => __('ID'),
          'datatype'      => 'number',
          'massiveaction' => false
-      ];
-
-      $tab[] = [
-         'id'       => '80',
-         'table'    => 'glpi_entities',
-         'field'    => 'completename',
-         'name'     => __('Entity'),
-         'datatype' => 'dropdown'
       ];
 
       return $tab;

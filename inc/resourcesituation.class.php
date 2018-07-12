@@ -112,12 +112,7 @@ class PluginResourcesResourceSituation extends CommonDropdown {
 
    function rawSearchOptions() {
 
-      $tab = [];
-
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'    => '14',
@@ -126,7 +121,7 @@ class PluginResourcesResourceSituation extends CommonDropdown {
          'name'  => __('Code', 'resources')
       ];
       $tab[] = [
-         'id'    => '16',
+         'id'    => '18',
          'table' => $this->getTable(),
          'field' => 'short_name',
          'name'  => __('Short name', 'resources')

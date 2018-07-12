@@ -178,19 +178,8 @@ class PluginResourcesResource extends CommonDBTM {
     **/
    function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-      $tab[] = [
-         'id'       => '1',
-         'table'    => $this->getTable(),
-         'field'    => 'name',
-         'name'     => __('Surname'),
-         'itemlink_type' => $this->getType()
-      ];
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
             'id'       => '1',

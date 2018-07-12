@@ -103,12 +103,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
 
    function rawSearchOptions() {
 
-      $tab = [];
-
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'    => '14',
@@ -124,7 +119,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
          'datatype' => 'bool'
       ];
       $tab[] = [
-         'id'            => '16',
+         'id'            => '17',
          'table'         => $this->getTable(),
          'field'         => 'is_leaving_state',
          'name'          => __("Employment state at leaving's resource", "resources"),

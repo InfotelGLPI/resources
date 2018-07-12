@@ -133,7 +133,7 @@ class PluginResourcesClient extends CommonDropdown {
       ];
 
       $tab[] = [
-         'id'         => '16',
+         'id'         => '18',
          'table'      => $this->getTable(),
          'field'      => 'security_gisf',
          'name'       => __('GISF - Supplier security incident management', 'resources'),

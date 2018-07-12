@@ -66,15 +66,10 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
 
    function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-
-      $tab[] = [
-         'id'       => '14',
+         'id'       => '15',
          'table'    => $this->getTable(),
          'field'    => 'short_name',
          'name'     => __('Short name', 'resources'),
@@ -87,7 +82,7 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
 
    /**
     * @param $field
-    * @param $values
+    * @param $valuesN
     * @param $options   array
     *
     * @return return|status|string

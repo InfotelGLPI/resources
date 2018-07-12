@@ -119,11 +119,6 @@ class PluginResourcesCost extends CommonDropdown {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-
-      $tab[] = [
          'id'       => '14',
          'table'    => 'glpi_plugin_resources_professions',
          'field'    => 'name',

@@ -100,7 +100,7 @@ class PluginResourcesHabilitationLevel extends CommonDropdown {
          'datatype' => 'bool'
       ];
       $tab[] = [
-         'id'       => '16',
+         'id'       => '14',
          'table'    => $this->getTable(),
          'field'    => 'number',
          'name'     => __('Unlimited number of selectable habilitations ', 'resources'),

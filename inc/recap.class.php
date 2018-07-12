@@ -58,18 +58,13 @@ class PluginResourcesRecap extends CommonDBTM {
       }
       return false;
    }
-//TODO : Probleme with searchOptions
+
    function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-
-      $tab[] = [
-         'id'       => '1',
+         'id'       => '3',
          'table'    => $this->table,
          'field'    => 'registration_number',
          'name'     => __('Administrative number'),

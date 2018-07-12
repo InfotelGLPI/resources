@@ -556,21 +556,8 @@ class PluginResourcesEmployee extends CommonDBTM {
 
    function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
-
-      $tab[] = [
-         'id'                 => '1',
-         'table'              => 'glpi_plugin_resources_resources',
-         'field'              => 'name',
-         'name'               => __('Name'),
-         'datatype'           => 'itemlink',
-         'itemlink_type'      => $this->getType()
-      ];
       $tab[] = [
          'id'                 => '2',
          'table'              => 'glpi_plugin_resources_employers',

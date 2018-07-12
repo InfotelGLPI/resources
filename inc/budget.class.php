@@ -101,21 +101,11 @@ class PluginResourcesBudget extends CommonDBTM {
     */
    function rawSearchOptions() {
 
-      $tab = [];
-
-      $tab[] = [
-         'id'   => 'common',
-         'name' => self::getTypeName(2)
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'            => '1',
-         'table'         => $this->getTable(),
-         'field'         => 'name',
-         'name'          => __('Name'),
-         'datatype'      => 'itemlink',
-         'itemlink_type' => $this->getType(),
-         'massiveaction' => false
+         'itemlink_type' => $this->getType()
       ];
 
       $tab[] = [
@@ -199,14 +189,6 @@ class PluginResourcesBudget extends CommonDBTM {
          'field'    => 'completename',
          'name'     => __('Entity'),
          'datatype' => 'dropdown'
-      ];
-
-      $tab[] = [
-         'id'       => '86',
-         'table'    => $this->getTable(),
-         'field'    => 'is_recursive',
-         'name'     => __('Child entities'),
-         'datatype' => 'bool'
       ];
 
       return $tab;
