@@ -136,13 +136,16 @@ class PluginResourcesContractNature extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'code';
-      $tab[14]['name']          = __('Code', 'resources');
+      $tab[] = [
+         'id'       => '14',
+         'table'    => $this->getTable(),
+         'field'    => 'code',
+         'name'     => __('Code', 'resources')
+      ];
 
       return $tab;
    }

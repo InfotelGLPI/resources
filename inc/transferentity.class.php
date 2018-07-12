@@ -156,36 +156,51 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       echo "</div>";
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
-      $tab['common'] = self::getTypeName(1);
 
-      $tab[1]['table']           = $this->getTable();
-      $tab[1]['field']           = 'name';
-      $tab[1]['name']            = __('Name');
-      $tab[1]['datatype']        = 'itemlink';
-      $tab[1]['itemlink_type']   = $this->getType();
-      $tab[1]['massiveaction']   = false;
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[2]['table']           = $this->getTable();
-      $tab[2]['field']           = 'id';
-      $tab[2]['name']            = __('ID');
-      $tab[2]['massiveaction']   = false;
-      $tab[2]['datatype']        = 'number';
+      $tab[] = [
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Name'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => $this->getType(),
+         'massiveaction' => false
+      ];
 
-      $tab[92]['table']           = 'glpi_entities';
-      $tab[92]['field']           = 'name';
-      $tab[92]['name']            = __('Entity');
-      $tab[92]['massiveaction']   = true;
-      $tab[92]['datatype']        = 'dropdown';
+      $tab[] = [
+         'id'            => '2',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
 
-      $tab[93]['table']           = 'glpi_groups';
-      $tab[93]['field']           = 'name';
-      $tab[93]['name']            = __('Group');
-      $tab[93]['massiveaction']   = true;
-      $tab[93]['datatype']        = 'dropdown';
+      $tab[] = [
+         'id'            => '92',
+         'table'         => 'glpi_entities',
+         'field'         => 'name',
+         'name'          => __('Entity'),
+         'massiveaction' => true,
+         'datatype'      => 'dropdown'
+      ];
 
+      $tab[] = [
+         'id'            => '93',
+         'table'         => 'glpi_groups',
+         'field'         => 'name',
+         'name'          => __('Group'),
+         'massiveaction' => true,
+         'datatype'      => 'dropdown'
+      ];
       return $tab;
    }
 

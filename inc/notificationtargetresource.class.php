@@ -260,6 +260,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI, $DB;
 
+      $dbu = new DbUtils();
       if ($event == 'AlertExpiredTasks') {
 
          $this->data['##resource.entity##']      =
@@ -290,7 +291,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
-            $plans                  = getAllDatasFromTable("glpi_plugin_resources_taskplannings", $restrict);
+            $plans                  = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 
             if (!empty($plans)) {
                foreach ($plans as $plan) {
@@ -814,7 +815,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $restrict = "`itemtype` = 'User' 
                         AND `plugin_resources_resources_id` = '" . $this->obj->getField("id") . "'";
-            $items    = getAllDatasFromTable("glpi_plugin_resources_resources_items", $restrict);
+            $items    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
             if (!empty($items)) {
                foreach ($items as $item) {
                   $user = new User();
@@ -854,7 +855,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $restrict = "`itemtype` = 'User' 
                         AND `plugin_resources_resources_id` = '" . $this->obj->getField("id") . "'";
-            $items    = getAllDatasFromTable("glpi_plugin_resources_resources_items", $restrict);
+            $items    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
             if (!empty($items)) {
                foreach ($items as $item) {
                   $user = new User();
@@ -1206,7 +1207,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $restrict .= " AND `glpi_plugin_resources_tasks`.`id` = '" . $options['tasks_id'] . "'";
          }
          $restrict .= " ORDER BY `name` DESC";
-         $tasks    = getAllDatasFromTable('glpi_plugin_resources_tasks', $restrict);
+         $tasks    = $dbu->getAllDataFromTable('glpi_plugin_resources_tasks', $restrict);
 
          $this->data['##lang.task.title##'] = __('Associated tasks', 'resources');
 
@@ -1231,7 +1232,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
-            $plans                  = getAllDatasFromTable("glpi_plugin_resources_taskplannings", $restrict);
+            $plans                  = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 
             if (!empty($plans)) {
                foreach ($plans as $plan) {

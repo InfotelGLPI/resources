@@ -37,20 +37,11 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`),
-   KEY `plugin_resources_contracttypes_id` (`plugin_resources_contracttypes_id`),
    KEY `users_id` (`users_id`),
    KEY `users_id_sales` (`users_id_sales`),
    KEY `users_id_recipient` (`users_id_recipient`),
-   KEY `plugin_resources_departments_id` (`plugin_resources_departments_id`),
-   KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`),
-   KEY `plugin_resources_resourcestates_id` (`plugin_resources_resourcestates_id`),
-   KEY `plugin_resources_resourcesituations_id` (`plugin_resources_resourcesituations_id`),
-   KEY `plugin_resources_contractnatures_id` (`plugin_resources_contractnatures_id`),
-   KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
-   KEY `plugin_resources_resourcespecialities_id` (`plugin_resources_resourcespecialities_id`),
    KEY `locations_id` (`locations_id`),
    KEY `is_leaving` (`is_leaving`),
-   KEY `plugin_resources_leavingreasons_id` (`plugin_resources_leavingreasons_id`),
    KEY `users_id_recipient_leaving` (`users_id_recipient_leaving`),
    KEY `date_mod` (`date_mod`),
    KEY `is_helpdesk_visible` (`is_helpdesk_visible`),
@@ -821,3 +812,14 @@ INSERT INTO `glpi_notificationtemplates` (name, itemtype)
 VALUES('Resource Transfer', 'PluginResourcesResource');
 INSERT INTO `glpi_notificationtemplates` (name, itemtype)
 VALUES('Alert for sales people', 'PluginResourcesResource');
+
+
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_contracttypes_id` (`plugin_resources_contracttypes_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_departments_id` (`plugin_resources_departments_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_resourcestates_id` (`plugin_resources_resourcestates_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_resourcesituations_id` (`plugin_resources_resourcesituations_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_contractnatures_id` (`plugin_resources_contractnatures_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_resourcespecialities_id` (`plugin_resources_resourcespecialities_id`);
+ALTER TABLE `glpi_plugin_resources_resources` ADD KEY `plugin_resources_leavingreasons_id` (`plugin_resources_leavingreasons_id`);

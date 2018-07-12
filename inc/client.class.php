@@ -110,33 +110,46 @@ class PluginResourcesClient extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'security_and';
-      $tab[14]['name']          = __('AND - Certificate of non-dissimulation', 'resources');
-      $tab[14]['injectable']    = true;
-      $tab[14]['datatype']      = 'bool';
+      $tab[] = [
+         'id'         => '14',
+         'table'      => $this->getTable(),
+         'field'      => 'security_and',
+         'name'       => __('AND - Certificate of non-dissimulation', 'resources'),
+         'injectable' => true,
+         'datatype'   => 'bool'
+      ];
 
-      $tab[15]['table']         = $this->getTable();
-      $tab[15]['field']         = 'security_fifour';
-      $tab[15]['name']          = __('FIFOUR - Supplier\'s sheet', 'resources');
-      $tab[15]['injectable']    = true;
-      $tab[15]['datatype']      = 'bool';
+      $tab[] = [
+         'id'         => '15',
+         'table'      => $this->getTable(),
+         'field'      => 'security_fifour',
+         'name'       => __('FIFOUR - Supplier\'s sheet', 'resources'),
+         'injectable' => true,
+         'datatype'   => 'bool'
+      ];
 
-      $tab[16]['table']         = $this->getTable();
-      $tab[16]['field']         = 'security_gisf';
-      $tab[16]['name']          = __('GISF - Supplier security incident management', 'resources');
-      $tab[16]['injectable']    = true;
-      $tab[16]['datatype']      = 'bool';
+      $tab[] = [
+         'id'         => '16',
+         'table'      => $this->getTable(),
+         'field'      => 'security_gisf',
+         'name'       => __('GISF - Supplier security incident management', 'resources'),
+         'injectable' => true,
+         'datatype'   => 'bool'
+      ];
 
-      $tab[17]['table']         = $this->getTable();
-      $tab[17]['field']         = 'security_cfi';
-      $tab[17]['name']          = __('CFI - Supplier card', 'resources');
-      $tab[17]['injectable']    = true;
-      $tab[17]['datatype']      = 'bool';
+      $tab[] = [
+         'id'         => '17',
+         'table'      => $this->getTable(),
+         'field'      => 'security_cfi',
+         'name'       => __('CFI - Supplier card', 'resources'),
+         'injectable' => true,
+         'datatype'   => 'bool'
+      ];
+
 
       return $tab;
    }

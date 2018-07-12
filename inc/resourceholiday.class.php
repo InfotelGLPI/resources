@@ -124,45 +124,70 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       return true;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
 
-      $tab['common']             = self::getTypeName(2);
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[1]['table']           = 'glpi_plugin_resources_resources';
-      $tab[1]['field']           = 'name';
-      $tab[1]['name']            = __('Surname');
-      $tab[1]['datatype']        = 'itemlink';
-      $tab[1]['itemlink_type']   = $this->getType();
+      $tab[] = [
+         'id'            => '1',
+         'table'         => 'glpi_plugin_resources_resources',
+         'field'         => 'name',
+         'name'          => __('Surname'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => $this->getType()
+      ];
+
       if (!Session::haveRight("plugin_resources_all", READ)) {
-         $tab[1]['searchtype']   = 'contains';
+         $tab[] = [
+            'id'         => '1',
+            'searchtype' => 'contains'
+         ];
       }
 
-      $tab[2]['table']           = 'glpi_plugin_resources_resources';
-      $tab[2]['field']           = 'firstname';
-      $tab[2]['name']            = __('First name');
+      $tab[] = [
+         'id'    => '2',
+         'table' => 'glpi_plugin_resources_resources',
+         'field' => 'firstname',
+         'name'  => __('First name')
+      ];
 
-      $tab[3]['table']           = $this->getTable();
-      $tab[3]['field']           = 'date_begin';
-      $tab[3]['name']            = __('Begin date');
-      $tab[3]['datatype']        = 'date';
+      $tab[] = [
+         'id'       => '3',
+         'table'    => $this->getTable(),
+         'field'    => 'date_begin',
+         'name'     => __('Begin date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[4]['table']           = $this->getTable();
-      $tab[4]['field']           = 'date_end';
-      $tab[4]['name']            = __('End date');
-      $tab[4]['datatype']        = 'date';
+      $tab[] = [
+         'id'       => '4',
+         'table'    => $this->getTable(),
+         'field'    => 'date_end',
+         'name'     => __('End date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[5]['table']           = $this->getTable();
-      $tab[5]['field']           = 'comment';
-      $tab[5]['name']            = __('Comments');
-      $tab[5]['datatype']        = 'text';
+      $tab[] = [
+         'id'       => '5',
+         'table'    => $this->getTable(),
+         'field'    => 'comment',
+         'name'     => __('Comments'),
+         'datatype' => 'text'
+      ];
 
-      $tab[30]['table']          = $this->getTable();
-      $tab[30]['field']          = 'id';
-      $tab[30]['name']           = __('ID');
-      $tab[30]['datatype']       = 'number';
-      $tab[30]['massiveaction']  = false;
+      $tab[] = [
+         'id'            => '30',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'datatype'      => 'number',
+         'massiveaction' => false
+      ];
 
       return $tab;
    }

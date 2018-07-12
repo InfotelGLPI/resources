@@ -64,18 +64,23 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
                 'list'  => true]];
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = [];
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'short_name';
-      $tab[14]['name']          = __('Short name', 'resources');
-      $tab[14]['datatype']      = 'text';
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[17]['table']         = 'glpi_locations';
-      $tab[17]['field']         = 'completename';
-      $tab[17]['name']          = __('Location');
+      $tab[] = [
+         'id'       => '14',
+         'table'    => $this->getTable(),
+         'field'    => 'short_name',
+         'name'     => __('Short name', 'resources'),
+         'datatype' => 'text'
+      ];
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
       return $tab;
    }

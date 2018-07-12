@@ -114,34 +114,54 @@ class PluginResourcesCost extends CommonDropdown {
       ];
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table']         = 'glpi_plugin_resources_professions';
-      $tab[14]['field']         = 'name';
-      $tab[14]['name']          = __('Profession', 'resources');
-      $tab[14]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[15]['table']         = 'glpi_plugin_resources_ranks';
-      $tab[15]['field']         = 'name';
-      $tab[15]['name']          = __('Rank', 'resources');
-      $tab[15]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'       => '14',
+         'table'    => 'glpi_plugin_resources_professions',
+         'field'    => 'name',
+         'name'     => __('Profession', 'resources'),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[17]['table']         = $this->getTable();
-      $tab[17]['field']         = 'begin_date';
-      $tab[17]['name']          = __('Begin date');
-      $tab[17]['datatype']      = 'date';
+      $tab[] = [
+         'id'       => '15',
+         'table'    => 'glpi_plugin_resources_ranks',
+         'field'    => 'name',
+         'name'     => __('Rank', 'resources'),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[18]['table']         = $this->getTable();
-      $tab[18]['field']         = 'end_date';
-      $tab[18]['name']          = __('End date');
-      $tab[18]['datatype']      = 'date';
+      $tab[] = [
+         'id'       => '17',
+         'table'    => $this->getTable(),
+         'field'    => 'begin_date',
+         'name'     => __('Begin date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[19]['table']         = $this->getTable();
-      $tab[19]['field']         = 'cost';
-      $tab[19]['name']          = __('Budget cost', 'resources');
-      $tab[19]['datatype']      = 'decimal';
+      $tab[] = [
+         'id'       => '18',
+         'table'    => $this->getTable(),
+         'field'    => 'end_date',
+         'name'     => __('End date'),
+         'datatype' => 'date'
+      ];
+
+      $tab[] = [
+         'id'       => '19',
+         'table'    => $this->getTable(),
+         'field'    => 'cost',
+         'name'     => __('Budget cost', 'resources'),
+         'datatype' => 'decimal'
+      ];
 
       return $tab;
    }

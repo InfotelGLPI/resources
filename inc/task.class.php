@@ -264,87 +264,131 @@ class PluginResourcesTask extends CommonDBTM {
       return $nb;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
 
-      $tab['common'] = PluginResourcesResource::getTypeName(2) . " - " . self::getTypeName(2);
+      $tab[] = [
+         'id'   => 'common',
+         'name' => PluginResourcesResource::getTypeName(2) . " - " . self::getTypeName(2)
+      ];
 
-      $tab[1]['table']         = $this->getTable();
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
+      $tab[] = [
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Name'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => $this->getType()
+      ];
 
-      $tab[2]['table']         = 'glpi_users';
-      $tab[2]['field']         = 'name';
-      $tab[2]['name']          = __('Technician');
-      $tab[2]['datatype']      = 'dropdown';
-      $tab[2]['massiveaction'] = false;
+      $tab[] = [
+         'id'            => '2',
+         'table'         => 'glpi_users',
+         'field'         => 'name',
+         'name'          => __('Technician'),
+         'datatype'      => 'dropdown',
+         'massiveaction' => false
+      ];
 
-      $tab[3]['table']         = 'glpi_groups';
-      $tab[3]['field']         = 'completename';
-      $tab[3]['name']          = __('Group');
-      $tab[3]['condition']     = '`is_assign`';
-      $tab[3]['massiveaction'] = false;
-      $tab[2]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'            => '3',
+         'table'         => 'glpi_groups',
+         'field'         => 'completename',
+         'name'          => __('Group'),
+         'condition'     => '`is_assign`',
+         'massiveaction' => false,
+         'datatype'      => 'dropdown'
+      ];
 
-      $tab[4]['table']         = 'glpi_plugin_resources_taskplannings';
-      $tab[4]['field']         = 'id';
-      $tab[4]['name']          = __('Planning');
-      $tab[4]['massiveaction'] = false;
-      $tab[4]['datatype']      = 'number';
+      $tab[] = [
+         'id'            => '4',
+         'table'         => 'glpi_plugin_resources_taskplannings',
+         'field'         => 'id',
+         'name'          => __('Planning'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
 
-      $tab[7]['table']         = $this->getTable();
-      $tab[7]['field']         = 'actiontime';
-      $tab[7]['name']          = __('Effective duration', 'resources');
-      $tab[7]['datatype']      = 'timestamp';
-      $tab[7]['massiveaction'] = false;
-      $tab[7]['nosearch']      = true;
+      $tab[] = [
+         'id'            => '7',
+         'table'         => $this->getTable(),
+         'field'         => 'actiontime',
+         'name'          => __('Effective duration', 'resources'),
+         'datatype'      => 'timestamp',
+         'massiveaction' => false,
+         'nosearch'      => true
+      ];
 
-      $tab[8]['table']    = $this->getTable();
-      $tab[8]['field']    = 'comment';
-      $tab[8]['name']     = __('Comments');
-      $tab[8]['datatype'] = 'text';
+      $tab[] = [
+         'id'       => '8',
+         'table'    => $this->getTable(),
+         'field'    => 'comment',
+         'name'     => __('Comments'),
+         'datatype' => 'text'
+      ];
 
-      $tab[9]['table']    = $this->getTable();
-      $tab[9]['field']    = 'is_finished';
-      $tab[9]['name']     = __('Carried out task', 'resources');
-      $tab[9]['datatype'] = 'bool';
+      $tab[] = [
+         'id'       => '9',
+         'table'    => $this->getTable(),
+         'field'    => 'is_finished',
+         'name'     => __('Carried out task', 'resources'),
+         'datatype' => 'bool'
+      ];
 
-      $tab[10]['table']         = 'glpi_plugin_resources_tasks_items';
-      $tab[10]['field']         = 'items_id';
-      $tab[10]['name']          = _n('Associated item', 'Associated items', 2);
-      $tab[10]['massiveaction'] = false;
-      $tab[10]['forcegroupby']  = true;
-      $tab[10]['joinparams']    = ['jointype' => 'child'];
+      $tab[] = [
+         'id'            => '10',
+         'table'         => 'glpi_plugin_resources_tasks_items',
+         'field'         => 'items_id',
+         'name'          => _n('Associated item', 'Associated items', 2),
+         'massiveaction' => false,
+         'forcegroupby'  => true,
+         'joinparams'    => [
+            'jointype' => 'child'
+         ]
+      ];
 
-      $tab[11]['table']    = 'glpi_plugin_resources_tasktypes';
-      $tab[11]['field']    = 'name';
-      $tab[11]['name']     = PluginResourcesTaskType::getTypeName(1);
-      $tab[11]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '11',
+         'table'    => 'glpi_plugin_resources_tasktypes',
+         'field'    => 'name',
+         'name'     => PluginResourcesTaskType::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[13]['table']         = 'glpi_plugin_resources_resources';
-      $tab[13]['field']         = 'id';
-      $tab[13]['name']          = PluginResourcesResource::getTypeName(1) . " " . __('ID');
-      $tab[13]['massiveaction'] = false;
-      $tab[13]['datatype']      = 'number';
+      $tab[] = [
+         'id'            => '13',
+         'table'         => 'glpi_plugin_resources_resources',
+         'field'         => 'id',
+         'name'          => PluginResourcesResource::getTypeName(1) . " " . __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
 
-      $tab[12]['table']         = 'glpi_plugin_resources_resources';
-      $tab[12]['field']         = 'name';
-      $tab[12]['name']          = PluginResourcesResource::getTypeName(2);
-      $tab[12]['massiveaction'] = false;
+      $tab[] = [
+         'id'            => '12',
+         'table'         => 'glpi_plugin_resources_resources',
+         'field'         => 'name',
+         'name'          => PluginResourcesResource::getTypeName(2),
+         'massiveaction' => false
+      ];
 
-      $tab[30]['table']         = $this->getTable();
-      $tab[30]['field']         = 'id';
-      $tab[30]['name']          = __('ID');
-      $tab[30]['massiveaction'] = false;
-      $tab[30]['datatype']      = 'number';
+      $tab[] = [
+         'id'            => '30',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
 
-      $tab[80]['table']    = 'glpi_entities';
-      $tab[80]['field']    = 'completename';
-      $tab[80]['name']     = __('Entity');
-      $tab[80]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '80',
+         'table'    => 'glpi_entities',
+         'field'    => 'completename',
+         'name'     => __('Entity'),
+         'datatype' => 'dropdown'
+      ];
 
       return $tab;
    }
@@ -588,20 +632,21 @@ class PluginResourcesTask extends CommonDBTM {
       $params = [
          'start'      => 0,
          'order'      => 'DESC',
-         'is_deleted' => 0
+         'is_deleted' => 0,
+         'as_map'     => 0
       ];
 
       $toview = null;
-      foreach ($task->getSearchOptions() as $key => $option) {
+      foreach ($task->rawSearchOptions() as $option) {
          if (isset($option['table'])) {
             if ($option['table'] == "glpi_plugin_resources_resources" && $option['field'] == "id") {
-               $params['criteria'][] = ['field'      => $key,
+               $params['criteria'][] = ['field'      => $option['id'],
                                              'searchtype' => 'contains',
                                              'value'      => $options['id']];
-               $toview               = $key;
+               $toview               = $option['id'];
             }
             if ($option['table'] == $task->getTable() && $option['field'] == "name") {
-               $params['sort'] = $key;
+               $params['sort'] = $option['id'];
             }
          }
       }
@@ -612,8 +657,8 @@ class PluginResourcesTask extends CommonDBTM {
          array_push($data['toview'], $toview);
       }
       Search::constructSQL($data);
-      Search::constructDatas($data);
-      Search::displayDatas($data);
+      Search::constructData($data);
+      Search::displayData($data);
    }
 
    function showCentral($who) {

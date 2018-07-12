@@ -554,33 +554,45 @@ class PluginResourcesEmployee extends CommonDBTM {
       $pdf->displaySpace();
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
 
-      $tab['common'] = self::getTypeName(2);
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[1]['table']         = 'glpi_plugin_resources_resources';
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
-
-      $tab[2]['table']    = 'glpi_plugin_resources_employers';
-      $tab[2]['field']    = 'name';
-      $tab[2]['name']     = PluginResourcesEmployer::getTypeName(1);
-      $tab[2]['datatype'] = 'dropdown';
-
-      $tab[3]['table']    = 'glpi_plugin_resources_clients';
-      $tab[3]['field']    = 'name';
-      $tab[3]['name']     = PluginResourcesClient::getTypeName(1);
-      $tab[3]['datatype'] = 'dropdown';
-
-      $tab[31]['table']         = $this->getTable();
-      $tab[31]['field']         = 'id';
-      $tab[31]['name']          = __('ID');
-      $tab[31]['datatype']      = 'number';
-      $tab[31]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => 'glpi_plugin_resources_resources',
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'itemlink_type'      => $this->getType()
+      ];
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => 'glpi_plugin_resources_employers',
+         'field'              => 'name',
+         'name'               => PluginResourcesEmployer::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => 'glpi_plugin_resources_clients',
+         'field'              => 'name',
+         'name'               => PluginResourcesClient::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
+      $tab[] = [
+         'id'                 => '31',
+         'table'              => $this->getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'number',
+         'massiveaction'      => false
+      ];
 
       return $tab;
    }

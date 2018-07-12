@@ -88,15 +88,22 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       return $tab;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = [];
 
-      $tab[15]['table']    = 'glpi_plugin_resources_habilitationlevels';
-      $tab[15]['field']    = 'name';
-      $tab[15]['name']     = __('Habilitation level', 'resources');
-      $tab[15]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
+      $tab[] = [
+         'id'       => '15',
+         'table'    => 'glpi_plugin_resources_habilitationlevels',
+         'field'    => 'name',
+         'name'     => __('Habilitation level', 'resources'),
+         'datatype' => 'dropdown'
+      ];
       return $tab;
    }
 
