@@ -59,165 +59,241 @@ class PluginResourcesRecap extends CommonDBTM {
       return false;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab['common']             = self::getTypeName(2);
+      $tab[] = [
+         'id'       => '3',
+         'table'    => $this->table,
+         'field'    => 'registration_number',
+         'name'     => __('Administrative number'),
+         'datatype' => 'string'
+      ];
 
-      $tab[1]['table']                = $this->table;
-      $tab[1]['field']                = 'registration_number';
-      $tab[1]['name']                 = __('Administrative number');
-      $tab[1]['datatype']             = 'string';
+      $tab[] = [
+         'id'            => '2',
+         'table'         => $this->table,
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number',
+         'nosearch'      => true
+      ];
 
-      $tab[2]['table']                 = $this->table;
-      $tab[2]['field']                 = 'id';
-      $tab[2]['name']                  = __('ID');
-      $tab[2]['massiveaction']         = false;
-      $tab[2]['datatype']              = 'number';
-      $tab[2]['nosearch']              = true;
+      $tab[] = [
+         'id'            => '4350',
+         'table'         => 'glpi_plugin_resources_resources',
+         'field'         => 'name',
+         'name'          => __('Surname'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => 'PluginResourcesResource'
+      ];
 
-      // FROM resources
+      $tab[] = [
+         'id'    => '4351',
+         'table' => 'glpi_plugin_resources_resources',
+         'field' => 'firstname',
+         'name'  => __('First name')
+      ];
 
-      $tab[4350]['table']              = 'glpi_plugin_resources_resources';
-      $tab[4350]['field']              = 'name';
-      $tab[4350]['name']               = __('Surname');
-      $tab[4350]['datatype']           = 'itemlink';
-      $tab[4350]['itemlink_type']      = 'PluginResourcesResource';
+      $tab[] = [
+         'id'       => '4352',
+         'table'    => 'glpi_plugin_resources_resources',
+         'field'    => 'quota',
+         'name'     => __('Quota','resources'),
+         'datatype' => 'decimal'
+      ];
 
-      $tab[4351]['table']              = 'glpi_plugin_resources_resources';
-      $tab[4351]['field']              = 'firstname';
-      $tab[4351]['name']               = __('First name');
+      $tab[] = [
+         'id'       => '4353',
+         'table'    => 'glpi_plugin_resources_resourcesituations',
+         'field'    => 'name',
+         'name'     => PluginResourcesResourceSituation::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4352]['table']              = 'glpi_plugin_resources_resources';
-      $tab[4352]['field']              = 'quota';
-      $tab[4352]['name']               = __('Quota', 'resources');
-      $tab[4352]['datatype']           = 'decimal';
+      $tab[] = [
+         'id'       => '4354',
+         'table'    => 'glpi_plugin_resources_contractnatures',
+         'field'    => 'name',
+         'name'     => PluginResourcesContractNature::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4353]['table']              = 'glpi_plugin_resources_resourcesituations';
-      $tab[4353]['field']              = 'name';
-      $tab[4353]['name']               = PluginResourcesResourceSituation::getTypeName(1);
-      $tab[4353]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4355',
+         'table'    => 'glpi_plugin_resources_contracttypes',
+         'field'    => 'name',
+         'name'     => PluginResourcesContractType::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4354]['table']              = 'glpi_plugin_resources_contractnatures';
-      $tab[4354]['field']              = 'name';
-      $tab[4354]['name']               = PluginResourcesContractNature::getTypeName(1);
-      $tab[4354]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4356',
+         'table'    => 'glpi_plugin_resources_resourcespecialities',
+         'field'    => 'name',
+         'name'     => PluginResourcesResourceSpeciality::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4355]['table']              = 'glpi_plugin_resources_contracttypes';
-      $tab[4355]['field']              = 'name';
-      $tab[4355]['name']               = PluginResourcesContractType::getTypeName(1);
-      $tab[4355]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4357',
+         'table'    => 'glpi_plugin_resources_ranks',
+         'field'    => 'name',
+         'name'     => PluginResourcesRank::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4356]['table']              = 'glpi_plugin_resources_resourcespecialities';
-      $tab[4356]['field']              = 'name';
-      $tab[4356]['name']               = PluginResourcesResourceSpeciality::getTypeName(1);
-      $tab[4356]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4358',
+            'table'    => 'glpi_plugin_resources_professions',
+         'field'    => 'name',
+         'name'     => PluginResourcesProfession::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4357]['table']              = 'glpi_plugin_resources_ranks';
-      $tab[4357]['field']              = 'name';
-      $tab[4357]['name']               = PluginResourcesRank::getTypeName(1);
-      $tab[4357]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4359',
+         'table'    => 'glpi_plugin_resources_professionlines',
+         'field'    => 'name',
+         'name'     => PluginResourcesProfessionLine::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4358]['table']              = 'glpi_plugin_resources_professions';
-      $tab[4358]['field']              = 'name';
-      $tab[4358]['name']               = PluginResourcesProfession::getTypeName(1);
-      $tab[4358]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4360',
+         'table'    => 'glpi_plugin_resources_professioncategories',
+         'field'    => 'name',
+         'name'     => PluginResourcesProfessionCategory::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4359]['table']              = 'glpi_plugin_resources_professionlines';
-      $tab[4359]['field']              = 'name';
-      $tab[4359]['name']               = PluginResourcesProfessionLine::getTypeName(1);
-      $tab[4359]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4376',
+         'table'    => 'glpi_plugin_resources_resources',
+         'field'    => 'date_begin',
+         'name'     => __('Arrival date', 'resources'),
+         'datatype' => 'date'
+      ];
 
-      $tab[4360]['table']              = 'glpi_plugin_resources_professioncategories';
-      $tab[4360]['field']              = 'name';
-      $tab[4360]['name']               = PluginResourcesProfessionCategory::getTypeName(1);
-      $tab[4360]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4377',
+         'table'    => 'glpi_plugin_resources_resources',
+         'field'    => 'date_end',
+         'name'     => __('Departure date', 'resources'),
+         'datatype' => 'date'
+      ];
 
-      $tab[4376]['table']              = 'glpi_plugin_resources_resources';
-      $tab[4376]['field']              = 'date_begin';
-      $tab[4376]['name']               = __('Arrival date', 'resources');
-      $tab[4376]['datatype']           = 'date';
+      $tab[] = [
+         'id'           => '4361',
+         'table'        => 'glpi_plugin_resources_employments',
+         'field'        => 'name',
+         'name'         => __('Name') . " - " . PluginResourcesEmployment::getTypeName(1),
+         'forcegroupby' => true
+      ];
 
-      $tab[4377]['table']              = 'glpi_plugin_resources_resources';
-      $tab[4377]['field']              = 'date_end';
-      $tab[4377]['name']               = __('Departure date', 'resources');
-      $tab[4377]['datatype']           = 'date';
+      $tab[] = [
+         'id'       => '4362',
+         'table'    => 'glpi_plugin_resources_employments',
+         'field'    => 'ratio_employment_budget',
+         'name'     => __('Ratio Employment / Budget', 'resources'),
+         'datatype' => 'decimal'
+      ];
 
-      // FROM employment
+      $tab[] = [
+         'id'       => '4363',
+         'table'    => 'glpi_plugin_resources_employmentranks',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesRank::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4361]['table']              = 'glpi_plugin_resources_employments';
-      $tab[4361]['field']              = 'name';
-      $tab[4361]['name']               = __('Name')." - ".PluginResourcesEmployment::getTypeName(1);
-      $tab[4361]['forcegroupby']       = true;
+      $tab[] = [
+         'id'       => '4364',
+         'table'    => 'glpi_plugin_resources_employmentprofessions',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesProfession::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4362]['table']              = 'glpi_plugin_resources_employments';
-      $tab[4362]['field']              = 'ratio_employment_budget';
-      $tab[4362]['name']               = __('Ratio Employment / Budget', 'resources');
-      $tab[4362]['datatype']           = 'decimal';
+      $tab[] = [
+         'id'       => '4365',
+         'table'    => 'glpi_plugin_resources_employmentprofessionlines',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesProfessionLine::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4363]['table']              = 'glpi_plugin_resources_employmentranks';
-      $tab[4363]['field']              = 'name';
-      $tab[4363]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesRank::getTypeName(1);
-      $tab[4363]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4366',
+         'table'    => 'glpi_plugin_resources_employmentprofessioncategories',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesProfessionCategory::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4364]['table']              = 'glpi_plugin_resources_employmentprofessions';
-      $tab[4364]['field']              = 'name';
-      $tab[4364]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfession::getTypeName(1);
-      $tab[4364]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4367',
+         'table'    => 'glpi_plugin_resources_employments',
+         'field'    => 'begin_date',
+         'name'     => __('Begin date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[4365]['table']              = 'glpi_plugin_resources_employmentprofessionlines';
-      $tab[4365]['field']              = 'name';
-      $tab[4365]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionLine::getTypeName(1);
-      $tab[4365]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4368',
+         'table'    => 'glpi_plugin_resources_employments',
+         'field'    => 'end_date',
+         'name'     => __('End date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[4366]['table']              = 'glpi_plugin_resources_employmentprofessioncategories';
-      $tab[4366]['field']              = 'name';
-      $tab[4366]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionCategory::getTypeName(1);
-      $tab[4366]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'       => '4369',
+         'table'    => 'glpi_plugin_resources_employmentstates',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmploymentState::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4367]['table']              = 'glpi_plugin_resources_employments';
-      $tab[4367]['field']              = 'begin_date';
-      $tab[4367]['name']               = __('Begin date');
-      $tab[4367]['datatype']           = 'date';
+      $tab[] = [
+         'id'       => '4370',
+         'table'    => 'glpi_plugin_resources_employers',
+         'field'    => 'completename',
+         'name'     => PluginResourcesEmployer::getTypeName(1),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[4368]['table']              = 'glpi_plugin_resources_employments';
-      $tab[4368]['field']              = 'end_date';
-      $tab[4368]['name']               = __('End date');
-      $tab[4368]['datatype']           = 'date';
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
-      $tab[4369]['table']              = 'glpi_plugin_resources_employmentstates';
-      $tab[4369]['field']              = 'name';
-      $tab[4369]['name']               = PluginResourcesEmploymentState::getTypeName(1);
-      $tab[4369]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'    => '4372',
+         'table' => 'glpi_plugin_resources_employmentranks',
+         'field' => 'id',
+         'name'  => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesRank::getTypeName(1) . " - " . __('ID')
+      ];
 
-      //From employer
+      $tab[] = [
+         'id'    => '4373',
+         'table' => 'glpi_plugin_resources_employmentprofessions',
+         'field' => 'id',
+         'name'  => PluginResourcesEmployment::getTypeName(1) . " - " . PluginResourcesProfession::getTypeName(1) . " - " . __('ID')
+      ];
 
-      $tab[4370]['table']              = 'glpi_plugin_resources_employers';
-      $tab[4370]['field']              = 'completename';
-      $tab[4370]['name']               = PluginResourcesEmployer::getTypeName(1);
-      $tab[4370]['datatype']           = 'dropdown';
+      $tab[] = [
+         'id'    => '4374',
+         'table' => 'glpi_plugin_resources_ranks',
+         'field' => 'id',
+         'name'  => PluginResourcesResource::getTypeName(1) . " - " . PluginResourcesRank::getTypeName(1) . " - " . __('ID')
+      ];
 
-      $tab[4371]['table']              = 'glpi_locations';
-      $tab[4371]['field']              = 'completename';
-      $tab[4371]['name']               = __('Employer address', 'resources');
-      $tab[4371]['datatype']           = 'dropdown';
-
-      $tab[4372]['table']              = 'glpi_plugin_resources_employmentranks';
-      $tab[4372]['field']              = 'id';
-      $tab[4372]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesRank::getTypeName(1)." - ".__('ID');
-
-      $tab[4373]['table']              = 'glpi_plugin_resources_employmentprofessions';
-      $tab[4373]['field']              = 'id';
-      $tab[4373]['name']               = PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfession::getTypeName(1)." - ".__('ID');
-
-      $tab[4374]['table']              = 'glpi_plugin_resources_ranks';
-      $tab[4374]['field']              = 'id';
-      $tab[4374]['name']               = PluginResourcesResource::getTypeName(1)." - ".PluginResourcesRank::getTypeName(1)." - ".__('ID');
-
-      $tab[4375]['table']              = 'glpi_plugin_resources_professions';
-      $tab[4375]['field']              = 'id';
-      $tab[4375]['name']               = PluginResourcesResource::getTypeName(1)." - ".PluginResourcesProfession::getTypeName(1)." - ".__('ID');
+      $tab[] = [
+         'id'    => '4375',
+         'table' => 'glpi_plugin_resources_professions',
+         'field' => 'id',
+         'name'  => PluginResourcesResource::getTypeName(1) . " - " . PluginResourcesProfession::getTypeName(1) . " - " . __('ID')
+      ];
 
       return $tab;
    }
@@ -245,8 +321,8 @@ class PluginResourcesRecap extends CommonDBTM {
 
       $data = Search::prepareDatasForSearch($itemtype, $params);
       self::constructSQL($data);
-      Search::constructDatas($data);
-      Search::displayDatas($data);
+      Search::constructData($data);
+      Search::displayData($data);
    }
 
    /**

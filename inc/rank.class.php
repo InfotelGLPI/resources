@@ -82,37 +82,50 @@ class PluginResourcesRank extends CommonDropdown {
                   ];
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[24]['table']         = $this->getTable();
-      $tab[24]['field']         = 'code';
-      $tab[24]['name']          = __('Code', 'resources');
-
-      $tab[25]['table']         = $this->getTable();
-      $tab[25]['field']         = 'short_name';
-      $tab[25]['name']         = __('Short name', 'resources');
-
-      $tab[27]['table']         = 'glpi_plugin_resources_professions';
-      $tab[27]['field']         = 'name';
-      $tab[27]['name']          = __('Profession', 'resources');
-      $tab[27]['datatype']      = 'dropdown';
-
-      $tab[28]['table']         = $this->getTable();
-      $tab[28]['field']         = 'is_active';
-      $tab[28]['name']          = __('Active');
-      $tab[28]['datatype']      = 'bool';
-
-      $tab[29]['table']         = $this->getTable();
-      $tab[29]['field']         = 'begin_date';
-      $tab[29]['name']          = __('Begin date');
-      $tab[29]['datatype']      = 'date';
-
-      $tab[30]['table']         = $this->getTable();
-      $tab[30]['field']         = 'end_date';
-      $tab[30]['name']          = __('End date');
-      $tab[30]['datatype']      = 'date';
+      $tab[] = [
+         'id'    => '24',
+         'table' => $this->getTable(),
+         'field' => 'code',
+         'name'  => __('Code', 'resources')
+      ];
+      $tab[] = [
+         'id'    => '25',
+         'table' => $this->getTable(),
+         'field' => 'short_name',
+         'name'  => __('Short name', 'resources')
+      ];
+      $tab[] = [
+         'id'       => '27',
+         'table'    => 'glpi_plugin_resources_professions',
+         'field'    => 'name',
+         'name'     => __('Profession', 'resources'),
+         'datatype' => 'dropdown'
+      ];
+      $tab[] = [
+         'id'       => '28',
+         'table'    => $this->getTable(),
+         'field'    => 'is_active',
+         'name'     => __('Active'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '29',
+         'table'    => $this->getTable(),
+         'field'    => 'begin_date',
+         'name'     => __('Begin date'),
+         'datatype' => 'date'
+      ];
+      $tab[] = [
+         'id'       => '30',
+         'table'    => $this->getTable(),
+         'field'    => 'end_date',
+         'name'     => __('End date'),
+         'datatype' => 'date'
+      ];
 
       return $tab;
    }

@@ -88,19 +88,24 @@ class PluginResourcesHabilitationLevel extends CommonDropdown {
       return $tab;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[15]['table']    = $this->getTable();
-      $tab[15]['field']    = 'is_mandatory_creating_resource';
-      $tab[15]['name']     = __('Mandatory when creating the resource', 'resources');
-      $tab[15]['datatype'] = 'bool';
-
-      $tab[16]['table']    = $this->getTable();
-      $tab[16]['field']    = 'number';
-      $tab[16]['name']     = __('Unlimited number of selectable habilitations ', 'resources');
-      $tab[16]['datatype'] = 'bool';
+      $tab[] = [
+         'id'       => '15',
+         'table'    => $this->getTable(),
+         'field'    => 'is_mandatory_creating_resource',
+         'name'     => __('Mandatory when creating the resource', 'resources'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '14',
+         'table'    => $this->getTable(),
+         'field'    => 'number',
+         'name'     => __('Unlimited number of selectable habilitations ', 'resources'),
+         'datatype' => 'bool'
+      ];
 
       return $tab;
    }

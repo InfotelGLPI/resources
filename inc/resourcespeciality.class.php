@@ -129,14 +129,17 @@ class PluginResourcesResourceSpeciality extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[17]['table']         = 'glpi_plugin_resources_ranks';
-      $tab[17]['field']         = 'name';
-      $tab[17]['name']          = __('Rank', 'resources');
-      $tab[17]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'       => '17',
+         'table'    => 'glpi_plugin_resources_ranks',
+         'field'    => 'name',
+         'name'     => __('Rank', 'resources'),
+         'datatype' => 'dropdown'
+      ];
 
       return $tab;
    }

@@ -99,70 +99,97 @@ class PluginResourcesBudget extends CommonDBTM {
    /**
     * allow search management
     */
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab           = [];
-      $tab['common'] = self::getTypeName(2);
+      $tab = parent::rawSearchOptions();
 
-      $tab[1]['table']         = $this->getTable();
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
-      $tab[1]['massiveaction'] = false;
+      $tab[] = [
+         'id'            => '1',
+         'itemlink_type' => $this->getType()
+      ];
 
-      $tab[2]['table']         = $this->getTable();
-      $tab[2]['field']         = 'id';
-      $tab[2]['name']          = __('ID');
-      $tab[2]['datatype']      = 'number';
-      $tab[2]['massiveaction'] = false;
+      $tab[] = [
+         'id'            => '2',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'datatype'      => 'number',
+         'massiveaction' => false
+      ];
 
-      $tab[3]['table']         = 'glpi_plugin_resources_ranks';
-      $tab[3]['field']         = 'name';
-      $tab[3]['name']          = __('Rank', 'resources');
-      $tab[3]['massiveaction'] = false;
-      $tab[3]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'            => '3',
+         'table'         => 'glpi_plugin_resources_ranks',
+         'field'         => 'name',
+         'name'          => __('Rank', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'dropdown'
+      ];
 
-      $tab[4]['table']         = 'glpi_plugin_resources_professions';
-      $tab[4]['field']         = 'name';
-      $tab[4]['name']          = __('Profession', 'resources');
-      $tab[4]['massiveaction'] = false;
-      $tab[4]['datatype']      = 'dropdown';
+      $tab[] = [
+         'id'            => '4',
+         'table'         => 'glpi_plugin_resources_professions',
+         'field'         => 'name',
+         'name'          => __('Profession', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'dropdown'
+      ];
 
-      $tab[5]['table']    = 'glpi_plugin_resources_budgettypes';
-      $tab[5]['field']    = 'name';
-      $tab[5]['name']     = __('Budget type', 'resources');
-      $tab[5]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '5',
+         'table'    => 'glpi_plugin_resources_budgettypes',
+         'field'    => 'name',
+         'name'     => __('Budget type', 'resources'),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[6]['table']    = $this->getTable();
-      $tab[6]['field']    = 'begin_date';
-      $tab[6]['name']     = __('Begin date');
-      $tab[6]['datatype'] = 'date';
+      $tab[] = [
+         'id'       => '6',
+         'table'    => $this->getTable(),
+         'field'    => 'begin_date',
+         'name'     => __('Begin date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[7]['table']    = $this->getTable();
-      $tab[7]['field']    = 'end_date';
-      $tab[7]['name']     = __('End date');
-      $tab[7]['datatype'] = 'date';
+      $tab[] = [
+         'id'       => '7',
+         'table'    => $this->getTable(),
+         'field'    => 'end_date',
+         'name'     => __('End date'),
+         'datatype' => 'date'
+      ];
 
-      $tab[8]['table'] = $this->getTable();
-      $tab[8]['field'] = 'volume';
-      $tab[8]['name']  = __('Budget volume', 'resources');
+      $tab[] = [
+         'id'    => '8',
+         'table' => $this->getTable(),
+         'field' => 'volume',
+         'name'  => __('Budget volume', 'resources')
+      ];
 
-      $tab[9]['table']    = 'glpi_plugin_resources_budgetvolumes';
-      $tab[9]['field']    = 'name';
-      $tab[9]['name']     = __('Type of budget volume', 'resources');
-      $tab[9]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '9',
+         'table'    => 'glpi_plugin_resources_budgetvolumes',
+         'field'    => 'name',
+         'name'     => __('Type of budget volume', 'resources'),
+         'datatype' => 'dropdown'
+      ];
 
-      $tab[10]['table']         = $this->getTable();
-      $tab[10]['field']         = 'date_mod';
-      $tab[10]['name']          = __('Last update');
-      $tab[10]['datatype']      = 'datetime';
-      $tab[10]['massiveaction'] = false;
+      $tab[] = [
+         'id'            => '10',
+         'table'         => $this->getTable(),
+         'field'         => 'date_mod',
+         'name'          => __('Last update'),
+         'datatype'      => 'datetime',
+         'massiveaction' => false
+      ];
 
-      $tab[80]['table']    = 'glpi_entities';
-      $tab[80]['field']    = 'completename';
-      $tab[80]['name']     = __('Entity');
-      $tab[80]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '80',
+         'table'    => 'glpi_entities',
+         'field'    => 'completename',
+         'name'     => __('Entity'),
+         'datatype' => 'dropdown'
+      ];
 
       return $tab;
    }

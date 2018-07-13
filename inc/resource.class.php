@@ -176,262 +176,349 @@ class PluginResourcesResource extends CommonDBTM {
     * @return an array of search options
     * More information on https://forge.indepnet.net/wiki/glpi/SearchEngine
     **/
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab['common'] = self::getTypeName(2);
-
-      $tab[1]['table']         = $this->getTable();
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Surname');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
       if (Session::getCurrentInterface() != 'central') {
-         $tab[1]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '1',
+            'searchtype'=> 'contains'
+         ];
       }
+      $tab[] = [
+         'id'       => '2',
+         'table'    => $this->getTable(),
+         'field'    => 'firstname',
+         'name'     => __('First name'),
+      ];
 
-      $tab[2]['table']    = $this->getTable();
-      $tab[2]['field']    = 'firstname';
-      $tab[2]['name']     = __('First name');
-      $tab[2]['datatype'] = 'itemlink';
       if (Session::getCurrentInterface() != 'central') {
-         $tab[2]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '2',
+            'searchtype'=> 'contains'
+         ];
       }
+      $tab[] = [
+         'id'       => '12',
+         'table'    => 'glpi_plugin_resources_contracttypes',
+         'field'    => 'name',
+         'name'     => PluginResourcesContractType::getTypeName(1),
+         'datatype'=>'dropdown'
+      ];
 
-      $tab[3]['table']    = 'glpi_plugin_resources_contracttypes';
-      $tab[3]['field']    = 'name';
-      $tab[3]['name']     = PluginResourcesContractType::getTypeName(1);
-      $tab[3]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'       => '4',
+         'table'    => 'glpi_users',
+         'field'    => 'name',
+         'name'     => __('Resource manager', 'resources'),
+         'datatype'=>'dropdown',
+         'right'=>'all'
+      ];
 
-      $tab[4]['table']    = 'glpi_users';
-      $tab[4]['field']    = 'name';
-      $tab[4]['name']     = __('Resource manager', 'resources');
-      $tab[4]['datatype'] = 'dropdown';
-      $tab[4]['right']    = 'all';
       if (Session::getCurrentInterface() != 'central') {
-         $tab[4]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '4',
+            'searchtype'=> 'contains'
+         ];
       }
 
-      $tab[5]['table']    = $this->getTable();
-      $tab[5]['field']    = 'date_begin';
-      $tab[5]['name']     = __('Arrival date', 'resources');
-      $tab[5]['datatype'] = 'date';
+      $tab[] = [
+         'id'       => '5',
+         'table'    => $this->getTable(),
+         'field'    => 'date_begin',
+         'name'     => __('Arrival date', 'resources'),
+         'datatype'=>'date'
+      ];
+      $tab[] = [
+         'id'       => '6',
+         'table'    => $this->getTable(),
+         'field'    => 'date_end',
+         'name'     => __('Departure date', 'resources'),
+         'datatype'=>'date'
+      ];
+      $tab[] = [
+         'id'       => '7',
+         'table'    => $this->getTable(),
+         'field'    => 'comment',
+         'name'     => __('Description'),
+         'datatype'=>'text'
+      ];
 
-      $tab[6]['table']    = $this->getTable();
-      $tab[6]['field']    = 'date_end';
-      $tab[6]['name']     = __('Departure date', 'resources');
-      $tab[6]['datatype'] = 'date';
 
-      $tab[7]['table']    = $this->getTable();
-      $tab[7]['field']    = 'comment';
-      $tab[7]['name']     = __('Description');
-      $tab[7]['datatype'] = 'text';
-
-      if (Session::getCurrentInterface() == 'central') {
-         $tab[8]['table']         = 'glpi_plugin_resources_resources_items';
-         $tab[8]['field']         = 'items_id';
-         $tab[8]['name']          = _n('Associated item', 'Associated items', 2);
-         $tab[8]['massiveaction'] = false;
-         $tab[8]['forcegroupby']  = true;
-         $tab[8]['nosearch']      = true;
-         $tab[8]['joinparams']    = ['jointype' => 'child'];
-      }
-
-      $tab[9]['table']         = $this->getTable();
-      $tab[9]['field']         = 'date_declaration';
-      $tab[9]['name']          = __('Request date');
-      $tab[9]['datatype']      = 'date';
-      $tab[9]['massiveaction'] = false;
-
-      $tab[10]['table']         = 'glpi_users';
-      $tab[10]['field']         = 'name';
-      $tab[10]['linkfield']     = 'users_id_recipient';
-      $tab[10]['name']          = __('Requester');
-      $tab[10]['datatype']      = 'dropdown';
-      $tab[10]['right']         = 'all';
-      $tab[10]['massiveaction'] = false;
       if (Session::getCurrentInterface() != 'central') {
-         $tab[10]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '8',
+            'table'    => 'glpi_plugin_resources_resources_items',
+            'field'    => 'items_id',
+            'name'     => _n('Associated item', 'Associated items', 2),
+            'massiveaction'=>false,
+            'forcegroupby'=>false,
+            'nosearch'=>false,
+            'joinparams'=>['jointype' => 'child']
+         ];
       }
+      $tab[] = [
+         'id'       => '9',
+         'table'    => $this->getTable(),
+         'field'    => 'date_declaration',
+         'name'     => __('Request date'),
+         'datatype'=>'date',
+         'massiveaction'=>false
+      ];
+      $tab[] = [
+         'id'       => '10',
+         'table'    => 'glpi_users',
+         'field'    => 'name',
+         'linkfield'     => 'users_id_recipient',
+         'name'     => __('Requester'),
+         'datatype'=>'dropdown',
+         'right'=>'all',
+         'massiveaction' => false
+      ];
 
-      $tab[11]['table']    = 'glpi_plugin_resources_departments';
-      $tab[11]['field']    = 'name';
-      $tab[11]['name']     = PluginResourcesDepartment::getTypeName(1);
-      $tab[11]['datatype'] = 'dropdown';
-
-      $tab[12]['table']    = 'glpi_locations';
-      $tab[12]['field']    = 'completename';
-      $tab[12]['name']     = __('Location');
-      $tab[12]['datatype'] = 'dropdown';
-
-      $tab[13]['table']    = $this->getTable();
-      $tab[13]['field']    = 'is_leaving';
-      $tab[13]['name']     = __('Declared as leaving', 'resources');
-      $tab[13]['datatype'] = 'bool';
-
-      $tab[14]['table']         = 'glpi_users';
-      $tab[14]['field']         = 'name';
-      $tab[14]['linkfield']     = 'users_id_recipient_leaving';
-      $tab[14]['name']          = __('Informant of leaving', 'resources');
-      $tab[14]['datatype']      = 'dropdown';
-      $tab[14]['right']         = 'all';
-      $tab[14]['massiveaction'] = false;
       if (Session::getCurrentInterface() != 'central') {
-         $tab[14]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '10',
+            'searchtype'=> 'contains'
+         ];
       }
+      $tab[] = [
+         'id'       => '11',
+         'table'    => 'glpi_plugin_resources_departments',
+         'field'    => 'name',
+         'name'     => PluginResourcesDepartment::getTypeName(1),
+         'datatype'=>'dropdown'
+      ];
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
+      $tab[] = [
+         'id'       => '13',
+         'table'    => $this->getTable(),
+         'field'    => 'is_leaving',
+         'name'     => __('Declared as leaving', 'resources'),
+         'datatype'=>'bool'
+      ];
+      $tab[] = [
+         'id'       => '14',
+         'table'    => 'glpi_users',
+         'field'    => 'name',
+         'linkfield'=>'users_id_recipient_leaving',
+         'name'     => __('Informant of leaving', 'resources'),
+         'datatype'=>'dropdown',
+         'right'=>'all',
+         'massiveaction'=>false
+      ];
 
-      if (Session::getCurrentInterface() == 'central') {
-         $tab[15]['table']    = $this->getTable();
-         $tab[15]['field']    = 'is_helpdesk_visible';
-         $tab[15]['name']     = __('Associable to a ticket');
-         $tab[15]['datatype'] = 'bool';
-      }
-
-      $tab[16]['table']         = $this->getTable();
-      $tab[16]['field']         = 'date_mod';
-      $tab[16]['name']          = __('Last update');
-      $tab[16]['datatype']      = 'datetime';
-      $tab[16]['massiveaction'] = false;
-
-      $tab[17]['table']    = 'glpi_plugin_resources_resourcestates';
-      $tab[17]['field']    = 'name';
-      $tab[17]['name']     = PluginResourcesResourceState::getTypeName(1);
-      $tab[17]['datatype'] = 'dropdown';
-
-      if (Session::getCurrentInterface() == 'central') {
-         $tab[18]['table']         = $this->getTable();
-         $tab[18]['field']         = 'picture';
-         $tab[18]['name']          = __('Photo', 'resources');
-         $tab[18]['massiveaction'] = false;
-
-         $tab[19]['table']         = $this->getTable();
-         $tab[19]['field']         = 'is_recursive';
-         $tab[19]['name']          = __('Child entities');
-         $tab[19]['datatype']      = 'bool';
-         $tab[19]['massiveaction'] = false;
-      }
-
-      $tab[20]['table']    = $this->getTable();
-      $tab[20]['field']    = 'quota';
-      $tab[20]['name']     = __('Quota', 'resources');
-      $tab[20]['datatype'] = 'decimal';
-
-      if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
-
-         $tab[21]['table']         = 'glpi_plugin_resources_resourcesituations';
-         $tab[21]['field']         = 'name';
-         $tab[21]['name']          = PluginResourcesResourceSituation::getTypeName(1);
-         $tab[21]['massiveaction'] = false;
-         $tab[21]['datatype']      = 'dropdown';
-
-         $tab[22]['table']         = 'glpi_plugin_resources_contractnatures';
-         $tab[22]['field']         = 'name';
-         $tab[22]['name']          = PluginResourcesContractNature::getTypeName(1);
-         $tab[22]['massiveaction'] = false;
-         $tab[22]['datatype']      = 'dropdown';
-
-         $tab[23]['table']         = 'glpi_plugin_resources_ranks';
-         $tab[23]['field']         = 'name';
-         $tab[23]['name']          = PluginResourcesRank::getTypeName(1);
-         $tab[23]['massiveaction'] = false;
-         $tab[23]['datatype']      = 'dropdown';
-
-         $tab[24]['table']         = 'glpi_plugin_resources_resourcespecialities';
-         $tab[24]['field']         = 'name';
-         $tab[24]['name']          = PluginResourcesResourceSpeciality::getTypeName(1);
-         $tab[24]['massiveaction'] = false;
-         $tab[24]['datatype']      = 'dropdown';
-      }
-
-      $tab[25]['table']    = 'glpi_plugin_resources_leavingreasons';
-      $tab[25]['field']    = 'name';
-      $tab[25]['name']     = PluginResourcesLeavingReason::getTypeName(1);
-      $tab[25]['datatype'] = 'dropdown';
-
-      $tab[27]['table']     = 'glpi_users';
-      $tab[27]['field']     = 'name';
-      $tab[27]['linkfield'] = 'users_id_sales';
-      $tab[27]['name']      = __('Sales manager', 'resources');
-      $tab[27]['datatype']  = 'dropdown';
-      $tab[27]['right']     = 'all';
       if (Session::getCurrentInterface() != 'central') {
-         $tab[27]['searchtype'] = 'contains';
+         $tab[] = [
+            'id'       => '14',
+            'searchtype'    => 'contains'
+         ];
       }
 
-      $tab[28]['table']         = $this->getTable();
-      $tab[28]['field']         = 'date_declaration_leaving';
-      $tab[28]['name']          = __('Declaration of departure date', 'resources');
-      $tab[28]['datatype']      = 'datetime';
-      $tab[28]['massiveaction'] = false;
+      if (Session::getCurrentInterface() != 'central') {
+         $tab[] = [
+            'id'       => '15',
+            'table'    => $this->getTable(),
+            'field'    => 'is_helpdesk_visible',
+            'name'     => __('Associable to a ticket'),
+            'datatype'=>'bool'
+         ];
+      }
+      $tab[] = [
+         'id'       => '16',
+         'table'    => $this->getTable(),
+         'field'    => 'date_mod',
+         'name'     => __('Last update'),
+         'datatype'=>'datetime',
+         'massiveaction' =>false
+      ];
+      $tab[] = [
+         'id'       => '17',
+         'table'    => $this->getTable(),
+         'field'    => 'name',
+         'name'     => PluginResourcesResourceState::getTypeName(1),
+         'datatype'=>'dropdown'
+      ];
+
+      if (Session::getCurrentInterface() != 'central') {
+         $tab[] = [
+            'id'       => '18',
+            'table'    => $this->getTable(),
+            'field'    => 'picture',
+            'name'     => __('Photo', 'resources'),
+            'massiveaction'=>false
+         ];
+         $tab[] = [
+            'id'       => '19',
+            'table'    => $this->getTable(),
+            'field'    => 'is_recursive',
+            'name'     => __('Child entities'),
+            'datatype'    => 'bool',
+            'massiveaction'=>false
+         ];
+      }
+      $tab[] = [
+         'id'       => '20',
+         'table'    => $this->getTable(),
+         'field'    => 'quota',
+         'name'     => __('Quota', 'resources'),
+         'datatype'=>'decimal'
+      ];
+      if (Session::getCurrentInterface() != 'central') {
+
+         $tab[] = [
+            'id'       => '21',
+            'table'    => 'glpi_plugin_resources_resourcesituations',
+            'field'    => 'name',
+            'name'     => PluginResourcesResourceSituation::getTypeName(1),
+            'massiveaction' => false,
+            'datatype'=>'dropdown'
+         ];
+         $tab[] = [
+            'id'       => '22',
+            'table'    => 'glpi_plugin_resources_contractnatures',
+            'field'    => 'name',
+            'name'     => PluginResourcesContractNature::getTypeName(1),
+            'massiveaction' => false,
+            'datatype'=>'dropdown'
+         ];
+         $tab[] = [
+            'id'       => '23',
+            'table'    => 'glpi_plugin_resources_ranks',
+            'field'    => 'name',
+            'name'     => PluginResourcesRank::getTypeName(1),
+            'massiveaction' => false,
+            'datatype'=>'dropdown'
+         ];
+         $tab[] = [
+            'id'       => '24',
+            'table'    => 'glpi_plugin_resources_resourcespecialities',
+            'field'    => 'name',
+            'name'     => PluginResourcesResourceSpeciality::getTypeName(1),
+            'massiveaction' => false,
+            'datatype'=>'dropdown'
+         ];
+      }
+
+      $tab[] = [
+         'id'       => '25',
+         'table'    => 'glpi_plugin_resources_leavingreasons',
+         'field'    => 'name',
+         'name'     => PluginResourcesLeavingReason::getTypeName(1),
+         'datatype'=>'dropdown'
+      ];
+      $tab[] = [
+         'id'       => '27',
+         'table'    => 'glpi_users',
+         'field'    => 'name',
+         'linkfield' => 'users_id_sales',
+         'name'     => __('Sales manager', 'resources'),
+         'datatype'=>'dropdown',
+         'right'=>'all'
+      ];
+
+      if (Session::getCurrentInterface() != 'central') {
+         $tab[] = [
+            'id'       => '27',
+            'searchtype'    => 'contains'
+            ];
+      }
+      $tab[] = [
+         'id'       => '28',
+         'table'    => $this->getTable(),
+         'field'    => 'date_declaration_leaving',
+         'name'     => __('Declaration of departure date', 'resources'),
+         'datatype'=>'datetime',
+         'massiveaction'=>false
+      ];
 
       $config = new PluginResourcesConfig();
       if ($config->useSecurity()) {
-         $tab[29]['table']         = $this->getTable();
-         $tab[29]['field']         = 'read_chart';
-         $tab[29]['name']          = __('Reading the security charter', 'resources');
-         $tab[29]['datatype']      = 'bool';
-         $tab[29]['massiveaction'] = true;
-
-         $tab[30]['table']         = $this->getTable();
-         $tab[30]['field']         = 'sensitize_security';
-         $tab[30]['name']          = __('Sensitized to security', 'resources');
-         $tab[30]['datatype']      = 'bool';
-         $tab[30]['massiveaction'] = true;
+         $tab[] = [
+            'id'       => '29',
+            'table'    => $this->getTable(),
+            'field'    => 'read_chart',
+            'name'     => __('Reading the security charter', 'resources'),
+            'datatype'=>'bool',
+            'massiveaction'=>true
+         ];
+         $tab[] = [
+            'id'       => '30',
+            'table'    => $this->getTable(),
+            'field'    => 'sensitize_security',
+            'name'     => __('Reading the security charter', 'resources'),
+            'datatype'=>'bool',
+            'massiveaction'=>true
+         ];
       }
 
-      $tab[32]['table']         = 'glpi_plugin_resources_habilitations';
-      $tab[32]['field']         = 'name';
-      $tab[32]['name']          = PluginResourcesHabilitation::getTypeName();
-      $tab[32]['datatype']      = 'itemlink';
-      $tab[32]['forcegroupby']  = true;
-      $tab[32]['massiveaction'] = false;
-      $tab[32]['joinparams']    = ['beforejoin'
-                                   => ['table'      => 'glpi_plugin_resources_resourcehabilitations',
-                                       'joinparams' => ['jointype' => 'child']]];
-
-      $tab[33]['table']         = 'glpi_plugin_resources_employers';
-      $tab[33]['field']         = 'name';
-      $tab[33]['name']          = PluginResourcesEmployer::getTypeName();
-      $tab[33]['datatype']      = 'itemlink';
-      $tab[33]['massiveaction'] = false;
-      $tab[33]['injectable']    = false;
-      $tab[33]['joinparams']    = ['join'
-                                   => ['table'      => 'glpi_plugin_resources_employees',
-                                       'joinparams' => ['jointype' => 'child']]];
-
-      $tab[34]['table']         = 'glpi_plugin_resources_clients';
-      $tab[34]['field']         = 'name';
-      $tab[34]['name']          = PluginResourcesClient::getTypeName();
-      $tab[34]['datatype']      = 'itemlink';
-      $tab[34]['massiveaction'] = false;
-      $tab[34]['injectable']    = false;
-      $tab[34]['joinparams']    = ['join'
-                                   => ['table'      => 'glpi_plugin_resources_employees',
-                                       'joinparams' => ['jointype' => 'child']]];
-
+      $tab[] = [
+         'id'       => '32',
+         'table'    => 'glpi_plugin_resources_habilitations',
+         'field'    => 'name',
+         'name'     => PluginResourcesHabilitation::getTypeName(),
+         'datatype'=>'itemlink',
+         'forcegroupby'=>true,
+         'massiveaction'=>false,
+         'joinparams'=>['beforejoin'
+                        => ['table'      => 'glpi_plugin_resources_resourcehabilitations',
+                            'joinparams' => ['jointype'=>'child']]]
+      ];
+      $tab[] = [
+         'id'       => '33',
+         'table'    => 'glpi_plugin_resources_employers',
+         'field'    => 'name',
+         'name'     => PluginResourcesEmployer::getTypeName(),
+         'datatype'=>'itemlink',
+         'forcegroupby'=>false,
+         'massiveaction'=>false,
+         'joinparams'=>['join'
+                        => ['table'      => 'glpi_plugin_resources_employees',
+                            'joinparams' => ['jointype'=>'child']]]
+      ];
+      $tab[] = [
+         'id'       => '34',
+         'table'    => 'glpi_plugin_resources_clients',
+         'field'    => 'name',
+         'name'     => PluginResourcesClient::getTypeName(),
+         'datatype'=>'itemlink',
+         'forcegroupby'=>false,
+         'massiveaction'=>false,
+         'joinparams'=>['join'
+                        => ['table'      => 'glpi_plugin_resources_employees',
+                            'joinparams' => ['jointype'=>'child']]]
+      ];
       if ($config->useSecurityCompliance()) {
-         $tab[35]['table']         = 'glpi_plugin_resources_employers';
-         $tab[35]['field']         = 'id';
-         $tab[35]['name']          = __('Client Sensitized to security', 'resources');
-         $tab[35]['datatype']      = 'specific';
-         $tab[35]['massiveaction'] = false;
-         $tab[35]['joinparams']    = ['join'
-                                      => ['table'      => 'glpi_plugin_resources_employees',
-                                          'joinparams' => ['jointype' => 'child']]];
+         $tab[] = [
+            'id'       => '35',
+            'table'    => 'glpi_plugin_resources_employers',
+            'field'    => 'id',
+            'name'     => __('Client Sensitized to security', 'resources'),
+            'datatype' => 'specific',
+            'massiveaction'=>false,
+            'joinparams'=>['join'
+                           => ['table'      => 'glpi_plugin_resources_employees',
+                               'joinparams' => ['jointype'=>'child']]]
+         ];
       }
+      $tab[] = [
+         'id'       => '31',
+         'table'    => $this->getTable(),
+         'field'    => 'id',
+         'name'     => __('ID'),
+         'massiveaction'=>false,
+         'datatype'=>'number'
+      ];
 
-      $tab[31]['table']         = $this->getTable();
-      $tab[31]['field']         = 'id';
-      $tab[31]['name']          = __('ID');
-      $tab[31]['massiveaction'] = false;
-      $tab[31]['datatype']      = 'number';
-
-      if (Session::getCurrentInterface() == 'central') {
-         $tab[80]['table']    = 'glpi_entities';
-         $tab[80]['field']    = 'completename';
-         $tab[80]['name']     = __('Entity');
-         $tab[80]['datatype'] = 'dropdown';
+      if (Session::getCurrentInterface() != 'central') {
+         $tab[] = [
+            'id'       => '80',
+            'table'    => 'glpi_entities',
+            'field'    => 'completename',
+            'name'     => __('Entity'),
+            'datatype'=>'dropdown'
+         ];
       }
       return $tab;
    }
@@ -3302,6 +3389,8 @@ class PluginResourcesResource extends CommonDBTM {
       $params['itemtype']          = 'User';
       $params['link_resources_id'] = 0;
 
+      $dbu                 = new DbUtils();
+
       foreach ($options as $key => $val) {
          $params[$key] = $val;
       }
@@ -3433,7 +3522,6 @@ class PluginResourcesResource extends CommonDBTM {
 
          $PluginResourcesTask = new PluginResourcesTask();
          $restrict            = "`plugin_resources_resources_id` = '" . $resources_id . "'";
-         $dbu                 = new DbUtils();
          $tasks               = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
          if (!empty($tasks)) {
             foreach ($tasks as $task) {
@@ -3454,7 +3542,6 @@ class PluginResourcesResource extends CommonDBTM {
 
          $PluginResourcesEmployment = new PluginResourcesEmployment();
          $restrict                  = "`plugin_resources_resources_id` = '" . $resources_id . "'";
-         $dbu                       = new DbUtils();
          $employments               = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
          if (!empty($employments)) {
             foreach ($employments as $employment) {

@@ -110,22 +110,29 @@ class PluginResourcesResourceSituation extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'code';
-      $tab[14]['name']          = __('Code', 'resources');
-
-      $tab[16]['table']         = $this->getTable();
-      $tab[16]['field']         = 'short_name';
-      $tab[16]['name']          = __('Short name', 'resources');
-
-      $tab[17]['table']         = $this->getTable();
-      $tab[17]['field']         = 'is_contract_linked';
-      $tab[17]['name']          = __('Is linked to a contract', 'resources');
-      $tab[17]['datatype']      = 'bool';
+      $tab[] = [
+         'id'    => '14',
+         'table' => $this->getTable(),
+         'field' => 'code',
+         'name'  => __('Code', 'resources')
+      ];
+      $tab[] = [
+         'id'    => '18',
+         'table' => $this->getTable(),
+         'field' => 'short_name',
+         'name'  => __('Short name', 'resources')
+      ];
+      $tab[] = [
+         'id'       => '17',
+         'table'    => $this->getTable(),
+         'field'    => 'is_contract_linked',
+         'name'     => __('Short name', 'resources'),
+         'datatype' => 'bool'
+      ];
 
       return $tab;
    }

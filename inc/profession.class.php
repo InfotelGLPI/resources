@@ -152,42 +152,57 @@ class PluginResourcesProfession extends CommonDropdown {
 
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
-
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'code';
-      $tab[14]['name']          = __('Code', 'resources');
-
-      $tab[15]['table']         = $this->getTable();
-      $tab[15]['field']         = 'short_name';
-      $tab[15]['name']          = __('Short name', 'resources');
-
-      $tab[17]['table']         = 'glpi_plugin_resources_professionlines';
-      $tab[17]['field']         = 'name';
-      $tab[17]['name']          = __('Profession line', 'resources');
-      $tab[17]['datatype']      = 'dropdown';
-
-      $tab[18]['table']         = 'glpi_plugin_resources_professioncategories';
-      $tab[18]['field']         = 'name';
-      $tab[18]['name']          = __('Profession category', 'resources');
-      $tab[18]['datatype']      = 'dropdown';
-
-      $tab[19]['table']         = $this->getTable();
-      $tab[19]['field']         = 'is_active';
-      $tab[19]['name']          = __('Active');
-      $tab[19]['datatype']      = 'bool';
-
-      $tab[20]['table']         = $this->getTable();
-      $tab[20]['field']         = 'begin_date';
-      $tab[20]['name']          = __('Begin date');
-      $tab[20]['datatype']      = 'date';
-
-      $tab[21]['table']         = $this->getTable();
-      $tab[21]['field']         = 'end_date';
-      $tab[21]['name']          = __('End date');
-      $tab[21]['datatype']      = 'date';
+      $tab = parent::rawSearchOptions();
+      
+      $tab[] = [
+         'id'       => '14',
+         'table'    => $this->getTable(),
+         'field'    => 'code',
+         'name'     => __('Code', 'resources')
+      ];
+      $tab[] = [
+         'id'       => '15',
+         'table'    => $this->getTable(),
+         'field'    => 'short_name',
+         'name'     => __('Short name', 'resources')
+      ];
+      $tab[] = [
+         'id'       => '17',
+         'table'    => 'glpi_plugin_resources_professionlines',
+         'field'    => 'name',
+         'name'     => __('Profession line', 'resources'),
+         'datatype'      => 'dropdown'
+      ];
+      $tab[] = [
+         'id'       => '18',
+         'table'    => 'glpi_plugin_resources_professioncategories',
+         'field'    => 'name',
+         'name'     => __('Profession category', 'resources'),
+         'datatype'      => 'dropdown'
+      ];
+      $tab[] = [
+         'id'       => '19',
+         'table'    => $this->getTable(),
+         'field'    => 'is_active',
+         'name'     => __('Active'),
+         'datatype'      => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '20',
+         'table'    => $this->getTable(),
+         'field'    => 'begin_date',
+         'name'     => __('Begin date'),
+         'datatype'      => 'date'
+      ];
+      $tab[] = [
+         'id'       => '21',
+         'table'    => $this->getTable(),
+         'field'    => 'end_date',
+         'name'     => __('End date'),
+         'datatype'      => 'date'
+      ];
 
       return $tab;
    }

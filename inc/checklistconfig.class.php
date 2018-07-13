@@ -61,41 +61,34 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       }
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab['common'] = self::getTypeName(2);
+      $tab[] = [
+         'id'       => '3',
+         'table'    => $this->getTable(),
+         'field'    => 'comment',
+         'name'     => __('Description'),
+         'datatype' => 'text'
+      ];
 
-      $tab[1]['table']    = $this->getTable();
-      $tab[1]['field']    = 'name';
-      $tab[1]['name']     = __('Name');
-      $tab[1]['datatype'] = 'itemlink';
+      $tab[] = [
+         'id'       => '4',
+         'table'    => $this->getTable(),
+         'field'    => 'tag',
+         'name'     => __('Important', 'resources'),
+         'datatype' => 'bool'
+      ];
 
-      $tab[2]['table'] = $this->getTable();
-      $tab[2]['field'] = 'address';
-      $tab[2]['name']  = __('Link', 'resources');
-
-      $tab[3]['table']    = $this->getTable();
-      $tab[3]['field']    = 'comment';
-      $tab[3]['name']     = __('Description');
-      $tab[3]['datatype'] = 'text';
-
-      $tab[4]['table']    = $this->getTable();
-      $tab[4]['field']    = 'tag';
-      $tab[4]['name']     = __('Important', 'resources');
-      $tab[4]['datatype'] = 'bool';
-
-      $tab[30]['table']         = $this->getTable();
-      $tab[30]['field']         = 'id';
-      $tab[30]['name']          = __('ID');
-      $tab[30]['datatype']      = 'number';
-      $tab[30]['massiveaction'] = false;
-
-      $tab[80]['table']    = 'glpi_entities';
-      $tab[80]['field']    = 'completename';
-      $tab[80]['name']     = __('Entity');
-      $tab[80]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'            => '30',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'datatype'      => 'number',
+         'massiveaction' => false
+      ];
 
       return $tab;
    }

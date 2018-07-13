@@ -101,24 +101,31 @@ class PluginResourcesEmploymentState extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'short_name';
-      $tab[14]['name']          = __('Short name', 'resources');
-
-      $tab[15]['table']         = $this->getTable();
-      $tab[15]['field']         = 'is_active';
-      $tab[15]['name']          = __('Active');
-      $tab[15]['datatype']      = 'bool';
-
-      $tab[16]['table']         = $this->getTable();
-      $tab[16]['field']         = 'is_leaving_state';
-      $tab[16]['name']          = __("Employment state at leaving's resource", "resources");
-      $tab[16]['datatype']      = 'bool';
-      $tab[16]['massiveaction'] = false;
+      $tab[] = [
+         'id'    => '14',
+         'table' => $this->getTable(),
+         'field' => 'short_name',
+         'name'  => __('Short name', 'resources')
+      ];
+      $tab[] = [
+         'id'       => '15',
+         'table'    => $this->getTable(),
+         'field'    => 'is_active',
+         'name'     => __('Active'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'            => '17',
+         'table'         => $this->getTable(),
+         'field'         => 'is_leaving_state',
+         'name'          => __("Employment state at leaving's resource", "resources"),
+         'datatype'      => 'bool',
+         'massiveaction' => false
+      ];
 
       return $tab;
    }

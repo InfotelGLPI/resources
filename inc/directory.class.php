@@ -50,102 +50,149 @@ class PluginResourcesDirectory extends CommonDBTM {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
       $tab = [];
 
-      $tab['common'] = self::getTypeName(2);
+      $tab[] = [
+         'id'   => 'common',
+         'name' => self::getTypeName(2)
+      ];
 
-      $tab[1]['table'] = $this->table;
-      $tab[1]['field'] = 'registration_number';
-      $tab[1]['name'] = __('Administrative number');
-      $tab[1]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this->table,
+         'field'              => 'registration_number',
+         'name'               => __('Administrative number'),
+         'datatype'           => 'string'
+      ];
 
-      $tab[2]['table'] = $this->table;
-      $tab[2]['field'] = 'id';
-      $tab[2]['name'] = __('ID');
-      $tab[2]['massiveaction'] = false;
-      $tab[2]['datatype'] = 'number';
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->table,
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'massiveaction'      => false,
+         'datatype'           => 'number'
+      ];
 
-      $tab[34]['table'] = $this->table;
-      $tab[34]['field'] = 'realname';
-      $tab[34]['name'] = __('Surname');
-      $tab[34]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '34',
+         'table'              => $this->table,
+         'field'              => 'realname',
+         'name'               => __('Surname'),
+         'datatype'           => 'string'
+      ];
 
-      $tab[9]['table'] = $this->table;
-      $tab[9]['field'] = 'firstname';
-      $tab[9]['name'] = __('First name');
-      $tab[9]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this->table,
+         'field'              => 'firstname',
+         'name'               => __('First name'),
+         'datatype'           => 'string'
+      ];
 
-      $tab[5]['table'] = 'glpi_useremails';
-      $tab[5]['field'] = 'email';
-      $tab[5]['name'] = _n('Email', 'Emails', 2);
-      $tab[5]['datatype'] = 'email';
-      $tab[5]['joinparams'] = ['jointype' => 'child'];
-      $tab[5]['forcegroupby'] = true;
-      $tab[5]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => 'glpi_useremails',
+         'field'              => 'email',
+         'name'               => _n('Email', 'Emails', 2),
+         'datatype'           => 'email',
+         'joinparams'         => ['jointype' => 'child'],
+         'forcegroupby'       => true,
+         'massiveaction'      => false
+      ];
 
-      $tab += Location::getSearchOptionsToAdd();
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
-      $tab[6]['table'] = $this->table;
-      $tab[6]['field'] = 'phone';
-      $tab[6]['name'] = __('Phone');
-      $tab[6]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->table,
+         'field'              => 'phone',
+         'name'               => __('Phone'),
+         'datatype'           => 'string'
+      ];
 
-      $tab[10]['table'] = $this->table;
-      $tab[10]['field'] = 'phone2';
-      $tab[10]['name'] = __('Phone 2');
-      $tab[10]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this->table,
+         'field'              => 'phone2',
+         'name'               => __('Phone 2'),
+         'datatype'           => 'string'
+      ];
 
-      $tab[11]['table'] = $this->table;
-      $tab[11]['field'] = 'mobile';
-      $tab[11]['name'] = __('Mobile phone');
-      $tab[11]['datatype'] = 'string';
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this->table,
+         'field'              => 'mobile',
+         'name'               => __('Mobile phone'),
+         'datatype'           => 'string'
+      ];
 
-      // FROM employee
+      $tab[] = [
+         'id'                 => '4313',
+         'table'              => 'glpi_plugin_resources_employers',
+         'field'              => 'completename',
+         'name'               => PluginResourcesEmployer::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
 
-      $tab[4313]['table'] = 'glpi_plugin_resources_employers';
-      $tab[4313]['field'] = 'completename';
-      $tab[4313]['name'] = PluginResourcesEmployer::getTypeName(1);
-      $tab[4313]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'                 => '4314',
+         'table'              => 'glpi_plugin_resources_clients',
+         'field'              => 'name',
+         'name'               => PluginResourcesClient::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
 
-      $tab[4314]['table'] = 'glpi_plugin_resources_clients';
-      $tab[4314]['field'] = 'name';
-      $tab[4314]['name'] = PluginResourcesClient::getTypeName(1);
-      $tab[4314]['datatype'] = 'dropdown';
-      // FROM resources
+      $tab[] = [
+         'id'                 => '4315',
+         'table'              => 'glpi_plugin_resources_contracttypes',
+         'field'              => 'name',
+         'name'               => PluginResourcesContractType::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
 
-      $tab[4315]['table'] = 'glpi_plugin_resources_contracttypes';
-      $tab[4315]['field'] = 'name';
-      $tab[4315]['name'] = PluginResourcesContractType::getTypeName(1);
-      $tab[4315]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'                 => '4316',
+         'table'              => 'glpi_plugin_resources_managers',
+         'field'              => 'name',
+         'name'               => __('Resource manager', 'resources'),
+         'searchtype'         => 'contains',
+         'datatype'           => 'dropdown'
+      ];
 
-      $tab[4316]['table'] = 'glpi_plugin_resources_managers';
-      $tab[4316]['field'] = 'name';
-      $tab[4316]['name'] = __('Resource manager', 'resources');
-      $tab[4316]['searchtype'] = 'contains';
-      $tab[4316]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'                 => '4317',
+         'table'              => 'glpi_plugin_resources_resources',
+         'field'              => 'date_begin',
+         'name'               => __('Arrival date', 'resources'),
+         'datatype'           => 'date'
+      ];
 
-      $tab[4317]['table'] = 'glpi_plugin_resources_resources';
-      $tab[4317]['field'] = 'date_begin';
-      $tab[4317]['name'] = __('Arrival date', 'resources');
-      $tab[4317]['datatype'] = 'date';
+      $tab[] = [
+         'id'                 => '4318',
+         'table'              => 'glpi_plugin_resources_resources',
+         'field'              => 'date_end',
+         'name'               => __('Departure date', 'resources'),
+         'datatype'           => 'date'
+      ];
 
-      $tab[4318]['table'] = 'glpi_plugin_resources_resources';
-      $tab[4318]['field'] = 'date_end';
-      $tab[4318]['name'] = __('Departure date', 'resources');
-      $tab[4318]['datatype'] = 'date';
+      $tab[] = [
+         'id'                 => '4319',
+         'table'              => 'glpi_plugin_resources_departments',
+         'field'              => 'name',
+         'name'               => PluginResourcesDepartment::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
 
-      $tab[4319]['table'] = 'glpi_plugin_resources_departments';
-      $tab[4319]['field'] = 'name';
-      $tab[4319]['name'] = PluginResourcesDepartment::getTypeName(1);
-      $tab[4319]['datatype'] = 'dropdown';
-
-      $tab[4320]['table'] = 'glpi_plugin_resources_resourcestates';
-      $tab[4320]['field'] = 'name';
-      $tab[4320]['name'] = PluginResourcesResourceState::getTypeName(1);
-      $tab[4320]['datatype'] = 'dropdown';
-
+      $tab[] = [
+         'id'                 => '4320',
+         'table'              => 'glpi_plugin_resources_resourcestates',
+         'field'              => 'name',
+         'name'               => PluginResourcesResourceState::getTypeName(1),
+         'datatype'           => 'dropdown'
+      ];
       return $tab;
    }
 
@@ -161,8 +208,8 @@ class PluginResourcesDirectory extends CommonDBTM {
 
       $data = Search::prepareDatasForSearch($itemtype, $params);
       self::constructSQL($data);
-      Search::constructDatas($data);
-      Search::displayDatas($data);
+      Search::constructData($data);
+      Search::displayData($data);
    }
 
    /**

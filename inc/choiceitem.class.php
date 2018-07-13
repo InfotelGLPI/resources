@@ -58,14 +58,17 @@ class PluginResourcesChoiceItem extends CommonTreeDropdown {
                'list'  => true]];
    }
 
-   function getSearchOptions () {
+   function rawSearchOptions () {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[11]['table']    = $this->getTable();
-      $tab[11]['field']    = 'is_helpdesk_visible';
-      $tab[11]['name']     = __('Visible in the simplified interface');
-      $tab[11]['datatype'] = 'bool';
+      $tab[] = [
+         'id'         => '11',
+         'table'      => $this->getTable(),
+         'field'      => 'is_helpdesk_visible',
+         'name'       => __('Visible in the simplified interface'),
+         'datatype'   => 'bool'
+      ];
 
       return $tab;
    }

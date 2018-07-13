@@ -80,33 +80,45 @@ class PluginResourcesContractType extends CommonDropdown {
       return $tab;
    }
 
-   function getSearchOptions() {
+   function rawSearchOptions() {
 
-      $tab = parent::getSearchOptions();
+      $tab = parent::rawSearchOptions();
 
-      $tab[14]['table'] = $this->getTable();
-      $tab[14]['field'] = 'code';
-      $tab[14]['name']  = __('Code', 'resources');
+      $tab[] = [
+         'id'    => '14',
+         'table' => $this->getTable(),
+         'field' => 'code',
+         'name'  => __('Code', 'resources')
+      ];
 
-      $tab[15]['table']    = $this->getTable();
-      $tab[15]['field']    = 'use_employee_wizard';
-      $tab[15]['name']     = __('Enter employer information about the resource', 'resources');
-      $tab[15]['datatype'] = 'bool';
-
-      $tab[16]['table']    = $this->getTable();
-      $tab[16]['field']    = 'use_need_wizard';
-      $tab[16]['name']     = __('Enter the computing needs of the resource', 'resources');
-      $tab[16]['datatype'] = 'bool';
-
-      $tab[17]['table']    = $this->getTable();
-      $tab[17]['field']    = 'use_picture_wizard';
-      $tab[17]['name']     = __('Add a picture', 'resources');
-      $tab[17]['datatype'] = 'bool';
-
-      $tab[18]['table']    = $this->getTable();
-      $tab[18]['field']    = 'use_habilitation_wizard';
-      $tab[18]['name']     = __('Enter habilitation information ', 'resources');
-      $tab[18]['datatype'] = 'bool';
+      $tab[] = [
+         'id'       => '15',
+         'table'    => $this->getTable(),
+         'field'    => 'use_employee_wizard',
+         'name'     => __('Enter employer information about the resource', 'resources'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '20',
+         'table'    => $this->getTable(),
+         'field'    => 'use_need_wizard',
+         'name'     => __('Enter the computing needs of the resource', 'resources'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '17',
+         'table'    => $this->getTable(),
+         'field'    => 'use_picture_wizard',
+         'name'     => __('Add a picture', 'resources'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '18',
+         'table'    => $this->getTable(),
+         'field'    => 'use_habilitation_wizard',
+         'name'     => __('Enter habilitation information', 'resources'),
+         'datatype' => 'bool'
+      ];
 
       return $tab;
    }
