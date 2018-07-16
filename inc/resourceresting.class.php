@@ -187,8 +187,19 @@ class PluginResourcesResourceResting extends CommonDBTM {
     **/
    function rawSearchOptions() {
 
-      $tab = parent::rawSearchOptions();
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => self::GetTypeName()
+      ];
 
+      $tab[] = [
+         'id'            => '1',
+         'table'         => 'glpi_plugin_resources_resources',
+         'field'         => 'name',
+         'name'          => __('Surname'),
+         'datatype'      => 'itemlink',
+         'itemlink_type' => $this->getType()
+      ];
       if (!Session::haveRight("plugin_resources_all", READ)) {
          $tab[] = [
             'id'         => '1',

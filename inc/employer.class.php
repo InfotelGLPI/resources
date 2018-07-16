@@ -82,7 +82,7 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
 
    /**
     * @param $field
-    * @param $valuesN
+    * @param $values
     * @param $options   array
     *
     * @return return|status|string

@@ -104,11 +104,6 @@ class PluginResourcesBudget extends CommonDBTM {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'            => '1',
-         'itemlink_type' => $this->getType()
-      ];
-
-      $tab[] = [
          'id'            => '2',
          'table'         => $this->getTable(),
          'field'         => 'id',

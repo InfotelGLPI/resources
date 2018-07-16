@@ -61,15 +61,16 @@ class PluginResourcesRecap extends CommonDBTM {
 
    function rawSearchOptions() {
 
-      $tab = parent::rawSearchOptions();
-
+      $tab = [];
       $tab[] = [
-         'id'       => '3',
+         'id'       => '1',
          'table'    => $this->table,
          'field'    => 'registration_number',
          'name'     => __('Administrative number'),
          'datatype' => 'string'
       ];
+
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
       $tab[] = [
          'id'            => '2',
@@ -264,8 +265,6 @@ class PluginResourcesRecap extends CommonDBTM {
          'name'     => PluginResourcesEmployer::getTypeName(1),
          'datatype' => 'dropdown'
       ];
-
-      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
       $tab[] = [
          'id'    => '4372',
@@ -811,6 +810,7 @@ class PluginResourcesRecap extends CommonDBTM {
                   $ORDER.
                   $LIMIT;
       }
+
       $data['sql']['search'] = $QUERY;
    }
 
@@ -1060,6 +1060,22 @@ class PluginResourcesRecap extends CommonDBTM {
          }
          return $before.$specific_leftjoin;
       }
+   }
+
+   /**
+    * Get the specific massive actions
+    *
+    * @since 0.84
+    *
+    * This should be overloaded in Class
+    *
+    * @param object $checkitem link item to check right (default NULL)
+    *
+    * @return array an array of massive actions
+    **/
+   function getSpecificMassiveActions($checkitem = null) {
+      //To avoid masives action error as there is no table for recap.class.php
+      return [];
    }
 
 }
