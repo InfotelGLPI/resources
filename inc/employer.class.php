@@ -68,6 +68,12 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
 
       $tab = parent::rawSearchOptions();
 
+      foreach ($tab as $key => $t){
+         if($t['id']==13){
+            unset($tab[$key]);
+         }
+      }
+
       $tab[] = [
          'id'       => '15',
          'table'    => $this->getTable(),
