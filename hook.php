@@ -950,7 +950,7 @@ function plugin_resources_addDefaultWhere($type) {
       case "PluginResourcesResource" :
          $who = Session::getLoginUserID();
          if (!Session::haveRight("plugin_resources_all", READ)) {
-            return " (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
+            return " (`glpi_plugin_resources_resources`.`users_id_sales` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
          }
          break;
    }
