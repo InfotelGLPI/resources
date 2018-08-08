@@ -40,11 +40,25 @@ class PluginResourcesRecap extends CommonDBTM {
    static protected $notable = true;
    private $table = "glpi_users";
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('List Employment / Resource', 'List Employments / Resources', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       if (Session::haveRight('plugin_resources_employment', UPDATE)) {
          return true;
@@ -52,6 +66,15 @@ class PluginResourcesRecap extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       if (Session::haveRight('plugin_resources_employment', READ)) {
          return true;
@@ -59,6 +82,18 @@ class PluginResourcesRecap extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function rawSearchOptions() {
 
       $tab = [];
@@ -102,7 +137,7 @@ class PluginResourcesRecap extends CommonDBTM {
          'id'       => '4352',
          'table'    => 'glpi_plugin_resources_resources',
          'field'    => 'quota',
-         'name'     => __('Quota','resources'),
+         'name'     => __('Quota', 'resources'),
          'datatype' => 'decimal'
       ];
 
@@ -346,6 +381,8 @@ class PluginResourcesRecap extends CommonDBTM {
          return false;
       }
 
+      $dbu = new DbUtils();
+
       $data['sql']['count']  = [];
       $data['sql']['search'] = '';
 
@@ -354,9 +391,9 @@ class PluginResourcesRecap extends CommonDBTM {
       $blacklist_tables = [];
       if (isset($CFG_GLPI['union_search_type'][$data['itemtype']])) {
          $itemtable          = $CFG_GLPI['union_search_type'][$data['itemtype']];
-         $blacklist_tables[] = getTableForItemType($data['itemtype']);
+         $blacklist_tables[] = $dbu->getTableForItemType($data['itemtype']);
       } else {
-         $itemtable = getTableForItemType("PluginResourcesEmployment");
+         $itemtable = $dbu->getTableForItemType("PluginResourcesEmployment");
       }
 
       $PluginResourcesEmployment = new PluginResourcesEmployment();
@@ -448,13 +485,13 @@ class PluginResourcesRecap extends CommonDBTM {
          }
 
          if ($data['itemtype'] == 'Entity') {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
 
          } else if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
             // Will be replace below in Union/Recursivity Hack
             $COMMONWHERE .= $LINK." ENTITYRESTRICT ";
          } else {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, $itemtable, '', '',
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable, '', '',
                                                        $data['item']->maybeRecursive());
          }
       }
@@ -608,7 +645,7 @@ class PluginResourcesRecap extends CommonDBTM {
 
                // b - ADD LEFT JOIN
                // Link reference tables
-               if (!in_array(getTableForItemType($metacriteria['itemtype']),
+               if (!in_array($dbu->getTableForItemType($metacriteria['itemtype']),
                                                  $already_link_tables2)) {
                   $FROM .= Search::addMetaLeftJoin($data['itemtype'], $metacriteria['itemtype'],
                                                  $already_link_tables2,
@@ -621,7 +658,7 @@ class PluginResourcesRecap extends CommonDBTM {
                              $already_link_tables2)) {
 
                   $FROM .= self::addLeftJoin($metacriteria['itemtype'],
-                                             getTableForItemType($metacriteria['itemtype']),
+                                             $dbu->getTableForItemType($metacriteria['itemtype']),
                                              $already_link_tables2, $sopt["table"],
                                              $sopt["linkfield"], 1, $metacriteria['itemtype'],
                                              $sopt["joinparams"], $sopt["field"]);
@@ -724,8 +761,8 @@ class PluginResourcesRecap extends CommonDBTM {
          $first = true;
          $QUERY = "";
          foreach ($CFG_GLPI[$CFG_GLPI["union_search_type"][$data['itemtype']]] as $ctype) {
-            $ctable = getTableForItemType($ctype);
-            if (($citem = getItemForItemtype($ctype))
+            $ctable = $dbu->getTableForItemType($ctype);
+            if (($citem = $dbu->getItemForItemtype($ctype))
                 && $citem->canView()) {
                if ($first) {
                   $first = false;
@@ -759,7 +796,7 @@ class PluginResourcesRecap extends CommonDBTM {
                   $tmpquery = str_replace($data['itemtype'], $ctype, $tmpquery);
 
                } else {// Ref table case
-                  $reftable = getTableForItemType($data['itemtype']);
+                  $reftable = $dbu->getTableForItemType($data['itemtype']);
 
                   $tmpquery = $SELECT.", '$ctype' AS TYPE,
                                       `$reftable`.`id` AS refID, "."
@@ -783,7 +820,7 @@ class PluginResourcesRecap extends CommonDBTM {
                                           $ctable, $tmpquery);
                }
                $tmpquery = str_replace("ENTITYRESTRICT",
-                                       getEntitiesRestrictRequest('', $ctable, '', '',
+                                       $dbu->getEntitiesRestrictRequest('', $ctable, '', '',
                                                                   $citem->maybeRecursive()),
                                        $tmpquery);
 
@@ -831,12 +868,12 @@ class PluginResourcesRecap extends CommonDBTM {
    **/
    static function addLeftJoin($itemtype, $ref_table, array &$already_link_tables, $new_table,
                                $linkfield, $meta = 0, $meta_type = 0, $joinparams = [], $field = '') {
-      global $CFG_GLPI;
 
       // Rename table for meta left join
-      $AS = "";
-      $nt = $new_table;
-      $cleannt    = $nt;
+      $AS      = "";
+      $nt      = $new_table;
+      $cleannt = $nt;
+      $dbu     = new DbUtils();
 
       // Virtual field no link
       if (strpos($linkfield, '_virtual') === 0) {
@@ -847,7 +884,7 @@ class PluginResourcesRecap extends CommonDBTM {
       //       if ($new_table=="glpi_users"
       //           || $new_table=="glpi_groups"
       //           || $new_table=="glpi_users_validation") {
-      if (!empty($linkfield) && ($linkfield != getForeignKeyFieldForTable($new_table))) {
+      if (!empty($linkfield) && ($linkfield != $dbu->getForeignKeyFieldForTable($new_table))) {
          $nt .= "_".$linkfield;
          $AS  = " AS `$nt`";
       }
@@ -878,7 +915,7 @@ class PluginResourcesRecap extends CommonDBTM {
 
       // Do not take into account standard linkfield
       $tocheck = $nt.".".$linkfield;
-      if ($linkfield == getForeignKeyFieldForTable($new_table)) {
+      if ($linkfield == $dbu->getForeignKeyFieldForTable($new_table)) {
          $tocheck = $nt;
       }
 
@@ -924,7 +961,7 @@ class PluginResourcesRecap extends CommonDBTM {
                   if (isset($tab['linkfield'])) {
                      $interlinkfield = $tab['linkfield'];
                   } else {
-                     $interlinkfield = getForeignKeyFieldForTable($intertable);
+                     $interlinkfield = $dbu->getForeignKeyFieldForTable($intertable);
                   }
 
                   $interjoinparams = [];
@@ -978,7 +1015,7 @@ class PluginResourcesRecap extends CommonDBTM {
          if (empty($specific_leftjoin)) {
             switch ($joinparams['jointype']) {
                case 'child' :
-                  $linkfield = getForeignKeyFieldForTable($cleanrt);
+                  $linkfield = $dbu->getForeignKeyFieldForTable($cleanrt);
                   if (isset($joinparams['linkfield'])) {
                      $linkfield = $joinparams['linkfield'];
                   }
@@ -993,9 +1030,9 @@ class PluginResourcesRecap extends CommonDBTM {
                   // Item_Item join
                   $specific_leftjoin = " LEFT JOIN `$new_table` $AS
                                           ON ((`$rt`.`id`
-                                                = `$nt`.`".getForeignKeyFieldForTable($cleanrt)."_1`
+                                                = `$nt`.`".$dbu->getForeignKeyFieldForTable($cleanrt)."_1`
                                                OR `$rt`.`id`
-                                                 = `$nt`.`".getForeignKeyFieldForTable($cleanrt)."_2`)
+                                                 = `$nt`.`".$dbu->getForeignKeyFieldForTable($cleanrt)."_2`)
                                               $addcondition)";
                   break;
 
@@ -1003,9 +1040,9 @@ class PluginResourcesRecap extends CommonDBTM {
                   // Item_Item join reverting previous item_item
                   $specific_leftjoin = " LEFT JOIN `$new_table` $AS
                                           ON ((`$nt`.`id`
-                                                = `$rt`.`".getForeignKeyFieldForTable($cleannt)."_1`
+                                                = `$rt`.`".$dbu->getForeignKeyFieldForTable($cleannt)."_1`
                                                OR `$nt`.`id`
-                                                 = `$rt`.`".getForeignKeyFieldForTable($cleannt)."_2`)
+                                                 = `$rt`.`".$dbu->getForeignKeyFieldForTable($cleannt)."_2`)
                                               $addcondition)";
                   break;
 
@@ -1045,7 +1082,7 @@ class PluginResourcesRecap extends CommonDBTM {
                   //                  $specific_leftjoin = "LEFT JOIN `$new_table` $AS
                   //                                          ON (`$rt`.`$linkfield` = `$nt`.`id`
                   //                                              $addcondition)";
-                  $transitemtype = getItemTypeForTable($new_table);
+                  $transitemtype = $dbu->getItemTypeForTable($new_table);
                   if (Session::haveTranslations($transitemtype, $field)) {
                      $transAS            = $nt.'_trans';
                      $specific_leftjoin .= "LEFT JOIN `glpi_dropdowntranslations` AS `$transAS`

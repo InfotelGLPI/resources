@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 
+/**
+ * Class PluginResourcesRuleContracttypeCollection
+ */
 class PluginResourcesRuleContracttypeCollection extends RuleCollection {
 
    static $rightname = 'plugin_resources';
@@ -39,19 +42,35 @@ class PluginResourcesRuleContracttypeCollection extends RuleCollection {
    public $stop_on_first_match=true;
    public $menu_option='contracttypes';
 
+   /**
+    * Get title used in list of rules
+    *
+    * @return Title of the rule collection
+    **/
    function getTitle() {
 
       return __('Assignment rule of fields to a contract type', 'resources');
    }
 
+   /**
+    * PluginResourcesRuleContracttypeCollection constructor.
+    *
+    * @param int $entity
+    */
    function __construct($entity = 0) {
       $this->entity = $entity;
    }
 
+   /**
+    * @return bool
+    */
    function showInheritedTab() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
    }
 
+   /**
+    * @return bool
+    */
    function showChildrensTab() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count($_SESSION['glpiactiveentities']) > 1);
    }

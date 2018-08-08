@@ -58,7 +58,7 @@ $columns = ['professioncategory' => ['sorton' => 'professioncategory'],
 
 
 $output_type = Search::HTML_OUTPUT;
-
+$dbu = new DbUtils();
 
 // Form validate
 if ($report->criteriasValidated()) {
@@ -88,7 +88,7 @@ if ($report->criteriasValidated()) {
 
    //to verify if professions exist
    // SQL statement
-   $condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
+   $condition = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
    $date=date("Y-m-d");
    $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
    $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
@@ -142,7 +142,7 @@ if ($report->criteriasValidated()) {
                         AND `glpi_plugin_resources_budgets`.`end_date` < '".$date."')) ".
       $sqlprofessioncategory.$sqlprofessionline;
 
-   $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
+   $conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
 
    $query.=$conditionAll." ".getOrderBy('profession', $columns);
 
@@ -229,7 +229,7 @@ if ($report->criteriasValidated()) {
          Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
          Report::title();
       }
-      echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
+      echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No item found')."</span></div>";
       Html::footer();
    } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
       include (GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");

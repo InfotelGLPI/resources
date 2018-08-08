@@ -85,7 +85,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 } else if (isset($_POST["undo_first_step"])) {
    //if ($resource->getfromDB($_POST["id"]))
    //$resource->deleteByCriteria(array('id' => $_POST["id"]));
-   $resource->wizardFirstForm($_SERVER['HTTP_REFERER']);
+   $resource->wizardFirstForm();
 
 } else if (isset($_POST["second_step"]) || isset($_POST["second_step_update"])) {
    $required = $resource->checkRequiredFields($_POST);

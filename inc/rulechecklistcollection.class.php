@@ -27,6 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Class PluginResourcesRuleChecklistCollection
+ */
 class PluginResourcesRuleChecklistCollection extends RuleCollection {
 
    static $rightname = 'plugin_resources';
@@ -35,18 +38,34 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
    //public $use_output_rule_process_as_next_input=true;
    public $menu_option='checklists';
 
+   /**
+    * Get title used in list of rules
+    *
+    * @return Title of the rule collection
+    **/
    function getTitle() {
       return __('Assignment rules of a checklist to a contract type', 'resources');
    }
 
+   /**
+    * PluginResourcesRuleChecklistCollection constructor.
+    *
+    * @param int $entity
+    */
    function __construct($entity = 0) {
       $this->entity = $entity;
    }
 
+   /**
+    * @return bool
+    */
    function showInheritedTab() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
    }
 
+   /**
+    * @return bool
+    */
    function showChildrensTab() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count($_SESSION['glpiactiveentities']) > 1);
    }
@@ -91,6 +110,15 @@ class PluginResourcesRuleChecklistCollection extends RuleCollection {
       return $checklists;
    }
 
+   /**
+    * Show test results for a rule
+    *
+    * @param $rule                     rule object
+    * @param $output          array    output data array
+    * @param $global_result   boolean  global result
+    *
+    * @return cleaned array
+    **/
    function showTestResults($rule, array $output, $global_result) {
 
       $actions = $rule->getActions();

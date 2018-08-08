@@ -149,6 +149,19 @@ class PluginResourcesResource extends CommonDBTM {
                                'items_id' => $item->getField('id')]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesClient'
@@ -159,6 +172,17 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesClient') {
@@ -244,7 +268,6 @@ class PluginResourcesResource extends CommonDBTM {
          'name'     => __('Description'),
          'datatype'=>'text'
       ];
-
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
@@ -853,7 +876,6 @@ class PluginResourcesResource extends CommonDBTM {
    function pre_updateInDB() {
 
       $PluginResourcesResource_Item = new PluginResourcesResource_Item();
-      $PluginResourcesChecklist     = new PluginResourcesChecklist();
       //if leaving field is updated  && isset($this->input["withtemplate"]) && $this->input["withtemplate"]!=1
 
       $this->input["checkbadge"] = 0;
@@ -1021,10 +1043,11 @@ class PluginResourcesResource extends CommonDBTM {
     * @return int|string
     */
    function dropdownTemplate($name, $value = 0) {
+      $dbu      = new DbUtils();
 
-      $restrict  = "`is_template` = '1'";
-      $restrict  .= getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
-      $restrict  .= " GROUP BY `template_name`
+      $restrict = "`is_template` = '1'";
+      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
+      $restrict .= " GROUP BY `template_name`
                   ORDER BY `template_name`";
       $dbu       = new DbUtils();
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
@@ -1043,7 +1066,7 @@ class PluginResourcesResource extends CommonDBTM {
       return Dropdown::showFromArray($name, $option, ['value' => $value]);
    }
 
-   /*
+   /**
     * Return the SQL command to retrieve linked object
     *
     * @return a SQL command which return a set of (itemtype, items_id)
@@ -2352,6 +2375,12 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param     $ID
+    * @param int $link
+    *
+    * @return array|string
+    */
    static function getResourceName($ID, $link = 0) {
       global $DB, $CFG_GLPI;
 
@@ -2383,9 +2412,11 @@ class PluginResourcesResource extends CommonDBTM {
                      "link"    => ""];
          }
 
+         $dbu = new DbUtils();
+
          if ($DB->numrows($result) == 1) {
             $data     = $DB->fetch_assoc($result);
-            $username = formatUserName($data["id"], $data["username"], $data["name"],
+            $username = $dbu->formatUserName($data["id"], $data["username"], $data["name"],
                                        $data["firstname"], $link);
 
             if ($link == 2) {
@@ -2637,6 +2668,12 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</table>";
    }
 
+   /**
+    * @param $userId
+    * @param $options
+    *
+    * @return array
+    */
    static function fastResourceAdd($userId, $options) {
       global $DB;
 
@@ -2745,6 +2782,16 @@ class PluginResourcesResource extends CommonDBTM {
       return [$idResource, $error, $message];
    }
 
+   /**
+    * @param bool   $count
+    * @param int    $entity_restrict
+    * @param int    $value
+    * @param array  $used
+    * @param string $search
+    * @param bool   $showOnlyLinkedResources
+    *
+    * @return bool|\mysqli_result
+    */
    static function getSqlSearchResult($count = true, $entity_restrict = -1, $value = 0, $used = [], $search = '', $showOnlyLinkedResources = false) {
       global $DB, $CFG_GLPI;
 
@@ -2753,13 +2800,14 @@ class PluginResourcesResource extends CommonDBTM {
          $entity_restrict = $_SESSION["glpiactiveentities"];
       }
 
+      $dbu         = new DbUtils();
       $joinprofile = false;
 
       $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0
                   AND `glpi_plugin_resources_resources`.`is_leaving` = 0
                   AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
 
-      $where .= getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', $entity_restrict, true);
+      $where .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', $entity_restrict, true);
       if ((is_numeric($value) && $value)
           || count($used)
       ) {
@@ -2846,12 +2894,17 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 
+   /**
+    * @param     $target
+    * @param int $add
+    */
    function listOfTemplates($target, $add = 0) {
+      $dbu = new DbUtils();
 
-      $restrict  = "`is_template` = 1";
-      $restrict  .= getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
-      $restrict  .= " ORDER BY `name`";
-      $dbu       = new DbUtils();
+      $restrict = "`is_template` = 1";
+      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
+      $restrict .= " ORDER BY `name`";
+
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
       if (Session::isMultiEntitiesMode()) {
@@ -2925,7 +2978,9 @@ class PluginResourcesResource extends CommonDBTM {
    function showResourcesToRemove() {
       global $CFG_GLPI;
 
-      if (countElementsInTable($this->getTable()) > 0) {
+      $dbu = new DbUtils();
+
+      if ($dbu->countElementsInTable($this->getTable()) > 0) {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
@@ -3002,7 +3057,9 @@ class PluginResourcesResource extends CommonDBTM {
    function showResourcesToChange($options = []) {
       global $CFG_GLPI;
 
-      if (countElementsInTable($this->getTable()) > 0) {
+      $dbu = new DbUtils();
+
+      if ($dbu->countElementsInTable($this->getTable()) > 0) {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
@@ -3080,7 +3137,9 @@ class PluginResourcesResource extends CommonDBTM {
    function showResourcesToTransfer($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
-      if (countElementsInTable($this->getTable()) > 0) {
+      $dbu = new DbUtils();
+
+      if ($dbu->countElementsInTable($this->getTable()) > 0) {
          echo "<div align='center'>";
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
@@ -3204,6 +3263,15 @@ class PluginResourcesResource extends CommonDBTM {
       return $actions;
    }
 
+   /**
+    * Class-specific method used to show the fields to specify the massive action
+    *
+    * @since 0.85
+    *
+    * @param MassiveAction $ma the current massive action object
+    *
+    * @return boolean false if parameters displayed ?
+    **/
    static function showMassiveActionsSubForm(MassiveAction $ma) {
       $itemtype = $ma->getItemtype(false);
       switch ($ma->getAction()) {
@@ -3641,6 +3709,12 @@ class PluginResourcesResource extends CommonDBTM {
 
 
    // Cron action
+
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -3656,6 +3730,9 @@ class PluginResourcesResource extends CommonDBTM {
       return [];
    }
 
+   /**
+    * @return string
+    */
    function queryAlert() {
 
       $first = false;
@@ -3798,6 +3875,8 @@ class PluginResourcesResource extends CommonDBTM {
          $resource               = new PluginResourcesResource();
          $resource->fields['id'] = isset($resources[0]['id']) ? $resources[0]['id'] : 0;
 
+         $dbu = new DbUtils();
+
          if (count($resources) > 0 && NotificationEvent::raiseEvent("AlertCommercialManager",
                                                                     $resource,
                                                                     ['resources'      => $resources,
@@ -3805,20 +3884,20 @@ class PluginResourcesResource extends CommonDBTM {
          ) {
             $cron_status = 1;
             if ($task) {
-               $task->log(getUserName($commercial['users_id_sales']) . ": " .
+               $task->log($dbu->getUserName($commercial['users_id_sales']) . ": " .
                           __('Send alert to the commercial manager', 'resources') . "\n");
                $task->addVolume(1);
             } else {
-               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']) . ": " .
+               Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
                                                 __('Send alert to the commercial manager', 'resources') . "\n");
             }
 
          } else {
             if ($task) {
-               $task->log(getUserName($commercial['users_id_sales']) . ": " .
+               $task->log($dbu->getUserName($commercial['users_id_sales']) . ": " .
                           __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             } else {
-               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']) . ": " .
+               Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
                                                 __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             }
          }
@@ -3946,6 +4025,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param $items
+    *
+    * @return bool
+    */
    function sendEmail($items) {
 
       $users = [];
@@ -4091,6 +4175,13 @@ class PluginResourcesResource extends CommonDBTM {
       return $params;
    }
 
+   /**
+    * get menu content
+    *
+    * @since 0.85
+    *
+    * @return array array for menu
+    **/
    static function getMenuContent() {
       global $CFG_GLPI;
 
@@ -4161,9 +4252,9 @@ class PluginResourcesResource extends CommonDBTM {
       $opt['criteria'][0]['value']      = Session::getLoginUserID();
       $opt['criteria'][0]['link']       = 'AND';
 
-      $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt,'&amp;');
+      $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
-      $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/commmercial.png' 
+      $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/commercial.png' 
       title='" . __('View my resources as a commercial', 'resources') . "' 
       alt='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = $url;
 
@@ -4180,6 +4271,11 @@ class PluginResourcesResource extends CommonDBTM {
       return $menu;
    }
 
+   /**
+    * @param $input
+    *
+    * @return bool
+    */
    function checkTransferMandatoryFields($input) {
       $msg     = [];
       $checkKo = false;
@@ -4258,6 +4354,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</tr>";
 
          $resource = new PluginResourcesResource();
+         $dbu      = new DbUtils();
 
          foreach ($DB->request($query) as $employee) {
             if ($resource->getFromDB($employee['plugin_resources_resources_id'])) {
@@ -4265,11 +4362,11 @@ class PluginResourcesResource extends CommonDBTM {
                   echo "<tr class='tab_bg_1'>";
                   echo "<td>" . $resource->getLink() . "</td>";
                   echo "<td>" . $resource->fields['firstname'] . "</td>";
-                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesResourceState'),
+                  echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('PluginResourcesResourceState'),
                                                           $resource->fields['plugin_resources_resourcestates_id']) . "</td>";
-                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('Location'),
+                  echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
                                                           $resource->fields['locations_id']) . "</td>";
-                  echo "<td>" . Dropdown::getDropdownName(getTableForItemType('PluginResourcesDepartment'),
+                  echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('PluginResourcesDepartment'),
                                                           $resource->fields['plugin_resources_departments_id']) . "</td>";
                   echo "</tr>";
                }

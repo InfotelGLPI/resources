@@ -31,23 +31,51 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesBudgetType
+ */
 class PluginResourcesBudgetType extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Budget type', 'Budget types', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRight('dropdown', UPDATE);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight('plugin_resources_budget', READ);
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       return [['name'  => 'code',
@@ -82,7 +110,7 @@ class PluginResourcesBudgetType extends CommonDropdown {
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
                $temp = new self();
-               $newID    = $temp->getID($input);
+               $newID    = $temp->getID();
 
                if ($newID<0) {
                   $newID = $temp->import($input);
@@ -95,6 +123,9 @@ class PluginResourcesBudgetType extends CommonDropdown {
       return 0;
    }
 
+   /**
+    * @return array
+    */
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();

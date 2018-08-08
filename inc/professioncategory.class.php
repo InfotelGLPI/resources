@@ -31,15 +31,29 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesProfessionCategory
+ */
 class PluginResourcesProfessionCategory extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Profession category', 'Profession categories', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       if (Session::haveRight('dropdown', UPDATE)
          && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
@@ -48,6 +62,15 @@ class PluginResourcesProfessionCategory extends CommonDropdown {
       return false;
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
@@ -55,6 +78,11 @@ class PluginResourcesProfessionCategory extends CommonDropdown {
       return false;
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       return [['name'  => 'code',
@@ -89,7 +117,7 @@ class PluginResourcesProfessionCategory extends CommonDropdown {
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
                $temp = new self();
-               $newID    = $temp->getID($input);
+               $newID    = $temp->getID();
 
                if ($newID<0) {
                   $newID = $temp->import($input);
@@ -102,6 +130,9 @@ class PluginResourcesProfessionCategory extends CommonDropdown {
       return 0;
    }
 
+   /**
+    * @return array
+    */
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();

@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResource_Item
+ */
 class PluginResourcesResource_Item extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
@@ -41,14 +44,32 @@ class PluginResourcesResource_Item extends CommonDBTM {
    static public $itemtype_2 = 'itemtype';
    static public $items_id_2 = 'items_id';
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * @param \CommonDBTM $item
+    */
    static function cleanForItem(CommonDBTM $item) {
 
       $temp = new self();
@@ -58,6 +79,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
       );
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return array|string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
@@ -80,6 +107,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
    }
 
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -91,6 +125,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -105,25 +146,43 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginResourcesResource $item
+    *
+    * @return int
+    */
    static function countForResource(PluginResourcesResource $item) {
 
       $types = implode("','", PluginResourcesResource::getTypes());
       if (empty($types)) {
          return 0;
       }
-      return countElementsInTable('glpi_plugin_resources_resources_items',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_resources_resources_items',
                                   "`itemtype` IN ('$types')
                                    AND `plugin_resources_resources_id` = '" . $item->getID() . "'");
    }
 
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
    static function countForItem(CommonDBTM $item) {
-
-      return countElementsInTable('glpi_plugin_resources_resources_items',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_resources_resources_items',
                                   "`itemtype`='" . $item->getType() . "'
                                    AND `items_id` = '" . $item->getID() . "'");
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype) {
       global $DB;
 
@@ -145,6 +204,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param $options
+    *
+    * @return bool
+    */
    function addItem($options) {
 
       if (!isset($options["plugin_resources_resources_id"])
@@ -173,6 +237,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    * @param $comment
+    */
    function updateItem($ID, $comment) {
 
       if ($ID > 0) {
@@ -182,11 +250,21 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    */
    function deleteItem($ID) {
 
       $this->delete(['id' => $ID]);
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype) {
 
       if ($this->getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)) {
@@ -222,6 +300,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $values
+    * @param $itemtype
+    */
    function updateLocation($values, $itemtype) {
       global $DB;
 
@@ -254,6 +336,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    *
+    * @return int
+    */
    function searchAssociatedBadge($ID) {
 
       $plugin                  = new Plugin();
@@ -285,8 +372,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param       $ID
+    * @param array $used
+    */
    function dropdownItems($ID, $used = []) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       $restrict  = "`plugin_resources_resources_id` = '$ID'";
       $dbu       = new DbUtils();
@@ -299,7 +390,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
          foreach ($resources as $resource) {
 
-            $table = getTableForItemType($resource["itemtype"]);
+            $table = $dbu->getTableForItemType($resource["itemtype"]);
 
             $query = "SELECT `" . $table . "`.*
                      FROM `" . $this->getTable() . "`
@@ -321,7 +412,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                if ($data = $DB->fetch_assoc($result_linked)) {
                   $name = $data["name"];
                   if ($resource["itemtype"] == 'User') {
-                     $name = getUserName($data["id"]);
+                     $name = $dbu->getUserName($data["id"]);
                   }
                   echo "<option value='" . $data["id"] . "," . $resource["itemtype"] . "'>" . $name;
                   if (empty($data["name"]) || $_SESSION["glpiis_ids_visible"] == 1) {
@@ -443,16 +534,18 @@ class PluginResourcesResource_Item extends CommonDBTM {
       echo "<th>" . __('Inventory number') . "</th>";
       echo "</tr>";
 
+      $dbu = new DbUtils();
+
       for ($i = 0; $i < $number; $i++) {
          $itemType = $DB->result($result, $i, "itemtype");
 
-         if (!($item = getItemForItemtype($itemType))) {
+         if (!($item = $dbu->getItemForItemtype($itemType))) {
             continue;
          }
 
          if ($item->canView()) {
             $column    = "name";
-            $itemTable = getTableForItemType($itemType);
+            $itemTable = $dbu->getTableForItemType($itemType);
 
             $query = "SELECT `" . $itemTable . "`.*,
                              `glpi_plugin_resources_resources_items`.`id` AS items_id,
@@ -464,7 +557,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                 AND `glpi_plugin_resources_resources_items`.`itemtype` = '$itemType'
                 AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$instID' ";
             if ($itemType != 'User') {
-               $query .= getEntitiesRestrictRequest(" AND ", $itemTable, '', '', $item->maybeRecursive());
+               $query .= $dbu->getEntitiesRestrictRequest(" AND ", $itemTable, '', '', $item->maybeRecursive());
             }
             if ($item->maybeTemplate()) {
                $query .= " AND `" . $itemTable . "`.`is_template` = '0'";
@@ -485,7 +578,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                      $ID = "";
 
                      if ($itemType == 'User') {
-                        $format = formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
+                        $format = $dbu->formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
                      } else {
                         $format = $data["name"];
                      }
@@ -604,6 +697,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $canedit      = $item->canadditem('PluginResourcesResource');
       $rand         = mt_rand();
       $is_recursive = $item->isRecursive();
+      $dbu          = new DbUtils();
 
       $query = "SELECT `glpi_plugin_resources_resources_items`.`id` AS assocID,
                        `glpi_entities`.`id` AS entity,
@@ -616,7 +710,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                 WHERE `glpi_plugin_resources_resources_items`.`items_id` = '$ID'
                       AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $item->getType() . "' ";
 
-      $query .= getEntitiesRestrictRequest(" AND", "glpi_plugin_resources_resources", '', '', true);
+      $query .= $dbu->getEntitiesRestrictRequest(" AND", "glpi_plugin_resources_resources", '', '', true);
 
       $query .= " ORDER BY `assocName`";
 
@@ -650,12 +744,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
             }
 
             if ($item->isRecursive()) {
-               $entities = getSonsOf('glpi_entities', $entity);
+               $entities = $dbu->getSonsOf('glpi_entities', $entity);
             } else {
                $entities = $entity;
             }
          }
-         $limit = getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', $entities, true);
+         $limit = $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', $entities, true);
          $q     = "SELECT COUNT(*)
                FROM `glpi_plugin_resources_resources`
                WHERE `is_deleted` = '0'
@@ -826,6 +920,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
          return false;
       }
 
+      $dbu = new DbUtils();
+
       $pdf->setColumnsSize(100);
       $pdf->displayTitle('<b>' . _n('Associated item', 'Associated items', 2) . '</b>');
 
@@ -860,12 +956,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
       } else {
          for ($i = 0; $i < $number; $i++) {
             $type = $DB->result($result, $i, "itemtype");
-            if (!($item = getItemForItemtype($type))) {
+            if (!($item = $dbu->getItemForItemtype($type))) {
                continue;
             }
             if ($item->canView()) {
                $column = "name";
-               $table  = getTableForItemType($type);
+               $table  = $dbu->getTableForItemType($type);
                $items  = new $type();
 
                $query = "SELECT `" . $table . "`.*, `glpi_entities`.`id` AS entity "
@@ -875,7 +971,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                   AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type' 
                   AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$ID' ";
                if ($type != 'User') {
-                  $query .= getEntitiesRestrictRequest(" AND ", $table, '', '', $items->maybeRecursive());
+                  $query .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', '', $items->maybeRecursive());
                }
 
                if ($items->maybeTemplate()) {
@@ -896,7 +992,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                            $items_id_display = " (" . $data["id"] . ")";
                         }
                         if ($type == 'User') {
-                           $name = Html::clean(getUserName($data["id"])) . $items_id_display;
+                           $name = Html::clean($dbu->getUserName($data["id"])) . $items_id_display;
                         } else {
                            $name = $data["name"] . $items_id_display;
                         }
@@ -952,6 +1048,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $canedit  = $item->can($ID, UPDATE);
 
       $PluginResourcesResource = new PluginResourcesResource();
+      $dbu                     = new DbUtils();
 
       $query = "SELECT `glpi_plugin_resources_resources`.* "
                . " FROM `glpi_plugin_resources_resources_items`,`glpi_plugin_resources_resources` "
@@ -959,7 +1056,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                . " WHERE `glpi_plugin_resources_resources_items`.`items_id` = '" . $ID . "' 
          AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $itemtype . "' 
          AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` "
-               . getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
+               . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
 
       $result = $DB->query($query);
       $number = $DB->numrows($result);

@@ -58,8 +58,9 @@ $report->setColumns( [new PluginReportsColumnInteger('registration_number', __('
                                                    ['sorton' => 'date_end'])]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
-$date=date("Y-m-d");
+$dbu       = new DbUtils();
+$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
+$date      = date("Y-m-d");
 
 //display only resource without user linked
 $query = "SELECT `glpi_users`.`registration_number`,

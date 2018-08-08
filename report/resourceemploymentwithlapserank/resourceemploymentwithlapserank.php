@@ -74,10 +74,11 @@ if (isset ($_POST["display_type"])) {
 }
 
 $title = $report->getFullTitle();
+$dbu   = new DbUtils();
 
 //to verify if resources exist
 // SQL statement
-$condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
+$condition = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
 $date=date("Y-m-d");
 $dataAll=[];
 
@@ -124,7 +125,7 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
 //                  AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
 //                  AND `glpi_plugin_resources_resources`.`is_template` = '0')";
 
-$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 
 $query.=$conditionAll." ".getOrderBy('entity', $columns);
 
@@ -165,7 +166,7 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
 //                            OR `glpi_plugin_resources_ranks`.`begin_date` > '".$date."'))
 //                  AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL)";
 
-$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
+$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
 
 $queryEmploy.=$conditionAll." ".getOrderBy('entity', $columns);
 
@@ -189,7 +190,7 @@ if ($nbtot == 0) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
       Report::title();
    }
-   echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
+   echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No item found')."</span></div>";
    Html::footer();
 } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT
            || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {

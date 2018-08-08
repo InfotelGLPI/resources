@@ -74,6 +74,7 @@ if (isset ($_POST["display_type"])) {
 }
 
 $title = $report->getFullTitle();
+$dbu   = new DbUtils();
 
 $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
                         FROM `glpi_plugin_resources_resources` 
@@ -84,7 +85,7 @@ $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id 
                         WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
                         AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
 
-$query_resource_user .= getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+$query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 
 
@@ -155,7 +156,7 @@ if ($nbtot == 0) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
       Report::title();
    }
-   echo "<div class='center'><font class='red b'>" . __('No item found') . "</font></div>";
+   echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No item found') . "</span></div>";
    Html::footer();
 } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
    include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");

@@ -31,23 +31,62 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesReportConfig
+ */
 class PluginResourcesReportConfig extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Notification', 'Notifications', $nb);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType() == 'PluginResourcesResource' && $this->canView()) {
          return self::getTypeName(2);
@@ -55,6 +94,17 @@ class PluginResourcesReportConfig extends CommonDBTM {
       return '';
    }
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
@@ -76,6 +126,13 @@ class PluginResourcesReportConfig extends CommonDBTM {
       return true;
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
       // Not attached to reference -> not added
       if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
@@ -84,6 +141,11 @@ class PluginResourcesReportConfig extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param $ID
+    *
+    * @return bool
+    */
    static function checkIfReportsExist($ID) {
 
       $restrict = "`plugin_resources_resources_id` = '" . $ID . "'";
@@ -99,6 +161,11 @@ class PluginResourcesReportConfig extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    *
+    * @return bool
+    */
    function getFromDBByResource($plugin_resources_resources_id) {
       global $DB;
 
@@ -146,8 +213,13 @@ class PluginResourcesReportConfig extends CommonDBTM {
       }
    }
 
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
 
       if (!$this->canview()) {
          return false;
@@ -221,6 +293,10 @@ class PluginResourcesReportConfig extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param        $ID
+    * @param string $withtemplate
+    */
    static function showReports($ID, $withtemplate = '') {
       global $DB;
 

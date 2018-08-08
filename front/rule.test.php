@@ -48,8 +48,8 @@ if (isset($_POST["rules_id"])) {
 } else {
    $rules_id = 0;
 }
-
-if (!$rule = getItemForItemtype($sub_type)) {
+$dbu = new DbUtils();
+if (!$rule = $dbu->getItemForItemtype($sub_type)) {
    exit;
 }
 $rule->checkGlobal(READ);

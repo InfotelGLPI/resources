@@ -46,13 +46,14 @@ if ($plugin->isActivated("useditemsexport")) {
       $field_user  = 'users_id';
 
       $total_numrows = 0;
+      $dbu = new DbUtils();
 
       foreach ($type_user as $itemtype) {
-         if (!($item = getItemForItemtype($itemtype))) {
+         if (!($item = $dbu->getItemForItemtype($itemtype))) {
             continue;
          }
 
-         $itemtable = getTableForItemType($itemtype);
+         $itemtable = $dbu->getTableForItemType($itemtype);
          $query = "SELECT *
                       FROM `$itemtable`
                       WHERE `".$field_user."` = '$users_id'";

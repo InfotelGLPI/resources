@@ -83,10 +83,11 @@ if ($report->criteriasValidated()) {
    }
 
    $title = $report->getFullTitle();
+   $dbu   = new DbUtils();
 
    //to verify if budget exist
    // SQL statement
-   $condition = getEntitiesRestrictRequest('', "glpi_plugin_resources_budgets", '', '', false);
+   $condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_resources_budgets", '', '', false);
    $date = $datecrit->getDate();
    $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
    $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
@@ -136,7 +137,7 @@ if ($report->criteriasValidated()) {
          Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
          Report::title();
       }
-      echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
+      echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No item found')."</span></div>";
       Html::footer();
    } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
       include (GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
@@ -465,6 +466,8 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
  * Build the ORDER BY clause
  *
  * @param $default string, name of the column used by default
+ * @param $columns
+ *
  * @return string
  */
 function getOrderBy($default, $columns) {

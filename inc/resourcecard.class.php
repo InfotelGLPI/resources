@@ -40,6 +40,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge'];
 
+   /**
+    * @param $ID
+    */
    static function resourceCard($ID) {
       global $CFG_GLPI;
 
@@ -122,9 +125,10 @@ class PluginResourcesResourceCard extends CommonDBTM {
     * @param $resource
     */
    static function showIdentity($resource, $user = false) {
-      global $CFG_GLPI;
 
       echo "<div id='plugin_resources_about' class='plugin_resources_content plugin_resources_clearfix'>";
+
+      $dbu = new DbUtils();
 
       if ($user === false) {
 
@@ -143,8 +147,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
          echo "<p>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Location'), "</span>" .
-                                                                             Dropdown::getDropdownName(getTableForItemType('Location'),
-                                                                                                       $resource->fields['locations_id'])) . "</br>";
+               Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
+                                         $resource->fields['locations_id'])) . "</br>";
 
          echo "<p>" . sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Arrival date', 'resources'),
                               "</span>" . Html::convDate($resource->fields["date_begin"])) . "</br>";
@@ -185,7 +189,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
          echo "<div id='plugin_resources_about-content' align='left'>";
 
-         echo "<h1>" . getUsername($user->getID()) . "</h1>";
+         echo "<h1>" . $dbu->getUsername($user->getID()) . "</h1>";
          echo "<h2>" . Dropdown::getDropdownName('glpi_usertitles', $user->getField('usertitles_id')) . "</h2>";
          echo "<div style='height:10px;'></div>";
          echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
@@ -193,7 +197,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Phone 2'), "</span>" . $user->fields['phone2']) . "</br>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Mobile phone'), "</span>" . $user->fields['mobile']) . "</br>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Location'), "</span>" .
-                                                                             Dropdown::getDropdownName(getTableForItemType('Location'), $user->fields['locations_id'])) . "</br>";
+              Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
+                                        $user->fields['locations_id'])) . "</br>";
 
          $emails = $user->getAllEmails($user->getID());
 
@@ -247,6 +252,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    }
 
+   /**
+    * @param $user
+    */
    static function showItems($user) {
       global $CFG_GLPI, $DB;
 
@@ -262,13 +270,14 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
       $inv   = false;
       $datas = [];
+      $dbu   = new DbUtils();
       foreach ($type_user as $itemtype) {
 
-         if (!($item = getItemForItemtype($itemtype)) || !in_array($itemtype, self::$types)) {
+         if (!($item = $dbu->getItemForItemtype($itemtype)) || !in_array($itemtype, self::$types)) {
             continue;
          }
          $i         = 0;
-         $itemtable = getTableForItemType($itemtype);
+         $itemtable = $dbu->getTableForItemType($itemtype);
          $query     = "SELECT *
                       FROM `$itemtable`
                       WHERE `" . $field_user . "` = '$ID'";
@@ -279,7 +288,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
          if ($item->maybeDeleted()) {
             $query .= " AND `is_deleted` = 0 ";
          }
-         $query .= getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
+         $query .= $dbu->getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
          $result = $DB->query($query);
 
          if ($DB->numrows($result) > 0) {

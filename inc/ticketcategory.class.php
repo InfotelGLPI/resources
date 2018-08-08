@@ -31,8 +31,16 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTicketCategory
+ */
 class PluginResourcesTicketCategory extends CommonDBTM {
 
+   /**
+    * @param $category
+    *
+    * @return bool
+    */
    function getFromDBbyCategory($category) {
       global $DB;
 
@@ -52,6 +60,9 @@ class PluginResourcesTicketCategory extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param $category
+    */
    function addTicketCategory($category) {
 
       if ($this->getFromDBbyCategory($category)) {
@@ -67,6 +78,9 @@ class PluginResourcesTicketCategory extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $target
+    */
    function showForm($target) {
 
       $dbu = new DbUtils();

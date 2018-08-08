@@ -107,6 +107,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
+      $dbu = new DbUtils();
+
       //Display for each action
       switch ($action_id) {
          case self::CHANGE_RESOURCEMANAGER :
@@ -116,7 +118,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __("Manager for the current resource", "resources");
             echo "</div>";
             echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
-            echo "&nbsp;" . getUserName($resource->getField('users_id'));
+            echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id'));
             echo "</div>";
             echo "</div>";
 
@@ -149,7 +151,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __("Sales manager for the current resource", "resources");
             echo "</div>";
             echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
-            echo "&nbsp;" . getUserName($resource->getField('users_id_sales'));
+            echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id_sales'));
             echo "</div>";
             echo "</div>";
 
@@ -382,6 +384,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
+      $dbu = new DbUtils();
+
       //Preparation of ticket data
       $data                                  = [];
       $data['itilcategories_id']             = 0;
@@ -405,19 +409,27 @@ class PluginResourcesResource_Change extends CommonDBTM {
       // name and content of ticket
       switch ($action_id) {
          case self::CHANGE_RESOURCEMANAGER :
-            $data['name']    = __("Change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Change manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $data['content'] .= __("Manager for the current resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($resource->getField('users_id')) . "\n";
-            $data['content'] .= __("New resource manager", 'resources') . "&nbsp;:&nbsp;" . getUserName($options['users_id']) . "\n";
+            $data['name']    = __("Change manager for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change manager for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['content'] .= __("Manager for the current resource", 'resources') . "&nbsp;:&nbsp;" .
+                                $dbu->getUserName($resource->getField('users_id')) . "\n";
+            $data['content'] .= __("New resource manager", 'resources') . "&nbsp;:&nbsp;" .
+                                $dbu->getUserName($options['users_id']) . "\n";
 
             $input['users_id'] = $options['users_id'];
             break;
 
          case self::CHANGE_RESOURCESALE :
-            $data['name']    = __("Change of sales manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Change of sales manager for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $data['content'] .= __("Sales manager for the current resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($resource->getField('users_id_sales')) . "\n";
-            $data['content'] .= __("New sales manager for the resource", 'resources') . "&nbsp;:&nbsp;" . getUserName($options['users_id_sales']) . "\n";
+            $data['name']    = __("Change of sales manager for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change of sales manager for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['content'] .= __("Sales manager for the current resource", 'resources') . "&nbsp;:&nbsp;" .
+                                $dbu->getUserName($resource->getField('users_id_sales')) . "\n";
+            $data['content'] .= __("New sales manager for the resource", 'resources') . "&nbsp;:&nbsp;" .
+                                $dbu->getUserName($options['users_id_sales']) . "\n";
 
             $input['users_id_sales'] = $options['users_id_sales'];
             break;
@@ -436,11 +448,13 @@ class PluginResourcesResource_Change extends CommonDBTM {
                       WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
                       AND `allow_resource_creation`";
             foreach ($DB->request($query) as $habilitation) {
-               $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $habilitation['id']) . "\n";
+               $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                             $habilitation['id']) . "\n";
             }
 
             $data['content'] .= __("New access profile of the resource", 'resources') . "&nbsp;:&nbsp;" .
-                                Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $options['plugin_resources_habilitations_id']) . "\n";
+                                Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
+                                                          $options['plugin_resources_habilitations_id']) . "\n";
 
             $input['plugin_resources_habilitations_id'] = $options['plugin_resources_habilitations_id'];
             break;
@@ -451,18 +465,24 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $data['content'] = __("Change the type of contract for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
             $data['content'] .= __("Current contract type of the resource", 'resources') . " " . "&nbsp;:&nbsp;" .
-                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField('plugin_resources_contracttypes_id')) . "\n";
+                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                          $resource->getField('plugin_resources_contracttypes_id')) . "\n";
             $data['content'] .= __("New type of contract", 'resources') . "&nbsp;:&nbsp;" .
-                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $options['plugin_resources_contracttypes_id']) . "\n";
+                                Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
+                                                          $options['plugin_resources_contracttypes_id']) . "\n";
 
             $input['plugin_resources_contracttypes_id'] = $options['plugin_resources_contracttypes_id'];
             break;
          case self::CHANGE_AGENCY :
 
-            $data['name']    = __("Change of agency for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] = __("Change of agency for", 'resources') . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $data['content'] .= __("Current agency of the resource", 'resources') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')) . "\n";
-            $data['content'] .= __("New resource agency", 'resources') . "&nbsp;:&nbsp;" . Dropdown::getDropdownName('glpi_locations', $options['locations_id']) . "\n";
+            $data['name']    = __("Change of agency for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = __("Change of agency for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+            $data['content'] .= __("Current agency of the resource", 'resources') . "&nbsp;:&nbsp;" .
+                                Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')) . "\n";
+            $data['content'] .= __("New resource agency", 'resources') . "&nbsp;:&nbsp;" .
+                                Dropdown::getDropdownName('glpi_locations', $options['locations_id']) . "\n";
 
             $input['locations_id'] = $options['locations_id'];
             break;
@@ -661,6 +681,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
       echo "</script>";
    }
 
+   /**
+    * @param $itilcategories_id
+    */
    static function displayButtonAdd($itilcategories_id) {
       if ($itilcategories_id != 0) {
          echo "<input type='submit' name='add_entity_category' class='submit' value='" . _sx('button', 'Add') . "' >";

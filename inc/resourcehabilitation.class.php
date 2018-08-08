@@ -75,6 +75,19 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
@@ -88,6 +101,17 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -269,7 +293,9 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          $habilitation_level = new PluginResourcesHabilitationLevel();
          $habilitation       = new PluginResourcesHabilitation();
 
-         $condition = getEntitiesRestrictRequest("", $habilitation_level->getTable(),
+         $dbu = new DbUtils();
+
+         $condition = $dbu->getEntitiesRestrictRequest("", $habilitation_level->getTable(),
                                                  "entities_id",
                                                  $resource->getEntityID(),
                                                  $habilitation_level->maybeRecursive());
@@ -403,9 +429,10 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       $resource = new PluginResourcesResource();
       $resource->getFromDB($params['plugin_resources_resources_id']);
+      $dbu = new DbUtils();
 
       $habilitation_level = new PluginResourcesHabilitationLevel();
-      $condition          = getEntitiesRestrictRequest("AND", $habilitation_level->getTable(),
+      $condition          = $dbu->getEntitiesRestrictRequest("AND", $habilitation_level->getTable(),
                                                        "entities_id",
                                                        $resource->getEntityID(),
                                                        $habilitation_level->maybeRecursive());

@@ -31,23 +31,49 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmployer
+ */
 class PluginResourcesEmployer extends CommonTreeDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Employer', 'Employers', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Return Additional Fileds for this type
+    **/
    function getAdditionalFields() {
 
       return [ [ 'name'  => $this->getForeignKeyField(),
@@ -64,12 +90,17 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
                 'list'  => true]];
    }
 
+   /**
+    * Get search function for the class
+    *
+    * @return array of search option
+    **/
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();
 
-      foreach ($tab as $key => $t){
-         if($t['id']==13){
+      foreach ($tab as $key => $t) {
+         if ($t['id']==13) {
             unset($tab[$key]);
          }
       }
@@ -105,7 +136,12 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
    }
 
 
-
+   /**
+    * @param $ID
+    * @param $entity
+    *
+    * @return int|\the
+    */
    static function transfer($ID, $entity) {
       global $DB;
 
@@ -123,7 +159,7 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
                $temp = new self();
-               $newID    = $temp->getID($input);
+               $newID    = $temp->getID();
 
                if ($newID<0) {
                   $newID = $temp->import($input);

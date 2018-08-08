@@ -75,8 +75,9 @@ $report->setColumns( [new PluginReportsColumn('registration_number', __('Adminis
                            new PluginReportsColumn('employer_name', __('Name')." - ".PluginResourcesEmployer::getTypeName(1),
                                                    ['sorton' => 'employer_name']),]);
 
+$dbu = new DbUtils();
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_employments", '', '', false);
+$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_employments", '', '', false);
 
 //display only resource which have rank and profession not equal to employment rank or profession
 $query = "SELECT `glpi_users`.`registration_number`,

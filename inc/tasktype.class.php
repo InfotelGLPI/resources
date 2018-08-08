@@ -30,23 +30,43 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTaskType
+ */
 class PluginResourcesTaskType extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @param int $nb
+    *
+    * @return string
+    */
    static function getTypeName($nb = 0) {
 
       return _n('Type of task', 'Types of task', $nb, 'resources');
    }
 
+   /**
+    * @return bool|\booleen
+    */
    static function canCreate() {
       return Session::haveRight('dropdown', UPDATE);
    }
 
+   /**
+    * @return bool|\booleen
+    */
    static function canView() {
       return Session::haveRight('plugin_resources_task', READ);
    }
 
+   /**
+    * @param $ID
+    * @param $entity
+    *
+    * @return int|\the
+    */
    static function transfer($ID, $entity) {
       global $DB;
 
@@ -64,7 +84,7 @@ class PluginResourcesTaskType extends CommonDropdown {
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
                $temp = new self();
-               $newID    = $temp->getID($input);
+               $newID    = $temp->getID();
 
                if ($newID<0) {
                   $newID = $temp->import($input);

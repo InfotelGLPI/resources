@@ -27,15 +27,29 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Class PluginResourcesResourcePDF
+ */
 class PluginResourcesResourcePDF extends PluginPdfCommon {
 
 
+   /**
+    * PluginResourcesResourcePDF constructor.
+    *
+    * @param \CommonGLPI|null $obj
+    */
    function __construct(CommonGLPI $obj = null) {
 
       $this->obj = ($obj ? $obj : new PluginResourcesResource());
    }
 
 
+   /**
+    * @param \PluginPdfSimplePDF      $pdf
+    * @param \PluginResourcesResource $res
+    *
+    * @return bool
+    */
    static function pdfMain(PluginPdfSimplePDF $pdf, PluginResourcesResource $res) {
 
       $ID = $res->getField('id');
@@ -61,8 +75,9 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
          '<b><i>'.__('Location').' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_locations', $res->fields['locations_id'])),
          '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $res->fields['plugin_resources_contracttypes_id'])));
 
+      $dbu = new DbUtils();
       $pdf->displayLine(
-         '<b><i>'.__('Resource manager', 'resources').' :</i></b> '.Html::clean(getusername($res->fields["users_id"])),
+         '<b><i>'.__('Resource manager', 'resources').' :</i></b> '.Html::clean($dbu->getUserName($res->fields["users_id"])),
          '<b><i>'.PluginResourcesDepartment::getTypeName(1).' :</i></b> '.Html::clean(Dropdown::getDropdownName('glpi_plugin_resources_departments', $res->fields["plugin_resources_departments_id"])));
 
       $pdf->displayLine(
@@ -76,6 +91,11 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       $pdf->displaySpace();
    }
 
+   /**
+    * @param array $options
+    *
+    * @return mixed
+    */
    function defineAllTabs($options = []) {
 
       $onglets = parent::defineAllTabs($options);
@@ -85,6 +105,13 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       return $onglets;
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       switch ($tab) {

@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTask
+ */
 class PluginResourcesTask extends CommonDBTM {
 
    static $rightname = 'plugin_resources_task';
@@ -41,15 +44,26 @@ class PluginResourcesTask extends CommonDBTM {
    CONST STATE_KO = 0;
    CONST STATE_OK = 1;
 
+   /**
+    * @param int $nb
+    *
+    * @return string
+    */
    static function getTypeName($nb = 0) {
 
       return _n('Task', 'Tasks', $nb);
    }
 
+   /**
+    * @return bool|\booleen
+    */
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * @return bool|\booleen
+    */
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -76,6 +90,11 @@ class PluginResourcesTask extends CommonDBTM {
       $temp->deleteByCriteria(['plugin_resources_tasks_id' => $this->fields['id']]);
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array|bool
+    */
    function prepareInputForAdd($input) {
 
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
@@ -105,6 +124,9 @@ class PluginResourcesTask extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @return bool|void
+    */
    function post_addItem() {
       global $CFG_GLPI;
 
@@ -131,6 +153,11 @@ class PluginResourcesTask extends CommonDBTM {
       }
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array
+    */
    function prepareInputForUpdate($input) {
 
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
@@ -159,6 +186,11 @@ class PluginResourcesTask extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param int $history
+    *
+    * @return bool|void
+    */
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
@@ -197,6 +229,9 @@ class PluginResourcesTask extends CommonDBTM {
       }
    }
 
+   /**
+    * @return bool
+    */
    function pre_deleteItem() {
       global $CFG_GLPI;
 
@@ -222,6 +257,12 @@ class PluginResourcesTask extends CommonDBTM {
 
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return array|string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
@@ -240,6 +281,13 @@ class PluginResourcesTask extends CommonDBTM {
    }
 
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       $self = new self();
@@ -255,15 +303,23 @@ class PluginResourcesTask extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
    static function countForItem(CommonDBTM $item) {
-
+      $dbu      = new DbUtils();
       $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "'
                   AND is_finished != 1 AND is_deleted = 0";
-      $nb       = countElementsInTable(['glpi_plugin_resources_tasks'], $restrict);
+      $nb       = $dbu->countElementsInTable(['glpi_plugin_resources_tasks'], $restrict);
 
       return $nb;
    }
 
+   /**
+    * @return array
+    */
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();
@@ -380,6 +436,11 @@ class PluginResourcesTask extends CommonDBTM {
    }
 
 
+   /**
+    * @param array $options
+    *
+    * @return array
+    */
    function defineTabs($options = []) {
 
       $ong = [];
@@ -433,6 +494,10 @@ class PluginResourcesTask extends CommonDBTM {
       }
    }
 
+   /**
+    * @param \CommonDBTM $item
+    * @param string      $withtemplate
+    */
    static function addNewTasks(CommonDBTM $item, $withtemplate = '') {
       global $CFG_GLPI;
 
@@ -454,6 +519,12 @@ class PluginResourcesTask extends CommonDBTM {
       }
    }
 
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm($ID, $options = []) {
 
       if (!$this->canView()) {
@@ -605,6 +676,9 @@ class PluginResourcesTask extends CommonDBTM {
       return (isset($tab[$value]) ? $tab[$value] : '');
    }
 
+   /**
+    * @param array $options
+    */
    static function showMinimalList($options = []) {
       $task = new PluginResourcesTask();
 
@@ -647,6 +721,9 @@ class PluginResourcesTask extends CommonDBTM {
       Search::displayData($data);
    }
 
+   /**
+    * @param $who
+    */
    function showCentral($who) {
       global $DB, $CFG_GLPI;
 
@@ -660,6 +737,8 @@ class PluginResourcesTask extends CommonDBTM {
          } else {
             $colsup = 0;
          }
+
+         $dbu = new DbUtils();
 
          $ASSIGN = "";
          if ($who > 0) {
@@ -686,7 +765,7 @@ class PluginResourcesTask extends CommonDBTM {
          $itemtable               = "glpi_plugin_resources_resources";
          if ($PluginResourcesResource->isEntityAssign()) {
             $LINK = " AND ";
-            $query .= getEntitiesRestrictRequest($LINK, $itemtable);
+            $query .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable);
          }
 
          $query .= " ORDER BY `glpi_plugin_resources_resources`.`name` DESC LIMIT 10;";
@@ -744,9 +823,9 @@ class PluginResourcesTask extends CommonDBTM {
                }
                echo "</a></td>";
 
-               echo "<td class='center'>" . getUserName($data["users_id"]) . "</td>";
+               echo "<td class='center'>" . $dbu->getUserName($data["users_id"]) . "</td>";
 
-               echo "<td class='center'>" . getUserName($data["users_id_task"]) . "</td>";
+               echo "<td class='center'>" . $dbu->getUserName($data["users_id_task"]) . "</td>";
 
                echo "</tr>";
             }
@@ -765,6 +844,12 @@ class PluginResourcesTask extends CommonDBTM {
    }
 
    // Cron action
+
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -851,6 +936,9 @@ class PluginResourcesTask extends CommonDBTM {
       return $cron_status;
    }
 
+   /**
+    * @return string
+    */
    function queryAlert() {
 
       $date  = date("Y-m-d");
@@ -895,6 +983,11 @@ class PluginResourcesTask extends CommonDBTM {
       return $actions;
    }
 
+   /**
+    * @param \MassiveAction $ma
+    *
+    * @return bool
+    */
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       switch ($ma->getAction()) {
@@ -1001,6 +1094,13 @@ class PluginResourcesTask extends CommonDBTM {
       }
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -1070,10 +1170,10 @@ class PluginResourcesTask extends CommonDBTM {
             $hour   = $units['hour'];
             $minute = $units['minute'];
             if ($hour) {
-               $actiontime = $hour . __('Hour', 'Hours', 2);
+               $actiontime = $hour . _n('Hour', 'Hours', 2);
             }
             if ($minute || !$hour) {
-               $actiontime .= $minute . __('Minute', 'Minutes', 2);
+               $actiontime .= $minute . _n('Minute', 'Minutes', 2);
             }
 
             $restrict = " `plugin_resources_tasks_id` = '" . $tID . "' ";
@@ -1091,7 +1191,7 @@ class PluginResourcesTask extends CommonDBTM {
 
             $users_id = $DB->result($result, $j, "users_id");
 
-            $managers  = Html::clean(getUserName($users_id));
+            $managers  = Html::clean($dbu->getUserName($users_id));
             $name      = $DB->result($result, $j, "name");
             $task_type = $DB->result($result, $j, "plugin_resources_tasktypes_id");
             $comment   = $DB->result($result, $j, "comment");

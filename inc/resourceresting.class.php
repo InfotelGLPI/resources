@@ -639,8 +639,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
                   __('Delete a global search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                }
             }
-
-            $itemtable = getTableForItemType($itemtype);
+            $dbu       = new DbUtils();
+            $itemtable = $dbu->getTableForItemType($itemtype);
          }
 
          // Display link item
@@ -1019,15 +1019,15 @@ class PluginResourcesResourceResting extends CommonDBTM {
             $LINK = " ";
             $first = false;
          }
-
+         $dbu = new DbUtils();
          if ($itemtype == 'Entity') {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
          } else if (isset($CFG_GLPI["union_search_type"]["PluginResourcesResource"])) {
 
             // Will be replace below in Union/Recursivity Hack
             $COMMONWHERE .= $LINK." ENTITYRESTRICT ";
          } else {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
          }
       }
 

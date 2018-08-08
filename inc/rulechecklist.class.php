@@ -45,36 +45,80 @@ class PluginResourcesRuleChecklist extends Rule {
    // From Rule
    public $can_sort=true;
 
+   /**
+    * Get title used in rule
+    *
+    * @return Title of the rule
+    **/
    function getTitle() {
 
       return PluginResourcesResource::getTypeName(2)." ".PluginResourcesChecklist::getTypeName(1);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * @return bool
+    */
    function maybeRecursive() {
       return true;
    }
 
 
+   /**
+    * @return bool
+    */
    function isEntityAssign() {
       return true;
    }
 
+   /**
+    * Can I change recursive flag to false
+    * check if there is "linked" object in another entity
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    function canUnrecurs() {
       return true;
    }
 
+   /**
+    * Get maximum number of Actions of the Rule (0 = unlimited)
+    *
+    * @return the maximum number of actions
+    **/
    function maxActionsCount() {
       return count($this->getActions());
    }
 
+   /**
+    * Function used to add specific params before rule processing
+    *
+    * @param $params parameters
+    **/
    function addSpecificParamsForPreview($params) {
 
       if (!isset($params["entities_id"])) {
@@ -83,6 +127,9 @@ class PluginResourcesRuleChecklist extends Rule {
       return $params;
    }
 
+   /**
+    * @return array
+    */
    function getCriterias() {
 
       $criterias = [];
@@ -100,6 +147,15 @@ class PluginResourcesRuleChecklist extends Rule {
       return $criterias;
    }
 
+   /**
+    * Display item used to select a pattern for a criteria
+    *
+    * @param $name      criteria name
+    * @param $ID        the given criteria
+    * @param $condition condition used
+    * @param $value     the pattern (default '')
+    * @param $test      Is to test rule ? (false by default)
+    **/
    function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false) {
 
       $PluginResourcesChecklist = new PluginResourcesChecklist();
@@ -161,6 +217,9 @@ class PluginResourcesRuleChecklist extends Rule {
       return $pattern;
    }
 
+   /**
+    * @return array
+    */
    function getActions() {
 
       $actions = [];

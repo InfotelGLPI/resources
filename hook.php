@@ -27,6 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * @return bool
+ */
 function plugin_resources_install() {
    global $DB;
 
@@ -485,7 +488,7 @@ function plugin_resources_install() {
    if ($DB->tableExists("glpi_plugin_resources_profiles")) {
 
       $notepad_tables = ['glpi_plugin_resources_resources'];
-
+      $dbu = new DbUtils();
       foreach ($notepad_tables as $t) {
          // Migrate data
          if ($DB->fieldExists($t, 'notepad')) {
@@ -496,7 +499,7 @@ function plugin_resources_install() {
             foreach ($DB->request($query) as $data) {
                $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
-                      VALUES ('".getItemTypeForTable($t)."', '".$data['id']."',
+                      VALUES ('".$dbu->getItemTypeForTable($t)."', '".$data['id']."',
                               '".addslashes($data['notepad'])."', NOW(), NOW())";
                $DB->queryOrDie($iq, "0.85 migrate notepad data");
             }
@@ -524,6 +527,9 @@ function plugin_resources_install() {
    return true;
 }
 
+/**
+ * @return bool
+ */
 function plugin_resources_uninstall() {
    global $DB;
 
@@ -682,6 +688,11 @@ function plugin_resources_postinit() {
    CommonGLPI::registerStandardTab("Central", 'PluginResourcesTask');
 }
 
+/**
+ * @param $types
+ *
+ * @return mixed
+ */
 function plugin_resources_AssignToTicket($types) {
 
    if (Session::haveRight("plugin_resources_open_ticket", 1)) {
@@ -692,6 +703,9 @@ function plugin_resources_AssignToTicket($types) {
 }
 
 // Define dropdown relations
+/**
+ * @return array
+ */
 function plugin_resources_getDatabaseRelations() {
 
    $plugin = new Plugin();
@@ -779,6 +793,9 @@ function plugin_resources_getDatabaseRelations() {
 }
 
 // Define Dropdown tables to be manage in GLPI :
+/**
+ * @return array
+ */
 function plugin_resources_getDropdown() {
 
    $plugin = new Plugin();
@@ -811,6 +828,11 @@ function plugin_resources_getDropdown() {
 
 ////// SEARCH FUNCTIONS ///////() {
 
+/**
+ * @param $itemtype
+ *
+ * @return array
+ */
 function plugin_resources_getAddSearchOptions($itemtype) {
 
    $sopt = [];
@@ -888,6 +910,13 @@ function plugin_resources_getAddSearchOptions($itemtype) {
    return $sopt;
 }
 
+/**
+ * @param $type
+ * @param $ID
+ * @param $num
+ *
+ * @return string
+ */
 function plugin_resources_addSelect($type, $ID, $num) {
 
    $searchopt = &Search::getOptions($type);
@@ -909,6 +938,13 @@ function plugin_resources_addSelect($type, $ID, $num) {
    return "";
 }
 
+/**
+ * @param $type
+ * @param $ref_table
+ * @param $already_link_tables
+ *
+ * @return string
+ */
 function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_tables) {
 
    // Example of default JOIN clause
@@ -944,6 +980,11 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
    return "";
 }
 
+/**
+ * @param $type
+ *
+ * @return string
+ */
 function plugin_resources_addDefaultWhere($type) {
 
    // Example of default WHERE item to be added
@@ -959,6 +1000,15 @@ function plugin_resources_addDefaultWhere($type) {
    return "";
 }
 
+/**
+ * @param $link
+ * @param $nott
+ * @param $type
+ * @param $ID
+ * @param $val
+ *
+ * @return string
+ */
 function plugin_resources_addWhere($link, $nott, $type, $ID, $val) {
 
    $searchopt = &Search::getOptions($type);
@@ -982,6 +1032,15 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val) {
    return "";
 }
 
+/**
+ * @param $type
+ * @param $ref_table
+ * @param $new_table
+ * @param $linkfield
+ * @param $already_link_tables
+ *
+ * @return \Left|string
+ */
 function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield, &$already_link_tables) {
 
    // Rename table for meta left join
@@ -1222,6 +1281,11 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
    return "";
 }
 
+/**
+ * @param $type
+ *
+ * @return bool
+ */
 function plugin_resources_forceGroupBy($type) {
 
    return true;
@@ -1233,6 +1297,14 @@ function plugin_resources_forceGroupBy($type) {
    return false;
 }
 
+/**
+ * @param $type
+ * @param $ID
+ * @param $data
+ * @param $num
+ *
+ * @return string
+ */
 function plugin_resources_giveItem($type, $ID, $data, $num) {
    global $CFG_GLPI, $DB;
 
@@ -1314,7 +1386,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
                            $link = Toolbox::getItemTypeFormURL('User');
                            $out.="<a href=\"".$link."?id=".$device["items_id"]."\">";
                         }
-                        $out.=getUserName($device["items_id"]);
+                        $out.=$dbu->getUserName($device["items_id"]);
                         if ($output_type == Search::HTML_OUTPUT) {
                            $out.="</a>";
                         }
@@ -1391,15 +1463,15 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
          switch ($table.'.'.$field) {
 
             case "glpi_plugin_resources_recipients.name" :
-               $out = getUserName($data['raw']["ITEM_".$num."_2"]);
+               $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
                return $out;
                break;
             case "glpi_plugin_resources_recipients_leaving.name" :
-               $out = getUserName($data['raw']["ITEM_".$num."_2"]);
+               $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
                return $out;
                break;
             case "glpi_plugin_resources_managers.name" :
-               $out = getUserName($data['raw']["ITEM_".$num."_2"]);
+               $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
                return $out;
                break;
          }
@@ -1450,7 +1522,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
             case "glpi_plugin_resources_managers.name" :
                $out = "";
                if (!empty($data['raw']["ITEM_".$num."_2"])) {
-                  $out = getUserName($data['raw']["ITEM_".$num."_2"]);
+                  $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
                }
                return $out;
                break;
@@ -1482,6 +1554,11 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
 }
 
 ////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
+/**
+ * @param $type
+ *
+ * @return array|mixed
+ */
 function plugin_resources_MassiveActions($type) {
 
    if (in_array($type, PluginResourcesResource::getTypes())) {
@@ -1492,6 +1569,11 @@ function plugin_resources_MassiveActions($type) {
 }
 
 // Do special actions for dynamic report
+/**
+ * @param $parm
+ *
+ * @return bool
+ */
 function plugin_resources_dynamicReport($parm) {
    $allowed = ['PluginResourcesDirectory', 'PluginResourcesRecap'];
 
@@ -1508,6 +1590,9 @@ function plugin_resources_dynamicReport($parm) {
 }
 
 // Hook done on before add item case
+/**
+ * @param $item
+ */
 function plugin_pre_item_update_resources($item) {
 
    if (Session::getCurrentInterface()

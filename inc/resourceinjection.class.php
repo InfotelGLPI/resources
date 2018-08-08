@@ -31,9 +31,19 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResourceInjection
+ */
 class PluginResourcesResourceInjection extends PluginResourcesResource
    implements PluginDatainjectionInjectionInterface {
 
+   /**
+    * Return the table used to store this object
+    *
+    * @param string $classname Force class (to avoid late_binding on inheritance)
+    *
+    * @return string
+    **/
    static function getTable($classname = null) {
 
       $parenttype = get_parent_class();
@@ -41,14 +51,25 @@ class PluginResourcesResourceInjection extends PluginResourcesResource
 
    }
 
+   /**
+    * @return bool
+    */
    function isPrimaryType() {
       return true;
    }
 
+   /**
+    * @return array
+    */
    function connectedTo() {
       return [];
    }
 
+   /**
+    * @param string $primary_type
+    *
+    * @return array|\the
+    */
    function getOptions($primary_type = '') {
 
       $tab = Search::getOptions(get_parent_class($this));

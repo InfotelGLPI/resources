@@ -40,8 +40,10 @@ if (!defined('GLPI_ROOT')) {
 
 Session::checkLoginUser();
 
+$dbu = new DbUtils();
+
 // Security
-if (!($item = getItemForItemtype($_GET['itemtype']))) {
+if (!($item = $dbu->getItemForItemtype($_GET['itemtype']))) {
    exit();
 }
 
@@ -156,7 +158,7 @@ if ($item instanceof CommonTreeDropdown) {
       }
 
       if (isset($_GET["entity_restrict"]) && !($_GET["entity_restrict"]<0)) {
-         $where .= getEntitiesRestrictRequest(" AND ", $table, '', $_GET["entity_restrict"],
+         $where .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', $_GET["entity_restrict"],
                                               $recur);
 
          if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"])>1) {
@@ -164,7 +166,7 @@ if ($item instanceof CommonTreeDropdown) {
          }
 
       } else {
-         $where .= getEntitiesRestrictRequest(" AND ", $table, '', '', $recur);
+         $where .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', '', $recur);
 
          if (count($_SESSION['glpiactiveentities'])>1) {
             $multi = true;
@@ -389,7 +391,7 @@ if ($item instanceof CommonTreeDropdown) {
       $multi = $item->maybeRecursive();
 
       if (isset($_GET["entity_restrict"]) && !($_GET["entity_restrict"]<0)) {
-         $where .= getEntitiesRestrictRequest("AND", $table, "entities_id",
+         $where .= $dbu->getEntitiesRestrictRequest("AND", $table, "entities_id",
                                               $_GET["entity_restrict"], $multi);
 
          if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"])>1) {
@@ -397,7 +399,7 @@ if ($item instanceof CommonTreeDropdown) {
          }
 
       } else {
-         $where .= getEntitiesRestrictRequest("AND", $table, '', '', $multi);
+         $where .= $dbu->getEntitiesRestrictRequest("AND", $table, '', '', $multi);
 
          if (count($_SESSION['glpiactiveentities'])>1) {
             $multi = true;

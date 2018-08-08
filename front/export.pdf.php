@@ -41,8 +41,8 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
    $PluginUseditemsexportExport = new PluginUseditemsexportExport();
    $users_id = $_GET['users_id'];
    if ($PluginUseditemsexportExport::generatePDF($users_id)) {
-
-      $table = getTableForItemType('PluginUseditemsexportExport');
+      $dbu = new DbUtils();
+      $table = $dbu->getTableForItemType('PluginUseditemsexportExport');
       foreach ($DB->request("SELECT `documents_id` 
                               FROM $table 
                               WHERE `users_id` = '$users_id'

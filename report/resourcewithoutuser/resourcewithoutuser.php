@@ -56,8 +56,9 @@ $report->setColumns( [new PluginReportsColumnLink('resource_id', __('Surname'), 
                                                    ['sorton' => 'date_end'])]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
-$date=date("Y-m-d");
+$dbu       = new DbUtils();
+$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
+$date      = date("Y-m-d");
 
 //display only resource without user linked
 $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,

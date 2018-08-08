@@ -73,13 +73,16 @@ $users       = [];
 $logins      = [];
 $linkedUsers = [];
 
+$dbu = new DbUtils();
+
 // Add linked resource users
 if ($DB->numrows($result)) {
    while ($data = $DB->fetch_array($result)) {
       array_push($users, ['id'   => $data["id"],
-                               'text' => formatUserName($data["id"], $data["username"], $data["name"], $data["firstname"])]);
+                          'text' => $dbu->formatUserName($data["id"], $data["username"],
+                                                   $data["name"], $data["firstname"])]);
       //      $logins[$data["id"]] = $data["name"];
-      $linkedUsers[]       = $data["userid"];
+      $linkedUsers[] = $data["userid"];
    }
 }
 
@@ -99,14 +102,21 @@ if ($_GET['addUnlinkedUsers']) {
                   OR CONCAT(`glpi_users`.`name`,' ',`glpi_users`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) ".
                   Search::makeTextSearch($_GET['searchText']).");";
    $result = $DB->query($query);
-   while ($data  = $DB->fetch_array($result)) {
-      array_push($users, ['id'   => 'users-'.$data["id"],
-                               'text' => formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"])]);
+   while ($data = $DB->fetch_array($result)) {
+      array_push($users, ['id'   => 'users-' . $data["id"],
+                          'text' => $dbu->formatUserName($data["id"], $data["name"],
+                                                         $data["realname"], $data["firstname"])]);
       //      $logins['users-'.$data["id"]] = $data["name"];
    }
 }
 
 if (!function_exists('dpuser_cmp')) {
+   /**
+    * @param $a
+    * @param $b
+    *
+    * @return int
+    */
    function dpuser_cmp($a, $b) {
       return strcasecmp($a['text'], $b['text']);
    }

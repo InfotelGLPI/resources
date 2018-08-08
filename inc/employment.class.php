@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmployment
+ */
 class PluginResourcesEmployment extends CommonDBTM {
 
    static $rightname = 'plugin_resources_employment';
@@ -41,15 +44,38 @@ class PluginResourcesEmployment extends CommonDBTM {
    // From CommonDBTM
    public $dohistory = true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Employment', 'Employments', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -75,8 +101,9 @@ class PluginResourcesEmployment extends CommonDBTM {
 
       if ($item->getType() == 'PluginResourcesResource' && $this->canView() && $withtemplate == 0) {
          if ($_SESSION['glpishow_count_on_tabs']) {
+            $dbu = new DbUtils();
             return self::createTabEntry(self::getTypeName(2),
-                                        countElementsInTable($this->getTable(),
+                                        $dbu->countElementsInTable($this->getTable(),
                                                              "`plugin_resources_resources_id` = '" . $item->getID() . "'"));
          }
          return self::getTypeName(2);
@@ -430,6 +457,11 @@ class PluginResourcesEmployment extends CommonDBTM {
 
    ////// CRON FUNCTIONS ///////
    //Cron action
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -441,6 +473,9 @@ class PluginResourcesEmployment extends CommonDBTM {
       return [];
    }
 
+   /**
+    * @return string
+    */
    function queryLeavingResources() {
 
       $date  = date("Y-m-d H:i:s");
@@ -542,136 +577,11 @@ class PluginResourcesEmployment extends CommonDBTM {
       return $cron_status;
    }
 
-   //Massive action
-   function getSpecificMassiveActions($checkitem = null) {
-      $isadmin = static::canUpdate();
-      $actions = parent::getSpecificMassiveActions($checkitem);
-
-      if ($isadmin
-          && Session::getCurrentInterface() == 'central'
-      ) {
-         if (strpos($_SERVER['PHP_SELF'], "employment.php")) {
-            $actions['Delete'] = __('Delete permanently');
-         }
-         if (Session::haveRight('transfer', READ)
-             && Session::isMultiEntitiesMode()
-         ) {
-            $actions['Transfert'] = __('Transfer');
-         }
-      } else if (Session::getCurrentInterface() == 'central') {
-         if (strpos($_SERVER['PHP_SELF'], "employment.php")) {
-            $actions['Delete_Item'] = __('Delete permanently');
-         }
-      }
-      return $actions;
-   }
-
-   function showSpecificMassiveActionsParameters($input = []) {
-
-      switch ($input['action']) {
-         case "Delete" :
-         case "Delete_Item" :
-            echo "<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value='" . _sx('button', 'Post') . "'>";
-            return true;
-            break;
-         case "Transfert" :
-            Dropdown::show('Entity');
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value='" . _sx('button', 'Post') . "'>";
-            return true;
-            break;
-
-         default :
-            return parent::showSpecificMassiveActionsParameters($input);
-            break;
-      }
-      return false;
-   }
-
-   function doSpecificMassiveActions($input = []) {
-
-      $res = ['ok'      => 0,
-                   'ko'      => 0,
-                   'noright' => 0];
-
-      $task_item = new PluginResourcesTask_Item();
-
-      switch ($input['action']) {
-         case "Transfert" :
-            if ($input['itemtype'] == 'PluginResourcesEmployment') {
-               foreach ($input["item"] as $key => $val) {
-                  if ($val == 1) {
-                     $this->getFromDB($key);
-                     $rank = PluginResourcesRank::transfer($PluginResourcesEmployment->fields["plugin_resources_ranks_id"], $data['entities_id']);
-                     if ($rank > 0) {
-                        $values["id"]                        = $key;
-                        $values["plugin_resources_ranks_id"] = $rank;
-                        $this->update($values);
-                     }
-
-                     $profession = PluginResourcesProfession::transfer($PluginResourcesEmployment->fields["plugin_resources_professions_id"],
-                                                                       $data['entities_id']);
-                     if ($profession > 0) {
-                        $values["id"]                              = $key;
-                        $values["plugin_resources_professions_id"] = $profession;
-                        $this->update($values);
-                     }
-
-                     unset($values);
-                     $values["id"]          = $key;
-                     $values["entities_id"] = $input['entities_id'];
-
-                     if ($this->update($values)) {
-                        $res['ok']++;
-                     } else {
-                        $res['ko']++;
-                     }
-                  }
-               }
-            }
-            break;
-         case "Delete" :
-            if ($input['itemtype'] == 'PluginResourcesEmployment') {
-               foreach ($input["item"] as $key => $val) {
-                  if ($val == 1) {
-                     if ($this->can(-1, UPDATE, $input)) {
-                        if ($this->delete(["id" => $key])) {
-                           $nbok++;
-                        } else {
-                           $nbko++;
-                        }
-                     } else {
-                        $nbnoright++;
-                     }
-                  }
-               }
-            }
-            break;
-         case "Delete_Item" :
-            if ($input['itemtype'] == 'PluginResourcesEmployment') {
-               foreach ($input["item"] as $key => $val) {
-                  if ($val == 1) {
-                     $values = ['id'                            => $key,
-                                     'plugin_resources_resources_id' => 0];
-                     if ($this->can($values["id"], UPDATE, $values)) {
-                        if ($this->update($values)) {
-                           $nbok++;
-                        } else {
-                           $nbko++;
-                        }
-                     } else {
-                        $nbnoright++;
-                     }
-                  }
-               }
-            }
-            break;
-         default :
-            return parent::doSpecificMassiveActions($input);
-            break;
-      }
-      return $res;
-   }
-
+   /**
+    * @param $menu
+    *
+    * @return mixed
+    */
    static function getMenuOptions($menu) {
 
       $plugin_page = '/plugins/resources/front/employment.php';

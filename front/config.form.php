@@ -63,18 +63,18 @@ if ($plugin->isActivated("resources")) {
       $config->showForm();
 
       //changes
-      $resourceChange->showForm($_SERVER['PHP_SELF']);
+      $resourceChange->showForm();
 
       //badges
       $plugin = new Plugin();
       if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
-         $resourceBadge->showFormConfig($_SERVER['PHP_SELF']);
+         $resourceBadge->showFormConfig();
       }
 
       //metademand
       if ($plugin->isActivated("metademands")) {
          $configHabilitation = new PluginResourcesConfigHabilitation();
-         $configHabilitation->showFormConfig($_SERVER['PHP_SELF']);
+         $configHabilitation->showFormConfig();
       }
 
       $cat->showForm($_SERVER['PHP_SELF']);

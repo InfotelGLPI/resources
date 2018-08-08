@@ -30,18 +30,34 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTaskPlanning
+ */
 class PluginResourcesTaskPlanning extends CommonDBTM {
 
    static $rightname = 'plugin_resources_task';
 
+   /**
+    * @return bool|\booleen
+    */
    static function canCreate() {
       return (Session::haveRight(self::$rightname, UPDATE));
    }
 
+   /**
+    * @param int $nb
+    *
+    * @return string
+    */
    static function getTypeName($nb = 0) {
       return sprintf(__('%1$s - %2$s'), _n('Human resource', 'Human resources', $nb, 'resources'), __('Tasks list', 'resources'));
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array|bool
+    */
    function prepareInputForAdd($input) {
 
       if (!isset($input["begin"]) || !isset($input["end"])) {
@@ -79,6 +95,11 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       }
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array|bool
+    */
    function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
@@ -104,10 +125,13 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param int $history
+    */
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
-      $fup                       = new PluginResourcesTask();
+      $fup = new PluginResourcesTask();
       $fup->getFromDB($this->input["plugin_resources_tasks_id"]);
       $timestart                 = strtotime($this->input["begin"]);
       $timeend                   = strtotime($this->input["end"]);
@@ -127,7 +151,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       global $DB;
 
       $query = "SELECT *
-                FROM `".$this->getTable()."`
+                FROM `" . $this->getTable() . "`
                 WHERE `plugin_resources_tasks_id` = '$plugin_resources_tasks_id'";
 
       if ($result = $DB->query($query)) {
@@ -142,16 +166,20 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param                      $resources
+    * @param \PluginResourcesTask $task
+    */
    function showFormForTask($resources, PluginResourcesTask $task) {
       global $CFG_GLPI;
 
       $PluginResourcesResource = new PluginResourcesResource();
       $PluginResourcesResource->getFromDB($resources);
-      $taskid                  = $task->getField('id');
+      $taskid = $task->getField('id');
       if ($taskid > 0 && $this->getFromDBbyTask($taskid)) {
          if ($this->canCreate()) {
             echo "<script type='text/javascript' >\n";
-            echo "function showPlan".$taskid."(){\n";
+            echo "function showPlan" . $taskid . "(){\n";
             echo "$('#plan').css({'display':'none'});";
             $params = [
                'form'   => 'followups',
@@ -160,15 +188,15 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                'end'    => $this->fields["end"],
                'entity' => $PluginResourcesResource->fields["entities_id"]
             ];
-            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planning.php", $params);
+            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/planning.php", $params);
             echo "}";
             echo "</script>\n";
-            echo "<div id='plan' onClick='showPlan".$taskid."()'>\n";
+            echo "<div id='plan' onClick='showPlan" . $taskid . "()'>\n";
             echo "<span class='showplan'>";
          }
          if ($this->fields["begin"] && $this->fields["end"]) {
-            echo Html::convDateTime($this->fields["begin"]).
-            "&nbsp;->&nbsp;".Html::convDateTime($this->fields["end"]);
+            echo Html::convDateTime($this->fields["begin"]) .
+                 "&nbsp;->&nbsp;" . Html::convDateTime($this->fields["end"]);
          } else {
             echo __('Plan this task');
          }
@@ -183,13 +211,13 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo "function showPlanUpdate(){\n";
             echo "$('#plan').css({'display':'none'});";
             $params = ['form'   => 'followups',
-                            'entity' => $_SESSION["glpiactive_entity"]];
-            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planning.php", $params);
+                       'entity' => $_SESSION["glpiactive_entity"]];
+            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/planning.php", $params);
             echo "};";
             echo "</script>";
 
             echo "<div id='plan'  onClick='showPlanUpdate()'>\n";
-            echo "<span class='showplan'>".__('Plan this task')."</span>";
+            echo "<span class='showplan'>" . __('Plan this task') . "</span>";
             echo "</div>\n";
             echo "<div id='viewplan'></div>\n";
          } else {
@@ -211,7 +239,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
 
    /**
     * Add error message to message after redirect
+    *
     * @param $type error type : date / is_res / other
+    *
     * @return nothing
     * */
    static function displayError($type) {
@@ -219,7 +249,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       switch ($type) {
          case "date" :
             Session::addMessageAfterRedirect(
-                  __('Error in entering dates. The starting date is later than the ending date'), false, ERROR);
+               __('Error in entering dates. The starting date is later than the ending date'), false, ERROR);
             break;
 
          default :
@@ -240,11 +270,11 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
 
       $out = "";
 
-      $out .= PluginResourcesResource::getTypeName()." - ".PluginResourcesTask::getTypeName().' : '.Html::convDateTime($val["begin"]).' -> '.
-            Html::convDateTime($val["end"]).' : ';
-      $out .= "<a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/task.form.php?id=".
-            $val["plugin_resources_tasks_id"]."'>";
-      $out .= Html::resume_text($val["name"], 80).'</a>';
+      $out .= PluginResourcesResource::getTypeName() . " - " . PluginResourcesTask::getTypeName() . ' : ' . Html::convDateTime($val["begin"]) . ' -> ' .
+              Html::convDateTime($val["end"]) . ' : ';
+      $out .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" .
+              $val["plugin_resources_tasks_id"] . "'>";
+      $out .= Html::resume_text($val["name"], 80) . '</a>';
 
       return $out;
    }
@@ -273,7 +303,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       $begin     = $parm['begin'];
       $end       = $parm['end'];
       // Get items to print
-      $ASSIGN    = "";
+      $ASSIGN = "";
 
       if ($who_group === "mine") {
          if (count($_SESSION["glpigroups"])) {
@@ -304,9 +334,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                                  LEFT JOIN `glpi_profiles_users`
                                     ON (`glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`)
                                  WHERE `glpi_profiles`.`interface`='central' ";
-
-         $ASSIGN.=getEntitiesRestrictRequest("AND", "glpi_profiles_users", '', $_SESSION["glpiactive_entity"], 1);
-         $ASSIGN.=") AND ";
+         $dbu = new DbUtils();
+         $ASSIGN .= $dbu->getEntitiesRestrictRequest("AND", "glpi_profiles_users", '', $_SESSION["glpiactive_entity"], 1);
+         $ASSIGN .= ") AND ";
       }
 
       $query = "SELECT `glpi_plugin_resources_tasks`.*,
@@ -352,6 +382,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
     * Display a Planning Item
     *
     * @param $parm Array of the item to display
+    *
     * @return Nothing (display function)
     * */
    static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {
@@ -360,50 +391,51 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/task.form.php?id=".$val["id"]."'";
+      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $val["id"] . "'";
 
-      $html .= " onmouseout=\"cleanhide('content_task_".$val["id"].$rand."')\"
-               onmouseover=\"cleandisplay('content_task_".$val["id"].$rand."')\"";
+      $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
+               onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
       $html .= ">";
 
       switch ($type) {
          case "in" :
             //TRANS: %1$s is the start time of a planned item, %2$s is the end
             $beginend = sprintf(__('From %1$s to %2$s'), date("H:i", strtotime($val["begin"])), date("H:i", strtotime($val["end"])));
-            $html .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
+            $html     .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
 
             break;
          case "begin" :
             $start = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
-            $html .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
+            $html  .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
             break;
 
          case "end" :
-            $end = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
+            $end  = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
             $html .= sprintf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
             break;
       }
 
       if ($val["users_id"] && $who == 0) {
-         $html .= " - ".__('User')." ".getUserName($val["users_id"]);
+         $dbu = new DbUtils();
+         $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id"]);
       }
       $html .= "</a><br>";
 
-      $html .= PluginResourcesResource::getTypeName(1).
-      " : <a href='".$CFG_GLPI["root_doc"]."/plugins/resources/front/resource.form.php?id=".
-      $val["plugin_resources_resources_id"]."'";
-      $html .= ">".$val["resource"]."</a>";
+      $html .= PluginResourcesResource::getTypeName(1) .
+               " : <a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" .
+               $val["plugin_resources_resources_id"] . "'";
+      $html .= ">" . $val["resource"] . "</a>";
 
-      $html .= "<div class='over_link' id='content_task_".$val["id"].$rand."'>";
+      $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
       if ($val["end"]) {
-         $html .= "<strong>".__('End date')."</strong> : ".Html::convdatetime($val["end"])."<br>";
+         $html .= "<strong>" . __('End date') . "</strong> : " . Html::convdatetime($val["end"]) . "<br>";
       }
       if ($val["type"]) {
-         $html .= "<strong>".PluginResourcesTaskType::getTypeName(1)."</strong> : ".
-         $val["type"]."<br>";
+         $html .= "<strong>" . PluginResourcesTaskType::getTypeName(1) . "</strong> : " .
+                  $val["type"] . "<br>";
       }
       if ($val["content"]) {
-         $html .= "<strong>".__('Description')."</strong> : ".$val["content"];
+         $html .= "<strong>" . __('Description') . "</strong> : " . $val["content"];
       }
       $html .= "</div>";
 

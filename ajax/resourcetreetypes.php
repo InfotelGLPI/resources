@@ -43,10 +43,10 @@ if (isset($_GET['node'])) {
 
    // Root node
    if ($_GET['node'] == -1) {
-      $entity = $_SESSION['glpiactive_entity'];
-
-      $where = " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0 ";
-      $where.=getEntitiesRestrictRequest("AND", "glpi_plugin_resources_resources");
+      $entity   = $_SESSION['glpiactive_entity'];
+      $dbu      = new DbUtils();
+      $where    = " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0 ";
+      $where    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_resources_resources");
       $restrict = "`id` IN (
                   SELECT DISTINCT `plugin_resources_contracttypes_id`
                   FROM `glpi_plugin_resources_resources`

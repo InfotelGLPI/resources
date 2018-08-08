@@ -32,16 +32,25 @@ if (!defined('GLPI_ROOT')) {
 }
 
 
+/**
+ * Class PluginResourcesServicecatalog
+ */
 class PluginResourcesServicecatalog extends CommonGLPI {
 
    static $rightname = 'plugin_resources';
 
    var $dohistory = false;
 
+   /**
+    * @return bool
+    */
    static function canUse() {
       return Session::haveRight(self::$rightname, UPDATE);
    }
 
+   /**
+    * @return string
+    */
    static function getMenuLogo() {
       global $CFG_GLPI;
 
@@ -49,6 +58,9 @@ class PluginResourcesServicecatalog extends CommonGLPI {
 
    }
 
+   /**
+    * @return string
+    */
    static function getMenuTitle() {
       global $CFG_GLPI;
 
@@ -58,15 +70,24 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    }
 
 
+   /**
+    * @return string
+    */
    static function getMenuComment() {
 
       return __('Manage human resources', 'resources');
    }
 
+   /**
+    * @return string
+    */
    static function getLinkList() {
       return "";
    }
 
+   /**
+    * @return string
+    */
    static function getList() {
       return "";
    }

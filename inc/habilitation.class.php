@@ -73,6 +73,9 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Return Additional Fileds for this type
+    **/
    function getAdditionalFields() {
 
       $tab = [['name'  => $this->getForeignKeyField(),
@@ -88,6 +91,11 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       return $tab;
    }
 
+   /**
+    * Get search function for the class
+    *
+    * @return array of search option
+    **/
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();
@@ -126,7 +134,7 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
                $temp = new self();
-               $newID    = $temp->getID($input);
+               $newID    = $temp->getID();
 
                if ($newID<0) {
                   $newID = $temp->import($input);
@@ -158,11 +166,12 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       if (!$habilitationlevels->getField('number')) {
          $habilitations[''] = Dropdown::EMPTY_VALUE;
       }
+      $dbu   = new DbUtils();
       $query = "SELECT *
-                FROM `".$plugin_habilitation->getTable()."`
+                FROM `" . $plugin_habilitation->getTable() . "`
                 WHERE `plugin_resources_habilitationlevels_id` = '$plugin_resources_habilitationlevels_id'
-                 ".getEntitiesRestrictRequest("AND", $plugin_habilitation->getTable(), "entities_id",
-                                              $entity, $plugin_habilitation->maybeRecursive());
+                 " . $dbu->getEntitiesRestrictRequest("AND", $plugin_habilitation->getTable(), "entities_id",
+                                                      $entity, $plugin_habilitation->maybeRecursive());
 
       foreach ($DB->request($query) as $habilitation) {
          $habilitations[$habilitation['id']] = $habilitation['name'];

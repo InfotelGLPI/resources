@@ -32,23 +32,52 @@ if (!defined('GLPI_ROOT')) {
 }
 
 // Class for a Dropdown
+
+/**
+ * Class PluginResourcesContractType
+ */
 class PluginResourcesContractType extends CommonDropdown {
 
    var $can_be_translated = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Type of contract', 'Types of contract', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       $tab = [['name'  => 'code',
@@ -80,6 +109,9 @@ class PluginResourcesContractType extends CommonDropdown {
       return $tab;
    }
 
+   /**
+    * @return array
+    */
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();
@@ -123,6 +155,12 @@ class PluginResourcesContractType extends CommonDropdown {
       return $tab;
    }
 
+   /**
+    * @param $ID
+    * @param $field
+    *
+    * @return bool
+    */
    static function checkWizardSetup($ID, $field) {
       if ($ID > 0) {
          $resource = new PluginResourcesResource();
@@ -139,6 +177,12 @@ class PluginResourcesContractType extends CommonDropdown {
       return false;
    }
 
+   /**
+    * @param $ID
+    * @param $entity
+    *
+    * @return int|\the
+    */
    static function transfer($ID, $entity) {
       global $DB;
 
@@ -156,7 +200,7 @@ class PluginResourcesContractType extends CommonDropdown {
                $input['name']        = $data['name'];
                $input['entities_id'] = $entity;
                $temp                 = new self();
-               $newID                = $temp->getID($input);
+               $newID                = $temp->getID();
 
                if ($newID < 0) {
                   $newID = $temp->import($input);
@@ -169,12 +213,17 @@ class PluginResourcesContractType extends CommonDropdown {
       return 0;
    }
 
+   /**
+    * @param     $name
+    * @param int $value
+    *
+    * @return int|string
+    */
    function dropdownContractType($name, $value = 0) {
-
+      $dbu      = new DbUtils();
       $restrict = " 1 = 1 ";
-      $restrict .= getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
+      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
       $restrict .= " ORDER BY `name`";
-      $dbu   = new DbUtils();
       $types = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
       $option[0] = __('Without contract', 'resources');
@@ -189,6 +238,11 @@ class PluginResourcesContractType extends CommonDropdown {
       return Dropdown::showFromArray($name, $option, ['value' => $value]);
    }
 
+   /**
+    * @param $value
+    *
+    * @return string
+    */
    function getContractTypeName($value) {
 
       switch ($value) {

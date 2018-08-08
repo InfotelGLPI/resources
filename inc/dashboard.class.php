@@ -27,18 +27,29 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Class PluginResourcesDashboard
+ */
 class PluginResourcesDashboard extends CommonGLPI {
 
    public $widgets = [];
    private $options;
    private $datas, $form;
 
+   /**
+    * PluginResourcesDashboard constructor.
+    *
+    * @param array $options
+    */
    function __construct($options = []) {
       $this->options = $options;
       $this->interfaces = ["central"];
    }
 
 
+   /**
+    * @return array
+    */
    function getWidgetsForItem() {
       return [
          $this->getType()."1" => __('New resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fa fa-table'></i>",
@@ -46,6 +57,11 @@ class PluginResourcesDashboard extends CommonGLPI {
       ];
    }
 
+   /**
+    * @param $widgetId
+    *
+    * @return \PluginMydashboardDatatable
+    */
    function getWidgetContentForItem($widgetId) {
       global $CFG_GLPI, $DB;
 

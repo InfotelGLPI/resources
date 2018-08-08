@@ -31,19 +31,45 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesChecklistconfig
+ */
 class PluginResourcesChecklistconfig extends CommonDBTM {
 
    static $rightname = 'plugin_resources_checklist';
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Checklist setup', 'Checklists setup', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -61,6 +87,18 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       }
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function rawSearchOptions() {
 
       $tab = parent::rawSearchOptions();
@@ -93,6 +131,12 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       return $tab;
    }
 
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
@@ -142,6 +186,11 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $resource
+    * @param $checklists_id
+    * @param $checklist_type
+    */
    function addResourceChecklist($resource, $checklists_id, $checklist_type) {
 
       $restrict = "`id` = '".$checklists_id."'";
@@ -168,6 +217,10 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $resource
+    * @param $checklist_type
+    */
    function addChecklistsFromRules($resource, $checklist_type) {
 
       $rulecollection = new PluginResourcesRuleChecklistCollection($resource->fields["entities_id"]);
@@ -269,6 +322,15 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       return $actions;
    }
 
+   /**
+    * Class-specific method used to show the fields to specify the massive action
+    *
+    * @since 0.85
+    *
+    * @param MassiveAction $ma the current massive action object
+    *
+    * @return boolean false if parameters displayed ?
+    **/
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       $PluginResourcesChecklist    = new PluginResourcesChecklist();

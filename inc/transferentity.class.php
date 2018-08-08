@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTransferEntity
+ */
 class PluginResourcesTransferEntity extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
@@ -42,16 +45,35 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       return __('Transfer entities', 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
 
-
+   /**
+    * @param $target
+    *
+    * @return bool
+    */
    function showForm($target) {
       global $CFG_GLPI;
 
@@ -111,6 +133,10 @@ class PluginResourcesTransferEntity extends CommonDBTM {
 
    }
 
+   /**
+    * @param $fields
+    * @param $canedit
+    */
    private function listItems($fields, $canedit) {
 
       $rand = mt_rand();
@@ -156,6 +182,18 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function rawSearchOptions() {
 
       $tab = [];
@@ -204,6 +242,13 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       return $tab;
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
       if (!$this->checkMandatoryFields($input)) {
          return false;
@@ -212,6 +257,13 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForUpdate($input) {
       if (!$this->checkMandatoryFields($input)) {
          return false;
@@ -220,6 +272,11 @@ class PluginResourcesTransferEntity extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param $input
+    *
+    * @return bool
+    */
    function checkMandatoryFields($input) {
       $msg     = [];
       $checkKo = false;

@@ -66,7 +66,8 @@ $report->setColumns( [new PluginReportsColumnInteger('registration_number', __('
                                                    ['sorton' => 'employer_name']),]);
 
 // SQL statement
-$condition = getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
+$dbu = new DbUtils();
+$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
 
 //display only leaving resource with active employment
 $query = "SELECT `glpi_users`.`registration_number`,

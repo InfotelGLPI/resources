@@ -31,25 +31,58 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResourceHoliday
+ */
 class PluginResourcesResourceHoliday extends CommonDBTM {
 
    static $rightname = 'plugin_resources_holiday';
 
    public $dohistory=true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Holiday', 'Holidays', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
 
       if (!isset ($input["date_begin"]) || $input["date_begin"] == 'NULL') {
@@ -78,6 +111,13 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       }
    }
 
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForUpdate($input) {
       if (!isset ($input["date_begin"]) || $input["date_begin"] == 'NULL') {
          Session::addMessageAfterRedirect(__('The begin date of the forced holiday period must be filled', 'resources'), false, ERROR);
@@ -98,6 +138,13 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @param boolean $history store changes history ? (default 1)
+    *
+    * @return void
+    **/
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
@@ -111,6 +158,12 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       }
    }
 
+   /**
+    * Actions done before the DELETE of the item in the database /
+    * Maybe used to add another check for deletion
+    *
+    * @return boolean true if item need to be deleted else false
+    **/
    function pre_deleteItem() {
       global $CFG_GLPI;
 
@@ -124,6 +177,18 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       return true;
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function rawSearchOptions() {
 
       $tab = [];
@@ -224,6 +289,11 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
    }
 
    //Show form from helpdesk to add holiday of a resource
+
+   /**
+    * @param       $ID
+    * @param array $options
+    */
    function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
@@ -399,8 +469,8 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
                         __('Delete a global search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                }
             }
-
-            $itemtable=getTableForItemType($itemtype);
+            $dbu       = new DbUtils();
+            $itemtable = $dbu->getTableForItemType($itemtype);
          }
 
          // Display link item
@@ -598,6 +668,9 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       Html::closeForm();
    }
 
+   /**
+    * @param $params
+    */
    function showMinimalList($params) {
       global $DB,$CFG_GLPI;
 
@@ -783,15 +856,15 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
             $LINK=" ";
             $first=false;
          }
-
+         $dbu = new DbUtils();
          if ($itemtype == 'Entity') {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable, 'id', '', true);
          } else if (isset($CFG_GLPI["union_search_type"]["PluginResourcesResource"])) {
 
             // Will be replace below in Union/Recursivity Hack
             $COMMONWHERE .= $LINK." ENTITYRESTRICT ";
          } else {
-            $COMMONWHERE .= getEntitiesRestrictRequest($LINK, "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
+            $COMMONWHERE .= $dbu->getEntitiesRestrictRequest($LINK, "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
          }
       }
 

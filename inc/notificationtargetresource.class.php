@@ -30,7 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-// Class NotificationTarget
+/**
+ * Class PluginResourcesNotificationTargetResource
+ */
 class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
    const RESOURCE_MANAGER                     = 4300;
@@ -45,6 +47,12 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    const RESOURCE_TARGET_ENTITY_GROUP_MANAGER = 4309;
    const RESOURCE_SALES_MANAGER               = 4310;
 
+   /**
+    * Return main notification events for the object type
+    * Internal use only => should use getAllEvents
+    *
+    * @return an array which contains : event => event label
+    **/
    function getEvents() {
 
       return ['new'                    => __('A resource has been added by', 'resources'),
@@ -110,6 +118,14 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * Add targets by a method not defined in NotificationTarget (specific to an itemtype)
+    *
+    * @param array $data    Data
+    * @param array $options Options
+    *
+    * @return void
+    **/
    function addSpecificTargets($data, $options) {
 
       //Look for all targets whose type is Notification::ITEM_USER
@@ -151,6 +167,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param        $options
+    * @param string $type
+    * @param bool   $supervisor
+    */
    function getEntityGroup($options, $type = 'source', $supervisor = false) {
       global $DB;
 
@@ -194,6 +215,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       return $this->addUserByField("users_id_recipient_leaving");
    }
 
+   /**
+    * @param array $options
+    */
    function getRessourceAddress($options = []) {
       global $DB;
 
@@ -215,6 +239,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param array $options
+    */
    function getTaskTechAddress($options = []) {
       global $DB;
 
@@ -235,6 +262,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param array $options
+    */
    function getTaskGroupAddress($options = []) {
       global $DB;
 
@@ -257,6 +287,16 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * Get all data needed for template processing
+    * Provides minimum information for alerts
+    * Can be overridden by each NotificationTartget class if needed
+    *
+    * @param string $event   Event name
+    * @param array  $options Options
+    *
+    * @return void
+    **/
    function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI, $DB;
 
@@ -287,7 +327,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.name##']   = $task['name'];
             $tmp['##task.type##']   = Dropdown::getDropdownName('glpi_plugin_resources_tasktypes',
                                                                 $task['plugin_resources_tasktypes_id']);
-            $tmp['##task.users##']  = Html::clean(getUserName($task['users_id']));
+            $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
@@ -349,9 +389,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.firstname##']       = $resource['firstname'];
             $tmp['##resource.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
                                                                              $resource['plugin_resources_contracttypes_id']);
-            $tmp['##resource.users##']           = Html::clean(getUserName($resource['users_id']));
-            $tmp['##resource.userssale##']       = Html::clean(getUserName($resource['users_id_sales']));
-            $tmp['##resource.usersrecipient##']  = Html::clean(getUserName($resource['users_id_recipient']));
+            $tmp['##resource.users##']           = Html::clean($dbu->getUserName($resource['users_id']));
+            $tmp['##resource.userssale##']       = Html::clean($dbu->getUserName($resource['users_id_sales']));
+            $tmp['##resource.usersrecipient##']  = Html::clean($dbu->getUserName($resource['users_id_recipient']));
             $tmp['##resource.datedeclaration##'] = Html::convDateTime($resource['date_declaration']);
             $tmp['##resource.datebegin##']       = Html::convDateTime($resource['date_begin']);
             $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
@@ -372,7 +412,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                     $resource['locations_id']);
             $comment                                    = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource['comment']));
             $tmp['##resource.comment##']                = Html::clean($comment);
-            $tmp['##resource.usersleaving##']           = Html::clean(getUserName($resource['users_id_recipient_leaving']));
+            $tmp['##resource.usersleaving##']           = Html::clean($dbu->getUserName($resource['users_id_recipient_leaving']));
             $tmp['##resource.leaving##']                = Dropdown::getYesNo($resource['is_leaving']);
             $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
             $tmp['##resource.leavingreason##']          = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
@@ -429,9 +469,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.firstname##']       = $checklist['resource_firstname'];
             $tmp['##checklist.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
                                                                               $checklist['plugin_resources_contracttypes_id']);
-            $tmp['##checklist.users##']           = Html::clean(getUserName($checklist['users_id']));
-            $tmp['##checklist.userssale##']       = Html::clean(getUserName($checklist['users_id_sales']));
-            $tmp['##checklist.usersrecipient##']  = Html::clean(getUserName($checklist['users_id_recipient']));
+            $tmp['##checklist.users##']           = Html::clean($dbu->getUserName($checklist['users_id']));
+            $tmp['##checklist.userssale##']       = Html::clean($dbu->getUserName($checklist['users_id_sales']));
+            $tmp['##checklist.usersrecipient##']  = Html::clean($dbu->getUserName($checklist['users_id_recipient']));
             $tmp['##checklist.datedeclaration##'] = Html::convDateTime($checklist['date_declaration']);
             $tmp['##checklist.datebegin##']       = Html::convDateTime($checklist['date_begin']);
             $tmp['##checklist.dateend##']         = Html::convDateTime($checklist['date_end']);
@@ -451,7 +491,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                      $checklist['locations_id']);
             $comment                                     = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $checklist['comment']));
             $tmp['##checklist.comment##']                = Html::clean($comment);
-            $tmp['##checklist.usersleaving##']           = Html::clean(getUserName($checklist['users_id_recipient_leaving']));
+            $tmp['##checklist.usersleaving##']           = Html::clean($dbu->getUserName($checklist['users_id_recipient_leaving']));
             $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime($checklist['date_declaration_leaving']);
             $tmp['##checklist.leaving##']                = Dropdown::getYesNo($checklist['is_leaving']);
             //            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
@@ -535,13 +575,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                              $this->obj->getField('plugin_resources_resourcestates_id'));
 
          $this->data['##lang.resource.users##'] = __('Resource manager', 'resources');
-         $this->data['##resource.users##']      = Html::clean(getUserName($this->obj->getField("users_id")));
+         $this->data['##resource.users##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id")));
 
          $this->data['##lang.resource.userssale##'] = __('Sales manager', 'resources');
-         $this->data['##resource.userssale##']      = Html::clean(getUserName($this->obj->getField("users_id_sales")));
+         $this->data['##resource.userssale##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_sales")));
 
          $this->data['##lang.resource.usersrecipient##'] = __('Requester');
-         $this->data['##resource.usersrecipient##']      = Html::clean(getUserName($this->obj->getField("users_id_recipient")));
+         $this->data['##resource.usersrecipient##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient")));
 
          $this->data['##lang.resource.datedeclaration##'] = __('Request date');
          $this->data['##resource.datedeclaration##']      = Html::convDate($this->obj->getField('date_declaration'));
@@ -567,7 +607,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                     $this->obj->getField('plugin_resources_leavingreasons_id'));
 
          $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
-         $this->data['##resource.usersleaving##']      = Html::clean(getUserName($this->obj->getField('users_id_recipient_leaving')));
+         $this->data['##resource.usersleaving##']      = Html::clean($dbu->getUserName($this->obj->getField('users_id_recipient_leaving')));
 
          $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
          $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
@@ -660,11 +700,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.status##'] = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
                                                                     $resource['plugin_resources_resourcestates_id']);
 
-            $tmp['##resource.users##'] = Html::clean(getUserName($resource["users_id"]));
+            $tmp['##resource.users##'] = Html::clean($dbu->getUserName($resource["users_id"]));
 
-            $tmp['##resource.userssale##'] = Html::clean(getUserName($resource["users_id_sales"]));
+            $tmp['##resource.userssale##'] = Html::clean($dbu->getUserName($resource["users_id_sales"]));
 
-            $tmp['##resource.usersrecipient##'] = Html::clean(getUserName($resource["users_id_recipient"]));
+            $tmp['##resource.usersrecipient##'] = Html::clean($dbu->getUserName($resource["users_id_recipient"]));
 
             $tmp['##resource.datedeclaration##'] = Html::convDate($resource['date_declaration']);
 
@@ -682,7 +722,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
                                                                            $resource['plugin_resources_leavingreasons_id']);
 
-            $tmp['##resource.usersleaving##'] = Html::clean(getUserName($resource['users_id_recipient_leaving']));
+            $tmp['##resource.usersleaving##'] = Html::clean($dbu->getUserName($resource['users_id_recipient_leaving']));
 
             $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
 
@@ -700,7 +740,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $events = $this->getAllEvents();
 
          $this->data['##lang.resource.title##']  = $events[$event];
-         $this->data['##resource.action_user##'] = getUserName(Session::getLoginUserID());
+         $this->data['##resource.action_user##'] = $dbu->getUserName(Session::getLoginUserID());
          $this->data['##lang.resource.entity##'] = __('Entity');
          $this->data['##resource.entity##']      =
             Dropdown::getDropdownName('glpi_entities',
@@ -729,13 +769,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->data['##resource.quota##']      = $this->obj->getField('quota');
 
          $this->data['##lang.resource.users##'] = __('Resource manager', 'resources');
-         $this->data['##resource.users##']      = Html::clean(getUserName($this->obj->getField("users_id")));
+         $this->data['##resource.users##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id")));
 
          $this->data['##lang.resource.userssale##'] = __('Sales manager', 'resources');
-         $this->data['##resource.userssale##']      = Html::clean(getUserName($this->obj->getField("users_id_sales")));
+         $this->data['##resource.userssale##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_sales")));
 
          $this->data['##lang.resource.usersrecipient##'] = __('Requester');
-         $this->data['##resource.usersrecipient##']      = Html::clean(getUserName($this->obj->getField("users_id_recipient")));
+         $this->data['##resource.usersrecipient##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient")));
 
          $this->data['##lang.resource.datedeclaration##'] = __('Request date');
          $this->data['##resource.datedeclaration##']      = Html::convDate($this->obj->getField('date_declaration'));
@@ -771,7 +811,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->data['##resource.comment##']      = Html::clean($comment);
 
          $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
-         $this->data['##resource.usersleaving##']      = Html::clean(getUserName($this->obj->getField("users_id_recipient_leaving")));
+         $this->data['##resource.usersleaving##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient_leaving")));
 
          $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
          $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
@@ -878,7 +918,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $PluginResourcesReportConfig = new PluginResourcesReportConfig();
             $PluginResourcesReportConfig->getFromDB($options['reports_id']);
 
-            $this->data['##lang.resource.informations##'] = __('Information', 'Informations', 2);
+            $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
             $information                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesReportConfig->fields['information']));
             $this->data['##resource.informations##']      = Html::clean(nl2br($information));
 
@@ -932,7 +972,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
 
             $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
-            $this->data['##resource.openby##']      = Html::clean(getUserName(Session::getLoginUserID()));
+            $this->data['##resource.openby##']      = Html::clean($dbu->getUserName(Session::getLoginUserID()));
 
             if (isset($options['oldvalues']) && !empty($options['oldvalues'])) {
                $this->target_object->oldvalues = $options['oldvalues'];
@@ -966,7 +1006,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
 
             $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
-            $this->data['##resource.openby##']      = Html::clean(getUserName(Session::getLoginUserID()));
+            $this->data['##resource.openby##']      = Html::clean($dbu->getUserName(Session::getLoginUserID()));
 
             if (isset($options['oldvalues']) && !empty($options['oldvalues'])) {
                $this->target_object->oldvalues = $options['oldvalues'];
@@ -1013,7 +1053,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id'])) {
                   $tmp['##update.users##'] = "---";
                } else {
-                  $tmp['##update.users##'] = Html::clean(getUserName($this->target_object->oldvalues['users_id']));
+                  $tmp['##update.users##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id']));
                }
             }
 
@@ -1021,7 +1061,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_sales'])) {
                   $tmp['##update.userssale##'] = "---";
                } else {
-                  $tmp['##update.userssale##'] = Html::clean(getUserName($this->target_object->oldvalues['users_id_sales']));
+                  $tmp['##update.userssale##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_sales']));
                }
             }
 
@@ -1029,7 +1069,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_recipient'])) {
                   $tmp['##update.usersrecipient##'] = "---";
                } else {
-                  $tmp['##update.usersrecipient##'] = Html::clean(getUserName($this->target_object->oldvalues['users_id_recipient']));
+                  $tmp['##update.usersrecipient##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_recipient']));
                }
             }
 
@@ -1141,7 +1181,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_recipient_leaving'])) {
                   $tmp['##update.usersleaving##'] = "---";
                } else {
-                  $tmp['##update.usersleaving##'] = Html::clean(getUserName($this->target_object->oldvalues['users_id_recipient_leaving']));
+                  $tmp['##update.usersleaving##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_recipient_leaving']));
                }
             }
 
@@ -1228,7 +1268,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.name##']   = $task['name'];
             $tmp['##task.type##']   = Dropdown::getDropdownName('glpi_plugin_resources_tasktypes',
                                                                 $task['plugin_resources_tasktypes_id']);
-            $tmp['##task.users##']  = Html::clean(getUserName($task['users_id']));
+            $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
@@ -1254,6 +1294,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @return array|void
+    */
    function getTags() {
 
       $tags = ['resource.id'                => 'ID',
@@ -1355,6 +1398,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resources'";
@@ -1374,7 +1418,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1396,7 +1440,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1434,7 +1478,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##resource.action## : ##resource.entity##';
@@ -1484,7 +1528,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1523,7 +1567,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##resource.action## : ##resource.entity##';
@@ -1567,7 +1611,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1608,7 +1652,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##checklist.action## : ##checklist.entity##';
@@ -1669,7 +1713,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1710,7 +1754,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1750,7 +1794,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1775,6 +1819,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id`
                        FROM `glpi_notificationtemplates`
@@ -1798,7 +1843,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1841,7 +1886,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1882,7 +1927,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1922,7 +1967,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1947,6 +1992,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id`
                        FROM `glpi_notificationtemplates`
@@ -1968,7 +2014,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -2024,7 +2070,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2050,6 +2096,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id`
                        FROM `glpi_notificationtemplates`
@@ -2072,7 +2119,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.transfertitle## -  ##resource.firstname## ##resource.name##';
@@ -2089,7 +2136,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2114,6 +2161,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id`
                        FROM `glpi_notificationtemplates`
@@ -2136,7 +2184,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.commercial.title##';
@@ -2199,7 +2247,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2224,6 +2272,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
       global $DB;
 
       $template = new NotificationTemplate();
+      $dbu      = new DbUtils();
 
       $query_id = "SELECT `id`
                        FROM `glpi_notificationtemplates`
@@ -2246,7 +2295,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -2284,7 +2333,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2317,6 +2366,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    }
 
 
+   /**
+    * @return string
+    */
    static function getContentTextResource() {
       return '##lang.resource.url##  : ##resource.url##
 
@@ -2367,6 +2419,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    ##ENDIFtask.realtime## ----------##ENDFOREACHtasks## ';
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResource() {
       return "&lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
                         &lt;strong&gt;##lang.resource.url##
@@ -2505,6 +2560,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                         &lt;/span&gt;##ENDIFtask.realtime##&lt;br /&gt;----------##ENDFOREACHtasks##&lt;/p&gt;";
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceReport() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.creationtitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
@@ -2575,6 +2633,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceResting() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.restingtitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
@@ -2667,6 +2728,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 &lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;';
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceHoliday() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.holidaytitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;

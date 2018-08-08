@@ -75,7 +75,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       echo "</div>";
    }
 
-   Search::show("PluginResourcesResource", $_GET);
+   Search::show("PluginResourcesResource");
 
 } else {
    Html::displayRightError();

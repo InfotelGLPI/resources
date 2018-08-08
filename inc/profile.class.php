@@ -31,10 +31,19 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesProfile
+ */
 class PluginResourcesProfile extends Profile {
 
    static $rightname = "profile";
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
@@ -43,6 +52,13 @@ class PluginResourcesProfile extends Profile {
       return '';
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
@@ -67,6 +83,9 @@ class PluginResourcesProfile extends Profile {
       return true;
    }
 
+   /**
+    * @param $profiles_id
+    */
    static function createFirstAccess($profiles_id) {
       self::addDefaultProfileInfos($profiles_id,
                                    ['plugin_resources'                 => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
@@ -109,6 +128,13 @@ class PluginResourcesProfile extends Profile {
       }
    }
 
+   /**
+    * @param int  $profiles_id
+    * @param bool $openform
+    * @param bool $closeform
+    *
+    * @return bool|void
+    */
    function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
       echo "<div class='firstbloc'>";
@@ -170,6 +196,12 @@ class PluginResourcesProfile extends Profile {
 
    }
 
+   /**
+    * @param bool  $all
+    * @param array $types
+    *
+    * @return array
+    */
    static function getAllRights($all = true, $types = []) {
 
       $rights = [

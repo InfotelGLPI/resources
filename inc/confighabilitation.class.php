@@ -146,7 +146,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             echo "<div align='center'><table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th colspan='2'>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
-            echo __('Action', 'Actions', 1) . '&nbsp;';
+            echo _n('Action', 'Actions', 1) . '&nbsp;';
             Dropdown::showFromArray('action',
                [self::ACTION_ADD => self::getNameAction(self::ACTION_ADD),
                      self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)],

@@ -31,18 +31,33 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTask_Item
+ */
 class PluginResourcesTask_Item extends CommonDBTM {
 
    static $rightname = 'plugin_resources_task';
 
+   /**
+    * @return bool|\booleen
+    */
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * @return bool|\booleen
+    */
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return array|string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if (!$withtemplate) {
@@ -56,6 +71,13 @@ class PluginResourcesTask_Item extends CommonDBTM {
       return '';
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       $self = new self();
@@ -65,6 +87,11 @@ class PluginResourcesTask_Item extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginResourcesTask $item
+    *
+    * @return int
+    */
    static function countForResourceTask(PluginResourcesTask $item) {
       $dbu   = new DbUtils();
       $types = implode("','", PluginResourcesResource::getTypes());
@@ -75,6 +102,13 @@ class PluginResourcesTask_Item extends CommonDBTM {
                                    AND `plugin_resources_tasks_id` = '" . $item->getID() . "'");
    }
 
+   /**
+    * @param $plugin_resources_tasks_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype) {
       global $DB;
 
@@ -96,6 +130,9 @@ class PluginResourcesTask_Item extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param $values
+    */
    function addTaskItem($values) {
 
       $args = explode(",", $values['item_item']);
@@ -106,6 +143,13 @@ class PluginResourcesTask_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $plugin_resources_tasks_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function deleteItemByTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype) {
 
       if ($this->getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)) {
@@ -115,6 +159,10 @@ class PluginResourcesTask_Item extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param        $instID
+    * @param string $withtemplate
+    */
    function showItemFromPlugin($instID, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
@@ -150,6 +198,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
          }
          echo "</tr>";
          $used = [];
+         $dbu = new DbUtils();
          if ($number != "0") {
 
             for ($i = 0; $i < $number; $i++) {
@@ -160,7 +209,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                }
                $item = new $type();
                if ($item->canView()) {
-                  $table = getTableForItemType($type);
+                  $table = $dbu->getTableForItemType($type);
                   $query = "SELECT `".$table."`.*, `".$this->getTable()."`.`id` as items_id 
                         FROM `".$this->getTable()."` 
                         INNER JOIN `".$table."` ON (`".$table."`.`id` = `".$this->getTable()."`.`items_id`) 
@@ -181,7 +230,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         }
                         $itemname = $data["name"];
                         if ($type == 'User') {
-                           $itemname = getUserName($itemID);
+                           $itemname = $dbu->getUserName($itemID);
                         }
 
                         $link = Toolbox::getItemTypeFormURL($type);
