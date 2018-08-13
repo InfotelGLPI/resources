@@ -318,7 +318,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td>" . PluginBadgesBadge::getTypeName(1) . "</td>";
 
-      $condition = "`plugin_resources_resources_id`= '" . $plugin_resources_resources_id . "' AND `itemtype` = 'User'";
+      $condition = ["plugin_resources_resources_id" => $plugin_resources_resources_id,
+                    "itemtype"                      => 'User'];
       $dbu       = new DbUtils();
       $infos     = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       $users     = [];

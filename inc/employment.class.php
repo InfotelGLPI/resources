@@ -104,7 +104,7 @@ class PluginResourcesEmployment extends CommonDBTM {
             $dbu = new DbUtils();
             return self::createTabEntry(self::getTypeName(2),
                                         $dbu->countElementsInTable($this->getTable(),
-                                                             "`plugin_resources_resources_id` = '" . $item->getID() . "'"));
+                                                             ["plugin_resources_resources_id" => $item->getID()]));
          }
          return self::getTypeName(2);
 
@@ -523,17 +523,15 @@ class PluginResourcesEmployment extends CommonDBTM {
                            OR `begin_date` IS NULL)
                            AND (`end_date` > '" . $data['date_end'] . "'
                                  OR `end_date` IS NULL)) ";
-            $dbu         = new DbUtils();
-            $employments = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
-            if (!empty($employments)) {
-               foreach ($employments as $employment) {
-                  $values = ['plugin_resources_employmentstates_id' => $default,
-                                  'end_date'                             => $data['date_end'],
-                                  'id'                                   => $employment['id']
-                  ];
-                  $PluginResourcesEmployment->update($values);
-               }
+            $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
+            while ($employment = $iterator->next()) {
+               $values = ['plugin_resources_employmentstates_id' => $default,
+                          'end_date'                             => $data['date_end'],
+                          'id'                                   => $employment['id']
+               ];
+               $PluginResourcesEmployment->update($values);
             }
+
             $resource = new PluginResourcesResource();
             $resource->getFromDB($data["id"]);
             $resource->update(['is_leaving'                 => 1,

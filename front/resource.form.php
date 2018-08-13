@@ -298,7 +298,8 @@ else if (isset($_POST["add_checklist"])) {
    Html::back();
 
 } else if (isset($_POST["report"])) {
-   $restrict   = "`itemtype` = 'User' AND `plugin_resources_resources_id` = '" . $_POST["id"] . "'";
+   $restrict = ["itemtype"                      => 'User',
+                "plugin_resources_resources_id" => $_POST["id"]];
    $dbu        = new DbUtils();
    $linkeduser = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 

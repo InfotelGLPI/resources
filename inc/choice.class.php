@@ -141,7 +141,7 @@ class PluginResourcesChoice extends CommonDBTM {
     */
    static function countForResource(PluginResourcesResource $item) {
       $dbu      = new DbUtils();
-      $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "' ";
+      $restrict = ["plugin_resources_resources_id" => $item->getField('id')];
       $nb       = $dbu->countElementsInTable(['glpi_plugin_resources_choices'], $restrict);
 
       return $nb;
@@ -272,7 +272,7 @@ class PluginResourcesChoice extends CommonDBTM {
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
-      $newrestrict = "`plugin_resources_resources_id` = '$plugin_resources_resources_id'";
+      $newrestrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
 
       $dbu        = new DbUtils();
       $newchoices = $dbu->getAllDataFromTable($this->getTable(), $newrestrict);
@@ -312,7 +312,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo __('Enter the computing needs of the resource', 'resources');
          echo "</h4></div></div>";
 
-         $restrict = "`plugin_resources_resources_id` = '$plugin_resources_resources_id' ";
+         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
          $choices  = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
          echo "<div class=\"bt-row\">";
@@ -530,7 +530,7 @@ class PluginResourcesChoice extends CommonDBTM {
    function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '') {
       global $CFG_GLPI;
 
-      $restrict = "`plugin_resources_resources_id` = '$plugin_resources_resources_id'";
+      $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
       $dbu      = new DbUtils();
       $choices  = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 

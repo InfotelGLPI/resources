@@ -193,7 +193,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
     */
    function addResourceChecklist($resource, $checklists_id, $checklist_type) {
 
-      $restrict = "`id` = '".$checklists_id."'";
+      $restrict = ["id" => $checklists_id];
       $dbu = new DbUtils();
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklistconfigs", $restrict);
 

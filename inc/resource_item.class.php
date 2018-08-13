@@ -153,14 +153,14 @@ class PluginResourcesResource_Item extends CommonDBTM {
     */
    static function countForResource(PluginResourcesResource $item) {
 
-      $types = implode("','", PluginResourcesResource::getTypes());
-      if (empty($types)) {
+      $types = $item->getTypes();
+      if (count($types) == 0) {
          return 0;
       }
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_resources_resources_items',
-                                  "`itemtype` IN ('$types')
-                                   AND `plugin_resources_resources_id` = '" . $item->getID() . "'");
+                                  ["itemtype"                      => $types,
+                                   "plugin_resources_resources_id" => $item->getID()]);
    }
 
 
@@ -172,8 +172,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_resources_resources_items',
-                                  "`itemtype`='" . $item->getType() . "'
-                                   AND `items_id` = '" . $item->getID() . "'");
+                                  ["itemtype" => $item->getType(),
+                                   "items_id" => $item->getID()]);
    }
 
    /**
@@ -309,8 +309,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
       $id = 0;
       if ($itemtype == "PluginResourcesResource") {
-         $restrict  = "`itemtype` = 'User' 
-                     AND `plugin_resources_resources_id` = '" . $values["id"] . "'";
+         $restrict = ["itemtype"                      => 'User',
+                      "plugin_resources_resources_id" => $values["id"]];
          $dbu       = new DbUtils();
          $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -349,15 +349,14 @@ class PluginResourcesResource_Item extends CommonDBTM {
       if ($plugin->isActivated("badges")) {
 
          //search is the user have a linked badge
-         $restrict = "`itemtype` = 'User' 
-                     AND `plugin_resources_resources_id` = '" . $ID . "'";
+         $restrict = ["itemtype"                      => 'User',
+                      "plugin_resources_resources_id" => $ID];
          $dbu      = new DbUtils();
-
          $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
          if (!empty($resources)) {
             foreach ($resources as $resource) {
-               $restrictbadge = "`users_id` = '" . $resource["items_id"] . "'";
+               $restrictbadge = ["users_id" => $resource["items_id"]];
                $badges        = $dbu->getAllDataFromTable("glpi_plugin_badges_badges", $restrictbadge);
                //if the user have a linked badge, send email for his badge
                if (!empty($badges)) {
@@ -379,7 +378,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
    function dropdownItems($ID, $used = []) {
       global $DB;
 
-      $restrict  = "`plugin_resources_resources_id` = '$ID'";
+      $restrict  = ["plugin_resources_resources_id" => $ID];
       $dbu       = new DbUtils();
       $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 

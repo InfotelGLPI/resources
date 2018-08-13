@@ -93,13 +93,16 @@ class PluginResourcesTask_Item extends CommonDBTM {
     * @return int
     */
    static function countForResourceTask(PluginResourcesTask $item) {
-      $dbu   = new DbUtils();
-      $types = implode("','", PluginResourcesResource::getTypes());
-      if (empty($types)) {
+
+      $types = PluginResourcesResource::getTypes();
+      if (count($types) == 0) {
          return 0;
       }
-      return $dbu->countElementsInTable('glpi_plugin_resources_tasks_items', "`itemtype` IN ('$types')
-                                   AND `plugin_resources_tasks_id` = '" . $item->getID() . "'");
+      $dbu   = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_resources_tasks_items',
+                                        ["plugin_resources_tasks_id" => $item->getID(),
+                                         "itemtype"                      => $types
+                                        ]);
    }
 
    /**

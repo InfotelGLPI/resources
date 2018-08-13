@@ -59,6 +59,10 @@ if (isset($_GET['used'])) {
    }
 }
 
+if (!isset($_GET['searchText'])) {
+  $_GET['searchText'] = '';
+}
+
 $plugin_resources_contracttypes_id=0;
 if (isset($_GET["plugin_resources_contracttypes_id"])&&
    $_GET["plugin_resources_contracttypes_id"]>0) {

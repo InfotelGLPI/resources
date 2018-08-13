@@ -271,7 +271,7 @@ function plugin_resources_install() {
 
    if ($update80) {
 
-      $restrict = "`plugin_resources_resources_id` ='-1'";
+      $restrict = ["plugin_resources_resources_id" => -1];
 
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
       $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
@@ -296,15 +296,15 @@ function plugin_resources_install() {
 
          $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             ADD `actiontime` INT( 11 ) NOT NULL DEFAULT 0 ;";
-         $DB->queryOrDie($query, $this->version." 0.80 Add actiontime in glpi_plugin_resources_tasks");
+         $DB->queryOrDie($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
 
          $query = "UPDATE `glpi_plugin_resources_tasks`
                    SET `actiontime` = ROUND(realtime * 3600)";
-         $DB->queryOrDie($query, $this->version." 0.80 Compute actiontime value in glpi_plugin_resources_tasks");
+         $DB->queryOrDie($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
 
          $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             DROP `realtime` ;";
-         $DB->queryOrDie($query, $this->version." 0.80 DROP realtime in glpi_plugin_resources_tasks");
+         $DB->queryOrDie($query, "0.80 DROP realtime in glpi_plugin_resources_tasks");
       }
 
       // ADD plannings for tasks
@@ -323,7 +323,7 @@ function plugin_resources_install() {
 
       $query = "ALTER TABLE `glpi_plugin_resources_tasks`
                DROP `date_begin`, DROP `date_end` ;";
-      $DB->queryOrDie($query, $this->version." 0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
+      $DB->queryOrDie($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
 
       // ADD tasks
       $PluginResourcesResource = new PluginResourcesResource();
@@ -341,7 +341,7 @@ function plugin_resources_install() {
    }
 
    if ($install || $update80) {
-      $restrict = "`itemtype` = 'PluginResourcesResource'";
+      $restrict = ["itemtype" => 'PluginResourcesResource'];
       $unicities = $dbu->getAllDataFromTable("glpi_fieldunicities", $restrict);
       if (empty($unicities)) {
          $query = "INSERT INTO `glpi_fieldunicities`
@@ -364,8 +364,8 @@ function plugin_resources_install() {
       if (!empty($number)) {
          while ($data = $DB->fetch_assoc($result)) {
 
-            $restrictaffected = "`itemtype` = '".$data['raw']["ITEMtype"]."'
-               AND `comment` = '".addslashes($data["comment"])."'";
+            $restrictaffected = ["itemtype" => $data['raw']["ITEMtype"],
+                                 "comment"  => addslashes($data["comment"])];
             $affected = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
 
             if (!empty($affected)) {
@@ -456,8 +456,8 @@ function plugin_resources_install() {
       if (!empty($number)) {
          while ($data = $DB->fetch_assoc($result)) {
 
-            $restrict = "`items_id` = '".$data["id"]."'
-               AND `itemtype` = 'User'";
+            $restrict = ["items_id" => $data["id"],
+                         "itemtype" => 'User'];
             $links = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
 
             if (!empty($links)) {
@@ -1369,8 +1369,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
                return $out;
                break;
             case "glpi_plugin_resources_resources_items.items_id" :
-               $restrict = "`plugin_resources_resources_id` = '".$data['id']."'
-                           ORDER BY `itemtype`, `items_id`";
+               $restrict = ["plugin_resources_resources_id" => $data['id']] +
+                           ["ORDER" => "`itemtype`, `items_id`"];
                $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                $out = '';
                if (!empty($items)) {
@@ -1431,8 +1431,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
 
                break;
             case "glpi_plugin_resources_tasks_items.items_id" :
-               $restrict = "`plugin_resources_tasks_id` = '".$data['id']."'
-                           ORDER BY `itemtype`, `items_id`";
+               $restrict = ["plugin_resources_tasks_id" => $data['id']] +
+                           ["ORDER" => "`itemtype`, `items_id`"];
                $items = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks_items", $restrict);
                $out = '';
                if (!empty($items)) {
@@ -1597,8 +1597,8 @@ function plugin_pre_item_update_resources($item) {
 
    if (Session::getCurrentInterface()
        &&!isset($item->input["_UpdateFromResource_"])) {
-      $restrict = "`itemtype` = '".get_class($item)."'
-               AND `items_id` = '".$item->getField('id')."'";
+      $restrict = ["itemtype" => get_class($item),
+                   "items_id" => $item->getField('id')];
       $dbu = new DbUtils();
       $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
       if (!empty($items)) {

@@ -221,9 +221,8 @@ class PluginResourcesContractType extends CommonDropdown {
     */
    function dropdownContractType($name, $value = 0) {
       $dbu      = new DbUtils();
-      $restrict = " 1 = 1 ";
-      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
-      $restrict .= " ORDER BY `name`";
+      $restrict = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
+                  ["ORDER" => "`name`"];
       $types = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
       $option[0] = __('Without contract', 'resources');

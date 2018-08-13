@@ -220,7 +220,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       $employee_spotted = false;
       $resource         = new PluginResourcesResource();
 
-      $restrict  = "`plugin_resources_resources_id` = '$plugin_resources_resources_id'";
+      $restrict  = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
       $dbu       = new DbUtils();
       $employees = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -377,7 +377,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
-      $restrict  = "`plugin_resources_resources_id` = '$plugin_resources_resources_id'";
+      $restrict  = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
       $dbu       = new DbUtils();
       $employees = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -487,7 +487,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       $resource = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
 
-      $restrict  = "`plugin_resources_resources_id` = '$plugin_resources_resources_id'";
+      $restrict  = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
       $dbu       = new DbUtils();
       $employees = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 

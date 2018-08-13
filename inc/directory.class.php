@@ -1005,7 +1005,7 @@ class PluginResourcesDirectory extends CommonDBTM {
     **/
    function getSpecificMassiveActions($checkitem = null) {
 
-      $actions = parent::getSpecificMassiveActions($checkitem);
+      $actions = [];
       if (Session::getCurrentInterface() == "central") {
          $actions['PluginResourcesDirectory'.MassiveAction::CLASS_ACTION_SEPARATOR.'Send'] = __('Send a notification');
       }

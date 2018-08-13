@@ -148,7 +148,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
     */
    static function checkIfReportsExist($ID) {
 
-      $restrict = "`plugin_resources_resources_id` = '" . $ID . "'";
+      $restrict = ["plugin_resources_resources_id" => $ID];
       $dbu      = new DbUtils();
       $reports  = $dbu->getAllDataFromTable("glpi_plugin_resources_reportconfigs", $restrict);
 

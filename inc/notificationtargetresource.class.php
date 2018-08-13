@@ -330,7 +330,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
-            $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
+            $restrict               = ["plugin_resources_tasks_id" => $task['id']];
             $plans                  = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 
             if (!empty($plans)) {
@@ -853,8 +853,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $this->data['##resource.login##'] = "";
             $this->data['##resource.email##'] = "";
 
-            $restrict = "`itemtype` = 'User' 
-                        AND `plugin_resources_resources_id` = '" . $this->obj->getField("id") . "'";
+            $restrict = ["itemtype" => 'User',
+                        "plugin_resources_resources_id" => $this->obj->getField("id")];
             $items    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
             if (!empty($items)) {
                foreach ($items as $item) {
@@ -893,8 +893,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $this->data['##resource.login##'] = "";
             $this->data['##resource.email##'] = "";
 
-            $restrict = "`itemtype` = 'User' 
-                        AND `plugin_resources_resources_id` = '" . $this->obj->getField("id") . "'";
+            $restrict = ["itemtype"                      => 'User',
+                         "plugin_resources_resources_id" => $this->obj->getField("id")];
             $items    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
             if (!empty($items)) {
                foreach ($items as $item) {
@@ -1239,14 +1239,15 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          }
 
          //task infos
-         $restrict = "`plugin_resources_resources_id`='" . $this->obj->getField('id') . "' AND `is_deleted` = 0";
+         $restrict = ["plugin_resources_resources_id" => $this->obj->getField('id'),
+                      "is_deleted"                    => 0];
 
          if (isset($options['tasks_id']) && is_array($options['tasks_id'])) {
-            $restrict .= " AND `glpi_plugin_resources_tasks`.`id` IN (" . implode(",", $options['tasks_id']) . ")";
+            $restrict += ["id" =>  $options['tasks_id']];
          } else if (isset($options['tasks_id']) && $options['tasks_id']) {
-            $restrict .= " AND `glpi_plugin_resources_tasks`.`id` = '" . $options['tasks_id'] . "'";
+            $restrict += ["id" => $options['tasks_id']];
          }
-         $restrict .= " ORDER BY `name` DESC";
+         $restrict += ["ORDER" => "name DESC"];
          $tasks    = $dbu->getAllDataFromTable('glpi_plugin_resources_tasks', $restrict);
 
          $this->data['##lang.task.title##'] = __('Associated tasks', 'resources');
@@ -1271,7 +1272,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
-            $restrict               = " `plugin_resources_tasks_id` = '" . $task['id'] . "' ";
+            $restrict               = ["plugin_resources_tasks_id" => $task['id']];
             $plans                  = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 
             if (!empty($plans)) {
@@ -1418,7 +1419,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1440,7 +1442,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1478,7 +1482,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##resource.action## : ##resource.entity##';
@@ -1528,7 +1533,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event" => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1567,7 +1574,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##resource.action## : ##resource.entity##';
@@ -1611,7 +1619,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1652,7 +1662,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##checklist.action## : ##checklist.entity##';
@@ -1713,7 +1724,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1754,7 +1767,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1794,7 +1808,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                            "event" => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1843,7 +1859,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1886,7 +1903,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -1927,7 +1946,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -1967,7 +1987,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2014,7 +2036,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -2070,7 +2093,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2119,7 +2144,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.transfertitle## -  ##resource.firstname## ##resource.name##';
@@ -2136,7 +2162,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2184,7 +2212,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.commercial.title##';
@@ -2247,7 +2276,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event"    => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,
@@ -2295,7 +2326,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
       if ($templates_id) {
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##lang.resource.title## -  ##resource.firstname## ##resource.name##';
@@ -2333,7 +2365,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
          $notification         = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginResourcesResource' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginResourcesResource',
+                                             "event" => $name])) {
                $tmp             = [
                   'name'         => $label,
                   'entities_id'  => 0,

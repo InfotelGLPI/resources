@@ -30,7 +30,7 @@
 $AJAX_INCLUDE = 1;
 
 include ('../../../inc/includes.php');
-header("Content-Type: text/html; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
@@ -45,37 +45,35 @@ if (isset($_GET['node'])) {
    if ($_GET['node'] == -1) {
       $entity   = $_SESSION['glpiactive_entity'];
       $dbu      = new DbUtils();
-      $where    = " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0 ";
-      $where    .= $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_resources_resources");
-      $restrict = "`id` IN (
-                  SELECT DISTINCT `plugin_resources_contracttypes_id`
-                  FROM `glpi_plugin_resources_resources`
-                  $where)
-                  GROUP BY `name`
-                  ORDER BY `name`";
-      $dbu = new DbUtils();
-      $contracts = $dbu->getAllDataFromTable("glpi_plugin_resources_contracttypes", $restrict);
 
-      if (!empty($contracts)) {
-         foreach ($contracts as $contract) {
-            $path                         = [];
-            $ID                           = $contract['id'];
+      $iterator = $DB->request([
+         'SELECT DISTINCT' => 'plugin_resources_contracttypes_id',
+         'FROM'            => 'glpi_plugin_resources_contracttypes',
+            'INNER JOIN' => [
+               'glpi_plugin_resources_resources' => [
+                  'FKEY' => [
+                     'glpi_plugin_resources_contracttypes' => 'id',
+                     'glpi_plugin_resources_resources'       => 'plugin_resources_contracttypes_id'
+                  ]
+               ]
+            ],
+            'WHERE'     => [
+              'is_deleted' => 0
+            ],
+         'ORDER'  => 'glpi_plugin_resources_contracttypes.name'
+         ]
+      );
 
-            $path['data']['title']        = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID);
-            $path['attr']['id']           = 'ent'.$ID;
-            //            if ($entity == 0) {
-            //               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=NULL&field[1]=80";
-            //            } else {
-            //               $link = "&link[1]=AND&searchtype[1]=contains&contains[1]=".Dropdown::getDropdownName("glpi_entities", $entity)."&field[1]=80";
-            //            }
-            $path['data']['attr']['href'] = $CFG_GLPI["root_doc"]."/plugins/resources/front/$target?criteria[0][field]=3&criteria[0][searchtype]=equals&criteria[0][value]=$ID&search=Rechercher&itemtype=PluginResourcesResource&start=0";
+      while ($contract = $iterator->next()) {
+         $ID   = $contract['plugin_resources_contracttypes_id'];
 
-            $nodes[] = $path;
-         }
+         $nodes[] = [
+            'id'   => $ID,
+            'text' => Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID),
+            'a_attr' => ["onclick" => 'window.location.replace("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
+                                      '?criteria[0][field]=12&criteria[0][searchtype]=equals&criteria[0][value]=' . $ID. '&search=Rechercher&itemtype=PluginResourcesResource&start=0")']
+         ];
       }
    }
-
    echo json_encode($nodes);
 }
-
-

@@ -205,10 +205,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab = parent::rawSearchOptions();
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '1',
-            'searchtype'=> 'contains'
-         ];
+         $tab[1] += ['searchtype'=> 'contains'];
       }
       $tab[] = [
          'id'       => '2',
@@ -218,10 +215,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '2',
-            'searchtype'=> 'contains'
-         ];
+         $tab[2] += ['searchtype'=> 'contains'];
       }
       $tab[] = [
          'id'       => '12',
@@ -241,10 +235,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '4',
-            'searchtype'=> 'contains'
-         ];
+         $tab[4] += ['searchtype'=> 'contains'];
       }
 
       $tab[] = [
@@ -301,10 +292,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '10',
-            'searchtype'=> 'contains'
-         ];
+         $tab[10] += ['searchtype' => 'contains'];
       }
       $tab[] = [
          'id'       => '11',
@@ -333,10 +321,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '14',
-            'searchtype'    => 'contains'
-         ];
+         $tab[2] += ['searchtype'    => 'contains'];
       }
 
       if (Session::getCurrentInterface() != 'central') {
@@ -442,10 +427,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (Session::getCurrentInterface() != 'central') {
-         $tab[] = [
-            'id'       => '27',
-            'searchtype'    => 'contains'
-            ];
+         $tab[27] += ['searchtype'    => 'contains'];
       }
       $tab[] = [
          'id'       => '28',
@@ -467,12 +449,12 @@ class PluginResourcesResource extends CommonDBTM {
             'massiveaction'=>true
          ];
          $tab[] = [
-            'id'       => '30',
-            'table'    => $this->getTable(),
-            'field'    => 'sensitize_security',
-            'name'     => __('Reading the security charter', 'resources'),
-            'datatype'=>'bool',
-            'massiveaction'=>true
+            'id'            => '30',
+            'table'         => $this->getTable(),
+            'field'         => 'sensitize_security',
+            'name'          => __('Reading the security charter', 'resources'),
+            'datatype'      => 'bool',
+            'massiveaction' => true
          ];
       }
 
@@ -543,6 +525,7 @@ class PluginResourcesResource extends CommonDBTM {
             'datatype'=>'dropdown'
          ];
       }
+
       return $tab;
    }
 
@@ -945,7 +928,7 @@ class PluginResourcesResource extends CommonDBTM {
     * @return nothing
     **/
    function post_updateItem($history = 1) {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       $PluginResourcesChecklist = new PluginResourcesChecklist();
       if (isset ($this->input["addchecklist"])
@@ -981,16 +964,14 @@ class PluginResourcesResource extends CommonDBTM {
                               OR `begin_date` IS NULL)
                               AND (`end_date` > '" . $this->input['date_end'] . "'
                                     OR `end_date` IS NULL)) ";
-            $dbu         = new DbUtils();
-            $employments = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
-            if (!empty($employments)) {
-               foreach ($employments as $employment) {
-                  $values = ['plugin_resources_employmentstates_id' => $default,
-                             'end_date'                             => $this->input['date_end'],
-                             'id'                                   => $employment['id']
-                  ];
-                  $PluginResourcesEmployment->update($values);
-               }
+
+            $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
+            while ($employment = $iterator->next()) {
+               $values = ['plugin_resources_employmentstates_id' => $default,
+                          'end_date'                             => $this->input['date_end'],
+                          'id'                                   => $employment['id']
+               ];
+               $PluginResourcesEmployment->update($values);
             }
          }
       }
@@ -1045,10 +1026,11 @@ class PluginResourcesResource extends CommonDBTM {
    function dropdownTemplate($name, $value = 0) {
       $dbu      = new DbUtils();
 
-      $restrict = "`is_template` = '1'";
-      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
-      $restrict .= " GROUP BY `template_name`
-                  ORDER BY `template_name`";
+      $restrict = ["is_template" => 1] +
+               $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
+                  ["ORDER" => "template_name"]+
+                  ["GROUPBY" => "template_name"];
+
       $dbu       = new DbUtils();
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -2901,9 +2883,9 @@ class PluginResourcesResource extends CommonDBTM {
    function listOfTemplates($target, $add = 0) {
       $dbu = new DbUtils();
 
-      $restrict = "`is_template` = 1";
-      $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $this->getTable(), '', '', $this->maybeRecursive());
-      $restrict .= " ORDER BY `name`";
+      $restrict = ["is_template" => 1] +
+                  $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive())+
+                  ["ORDER" => "name"];
 
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -3589,7 +3571,7 @@ class PluginResourcesResource extends CommonDBTM {
          //         unset($values);
 
          $PluginResourcesTask = new PluginResourcesTask();
-         $restrict            = "`plugin_resources_resources_id` = '" . $resources_id . "'";
+         $restrict            = ["plugin_resources_resources_id" => $resources_id];
          $tasks               = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
          if (!empty($tasks)) {
             foreach ($tasks as $task) {
@@ -3609,7 +3591,7 @@ class PluginResourcesResource extends CommonDBTM {
          unset($values);
 
          $PluginResourcesEmployment = new PluginResourcesEmployment();
-         $restrict                  = "`plugin_resources_resources_id` = '" . $resources_id . "'";
+         $restrict                  = ["plugin_resources_resources_id" => $resources_id];
          $employments               = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
          if (!empty($employments)) {
             foreach ($employments as $employment) {
@@ -3637,7 +3619,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $PluginResourcesEmployee = new PluginResourcesEmployee();
 
-         $restrict  = "`plugin_resources_resources_id` = '" . $resources_id . "'";
+         $restrict  = ["plugin_resources_resources_id" => $resources_id];
          $employees = $dbu->getAllDataFromTable("glpi_plugin_resources_employees", $restrict);
          if (!empty($employees)) {
             foreach ($employees as $employee) {
@@ -3677,7 +3659,8 @@ class PluginResourcesResource extends CommonDBTM {
             $checklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
 
             // Notification
-            $restrict = "`itemtype` = 'User' AND `plugin_resources_resources_id` = '" . $resources_id . "'";
+            $restrict = ["itemtype"                      => 'User',
+                         "plugin_resources_resources_id" => $resources_id];
 
             $data = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 
@@ -3923,105 +3906,48 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class='left' style='width:100%'>";
 
-      echo "<script type='javascript'>";
-      echo "var Tree_Category_Loader$rand = new Ext.tree.TreeLoader({
-         dataUrl:'" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php'
-      });";
+      $js = "   $(function() {
+                  $.getScript('{$CFG_GLPI["root_doc"]}/lib/jqueryplugins/jstree/jstree.min.js').done(function(data, textStatus, jqxhr) {
+                     $('#resource_tree_projectcategory$rand')
+                     // call `.jstree` with the options object
+                     .jstree({
+                        // the `plugins` array allows you to configure the active plugins on this instance
+                        'plugins' : ['search', 'qload', 'conditionalselect'],
+                        'search': {
+                           'case_insensitive': true,
+                           'show_only_matches': true,
+                           'ajax': {
+                              'type': 'POST',
+                              'url': '".$CFG_GLPI["root_doc"]."/plugins/resources/ajax/resourcetreetypes.php'
+                           }
+                        },
+                        'qload': {
+                           'prevLimit': 50,
+                           'nextLimit': 30,
+                           'moreText': '".__s('Load more entities...')."'
+                        },
+                        'core': {
+                           'themes': {
+                              'name': 'glpi'
+                           },
+                           'animation': 0,
+                           'data': {
+                              'url': function(node) {
+                                 return node.id === '#' ?
+                                    '".$CFG_GLPI["root_doc"]."/plugins/resources/ajax/resourcetreetypes.php?node=-1' :
+                                    '".$CFG_GLPI["root_doc"]."/plugins/resources/ajax/resourcetreetypes.php?node='+node.id;
+                              }
+                           }
+                        }
+                     });
 
-      echo "var Tree_Category$rand = new Ext.tree.TreePanel({
-         collapsible      : false,
-         animCollapse     : false,
-         border           : false,
-         id               : 'tree_projectcategory$rand',
-         el               : 'tree_projectcategory$rand',
-         autoScroll       : true,
-         animate          : false,
-         enableDD         : true,
-         containerScroll  : true,
-         height           : 320,
-         width            : 770,
-         loader           : Tree_Category_Loader$rand,
-         rootVisible     : false
-      });";
+                  });
+               });";
 
-      // SET the root node.
-      echo "var Tree_Category_Root$rand = new Ext.tree.AsyncTreeNode({
-         text     : '',
-         draggable   : false,
-         id    : '-1'                  // this IS the id of the startnode
-      });
-      Tree_Category$rand.setRootNode(Tree_Category_Root$rand);";
+      echo Html::scriptBlock($js);
 
-      // Render the tree.
-      echo "Tree_Category$rand.render();
-            Tree_Category_Root$rand.expand();";
+      echo "<div id='resource_tree_projectcategory$rand' ></div>";
 
-      echo "</script>";
-
-      echo "<div id='tree_projectcategory$rand' ></div>";
-      echo "<script type='text/javascript'>";
-      echo Html::jsGetElementbyID("tree_projectcategory$rand") . "
-              // call `.jstree` with the options object
-              .jstree({
-                  // the `plugins` array allows you to configure the active plugins on this instance
-                  'plugins' : ['themes','json_data', 'search'],
-                  'core' : {'load_open': true,
-                            'html_titles': true,
-                            'animation' : 0},
-                  'themes' : {
-                     'theme' : 'classic',
-                     'url'   : '" . $CFG_GLPI["root_doc"] . "/css/jstree/style.css'
-                  },
-                  'search' : {
-                     'case_insensitive' : true,
-                     'show_only_matches' : true,
-                     'ajax' : {
-                        'type': 'POST',
-                       'url' : '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php'
-                     }
-                   },
-                  'json_data' : {
-                'ajax' : {
-                'type': 'POST',
-                'url': function (node) {
-                    var nodeId = '';
-                    var url = ''
-                    if (node == -1)
-                    {
-                        url = '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php?node=-1';
-                    }
-                    else
-                    {
-                        nodeId = node.attr('id');
-                        url = '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php?node='+nodeId;
-                    }
-
-                    return url;
-                },
-                'success': function (new_data) {
-                    //where new_data = node children
-                    //e.g.: [{'data':'Hardware','attr':{'id':'child2'}},
-                    //         {'data':'Software','attr':{'id':'child3'}}]
-                    return new_data;
-                },
-                'progressive_render' : true
-               }
-        }
-              }).bind(
-        'select_node.jstree',
-        function (e, data) {
-            document.location.href = data.rslt.obj.children('a').attr('href');
-        });
-         $('#entsearch').click(function () {
-            " . Html::jsGetElementbyID("tree_projectcategory$rand") . ".jstree('close_all');;
-            " . Html::jsGetElementbyID("tree_projectcategory$rand") .
-           ".jstree('search'," . Html::jsGetDropdownValue('entsearchtext') . ");
-         });
-
-        ";
-      echo "</script>";
-
-      echo "<div id='tree_projectcategory$rand' ></div>";
       echo "</div>";
    }
 
@@ -4034,8 +3960,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       $users = [];
       foreach ($items as $key => $val) {
-         $restrict  = "`itemtype` = 'User'
-                       AND `plugin_resources_resources_id` = '" . $key . "'";
+         $restrict  = ["itemtype" => 'User',
+                       "plugin_resources_resources_id" => $key];
          $dbu       = new DbUtils();
          $resources = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
 

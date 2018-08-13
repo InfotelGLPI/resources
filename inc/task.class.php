@@ -266,8 +266,7 @@ class PluginResourcesTask extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
-          && $this->canView()
-      ) {
+          && $this->canView()) {
          if ($_SESSION['glpishow_count_on_tabs']) {
             return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
          }
@@ -310,8 +309,9 @@ class PluginResourcesTask extends CommonDBTM {
     */
    static function countForItem(CommonDBTM $item) {
       $dbu      = new DbUtils();
-      $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "'
-                  AND is_finished != 1 AND is_deleted = 0";
+      $restrict = ["plugin_resources_resources_id" => $item->getField('id'),
+                   "is_deleted"                    => 0,
+                   "NOT"                           => ["is_finished" => 1]];
       $nb       = $dbu->countElementsInTable(['glpi_plugin_resources_tasks'], $restrict);
 
       return $nb;
@@ -465,8 +465,8 @@ class PluginResourcesTask extends CommonDBTM {
 
       $task_item = new PluginResourcesTask_Item();
 
-      $restrict = "`plugin_resources_resources_id` = '" . $oldid . "'
-                  AND is_deleted != 1";
+      $restrict = ["plugin_resources_resources_id" => $oldid,
+                  "NOT" => ["is_deleted" => 1]];
       $dbu      = new DbUtils();
       $ptasks   = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
       if (!empty($ptasks)) {
@@ -481,8 +481,9 @@ class PluginResourcesTask extends CommonDBTM {
 
             $newtid = $item->add($values);
 
-            $restrictitems = "`plugin_resources_tasks_id` = '" . $taskid . "'";
-            $tasksitems    = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks_items", $restrictitems);
+            $restrictitems = ["plugin_resources_tasks_id" => $taskid];
+            $tasksitems    = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks_items",
+                                                       $restrictitems);
             if (!empty($tasksitems)) {
                foreach ($tasksitems as $tasksitem) {
                   $task_item->add(['plugin_resources_tasks_id' => $newtid,
@@ -802,7 +803,7 @@ class PluginResourcesTask extends CommonDBTM {
                }
                echo "<td class='center'>" . Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $data["plugin_resources_tasktypes_id"]) . "</td>";
                echo "<td align='center'>";
-               $restrict = " `plugin_resources_tasks_id` = '" . $data['plugin_resources_tasks_id'] . "' ";
+               $restrict = ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']];
                $dbu      = new DbUtils();
 
                $plans = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
@@ -1176,7 +1177,7 @@ class PluginResourcesTask extends CommonDBTM {
                $actiontime .= $minute . _n('Minute', 'Minutes', 2);
             }
 
-            $restrict = " `plugin_resources_tasks_id` = '" . $tID . "' ";
+            $restrict = ["plugin_resources_tasks_id" => $tID];
             $dbu      = new DbUtils();
             $plans    = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 

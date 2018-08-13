@@ -158,9 +158,9 @@ class PluginResourcesChecklist extends CommonDBTM {
          $checklist_type = self::RESOURCES_CHECKLIST_IN;
       }
       $dbu        = new DbUtils();
-      $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "' 
-                     AND `checklist_type` = '" . $checklist_type . "'
-                     AND is_checked != 1 ";
+      $restrict = ["plugin_resources_resources_id" => $item->getField('id'),
+                   "checklist_type" => $checklist_type,
+                   "NOT" => ["is_checked" => 1]];
       $nb       = $dbu->countElementsInTable(['glpi_plugin_resources_checklists'], $restrict);
 
       return $nb;
@@ -173,7 +173,7 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    static function checkifChecklistExist($ID) {
 
-      $restrict   = "`plugin_resources_resources_id` = '" . $ID . "'";
+      $restrict   = ["plugin_resources_resources_id" => $ID];
       $dbu        = new DbUtils();
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
@@ -193,8 +193,8 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    static function checkifChecklistFinished($input) {
 
-      $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
-                  AND `checklist_type` = '" . $input['checklist_type'] . "'";
+      $restrict = ["plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
+                   "checklist_type"                => $input['checklist_type']];
       $dbu        = new DbUtils();
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
@@ -222,8 +222,8 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    function openFinishedChecklist($input) {
 
-      $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
-                  AND `checklist_type` = '" . $input['checklist_type'] . "'";
+      $restrict = ["plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
+                   "checklist_type"                => $input['checklist_type']];
       $dbu        = new DbUtils();
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
@@ -656,10 +656,10 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
 
       // Get check list
-      $restrict   = "`entities_id` = '" . $entities_id . "' 
-                     AND `plugin_resources_resources_id` = '$plugin_resources_resources_id' 
-                     AND `checklist_type` = '$checklist_type' 
-                     ORDER BY `rank`";
+      $restrict   = ["entities_id" => $entities_id,
+                     "plugin_resources_resources_id" => $plugin_resources_resources_id,
+                     "checklist_type" => $checklist_type] +
+                     ["ORDER" => "rank"];
       $dbu        = new DbUtils();
       $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
       $numrows    = $dbu->countElementsInTable("glpi_plugin_resources_checklists", $restrict);
