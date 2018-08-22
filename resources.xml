@@ -6,12 +6,14 @@
    <logo>https://raw.githubusercontent.com/InfotelGLPI/resources/master/resources.png</logo>
    <description>
       <short>
+	 <cs><![CDATA[Správa pracovníků. Tento zásuvný modul umožńuje spravovat pracovníky pro správnou správu přiřazování materiálu.<br />- Správa různých režimů (soukromé, veřejné, SSII)<br />- Kontrolní seznamy / Správa úkolů<br />- Systém oznamování<br />- Je možné použís dohromady se službou podpory]]></cs>
+	 <en><![CDATA[Resources management. This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />- Checklists / Tasks management<br />- Notifications system<br />- Can be used with helpdesk]]></en>
          <fr><![CDATA[Gestion de ressources humaines. Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />- Gestion des divers modes de fonctionnement (privé, public, SSII)<br />- Gestion de checklists / tâches<br />- Système de notifications<br />- Utilisable depuis le helpdesk]]></fr>
-         <en><![CDATA[Resources management. This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />- Checklists / Tasks management<br />- Notifications system<br />- Can be used with helpdesk]]></en>
       </short>
       <long>
+	 <cs><![CDATA[Tento zásuvný modul umožńuje spravovat pracovníky pro správnou správu přiřazování materiálu.<br />- Správa různých režimů (soukromé, veřejné, SSII)<br />Funkce : <br />- Kontrolní seznamy<br />-  Správa úkolů<br />- Systém oznamování<br />- Je možné použít dohromady se službou podpory<br />- Je možné použít ve spojení se zásuvným modulem Jmenovky<br />- Je možné použít ve spojení s modulem PDF]]></cs>
+	 <en><![CDATA[This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />Features : <br />- Checklists management<br />- Tasks management<br />- Notifications system<br />- Can be used with helpdesk<br />- Can be used with badges plugin<br />- Can be used with PDF plugin]]></en>
          <fr><![CDATA[Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.<br />- Gestion des divers modes de fonctionnement (privé, public, SSII)<br />Fonctionnalités : <br />- Gestion de checklists<br />- Gestion de tâches<br />- Système de notifications<br />- Utilisable avec le plugin badges<br />- Utilisable depuis le helpdesk<br />- Utilisable avec le plugin PDF]]></fr>
-         <en><![CDATA[This plugin allows you to manage human resources to properly manage the allocation of material.<br />- Management of various modes (private, public, SSII)<br />Features : <br />- Checklists management<br />- Tasks management<br />- Notifications system<br />- Can be used with helpdesk<br />- Can be used with badges plugin<br />- Can be used with PDF plugin]]></en>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/resources</homepage>
@@ -161,33 +163,37 @@
       </version>
    </versions>
    <langs>
-      <lang>fr_FR</lang>
-      <lang>en_GB</lang>
-      <lang>de_DE</lang>
       <lang>cs_CZ</lang>
-      <lang>sv_SE</lang>
-      <lang>es_ES</lang>
+      <lang>de_DE</lang>
+      <lang>en_GB</lang>
       <lang>es_AR</lang>
+      <lang>es_ES</lang>
+      <lang>fr_FR</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>
       <lang>ru_RU</lang>
       <lang>sv_SE</lang>
       <lang>tr_TR</lang>
-	  <lang>id_ID</lang>
    </langs>
    <license><![CDATA[GPL v2+]]></license>
    <tags>
+         <cs>
+            <tag>Úvazky</tag>
+            <tag>Zaměstnanci</tag>
+            <tag>Kalendář</tag>
+            <tag>Správa</tag>
+         </cs>
+	 <en>
+            <tag>Resources</tag>
+            <tag>Employees</tag>
+            <tag>Calendar</tag>
+            <tag>Management</tag>
+         </en>
          <fr>
             <tag>Ressources</tag>
             <tag>Employés</tag>
             <tag>Calendrier</tag>
             <tag>Gestion</tag>
          </fr>
-         <en>
-            <tag>Resources</tag>
-            <tag>Employees</tag>
-            <tag>Calendar</tag>
-            <tag>Management</tag>
-         </en>
    </tags>
 </root>
