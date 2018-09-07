@@ -543,7 +543,7 @@ function plugin_resources_install() {
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    if(class_exists("PluginResourcesImport")){
-      CronTask::Register('PluginResourcesImport', 'ImportSyges', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
+      CronTask::Register('PluginResourcesImport', 'ImportExternal', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    }
 
    PluginResourcesProfile::initProfile();

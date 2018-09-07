@@ -511,16 +511,16 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[] = [
             'id'       => '36',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'matricule_SYGES',
-            'name'     => __('Registration number SYGES', 'resources'),
+            'field'    => 'matricule_External',
+            'name'     => __('Registration number External', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];
          $tab[] = [
             'id'       => '37',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'id_SYGES',
-            'name'     => __('ID SYGES', 'resources'),
+            'field'    => 'id_External',
+            'name'     => __('External ID', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];
@@ -1754,27 +1754,27 @@ class PluginResourcesResource extends CommonDBTM {
       if ($canimport) {
          $colspan = 0;
 
-         //See import SYGES
-         echo "<tr><th colspan='6'>" . __('SYGES Imports', 'resources') . "</th></tr>";
+         //See import External
+         echo "<tr><th colspan='6'>" . __('External Imports', 'resources') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkAdd\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' alt='" . __('Import new resource', 'resources') . "'>";
-         echo "<br>" . __('Importation de nouvelles ressources', 'resources') . "</a>";
+         echo "<br>" . __('Importation new resource', 'resources') . "</a>";
          echo "</td>";
 
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with SYGES', 'resources') . "'>";
-         echo "<br>" . __('Incoherences avec Syges', 'resources') . "</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with External', 'resources') . "'>";
+         echo "<br>" . __('Incoherences avec External', 'resources') . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkDelete\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/delete.png' alt='" . __('Delete resource', 'resources') . "'>";
-         echo "<br>" . __('Supression de ressources humaines', 'resources') . "</a>";
+         echo "<br>" . __('Delete resources', 'resources') . "</a>";
          echo "</td>";
 
          echo "</tr>";

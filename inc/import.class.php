@@ -146,7 +146,7 @@ class PluginResourcesImport extends CommonDBTM {
       ];
 
 
-      //Données de l'import SYGES
+      //Données de l'import External
       $tab[] = [
          'id'            => '1',
          'table'         => $this->getTable(),
@@ -159,8 +159,8 @@ class PluginResourcesImport extends CommonDBTM {
       $tab[] = [
          'id'            => '2',
          'table'         => $this->getTable(),
-         'field'         => 'id_SYGES',
-         'name'          => __('ID SYGES', 'resources'),
+         'field'         => 'id_External',
+         'name'          => __('ID External', 'resources'),
          'massiveaction' => false,
          'datatype'      => 'text'
       ];
@@ -196,7 +196,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'        => '6',
          'table'     => $this->getTable(),
          'field'     => 'users_id_sales',
-         'name'      => __('Sales manager SYGES', 'resources'),
+         'name'      => __('Sales manager External', 'resources'),
          'massiveaction' => false,
          'datatype'  => 'text'
       ];
@@ -205,7 +205,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'       => '8',
          'table'    => $this->getTable(),
          'field'    => 'date_begin',
-         'name'     => __('Arrival date SYGES', 'resources'),
+         'name'     => __('Arrival date External', 'resources'),
          'massiveaction' => false,
          'datatype' => 'date'
       ];
@@ -214,7 +214,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'       => '10',
          'table'    => $this->getTable(),
          'field'    => 'date_end',
-         'name'     => __('Departure date SYGES', 'resources'),
+         'name'     => __('Departure date External', 'resources'),
          'massiveaction' => false,
          'datatype' => 'date'
       ];
@@ -223,7 +223,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'       => '12',
          'table'    => $this->getTable(),
          'field'    => 'branching_agency',
-         'name'     => __('Agence de rattachement SYGES', 'resources'),
+         'name'     => __('Agence de rattachement External', 'resources'),
          'massiveaction' => false,
          'datatype'  => 'text'
       ];
@@ -241,7 +241,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'       => '15',
          'table'    => $this->getTable(),
          'field'    => 'origin',
-         'name'     => __('Type Contrat SYGES', 'resources'),
+         'name'     => __('Type Contrat External', 'resources'),
          'massiveaction' => false,
          'datatype'  => 'text'
       ];
@@ -261,7 +261,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'       => '18',
          'table'    => $this->getTable(),
          'field'    => 'email',
-         'name'     => __('Email SYGES', 'resources'),
+         'name'     => __('Email External', 'resources'),
          'massiveaction' => false,
          'datatype'  => 'text'
       ];
@@ -298,7 +298,7 @@ class PluginResourcesImport extends CommonDBTM {
          $tab[] = [
             'id'       => '14',
             'table'     => "glpi_plugin_resources_resources",
-            'field'    => 'branching_agency_SYGES',
+            'field'    => 'branching_agency_External',
             'name'     => __('Agence de rattachement GLPI', 'resources'),
             'massiveaction' => false,
             'datatype'  => 'text'
@@ -307,7 +307,7 @@ class PluginResourcesImport extends CommonDBTM {
          $tab[] = [
             'id'       => '17',
             'table'     => "glpi_plugin_resources_resources",
-            'field'    => 'contracttype_SYGES',
+            'field'    => 'contracttype_External',
             'name'     => __('Type Contrat GLPI', 'resources'),
             'massiveaction' => false,
             'datatype'  => 'text'
@@ -316,7 +316,7 @@ class PluginResourcesImport extends CommonDBTM {
          $tab[] = [
             'id'       => '19',
             'table'     => "glpi_plugin_resources_resources",
-            'field'    => 'email_SYGES',
+            'field'    => 'email_External',
             'name'     => __('Email GLPI', 'resources'),
             'massiveaction' => false,
             'datatype'  => 'text'
@@ -373,12 +373,12 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('Registration number', 'resources') . "</td>";
       echo "<td>";
-      echo $resource->getField('matricule_SYGES');
+      echo $resource->getField('matricule_External');
       echo "</td>";
 
-      echo "<td>" . __('ID SYGES', 'resources') . "</td>";
+      echo "<td>" . __('External ID', 'resources') . "</td>";
       echo "<td>";
-      echo $resource->getField('id_SYGES');
+      echo $resource->getField('id_External');
       echo "</td>";
 
       echo "</tr>";
@@ -387,12 +387,12 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('Branching Agency', 'resources') . "</td>";
       echo "<td>";
-      echo $resource->getField('branching_agency_SYGES');
+      echo $resource->getField('branching_agency_External');
       echo "</td>";
 
       echo "<td>" . __('Email' ) . "</td>";
       echo "<td>";
-      echo $resource->getField('email_SYGES');
+      echo $resource->getField('email_External');
       echo "</td>";
 
       echo "</tr>";
@@ -435,12 +435,12 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('Registration number', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "matricule_SYGES",["value" => $resource->getField('matricule_SYGES')]);
+      Html::autocompletionTextField($this, "matricule_External",["value" => $resource->getField('matricule_External')]);
       echo "</td>";
 
-      echo "<td>" . __('ID SYGES', 'resources') . "</td>";
+      echo "<td>" . __('Externa  ID', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "id_SYGES",["value" => $resource->getField('id_SYGES')]);
+      Html::autocompletionTextField($this, "id_External",["value" => $resource->getField('id_External')]);
       echo "</td>";
 
       echo "</tr>";
@@ -449,12 +449,12 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('Branching Agency', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "branching_agency_SYGES",["value" => $resource->getField('branching_agency_SYGES')]);
+      Html::autocompletionTextField($this, "branching_agency_External",["value" => $resource->getField('branching_agency_External')]);
       echo "</td>";
 
       echo "<td>" . __('Email' ) . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "email_SYGES",["value" => $resource->getField('email_SYGES')]);
+      Html::autocompletionTextField($this, "email_External",["value" => $resource->getField('email_External')]);
       echo "</td>";
 
       echo "</tr>";
@@ -519,13 +519,13 @@ class PluginResourcesImport extends CommonDBTM {
          while ($datas = $DB->fetch_assoc($res)) {
             foreach ($datas as $field => $data) {
 
-               // color for checkIncoherence when data GLPI <> data SYGES
+               // color for checkIncoherence when data GLPI <> data External
                if($_SESSION['actionImport'] == "checkIncoherences"){
-                  $fieldsToCheck = ["branching_agency_SYGES" => "branching_agency_SYGES_resources",
+                  $fieldsToCheck = ["branching_agency_External" => "branching_agency_External_resources",
                                     "users_id_sales_imports" => "users_id_sales_resources",
                                     "date_begin_imports"     => "date_begin_resources",
                                     "date_end_imports"       => "date_end_resources",
-                                    "email_SYGES"            => "email_SYGES_resources"];
+                                    "email_External"            => "email_External_resources"];
                   $showDiff = $this->ShowDiffField($fieldsToCheck, $datas, $field);
                }
 
@@ -640,7 +640,7 @@ class PluginResourcesImport extends CommonDBTM {
       $entete=0;
       if($_SESSION['actionImport'] == "checkIncoherences") {
          echo "<tr>";
-         echo "<th colspan='12'>Données Fichier SYGES</th>";
+         echo "<th colspan='12'>Données Fichier External</th>";
          echo "<th style='border-left:2px solid black' colspan='8'>Données ressource GLPI</th>";
          echo "</tr>";
       }
@@ -665,7 +665,7 @@ class PluginResourcesImport extends CommonDBTM {
                    </label>
                 </div>
               </th>";
-      echo "<th>". __("ID SYGES", 'resources') ."</th>";
+      echo "<th>". __("External ID", 'resources') ."</th>";
       echo "<th>". __("Registration number", 'resources') ."</th>";
       echo "<th>". __("Name") ."</th>";
       echo "<th>". __("First name") ."</th>";
@@ -677,7 +677,7 @@ class PluginResourcesImport extends CommonDBTM {
       echo "<th>". _n("Affected client","Affected clients",1,"resources") ."</th>";
       echo "<th>". __("Email") ."</th>";
       if($_SESSION['actionImport'] == "checkIncoherences"){
-         echo "<th style='border-left:2px solid black'>". __("Contract type SYGES") ."</th>";
+         echo "<th style='border-left:2px solid black'>". __("Contract type External") ."</th>";
          echo "<th>". __("Contract type") ."</th>";
          echo "<th>". __("Branching Agency","resources") ."</th>";
          echo "<th>". __("Sales manager","resources") ."</th>";
@@ -707,7 +707,7 @@ class PluginResourcesImport extends CommonDBTM {
          $showDiff = "";
       }
       switch($field){
-         case "contracttype_SYGES" :
+         case "contracttype_External" :
             echo "<td style='border-left:2px solid black' valign='top'>".$data."</td>";
             break;
          case "affected_client_imports" :
@@ -774,7 +774,7 @@ class PluginResourcesImport extends CommonDBTM {
             }
          } else{
             if($field == "origin"){
-               $valuesUpdateKeys['imports']['contracttype_SYGES'] = $val;
+               $valuesUpdateKeys['imports']['contracttype_External'] = $val;
             } else{
                $valuesUpdateKeys['imports'][$field] = $val;
             }
@@ -784,7 +784,7 @@ class PluginResourcesImport extends CommonDBTM {
          case "checkAdd" :
             $valuesUpdateKeys['imports']['entities_id'] = 0;
             if($resource->add($valuesUpdateKeys['imports'])){
-               $import->getFromDBByCrit(["id_SYGES = '".$valuesUpdateKeys['imports']["id_SYGES"]."'"]);
+               $import->getFromDBByCrit(["id_External = '".$valuesUpdateKeys['imports']["id_External"]."'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully imported', 'resources'), true, INFO);
             } else{
@@ -792,10 +792,10 @@ class PluginResourcesImport extends CommonDBTM {
             }
             break;
          case "checkIncoherences" :
-            $resource->getFromDBByCrit(["id_SYGES = '".$valuesUpdateKeys['imports']["id_SYGES"]."'"]);
+            $resource->getFromDBByCrit(["id_External = '".$valuesUpdateKeys['imports']["id_External"]."'"]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if($resource->update($valuesUpdateKeys['imports'])){
-               $import->getFromDBByCrit(["id_SYGES = '".$valuesUpdateKeys['imports']["id_SYGES"]."'"]);
+               $import->getFromDBByCrit(["id_External = '".$valuesUpdateKeys['imports']["id_External"]."'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully updated', 'resources'), true, INFO);
             } else{
@@ -808,10 +808,10 @@ class PluginResourcesImport extends CommonDBTM {
             break;
          break;
          case "checkDelete" :
-            $resource->getFromDBByCrit(["id_SYGES = '".$valuesUpdateKeys['imports']["id_SYGES"]."'"]);
+            $resource->getFromDBByCrit(["id_External = '".$valuesUpdateKeys['imports']["id_External"]."'"]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if($resource->update($valuesUpdateKeys['imports'])){
-               $import->getFromDBByCrit(["id_SYGES = '".$valuesUpdateKeys['imports']["id_SYGES"]."'"]);
+               $import->getFromDBByCrit(["id_External = '".$valuesUpdateKeys['imports']["id_External"]."'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource end date successfully update', 'resources'), true, INFO);
             } else{
@@ -838,45 +838,45 @@ class PluginResourcesImport extends CommonDBTM {
     **/
    static function initSQL($limit, $limitBegin, $limitNb) {
       $SELECT = "SELECT imp.id as id, 
-                        imp.id_SYGES as id_SYGES_imports,
-                        imp.matricule as matricule_SYGES, 
+                        imp.id_External as id_External_imports,
+                        imp.matricule as matricule_External, 
                         imp.name as name_imports, 
                         imp.firstname as firstname_imports,
                         imp.origin as origin,
-                        imp.branching_agency as branching_agency_SYGES,
+                        imp.branching_agency as branching_agency_External,
                         imp.users_id_sales as users_id_sales_imports,
                         imp.date_begin as date_begin_imports,
                         imp.date_end as date_end_imports,
                         imp.affected_client as affected_client_imports,
-                        imp.email as email_SYGES ";
+                        imp.email as email_External ";
       $FROM = "FROM glpi_plugin_resources_imports imp ";
-      $JOIN = "INNER JOIN glpi_plugin_resources_resources ON glpi_plugin_resources_resources.id_SYGES = imp.id_SYGES 
+      $JOIN = "INNER JOIN glpi_plugin_resources_resources ON glpi_plugin_resources_resources.id_External = imp.id_External 
                INNER JOIN glpi_plugin_resources_contracttypes ON glpi_plugin_resources_resources.plugin_resources_contracttypes_id = glpi_plugin_resources_contracttypes.id                
                ";
       $WHERE = "";
       $GROUPBY = "";
       $ORDER = " ORDER BY imp.id";
       if($_SESSION['actionImport'] == 'checkAdd'){
-         $WHERE .= "WHERE id_SYGES NOT IN(
-                              SELECT id_SYGES 
+         $WHERE .= "WHERE id_External NOT IN(
+                              SELECT id_External 
                               FROM glpi_plugin_resources_resources
-                              WHERE id_SYGES!='') ";
+                              WHERE id_External!='') ";
       } else if($_SESSION['actionImport'] == 'checkIncoherences'){
-         $SELECT .= ",glpi_plugin_resources_resources.contracttype_SYGES as contracttype_SYGES,
+         $SELECT .= ",glpi_plugin_resources_resources.contracttype_External as contracttype_External,
                       glpi_plugin_resources_contracttypes.name as name_contracttypes,
-                      glpi_plugin_resources_resources.branching_agency_SYGES as branching_agency_SYGES_resources,
+                      glpi_plugin_resources_resources.branching_agency_External as branching_agency_External_resources,
                       glpi_plugin_resources_resources.users_id_sales as users_id_sales_resources,
                       glpi_plugin_resources_resources.date_begin as date_begin_resources,
                       glpi_plugin_resources_resources.date_end as date_end_resources,
-                      glpi_plugin_resources_resources.email_SYGES as email_SYGES_resources,
+                      glpi_plugin_resources_resources.email_External as email_External_resources,
                       (SELECT name FROM glpi_locations WHERE glpi_plugin_resources_resources.locations_id = glpi_locations.id ) as name_locations ";
          $FROM .= $JOIN;
-         $WHERE .= "WHERE glpi_plugin_resources_resources.branching_agency_SYGES != imp.branching_agency
+         $WHERE .= "WHERE glpi_plugin_resources_resources.branching_agency_External != imp.branching_agency
                     OR glpi_plugin_resources_resources.users_id_sales != imp.users_id_sales 
                     OR glpi_plugin_resources_resources.date_begin != imp.date_begin 
                     OR glpi_plugin_resources_resources.date_end != imp.date_end 
-                    OR glpi_plugin_resources_resources.email_SYGES != imp.email 
-                    OR glpi_plugin_resources_resources.contracttype_SYGES != imp.origin ";
+                    OR glpi_plugin_resources_resources.email_External != imp.email 
+                    OR glpi_plugin_resources_resources.contracttype_External != imp.origin ";
          $GROUPBY = " GROUP BY imp.id";
       } else if($_SESSION['actionImport'] == 'checkDelete'){
          $SELECT .= " ";
@@ -931,16 +931,16 @@ class PluginResourcesImport extends CommonDBTM {
     */
    function array_download($array, $delimiter) {
 
-      $entete = ["id_SYGES"           => "ID SYGES",
-                 "matricule_SYGES"    => "Matricule",
+      $entete = ["id_External"           => "External ID",
+                 "matricule_External"    => "Matricule",
                  "name"               => "Nom",
                  "firstname"          => "Prenom",
-                 "contracttype_SYGES" => "Type contrat",
+                 "contracttype_External" => "Type contrat",
                  "users_id_sales"     => "Resp comm",
                  "date_begin"         => "Date Debut",
                  "date_end"           => "Date Fin",
                  "affected_client"    => "Client affecte",
-                 "email_SYGES"        => "Email"];
+                 "email_External"        => "Email"];
       ksort($entete);
       $f = fopen('php://temp', 'w');
       foreach ($array as $id => $resources){
@@ -976,7 +976,7 @@ class PluginResourcesImport extends CommonDBTM {
          $pdf->AddPage("L");
          $pdf->SetFont('Arial','',8);
          foreach($entete as $keyEntete => $rowEntet){
-            if($keyEntete == "email_SYGES"){
+            if($keyEntete == "email_External"){
                $pdf->Cell(40,5,$rowEntet);
             } else{
                $pdf->Cell(25,5,$rowEntet);
@@ -986,7 +986,7 @@ class PluginResourcesImport extends CommonDBTM {
 
          foreach($arrayResource as $rowResource){
             foreach ($rowResource as $key => $row){
-               if($key == "email_SYGES"){
+               if($key == "email_External"){
                   $pdf->Cell(40,5,$row);
                } else{
                   $pdf->Cell(25,5,$row);
@@ -1025,7 +1025,7 @@ class PluginResourcesImport extends CommonDBTM {
 
             //Translate files data for inserting in Database
             $arrayCorrespondance = [
-               'id' => 'id_SYGES',
+               'id' => 'id_External',
                'Origine' => 'origin',
                'Matricule' => 'matricule',
                'Nom' => 'name',
@@ -1059,7 +1059,7 @@ class PluginResourcesImport extends CommonDBTM {
                }
 
                //If there is no row with the id
-               if(!$import->getFromDBByCrit(['id_SYGES = "'.$datas['id_SYGES'].'"'])){
+               if(!$import->getFromDBByCrit(['id_External = "'.$datas['id_External'].'"'])){
                   $nbRowAdd++;
 
                   $resource = new PluginResourcesResource();
@@ -1076,14 +1076,14 @@ class PluginResourcesImport extends CommonDBTM {
                   $datas['users_id_sales'] = $responsable->getField("id");
 
                   // Process for adding datas in import table
-                  if($resource->getFromDBByCrit(["id_SYGES = '".  $datas['id_SYGES']."'"])){
+                  if($resource->getFromDBByCrit(["id_External = '".  $datas['id_External']."'"])){
 
                      //if datas are identical with ressource data we skip the raw
                      if($datas['date_begin'] == $resource->getField('date_begin') &&
                         $datas['date_end'] == $resource->getField('date_end') &&
-                        $datas['branching_agency'] == $resource->getField('branching_agency_SYGES') &&
+                        $datas['branching_agency'] == $resource->getField('branching_agency_External') &&
                         $datas['users_id_sales'] == $resource->getField('users_id_sales') &&
-                        $datas['email'] == $resource->getField('email_SYGES')){
+                        $datas['email'] == $resource->getField('email_External')){
                         continue;
                      }
                      $import->add($datas);
@@ -1096,7 +1096,7 @@ class PluginResourcesImport extends CommonDBTM {
                $cron_status = 1;
                if ($task) {
                   $task->addVolume($nbRowAdd);
-                  $task->log(__('SYGES datas successfully imported', 'resources'));
+                  $task->log(__('External datas successfully imported', 'resources'));
                   rename($path.$file,$path."/done/".$file);
                }
             } else {
@@ -1171,9 +1171,9 @@ class PluginResourcesImport extends CommonDBTM {
    static function cronInfo($name) {
 
       switch ($name) {
-         case 'ImportSyges':
+         case 'ImportExternal':
             return [
-               'description' => __('SYGES files imports', 'resources')];   // Optional
+               'description' => __('External files imports', 'resources')];   // Optional
             break;
       }
       return [];
@@ -1186,11 +1186,11 @@ class PluginResourcesImport extends CommonDBTM {
     * @global $CFG_GLPI
     * @param $task for log
     */
-   static function cronImportSyges($task = NULL) {
+   static function cronImportExternal($task = NULL) {
       global $DB, $CFG_GLPI;
 
       $CronTask = new CronTask();
-      if ($CronTask->getFromDBbyName("PluginResourcesImport", "ImportSyges")) {
+      if ($CronTask->getFromDBbyName("PluginResourcesImport", "ImportExternal")) {
          if ($CronTask->fields["state"] == CronTask::STATE_DISABLE) {
             return 0;
          }

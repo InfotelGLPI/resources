@@ -266,7 +266,7 @@ class PluginResourcesProfile extends Profile {
                 'type'      => 'public'
           ],
           ['itemtype'  => 'PluginResourcesImport',
-                'label'     => __('SYGES Import', 'resources'),
+                'label'     => __('External Import', 'resources'),
                 'field'     => 'plugin_resources_import',
                 'type'      => 'import'
           ]

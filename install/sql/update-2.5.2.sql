@@ -1,15 +1,15 @@
 ALTER TABLE glpi_plugin_resources_configs ADD `import_external_datas` tinyint(1) NOT NULL DEFAULT '0';
-ALTER TABLE glpi_plugin_resources_resources ADD `matricule_SYGES` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_resources ADD `id_SYGES`varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_resources ADD `branching_agency_SYGES` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_resources ADD `contracttype_SYGES` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_resources ADD `email_SYGES` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD `matricule_External` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD `id_External`varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD `branching_agency_External` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD `contracttype_External` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD `email_External` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_profiles ADD `import` char(1) collate utf8_unicode_ci default NULL;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
    `id` int(11) NOT NULL auto_increment,
-   `id_SYGES` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+   `id_External` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `origin` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `matricule` varchar(255) NOT NULL default '',
    `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
