@@ -120,6 +120,15 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
 
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('SYGES data import', 'resources');
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
@@ -146,5 +155,11 @@ class PluginResourcesConfig extends CommonDBTM {
       return $this->fields['security_compliance'];
    }
 
+   /**
+    * @return mixed
+    */
+   function useImportExternalDatas() {
+      return $this->fields['import_external_datas'];
+   }
 
 }

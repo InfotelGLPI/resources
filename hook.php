@@ -50,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.5.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.5.2.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -266,6 +266,12 @@ function plugin_resources_install() {
    //Version 2.4.4
    if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.4.4.sql");
+
+   }
+
+   //Version 2.5.2
+   if (!$DB->fieldExists("glpi_plugin_resources_configs","import_external_datas")) {
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.5.2.sql");
 
    }
 
@@ -514,11 +520,31 @@ function plugin_resources_install() {
       mkdir($rep_files_resources);
    }
 
+  /* if (!is_dir($rep_files_resources."/pictures")) {
+      mkdir($rep_files_resources."/pictures");
+   }
+   if (!is_dir($rep_files_resources."/import")) {
+      mkdir($rep_files_resources."/import");
+   }
+   if (!is_dir($rep_files_resources."/import/done")) {
+      mkdir($rep_files_resources."/import/done");
+   }
+
+   $files = scandir ($rep_files_resources);
+   foreach($files as $file){
+      if(!is_dir($rep_files_resources . "/" . $file)){
+         rename($rep_files_resources.$file,$rep_files_resources."/pictures/".$file);
+      }
+   }*/
+
    CronTask::Register('PluginResourcesResource', 'Resources', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesTask', 'ResourcesTask', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesChecklist', 'ResourcesChecklist', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
+   if(class_exists("PluginResourcesImport")){
+      CronTask::Register('PluginResourcesImport', 'ImportSyges', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
+   }
 
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
@@ -576,6 +602,7 @@ function plugin_resources_uninstall() {
               "glpi_plugin_resources_resources_changes",
               "glpi_plugin_resources_confighabilitations",
               "glpi_plugin_resources_habilitations",
+              "glpi_plugin_resources_imports"
    ];
 
    foreach ($tables as $table) {

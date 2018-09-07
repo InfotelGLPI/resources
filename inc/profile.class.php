@@ -66,17 +66,18 @@ class PluginResourcesProfile extends Profile {
          $prof = new self();
 
          self::addDefaultProfileInfos($ID, ['plugin_resources'                  => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                                  'plugin_resources_task'            => 0,
-                                                  'plugin_resources_checklist'       => 0,
-                                                  'plugin_resources_employee'        => 0,
-                                                  'plugin_resources_resting'         => 0,
-                                                  'plugin_resources_holiday'         => 0,
-                                                  'plugin_resources_habilitation'    => 0,
-                                                  'plugin_resources_employment'      => 0,
-                                                  'plugin_resources_budget'          => 0,
-                                                  'plugin_resources_dropdown_public' => 0,
-                                                  'plugin_resources_open_ticket'     => 0,
-                                                  'plugin_resources_all'             => 0]);
+                                            'plugin_resources_task'            => 0,
+                                            'plugin_resources_checklist'       => 0,
+                                            'plugin_resources_employee'        => 0,
+                                            'plugin_resources_resting'         => 0,
+                                            'plugin_resources_holiday'         => 0,
+                                            'plugin_resources_habilitation'    => 0,
+                                            'plugin_resources_employment'      => 0,
+                                            'plugin_resources_budget'          => 0,
+                                            'plugin_resources_dropdown_public' => 0,
+                                            'plugin_resources_import'          => 0,
+                                            'plugin_resources_open_ticket'     => 0,
+                                            'plugin_resources_all'             => 0]);
          $prof->showForm($ID);
       }
 
@@ -89,17 +90,18 @@ class PluginResourcesProfile extends Profile {
    static function createFirstAccess($profiles_id) {
       self::addDefaultProfileInfos($profiles_id,
                                    ['plugin_resources'                 => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                         'plugin_resources_task'            => ALLSTANDARDRIGHT,
-                                         'plugin_resources_checklist'       => ALLSTANDARDRIGHT,
-                                         'plugin_resources_employee'        => ALLSTANDARDRIGHT,
-                                         'plugin_resources_resting'         => ALLSTANDARDRIGHT,
-                                         'plugin_resources_holiday'         => ALLSTANDARDRIGHT,
-                                         'plugin_resources_habilitation'    => ALLSTANDARDRIGHT,
-                                         'plugin_resources_employment'      => ALLSTANDARDRIGHT,
-                                         'plugin_resources_budget'          => ALLSTANDARDRIGHT,
-                                         'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
-                                         'plugin_resources_open_ticket'     => 1,
-                                         'plugin_resources_all'             => 1], true);
+                                    'plugin_resources_task'            => ALLSTANDARDRIGHT,
+                                    'plugin_resources_checklist'       => ALLSTANDARDRIGHT,
+                                    'plugin_resources_employee'        => ALLSTANDARDRIGHT,
+                                    'plugin_resources_resting'         => ALLSTANDARDRIGHT,
+                                    'plugin_resources_holiday'         => ALLSTANDARDRIGHT,
+                                    'plugin_resources_habilitation'    => ALLSTANDARDRIGHT,
+                                    'plugin_resources_employment'      => ALLSTANDARDRIGHT,
+                                    'plugin_resources_budget'          => ALLSTANDARDRIGHT,
+                                    'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
+                                    'plugin_resources_import'          => 0,
+                                    'plugin_resources_open_ticket'     => 1,
+                                    'plugin_resources_all'             => 1], true);
 
    }
 
@@ -182,6 +184,14 @@ class PluginResourcesProfile extends Profile {
                                                                'default_class' => 'tab_bg_2',
                                                                'title'         => __('Public service management', 'resources')]);
 
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if($config->getField('import_external_datas')==1){
+         $importRights = $this->getAllRights(false, ['import']);
+         $profile->displayRightsChoiceMatrix($importRights, ['canedit'       => $canedit,
+                                                             'default_class' => 'tab_bg_2',
+                                                             'title'         => __('Import external datas', 'resources')]);
+      }
       if ($canedit
           && $closeform) {
          echo "<div class='center'>";
@@ -254,6 +264,11 @@ class PluginResourcesProfile extends Profile {
                 'label'     => __('Dropdown management', 'resources'),
                 'field'     => 'plugin_resources_dropdown_public',
                 'type'      => 'public'
+          ],
+          ['itemtype'  => 'PluginResourcesImport',
+                'label'     => __('SYGES Import', 'resources'),
+                'field'     => 'plugin_resources_import',
+                'type'      => 'import'
           ]
       ];
 
@@ -319,17 +334,18 @@ class PluginResourcesProfile extends Profile {
                             "`profiles_id`='$profiles_id'") as $profile_data) {
 
          $matching = ['resources'       => 'plugin_resources',
-                           'task'            => 'plugin_resources_task',
-                           'checklist'       => 'plugin_resources_checklist',
-                           'employee'        => 'plugin_resources_employee' ,
-                           'resting'         => 'plugin_resources_resting',
-                           'holiday'         => 'plugin_resources_holiday',
-                           'habilitation'    => 'plugin_resources_habilitation',
-                           'employment'      => 'plugin_resources_employment',
-                           'budget'          => 'plugin_resources_budget',
-                           'dropdown_public' => 'plugin_resources_dropdown_public',
-                           'open_ticket'     => 'plugin_resources_open_ticket',
-                           'all'             => 'plugin_resources_all'];
+                      'task'            => 'plugin_resources_task',
+                      'checklist'       => 'plugin_resources_checklist',
+                      'employee'        => 'plugin_resources_employee',
+                      'resting'         => 'plugin_resources_resting',
+                      'holiday'         => 'plugin_resources_holiday',
+                      'habilitation'    => 'plugin_resources_habilitation',
+                      'employment'      => 'plugin_resources_employment',
+                      'budget'          => 'plugin_resources_budget',
+                      'dropdown_public' => 'plugin_resources_dropdown_public',
+                      'import'          => 'plugin_resources_import',
+                      'open_ticket'     => 'plugin_resources_open_ticket',
+                      'all'             => 'plugin_resources_all'];
 
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
