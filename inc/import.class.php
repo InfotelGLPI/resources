@@ -495,77 +495,79 @@ class PluginResourcesImport extends CommonDBTM {
          $limitNb = 0;
       }
 
-      $req = self::initSQL(false, $limitBegin, $limitNb);
-
-      if($res = $DB->query($req)) {
-         if ($count = $DB->numrows($res)) {
-            $nbRows = $count;
-         } else {
-            $nbRows = 0;
-         }
-
-         $target = $CFG_GLPI['root_doc'] . '/plugins/resources/front/import.php';
-         $parameters = "actionImport=".$_SESSION['actionImport'];
-         Html::printPager($limitBegin, $nbRows, $target, $parameters);
-      }
-
       $req = self::initSQL(true, $limitBegin, $limitNb);
 
       if($res = $DB->query($req)){
+         if($res->num_rows > 0){
 
-         $this->listHead();
+            $reqRows = self::initSQL(false, $limitBegin, $limitNb);
 
-         echo "<tr>";
-         while ($datas = $DB->fetch_assoc($res)) {
-            foreach ($datas as $field => $data) {
-
-               // color for checkIncoherence when data GLPI <> data External
-               if($_SESSION['actionImport'] == "checkIncoherences"){
-                  $fieldsToCheck = ["branching_agency_External" => "branching_agency_External_resources",
-                                    "users_id_sales_imports" => "users_id_sales_resources",
-                                    "date_begin_imports"     => "date_begin_resources",
-                                    "date_end_imports"       => "date_end_resources",
-                                    "email_External"            => "email_External_resources"];
-                  $showDiff = $this->ShowDiffField($fieldsToCheck, $datas, $field);
+            if($resRows = $DB->query($reqRows)) {
+               if ($count = $DB->numrows($resRows)) {
+                  $nbRows = $count;
+               } else {
+                  $nbRows = 0;
                }
 
-               // Checkbox for the first colomn
-               if($field == "id"){
-                  echo "<td width='10' valign='top'>
-                            <span class='form-group-checkbox'>
-                                <input type='checkbox' class='new_checkbox' id='checkall_imports".$data."' name='resource[import][".$data."]' value='1' data-glpicore-ma-tags='common'>
-                                <label class='label-checkbox' title='' for='checkall_imports".$data."'> 
-                                   <span class='check'></span> 
-                                   <span class='box'></span>&nbsp;
-                                </label>
-                            </span>
-                        </td>";
-               } else{
-                  $this->listContent($field, $data, $datas, $options, $showDiff);
+               $target = $CFG_GLPI['root_doc'] . '/plugins/resources/front/import.php';
+               $parameters = "actionImport=".$_SESSION['actionImport'];
+               Html::printPager($limitBegin, $nbRows, $target, $parameters);
+            }
+
+            $this->listHead();
+
+            echo "<tr>";
+            while ($datas = $DB->fetch_assoc($res)) {
+               foreach ($datas as $field => $data) {
+
+                  // color for checkIncoherence when data GLPI <> data External
+                  if($_SESSION['actionImport'] == "checkIncoherences"){
+                     $fieldsToCheck = ["branching_agency_External" => "branching_agency_External_resources",
+                                       "users_id_sales_imports" => "users_id_sales_resources",
+                                       "date_begin_imports"     => "date_begin_resources",
+                                       "date_end_imports"       => "date_end_resources",
+                                       "email_External"            => "email_External_resources"];
+                     $showDiff = $this->ShowDiffField($fieldsToCheck, $datas, $field);
+                  }
+
+                  // Checkbox for the first colomn
+                  if($field == "id"){
+                     echo "<td width='10' valign='top'>
+                               <span class='form-group-checkbox'>
+                                   <input type='checkbox' class='new_checkbox' id='checkall_imports".$data."' name='resource[import][".$data."]' value='1' data-glpicore-ma-tags='common'>
+                                   <label class='label-checkbox' title='' for='checkall_imports".$data."'> 
+                                      <span class='check'></span> 
+                                      <span class='box'></span>&nbsp;
+                                   </label>
+                               </span>
+                           </td>";
+                  } else{
+                     $this->listContent($field, $data, $datas, $options, $showDiff);
+                  }
                }
+               if($_SESSION['actionImport'] == "checkAdd"){
+                  $this->dropdownField("PluginResourcesContractType", "",
+                                       "plugin_resources_contracttypes_id", $options,
+                                       $datas, "Externe");
+
+                  echo "<td valign='top'>";
+                  $options["name"] = "resource[values][".$datas['id']."][locations_id]";
+                  Dropdown::show('Location',$options);
+                  echo "</td>";
+               }
+               echo "</tr>";
             }
-            if($_SESSION['actionImport'] == "checkAdd"){
-               $this->dropdownField("PluginResourcesContractType", "",
-                                    "plugin_resources_contracttypes_id", $options,
-                                    $datas, "Externe");
-
-               echo "<td valign='top'>";
-               $options["name"] = "resource[values][".$datas['id']."][locations_id]";
-               Dropdown::show('Location',$options);
-               echo "</td>";
+            echo "</tbody></table>";
+            if($_SESSION['actionImport'] == "checkIncoherences"){
+               echo Html::submit("Exporter Données (CSV)",['name' => 'exportCSV']) . "   ";
+               echo Html::submit("Exporter Données (PDF)",['name' => 'exportPDF']) . "   ";
             }
-            echo "</tr>";
-         }
-         echo "</tbody></table>";
-         if($_SESSION['actionImport'] == "checkIncoherences"){
-            echo Html::submit("Exporter Données (CSV)",['name' => 'exportCSV']) . "   ";
-            echo Html::submit("Exporter Données (PDF)",['name' => 'exportPDF']) . "   ";
-         }
-         echo Html::submit("Valider",['name' => 'import']);
-         echo "</div>";
-         Html::closeForm();
-
-
+            echo Html::submit("Valider",['name' => 'import']);
+            echo "</div>";
+            Html::closeForm();
+            } else{
+               echo "<br /><div class='center b'>" . __("No item found") . "</div>";
+            }
       }
    }
 
@@ -862,6 +864,8 @@ class PluginResourcesImport extends CommonDBTM {
                               FROM glpi_plugin_resources_resources
                               WHERE id_External!='') ";
       } else if($_SESSION['actionImport'] == 'checkIncoherences'){
+         $resource = new PluginResourcesResource();
+
          $SELECT .= ",glpi_plugin_resources_resources.contracttype_External as contracttype_External,
                       glpi_plugin_resources_contracttypes.name as name_contracttypes,
                       glpi_plugin_resources_resources.branching_agency_External as branching_agency_External_resources,
@@ -1014,7 +1018,7 @@ class PluginResourcesImport extends CommonDBTM {
     * @return array output
     */
    function initCsvDataAndImportGLPI($task) {
-      $path = GLPI_PLUGIN_DOC_DIR."/resources/import";
+      $path = GLPI_PLUGIN_DOC_DIR."/resources/import/";
       $files = scandir ($path);
       $nbRowAdd = 0;
 
