@@ -47,7 +47,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.4.4.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.4.5.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -263,6 +263,11 @@ function plugin_resources_install() {
    //Version 2.4.4
    if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.4.4.sql");
+
+   }
+   //Version 2.4.5
+   if (!$DB->tableExists("glpi_plugin_resources_imports")) {
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.4.5.sql");
 
    }
 
@@ -514,6 +519,7 @@ function plugin_resources_install() {
    CronTask::Register('PluginResourcesChecklist', 'ResourcesChecklist', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
+   CronTask::Register('PluginResourcesImport', 'ImportSyges', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
 
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
@@ -568,6 +574,7 @@ function plugin_resources_uninstall() {
               "glpi_plugin_resources_resources_changes",
               "glpi_plugin_resources_confighabilitations",
               "glpi_plugin_resources_habilitations",
+              "glpi_plugin_resources_imports"
    ];
 
    foreach ($tables as $table) {

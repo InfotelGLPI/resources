@@ -420,6 +420,24 @@ class PluginResourcesResource extends CommonDBTM {
                                       => ['table'      => 'glpi_plugin_resources_employees',
                                           'joinparams' => ['jointype' => 'child']]];
       }
+      if ($config->useImportExternalDatas()) {
+         $tab[] = [
+            'id'       => '36',
+            'table'    => 'glpi_plugin_resources_resources',
+            'field'    => 'matricule_SYGES',
+            'name'     => __('Matricule SYGES', 'resources'),
+            'datatype' => 'text',
+            'massiveaction'=>false
+         ];
+         $tab[] = [
+            'id'       => '37',
+            'table'    => 'glpi_plugin_resources_resources',
+            'field'    => 'id_SYGES',
+            'name'     => __('ID SYGES', 'resources'),
+            'datatype' => 'text',
+            'massiveaction'=>false
+         ];
+      }
 
       $tab[31]['table']         = $this->getTable();
       $tab[31]['field']         = 'id';
@@ -458,6 +476,11 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addStandardTab('PluginResourcesEmployee', $ong, $options);
       $this->addStandardTab('PluginResourcesChecklist', $ong, $options);
       $this->addStandardTab('PluginResourcesTask', $ong, $options);
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if($config->getField('import_external_datas')==1){
+         $this->addStandardTab('PluginResourcesImport', $ong, $options);
+      }
 
       if (Session::getCurrentInterface() == 'central') {
 
@@ -1458,6 +1481,7 @@ class PluginResourcesResource extends CommonDBTM {
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
       $canbadges        = Session::haveright('plugin_badges', READ);
+      $canimport        = Session::haveright('plugin_resources_import', READ);
 
       if ($this->canCreate()) {
          echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
@@ -1636,6 +1660,36 @@ class PluginResourcesResource extends CommonDBTM {
 
          echo "</tr>";
       }
+
+      if ($canimport) {
+         $colspan = 0;
+
+         //See import SYGES
+         echo "<tr><th colspan='6'>" . __('Import SYGES', 'resources') . "</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td class='center' colspan='2'>";
+         echo "<a href=\"./import.php?actionImport=checkAdd\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Importation de nouvelles ressources', 'resources') . "'>";
+         echo "<br>" . __('Importation de nouvelles ressources', 'resources') . "</a>";
+         echo "</td>";
+
+
+         echo "<td class='center' colspan='2'>";
+         echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Incohérences avec Syges', 'resources') . "'>";
+         echo "<br>" . __('Incohérences avec Syges', 'resources') . "</a>";
+         echo "</td>";
+
+         echo "<td class='center' colspan='2'>";
+         echo "<a href=\"./import.php?actionImport=checkDelete\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Supression de ressources humaines', 'resources') . "'>";
+         echo "<br>" . __('Supression de ressources humaines', 'resources') . "</a>";
+         echo "</td>";
+
+         echo "</tr>";
+      }
+
       echo " </table></div>";
    }
 

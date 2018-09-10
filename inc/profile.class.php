@@ -59,6 +59,7 @@ class PluginResourcesProfile extends Profile {
                                                   'plugin_resources_employment'      => 0,
                                                   'plugin_resources_budget'          => 0,
                                                   'plugin_resources_dropdown_public' => 0,
+                                                  'plugin_resources_import'          => 0,
                                                   'plugin_resources_open_ticket'     => 0,
                                                   'plugin_resources_all'             => 0]);
          $prof->showForm($ID);
@@ -79,6 +80,7 @@ class PluginResourcesProfile extends Profile {
                                          'plugin_resources_employment'      => ALLSTANDARDRIGHT,
                                          'plugin_resources_budget'          => ALLSTANDARDRIGHT,
                                          'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
+                                         'plugin_resources_import'          => 0,
                                          'plugin_resources_open_ticket'     => 1,
                                          'plugin_resources_all'             => 1], true);
 
@@ -155,6 +157,14 @@ class PluginResourcesProfile extends Profile {
       $profile->displayRightsChoiceMatrix($publicRights, ['canedit'       => $canedit,
                                                                'default_class' => 'tab_bg_2',
                                                                'title'         => __('Public service management', 'resources')]);
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if($config->getField('import_external_datas')==1){
+         $importRights = $this->getAllRights(false, ['import']);
+         $profile->displayRightsChoiceMatrix($importRights, ['canedit'       => $canedit,
+                                                             'default_class' => 'tab_bg_2',
+                                                             'title'         => __('Import external datas', 'resources')]);
+      }
 
       if ($canedit
           && $closeform) {
@@ -222,6 +232,11 @@ class PluginResourcesProfile extends Profile {
                 'label'     => __('Dropdown management', 'resources'),
                 'field'     => 'plugin_resources_dropdown_public',
                 'type'      => 'public'
+          ],
+          ['itemtype'  => 'PluginResourcesImport',
+           'label'     => __('Import SYGES', 'resources'),
+           'field'     => 'plugin_resources_import',
+           'type'      => 'import'
           ]
       ];
 
@@ -296,6 +311,7 @@ class PluginResourcesProfile extends Profile {
                            'employment'      => 'plugin_resources_employment',
                            'budget'          => 'plugin_resources_budget',
                            'dropdown_public' => 'plugin_resources_dropdown_public',
+                           'import'          => 'plugin_resources_import',
                            'open_ticket'     => 'plugin_resources_open_ticket',
                            'all'             => 'plugin_resources_all'];
 
