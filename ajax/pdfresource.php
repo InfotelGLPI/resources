@@ -73,6 +73,9 @@ if ($plugin->isActivated("useditemsexport")) {
 
          $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/export.pdf.php";
          echo __('Please ensure that the return form is signed by the employee', 'resources')."<br><br>";
+         echo "<span class='red'>" .
+              __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources').
+              "</span><br><br>";
          echo "<a class='vsubmit' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('Download the restitution form', 'resources') . "</a>";
 
          Html::closeForm();
