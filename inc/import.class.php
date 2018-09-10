@@ -513,7 +513,7 @@ class PluginResourcesImport extends CommonDBTM {
                $parameters = "actionImport=".$_SESSION['actionImport'];
                Html::printPager($limitBegin, $nbRows, $target, $parameters);
             }
-            
+
             $this->listHead();
 
             echo "<tr>";

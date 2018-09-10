@@ -312,7 +312,7 @@ else if (isset($_POST["add_checklist"])) {
 
 } else if (isset($_POST["delete_picture"])) {
    if (isset($_POST['picture'])) {
-      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $_POST['picture'];
+      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $_POST['picture'];
       if (file_exists($filename)) {
          if (unlink($filename)) {
             $_POST['picture'] = 'NULL';

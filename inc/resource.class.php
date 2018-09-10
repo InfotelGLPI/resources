@@ -424,16 +424,16 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[] = [
             'id'       => '36',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'matricule_SYGES',
-            'name'     => __('Matricule SYGES', 'resources'),
+            'field'    => 'matricule_External',
+            'name'     => __('Registration number External', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];
          $tab[] = [
             'id'       => '37',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'id_SYGES',
-            'name'     => __('ID SYGES', 'resources'),
+            'field'    => 'id_External',
+            'name'     => __('External ID', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];
@@ -589,7 +589,7 @@ class PluginResourcesResource extends CommonDBTM {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
 
-               if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/")) {
+               if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/")) {
                   $input['picture'] = $this->addPhoto($this);
                }
             } else {
@@ -701,8 +701,7 @@ class PluginResourcesResource extends CommonDBTM {
       $name = $this->replace_accents($name);
 
       $tmpfile  = GLPI_DOC_DIR . "/_uploads/" . $name;
-      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $name;
-
+      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $name;
       imagejpeg($tmp, $tmpfile, 100);
 
       rename($tmpfile, $filename);
@@ -935,7 +934,7 @@ class PluginResourcesResource extends CommonDBTM {
       global $CFG_GLPI;
 
       if (isset($this->input['picture']) && $this->input['picture'] != "" && $this->input['picture'] != "null" && $this->input['picture'] != "NULL") {
-         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->input['picture'];
+         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->input['picture'];
          unlink($filename);
       }
       if ($CFG_GLPI["notifications_mailing"]
@@ -1027,7 +1026,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<td rowspan='6' colspan='2' align='center'>";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
-         $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->fields["picture"];
+         $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -1664,27 +1663,27 @@ class PluginResourcesResource extends CommonDBTM {
       if ($canimport) {
          $colspan = 0;
 
-         //See import SYGES
-         echo "<tr><th colspan='6'>" . __('Import SYGES', 'resources') . "</th></tr>";
+         //See import External
+         echo "<tr><th colspan='6'>" . __('External Imports', 'resources') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkAdd\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Importation de nouvelles ressources', 'resources') . "'>";
-         echo "<br>" . __('Importation de nouvelles ressources', 'resources') . "</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' alt='" . __('Import new resource', 'resources') . "'>";
+         echo "<br>" . __('Importation new resource', 'resources') . "</a>";
          echo "</td>";
 
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Incohérences avec Syges', 'resources') . "'>";
-         echo "<br>" . __('Incohérences avec Syges', 'resources') . "</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with External', 'resources') . "'>";
+         echo "<br>" . __('Incoherences avec External', 'resources') . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkDelete\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Supression de ressources humaines', 'resources') . "'>";
-         echo "<br>" . __('Supression de ressources humaines', 'resources') . "</a>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/delete.png' alt='" . __('Delete resource', 'resources') . "'>";
+         echo "<br>" . __('Delete resources', 'resources') . "</a>";
          echo "</td>";
 
          echo "</tr>";
@@ -2270,7 +2269,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
 
       if (isset($this->fields["picture"])) {
-         $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->fields["picture"];
+         $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -2361,7 +2360,7 @@ class PluginResourcesResource extends CommonDBTM {
                $user["comment"] = "";
 
                if (isset($data["picture"]) && !empty($data["picture"])) {
-                  $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $data["picture"];
+                  $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
                   if (file_exists($path)) {
                      $user["comment"] .= "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
                       <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -3964,7 +3963,7 @@ class PluginResourcesResource extends CommonDBTM {
    static function sendFile($file, $filename) {
 
       // Test securite : document in DOC_DIR
-      $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/", "", $file);
+      $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/", "", $file);
 
       if (strstr($tmpfile, "../") || strstr($tmpfile, "..\\")) {
          Event::log($file, "sendFile", 1, "security",
