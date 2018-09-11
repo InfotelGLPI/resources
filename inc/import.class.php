@@ -469,15 +469,10 @@ class PluginResourcesImport extends CommonDBTM {
 
                   // Checkbox for the first colomn
                   if ($field == "id") {
-                     echo "<td width='10' valign='top'>
-                               <span class='form-group-checkbox'>
-                                   <input type='checkbox' class='new_checkbox' id='checkall_imports" . $data . "' name='resource[import][" . $data . "]' value='1' data-glpicore-ma-tags='common'>
-                                   <label class='label-checkbox' title='' for='checkall_imports" . $data . "'> 
-                                      <span class='check'></span> 
-                                      <span class='box'></span>&nbsp;
-                                   </label>
-                               </span>
-                           </td>";
+                     echo "<td width='10' valign='top'>";
+
+                     echo Html::showCheckbox(["name" => "resource[import][$data]"]);
+                     echo "</td>";
                   } else {
                      $this->listContent($field, $data, $datas, $options, $showDiff);
                   }
@@ -526,15 +521,7 @@ class PluginResourcesImport extends CommonDBTM {
       $options["value"] = 0;
       foreach ($findRes as $findVal) {
          if ($findVal['name'] == $data || $noIf) {
-            if ($itemType == "PluginResourcesClient") {
                $options["value"] = $findVal['id'];
-            } else if ($itemType == "PluginResourcesContractType") {
-               if ($datas["origin"] == "Externe") {
-                  $options["value"] = $findVal['id'];
-               }
-            } else {
-               $options["value"] = $findVal['id'];
-            }
 
          }
       }
@@ -554,8 +541,8 @@ class PluginResourcesImport extends CommonDBTM {
       foreach ($fieldsToCheck as $fieldImport => $fieldResource) {
          if ($datas[$fieldResource] != $datas[$fieldImport] &&
              ($field == $fieldResource || $field == $fieldImport)) {
-            $showDiff[$fieldResource]['showDiff'] = "font-weight:bold;";
-            $showDiff[$fieldImport]['showDiff']   = "font-weight:bold;";
+            $showDiff[$fieldResource]['showDiff'] = "font-weight:bold;color:red;";
+            $showDiff[$fieldImport]['showDiff']   = "font-weight:bold;color:red;";
          } else {
             $showDiff[$fieldResource]['showDiff'] = "";
             $showDiff[$fieldImport]['showDiff']   = "";
@@ -671,24 +658,20 @@ class PluginResourcesImport extends CommonDBTM {
             if ($user->getFromDB($data)) {
                $resp = $user->getField("firstname") . " " . $user->getField("realname");
             }
-            echo "<td valign='top' style='" . $showDiff . "'><input type='hidden' value='" . $data . "' 
-                        name='resource[values][" . $datas['id'] . "][" . $field . "]'>" . $resp . "</td>";
+            echo "<td valign='top' style='" . $showDiff . "'>" . $resp . "</td>";
             break;
          case "date_begin_imports" :
          case "date_begin_resources" :
          case "date_end_imports" :
          case "date_end_resources" :
             if ($data != "" && $data != null) {
-               echo "<td valign='top' style='" . $showDiff . "'><input type='hidden' value='" . $data . "' 
-                                    name='resource[values][" . $datas['id'] . "][" . $field . "]'>" . date("d/m/Y", strtotime($data)) . "</td>";
+               echo "<td valign='top' style='" . $showDiff . "'>" . date("d/m/Y", strtotime($data)) . "</td>";
             } else {
                echo "<td></td>";
             }
             break;
          default :
-            //            echo html::input("resource[values][".$datas['id']."][".$field."]",["value"=>$data]);
-            echo "<td valign='top' style='" . $showDiff . "'><input type='hidden' value='" . $data . "' 
-                     name='resource[values][" . $datas['id'] . "][" . $field . "]'>" . $data . "</td>";
+            echo "<td valign='top' style='" . $showDiff . "'>" . $data . "</td>";
             break;
       }
    }
@@ -697,9 +680,11 @@ class PluginResourcesImport extends CommonDBTM {
     * @param $values
     * @param $action
     */
-   function processResources($values, $action) {
+   function processResources($id, $values, $action) {
       $resource         = new PluginResourcesResource();
       $import           = new PluginResourcesImport();
+      $import->getFromDB($id);
+      $values = array_merge($values,$import->fields);
       $valuesUpdateKeys = [];
       foreach ($values as $field => $val) {
          if (strpos($field, "imports")) {
@@ -715,6 +700,12 @@ class PluginResourcesImport extends CommonDBTM {
          } else {
             if ($field == "origin") {
                $valuesUpdateKeys['imports']['contracttype_external'] = $val;
+            } else if($field == "matricule") {
+               $valuesUpdateKeys['imports']["matricule_external"] = $val;
+            } else if($field == "branching_agency") {
+               $valuesUpdateKeys['imports']["branching_agency_external"] = $val;
+            } else if($field == "email") {
+               $valuesUpdateKeys['imports']["email_external"] = $val;
             } else {
                $valuesUpdateKeys['imports'][$field] = $val;
             }
@@ -724,7 +715,6 @@ class PluginResourcesImport extends CommonDBTM {
          case "checkAdd" :
             $valuesUpdateKeys['imports']['entities_id'] = 0;
             if ($resource->add($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully imported', 'resources'), true, INFO);
             } else {
@@ -735,7 +725,6 @@ class PluginResourcesImport extends CommonDBTM {
             $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully updated', 'resources'), true, INFO);
             } else {
@@ -751,7 +740,6 @@ class PluginResourcesImport extends CommonDBTM {
             $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource end date successfully update', 'resources'), true, INFO);
             } else {

@@ -512,7 +512,7 @@ class PluginResourcesResource extends CommonDBTM {
             'id'       => '36',
             'table'    => 'glpi_plugin_resources_resources',
             'field'    => 'matricule_external',
-            'name'     => __('Registration number External', 'resources'),
+            'name'     => __('Administrative number External', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];

@@ -38,6 +38,8 @@ if (Session::getCurrentInterface() == 'central' &&
 }
 
 $import = new PluginResourcesImport();
+$oneDataSelected = false;
+
 if ($import->canView() || Session::haveRight("config", UPDATE)) {
    if (isset($_GET["actionImport"]) && !empty($_GET["actionImport"])) {
       $_SESSION["actionImport"] = $_GET["actionImport"];
@@ -46,9 +48,17 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
    if (isset($_POST['import'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            $import->processResources($_POST['resource']['values'][$idResourceImport], $_GET['actionImport']);
+            if($_POST['resource']['import'][$idResourceImport]==1){
+               $oneDataSelected = true;
+               $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], $_GET['actionImport']);
+            }
          }
-         Html::back();
+         if($oneDataSelected) {
+            Html::back();
+         } else {
+            Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
+            Html::back();
+         }
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
@@ -56,9 +66,18 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
    } else if (isset($_POST['exportCSV'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
+            if($_POST['resource']['import'][$idResourceImport]==1) {
+               $oneDataSelected = true;
+               $datas[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
+            }
          }
-         $import->array_download($datas, ";");
+         if($oneDataSelected) {
+            $import->array_download($datas, ";");
+         } else {
+               Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
+               Html::back();
+         }
+
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
@@ -66,9 +85,18 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
    } else if (isset($_POST['exportPDF'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesPDF");
+            if($_POST['resource']['import'][$idResourceImport]==1) {
+               $oneDataSelected = true;
+               $datas[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesPDF");
+            }
          }
-         $import->array_download($datas, "");
+         if($oneDataSelected) {
+            $import->array_download($datas, "");
+            header("Location: http://localhost/glpi931/plugins/resources/front/import.php?actionImport=checkIncoherences");
+         } else {
+            Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
+            Html::back();
+         }
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
