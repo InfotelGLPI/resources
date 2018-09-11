@@ -1024,8 +1024,7 @@ class PluginResourcesImport extends CommonDBTM {
                   }
 
                   // Process for adding datas in import table
-                  if ($resource = $resource->getFromDBByCrit(["id_external" => $datas['id_external']])) {
-
+                  if ($resource->getFromDBByCrit(["id_external" => $datas['id_external']])) {
                      //if datas are identical with ressource data we skip the raw
                      if ($datas['date_begin'] == $resource->getField('date_begin') &&
                          $datas['date_end'] == $resource->getField('date_end') &&
