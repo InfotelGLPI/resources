@@ -864,8 +864,6 @@ class PluginResourcesImport extends CommonDBTM {
                               FROM glpi_plugin_resources_resources
                               WHERE id_external!='') ";
       } else if ($_SESSION['actionImport'] == 'checkIncoherences') {
-         $resource = new PluginResourcesResource();
-
          $SELECT  .= ",glpi_plugin_resources_resources.contracttype_External as contracttype_External,
                       glpi_plugin_resources_contracttypes.name as name_contracttypes,
                       glpi_plugin_resources_resources.branching_agency_External as branching_agency_External_resources,
@@ -1061,8 +1059,7 @@ class PluginResourcesImport extends CommonDBTM {
                }
 
                //If there is no row with the id
-               if (!$import->getFromDBByCrit(['id_external"' => $datas['id_external'],
-                                              '"is_active'   => 1])) {
+               if (!$import->getFromDBByCrit(['id_external' => $datas['id_external']])) {
                   $nbRowAdd++;
 
                   $resource = new PluginResourcesResource();
