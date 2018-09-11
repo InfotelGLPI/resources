@@ -437,7 +437,7 @@ class PluginResourcesImport extends CommonDBTM {
       Html::autocompletionTextField($this, "matricule_External", ["value" => $resource->getField('matricule_External')]);
       echo "</td>";
 
-      echo "<td>" . __('Externa  ID', 'resources') . "</td>";
+      echo "<td>" . __('External  ID', 'resources') . "</td>";
       echo "<td>";
       Html::autocompletionTextField($this, "id_external", ["value" => $resource->getField('id_external')]);
       echo "</td>";
