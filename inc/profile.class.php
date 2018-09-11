@@ -268,7 +268,8 @@ class PluginResourcesProfile extends Profile {
           ['itemtype'  => 'PluginResourcesImport',
                 'label'     => __('External Import', 'resources'),
                 'field'     => 'plugin_resources_import',
-                'type'      => 'import'
+                'type'      => 'import',
+                'rights' => [READ => __('Read') , UPDATE => __('Update')]
           ]
       ];
 
