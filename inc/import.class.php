@@ -137,7 +137,7 @@ class PluginResourcesImport extends CommonDBTM {
       return '';
    }
 
-   /* public function rawSearchOptions(){
+    public function rawSearchOptions(){
        $tab = [];
 
        $tab[] = [
@@ -159,7 +159,7 @@ class PluginResourcesImport extends CommonDBTM {
        $tab[] = [
           'id'            => '2',
           'table'         => $this->getTable(),
-          'field'         => 'id_External',
+          'field'         => 'id_external',
           'name'          => __('ID External', 'resources'),
           'massiveaction' => false,
           'datatype'      => 'text'
@@ -324,7 +324,7 @@ class PluginResourcesImport extends CommonDBTM {
        }
 
        return $tab;
-    }*/
+    }
 
 
    /**
@@ -378,7 +378,7 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('External ID', 'resources') . "</td>";
       echo "<td>";
-      echo $resource->getField('id_External');
+      echo $resource->getField('id_external');
       echo "</td>";
 
       echo "</tr>";
@@ -440,7 +440,7 @@ class PluginResourcesImport extends CommonDBTM {
 
       echo "<td>" . __('Externa  ID', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "id_External", ["value" => $resource->getField('id_External')]);
+      Html::autocompletionTextField($this, "id_external", ["value" => $resource->getField('id_external')]);
       echo "</td>";
 
       echo "</tr>";
@@ -787,7 +787,7 @@ class PluginResourcesImport extends CommonDBTM {
          case "checkAdd" :
             $valuesUpdateKeys['imports']['entities_id'] = 0;
             if ($resource->add($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_External = '" . $valuesUpdateKeys['imports']["id_External"] . "'"]);
+               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully imported', 'resources'), true, INFO);
             } else {
@@ -795,10 +795,10 @@ class PluginResourcesImport extends CommonDBTM {
             }
             break;
          case "checkIncoherences" :
-            $resource->getFromDBByCrit(["id_External = '" . $valuesUpdateKeys['imports']["id_External"] . "'"]);
+            $resource->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_External = '" . $valuesUpdateKeys['imports']["id_External"] . "'"]);
+               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully updated', 'resources'), true, INFO);
             } else {
@@ -811,10 +811,10 @@ class PluginResourcesImport extends CommonDBTM {
             break;
             break;
          case "checkDelete" :
-            $resource->getFromDBByCrit(["id_External = '" . $valuesUpdateKeys['imports']["id_External"] . "'"]);
+            $resource->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_External = '" . $valuesUpdateKeys['imports']["id_External"] . "'"]);
+               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource end date successfully update', 'resources'), true, INFO);
             } else {
@@ -841,7 +841,7 @@ class PluginResourcesImport extends CommonDBTM {
     **/
    static function initSQL($limit, $limitBegin, $limitNb) {
       $SELECT  = "SELECT imp.id as id, 
-                        imp.id_External as id_External_imports,
+                        imp.id_external as id_external_imports,
                         imp.matricule as matricule_External, 
                         imp.name as name_imports, 
                         imp.firstname as firstname_imports,
@@ -853,17 +853,17 @@ class PluginResourcesImport extends CommonDBTM {
                         imp.affected_client as affected_client_imports,
                         imp.email as email_External ";
       $FROM    = "FROM glpi_plugin_resources_imports imp ";
-      $JOIN    = "INNER JOIN glpi_plugin_resources_resources ON glpi_plugin_resources_resources.id_External = imp.id_External 
+      $JOIN    = "INNER JOIN glpi_plugin_resources_resources ON glpi_plugin_resources_resources.id_external = imp.id_external 
                INNER JOIN glpi_plugin_resources_contracttypes ON glpi_plugin_resources_resources.plugin_resources_contracttypes_id = glpi_plugin_resources_contracttypes.id                
                ";
       $WHERE   = "";
       $GROUPBY = "";
       $ORDER   = " ORDER BY imp.id";
       if ($_SESSION['actionImport'] == 'checkAdd') {
-         $WHERE .= "WHERE id_External NOT IN(
-                              SELECT id_External 
+         $WHERE .= "WHERE id_external NOT IN(
+                              SELECT id_external 
                               FROM glpi_plugin_resources_resources
-                              WHERE id_External!='') ";
+                              WHERE id_external!='') ";
       } else if ($_SESSION['actionImport'] == 'checkIncoherences') {
          $resource = new PluginResourcesResource();
 
@@ -900,7 +900,6 @@ class PluginResourcesImport extends CommonDBTM {
       return $QUERY;
    }
 
-
    /**
     * Get all CSV Data from file $file
     *
@@ -936,7 +935,7 @@ class PluginResourcesImport extends CommonDBTM {
     */
    function array_download($array, $delimiter) {
 
-      $entete = ["id_External"           => "External ID",
+      $entete = ["id_external"           => "External ID",
                  "matricule_External"    => "Matricule",
                  "name"                  => "Nom",
                  "firstname"             => "Prenom",
@@ -1030,7 +1029,7 @@ class PluginResourcesImport extends CommonDBTM {
 
             //Translate files data for inserting in Database
             $arrayCorrespondance = [
-               'id'                     => 'id_External',
+               'id'                     => 'id_external',
                'Origine'                => 'origin',
                'Matricule'              => 'matricule',
                'Nom'                    => 'name',
@@ -1064,7 +1063,7 @@ class PluginResourcesImport extends CommonDBTM {
                }
 
                //If there is no row with the id
-               if (!$import->getFromDBByCrit(['id_External = "' . $datas['id_External'] . '"'])) {
+               if (!$import->getFromDBByCrit(['id_external = "' . $datas['id_external'] . '"'])) {
                   $nbRowAdd++;
 
                   $resource = new PluginResourcesResource();
@@ -1081,7 +1080,7 @@ class PluginResourcesImport extends CommonDBTM {
                   $datas['users_id_sales'] = $responsable->getField("id");
 
                   // Process for adding datas in import table
-                  if ($resource->getFromDBByCrit(["id_External = '" . $datas['id_External'] . "'"])) {
+                  if ($resource->getFromDBByCrit(["id_external = '" . $datas['id_external'] . "'"])) {
 
                      //if datas are identical with ressource data we skip the raw
                      if ($datas['date_begin'] == $resource->getField('date_begin') &&
