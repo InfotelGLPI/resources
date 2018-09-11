@@ -722,7 +722,6 @@ class PluginResourcesImport extends CommonDBTM {
       }
       switch ($action) {
          case "checkAdd" :
-            Toolbox::logDebug($valuesUpdateKeys);
             $valuesUpdateKeys['imports']['entities_id'] = 0;
             if ($resource->add($valuesUpdateKeys['imports'])) {
                $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
@@ -733,7 +732,6 @@ class PluginResourcesImport extends CommonDBTM {
             }
             break;
          case "checkIncoherences" :
-            Toolbox::logDebug($valuesUpdateKeys);
             $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
