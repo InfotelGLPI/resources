@@ -511,7 +511,7 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[] = [
             'id'       => '36',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'matricule_External',
+            'field'    => 'matricule_external',
             'name'     => __('Registration number External', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
@@ -519,7 +519,7 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[] = [
             'id'       => '37',
             'table'    => 'glpi_plugin_resources_resources',
-            'field'    => 'id_External',
+            'field'    => 'id_external',
             'name'     => __('External ID', 'resources'),
             'datatype' => 'text',
             'massiveaction'=>false
@@ -1768,7 +1768,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with External', 'resources') . "'>";
-         echo "<br>" . __('Incoherences avec External', 'resources') . "</a>";
+         echo "<br>" . __('Inconsistencies with External', 'resources') . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";

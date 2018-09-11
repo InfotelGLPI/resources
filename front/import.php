@@ -57,7 +57,7 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
             $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
-         }
+   }
          $import->array_download($datas,";");
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
@@ -74,7 +74,7 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
          Html::back();
       }
    }
-     $import->showListDatas();
+   $import->showListDatas();
 } else {
       Html::displayRightError();
 }

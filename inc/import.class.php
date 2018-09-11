@@ -749,6 +749,7 @@ class PluginResourcesImport extends CommonDBTM {
             }
             break;
          default :
+//            echo html::input("resource[values][".$datas['id']."][".$field."]",["value"=>$data]);
             echo "<td valign='top' style='" . $showDiff . "'><input type='hidden' value='".$data."' 
                      name='resource[values][".$datas['id']."][".$field."]'>".$data."</td>";
             break;
@@ -1129,7 +1130,7 @@ class PluginResourcesImport extends CommonDBTM {
          } else if($_SESSION["actionImport"] == "checkIncoherences"){
             $actions['PluginResourcesImport' . MassiveAction::CLASS_ACTION_SEPARATOR . 'ImportUpdate'] = __("Update inconsistencies", 'resources');
          } else if($_SESSION["actionImport"] == "checkDelete"){
-            $actions['PluginResourcesImport' . MassiveAction::CLASS_ACTION_SEPARATOR . 'ImportDelete'] = __("Importer end date of ressources", 'resources');
+            $actions['PluginResourcesImport' . MassiveAction::CLASS_ACTION_SEPARATOR . 'ImportDelete'] = __("Import end date of ressources", 'resources');
 
          }
       }
