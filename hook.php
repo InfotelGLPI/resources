@@ -272,7 +272,6 @@ function plugin_resources_install() {
    //Version 2.5.2
    if (!$DB->fieldExists("glpi_plugin_resources_configs","import_external_datas")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.5.2.sql");
-
    }
 
    if ($update80) {

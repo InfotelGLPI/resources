@@ -311,26 +311,6 @@ CREATE TABLE `glpi_plugin_resources_ticketcategories` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `glpi_plugin_resources_profiles`;
-CREATE TABLE `glpi_plugin_resources_profiles` (
-   `id` int(11) NOT NULL auto_increment,
-   `profiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
-   `resources` char(1) collate utf8_unicode_ci default NULL,
-   `task` char(1) collate utf8_unicode_ci default NULL,
-   `checklist` char(1) collate utf8_unicode_ci default NULL,
-   `all` char(1) collate utf8_unicode_ci default NULL,
-   `employee` char(1) collate utf8_unicode_ci default NULL,
-   `resting` char(1) collate utf8_unicode_ci default NULL,
-   `holiday` char(1) collate utf8_unicode_ci default NULL,
-   `open_ticket` char(1) collate utf8_unicode_ci default NULL,
-   `employment` char(1) collate utf8_unicode_ci default NULL,
-   `budget` char(1) collate utf8_unicode_ci default NULL,
-   `dropdown_public` char(1) collate utf8_unicode_ci default NULL,
-   `import` char(1) collate utf8_unicode_ci default NULL,
-   PRIMARY KEY  (`id`),
-   KEY `profiles_id` (`profiles_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 DROP TABLE IF EXISTS `glpi_plugin_resources_reportconfigs`;
 CREATE TABLE `glpi_plugin_resources_reportconfigs` (
    `id` int(11) NOT NULL auto_increment,

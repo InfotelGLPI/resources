@@ -4,7 +4,6 @@ ALTER TABLE glpi_plugin_resources_resources ADD `id_external`varchar(255) COLLAT
 ALTER TABLE glpi_plugin_resources_resources ADD `branching_agency_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD `contracttype_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD `email_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_profiles ADD `import` char(1) collate utf8_unicode_ci default NULL;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (

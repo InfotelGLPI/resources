@@ -137,194 +137,193 @@ class PluginResourcesImport extends CommonDBTM {
       return '';
    }
 
-    public function rawSearchOptions(){
-       $tab = [];
+   public function rawSearchOptions() {
+      $tab = [];
 
-       $tab[] = [
-          'id'   => 'common',
-          'name' => __('Characteristics')
-       ];
-
-
-       //Données de l'import External
-       $tab[] = [
-          'id'            => '1',
-          'table'         => $this->getTable(),
-          'field'         => 'id',
-          'name'          => __('ID'),
-          'massiveaction' => false,
-          'datatype'      => 'number'
-       ];
-
-       $tab[] = [
-          'id'            => '2',
-          'table'         => $this->getTable(),
-          'field'         => 'id_external',
-          'name'          => __('ID External', 'resources'),
-          'massiveaction' => false,
-          'datatype'      => 'text'
-       ];
-
-       $tab[] = [
-          'id'            => '3',
-          'table'         => $this->getTable(),
-          'field'         => 'name',
-          'name'          => __('Name'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'            => '4',
-          'table'         => $this->getTable(),
-          'field'         => 'firstname',
-          'name'          => __('Firstname'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'            => '5',
-          'table'         => $this->getTable(),
-          'field'         => 'matricule',
-          'name'          => __('Matricule'),
-          'massiveaction' => false,
-          'datatype'      => 'text'
-       ];
-
-       $tab[] = [
-          'id'        => '6',
-          'table'     => $this->getTable(),
-          'field'     => 'users_id_sales',
-          'name'      => __('Sales manager External', 'resources'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'       => '8',
-          'table'    => $this->getTable(),
-          'field'    => 'date_begin',
-          'name'     => __('Arrival date External', 'resources'),
-          'massiveaction' => false,
-          'datatype' => 'date'
-       ];
-
-       $tab[] = [
-          'id'       => '10',
-          'table'    => $this->getTable(),
-          'field'    => 'date_end',
-          'name'     => __('Departure date External', 'resources'),
-          'massiveaction' => false,
-          'datatype' => 'date'
-       ];
-
-       $tab[] = [
-          'id'       => '12',
-          'table'    => $this->getTable(),
-          'field'    => 'branching_agency',
-          'name'     => __('Agence de rattachement External', 'resources'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'       => '13',
-          'table'    => "glpi_locations",
-          'field'    => 'name',
-          'name'     => __('Location'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'       => '15',
-          'table'    => $this->getTable(),
-          'field'    => 'origin',
-          'name'     => __('Type Contrat External', 'resources'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
-
-       $tab[] = [
-          'id'       => '16',
-          'table'    => 'glpi_plugin_resources_contracttypes',
-          'field'    => 'name',
-          'name'     => __('Type de contrat', 'resources'),
-          'massiveaction' => false,
-          'datatype' => 'dropdown'
-       ];
+      $tab[] = [
+         'id'   => 'common',
+         'name' => __('Characteristics')
+      ];
 
 
+      //Données de l'import External
+      $tab[] = [
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
 
-       $tab[] = [
-          'id'       => '18',
-          'table'    => $this->getTable(),
-          'field'    => 'email',
-          'name'     => __('Email External', 'resources'),
-          'massiveaction' => false,
-          'datatype'  => 'text'
-       ];
+      $tab[] = [
+         'id'            => '2',
+         'table'         => $this->getTable(),
+         'field'         => 'id_external',
+         'name'          => __('ID External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
 
-       //Données de GLPI
-       if($_SESSION['actionImport']=="checkIncoherences"){
-          $tab[] = [
-             'id'        => '7',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'     => 'users_id_sales',
-             'name'      => __('Sales manager GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
+      $tab[] = [
+         'id'            => '3',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Name'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
 
-          $tab[] = [
-             'id'        => '9',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'     => 'date_begin',
-             'name'      => __('Arrival date GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
+      $tab[] = [
+         'id'            => '4',
+         'table'         => $this->getTable(),
+         'field'         => 'firstname',
+         'name'          => __('Firstname'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
 
-          $tab[] = [
-             'id'        => '11',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'     => 'date_end',
-             'name'      => __('Departure date GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
+      $tab[] = [
+         'id'            => '5',
+         'table'         => $this->getTable(),
+         'field'         => 'matricule',
+         'name'          => __('Matricule'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
 
-          $tab[] = [
-             'id'       => '14',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'    => 'branching_agency_External',
-             'name'     => __('Agence de rattachement GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
+      $tab[] = [
+         'id'            => '6',
+         'table'         => $this->getTable(),
+         'field'         => 'users_id_sales',
+         'name'          => __('Sales manager External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
 
-          $tab[] = [
-             'id'       => '17',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'    => 'contracttype_External',
-             'name'     => __('Type Contrat GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
+      $tab[] = [
+         'id'            => '8',
+         'table'         => $this->getTable(),
+         'field'         => 'date_begin',
+         'name'          => __('Arrival date External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'date'
+      ];
 
-          $tab[] = [
-             'id'       => '19',
-             'table'     => "glpi_plugin_resources_resources",
-             'field'    => 'email_External',
-             'name'     => __('Email GLPI', 'resources'),
-             'massiveaction' => false,
-             'datatype'  => 'text'
-          ];
-       }
+      $tab[] = [
+         'id'            => '10',
+         'table'         => $this->getTable(),
+         'field'         => 'date_end',
+         'name'          => __('Departure date External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'date'
+      ];
 
-       return $tab;
-    }
+      $tab[] = [
+         'id'            => '12',
+         'table'         => $this->getTable(),
+         'field'         => 'branching_agency',
+         'name'          => __('Agence de rattachement External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
+
+      $tab[] = [
+         'id'            => '13',
+         'table'         => "glpi_locations",
+         'field'         => 'name',
+         'name'          => __('Location'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
+
+      $tab[] = [
+         'id'            => '15',
+         'table'         => $this->getTable(),
+         'field'         => 'origin',
+         'name'          => __('Type Contrat External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
+
+      $tab[] = [
+         'id'            => '16',
+         'table'         => 'glpi_plugin_resources_contracttypes',
+         'field'         => 'name',
+         'name'          => __('Type de contrat', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'dropdown'
+      ];
+
+
+      $tab[] = [
+         'id'            => '18',
+         'table'         => $this->getTable(),
+         'field'         => 'email',
+         'name'          => __('Email External', 'resources'),
+         'massiveaction' => false,
+         'datatype'      => 'text'
+      ];
+
+      //Données de GLPI
+      if ($_SESSION['actionImport'] == "checkIncoherences") {
+         $tab[] = [
+            'id'            => '7',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'users_id_sales',
+            'name'          => __('Sales manager GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+
+         $tab[] = [
+            'id'            => '9',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'date_begin',
+            'name'          => __('Arrival date GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+
+         $tab[] = [
+            'id'            => '11',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'date_end',
+            'name'          => __('Departure date GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+
+         $tab[] = [
+            'id'            => '14',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'branching_agency_External',
+            'name'          => __('Agence de rattachement GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+
+         $tab[] = [
+            'id'            => '17',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'contracttype_External',
+            'name'          => __('Type Contrat GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+
+         $tab[] = [
+            'id'            => '19',
+            'table'         => "glpi_plugin_resources_resources",
+            'field'         => 'email_External',
+            'name'          => __('Email GLPI', 'resources'),
+            'massiveaction' => false,
+            'datatype'      => 'text'
+         ];
+      }
+
+      return $tab;
+   }
 
 
    /**
@@ -559,14 +558,14 @@ class PluginResourcesImport extends CommonDBTM {
             }
             echo "</tbody></table>";
             if ($_SESSION['actionImport'] == "checkIncoherences") {
-               echo Html::submit("Exporter Données (CSV)", ['name' => 'exportCSV']) . "   ";
-               echo Html::submit("Exporter Données (PDF)", ['name' => 'exportPDF']) . "   ";
+               echo Html::submit(__('Export datas (CSV)', 'resource'), ['name' => 'exportCSV']) . "   ";
+               echo Html::submit(__('Export datas (PDF)', 'resource'), ['name' => 'exportPDF']) . "   ";
             }
-            echo Html::submit("Valider", ['name' => 'import']);
+            echo Html::submit(__('Import'), ['name' => 'import']);
             echo "</div>";
             Html::closeForm();
          } else {
-            echo "<br /><div class='center b'>" . __("No item found") . "</div>";
+            echo "<br /><div class='center b'>" . __('No item found') . "</div>";
          }
       }
    }
@@ -787,7 +786,7 @@ class PluginResourcesImport extends CommonDBTM {
          case "checkAdd" :
             $valuesUpdateKeys['imports']['entities_id'] = 0;
             if ($resource->add($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
+               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully imported', 'resources'), true, INFO);
             } else {
@@ -795,10 +794,10 @@ class PluginResourcesImport extends CommonDBTM {
             }
             break;
          case "checkIncoherences" :
-            $resource->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
+            $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
+               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource Successfully updated', 'resources'), true, INFO);
             } else {
@@ -811,10 +810,10 @@ class PluginResourcesImport extends CommonDBTM {
             break;
             break;
          case "checkDelete" :
-            $resource->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
+            $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
             if ($resource->update($valuesUpdateKeys['imports'])) {
-               $import->getFromDBByCrit(["id_external = '" . $valuesUpdateKeys['imports']["id_external"] . "'"]);
+               $import->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource end date successfully update', 'resources'), true, INFO);
             } else {
@@ -1018,15 +1017,14 @@ class PluginResourcesImport extends CommonDBTM {
     * @return array output
     */
    function initCsvDataAndImportGLPI($task) {
-      $path     = GLPI_PLUGIN_DOC_DIR . "/resources/import/";
-      $files    = scandir($path);
-      $nbRowAdd = 0;
-
+      $path      = GLPI_PLUGIN_DOC_DIR . "/resources/import/";
+      $files     = scandir($path);
+      $nbRowAdd  = 0;
+      $fileDatas = "";
       // All files in the folder
       foreach ($files as $file) {
          if (!is_dir($path . "/" . $file)) {
             $fileDatas = $this->getCsvDatas($path, $file);
-
             //Translate files data for inserting in Database
             $arrayCorrespondance = [
                'id'                     => 'id_external',
@@ -1059,28 +1057,40 @@ class PluginResourcesImport extends CommonDBTM {
                   if ($arrayCorrespondance[$key] == 'matricule' && $datas["origin"] == "Interne") {
                      $raw = "C" . $raw;
                   }
-                  $datas[$arrayCorrespondance[$key]] = Html::cleanInputText($raw);
+                  $datas[$arrayCorrespondance[$key]] = preg_replace("/\s+/", " ", Html::cleanInputText($raw));
                }
 
                //If there is no row with the id
-               if (!$import->getFromDBByCrit(['id_external = "' . $datas['id_external'] . '"'])) {
+               if (!$import->getFromDBByCrit(['id_external"' => $datas['id_external'],
+                                              '"is_active'   => 1])) {
                   $nbRowAdd++;
 
                   $resource = new PluginResourcesResource();
 
                   //Import id of commercial resp
-                  $responsable = new User();
-                  $firstname   = substr($datas['users_id_sales'],
-                                        0,
-                                        strpos($datas['users_id_sales'], " "));
-                  $realname    = substr($datas['users_id_sales'],
-                                        strpos($datas['users_id_sales'],
-                                               " ") + 1);
-                  $responsable->getFromDBByCrit(["firstname = '" . $firstname . "' AND realname = '" . $realname . "'"]);
-                  $datas['users_id_sales'] = $responsable->getField("id");
+                  $resp      = new User();
+                  $firstname = substr($datas['users_id_sales'],
+                                      0,
+                                      strpos($datas['users_id_sales'], " "));
+                  $realname  = substr($datas['users_id_sales'],
+                                      strpos($datas['users_id_sales'],
+                                             " ") + 1);
+                  $cnt       = countElementsInTable('glpi_users', ['firstname' => $firstname,
+                                                                   'realname'  => $realname,
+                                                                   'is_active' => 1]);
+
+                  if ($cnt == 1) {
+                     $resp->getFromDBByCrit(["firstname" => $firstname,
+                                             "realname"  => $realname,
+                                             "is_active" => 1]);
+                     $datas['users_id_sales'] = $resp->getField('id');
+                  } else {
+                     $datas['users_id_sales'] = 0;
+                  }
 
                   // Process for adding datas in import table
-                  if ($resource->getFromDBByCrit(["id_external = '" . $datas['id_external'] . "'"])) {
+                  if ($resource = $resource->getFromDBByCrit(["id_external" => $datas['id_external'],
+                                                              "is_active"   => 1])) {
 
                      //if datas are identical with ressource data we skip the raw
                      if ($datas['date_begin'] == $resource->getField('date_begin') &&
@@ -1096,8 +1106,7 @@ class PluginResourcesImport extends CommonDBTM {
                   }
                }
             }
-            if ($nbRowAdd) {
-               $cron_status = 1;
+            if ($nbRowAdd > 0) {
                if ($task) {
                   $task->addVolume($nbRowAdd);
                   $task->log(__('External datas successfully imported', 'resources'));
@@ -1107,6 +1116,9 @@ class PluginResourcesImport extends CommonDBTM {
                $task->log(__('No item selected', 'resources'));
             }
          }
+      }
+      if ($fileDatas == "") {
+         $task->log(__('No file found', 'resources'));
       }
    }
 
@@ -1203,8 +1215,8 @@ class PluginResourcesImport extends CommonDBTM {
          return 0;
       }
 
-      $import   = new self();
-      $nb_lines = $import->initCsvDataAndImportGLPI($task);
+      $import = new self();
+      $import->initCsvDataAndImportGLPI($task);
       return 1;
    }
 
