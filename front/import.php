@@ -27,13 +27,13 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 //show list of imports
 if (Session::getCurrentInterface() == 'central' &&
     (!isset($_POST['exportCSV']) && !isset($_POST['exportPDF']))) {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else if(!isset($_POST['exportCSV']) && !isset($_POST['exportPDF'])){
+} else if (!isset($_POST['exportCSV']) && !isset($_POST['exportPDF'])) {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
@@ -41,34 +41,34 @@ $import = new PluginResourcesImport();
 if ($import->canView() || Session::haveRight("config", UPDATE)) {
    if (isset($_GET["actionImport"]) && !empty($_GET["actionImport"])) {
       $_SESSION["actionImport"] = $_GET["actionImport"];
-      $action = $_SESSION["actionImport"];
+      $action                   = $_SESSION["actionImport"];
    }
-   if(isset($_POST['import'])){
-      if(isset($_POST['resource']['import'])){
-         foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            $import->processResources($_POST['resource']['values'][$idResourceImport],$_GET['actionImport']);
-         }
-         Html::back();
-      } else{
-         Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
-         Html::back();
-      }
-   } else if(isset($_POST['exportCSV'])) {
+   if (isset($_POST['import'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
-   }
-         $import->array_download($datas,";");
+            $import->processResources($_POST['resource']['values'][$idResourceImport], $_GET['actionImport']);
+         }
+         Html::back();
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
       }
-   } else if(isset($_POST['exportPDF'])){
+   } else if (isset($_POST['exportCSV'])) {
+      if (isset($_POST['resource']['import'])) {
+         foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
+            $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
+         }
+         $import->array_download($datas, ";");
+      } else {
+         Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
+         Html::back();
+      }
+   } else if (isset($_POST['exportPDF'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
             $datas[$idResourceImport] = $import->processResources($_POST['resource']['values'][$idResourceImport], "importIncoherencesPDF");
          }
-         $import->array_download($datas,"");
+         $import->array_download($datas, "");
       } else {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
@@ -76,7 +76,7 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
    }
    $import->showListDatas();
 } else {
-      Html::displayRightError();
+   Html::displayRightError();
 }
 
 if (Session::getCurrentInterface() == 'central') {

@@ -571,7 +571,7 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addStandardTab('PluginResourcesTask', $ong, $options);
       $config = new PluginResourcesConfig();
       $config->getFromDB(1);
-      if($config->getField('import_external_datas')==1){
+      if ($config->useImportExternalDatas()) {
          $this->addStandardTab('PluginResourcesImport', $ong, $options);
       }
 
