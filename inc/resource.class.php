@@ -478,7 +478,7 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addStandardTab('PluginResourcesTask', $ong, $options);
       $config = new PluginResourcesConfig();
       $config->getFromDB(1);
-      if($config->getField('import_external_datas')==1){
+      if ($config->useImportExternalDatas()) {
          $this->addStandardTab('PluginResourcesImport', $ong, $options);
       }
 
@@ -1677,7 +1677,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with External', 'resources') . "'>";
-         echo "<br>" . __('Incoherences avec External', 'resources') . "</a>";
+         echo "<br>" . __('Inconsistencies with External', 'resources') . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";
