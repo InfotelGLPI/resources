@@ -541,9 +541,7 @@ function plugin_resources_install() {
    CronTask::Register('PluginResourcesChecklist', 'ResourcesChecklist', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
-   if(class_exists("PluginResourcesImport")){
-      CronTask::Register('PluginResourcesImport', 'ImportExternal', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
-   }
+   CronTask::Register('PluginResourcesImport', 'ImportExternal', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
 
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);

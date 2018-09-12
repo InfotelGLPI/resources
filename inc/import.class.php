@@ -412,6 +412,124 @@ class PluginResourcesImport extends CommonDBTM {
    }
 
    /**
+    * Print pager for search option (first/previous/next/last)
+    *
+    * @param $start                       from witch item we start
+    * @param $numrows                     total items
+    * @param $target                      page would be open when click on the option (last,previous etc)
+    * @param $parameters                  parameters would be passed on the URL.
+    * @param $item_type_output            item type display - if >0 display export PDF et Sylk form
+    *                                     (default 0)
+    * @param $item_type_output_param      item type parameter for export (default 0)
+    * @param $additional_info             Additional information to display (default '')
+    *
+    * @return nothing (print a pager)
+    *
+    **/
+   static function printPager($start, $numrows, $target, $parameters, $item_type_output = 0,
+                              $item_type_output_param = 0, $additional_info = '') {
+      global $CFG_GLPI;
+
+      $list_limit = $_SESSION['glpilist_limit'];
+      // Forward is the next step forward
+      $forward = $start+$list_limit;
+
+      // This is the end, my friend
+      $end = $numrows-$list_limit;
+
+      // Human readable count starts here
+
+      $current_start = $start+1;
+
+      // And the human is viewing from start to end
+      $current_end = $current_start+$list_limit-1;
+      if ($current_end > $numrows) {
+         $current_end = $numrows;
+      }
+
+      // Empty case
+      if ($current_end == 0) {
+         $current_start = 0;
+      }
+
+      // Backward browsing
+      if ($current_start-$list_limit <= 0) {
+         $back = 0;
+      } else {
+         $back = $start-$list_limit;
+      }
+
+      // Print it
+      echo "<div><table class='tab_cadre_pager'>";
+      echo "<tr>";
+
+      if (strpos($target, '?') == false) {
+         $fulltarget = $target."?".$parameters;
+      } else {
+         $fulltarget = $target."&".$parameters;
+      }
+      // Back and fast backward button
+      if (!$start == 0) {
+         echo "<th class='left'>";
+         echo "<a href='$fulltarget&amp;start=0'>";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/pics/first.png' alt=\"".__s('Start').
+              "\" title=\"".__s('Start')."\" class='pointer'>";
+         echo "</a></th>";
+         echo "<th class='left'>";
+         echo "<a href='$fulltarget&amp;start=$back'>";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/pics/left.png' alt=\"".__s('Previous').
+              "\" title=\"".__s('Previous')."\" class='pointer'>";
+         echo "</a></th>";
+      }
+
+      // Print the "where am I?"
+      echo "<td width='31%' class='tab_bg_2'>";
+      Html::printPagerForm("$fulltarget&amp;start=$start");
+      echo "</td>";
+
+      if (!empty($additional_info)) {
+         echo "<td class='tab_bg_2'>";
+         echo $additional_info;
+         echo "</td>";
+      }
+
+      if (!empty($item_type_output)) {
+
+         echo "<td class='tab_bg_2 responsive_hidden' width='30%'>";
+         $values[Search::PDF_OUTPUT_LANDSCAPE]     = __('Current page in landscape PDF');
+         $values[Search::CSV_OUTPUT]               = __('Current page in CSV');
+
+         Dropdown::showFromArray('display_type', $values);
+         echo "<button type='submit' name='export' class='unstyled pointer' ".
+              " title=\"" . _sx('button', 'Export') . "\">" .
+              "<i class='fa fa-floppy-o'></i><span class='sr-only'>"._sx('button', 'Export')."<span>";
+         echo "</td>";
+      }
+
+      echo "<td width='20%' class='tab_bg_2 b'>";
+      //TRANS: %1$d, %2$d, %3$d are page numbers
+      printf(__('From %1$d to %2$d of %3$d'), $current_start, $current_end, $numrows);
+      echo "</td>\n";
+
+      // Forward and fast forward button
+      if ($forward<$numrows) {
+         echo "<th class='right'>";
+         echo "<a href='$fulltarget&amp;start=$forward'>";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/pics/right.png' alt=\"".__s('Next').
+              "\" title=\"".__s('Next')."\" class='pointer'>";
+         echo "</a></th>\n";
+
+         echo "<th class='right'>";
+         echo "<a href='$fulltarget&amp;start=$end'>";
+         echo "<img src='".$CFG_GLPI["root_doc"]."/pics/last.png' alt=\"".__s('End').
+              "\" title=\"".__s('End')."\" class='pointer'>";
+         echo "</a></th>\n";
+      }
+      // End pager
+      echo "</tr></table></div>";
+   }
+
+   /**
     * Display result table
     *
     * @return nothing
@@ -445,10 +563,15 @@ class PluginResourcesImport extends CommonDBTM {
                } else {
                   $nbRows = 0;
                }
-
+               echo "<form name='form' method='post'
+                  action ='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php?actionImport=" . $_SESSION['actionImport'] . "' >";
                $target     = $CFG_GLPI['root_doc'] . '/plugins/resources/front/import.php';
                $parameters = "actionImport=" . $_SESSION['actionImport'];
-               Html::printPager($limitBegin, $nbRows, $target, $parameters);
+               $item_type_output = 0;
+               if ($_SESSION['actionImport'] == "checkIncoherences") {
+                  $item_type_output = 1;
+               }
+               $this->printPager($limitBegin, $nbRows, $target, $parameters,$item_type_output);
             }
 
             $this->listHead();
@@ -490,10 +613,6 @@ class PluginResourcesImport extends CommonDBTM {
                echo "</tr>";
             }
             echo "</tbody></table>";
-            if ($_SESSION['actionImport'] == "checkIncoherences") {
-               echo Html::submit(__('Export datas (CSV)', 'resource'), ['name' => 'exportCSV']) . "   ";
-               echo Html::submit(__('Export datas (PDF)', 'resource'), ['name' => 'exportPDF']) . "   ";
-            }
             echo Html::submit(__('Import'), ['name' => 'import']);
             echo "</div>";
             Html::closeForm();
@@ -521,7 +640,7 @@ class PluginResourcesImport extends CommonDBTM {
       $options["value"] = 0;
       foreach ($findRes as $findVal) {
          if ($findVal['name'] == $data || $noIf) {
-               $options["value"] = $findVal['id'];
+            $options["value"] = $findVal['id'];
 
          }
       }
@@ -556,8 +675,7 @@ class PluginResourcesImport extends CommonDBTM {
     */
    function listHead() {
       global $CFG_GLPI;
-      echo "<form name='form' method='post'
-         action ='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php?actionImport=" . $_SESSION['actionImport'] . "' >";
+
       echo "<input type='hidden' name='actionImport' value='" . $_SESSION['actionImport'] . "'>";
       echo "<div align='center'>
                 <table boreder='0' class='tab_cadrehov'>";
@@ -739,6 +857,8 @@ class PluginResourcesImport extends CommonDBTM {
          case "checkDelete" :
             $resource->getFromDBByCrit(["id_external" => $valuesUpdateKeys['imports']["id_external"]]);
             $valuesUpdateKeys['imports']['id'] = $resource->getField("id");
+            $valuesUpdateKeys['imports']['is_leaving'] = 1;
+            $valuesUpdateKeys['imports']['users_id_recipient_leaving'] = Session::getLoginUserID();
             if ($resource->update($valuesUpdateKeys['imports'])) {
                $import->deleteFromDB();
                Session::addMessageAfterRedirect(__('Resource end date successfully update', 'resources'), true, INFO);
@@ -856,13 +976,14 @@ class PluginResourcesImport extends CommonDBTM {
     * @param $array
     * @param $delimiter
     */
-   function array_download($array, $delimiter) {
+   function array_download($array, $delimiter="") {
 
+      $_SESSION['glpicsrftokens'][$_POST['_glpi_csrf_token']] = time() + GLPI_CSRF_EXPIRES;
       $entete = ["id_external"           => "External ID",
                  "matricule_external"    => "Matricule",
                  "name"                  => "Nom",
                  "firstname"             => "Prenom",
-                 "contracttype_external" => "Type contrat",
+                 "contracttype_external" => "Contrat",
                  "users_id_sales"        => "Resp comm",
                  "date_begin"            => "Date Debut",
                  "date_end"              => "Date Fin",
@@ -889,35 +1010,41 @@ class PluginResourcesImport extends CommonDBTM {
       if ($delimiter != "") {
          fputcsv($f, $entete, $delimiter);
          foreach ($arrayResource as $val) {
-            fputcsv($f, $val, $delimiter);
+            fputcsv($f,array_map('utf8_decode',array_values($val)) , $delimiter);
          }
 
          fseek($f, 0);
 
-         header('Content-Type: application/csv');
+         header("Content-Type: application-x/force-download");
+         header('Content-Type: application/csv; charset=utf-8');
          header('Content-Disposition: attachment; filename="export.csv";');
 
          fpassthru($f);
       } else {
+         $lenghtRow = [];
+         foreach ($arrayResource as $rowResource) {
+            foreach ($rowResource as $key => $row) {
+               if(!isset($lenghtRow[$key])){
+                  $lenghtRow[$key] = 0;
+               }
+               if(strlen($row) > $lenghtRow[$key]){
+                  $lenghtRow[$key] = strlen($row);
+               }
+            }
+         }
+
          $pdf = new FPDF();
+         $pdf->SetMargins(0, 5);
          $pdf->AddPage("L");
          $pdf->SetFont('Arial', '', 8);
          foreach ($entete as $keyEntete => $rowEntet) {
-            if ($keyEntete == "email_external") {
-               $pdf->Cell(40, 5, $rowEntet);
-            } else {
-               $pdf->Cell(25, 5, $rowEntet);
-            }
+            $pdf->Cell($lenghtRow[$keyEntete]*2, 5, utf8_decode($rowEntet));
          }
          $pdf->Ln();
 
          foreach ($arrayResource as $rowResource) {
             foreach ($rowResource as $key => $row) {
-               if ($key == "email_external") {
-                  $pdf->Cell(40, 5, $row);
-               } else {
-                  $pdf->Cell(25, 5, $row);
-               }
+               $pdf->Cell($lenghtRow[$key]*2, 5, utf8_decode($row));
 
                if ($key == "users_id_sales") {
                   $pdf->Ln();
@@ -926,13 +1053,13 @@ class PluginResourcesImport extends CommonDBTM {
          }
          $pdf->Output();
 
-         header('Content-Type: application/pdf');
+         header("Content-Type: application-x/force-download");
+         header('Content-Type: application/pdf; charset=utf-8');
          header('Content-Disposition: attachment; filename="export.pdf";');
       }
 
-
       fclose($f);
-      exit;
+      exit();
    }
 
    /**

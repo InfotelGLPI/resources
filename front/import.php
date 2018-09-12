@@ -30,10 +30,9 @@
 include('../../../inc/includes.php');
 
 //show list of imports
-if (Session::getCurrentInterface() == 'central' &&
-    (!isset($_POST['exportCSV']) && !isset($_POST['exportPDF']))) {
+if (Session::getCurrentInterface() == 'central' && !isset($_POST['export'])) {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
-} else if (!isset($_POST['exportCSV']) && !isset($_POST['exportPDF'])) {
+} else if (!isset($_POST['export'])) {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
@@ -63,46 +62,26 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
       }
-   } else if (isset($_POST['exportCSV'])) {
+   } else if (isset($_POST['display_type']) && isset($_POST['export'])) {
       if (isset($_POST['resource']['import'])) {
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
             if($_POST['resource']['import'][$idResourceImport]==1) {
-               $oneDataSelected = true;
                $datas[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
+            } else{
+               $datasImport[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
             }
          }
-         if($oneDataSelected) {
-            $import->array_download($datas, ";");
-         } else {
-               Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
-               Html::back();
-         }
-
-      } else {
-         Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
-         Html::back();
-      }
-   } else if (isset($_POST['exportPDF'])) {
-      if (isset($_POST['resource']['import'])) {
-         foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            if($_POST['resource']['import'][$idResourceImport]==1) {
-               $oneDataSelected = true;
-               $datas[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesPDF");
-            }
-         }
-         if($oneDataSelected) {
-            $import->array_download($datas, "");
-            header("Location: http://localhost/glpi931/plugins/resources/front/import.php?actionImport=checkIncoherences");
-         } else {
-            Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
-            Html::back();
+         if ($_POST['display_type']==3){
+            $import->array_download($datasImport, ";");
+         } else if ($_POST['display_type']==2){
+            $import->array_download($datasImport);
          }
       } else {
-         Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
       }
+   } else{
+      $import->showListDatas();
    }
-   $import->showListDatas();
 } else {
    Html::displayRightError();
 }
