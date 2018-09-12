@@ -1761,7 +1761,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./import.php?actionImport=checkAdd\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' alt='" . __('Import new resource', 'resources') . "'>";
-         echo "<br>" . __('Importation new resource', 'resources') . "</a>";
+         echo "<br>" . __('Import new resource', 'resources') . "</a>";
          echo "</td>";
 
 

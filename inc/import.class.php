@@ -180,7 +180,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'            => '15',
          'table'         => $this->getTable(),
          'field'         => 'origin',
-         'name'          => __('Type Contrat External', 'resources'),
+         'name'          => __('External Contract type', 'resources'),
          'massiveaction' => false,
          'datatype'      => 'text'
       ];
@@ -189,7 +189,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'            => '16',
          'table'         => 'glpi_plugin_resources_contracttypes',
          'field'         => 'name',
-         'name'          => __('Type de contrat', 'resources'),
+         'name'          => __('Contract type', 'resources'),
          'massiveaction' => false,
          'datatype'      => 'dropdown'
       ];
@@ -246,7 +246,7 @@ class PluginResourcesImport extends CommonDBTM {
             'id'            => '17',
             'table'         => "glpi_plugin_resources_resources",
             'field'         => 'contracttype_external',
-            'name'          => __('Type Contrat GLPI', 'resources'),
+            'name'          => __('Contract type GLPI', 'resources'),
             'massiveaction' => false,
             'datatype'      => 'text'
          ];
@@ -979,16 +979,16 @@ class PluginResourcesImport extends CommonDBTM {
    function array_download($array, $delimiter="") {
 
       $_SESSION['glpicsrftokens'][$_POST['_glpi_csrf_token']] = time() + GLPI_CSRF_EXPIRES;
-      $entete = ["id_external"           => "External ID",
-                 "matricule_external"    => "Matricule",
-                 "name"                  => "Nom",
-                 "firstname"             => "Prenom",
-                 "contracttype_external" => "Contrat",
-                 "users_id_sales"        => "Resp comm",
-                 "date_begin"            => "Date Debut",
-                 "date_end"              => "Date Fin",
-                 "affected_client"       => "Client affecte",
-                 "email_external"        => "Email"];
+      $entete = ["id_external"           => __("External ID",'resources'),
+                 "matricule_external"    => __("Administrative number"),
+                 "name"                  => __("Name"),
+                 "firstname"             => __("First name"),
+                 "contracttype_external" => __("Contract"),
+                 "users_id_sales"        => __("Sales manager",'resources'),
+                 "date_begin"            => __("Begin date"),
+                 "date_end"              => __("End date"),
+                 "affected_client"       => _n("Affected client","Affected clients",1,'resources'),
+                 "email_external"        => __("Email")];
       ksort($entete);
       $f = fopen('php://temp', 'w');
       foreach ($array as $id => $resources) {
