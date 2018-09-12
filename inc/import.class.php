@@ -162,7 +162,7 @@ class PluginResourcesImport extends CommonDBTM {
          'id'            => '12',
          'table'         => $this->getTable(),
          'field'         => 'branching_agency',
-         'name'          => __('Agence de rattachement External', 'resources'),
+         'name'          => __('Branching Agency External', 'resources'),
          'massiveaction' => false,
          'datatype'      => 'text'
       ];
@@ -237,7 +237,7 @@ class PluginResourcesImport extends CommonDBTM {
             'id'            => '14',
             'table'         => "glpi_plugin_resources_resources",
             'field'         => 'branching_agency_external',
-            'name'          => __('Agence de rattachement GLPI', 'resources'),
+            'name'          => __('Branching Agency GLPI', 'resources'),
             'massiveaction' => false,
             'datatype'      => 'text'
          ];
