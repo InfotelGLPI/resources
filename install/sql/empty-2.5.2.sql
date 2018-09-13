@@ -36,7 +36,6 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `matricule_external` varchar(255) NOT NULL default '0',
    `id_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `branching_agency_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-   `contracttype_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `email_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),

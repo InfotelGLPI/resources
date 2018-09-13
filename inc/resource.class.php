@@ -512,7 +512,7 @@ class PluginResourcesResource extends CommonDBTM {
             'id'       => '36',
             'table'    => 'glpi_plugin_resources_resources',
             'field'    => 'matricule_external',
-            'name'     => __('Administrative number External', 'resources'),
+            'name'     => __('Administrative number'),
             'datatype' => 'text',
             'massiveaction'=>false
          ];
@@ -1752,29 +1752,30 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</tr>";
       }
       if ($canimport) {
-         $colspan = 0;
-
          //See import External
-         echo "<tr><th colspan='6'>" . __('External Imports', 'resources') . "</th></tr>";
+         echo "<tr><th colspan='6'>" . __('External imports', 'resources') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./import.php?actionImport=checkAdd\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' alt='" . __('Import new resource', 'resources') . "'>";
-         echo "<br>" . __('Import new resource', 'resources') . "</a>";
+         echo "<a href=\"./import.php?actionImport=" . PluginResourcesImport::ACTION_ADD . "\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' 
+               alt='" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_ADD) . "'>";
+         echo "<br>" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_ADD) . "</a>";
          echo "</td>";
 
 
          echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./import.php?actionImport=checkIncoherences\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' alt='" . __('Inconsistencies with External', 'resources') . "'>";
-         echo "<br>" . __('Inconsistencies with External', 'resources') . "</a>";
+         echo "<a href=\"./import.php?actionImport=" . PluginResourcesImport::ACTION_INCOHERENCE . "\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' 
+               alt='" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_INCOHERENCE) . "'>";
+         echo "<br>" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_INCOHERENCE) . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./import.php?actionImport=checkDelete\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/delete.png' alt='" . __('Delete resource', 'resources') . "'>";
-         echo "<br>" . __('Delete resources', 'resources') . "</a>";
+         echo "<a href=\"./import.php?actionImport=" . PluginResourcesImport::ACTION_DELETE . "\">";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/delete.png' 
+               alt='" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_DELETE) . "'>";
+         echo "<br>" . PluginResourcesImport::getNameInterface(PluginResourcesImport::ACTION_DELETE) . "</a>";
          echo "</td>";
 
          echo "</tr>";

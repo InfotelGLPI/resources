@@ -2,7 +2,6 @@ ALTER TABLE glpi_plugin_resources_configs ADD `import_external_datas` tinyint(1)
 ALTER TABLE glpi_plugin_resources_resources ADD `matricule_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD `id_external`varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD `branching_agency_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
-ALTER TABLE glpi_plugin_resources_resources ADD `contracttype_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD `email_external` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
