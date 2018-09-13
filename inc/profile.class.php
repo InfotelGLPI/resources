@@ -183,7 +183,7 @@ class PluginResourcesProfile extends Profile {
    static function getAllRights($all = true, $types = []) {
 
       $rights = [
-          ['itemtype'  => 'PluginResourcesResource',
+          [    'itemtype'  => 'PluginResourcesResource',
                 'label'     => _n('Human resource', 'Human resources', 1, 'resources'),
                 'field'     => 'plugin_resources',
                 'type'      => 'general'
