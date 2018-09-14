@@ -54,7 +54,7 @@ class PluginResourcesImport extends CommonDBTM {
     **/
    static function getTypeName($nb = 0) {
 
-      return __('Import');
+      return __('Import External', 'resources');
    }
 
    /**

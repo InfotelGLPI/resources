@@ -1753,7 +1753,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       if ($canimport) {
          //See import External
-         echo "<tr><th colspan='6'>" . __('External imports', 'resources') . "</th></tr>";
+         echo "<tr><th colspan='6'>" . __('Import External', 'resources') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
