@@ -36,23 +36,26 @@ if (Session::getCurrentInterface() == 'central' && !isset($_POST['export'])) {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
 
-$import = new PluginResourcesImport();
+$import          = new PluginResourcesImport();
 $oneDataSelected = false;
 
 if ($import->canView() || Session::haveRight("config", UPDATE)) {
-   if (isset($_GET["actionImport"]) && !empty($_GET["actionImport"])) {
-      $_SESSION["actionImport"] = $_GET["actionImport"];
-      $action                   = $_SESSION["actionImport"];
-   }
+
    if (isset($_POST['import'])) {
+
       if (isset($_POST['resource']['import'])) {
+
          foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            if($_POST['resource']['import'][$idResourceImport]==1){
+            if ($_POST['resource']['import'][$idResourceImport] == 1) {
                $oneDataSelected = true;
-               $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], $_GET['actionImport']);
+               $values          = [];
+               if (isset($_POST['resource']['values'][$idResourceImport])) {
+                  $values = $_POST['resource']['values'][$idResourceImport];
+               }
+               $import->processResources($idResourceImport, $values, $_GET['actionImport']);
             }
          }
-         if($oneDataSelected) {
+         if ($oneDataSelected) {
             Html::back();
          } else {
             Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
@@ -62,25 +65,8 @@ if ($import->canView() || Session::haveRight("config", UPDATE)) {
          Session::addMessageAfterRedirect(__('No item selected', 'resources'), true, ERROR);
          Html::back();
       }
-   } else if (isset($_POST['display_type']) && isset($_POST['export'])) {
-      if (isset($_POST['resource']['import'])) {
-         foreach ($_POST['resource']['import'] as $idResourceImport => $numRow) {
-            if($_POST['resource']['import'][$idResourceImport]==1) {
-               $datas[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
-            } else{
-               $datasImport[$idResourceImport] = $import->processResources($idResourceImport, $_POST['resource']['values'][$idResourceImport], "importIncoherencesCSV");
-            }
-         }
-         if ($_POST['display_type']==3){
-            $import->array_download($datasImport, ";");
-         } else if ($_POST['display_type']==2){
-            $import->array_download($datasImport);
-         }
-      } else {
-         Html::back();
-      }
-   } else{
-      $import->showListDatas();
+   } else {
+      $import->showListDatas($_GET["actionImport"]);
    }
 } else {
    Html::displayRightError();
