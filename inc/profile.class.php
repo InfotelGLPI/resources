@@ -190,7 +190,7 @@ class PluginResourcesProfile extends Profile {
          $importRights = $this->getAllRights(false, ['import']);
          $profile->displayRightsChoiceMatrix($importRights, ['canedit'       => $canedit,
                                                              'default_class' => 'tab_bg_2',
-                                                             'title'         => __('Import external datas', 'resources')]);
+                                                             'title'         => __('Import External', 'resources')]);
       }
       if ($canedit
           && $closeform) {
@@ -266,10 +266,10 @@ class PluginResourcesProfile extends Profile {
                 'type'      => 'public'
           ],
           ['itemtype'  => 'PluginResourcesImport',
-                'label'     => __('External Import', 'resources'),
-                'field'     => 'plugin_resources_import',
-                'type'      => 'import',
-                'rights' => [READ => __('Read') , UPDATE => __('Update')]
+           'label'     => __('Import External', 'resources'),
+           'field'     => 'plugin_resources_import',
+           'type'      => 'import',
+           'rights' => [READ => __('Read') , UPDATE => __('Update')]
           ]
       ];
 

@@ -432,7 +432,6 @@ class PluginResourcesImport extends CommonDBTM {
          case "locations_id" :
             $this->dropdownField("Location", "locations_id", $options, $datas['id'], $value);
             break;
-         case "users_id_sales_resources" :
          case "users_id_sales_imports" :
             $resp = __("No sales manager", "resources");
             $user = new User();
@@ -440,6 +439,16 @@ class PluginResourcesImport extends CommonDBTM {
                $resp = $user->getField("firstname") . " " . $user->getField("realname");
             }
             echo "<td valign='top' style='" . $showDiff . "'>" . $resp . "</td>";
+            break;
+         case 'users_id_sales_resources':
+            $resp = __("No sales manager", "resources");
+
+            echo "<td valign='top'>";
+            User::dropdown(['value'  => $datas['users_id_sales_resources'],
+                            'name'   => "users_id_sales",
+                            'right'  => 'all',
+                            'name' => 'resource[values]['.$datas['id'].'][users_id_sales]']);
+            echo "</td>";
             break;
          case "date_begin_imports" :
          case "date_begin_resources" :
@@ -569,70 +578,70 @@ class PluginResourcesImport extends CommonDBTM {
     */
    static function initSQL($actionImport, $limitBegin = 0, $limitNb = 0) {
 
-      $table_import    = "glpi_plugin_resources_imports";
-      $table_resources = "glpi_plugin_resources_resources";
+      $table_import    = "`glpi_plugin_resources_imports`";
+      $table_resources = "`glpi_plugin_resources_resources`";
       $entities_id     = $_SESSION['glpiactiveentities'];
 
-      $SELECT = "SELECT $table_import.id as id, 
-                        $table_import.id_external as id_external_imports,
-                        $table_import.matricule as matricule_external, 
-                        $table_import.name as name_imports, 
-                        $table_import.firstname as firstname_imports,
-                        $table_import.origin as origin,
-                        $table_import.branching_agency as branching_agency_external,
-                        $table_import.users_id_sales as users_id_sales_imports,
-                        $table_import.date_begin as date_begin_imports,
-                        $table_import.date_end as date_end_imports,
-                        $table_import.affected_client as affected_client,
-                        $table_import.email as email_external ";
+      $SELECT = "SELECT $table_import.`id` as id, 
+                        $table_import.`id_external` as id_external_imports,
+                        $table_import.`matricule` as matricule_external, 
+                        $table_import.`name` as name_imports, 
+                        $table_import.`firstname` as firstname_imports,
+                        $table_import.`origin` as origin,
+                        $table_import.`branching_agency` as branching_agency_external,
+                        $table_import.`users_id_sales` as users_id_sales_imports,
+                        $table_import.`date_begin` as date_begin_imports,
+                        $table_import.`date_end` as date_end_imports,
+                        $table_import.`affected_client` as affected_client,
+                        $table_import.`email` as email_external ";
       $FROM   = "FROM $table_import ";
 
       $JOIN = "INNER JOIN $table_resources 
-                  ON $table_resources.id_external = $table_import.id_external ";
+                  ON $table_resources.`id_external` = $table_import.`id_external` ";
 
       $WHERE   = "";
       $GROUPBY = "";
-      $ORDER   = " ORDER BY $table_import.id";
+      $ORDER   = " ORDER BY $table_import.`id`";
 
       if ($actionImport == self::ACTION_ADD) {
 
-         $SELECT .= ",$table_import.affected_client as client_name ";
+         $SELECT .= ",$table_import.`affected_client as client_name` ";
          //select id_external that are not present in resource
-         $WHERE .= "WHERE id_external NOT IN(
-                              SELECT id_external 
+         $WHERE .= "WHERE `id_external` NOT IN(
+                              SELECT `id_external` 
                               FROM $table_resources
-                              WHERE id_external != '') ";
+                              WHERE `id_external` != '') ";
 
       } else if ($actionImport == self::ACTION_INCOHERENCE) {
          //add fields for interface inconsistencies
-         $SELECT .= ",$table_resources.plugin_resources_contracttypes_id as contracttypes_id,
-                      $table_resources.branching_agency_external as branching_agency_external_resources,
-                      $table_resources.users_id_sales as users_id_sales_resources,
-                      $table_resources.date_begin as date_begin_resources,
-                      $table_resources.date_end as date_end_resources,
-                      $table_resources.email_external as email_external_resources,
-                      glpi_plugin_resources_employees.plugin_resources_clients_id as clients_id,
-                      $table_resources.locations_id ";
+         $SELECT .= ",$table_resources.`plugin_resources_contracttypes_id` as contracttypes_id,
+                      $table_resources.`branching_agency_external` as branching_agency_external_resources,
+                      $table_resources.`users_id_sales` as users_id_sales_resources,
+                      $table_resources.`date_begin` as date_begin_resources,
+                      $table_resources.`date_end` as date_end_resources,
+                      $table_resources.`email_external` as email_external_resources,
+					 `glpi_plugin_resources_employees`.`plugin_resources_clients_id` as clients_id,
+                      $table_resources.`locations_id` ";
 
          $FROM .= $JOIN;
          $FROM .= " INNER JOIN `glpi_plugin_resources_employees` 
                   ON `glpi_plugin_resources_employees`.`plugin_resources_resources_id` = $table_resources.id ";
 
-         $WHERE   .= "WHERE $table_resources.entities_id IN (" . implode(",", $entities_id) . ") 
-                     AND ($table_resources.branching_agency_external != $table_import.branching_agency
-                    OR $table_resources.users_id_sales != $table_import.users_id_sales 
-                    OR $table_resources.date_begin != $table_import.date_begin 
-                    OR $table_resources.date_end != $table_import.date_end 
-                    OR $table_resources.email_external != $table_import.email) ";
-         $GROUPBY = " GROUP BY $table_import.id";
+         $WHERE   .= "WHERE $table_resources.`entities_id` IN (" . implode(",", $entities_id) . ") 
+                     AND ($table_resources.`branching_agency_external` != $table_import.`branching_agency`
+                    OR $table_resources.`users_id_sales` != $table_import.`users_id_sales` 
+                    OR $table_resources.`date_begin` != $table_import.`date_begin` 
+                    OR $table_resources.`date_end` != $table_import.`date_end` 
+                    OR $table_resources.`email_external` != $table_import.`email`) ";
+         $GROUPBY = " GROUP BY $table_import.`id`";
 
       } else if ($actionImport == self::ACTION_DELETE) {
          //select resource who do not have a departure date or whose departure date is different
          $FROM  .= $JOIN;
-         $WHERE .= "WHERE $table_resources.entities_id IN (" . implode(",", $entities_id) . ")
-                     AND $table_resources.date_end IS NULL 
-                     AND $table_import.date_end > 0
-                    OR $table_resources.date_end < $table_import.date_end";
+         $WHERE .= "WHERE $table_resources.`entities_id` IN (" . implode(",", $entities_id) . ")
+                     AND $table_resources.`date_end` IS NULL 
+                     AND $table_import.`date_end` > 0
+                    OR $table_resources.`date_end` < $table_import.`date_end`";
       }
 
       $LIMIT = "";
