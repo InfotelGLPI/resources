@@ -175,7 +175,7 @@ function plugin_version_resources() {
 
    return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.4.5',
+      'version'        => '2.4.6',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
