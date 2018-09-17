@@ -1664,7 +1664,7 @@ class PluginResourcesResource extends CommonDBTM {
          $colspan = 0;
 
          //See import External
-         echo "<tr><th colspan='6'>" . __('Import External', 'resources') . "</th></tr>";
+         echo "<tr><th colspan='6'>" . __('Import external', 'resources') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
