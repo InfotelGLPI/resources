@@ -122,7 +122,7 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('Import External', 'resources');
+         echo __('Import external', 'resources');
          echo "</td>";
          echo "<td>";
          Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);

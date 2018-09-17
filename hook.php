@@ -951,12 +951,40 @@ function plugin_resources_addSelect($type, $ID, $num) {
    // No need of the function if you do not have specific cases
    switch ($table.".".$field) {
       case "glpi_plugin_resources_resources.name":
-         return "`".$table."`.`".$field."` AS META_$num,`".$table."`.`".$field."` AS ITEM_$num, `".$table."`.`id` AS ITEM_".$num."_2, ";
+         return "`".$table."`.`".$field."` AS META_$num,`".$table."`.`".$field."` AS ITEM_$num, 
+         `".$table."`.`id` AS ITEM_".$num."_2, ";
          break;
       case "glpi_plugin_resources_managers.name":
       case "glpi_plugin_resources_recipients_leaving.name":
       case "glpi_plugin_resources_recipients.name":
-         return "`".$table."`.`".$field."` AS ITEM_$num, `".$table."`.`id` AS ITEM_".$num."_2, `".$table."`.`firstname` AS ITEM_".$num."_3,`".$table."`.`realname` AS ITEM_".$num."_4, ";
+         return "`".$table."`.`".$field."` AS ITEM_$num, `".$table."`.`id` AS ITEM_".$num."_2, 
+         `".$table."`.`firstname` AS ITEM_".$num."_3,`".$table."`.`realname` AS ITEM_".$num."_4, ";
+         break;
+      case "glpi_plugin_resources_imports.id":
+
+         $table_resources = "`glpi_plugin_resources_resources`";
+         $select = "`".$table."`.`".$field."` AS ITEM_$num,
+                     $table.`name` as name_imports,
+                     $table.`firstname` as firstname_imports,
+                     $table.`matricule` as matricule_external, 
+                     $table.`origin` as origin,
+                     $table.`branching_agency` as branching_agency_external,
+                     $table.`users_id_sales` as users_id_sales_imports,
+                     $table.`date_begin` as date_begin_imports,
+                     $table.`date_end` as date_end_imports,
+                     $table.`affected_client` as affected_client,
+                     $table.`email` as email_external 
+                     $table_resources.`plugin_resources_contracttypes_id` as contracttypes_id,
+                     $table_resources.`matricule_external` as matricule_resources,
+                     $table_resources.`branching_agency_external` as branching_agency_external_resources,
+                     $table_resources.`users_id_sales` as users_id_sales_resources,
+                     $table_resources.`date_begin` as date_begin_resources,
+                     $table_resources.`date_end` as date_end_resources,
+                     $table_resources.`email_external` as email_external_resources,
+                     `glpi_plugin_resources_employees`.`plugin_resources_clients_id` as clients_id,
+                     $table_resources.`locations_id` ";
+
+         return $select;
          break;
    }
    return "";
@@ -1000,6 +1028,26 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
                   ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
          return $out;
          break;
+      case "PluginResourcesImport" :
+
+         $table_resources = "glpi_plugin_resources_resources";
+         $table_import = "glpi_plugin_resources_imports";
+
+         $join = " INNER JOIN $table_resources 
+                  ON `$table_resources`.`id_external` = `$table_import`.`id_external` ";
+         $join .= " LEFT JOIN `glpi_plugin_resources_employees` 
+                  ON `glpi_plugin_resources_employees`.`plugin_resources_resources_id` = `$table_resources`.`id`
+                  LEFT JOIN `glpi_plugin_resources_clients` 
+                  ON `glpi_plugin_resources_clients`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_clients_id`
+                  INNER JOIN `glpi_locations` 
+                  ON `glpi_locations`.`id` = $table_resources.`locations_id`
+                  INNER JOIN `glpi_plugin_resources_contracttypes` 
+                  ON `glpi_plugin_resources_contracttypes`.`id` = $table_resources.`plugin_resources_contracttypes_id`
+                  LEFT JOIN `glpi_users` as glpi_users_users_id_sales
+                  ON `glpi_users_users_id_sales`.`id` = `$table_import`.`users_id_sales`";
+         return $join;
+
+         break;
    }
    return "";
 }
@@ -1017,8 +1065,23 @@ function plugin_resources_addDefaultWhere($type) {
       case "PluginResourcesResource" :
          $who = Session::getLoginUserID();
          if (!Session::haveRight("plugin_resources_all", READ)) {
-            return " (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
+            return " (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' 
+            OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
          }
+         break;
+
+      case "PluginResourcesImport" :
+         $entities_id     = $_SESSION['glpiactiveentities'];
+         $table_resources = "glpi_plugin_resources_resources";
+         $table_import    = "glpi_plugin_resources_imports";
+
+         return " $table_resources.entities_id IN (" . implode(",", $entities_id) . ") 
+                     AND ($table_resources.branching_agency_external != $table_import.branching_agency
+                    OR $table_resources.`matricule_external` != $table_import.`matricule`
+                    OR $table_resources.users_id_sales != $table_import.users_id_sales 
+                    OR $table_resources.date_begin != $table_import.date_begin 
+                    OR $table_resources.date_end != $table_import.date_end 
+                    OR $table_resources.email_external != $table_import.email) ";
          break;
    }
    return "";
@@ -1602,12 +1665,19 @@ function plugin_resources_dynamicReport($parm) {
    $allowed = ['PluginResourcesDirectory', 'PluginResourcesRecap'];
 
    if (in_array($parm["item_type"], $allowed)) {
+      $item = new $parm["item_type"];
+
       $params = Search::manageParams($parm["item_type"], $parm);
       $data   = Search::prepareDatasForSearch($parm["item_type"], $params);
-      PluginResourcesDirectory::constructSQL($data);
+      $item->constructSQL($data);
+
       Search::constructData($data);
       Search::displayData($data);
       return true;
+   } else if ($parm["item_type"] == 'PluginResourcesImport'
+                 && isset($parm["display_type"])) {
+      PluginResourcesImport::showDynamicReport($parm);
+
    }
 
    return false;
