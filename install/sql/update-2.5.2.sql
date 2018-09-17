@@ -13,6 +13,7 @@ CREATE TABLE `glpi_plugin_resources_imports` (
    `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `firstname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `branching_agency` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+   `users_sales` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
    `users_id_sales` int(11) NOT NULL default '0',
    `date_begin` date default NULL,
    `date_end` date default NULL,
