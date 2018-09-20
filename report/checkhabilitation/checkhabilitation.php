@@ -208,6 +208,7 @@ if ($nbtot > 0) {
    echo Search::showNewLine($output_type);
 
    echo Search::showHeaderItem($output_type, PluginResourcesResource::getTypeName(1), $num);
+   echo Search::showHeaderItem($output_type, Location::getTypeName(1), $num);
    echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
    echo Search::showHeaderItem($output_type, PluginResourcesHabilitation::getTypeName(2), $num);
    echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
@@ -225,6 +226,8 @@ if ($nbtot > 0) {
       $resource->getFromDB($data['resources_id']);
 
       echo Search::showItem($output_type, $resource->getLink(), $num, $key);
+      echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_locations',
+                                                                    $resource->getField('locations_id')), $num, $key);
       echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
       echo Search::showItem($output_type, implode('<br>', $data['habilitations']), $num, $key);
       $user = new User();
