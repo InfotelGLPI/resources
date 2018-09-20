@@ -212,6 +212,7 @@ if ($nbtot > 0) {
    echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
    echo Search::showHeaderItem($output_type, PluginResourcesHabilitation::getTypeName(2), $num);
    echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
+   echo Search::showHeaderItem($output_type, __('Login'), $num);
    echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinggroup'], $num);
 
    echo Search::showEndLine($output_type);
@@ -233,6 +234,7 @@ if ($nbtot > 0) {
       $user = new User();
       $user->getFromDB($data['users_id']);
       echo Search::showItem($output_type, $user->getLink(), $num, $key);
+      echo Search::showItem($output_type, $user->getField('name'), $num, $key);
       echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
 
       echo Search::showEndLine($output_type);
