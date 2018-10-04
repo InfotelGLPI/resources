@@ -974,7 +974,7 @@ class PluginResourcesTask extends CommonDBTM {
       if ($isadmin) {
          $actions['PluginResourcesTask' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install']    = __('Associate');
          $actions['PluginResourcesTask' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = __('Dissociate');
-         $actions['PluginResourcesTask' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate']  = __('Duplicate', 'resources');
+         $actions['PluginResourcesTask' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate']  = _x('button', 'Duplicate');
          if (Session::haveRight('transfer', READ)
              && Session::isMultiEntitiesMode()
          ) {
@@ -1056,8 +1056,9 @@ class PluginResourcesTask extends CommonDBTM {
                foreach ($ids as $key => $val) {
                   $item->getFromDB($key);
                   unset($item->fields["id"]);
-                  $item->fields["name"]    = addslashes($item->fields["name"]);
-                  $item->fields["comment"] = addslashes($item->fields["comment"]);
+                  $item->fields["name"]        = addslashes($item->fields["name"]);
+                  $item->fields["comment"]     = addslashes($item->fields["comment"]);
+                  $item->fields["entities_id"] = $input['entities_id'];
                   if ($item->add($item->fields)) {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                   } else {
