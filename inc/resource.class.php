@@ -1007,7 +1007,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       if ($CFG_GLPI["notifications_mailing"]
           && $this->fields["is_template"] != 1
-          && isset($this->input['delete'])
+          && isset($this->input['_delete'])
           && isset($this->input['send_notification'])
           && $this->input['send_notification'] == 1
       ) {

@@ -236,7 +236,7 @@ class PluginResourcesTask extends CommonDBTM {
       global $CFG_GLPI;
 
       if ($CFG_GLPI["notifications_mailing"]
-          && isset($this->input['delete'])
+          && isset($this->input['_delete'])
       ) {
          $PluginResourcesResource = new PluginResourcesResource();
          $options                 = ['tasks_id' => $this->fields["id"]];
