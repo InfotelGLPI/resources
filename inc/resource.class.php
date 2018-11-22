@@ -343,7 +343,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
       $tab[] = [
          'id'       => '17',
-         'table'    => $this->getTable(),
+         'table'    => 'glpi_plugin_resources_resourcestates',
          'field'    => 'name',
          'name'     => PluginResourcesResourceState::getTypeName(1),
          'datatype'=>'dropdown'
