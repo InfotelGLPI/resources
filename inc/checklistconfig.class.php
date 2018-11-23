@@ -181,7 +181,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "</tr>";
 
-      $options['candel'] = false;
+//      $options['candel'] = false;
       $this->showFormButtons($options);
       return true;
    }

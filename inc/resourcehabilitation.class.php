@@ -343,7 +343,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   echo "</div>";
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
                   if ($habilitation_level->getField('number')) {
-                     Dropdown::showFromArray($habilitation_level->getName(), $habilitations,
+                     Dropdown::showFromArray(str_replace(" ","_",$habilitation_level->getName()), $habilitations,
                                              ['multiple' => true,
                                               'width'    => 100]);
                   } else {
@@ -392,7 +392,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       foreach ($params as $key => $val) {
          if (is_array($val)
-             && $habilitation_level->getFromDBByCrit(['name' => $key, 'number' => 1])) {
+             && ($habilitation_level->getFromDBByCrit(['name' => str_replace("_"," ",$key), 'number' => 1]) ||
+                 $habilitation_level->getFromDBByCrit(['name' => $key, 'number' => 1]))) {
             foreach ($val as $v) {
                $this->addResourceHabilitationInDb($v, $params);
             }
