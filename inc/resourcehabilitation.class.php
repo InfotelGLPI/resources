@@ -322,6 +322,12 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   } else {
                      Dropdown::showFromArray(str_replace(' ', '_', $habilitation_level->getName()), $habilitations);
                   }
+                  $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
+                                                                            $resource->fields["entities_id"],
+                                                                            true);
+                  unset($habilitations['']);
+                  echo "&nbsp";
+                  Html::showToolTip(nl2br(implode("<br>", $habilitations)));
                   echo "</div></div>";
                }
                echo "</div></div>";

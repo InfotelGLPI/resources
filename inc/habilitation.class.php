@@ -145,7 +145,7 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     *
     * @return array list of habilitations
     */
-   function getHabilitationsWithLevel(PluginResourcesHabilitationLevel $habilitationlevels, $entity) {
+   function getHabilitationsWithLevel(PluginResourcesHabilitationLevel $habilitationlevels, $entity, $comments = false) {
       global $DB;
 
       $plugin_habilitation = new self();
@@ -164,6 +164,11 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
 
       foreach ($DB->request($query) as $habilitation) {
          $habilitations[$habilitation['id']] = $habilitation['name'];
+
+         if ($comments
+            && isset($habilitation['comment']) && !empty($habilitation['comment'])) {
+            $habilitations[$habilitation['id']] .= " - " . $habilitation['comment'];
+         }
       }
 
       return $habilitations;
