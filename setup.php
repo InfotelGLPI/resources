@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+define('PLUGIN_RESOURCES_VERSION', '2.6.0');
+
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
    global $PLUGIN_HOOKS;
@@ -181,11 +183,16 @@ function plugin_version_resources() {
 
    return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.5.1',
+      'version'        => PLUGIN_RESOURCES_VERSION,
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
-      'minGlpiVersion' => '9.3',
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.4',
+            'dev' => false
+         ]
+      ]
    ];
 }
 
@@ -197,10 +204,11 @@ function plugin_version_resources() {
  * @return bool
  */
 function plugin_resources_check_prerequisites() {
-
-   if (version_compare(GLPI_VERSION, '9.3', 'lt')
-       || version_compare(GLPI_VERSION, '9.4', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.3');
+   if (version_compare(GLPI_VERSION, '9.4', 'lt')
+       || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', '9.4');
+      }
       return false;
    }
    return true;

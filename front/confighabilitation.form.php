@@ -72,8 +72,8 @@ if (isset($_POST['add_metademand'])) {
    }
 } else if (isset($_GET['new'])) {
    if ($plugin->isActivated("metademands")) {
-      $data = $habilitation->find('`entities_id`=' . $_SESSION['glpiactive_entity']."
-                                 AND `action` = ".PluginResourcesConfigHabilitation::ACTION_ADD);
+      $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
+                                 'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
       $data = array_shift($data);
       if (!empty($data["plugin_metademands_metademands_id"])) {
          Html::redirect($CFG_GLPI["root_doc"] . "/plugins/metademands/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
@@ -92,8 +92,8 @@ if (isset($_POST['add_metademand'])) {
 
 } else if (isset($_GET['delete'])) {
    if ($plugin->isActivated("metademands")) {
-      $data = $habilitation->find('`entities_id`=' . $_SESSION['glpiactive_entity']."
-                                 AND `action` = ".PluginResourcesConfigHabilitation::ACTION_ADD);
+      $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
+                                   'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
       $data = array_shift($data);
 
       if (!empty($data["plugin_metademands_metademands_id"])) {

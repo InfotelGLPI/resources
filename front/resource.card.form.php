@@ -39,8 +39,8 @@ if (isset($_POST['plugin_resources_resources_id'])) {
    $plugin_resources_resources_id = $_POST['plugin_resources_resources_id'];
 } else {
    $resource_item = new PluginResourcesResource_Item();
-   $resource = $resource_item->find("`itemtype` = 'User' AND 
-                                     `items_id` = " . $_SESSION['glpiID'],
+   $resource = $resource_item->find(['itemtype' => 'User', 
+                                     'items_id' => $_SESSION['glpiID']],
                                     "",
                                     "1");
 

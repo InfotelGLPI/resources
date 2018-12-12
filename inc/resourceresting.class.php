@@ -505,7 +505,15 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       $resting  = new PluginResourcesResourceResting();
-      $restings = $resting->find("`plugin_resources_resources_id` = $plugin_resources_resources_id AND (`date_end` IS NULL OR `date_end` LIKE '0000-00-00')");
+      $restrict = ['plugin_resources_resources_id' => $plugin_resources_resources_id,
+                   [
+                      'OR' => [
+                         'date_end' => NULL,
+                         'date_end' => '0000-00-00'
+                      ]
+                   ]];
+
+      $restings = $resting->find($restrict);
 
       //array of resting
       $elements = [];

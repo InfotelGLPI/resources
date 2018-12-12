@@ -122,7 +122,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
       }
 
       $used_data = [];
-      $data_entities = $this->find("`entities_id` = ".$_SESSION['glpiactive_entity']);
+      $data_entities = $this->find(['entities_id' => $_SESSION['glpiactive_entity']]);
 
       $number_action = count($data_entities);
 

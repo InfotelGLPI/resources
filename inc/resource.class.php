@@ -3138,7 +3138,7 @@ class PluginResourcesResource extends CommonDBTM {
             $resource = new PluginResourcesResource();
             if ($resource->getFromDB($plugin_resources_resources_id)) {
                $resource_item = new PluginResourcesResource_Item();
-               $linked        = $resource_item->find("`plugin_resources_resources_id` = " . $plugin_resources_resources_id);
+               $linked        = $resource_item->find(['plugin_resources_resources_id' => $plugin_resources_resources_id]);
 
                echo "<div class=\"bt-row\">";
                echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";

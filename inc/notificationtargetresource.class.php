@@ -398,7 +398,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                              $resource['plugin_resources_departments_id']);
             $resourcehabilitation                = new PluginResourcesResourceHabilitation();
-            $habilitations                       = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            $habilitations                       = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource['id']]);
             $tab                                 = [];
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
@@ -478,7 +478,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                               $checklist['plugin_resources_departments_id']);
             $resourcehabilitation                 = new PluginResourcesResourceHabilitation();
-            $habilitations                        = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $checklist['plugin_resources_resources_id']);
+            $habilitations                        = $resourcehabilitation->find(['plugin_resources_resources_id' => $checklist['plugin_resources_resources_id']]);
             $tab                                  = [];
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
@@ -553,7 +553,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                  $this->obj->getField('plugin_resources_departments_id'));
 
          $resourcehabilitation                         = new PluginResourcesResourceHabilitation();
-         $habilitations                                = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
+         $habilitations                                = $resourcehabilitation->find(['plugin_resources_resources_id' => $this->obj->getField('id')]);
          $tab                                          = [];
          $this->data['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
          foreach ($habilitations as $habilitation) {
@@ -683,7 +683,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                         $resource['plugin_resources_departments_id']);
 
             $resourcehabilitation = new PluginResourcesResourceHabilitation();
-            $habilitations        = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource['id']);
+            $habilitations        = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource['id']]);
             $tab                  = [];
             foreach ($habilitations as $habilitation) {
                $tab[] = Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
@@ -824,7 +824,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                     $this->obj->getField('plugin_resources_leavingreasons_id'));
 
          $resourcehabilitation                         = new PluginResourcesResourceHabilitation();
-         $habilitations                                = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $this->obj->getField('id'));
+         $habilitations                                = $resourcehabilitation->find(['plugin_resources_resources_id' => $this->obj->getField('id')]);
          $this->data['##lang.resource.habilitation##'] = PluginResourcesHabilitation::getTypeName(count($habilitations));
          $tab                                          = [];
          foreach ($habilitations as $habilitation) {

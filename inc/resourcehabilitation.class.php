@@ -148,7 +148,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
       $canedit = $this->canCreate();
 
-      $data = $this->find("`plugin_resources_resources_id` = " . $item->getField('id'));
+      $data = $this->find(['plugin_resources_resources_id' => $item->getField('id')]);
 
       if ($canedit) {
          $used = [];
@@ -295,10 +295,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          $dbu = new DbUtils();
 
-         $condition = $dbu->getEntitiesRestrictRequest("", $habilitation_level->getTable(),
-                                                 "entities_id",
-                                                 $resource->getEntityID(),
-                                                 $habilitation_level->maybeRecursive());
+         $condition  = $dbu->getEntitiesRestrictCriteria($habilitation_level->getTable(), 'entities_id',$resource->getEntityID(), $habilitation_level->maybeRecursive());
          $levels    = $habilitation_level->find($condition, "name");
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
@@ -436,11 +433,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $dbu = new DbUtils();
 
       $habilitation_level = new PluginResourcesHabilitationLevel();
-      $condition          = $dbu->getEntitiesRestrictRequest("AND", $habilitation_level->getTable(),
-                                                       "entities_id",
-                                                       $resource->getEntityID(),
-                                                       $habilitation_level->maybeRecursive());
-      $levels             = $habilitation_level->find("`is_mandatory_creating_resource` $condition", "name");
+      $condition  = ['is_mandatory_creating_resource' => 1] + $dbu->getEntitiesRestrictCriteria($habilitation_level->getTable(), 'entities_id',$resource->getEntityID(), $habilitation_level->maybeRecursive());
+      $levels             = $habilitation_level->find($condition, "name");
 
       foreach ($levels as $level) {
          if (!isset($params[str_replace("_", " ", $level['name'])])

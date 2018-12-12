@@ -34,8 +34,8 @@ if ($plugin->isActivated("useditemsexport")) {
 
    if (isset($_POST['plugin_resources_resources_id'])) {
       $resource_item = new PluginResourcesResource_Item();
-      $resource = $resource_item->find("`itemtype` = 'User' AND 
-                           `plugin_resources_resources_id` = ".$_POST['plugin_resources_resources_id'],
+      $resource = $resource_item->find(['itemtype' => 'User',
+                                        'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id']],
                            "",
                            "1");
 

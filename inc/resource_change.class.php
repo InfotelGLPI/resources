@@ -577,7 +577,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
     */
    private function listItems($canedit) {
       // Entity already added for this action
-      $datas = $this->find("", "actions_id");
+      $datas = $this->find([], "actions_id");
 
       $rand = mt_rand();
 
@@ -631,7 +631,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       global $CFG_GLPI;
 
       // Entity already added for this action
-      $datas = $this->find("`actions_id` = " . $actions_id);
+      $datas = $this->find(['actions_id' => $actions_id]);
 
       $used_entities = [];
       if ($datas) {

@@ -50,12 +50,10 @@ class PluginResourcesResourceCard extends CommonDBTM {
       $resource->getFromDB($ID);
 
       $resource_item = new PluginResourcesResource_Item();
-      $data = $resource_item->find("`itemtype` = 'User' AND 
-                           `plugin_resources_resources_id` = $ID",
-                                       "",
-                                       "1");
+      $data          =  $resource_item->find(['itemtype' => 'User',
+                                              'plugin_resources_resources_id' => $ID], "", "1");
 
-      $data = reset($data);
+      $data     = reset($data);
       $users_id = $data['items_id'];
 
       $user = new User();
@@ -65,8 +63,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
          echo "<div id='plugin_resources_card'>";
          echo "<div id='plugin_resources_card-header'>";
-         echo "<div id='plugin_resources_card-header-button' data-download='".$CFG_GLPI["root_doc"].
-              "/front/user.form.php?getvcard=1&amp;id=".$user->getID()."'
+         echo "<div id='plugin_resources_card-header-button' data-download='" . $CFG_GLPI["root_doc"] .
+              "/front/user.form.php?getvcard=1&amp;id=" . $user->getID() . "'
                            class='download mouse-events'></div>";
          echo "</div>"; //end plugin_resources_card-header
 
@@ -147,8 +145,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
          echo "<p>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Location'), "</span>" .
-               Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
-                                         $resource->fields['locations_id'])) . "</br>";
+                                                                             Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
+                                                                                                       $resource->fields['locations_id'])) . "</br>";
 
          echo "<p>" . sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Arrival date', 'resources'),
                               "</span>" . Html::convDate($resource->fields["date_begin"])) . "</br>";
@@ -160,7 +158,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
                echo "<h3>" . PluginResourcesResourceHabilitation::getTypeName($count) . "</h3>";
 
                $resourcehabilitation = new PluginResourcesResourceHabilitation();
-               $datas                = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource->getField('id'));
+               $datas                = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
 
                echo "<table class='tab_cadre_fixe'>";
                echo "<tr>";
@@ -197,8 +195,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Phone 2'), "</span>" . $user->fields['phone2']) . "</br>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Mobile phone'), "</span>" . $user->fields['mobile']) . "</br>";
          echo sprintf(__('%1$s: %2$s'), "<span class='b'>" . __('Location'), "</span>" .
-              Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
-                                        $user->fields['locations_id'])) . "</br>";
+                                                                             Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
+                                                                                                       $user->fields['locations_id'])) . "</br>";
 
          $emails = $user->getAllEmails($user->getID());
 
@@ -226,7 +224,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
                echo "<h3>" . PluginResourcesResourceHabilitation::getTypeName($count) . "</h3>";
 
                $resourcehabilitation = new PluginResourcesResourceHabilitation();
-               $datas                = $resourcehabilitation->find("`plugin_resources_resources_id` = " . $resource->getField('id'));
+               $datas                = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
 
                echo "<table class='tab_cadre_fixe'>";
                echo "<tr>";
@@ -288,7 +286,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
          if ($item->maybeDeleted()) {
             $query .= " AND `is_deleted` = 0 ";
          }
-         $query .= $dbu->getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
+         $query  .= $dbu->getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
          $result = $DB->query($query);
 
          if ($DB->numrows($result) > 0) {

@@ -626,8 +626,8 @@ function plugin_resources_uninstall() {
 
    //drop rules
    $Rule = new Rule();
-   $a_rules = $Rule->find("`sub_type`='PluginResourcesRuleChecklist'
-                              OR `sub_type`='PluginResourcesRuleContracttype'");
+   $a_rules = $Rule->find(['sub_type' => 'PluginResourcesRuleChecklist',
+                              `sub_type` => 'PluginResourcesRuleContracttype']);
    foreach ($a_rules as $data) {
       $Rule->delete($data);
    }
@@ -1560,10 +1560,12 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
  * @return array|mixed
  */
 function plugin_resources_MassiveActions($type) {
-
-   if (in_array($type, PluginResourcesResource::getTypes())) {
-      $resource = new PluginResourcesResource();
-      return $resource->massiveActions($type);
+   $plugin = new Plugin();
+   if ($plugin->isActivated('resources')) {
+      if (in_array($type, PluginResourcesResource::getTypes())) {
+         $resource = new PluginResourcesResource();
+         return $resource->massiveActions($type);
+      }
    }
    return [];
 }

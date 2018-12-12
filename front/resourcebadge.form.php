@@ -70,7 +70,7 @@ if ($plugin->isActivated("badges")) {
       }
    } else if (isset($_GET['new'])) {
       if ($plugin->isActivated("metademands")) {
-         $data = $badge->find('`entities_id`=' . $_SESSION['glpiactive_entity']);
+         $data = $badge->find(['entities_id' => $_SESSION['glpiactive_entity']]);
          $data = array_shift($data);
 
          if (!empty($data["plugin_metademands_metademands_id"])) {
