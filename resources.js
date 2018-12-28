@@ -93,7 +93,7 @@ function First2UpperCase(texte) {
  * @param id
  */
 function plugin_resources_change_action(root_doc, id){
-    var resource_id = $("input[name='plugin_resources_resources_id']");
+    var resource_id = $("select[name='plugin_resources_resources_id']");
 
     $.ajax({
          url: root_doc+'/plugins/resources/ajax/resourcechange.php',
