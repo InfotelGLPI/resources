@@ -301,7 +301,6 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
       echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";

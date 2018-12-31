@@ -300,7 +300,6 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::css("/lib/font-awesome-4.7.0/css/font-awesome.min.css");
          echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
 
          echo "<div id ='content'>";
@@ -340,12 +339,13 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   echo "</div>";
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
                   if ($habilitation_level->getField('number')) {
-                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()),
+                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
                                              $habilitations,
                                              ['multiple' => true,
                                               'width'    => 200]);
                   } else {
-                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()), $habilitations);
+                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
+                                             $habilitations);
                   }
                   echo "</div></div>";
                }
@@ -389,16 +389,16 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $habilitation_level = new PluginResourcesHabilitationLevel();
 
       foreach ($params as $key => $val) {
-         if (is_array($val)
-             && ($habilitation_level->getFromDBByCrit(['name' => str_replace("_", " ", $key),
-                                                       'number' => 1]) ||
-                 $habilitation_level->getFromDBByCrit(['name' => $key, 'number' => 1]))) {
-            foreach ($val as $v) {
-               $this->addResourceHabilitationInDb($v, $params);
+         if (strpos($key, '__') > 0) {
+            list($name, $id) = explode('__', $key);
+            if (is_array($val)
+                && ($habilitation_level->getFromDB($id))) {
+               foreach ($val as $v) {
+                  $this->addResourceHabilitationInDb($v, $params);
+               }
+            } else if ($habilitation_level->getFromDB($id)) {
+               $this->addResourceHabilitationInDb($val, $params);
             }
-         } else if ($habilitation_level->getFromDBByCrit(['name' => str_replace("_", " ", $key),
-                                                          'number' => 0])) {
-            $this->addResourceHabilitationInDb($val, $params);
          }
       }
    }
@@ -437,9 +437,10 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $levels             = $habilitation_level->find($condition, "name");
 
       foreach ($levels as $level) {
-         if (!isset($params[str_replace(" ", "_", $level['name'])])
-             || (isset($params[str_replace(" ", "_", $level['name'])])
-                 && empty($params[str_replace(" ", "_",$level['name'])]))) {
+         if (!isset($params[str_replace(" ", "_", $level['name']) . '__' . $level['id']])
+             || (isset($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])])
+                 && empty($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])]))) {
+
             return false;
 
          }
