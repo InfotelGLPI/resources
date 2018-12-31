@@ -187,11 +187,16 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
                       FROM `glpi_plugin_resources_resourcehabilitations` 
                       LEFT JOIN `glpi_plugin_resources_habilitations` 
-                      ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                       ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                      LEFT JOIN `glpi_plugin_resources_habilitationlevels` 
+                      ON `glpi_plugin_resources_habilitationlevels`.`id` = `glpi_plugin_resources_habilitations`.`plugin_resources_habilitationlevels_id`
                       WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
-                      AND `allow_resource_creation`";
+                      AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
+
+            $used = [];
             foreach ($DB->request($query) as $data) {
                echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $data['id']) . "<br>";
+               $used[] = $data['id'];
             }
             echo "</div>";
             echo "</div>";
@@ -200,12 +205,24 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
             echo __('New access profile of the resource', 'resources');
             echo "</div>";
+
+            //level
+            $habilitationlevel = new PluginResourcesHabilitationLevel();
+            $levels = $habilitationlevel->find("`is_mandatory_creating_resource` = 1");
+            $condition = "";
+            foreach ($levels as $level) {
+               if(!empty($condition)) {
+                  $condition .= " AND ";
+               }
+               $condition .= "`plugin_resources_habilitationlevels_id` = {$level['id']} ";
+            }
+
             echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
             $rand = PluginResourcesHabilitation::dropdown(['name'      => "plugin_resources_habilitations_id",
                                                            'entity'    => $resource->fields["entities_id"],
                                                            'right'     => 'all',
-                                                           'condition' => 'allow_resource_creation',
-                                                           'used'      => [$resource->getField('plugin_resources_habilitations_id')],
+                                                           'condition' => $condition,
+                                                           'used'      => $used,
                                                            'on_change' => 'plugin_resources_load_button_changeresources_profil()']);
 
             echo "<script type='text/javascript'>";
@@ -441,12 +458,14 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
 
             $data['content'] .= __("Current access profile of the resource", 'resources') . "&nbsp;:&nbsp;";
-            $query           = "SELECT `glpi_plugin_resources_habilitations`.`id` 
+            $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
                       FROM `glpi_plugin_resources_resourcehabilitations` 
                       LEFT JOIN `glpi_plugin_resources_habilitations` 
-                      ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                       ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                      LEFT JOIN `glpi_plugin_resources_habilitationlevels` 
+                      ON `glpi_plugin_resources_habilitationlevels`.`id` = `glpi_plugin_resources_habilitations`.`plugin_resources_habilitationlevels_id`
                       WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
-                      AND `allow_resource_creation`";
+                      AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
             foreach ($DB->request($query) as $habilitation) {
                $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                              $habilitation['id']) . "\n";
