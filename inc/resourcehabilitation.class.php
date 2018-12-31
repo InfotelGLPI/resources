@@ -343,12 +343,12 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   echo "</div>";
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
                   if ($habilitation_level->getField('number')) {
-                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "#" . $habilitation_level->getID(),
+                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
                                              $habilitations,
                                              ['multiple' => true,
                                               'width'    => 200]);
                   } else {
-                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "#" . $habilitation_level->getID(),
+                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
                                              $habilitations);
                   }
                   echo "</div></div>";
@@ -393,8 +393,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $habilitation_level = new PluginResourcesHabilitationLevel();
 
       foreach ($params as $key => $val) {
-         if (strpos($key, '#') > 0) {
-            list($name, $id) = explode('#', $key);
+         if (strpos($key, '__') > 0) {
+            list($name, $id) = explode('__', $key);
             if (is_array($val)
                 && ($habilitation_level->getFromDB($id))) {
                foreach ($val as $v) {
@@ -444,9 +444,9 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $levels             = $habilitation_level->find("`is_mandatory_creating_resource` $condition", "name");
 
       foreach ($levels as $level) {
-         if (!isset($params[str_replace(" ", "_", $level['name']) . '#' . $level['id']])
-             || (isset($params[str_replace(" ", "_", $level['name'] . '#' . $level['id'])])
-                 && empty($params[str_replace(" ", "_", $level['name'] . '#' . $level['id'])]))) {
+         if (!isset($params[str_replace(" ", "_", $level['name']) . '__' . $level['id']])
+             || (isset($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])])
+                 && empty($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])]))) {
 
             return false;
 
