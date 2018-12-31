@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 14:41+0200\n"
-"PO-Revision-Date: 2018-09-10 12:43+0000\n"
+"POT-Creation-Date: 2018-12-31 16:48+0100\n"
+"PO-Revision-Date: 2018-12-31 15:49+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_resources/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -90,7 +90,7 @@ msgstr[1] "Clients affectés"
 #: inc/resource.class.php:1276 inc/resource.class.php:2078
 #: inc/resource.class.php:2632 inc/resourcepdf.class.php:80
 #: inc/rulecontracttype.class.php:239 inc/task.class.php:789
-#: inc/task.class.php:1157
+#: inc/task.class.php:1158
 msgid "Resource manager"
 msgstr "Encadrant direct de la ressource"
 
@@ -267,7 +267,7 @@ msgstr[0] "Checklist"
 msgstr[1] "Checklists"
 
 #: inc/checklist.class.php:312 inc/checklist.class.php:686
-#: inc/resourcebadge.class.php:436 inc/resource_change.class.php:756
+#: inc/resourcebadge.class.php:436 inc/resource_change.class.php:775
 msgid "Create a end treatment ticket"
 msgstr "Créer un ticket de fin de traitement"
 
@@ -360,7 +360,7 @@ msgstr "Nouvelle ressource - checklist à vérifier"
 #: inc/resource_item.class.php:820 inc/resource_item.class.php:1075
 #: inc/resource_item.class.php:1085 inc/resourcepdf.class.php:85
 #: inc/rulecontracttype.class.php:255
-#: report/checkhabilitation/checkhabilitation.php:212
+#: report/checkhabilitation/checkhabilitation.php:213
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:253
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:57
@@ -446,7 +446,7 @@ msgstr "Sera ajouté dans la zone commentaire de la ressource"
 #: inc/choice.class.php:443 inc/employee.class.php:458
 #: inc/resource.class.php:1770 inc/resource.class.php:2247
 #: inc/resource.class.php:2260 inc/resource.class.php:2347
-#: inc/resourcehabilitation.class.php:371
+#: inc/resourcehabilitation.class.php:373
 msgctxt "button"
 msgid "Next >"
 msgstr "Suivant >"
@@ -1103,15 +1103,15 @@ msgstr "Changer de direction (mutation)"
 msgid "Please select a resource"
 msgstr "Veuillez sélectionner une ressource"
 
-#: inc/resource_change.class.php:118 inc/resource_change.class.php:416
+#: inc/resource_change.class.php:118 inc/resource_change.class.php:433
 msgid "Manager for the current resource"
 msgstr "Encadrant direct actuel de la ressource"
 
-#: inc/resource_change.class.php:127 inc/resource_change.class.php:418
+#: inc/resource_change.class.php:127 inc/resource_change.class.php:435
 msgid "New resource manager"
 msgstr "Nouvel encadrant direct de la ressource"
 
-#: inc/resource_change.class.php:151 inc/resource_change.class.php:429
+#: inc/resource_change.class.php:151 inc/resource_change.class.php:446
 msgid "Sales manager for the current resource"
 msgstr "Responsable commercial actuel de la ressource"
 
@@ -1119,59 +1119,59 @@ msgstr "Responsable commercial actuel de la ressource"
 msgid "New resource sales manager"
 msgstr "Nouveau responsable commercial de la ressource"
 
-#: inc/resource_change.class.php:184 inc/resource_change.class.php:443
+#: inc/resource_change.class.php:184 inc/resource_change.class.php:460
 msgid "Current access profile of the resource"
 msgstr "Profil d'accès actuel de la ressource"
 
-#: inc/resource_change.class.php:201 inc/resource_change.class.php:455
+#: inc/resource_change.class.php:206 inc/resource_change.class.php:474
 msgid "New access profile of the resource"
 msgstr "Nouveau profil d'accès de la ressource"
 
-#: inc/resource_change.class.php:230 inc/resource_change.class.php:467
+#: inc/resource_change.class.php:247 inc/resource_change.class.php:486
 msgid "Current contract type of the resource"
 msgstr "Type de contrat actuel de la ressource"
 
-#: inc/resource_change.class.php:241 inc/resource_change.class.php:470
+#: inc/resource_change.class.php:258 inc/resource_change.class.php:489
 msgid "New type of contract"
 msgstr "Nouveau type de contrat"
 
-#: inc/resource_change.class.php:269 inc/resource_change.class.php:482
+#: inc/resource_change.class.php:286 inc/resource_change.class.php:501
 msgid "Current agency of the resource"
 msgstr "Agence actuelle de la ressource"
 
-#: inc/resource_change.class.php:278 inc/resource_change.class.php:484
+#: inc/resource_change.class.php:295 inc/resource_change.class.php:503
 msgid "New resource agency"
 msgstr "Nouvelle agence de la ressource"
 
-#: inc/resource_change.class.php:367
+#: inc/resource_change.class.php:384
 msgid "Starting change"
 msgstr "Lancer le changement"
 
-#: inc/resource_change.class.php:412 inc/resource_change.class.php:414
+#: inc/resource_change.class.php:429 inc/resource_change.class.php:431
 msgid "Change manager for"
 msgstr "Changement de l'encadrant direct pour"
 
-#: inc/resource_change.class.php:425 inc/resource_change.class.php:427
+#: inc/resource_change.class.php:442 inc/resource_change.class.php:444
 msgid "Change of sales manager for"
 msgstr "Changement du responsable commercial pour"
 
-#: inc/resource_change.class.php:431
+#: inc/resource_change.class.php:448
 msgid "New sales manager for the resource"
 msgstr "Nouveau responsable commercial de la ressource"
 
-#: inc/resource_change.class.php:438 inc/resource_change.class.php:440
+#: inc/resource_change.class.php:455 inc/resource_change.class.php:457
 msgid "Change the access profile for"
 msgstr "Changement du profil d'accès pour"
 
-#: inc/resource_change.class.php:463 inc/resource_change.class.php:465
+#: inc/resource_change.class.php:482 inc/resource_change.class.php:484
 msgid "Change the type of contract for"
 msgstr "Changement du type du contrat pour"
 
-#: inc/resource_change.class.php:478 inc/resource_change.class.php:480
+#: inc/resource_change.class.php:497 inc/resource_change.class.php:499
 msgid "Change of agency for"
 msgstr "Changement d'agence pour"
 
-#: inc/resource_change.class.php:506 inc/resource_change.class.php:531
+#: inc/resource_change.class.php:525 inc/resource_change.class.php:550
 msgid "Managing change actions"
 msgstr "Gestion des actions de changement"
 
@@ -1367,7 +1367,7 @@ msgstr "Liste des tâches"
 
 #: inc/resource.class.php:4184
 msgid "View my resources as a commercial"
-msgstr "Voir mes ressources comme commercial"
+msgstr "Voir mes ressources en tant que commercial"
 
 #: inc/resource.class.php:4274
 msgid "Resources list"
@@ -1387,7 +1387,7 @@ msgstr "Suppression de l'habilitation : %s"
 msgid "Enter habilitations about the resource"
 msgstr "Entrez les habilitations pour la ressource"
 
-#: inc/resourcehabilitation.class.php:362
+#: inc/resourcehabilitation.class.php:364
 msgid "No habilitation level, you cannot add habilitation for this resource."
 msgstr "Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour cette ressource."
 
@@ -1505,10 +1505,6 @@ msgstr "Tâches en cours"
 #: inc/task.class.php:859 inc/task.class.php:898
 msgid "Not finished tasks"
 msgstr "Tâches non terminées"
-
-#: inc/task.class.php:977
-msgid "Duplicate"
-msgstr "Dupliquer"
 
 #: inc/tasktype.class.php:47
 msgid "Type of task"
