@@ -108,16 +108,6 @@ class PluginResourcesRecap extends CommonDBTM {
       $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
       $tab[] = [
-         'id'            => '2',
-         'table'         => $this->table,
-         'field'         => 'id',
-         'name'          => __('ID'),
-         'massiveaction' => false,
-         'datatype'      => 'number',
-         'nosearch'      => true
-      ];
-
-      $tab[] = [
          'id'            => '4350',
          'table'         => 'glpi_plugin_resources_resources',
          'field'         => 'name',
@@ -130,7 +120,8 @@ class PluginResourcesRecap extends CommonDBTM {
          'id'    => '4351',
          'table' => 'glpi_plugin_resources_resources',
          'field' => 'firstname',
-         'name'  => __('First name')
+         'name'  => __('First name'),
+         'itemlink_type' => 'PluginResourcesResource'
       ];
 
       $tab[] = [
@@ -408,7 +399,7 @@ class PluginResourcesRecap extends CommonDBTM {
 
       // Add select for all toview item
       foreach ($data['toview'] as $key => $val) {
-         $SELECT .= Search::addSelect($data['itemtype'], $val, $key, 0);
+         $SELECT .= Search::addSelect($data['itemtype'], $val, 0);
       }
 
       //// 2 - FROM AND LEFT JOIN
@@ -641,7 +632,7 @@ class PluginResourcesRecap extends CommonDBTM {
 
                 // a - SELECT
                $SELECT .= Search::addSelect($metacriteria['itemtype'], $metacriteria['field'],
-                                          $metanum, 1, $metacriteria['itemtype']);
+                                          1, $metacriteria['itemtype']);
 
                // b - ADD LEFT JOIN
                // Link reference tables

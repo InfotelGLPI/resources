@@ -784,7 +784,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
       // Add select for all toview item
       foreach ($toview as $key => $val) {
-         $query.= Search::addSelect($itemtype, $val, $key, 0);
+         $query.= Search::addSelect($itemtype, $val, 0);
       }
 
       $query .= "`".$itemtable."`.`id` AS id ";

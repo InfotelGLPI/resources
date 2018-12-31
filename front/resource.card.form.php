@@ -41,8 +41,8 @@ if (isset($_POST['plugin_resources_resources_id'])) {
    $resource_item = new PluginResourcesResource_Item();
    $resource = $resource_item->find(['itemtype' => 'User', 
                                      'items_id' => $_SESSION['glpiID']],
-                                    "",
-                                    "1");
+                                    [],
+                                    [1]);
 
    $resource = reset($resource);
    $plugin_resources_resources_id = $resource['plugin_resources_resources_id'];

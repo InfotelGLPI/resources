@@ -51,7 +51,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
       $resource_item = new PluginResourcesResource_Item();
       $data          =  $resource_item->find(['itemtype' => 'User',
-                                              'plugin_resources_resources_id' => $ID], "", "1");
+                                              'plugin_resources_resources_id' => $ID], [], [1]);
 
       $data     = reset($data);
       $users_id = $data['items_id'];

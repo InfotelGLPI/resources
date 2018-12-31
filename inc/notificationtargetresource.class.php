@@ -183,17 +183,30 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $entity = $options['source_entity'];
             break;
       }
+      $criteria = $this->getDistinctUserCriteria();
+      $criteria['FROM'] = User::getTable();
+      $criteria['LEFT JOIN'] = [
+            Group_User::getTable()                    => [
+               'ON' => [
+                  Group_User::getTable() => 'users_id',
+                  User::getTable()       => 'id'
+               ]
+            ],
+            PluginResourcesTransferEntity::getTable() => [
+               'ON' => [
+                  PluginResourcesTransferEntity::getTable() => 'groups_id',
+                  Group_User::getTable()                    => 'groups_id'
+               ]
+            ]
+         ];
+      $criteria['WHERE'] = ['glpi_plugin_resources_transferentities.entities_id' => $entity];
 
-      $query = $this->getDistinctUserSql() .
-               " FROM `glpi_users`
-                      LEFT JOIN `glpi_groups_users` ON (`glpi_groups_users`.`users_id` = `glpi_users`.`id`) 
-                      LEFT JOIN `glpi_plugin_resources_transferentities` ON (`glpi_plugin_resources_transferentities`.`groups_id` = `glpi_groups_users`.`groups_id`)
-                      WHERE `glpi_plugin_resources_transferentities`.`entities_id` = '" . $entity . "'";
       if ($supervisor) {
-         $query .= " AND `glpi_groups_users`.`is_manager` = 1";
+         $criteria['WHERE']['glpi_groups_users.is_manager'] = 1;
       }
 
-      foreach ($DB->request($query) as $data) {
+      $iterator = $DB->request($criteria);
+      while ($data = $iterator->next()) {
          $this->addToRecipientsList($data);
       }
    }
@@ -275,13 +288,27 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          if (is_array($options['tasks_id'])) {
             $options['tasks_id'] = reset($options['tasks_id']);
          }
-         $query = $this->getDistinctUserSql() .
-                  " FROM `glpi_users`
-                    LEFT JOIN `glpi_groups_users` ON (`glpi_groups_users`.`users_id` = `glpi_users`.`id`) 
-                    LEFT JOIN `glpi_plugin_resources_tasks` ON (`glpi_plugin_resources_tasks`.`groups_id` = `glpi_groups_users`.`groups_id`)
-                    WHERE `glpi_plugin_resources_tasks`.`id` = '" . $options['tasks_id'] . "'";
 
-         foreach ($DB->request($query) as $data) {
+         $criteria = $this->getDistinctUserCriteria();
+         $criteria['FROM'] = User::getTable();
+         $criteria['LEFT JOIN'] = [
+            Group_User::getTable()          => [
+               'ON' => [
+                  Group_User::getTable() => 'users_id',
+                  User::getTable()       => 'id'
+               ]
+            ],
+            PluginResourcesTask::getTable() => [
+               'ON' => [
+                  Group_User::getTable()          => 'groups_id',
+                  PluginResourcesTask::getTable() => 'groups_id'
+               ]
+            ]
+         ];
+         $criteria['WHERE'] = ['glpi_plugin_resources_tasks.id' => $options['tasks_id']];
+
+         $iterator = $DB->request($criteria);
+         while ($data = $iterator->next()) {
             $this->addToRecipientsList($data);
          }
       }

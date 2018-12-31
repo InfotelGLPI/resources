@@ -50,23 +50,22 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
                               LIMIT 1") as $data) {
          $doc = new Document();
          if ($doc->getFromDB($data['documents_id'])) {
+            if (!empty($doc->fields['filepath'])) {
+               $file = GLPI_DOC_DIR . "/" . $doc->fields['filepath'];
 
-            $file = GLPI_DOC_DIR . "/" . $doc->fields['filepath'];
+               if (!file_exists($file)) {
+                  die("Error file " . $file . " does not exist");
+               }
+               // Now send the file with header() magic
+               header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
+               header('Pragma: private'); /// IE BUG + SSL
+               header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
+               header("Content-disposition: filename=\"" . $doc->fields['filename'] . "\"");
+               header("Content-type: " . $doc->fields['mime']);
 
-            if (!file_exists($file)) {
-               die("Error file " . $file . " does not exist");
+               readfile($file) or die ("Error opening file $file");
             }
-            // Now send the file with header() magic
-            header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
-            header('Pragma: private'); /// IE BUG + SSL
-            header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
-            header("Content-disposition: filename=\"" . $doc->fields['filename'] . "\"");
-            header("Content-type: " . $doc->fields['mime']);
-
-            readfile($file) or die ("Error opening file $file");
          }
       }
-
-
    }
 }

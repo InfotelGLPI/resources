@@ -437,9 +437,9 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $levels             = $habilitation_level->find($condition, "name");
 
       foreach ($levels as $level) {
-         if (!isset($params[str_replace("_", " ", $level['name'])])
-             || (isset($params[str_replace("_", " ", $level['name'])])
-                 && empty($params[str_replace("_", " ",$level['name'])]))) {
+         if (!isset($params[str_replace(" ", "_", $level['name'])])
+             || (isset($params[str_replace(" ", "_", $level['name'])])
+                 && empty($params[str_replace(" ", "_",$level['name'])]))) {
             return false;
 
          }

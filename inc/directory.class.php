@@ -293,7 +293,7 @@ class PluginResourcesDirectory extends CommonDBTM {
 
       // Add select for all toview item
       foreach ($data['toview'] as $key => $val) {
-         $SELECT .= Search::addSelect($data['itemtype'], $val, $key, 0);
+         $SELECT .= Search::addSelect($data['itemtype'], $val, 0);
       }
 
       //// 2 - FROM AND LEFT JOIN
@@ -519,7 +519,7 @@ class PluginResourcesDirectory extends CommonDBTM {
 
                 // a - SELECT
                $SELECT .= Search::addSelect($metacriteria['itemtype'], $metacriteria['field'],
-                                          $metanum, 1, $metacriteria['itemtype']);
+                                          1, $metacriteria['itemtype']);
 
                // b - ADD LEFT JOIN
                // Link reference tables

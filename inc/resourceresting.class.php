@@ -458,8 +458,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
       $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
-                                                      'on_change' => 'plugin_resources_load_user_resting()',
-                                                      'entity'    => $_SESSION['glpiactiveentities']]);
+                                                 'on_change' => 'plugin_resources_load_user_resting()',
+                                                 'entity'    => $_SESSION['glpiactiveentities']]);
 
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_user_resting(){";
@@ -508,8 +508,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
       $restrict = ['plugin_resources_resources_id' => $plugin_resources_resources_id,
                    [
                       'OR' => [
-                         'date_end' => NULL,
-                         'date_end' => '0000-00-00'
+                         ['date_end' => NULL],
+                         ['date_end' => '0000-00-00']
                       ]
                    ]];
 
@@ -960,7 +960,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       // Add select for all toview item
       foreach ($toview as $key => $val) {
-         $query.= Search::addSelect($itemtype, $val, $key, 0);
+         $query.= Search::addSelect($itemtype, $val, 0);
       }
 
       $query .= "`".$itemtable."`.`id` AS id ";
