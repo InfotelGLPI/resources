@@ -67,7 +67,7 @@ if (isset($_POST['add_metademand'])) {
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
       echo "<div align='center'><br><br>";
-      echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\"><br><br>";
+      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 } else if (isset($_GET['new'])) {
@@ -86,7 +86,7 @@ if (isset($_POST['add_metademand'])) {
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
       echo "<div align='center'><br><br>";
-      echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\"><br><br>";
+      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
       echo "<b>" . __('Please activate the plugin metademand', 'activity') . "</b></div>";
    }
 
@@ -106,7 +106,7 @@ if (isset($_POST['add_metademand'])) {
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
       echo "<div align='center'><br><br>";
-      echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\"><br><br>";
+      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
       echo "<b>" . __('Please activate the plugin metademand', 'activity') . "</b></div>";
    }
 

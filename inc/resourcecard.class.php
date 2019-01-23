@@ -357,7 +357,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
       if ($inv == false) {
          echo "<div class='center'><br><br>" .
-              "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt='warning'><br><br>";
+              "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
          echo "<b>" . __('No item found') . "</b></div>";
 
       }

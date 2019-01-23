@@ -4118,51 +4118,37 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       // Resource directory
-      $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory18.png' 
-      title='" . __('Directory', 'resources') . "' alt='" . __('Directory', 'resources') . "'>"] = '/plugins/resources/front/directory.php';
+      $menu['links']["<i class='far fa-address-book fa-2x' title='" .  __('Directory', 'resources') . "'></i>"] = '/plugins/resources/front/directory.php';
 
       // Resting
       if (Session::haveright("plugin_resources_resting", UPDATE)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/restinglist18.png' 
-         title='" . __('List of non contract periods', 'resources') . "' 
-         alt='" . __('List of non contract periods', 'resources') . "'>"] = '/plugins/resources/front/resourceresting.php';
+         $menu['links']["<i class='fas fa-file-signature fa-2x' title='" .  __('List of non contract periods', 'resources') . "'></i>"] = '/plugins/resources/front/resourceresting.php';
       }
 
       // Holiday
       if (Session::haveright("plugin_resources_holiday", UPDATE)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist18.png' 
-         title='" . __('List of forced holidays', 'resources') . "' 
-         alt='" . __('List of forced holidays', 'resources') . "'>"] = '/plugins/resources/front/resourceholiday.php';
+         $menu['links']["<i class='fas fa-atlas fa-2x' title='" .  __('List of forced holidays', 'resources') . "'></i>"] = '/plugins/resources/front/resourceholiday.php';
       }
 
       // Employment
       if (Session::haveright("plugin_resources_employment", READ)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist18.png' 
-         title='" . __('Employment management', 'resources') . "' alt='" . __('Employment management', 'resources') . "'>"]      = '/plugins/resources/front/employment.php';
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap18.png' 
-         title='" . __('List Employments / Resources', 'resources') . "' 
-         alt='" . __('List Employments / Resources', 'resources') . "'>"] = '/plugins/resources/front/recap.php';
+         $menu['links']["<i class='fas fa-list-ul fa-2x' title='" .  __('Employment management', 'resources') . "'></i>"]      = '/plugins/resources/front/employment.php';
+         $menu['links']["<i class='fas fa-city fa-2x' title='" .  __('List Employments / Resources', 'resources') . "'></i>"] = '/plugins/resources/front/recap.php';
       }
 
       // Budget
       if (Session::haveright("plugin_resources_budget", READ)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/budgetlist18.png' 
-         title='" . __('Budget management', 'resources') . "' 
-         alt='" . __('Budget management', 'resources') . "'>"] = '/plugins/resources/front/budget.php';
+         $menu['links']["<i class='fas fa-coins fa-2x' title='" .  __('Budget management', 'resources') . "'></i>"] = '/plugins/resources/front/budget.php';
       }
 
       // Task
       if (Session::haveright("plugin_resources_task", READ)) {
-         $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/pics/menu_showall.png' 
-         title='" . __('Tasks list', 'resources') . "' 
-         alt='" . __('Tasks list', 'resources') . "'>"] = '/plugins/resources/front/task.php';
+         $menu['links']["<i class='fas fa-tasks fa-2x' title='" .  __('Tasks list', 'resources') . "'></i>"] = '/plugins/resources/front/task.php';
       }
 
       // Checklist
       if (Session::haveright("plugin_resources_checklist", READ)) {
-         $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/pics/reservation-3.png' 
-         title='" . _n('Checklist', 'Checklists', 2, 'resources') . "' 
-         alt='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = '/plugins/resources/front/checklistconfig.php';
+         $menu['links']["<i class='far fa-calendar-check fa-2x' title='" . _n('Checklist', 'Checklists', 2, 'resources') . "'></i>"] = '/plugins/resources/front/checklistconfig.php';
       }
 
       $opt                              = [];
@@ -4174,9 +4160,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
-      $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/commercial.png' 
-      title='" . __('View my resources as a commercial', 'resources') . "' 
-      alt='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = $url;
+      $menu['links']["<i class='fas fa-user-tie fa-2x' title='" . __('View my resources as a commercial', 'resources') . "'></i>"] = $url;
 
       // Config page
       if (Session::haveRight("config", UPDATE)) {
