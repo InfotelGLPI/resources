@@ -340,6 +340,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       echo "<td>";
 
       PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
+                                         'display'   => true,
                                               'value'  => $resource,
                                               'entity' => $this->fields["entities_id"]]);
 

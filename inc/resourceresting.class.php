@@ -338,6 +338,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
       PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
+                                         'display'   => true,
                                               'value'  => $this->fields["plugin_resources_resources_id"],
                                               'entity' => $_SESSION['glpiactiveentities']]);
 

@@ -268,6 +268,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td class='left'>";
       $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
+                                                 'display'   => true,
                                                  'on_change' => 'plugin_resources_load_badge()',
                                                  'entity'    => $_SESSION['glpiactiveentities']]);
 

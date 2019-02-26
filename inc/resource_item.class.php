@@ -776,6 +776,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
             }
 
             PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
+                                               'display'   => true,
                                                     'entity' => $entities,
                                                     'used'   => $used]);
 

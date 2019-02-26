@@ -55,6 +55,7 @@ if (Session::haveRight("plugin_resources", UPDATE)) {
    echo "<tr class='tab_bg_2 center'>";
    echo "<td>";
    PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
+                                      'display'   => true,
                                            'entity' => $_SESSION['glpiactiveentities'],
                                            'value'     => $plugin_resources_resources_id,
                                            'on_change' => 'main.submit();']);
