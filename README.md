@@ -2,10 +2,10 @@
 Plugin resources pour GLPI
 
 Ce plugin est sur Transifex - Aidez-nous à le traduire :
-https://www.transifex.com/tsmr/GLPI_resources/
+https://www.transifex.com/infotelGLPI/GLPI_resources/
 
 This plugin is on Transifex - Help us to translate :
-https://www.transifex.com/tsmr/GLPI_resources/
+https://www.transifex.com/infotelGLPI/GLPI_resources/
 
 Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.
 
