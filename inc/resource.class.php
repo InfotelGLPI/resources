@@ -1561,6 +1561,7 @@ class PluginResourcesResource extends CommonDBTM {
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
       $canbadges        = Session::haveright('plugin_badges', READ);
+      $canImport        = Session::haveright('plugin_resources_import', READ);
 
       if ($this->canCreate()) {
          echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
@@ -1739,6 +1740,37 @@ class PluginResourcesResource extends CommonDBTM {
 
          echo "</tr>";
       }
+
+      if ($canImport) {
+         $colspan = 0;
+
+         //See import External
+         echo "<tr><th colspan='6'>" . __('Import resources', 'resources') . "</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td class='center' colspan='2'>";
+         echo "<a href='./import.php'>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' />";
+         echo "<br>" . __('Add new resources', 'resources') . "</a>";
+         echo "</td>";
+
+
+         echo "<td class='center' colspan='2'>";
+         echo "<a href='./import.php'>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' />";
+         echo "<br>" . __('Incoherences', 'resources') . "</a>";
+         echo "</td>";
+
+         echo "<td class='center' colspan='2'>";
+         echo "<a href='./import.php'>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/conf.png' />";
+         echo "<br>" . __('Configure Imports', 'resources') . "</a>";
+         echo "</td>";
+
+
+         echo "</tr>";
+      }
+
       echo " </table></div>";
    }
 
@@ -4180,6 +4212,12 @@ class PluginResourcesResource extends CommonDBTM {
       $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
       $menu['links']["<i class='fas fa-user-tie fa-2x' title='" . __('View my resources as a commercial', 'resources') . "'></i>"] = $url;
+
+      // Import page
+      if(Session::haveRight('plugin_resources_import', READ)){
+         $menu['links']["<i class='fas fa-cog fa-2x' title='" . __('Import configuration','resources') . "'></i>"]
+            = '/plugins/resources/front/import.php';
+      }
 
       // Config page
       if (Session::haveRight("config", UPDATE)) {

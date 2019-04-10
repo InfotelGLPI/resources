@@ -113,10 +113,19 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "<td>";
          echo __('Security compliance management', 'resources');
          echo "<br><span class='red'>".sprintf(__('%1$s <br> %2$s'), __('Display of four additional security fields in the clients', 'resources'),
-                                               __('(If all four fields are enabled, the client is compliant with security)', 'resources'))."</span>";
+               __('(If all four fields are enabled, the client is compliant with security)', 'resources'))."</span>";
          echo "</td>";
          echo "<td>";
          Dropdown::showYesNo('security_compliance', $this->fields['security_compliance']);
+         echo "</td>";
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Import external', 'resources');
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);
          echo "</td>";
          echo "</tr>";
 
@@ -144,6 +153,13 @@ class PluginResourcesConfig extends CommonDBTM {
     */
    function useSecurityCompliance() {
       return $this->fields['security_compliance'];
+   }
+
+   /**
+    * @return mixed
+    */
+   function useImportExternalDatas() {
+      return $this->fields['import_external_datas'];
    }
 
 

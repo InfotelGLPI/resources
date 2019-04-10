@@ -720,10 +720,11 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `id` int(11) NOT NULL auto_increment,
    `security_display` tinyint(1) NOT NULL default '0',
    `security_compliance` tinyint(1) NOT NULL default '0',
+   `import_external_datas` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0);
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0);
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','3','2','0');
