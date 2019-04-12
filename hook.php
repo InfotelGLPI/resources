@@ -50,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.5.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.6.1.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -129,13 +129,6 @@ function plugin_resources_install() {
    } else if (!$DB->tableExists("glpi_plugin_resources_checklistconfigs")) {
       $update80 = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-1.7.0.sql");
-
-   }
-
-   if ($update) {
-      // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
-      call_user_func(["PluginResourcesNotificationTargetResource", 'update_notif']);
    }
 
    if ($update78) {
@@ -266,7 +259,11 @@ function plugin_resources_install() {
    //Version 2.4.4
    if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.4.4.sql");
+   }
 
+   //Version 2.5.1
+   if (!!$DB->tableExists("glpi_plugin_resources_imports")) {
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.6.1.sql");
    }
 
    if ($update80) {
@@ -533,49 +530,52 @@ function plugin_resources_install() {
 function plugin_resources_uninstall() {
    global $DB;
 
-   $tables = ["glpi_plugin_resources_resources",
-              "glpi_plugin_resources_resources_items",
-              "glpi_plugin_resources_employees",
-              "glpi_plugin_resources_employers",
-              "glpi_plugin_resources_clients",
-              "glpi_plugin_resources_choices",
-              "glpi_plugin_resources_choiceitems",
-              "glpi_plugin_resources_departments",
-              "glpi_plugin_resources_contracttypes",
-              "glpi_plugin_resources_resourcestates",
-              "glpi_plugin_resources_tasktypes",
-              "glpi_plugin_resources_profiles",
-              "glpi_plugin_resources_tasks",
-              "glpi_plugin_resources_taskplannings",
-              "glpi_plugin_resources_tasks_items",
-              "glpi_plugin_resources_checklists",
-              "glpi_plugin_resources_checklistconfigs",
-              "glpi_plugin_resources_reportconfigs",
-              "glpi_plugin_resources_resourcerestings",
-              "glpi_plugin_resources_resourceholidays",
-              "glpi_plugin_resources_ticketcategories",
-              "glpi_plugin_resources_resourcesituations",
-              "glpi_plugin_resources_contractnatures",
-              "glpi_plugin_resources_ranks",
-              "glpi_plugin_resources_resourcespecialities",
-              "glpi_plugin_resources_leavingreasons",
-              "glpi_plugin_resources_professions",
-              "glpi_plugin_resources_professionlines",
-              "glpi_plugin_resources_professioncategories",
-              "glpi_plugin_resources_employments",
-              "glpi_plugin_resources_employmentstates",
-              "glpi_plugin_resources_budgets",
-              "glpi_plugin_resources_costs",
-              "glpi_plugin_resources_budgettypes",
-              "glpi_plugin_resources_budgetvolumes",
-              "glpi_plugin_resources_configs",
-              "glpi_plugin_resources_notifications",
-              "glpi_plugin_resources_resourcebadges",
-              "glpi_plugin_resources_resourcehabilitations",
-              "glpi_plugin_resources_transferentities",
-              "glpi_plugin_resources_resources_changes",
-              "glpi_plugin_resources_confighabilitations",
-              "glpi_plugin_resources_habilitations",
+   $tables = [
+      "glpi_plugin_resources_resources",
+      "glpi_plugin_resources_resources_items",
+      "glpi_plugin_resources_employees",
+      "glpi_plugin_resources_employers",
+      "glpi_plugin_resources_clients",
+      "glpi_plugin_resources_choices",
+      "glpi_plugin_resources_choiceitems",
+      "glpi_plugin_resources_departments",
+      "glpi_plugin_resources_contracttypes",
+      "glpi_plugin_resources_resourcestates",
+      "glpi_plugin_resources_tasktypes",
+      "glpi_plugin_resources_profiles",
+      "glpi_plugin_resources_tasks",
+      "glpi_plugin_resources_taskplannings",
+      "glpi_plugin_resources_tasks_items",
+      "glpi_plugin_resources_checklists",
+      "glpi_plugin_resources_checklistconfigs",
+      "glpi_plugin_resources_reportconfigs",
+      "glpi_plugin_resources_resourcerestings",
+      "glpi_plugin_resources_resourceholidays",
+      "glpi_plugin_resources_ticketcategories",
+      "glpi_plugin_resources_resourcesituations",
+      "glpi_plugin_resources_contractnatures",
+      "glpi_plugin_resources_ranks",
+      "glpi_plugin_resources_resourcespecialities",
+      "glpi_plugin_resources_leavingreasons",
+      "glpi_plugin_resources_professions",
+      "glpi_plugin_resources_professionlines",
+      "glpi_plugin_resources_professioncategories",
+      "glpi_plugin_resources_employments",
+      "glpi_plugin_resources_employmentstates",
+      "glpi_plugin_resources_budgets",
+      "glpi_plugin_resources_costs",
+      "glpi_plugin_resources_budgettypes",
+      "glpi_plugin_resources_budgetvolumes",
+      "glpi_plugin_resources_configs",
+      "glpi_plugin_resources_notifications",
+      "glpi_plugin_resources_resourcebadges",
+      "glpi_plugin_resources_resourcehabilitations",
+      "glpi_plugin_resources_transferentities",
+      "glpi_plugin_resources_resources_changes",
+      "glpi_plugin_resources_confighabilitations",
+      "glpi_plugin_resources_habilitations",
+      "glpi_plugin_resources_imports",
+      "glpi_plugin_resources_importcolumns"
    ];
 
    foreach ($tables as $table) {

@@ -36,8 +36,18 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesImport extends CommonDBTM {
 
-   static $rightname = "plugin_resources";
+   static $rightname = 'plugin_resources_import';
    public $dohistory = true;
+
+   static function getFormUrl($full = true){
+      global $CFG_GLPI;
+      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.form.php";
+   }
+
+   static function getIndexUrl(){
+      global $CFG_GLPI;
+      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
+   }
 
    /**
     * Return the localized name of the current Type
@@ -50,44 +60,81 @@ class PluginResourcesImport extends CommonDBTM {
    }
 
    /**
-    * Get Tab Name used for itemtype
+    * Define tabs to display
     *
     * NB : Only called for existing object
-    *      Must check right on what will be displayed + template
     *
-    * @since 0.83
+    * @param $options array
+    *     - withtemplate is a template view ?
     *
-    * @param CommonGLPI $item Item on which the tab need to be displayed
-    * @param boolean    $withtemplate is a template object ? (default 0)
-    *
-    * @return string tab name
+    * @return array containing the onglets
     **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+   function defineTabs($options = []) {
+      $ong = [];
+      $this->addDefaultFormTab($ong);
+      $this->addStandardTab('PluginResourcesImportColumn', $ong, $options);
+      return $ong;
+   }
 
-      if ($item->getType() == 'PluginResourcesImport'
-         && $this->canView()) {
-         return self::getTypeName(2);
+   function showTitle($links = true, $display = true){
+
+      global $CFG_GLPI;
+
+      $html = '<div class="center">';
+      $title = '<h1>'.$this->getTypeName()."</h1>";
+
+      if($links){
+
+         $html.= '<a href="'.self::getIndexUrl().'" class="pointer" title="'.__("List of Imports").'">';
+         $html.= $title.'</a>';
+
+         if(Session::haveright('plugin_resources_import', CREATE)){
+            $html.= '<a href="'.self::getFormUrl().'" class="pointer" title="'.__("Add an Import").'"><i class="fa fa-plus fa-2x"></i>';
+            $html .='</a>';
+         }
+
+      }else{
+         $html.= $title;
       }
-      return '';
+
+      $html.= '<br></div>';
+
+      if($display){
+         echo $html;
+      }
    }
 
    /**
-    * show Tab content
+    * Print survey
     *
-    * @since 0.83
+    * @param       $ID
+    * @param array $options
     *
-    * @param CommonGLPI $item Item on which the tab need to be displayed
-    * @param integer    $tabnum tab number (default 1)
-    * @param boolean    $withtemplate is a template object ? (default 0)
-    *
-    * @return boolean
-    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-
-      if ($item->getType() == 'PluginResourcesImport') {
-         $self = new self();
-         //$self->showListResourcesForClient($item->getField('id'));
+    * @return bool
+    */
+   function showForm($ID, $options = []) {
+      if (!$this->canView()) {
+         return false;
       }
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this, "name");
+      echo "</td>";
+      echo "<td>" . __('Comments') . "</td>";
+      echo "<td>";
+      echo "<textarea cols='60' rows='6' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo "</td></tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Active') . "</td>";
+      echo "<td>";
+      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
+      echo "</td><td colspan='2'></td></tr>";
+      $this->showFormButtons($options);
+      Html::closeForm();
       return true;
    }
+
 }

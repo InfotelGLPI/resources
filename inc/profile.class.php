@@ -273,7 +273,12 @@ class PluginResourcesProfile extends Profile {
             'label' => __('Import external', 'resources'),
             'field' => 'plugin_resources_import',
             'type' => 'import',
-            'rights' => [READ => __('Read'), UPDATE => __('Update')]
+            'rights' => [
+               READ => __('Read'),
+               UPDATE => __('Update'),
+               CREATE => __('Create'),
+               PURGE => __('Purge')
+            ]
          ]
       ];
 

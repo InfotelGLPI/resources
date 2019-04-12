@@ -31,9 +31,9 @@ include ('../../../inc/includes.php');
 
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   Html::helpHeader(PluginResourcesMenu::getTypeName(2));
 }
 
 $resource = new PluginResourcesResource();

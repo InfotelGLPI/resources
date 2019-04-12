@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.6.0');
+define('PLUGIN_RESOURCES_VERSION', '2.6.1');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
@@ -116,7 +116,7 @@ function plugin_init_resources() {
               && !class_exists('PluginServicecatalogDashboard'))
           || (class_exists('PluginServicecatalogDashboard')
               && !Session::haveRight("plugin_servicecatalog", READ))) {
-         $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesResource'];
+         $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
       // Resource menu
       if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
