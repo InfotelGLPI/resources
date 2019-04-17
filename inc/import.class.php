@@ -39,6 +39,8 @@ class PluginResourcesImport extends CommonDBTM {
    static $rightname = 'plugin_resources_import';
    public $dohistory = true;
 
+   static $keyInOtherTables = 'plugin_resources_imports_id';
+
    static function getFormUrl($full = true){
       global $CFG_GLPI;
       return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.form.php";
@@ -72,8 +74,19 @@ class PluginResourcesImport extends CommonDBTM {
    function defineTabs($options = []) {
       $ong = [];
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginResourcesImportColumn', $ong, $options);
+      $this->addStandardTab(PluginResourcesImportColumn::class, $ong, $options);
       return $ong;
+   }
+
+   function getChildColumns(){
+
+      $column = new PluginResourcesImportColumn();
+      $columns = $column->find(
+         [PluginResourcesImportColumn::$items_id => $this->getID()],
+         ['is_identifier']
+      );
+
+      return $columns;
    }
 
    function showTitle($links = true, $display = true){
@@ -88,7 +101,7 @@ class PluginResourcesImport extends CommonDBTM {
          $html.= '<a href="'.self::getIndexUrl().'" class="pointer" title="'.__("List of Imports").'">';
          $html.= $title.'</a>';
 
-         if(Session::haveright('plugin_resources_import', CREATE)){
+         if(Session::haveright(self::$rightname, CREATE)){
             $html.= '<a href="'.self::getFormUrl().'" class="pointer" title="'.__("Add an Import").'"><i class="fa fa-plus fa-2x"></i>';
             $html .='</a>';
          }

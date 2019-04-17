@@ -212,14 +212,14 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
-         echo "<a href='".PluginResourcesImport::getIndexUrl()."'>";
+         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::NEW_IMPORTS."'>";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' />";
          echo "<br>" . __('Add new resources', 'resources') . "</a>";
          echo "</td>";
 
 
          echo "<td class='center' colspan='2'>";
-         echo "<a href='".PluginResourcesImport::getIndexUrl()."'>";
+         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::CONFLICTED_IMPORTS."'>";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' />";
          echo "<br>" . __('Incoherences', 'resources') . "</a>";
          echo "</td>";

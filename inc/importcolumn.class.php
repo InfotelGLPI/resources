@@ -31,20 +31,16 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-define("String", 1);
-define("Int", 2);
-
 /**
- * Class PluginResourcesImport
+ * Class PluginResourcesImportColumn
  */
 class PluginResourcesImportColumn extends CommonDBChild {
 
    static $rightname = 'plugin_resources_import';
    public $dohistory = true;
 
-   // From CommonDBChild
-   public static $itemtype = 'PluginResourcesImport';
-   public static $items_id = 'plugin_resources_imports_id';
+   static public $itemtype = 'PluginResourcesImport';
+   static public $items_id = 'plugin_resources_imports_id';
 
    /**
     * Return the localized name of the current Type
@@ -86,7 +82,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
             $table = $dbu->getTableForItemType(__CLASS__);
             return self::createTabEntry(self::getTypeName(),
                $dbu->countElementsInTable($table,
-                  [self::$items_id => $item->getID()]));
+                  [PluginResourcesImport::$keyInOtherTables => $item->getID()]));
          }
          return self::getTypeName();
       }
@@ -109,6 +105,26 @@ class PluginResourcesImportColumn extends CommonDBChild {
          self::showForImport($item, $withtemplate);
       }
       return true;
+   }
+
+   static function getIdentifierNames(){
+      return [
+         __("No Identifier", "resources"),
+         __("Level 1 Identifier", "resources"),
+         __("Level 2 Identifier", "resources")
+      ];
+   }
+
+   function getIsIdentifierDropdown($value, $disabled = false){
+
+      $names = self::getIdentifierNames();
+
+      $param = [
+         'value' => $value,
+         'disabled' => $disabled
+      ];
+
+      return Dropdown::showFromArray("is_identifier", $names, $param);
    }
 
    public static function showForImport(PluginResourcesImport $import, $withtemplate = ''){
@@ -149,7 +165,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
          echo "<table class='tab_cadre_fixehov'>";
          // Title
          echo "<tr>";
-         echo "<th colspan='4'>" . self::getTypeName(2) . "</th>";
+         echo "<th colspan='5'>" . self::getTypeName(2) . "</th>";
          echo "</tr>";
 
          // Columns
@@ -162,6 +178,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
          echo "<th>" . __('Name') . "</th>";
          echo "<th>" . __('Type') . "</th>";
          echo "<th>" . __('Resource Attribute', 'resources') . "</th>";
+         echo "<th>" . __('Identifiers', 'resources') . "</th>";
          echo "</tr>";
          foreach ($columns as $column) {
             if ($importInstance->getFromDB($column['id'])) {
@@ -224,6 +241,10 @@ class PluginResourcesImportColumn extends CommonDBChild {
 
       echo "</td>";
 
+      echo "<td style='text-align:center'>";
+      self::getIsIdentifierDropdown($this->getField('is_identifier'), true);
+      echo "</td>";
+
       echo "</tr>";
    }
 
@@ -258,12 +279,12 @@ class PluginResourcesImportColumn extends CommonDBChild {
       echo $title;
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>Name</td>";
+      echo "<td>".__('Name')."</td>";
       echo "<td><input type='text' name='name' value='$name'></td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>Type</td>";
+      echo "<td>".__('Type')."</td>";
       echo "<td>";
       Dropdown::showFromArray(
          'type',
@@ -274,7 +295,8 @@ class PluginResourcesImportColumn extends CommonDBChild {
       echo "</td>";
       echo "</tr>";
 
-      echo "<td>Resource Attribute</td>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Resource Attribute', 'resources')."</td>";
       echo "<td>";
       Dropdown::showFromArray(
          'resource_column',
@@ -283,6 +305,14 @@ class PluginResourcesImportColumn extends CommonDBChild {
       );
 
       echo "</td>";
+      echo "</tr>";
+
+      echo "<tr>";
+      echo "<td>".__('Identifiers', 'resources')."</td>";
+      echo "<td>";
+      $this->getIsIdentifierDropdown($importColumn->getField('is_identifier'), false);
+      echo "</td>";
+
       echo "</tr>";
 
       echo "<tr>";

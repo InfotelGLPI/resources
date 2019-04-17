@@ -72,6 +72,41 @@ class PluginResourcesResource extends CommonDBTM {
       ];
    }
 
+   static function getDataType($dataNameId){
+
+      switch($dataNameId){
+         case 0: return "String";
+         case 1: return "String";
+         case 2: return "Contract";
+         case 3: return "User";
+         case 4: return "Location";
+         case 5: return "User";
+         case 6: return "PluginResourcesDepartment";
+         case 7: return "Date";
+         case 8: return "Date";
+         case 9: return "User";
+         case 10: return "String";
+      }
+      return null;
+   }
+
+   static function getColumnName($dataNameId){
+      switch($dataNameId){
+         case 0: return "firstname";
+         case 1: return "name";
+         case 2: return "plugin_resources_contracttypes_id";
+         case 3: return "users_id";
+         case 4: return "locations_id";
+         case 5: return "users_id_recipient";
+         case 6: return "plugin_resources_departments_id";
+         case 7: return "date_begin";
+         case 8: return "date_end";
+         case 9: return "users_id_sales";
+         case 10: return "others";
+      }
+      return null;
+   }
+
    /**
     * For other plugins, add a type to the linkable types
     *
@@ -221,7 +256,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'            => '1',
+         'id'            => '12',
          'table'         => $this->getTable(),
          'field'         => 'name',
          'name'          => __('Surname'),

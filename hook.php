@@ -511,11 +511,25 @@ function plugin_resources_install() {
       mkdir($rep_files_resources);
    }
 
+   if (!is_dir($rep_files_resources."/pictures")) {
+      mkdir($rep_files_resources."/pictures");
+   }
+   if (!is_dir($rep_files_resources."/import")) {
+      mkdir($rep_files_resources."/import");
+   }
+   if (!is_dir($rep_files_resources."/import/done")) {
+      mkdir($rep_files_resources."/import/done");
+   }
+   if (!is_dir($rep_files_resources."/import/fail")) {
+      mkdir($rep_files_resources."/import/fail");
+   }
+
    CronTask::Register('PluginResourcesResource', 'Resources', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesTask', 'ResourcesTask', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesChecklist', 'ResourcesChecklist', DAY_TIMESTAMP);
    CronTask::Register('PluginResourcesEmployment', 'ResourcesLeaving', DAY_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
    CronTask::Register('PluginResourcesResource', 'AlertCommercialManager', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
+   CronTask::Register('PluginResourcesImportResource', 'ResourceImport', MONTH_TIMESTAMP, ['state' => CronTask::STATE_DISABLE]);
 
    PluginResourcesProfile::initProfile();
    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
