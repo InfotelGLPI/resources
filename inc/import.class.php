@@ -90,9 +90,6 @@ class PluginResourcesImport extends CommonDBTM {
    }
 
    function showTitle($links = true, $display = true){
-
-      global $CFG_GLPI;
-
       $html = '<div class="center">';
       $title = '<h1>'.$this->getTypeName()."</h1>";
 

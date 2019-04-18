@@ -39,7 +39,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
    static $rightname = 'plugin_resources_import';
    public $dohistory = true;
 
-   static public $itemtype = 'PluginResourcesImport';
+   static public $itemtype = PluginResourcesImport::class;
    static public $items_id = 'plugin_resources_imports_id';
 
    /**
@@ -76,7 +76,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       // can exists for template
-      if ($item->getType() == 'PluginResourcesImport') {
+      if ($item->getType() == self::$itemtype) {
          if ($_SESSION['glpishow_count_on_tabs']) {
             $dbu = new DbUtils();
             $table = $dbu->getTableForItemType(__CLASS__);
@@ -101,7 +101,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
     * @return true
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType() == 'PluginResourcesImport') {
+      if ($item->getType() == self::$itemtype) {
          self::showForImport($item, $withtemplate);
       }
       return true;
@@ -325,6 +325,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
 
       echo "</table></div>";
       Html::closeForm();
+      return true;
    }
 
 

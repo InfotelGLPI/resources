@@ -343,6 +343,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                case "Date": return $this->formatDate($value);
             }
       }
+      return null;
    }
 
    private function formatDate($value){
@@ -450,29 +451,86 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "</thead>";
    }
 
-   /**
-    *
-    *
-    * @param $type
-    */
-   function showList($type){
+   private function getExistingResourceRequest($existingDatas){
 
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+      $pluginResourcesResourceImportData = new PluginResourcesResourceImportData();
+      $pluginResourcesResource = new PluginResourcesResource();
+
+      // Get resources
+      $query = "SELECT resource.id FROM ".$pluginResourcesResource->getTable()." as resource";
+      $query .=" INNER JOIN ".$pluginResourcesResourceImport->getTable() . " as resourcei";
+      $query .=" ON resource.id = resourcei.plugin_resources_resources_id";
+      $query .=" INNER JOIN ".$pluginResourcesResourceImportData->getTable() . " as resourceid";
+      $query .=" ON resourcei.id = resourceid.plugin_resources_resourceimports_id";
+      $query .=" WHERE 1=1";
+
+      foreach($existingDatas as $existingData){
+
+         $value = ($existingData['type'] == 2)
+            ? "'".$existingData['value']."'"
+            : $existingData['value'];
+
+         $query .=" AND resourceid.name = "."'".$existingData['name']."'";
+         $query .=" AND resourceid.value = ".$value;
+      }
+      return $query;
+   }
+
+   function isNewImport($importResourceID){
+      global $DB;
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      $datas = $pluginResourcesImportResourceData->getResourceDataByImportResource($importResourceID, 1, ['resource_column']);
+
+      $resourceRequest = $this->getExistingResourceRequest($datas);
+
+      $result = $DB->query($resourceRequest);
+
+      if ($result->num_rows == 0) {
+
+         $datas = $pluginResourcesImportResourceData->getResourceDataByImportResource($importResourceID, 1, ['resource_column']);
+         $resourceRequest = $this->getExistingResourceRequest($datas);
+
+         $result = $DB->query($resourceRequest);
+
+         while($data = $result->fetch_assoc()){
+            return $data['id'];
+         }
+      }
+      return false;
+   }
+
+   function showList($type){
       $pluginResourcesImport = new PluginResourcesImport();
+
       $imports = $pluginResourcesImport->find();
 
       foreach($imports as $import){
 
-         // Limit by the type
-         // 0 NEW
-         // 1 INCOHERENCE
-         $importResources = $this->find(['plugin_resources_imports_id' => $import['id']]);
+         echo "<form name='form' method='post' id='massimport' action ='".
+            Toolbox::getItemTypeFormURL(PluginResourcesResourceImport::getType())."' >";
 
-         echo "<form name='form' method='post' id='massimport' action ='' >";
          echo "<div align='center'>";
          echo "<table border='0' class='tab_cadrehov'>";
          $this->showHead($type, $import);
 
+         $importResources = $this->find(['plugin_resources_imports_id' => $import['id']]);
+
          foreach($importResources as $importResource){
+
+            switch($type){
+               case self::NEW_IMPORTS:
+                  if($this->isNewImport($importResource['id'])){
+                     continue 2;
+                  }
+                  break;
+               case self::CONFLICTED_IMPORTS:
+                  if(!$this->isNewImport($importResource['id'])){
+                     continue 2;
+                  }
+                  break;
+            }
 
             echo "<tr valign='center'>";
 
@@ -606,8 +664,6 @@ class PluginResourcesImportResource extends CommonDBTM {
     * @return rand value used if displayes else string
     **/
    static function showDateFieldWithoutDiv($name, $options = []) {
-      global $CFG_GLPI;
-
       $p['value']      = '';
       $p['maybeempty'] = true;
       $p['canedit']    = true;

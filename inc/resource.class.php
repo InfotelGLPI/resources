@@ -606,17 +606,18 @@ class PluginResourcesResource extends CommonDBTM {
       $ong = [];
 
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginResourcesResource_Item', $ong, $options);
-      $this->addStandardTab('PluginResourcesChoice', $ong, $options);
-      $this->addStandardTab('PluginResourcesResourceHabilitation', $ong, $options);
-      $this->addStandardTab('PluginResourcesEmployment', $ong, $options);
-      $this->addStandardTab('PluginResourcesEmployee', $ong, $options);
-      $this->addStandardTab('PluginResourcesChecklist', $ong, $options);
-      $this->addStandardTab('PluginResourcesTask', $ong, $options);
+      $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesResourceHabilitation::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesEmployment::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesEmployee::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesChecklist::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesTask::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesResourceImport::class, $ong, $options);
 
       if (Session::getCurrentInterface() == 'central') {
 
-         $this->addStandardTab('PluginResourcesReportConfig', $ong, $options);
+         $this->addStandardTab(PluginResourcesReportConfig::class, $ong, $options);
          $this->addStandardTab('Document_Item', $ong, $options);
 
          if (!isset($options['withtemplate']) || empty($options['withtemplate'])) {
@@ -3987,5 +3988,4 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
    }
-
 }

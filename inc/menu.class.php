@@ -205,8 +205,6 @@ class PluginResourcesMenu extends CommonDBTM{
       }
 
       if ($canImport) {
-         $colspan = 0;
-
          //See import External
          echo "<tr><th colspan='6'>" . __('Import resources', 'resources') . "</th></tr>";
 
@@ -243,8 +241,6 @@ class PluginResourcesMenu extends CommonDBTM{
     * @return array array for menu
     **/
    static function getMenuContent() {
-      global $CFG_GLPI;
-
       $plugin_page = "/plugins/resources/front/menu.php";
 
       $menu        = [];
