@@ -765,15 +765,6 @@ CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimportdatas`;
-CREATE TABLE `glpi_plugin_resources_resourceimportdatas`(
-   `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `value` varchar(255) COLLATE utf8_unicode_ci,
-   `plugin_resources_resourceimports_id` tinyint(1) NOT NULL DEFAULT '0',
-   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
-
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimports`;
 CREATE TABLE `glpi_plugin_resources_resourceimports` (
    `id` int(11) NOT NULL auto_increment,
