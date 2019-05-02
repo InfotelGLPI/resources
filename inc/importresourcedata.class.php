@@ -63,20 +63,19 @@ class PluginResourcesImportResourceData extends CommonDBChild {
       return $DB->query($query);
    }
 
-   public function getResourceDataByImportResource($importResourceId, $identifierLevel = null, $order = []){
+   public function getFromParentAndIdentifierLevel($importResourceId, $identifierLevel = null, $order = []){
 
       global $DB;
 
       $query =
-         "SELECT *".
-         " FROM `".self::getTable()."`".
-         " INNER JOIN `".PluginResourcesImportColumn::getTable()."`".
-         " ON `".PluginResourcesImportColumn::getTable()."`.`id`".
-         " = `".self::getTable()."`.`plugin_resources_importcolumns_id`".
-         " WHERE `".self::getTable()."`.`plugin_resources_importresources_id` = ".$importResourceId;
+         "SELECT data.id, data.name, data.value, ic.resource_column, ic.type".
+         " FROM `".self::getTable()."` as data".
+         " INNER JOIN `".PluginResourcesImportColumn::getTable()."` as ic".
+         " ON ic.`id` = data.`plugin_resources_importcolumns_id`".
+         " WHERE data.`plugin_resources_importresources_id` = ".$importResourceId;
 
       if($identifierLevel){
-         $query.=" AND `".PluginResourcesImportColumn::getTable()."`.`is_identifier` = ".$identifierLevel;
+         $query.=" AND ic.`is_identifier` = ".$identifierLevel;
       }
 
       if(count($order)){

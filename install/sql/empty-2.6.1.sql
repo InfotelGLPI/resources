@@ -759,7 +759,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_importresourcedatas`;
 CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `value` varchar(255) COLLATE utf8_unicode_ci NULL,
   `plugin_resources_importresources_id` tinyint(1) NOT NULL DEFAULT '0',
   `plugin_resources_importcolumns_id` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)

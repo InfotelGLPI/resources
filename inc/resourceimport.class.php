@@ -54,6 +54,145 @@ class PluginResourcesResourceImport extends CommonDBChild {
    }
 
    /**
+    * Create New Resource and linked ResourceImport
+    * Delete ImportResource and ImportResourceData
+    *
+    * @param array $input
+    * @param array $options
+    * @param bool $history
+    * @return int|null
+    */
+   function add(array $input, $options = [], $history = true) {
+      $resourceID = null;
+      if(isset($input['import'])){
+         foreach($input['import'] as $importID=>$datas){
+
+            $resourceInput = [];
+            $resourceInput['entities_id'] = $_SESSION['glpiactive_entity'];
+            $resourceImportInputs = [];
+
+            foreach($datas as $importColumnID=>$data){
+
+               if($data['id'] == 0 && $data['value'] == "-1" ){
+                  continue;
+               }
+
+               switch($data['resource_column']){
+                  case "10": //others
+                     $resourceImportInputs[] = [
+                        'name' => $data['name'],
+                        'value' => $data['value']
+                     ];
+                     break;
+                  default:
+                     $resourceTableColumnName = PluginResourcesResource::getResourceColumnNameFromDataNameID($data['resource_column']);
+                     $resourceInput[$resourceTableColumnName] = $data['value'];
+                     break;
+               }
+            }
+
+            $resource = new PluginResourcesResource();
+            $resourceID = $resource->add($resourceInput);
+
+            foreach($resourceImportInputs as $resourceImportInput){
+               $resourceImportInput[PluginResourcesResourceImport::$items_id] = $resourceID;
+               parent::add($resourceImportInput);
+            }
+         }
+         // Delete importResource and importResourceData
+         $pluginResourcesImportResource = new PluginResourcesImportResource();
+         $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+         foreach($input['import'] as $importID=>$datas){
+            foreach($datas as $importColumnID=>$data){
+               if($data['id'] == 0){
+                  continue;
+               }
+               $pluginResourcesImportResourceData->delete(["id"=>$data['id']]);
+            }
+            $pluginResourcesImportResource->delete(["id"=>$importID]);
+         }
+      }
+      return $resourceID;
+   }
+
+   function update(array $input, $history = 1, $options = [])
+   {
+      $resourceID = $input['resource'];
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+
+      if (isset($input['import'])) {
+         foreach ($input['import'] as $importID => $datas) {
+
+            $resourceInput = [];
+            $resourceInput['entities_id'] = $_SESSION['glpiactive_entity'];
+
+            foreach ($datas as $importColumnID => $data) {
+
+               if ($data['id'] == 0 && $data['value'] == "-1") {
+                  continue;
+               }
+
+               switch($data['resource_column']){
+                  case 10:
+                     $criterias = [PluginResourcesResourceImport::$items_id => $resourceID,'name' => $data['name']];
+
+                     $pluginResourcesResourceImport->getFromDBByCrit($criterias);
+
+                     $resourceImportInput = [
+                        PluginResourcesResourceImport::getIndexName() => $pluginResourcesResourceImport->getID(),
+                        'value' => $data['value']
+                     ];
+
+                     if(!parent::update($resourceImportInput)){
+                        Html::displayErrorAndDie('Error when updating Resource Import');
+                     }
+                     break;
+                  default:
+
+                     // Get the column name from resource_column
+                     $fieldName = PluginResourcesResource::getResourceColumnNameFromDataNameID($data['resource_column']);
+
+                     // Prepare inputs
+                     $resourceInput = [
+                        PluginResourcesResource::getIndexName() => $resourceID,
+                        $fieldName => $data['value']
+                     ];
+
+                     $resource = new PluginResourcesResource();
+
+                     // Update resource column
+                     if(!$resource->update($resourceInput)){
+                        Html::displayErrorAndDie('Error when updating Resource Import');
+                     }
+               }
+            }
+            // Delete importResource and importResourceData
+            foreach ($datas as $importColumnID => $data) {
+
+               if ($data['id'] == 0 && $data['value'] == "-1") {
+                  continue;
+               }
+
+               $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+               $importResourceDataInput = [PluginResourcesImportResourceData::getIndexName() => $data['id']];
+
+               // Delete resource column
+               if(!$pluginResourcesImportResourceData->delete($importResourceDataInput)){
+                  Html::displayErrorAndDie('Error when deleting Import Resource Data');
+               }
+            }
+            $pluginResourcesImportResource = new PluginResourcesImportResource();
+
+            $importResourceInput = [];
+         }
+      }
+   }
+
+
+
+   /**
     * show Tab content
     *
     * @since version 0.83

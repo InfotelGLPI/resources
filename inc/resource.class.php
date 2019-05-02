@@ -34,12 +34,13 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginResourcesResource
  */
-class PluginResourcesResource extends CommonDBTM {
+class PluginResourcesResource extends CommonDBTM
+{
 
    static $rightname = 'plugin_resources';
 
    static $types = ['Computer', 'Monitor', 'NetworkEquipment', 'Peripheral',
-                    'Phone', 'Printer', 'Software', 'ConsumableItem', 'User'];
+      'Phone', 'Printer', 'Software', 'ConsumableItem', 'User'];
 
    protected $usenotepad = true;
 
@@ -51,12 +52,14 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return string
     **/
-   static function getTypeName($nb = 0) {
+   static function getTypeName($nb = 0)
+   {
 
       return _n('Human resource', 'Human resources', $nb, 'resources');
    }
 
-   static function getDataNames(){
+   static function getDataNames()
+   {
       return [
          __("Firstname", "resources"),
          __("Lastname", "resources"),
@@ -72,39 +75,73 @@ class PluginResourcesResource extends CommonDBTM {
       ];
    }
 
+   static function getResourceColumnNameFromDataNameID($dataNameID){
+
+      $dataNames = [
+         "firstname",
+         "name",
+         "plugin_resources_contracttypes_id",
+         "users_id_recipient",
+         "locations_id",
+         "users_id",
+         "plugin_resources_departments_id",
+         "date_begin",
+         "date_end",
+         "users_id_sales",
+      ];
+
+      if(!array_key_exists ($dataNameID, $dataNames)){
+         Html::displayErrorAndDie("Resource column name not found");
+         return null;
+      }
+      return $dataNames[$dataNameID];
+   }
+
    static function getDataType($dataNameId){
 
-      switch($dataNameId){
-         case 0: return "String";
-         case 1: return "String";
-         case 2: return "Contract";
-         case 3: return "User";
-         case 4: return "Location";
-         case 5: return "User";
-         case 6: return "PluginResourcesDepartment";
-         case 7: return "Date";
-         case 8: return "Date";
-         case 9: return "User";
-         case 10: return "String";
+      $dataTypes = [
+         "String",
+         "String",
+         "Contract",
+         "User",
+         "Location",
+         "User",
+         "PluginResourcesDepartment",
+         "Date",
+         "Date",
+         "User",
+         "String"
+      ];
+
+      if(!array_key_exists ($dataNameId, $dataTypes)){
+         Html::displayErrorAndDie("Data Type not found");
+         return null;
       }
-      return null;
+      return $dataTypes[$dataNameId];
    }
 
    static function getColumnName($dataNameId){
-      switch($dataNameId){
-         case 0: return "firstname";
-         case 1: return "name";
-         case 2: return "plugin_resources_contracttypes_id";
-         case 3: return "users_id";
-         case 4: return "locations_id";
-         case 5: return "users_id_recipient";
-         case 6: return "plugin_resources_departments_id";
-         case 7: return "date_begin";
-         case 8: return "date_end";
-         case 9: return "users_id_sales";
-         case 10: return "others";
+
+      $columnNames = [
+         "firstname",
+         "name",
+         "plugin_resources_contracttypes_i",
+         "users_id",
+         "locations_id",
+         "users_id_recipient",
+         "plugin_resources_departments_id",
+         "date_begin",
+         "date_end",
+         "users_id_sales",
+         "others"
+      ];
+
+      if(!array_key_exists ($dataNameId, $columnNames)){
+         Html::displayErrorAndDie("Resource column name not found");
+         return null;
       }
-      return null;
+
+      return $columnNames[$dataNameId];
    }
 
    /**
@@ -113,7 +150,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param $type string class name
     **/
-   static function registerType($type) {
+   static function registerType($type)
+   {
       if (!in_array($type, self::$types)) {
          self::$types[] = $type;
       }
@@ -126,7 +164,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array of types
     **/
-   static function getTypes($all = false) {
+   static function getTypes($all = false)
+   {
 
       if ($all) {
          return self::$types;
@@ -153,7 +192,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return nothing
     **/
-   function cleanDBonPurge() {
+   function cleanDBonPurge()
+   {
 
       $temp = new PluginResourcesResource_Item();
       $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
@@ -188,16 +228,17 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param CommonDBTM $item
     */
-   static function cleanForItem(CommonDBTM $item) {
+   static function cleanForItem(CommonDBTM $item)
+   {
 
       $type = get_class($item);
       $temp = new PluginResourcesResource_Item();
       $temp->deleteByCriteria(['itemtype' => $type,
-                               'items_id' => $item->getField('id')]);
+         'items_id' => $item->getField('id')]);
 
       $task = new PluginResourcesTask_Item();
       $task->deleteByCriteria(['itemtype' => $type,
-                               'items_id' => $item->getField('id')]);
+         'items_id' => $item->getField('id')]);
    }
 
    /**
@@ -206,17 +247,18 @@ class PluginResourcesResource extends CommonDBTM {
     * NB : Only called for existing object
     *      Must check right on what will be displayed + template
     *
-    * @since 0.83
-    *
     * @param CommonGLPI $item Item on which the tab need to be displayed
-    * @param boolean    $withtemplate is a template object ? (default 0)
+    * @param boolean $withtemplate is a template object ? (default 0)
     *
     * @return string tab name
-    **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    **@since 0.83
+    *
+    */
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+   {
 
       if ($item->getType() == 'PluginResourcesClient'
-          && $this->canView()) {
+         && $this->canView()) {
          return self::getTypeName(2);
       }
       return '';
@@ -226,15 +268,16 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * show Tab content
     *
-    * @since 0.83
-    *
     * @param CommonGLPI $item Item on which the tab need to be displayed
-    * @param integer    $tabnum tab number (default 1)
-    * @param boolean    $withtemplate is a template object ? (default 0)
+    * @param integer $tabnum tab number (default 1)
+    * @param boolean $withtemplate is a template object ? (default 0)
     *
     * @return boolean
-    **/
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    **@since 0.83
+    *
+    */
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+   {
 
       if ($item->getType() == 'PluginResourcesClient') {
          $self = new self();
@@ -251,16 +294,17 @@ class PluginResourcesResource extends CommonDBTM {
     * @return an array of search options
     * More information on https://forge.indepnet.net/wiki/glpi/SearchEngine
     **/
-   function rawSearchOptions() {
+   function rawSearchOptions()
+   {
 
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'            => '12',
-         'table'         => $this->getTable(),
-         'field'         => 'name',
-         'name'          => __('Surname'),
-         'datatype'      => 'itemlink',
+         'id' => '12',
+         'table' => $this->getTable(),
+         'field' => 'name',
+         'name' => __('Surname'),
+         'datatype' => 'itemlink',
          'itemlink_type' => $this->getType(),
       ];
 
@@ -270,30 +314,30 @@ class PluginResourcesResource extends CommonDBTM {
 
 
       $tab[] = [
-         'id'    => '2',
+         'id' => '2',
          'table' => $this->getTable(),
          'field' => 'firstname',
-         'name'  => __('First name'),
+         'name' => __('First name'),
       ];
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[2] += ['searchtype' => 'contains'];
       }
       $tab[] = [
-         'id'       => '12',
-         'table'    => 'glpi_plugin_resources_contracttypes',
-         'field'    => 'name',
-         'name'     => PluginResourcesContractType::getTypeName(1),
+         'id' => '14',
+         'table' => 'glpi_plugin_resources_contracttypes',
+         'field' => 'name',
+         'name' => PluginResourcesContractType::getTypeName(1),
          'datatype' => 'dropdown'
       ];
 
       $tab[] = [
-         'id'       => '4',
-         'table'    => 'glpi_users',
-         'field'    => 'name',
-         'name'     => __('Resource manager', 'resources'),
+         'id' => '4',
+         'table' => 'glpi_users',
+         'field' => 'name',
+         'name' => __('Resource manager', 'resources'),
          'datatype' => 'dropdown',
-         'right'    => 'all'
+         'right' => 'all'
       ];
 
       if (Session::getCurrentInterface() != 'central') {
@@ -301,55 +345,55 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $tab[] = [
-         'id'       => '5',
-         'table'    => $this->getTable(),
-         'field'    => 'date_begin',
-         'name'     => __('Arrival date', 'resources'),
+         'id' => '5',
+         'table' => $this->getTable(),
+         'field' => 'date_begin',
+         'name' => __('Arrival date', 'resources'),
          'datatype' => 'date'
       ];
       $tab[] = [
-         'id'       => '6',
-         'table'    => $this->getTable(),
-         'field'    => 'date_end',
-         'name'     => __('Departure date', 'resources'),
+         'id' => '6',
+         'table' => $this->getTable(),
+         'field' => 'date_end',
+         'name' => __('Departure date', 'resources'),
          'datatype' => 'date'
       ];
       $tab[] = [
-         'id'       => '7',
-         'table'    => $this->getTable(),
-         'field'    => 'comment',
-         'name'     => __('Description'),
+         'id' => '7',
+         'table' => $this->getTable(),
+         'field' => 'comment',
+         'name' => __('Description'),
          'datatype' => 'text'
       ];
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
-            'id'            => '8',
-            'table'         => 'glpi_plugin_resources_resources_items',
-            'field'         => 'items_id',
-            'name'          => _n('Associated item', 'Associated items', 2),
+            'id' => '8',
+            'table' => 'glpi_plugin_resources_resources_items',
+            'field' => 'items_id',
+            'name' => _n('Associated item', 'Associated items', 2),
             'massiveaction' => false,
-            'forcegroupby'  => false,
-            'nosearch'      => false,
-            'joinparams'    => ['jointype' => 'child']
+            'forcegroupby' => false,
+            'nosearch' => false,
+            'joinparams' => ['jointype' => 'child']
          ];
       }
       $tab[] = [
-         'id'            => '9',
-         'table'         => $this->getTable(),
-         'field'         => 'date_declaration',
-         'name'          => __('Request date'),
-         'datatype'      => 'date',
+         'id' => '9',
+         'table' => $this->getTable(),
+         'field' => 'date_declaration',
+         'name' => __('Request date'),
+         'datatype' => 'date',
          'massiveaction' => false
       ];
       $tab[] = [
-         'id'            => '10',
-         'table'         => 'glpi_users',
-         'field'         => 'name',
-         'linkfield'     => 'users_id_recipient',
-         'name'          => __('Requester'),
-         'datatype'      => 'dropdown',
-         'right'         => 'all',
+         'id' => '10',
+         'table' => 'glpi_users',
+         'field' => 'name',
+         'linkfield' => 'users_id_recipient',
+         'name' => __('Requester'),
+         'datatype' => 'dropdown',
+         'right' => 'all',
          'massiveaction' => false
       ];
 
@@ -357,28 +401,28 @@ class PluginResourcesResource extends CommonDBTM {
          $tab[10] += ['searchtype' => 'contains'];
       }
       $tab[] = [
-         'id'       => '11',
-         'table'    => 'glpi_plugin_resources_departments',
-         'field'    => 'name',
-         'name'     => PluginResourcesDepartment::getTypeName(1),
+         'id' => '11',
+         'table' => 'glpi_plugin_resources_departments',
+         'field' => 'name',
+         'name' => PluginResourcesDepartment::getTypeName(1),
          'datatype' => 'dropdown'
       ];
-      $tab   = array_merge($tab, Location::rawSearchOptionsToAdd());
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
       $tab[] = [
-         'id'       => '13',
-         'table'    => $this->getTable(),
-         'field'    => 'is_leaving',
-         'name'     => __('Declared as leaving', 'resources'),
+         'id' => '36',
+         'table' => $this->getTable(),
+         'field' => 'is_leaving',
+         'name' => __('Declared as leaving', 'resources'),
          'datatype' => 'bool'
       ];
       $tab[] = [
-         'id'            => '14',
-         'table'         => 'glpi_users',
-         'field'         => 'name',
-         'linkfield'     => 'users_id_recipient_leaving',
-         'name'          => __('Informant of leaving', 'resources'),
-         'datatype'      => 'dropdown',
-         'right'         => 'all',
+         'id' => '14',
+         'table' => 'glpi_users',
+         'field' => 'name',
+         'linkfield' => 'users_id_recipient_leaving',
+         'name' => __('Informant of leaving', 'resources'),
+         'datatype' => 'dropdown',
+         'right' => 'all',
          'massiveaction' => false
       ];
 
@@ -388,202 +432,202 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
-            'id'       => '15',
-            'table'    => $this->getTable(),
-            'field'    => 'is_helpdesk_visible',
-            'name'     => __('Associable to a ticket'),
+            'id' => '15',
+            'table' => $this->getTable(),
+            'field' => 'is_helpdesk_visible',
+            'name' => __('Associable to a ticket'),
             'datatype' => 'bool'
          ];
       }
       $tab[] = [
-         'id'            => '16',
-         'table'         => $this->getTable(),
-         'field'         => 'date_mod',
-         'name'          => __('Last update'),
-         'datatype'      => 'datetime',
+         'id' => '16',
+         'table' => $this->getTable(),
+         'field' => 'date_mod',
+         'name' => __('Last update'),
+         'datatype' => 'datetime',
          'massiveaction' => false
       ];
       $tab[] = [
-         'id'       => '17',
-         'table'    => 'glpi_plugin_resources_resourcestates',
-         'field'    => 'name',
-         'name'     => PluginResourcesResourceState::getTypeName(1),
+         'id' => '17',
+         'table' => 'glpi_plugin_resources_resourcestates',
+         'field' => 'name',
+         'name' => PluginResourcesResourceState::getTypeName(1),
          'datatype' => 'dropdown'
       ];
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
-            'id'            => '18',
-            'table'         => $this->getTable(),
-            'field'         => 'picture',
-            'name'          => __('Photo', 'resources'),
+            'id' => '18',
+            'table' => $this->getTable(),
+            'field' => 'picture',
+            'name' => __('Photo', 'resources'),
             'massiveaction' => false
          ];
          $tab[] = [
-            'id'            => '19',
-            'table'         => $this->getTable(),
-            'field'         => 'is_recursive',
-            'name'          => __('Child entities'),
-            'datatype'      => 'bool',
+            'id' => '19',
+            'table' => $this->getTable(),
+            'field' => 'is_recursive',
+            'name' => __('Child entities'),
+            'datatype' => 'bool',
             'massiveaction' => false
          ];
       }
       $tab[] = [
-         'id'       => '20',
-         'table'    => $this->getTable(),
-         'field'    => 'quota',
-         'name'     => __('Quota', 'resources'),
+         'id' => '20',
+         'table' => $this->getTable(),
+         'field' => 'quota',
+         'name' => __('Quota', 'resources'),
          'datatype' => 'decimal'
       ];
       if (Session::getCurrentInterface() != 'central') {
 
          $tab[] = [
-            'id'            => '21',
-            'table'         => 'glpi_plugin_resources_resourcesituations',
-            'field'         => 'name',
-            'name'          => PluginResourcesResourceSituation::getTypeName(1),
+            'id' => '21',
+            'table' => 'glpi_plugin_resources_resourcesituations',
+            'field' => 'name',
+            'name' => PluginResourcesResourceSituation::getTypeName(1),
             'massiveaction' => false,
-            'datatype'      => 'dropdown'
+            'datatype' => 'dropdown'
          ];
          $tab[] = [
-            'id'            => '22',
-            'table'         => 'glpi_plugin_resources_contractnatures',
-            'field'         => 'name',
-            'name'          => PluginResourcesContractNature::getTypeName(1),
+            'id' => '22',
+            'table' => 'glpi_plugin_resources_contractnatures',
+            'field' => 'name',
+            'name' => PluginResourcesContractNature::getTypeName(1),
             'massiveaction' => false,
-            'datatype'      => 'dropdown'
+            'datatype' => 'dropdown'
          ];
          $tab[] = [
-            'id'            => '23',
-            'table'         => 'glpi_plugin_resources_ranks',
-            'field'         => 'name',
-            'name'          => PluginResourcesRank::getTypeName(1),
+            'id' => '23',
+            'table' => 'glpi_plugin_resources_ranks',
+            'field' => 'name',
+            'name' => PluginResourcesRank::getTypeName(1),
             'massiveaction' => false,
-            'datatype'      => 'dropdown'
+            'datatype' => 'dropdown'
          ];
          $tab[] = [
-            'id'            => '24',
-            'table'         => 'glpi_plugin_resources_resourcespecialities',
-            'field'         => 'name',
-            'name'          => PluginResourcesResourceSpeciality::getTypeName(1),
+            'id' => '24',
+            'table' => 'glpi_plugin_resources_resourcespecialities',
+            'field' => 'name',
+            'name' => PluginResourcesResourceSpeciality::getTypeName(1),
             'massiveaction' => false,
-            'datatype'      => 'dropdown'
+            'datatype' => 'dropdown'
          ];
       }
 
       $tab[] = [
-         'id'       => '25',
-         'table'    => 'glpi_plugin_resources_leavingreasons',
-         'field'    => 'name',
-         'name'     => PluginResourcesLeavingReason::getTypeName(1),
+         'id' => '25',
+         'table' => 'glpi_plugin_resources_leavingreasons',
+         'field' => 'name',
+         'name' => PluginResourcesLeavingReason::getTypeName(1),
          'datatype' => 'dropdown'
       ];
       $tab[] = [
-         'id'        => '27',
-         'table'     => 'glpi_users',
-         'field'     => 'name',
+         'id' => '27',
+         'table' => 'glpi_users',
+         'field' => 'name',
          'linkfield' => 'users_id_sales',
-         'name'      => __('Sales manager', 'resources'),
-         'datatype'  => 'dropdown',
-         'right'     => 'all'
+         'name' => __('Sales manager', 'resources'),
+         'datatype' => 'dropdown',
+         'right' => 'all'
       ];
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[27] += ['searchtype' => 'contains'];
       }
       $tab[] = [
-         'id'            => '28',
-         'table'         => $this->getTable(),
-         'field'         => 'date_declaration_leaving',
-         'name'          => __('Declaration of departure date', 'resources'),
-         'datatype'      => 'datetime',
+         'id' => '28',
+         'table' => $this->getTable(),
+         'field' => 'date_declaration_leaving',
+         'name' => __('Declaration of departure date', 'resources'),
+         'datatype' => 'datetime',
          'massiveaction' => false
       ];
 
       $config = new PluginResourcesConfig();
       if ($config->useSecurity()) {
          $tab[] = [
-            'id'            => '29',
-            'table'         => $this->getTable(),
-            'field'         => 'read_chart',
-            'name'          => __('Reading the security charter', 'resources'),
-            'datatype'      => 'bool',
+            'id' => '29',
+            'table' => $this->getTable(),
+            'field' => 'read_chart',
+            'name' => __('Reading the security charter', 'resources'),
+            'datatype' => 'bool',
             'massiveaction' => true
          ];
          $tab[] = [
-            'id'            => '30',
-            'table'         => $this->getTable(),
-            'field'         => 'sensitize_security',
-            'name'          => __('Reading the security charter', 'resources'),
-            'datatype'      => 'bool',
+            'id' => '30',
+            'table' => $this->getTable(),
+            'field' => 'sensitize_security',
+            'name' => __('Reading the security charter', 'resources'),
+            'datatype' => 'bool',
             'massiveaction' => true
          ];
       }
 
       $tab[] = [
-         'id'            => '32',
-         'table'         => 'glpi_plugin_resources_habilitations',
-         'field'         => 'name',
-         'name'          => PluginResourcesHabilitation::getTypeName(),
-         'datatype'      => 'itemlink',
-         'forcegroupby'  => true,
+         'id' => '32',
+         'table' => 'glpi_plugin_resources_habilitations',
+         'field' => 'name',
+         'name' => PluginResourcesHabilitation::getTypeName(),
+         'datatype' => 'itemlink',
+         'forcegroupby' => true,
          'massiveaction' => false,
-         'joinparams'    => ['beforejoin'
-                             => ['table'      => 'glpi_plugin_resources_resourcehabilitations',
-                                 'joinparams' => ['jointype' => 'child']]]
+         'joinparams' => ['beforejoin'
+         => ['table' => 'glpi_plugin_resources_resourcehabilitations',
+               'joinparams' => ['jointype' => 'child']]]
       ];
       $tab[] = [
-         'id'            => '33',
-         'table'         => 'glpi_plugin_resources_employers',
-         'field'         => 'name',
-         'name'          => PluginResourcesEmployer::getTypeName(),
-         'datatype'      => 'itemlink',
-         'forcegroupby'  => false,
+         'id' => '33',
+         'table' => 'glpi_plugin_resources_employers',
+         'field' => 'name',
+         'name' => PluginResourcesEmployer::getTypeName(),
+         'datatype' => 'itemlink',
+         'forcegroupby' => false,
          'massiveaction' => false,
-         'joinparams'    => ['join'
-                             => ['table'      => 'glpi_plugin_resources_employees',
-                                 'joinparams' => ['jointype' => 'child']]]
+         'joinparams' => ['join'
+         => ['table' => 'glpi_plugin_resources_employees',
+               'joinparams' => ['jointype' => 'child']]]
       ];
       $tab[] = [
-         'id'            => '34',
-         'table'         => 'glpi_plugin_resources_clients',
-         'field'         => 'name',
-         'name'          => PluginResourcesClient::getTypeName(),
-         'datatype'      => 'itemlink',
-         'forcegroupby'  => false,
+         'id' => '34',
+         'table' => 'glpi_plugin_resources_clients',
+         'field' => 'name',
+         'name' => PluginResourcesClient::getTypeName(),
+         'datatype' => 'itemlink',
+         'forcegroupby' => false,
          'massiveaction' => false,
-         'joinparams'    => ['join'
-                             => ['table'      => 'glpi_plugin_resources_employees',
-                                 'joinparams' => ['jointype' => 'child']]]
+         'joinparams' => ['join'
+         => ['table' => 'glpi_plugin_resources_employees',
+               'joinparams' => ['jointype' => 'child']]]
       ];
       if ($config->useSecurityCompliance()) {
          $tab[] = [
-            'id'            => '35',
-            'table'         => 'glpi_plugin_resources_employers',
-            'field'         => 'id',
-            'name'          => __('Client Sensitized to security', 'resources'),
-            'datatype'      => 'specific',
+            'id' => '35',
+            'table' => 'glpi_plugin_resources_employers',
+            'field' => 'id',
+            'name' => __('Client Sensitized to security', 'resources'),
+            'datatype' => 'specific',
             'massiveaction' => false,
-            'joinparams'    => ['join'
-                                => ['table'      => 'glpi_plugin_resources_employees',
-                                    'joinparams' => ['jointype' => 'child']]]
+            'joinparams' => ['join'
+            => ['table' => 'glpi_plugin_resources_employees',
+                  'joinparams' => ['jointype' => 'child']]]
          ];
       }
       $tab[] = [
-         'id'            => '31',
-         'table'         => $this->getTable(),
-         'field'         => 'id',
-         'name'          => __('ID'),
+         'id' => '31',
+         'table' => $this->getTable(),
+         'field' => 'id',
+         'name' => __('ID'),
          'massiveaction' => false,
-         'datatype'      => 'number'
+         'datatype' => 'number'
       ];
 
       if (Session::getCurrentInterface() != 'central') {
          $tab[] = [
-            'id'       => '80',
-            'table'    => 'glpi_entities',
-            'field'    => 'completename',
-            'name'     => __('Entity'),
+            'id' => '80',
+            'table' => 'glpi_entities',
+            'field' => 'completename',
+            'name' => __('Entity'),
             'datatype' => 'dropdown'
          ];
       }
@@ -601,7 +645,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array containing the onglets
     **/
-   function defineTabs($options = []) {
+   function defineTabs($options = [])
+   {
 
       $ong = [];
 
@@ -636,9 +681,10 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array
     */
-   function checkRequiredFields($input) {
+   function checkRequiredFields($input)
+   {
 
-      $need           = [];
+      $need = [];
       $rulecollection = new PluginResourcesRuleContracttypeCollection($input['entities_id']);
 
       $fields = [];
@@ -657,13 +703,13 @@ class PluginResourcesResource extends CommonDBTM {
       if (count($field) > 0) {
          foreach ($field as $key => $val) {
             if (!isset($input[$val])
-                || empty($input[$val])
-                || is_null($input[$val])
-                || $input[$val] == "NULL"
+               || empty($input[$val])
+               || is_null($input[$val])
+               || $input[$val] == "NULL"
             ) {
                if (!$rank->canCreate()
-                   && in_array($val,
-                               ['plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id'])
+                  && in_array($val,
+                     ['plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id'])
                ) {
                } else {
                   $need[] = $val;
@@ -682,7 +728,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return the modified $input array
     **/
-   function prepareInputForAdd($input) {
+   function prepareInputForAdd($input)
+   {
 
       if (!isset ($input["is_template"])) {
 
@@ -695,7 +742,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       if (isset($input['date_end'])
-          && empty($input['date_end'])
+         && empty($input['date_end'])
       ) {
          $input['date_end'] = 'NULL';
       }
@@ -708,7 +755,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       if (!isset($input['plugin_resources_resourcestates_id'])
-          || empty($input['plugin_resources_resourcestates_id'])
+         || empty($input['plugin_resources_resourcestates_id'])
       ) {
          $input['plugin_resources_resourcestates_id'] = '0';
       }
@@ -717,7 +764,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
-             || $_FILES['picture']['type'] == "image/pjpeg"
+            || $_FILES['picture']['type'] == "image/pjpeg"
          ) {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
@@ -746,7 +793,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return nothing
     **/
-   function post_addItem() {
+   function post_addItem()
+   {
       global $CFG_GLPI;
 
       // Manage add from template
@@ -778,9 +826,9 @@ class PluginResourcesResource extends CommonDBTM {
       //Launch notification
 
       if (isset($this->input['withtemplate'])
-          && $this->input["withtemplate"] != 1
-          && isset($this->input['send_notification'])
-          && $this->input['send_notification'] == 1
+         && $this->input["withtemplate"] != 1
+         && isset($this->input['send_notification'])
+         && $this->input['send_notification'] == 1
       ) {
          if ($CFG_GLPI["notifications_mailing"]) {
             NotificationEvent::raiseEvent("new", $this);
@@ -800,7 +848,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return mixed|string
     */
-   function replace_accents($str, $charset = 'utf-8') {
+   function replace_accents($str, $charset = 'utf-8')
+   {
       $str = htmlentities($str, ENT_NOQUOTES, $charset);
 
       $str = preg_replace('#\&([A-za-z])(?:acute|cedil|circ|grave|ring|tilde|uml)\;#', '\1', $str);
@@ -815,25 +864,26 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return mixed|string
     */
-   function addPhoto($class) {
+   function addPhoto($class)
+   {
       $uploadedfile = $_FILES['picture']['tmp_name'];
-      $src          = imagecreatefromjpeg($uploadedfile);
+      $src = imagecreatefromjpeg($uploadedfile);
 
       list($width, $height) = getimagesize($uploadedfile);
 
-      $newwidth  = 75;
+      $newwidth = 75;
       $newheight = ($height / $width) * $newwidth;
-      $tmp       = imagecreatetruecolor($newwidth, $newheight);
+      $tmp = imagecreatetruecolor($newwidth, $newheight);
 
       imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-      $ext                 = strtolower(substr(strrchr($_FILES['picture']['name'], '.'), 1));
-      $resources_name      = str_replace(" ", "", strtolower($class->fields["name"]));
+      $ext = strtolower(substr(strrchr($_FILES['picture']['name'], '.'), 1));
+      $resources_name = str_replace(" ", "", strtolower($class->fields["name"]));
       $resources_firstname = str_replace(" ", "", strtolower($class->fields["firstname"]));
-      $name                = $resources_name . "_" . $resources_firstname . "." . $ext;
+      $name = $resources_name . "_" . $resources_firstname . "." . $ext;
 
       $name = $this->replace_accents($name);
 
-      $tmpfile  = GLPI_DOC_DIR . "/_uploads/" . $name;
+      $tmpfile = GLPI_DOC_DIR . "/_uploads/" . $name;
       $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $name;
 
       imagejpeg($tmp, $tmpfile, 100);
@@ -854,15 +904,16 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return the modified $input array
     **/
-   function prepareInputForUpdate($input) {
+   function prepareInputForUpdate($input)
+   {
 
       if (isset($input['date_begin'])
-          && empty($input['date_begin'])
+         && empty($input['date_begin'])
       ) {
          $input['date_begin'] = 'NULL';
       }
       if (isset($input['date_end'])
-          && empty($input['date_end'])
+         && empty($input['date_end'])
       ) {
          $input['date_end'] = 'NULL';
       }
@@ -872,7 +923,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
-             || $_FILES['picture']['type'] == "image/pjpeg"
+            || $_FILES['picture']['type'] == "image/pjpeg"
          ) {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
@@ -887,29 +938,29 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-      $input["_old_name"]                                     = $this->fields["name"];
-      $input["_old_firstname"]                                = $this->fields["firstname"];
-      $input["_old_plugin_resources_contracttypes_id"]        = $this->fields["plugin_resources_contracttypes_id"];
-      $input["_old_users_id"]                                 = $this->fields["users_id"];
-      $input["_old_users_id_sales"]                           = $this->fields["users_id_sales"];
-      $input["_old_users_id_recipient"]                       = $this->fields["users_id_recipient"];
-      $input["_old_date_declaration"]                         = $this->fields["date_declaration"];
-      $input["_old_date_begin"]                               = $this->fields["date_begin"];
-      $input["_old_date_end"]                                 = $this->fields["date_end"];
-      $input["_old_quota"]                                    = $this->fields["quota"];
-      $input["_old_plugin_resources_departments_id"]          = $this->fields["plugin_resources_departments_id"];
-      $input["_old_plugin_resources_resourcestates_id"]       = $this->fields["plugin_resources_resourcestates_id"];
-      $input["_old_plugin_resources_resourcesituations_id"]   = $this->fields["plugin_resources_resourcesituations_id"];
-      $input["_old_plugin_resources_contractnatures_id"]      = $this->fields["plugin_resources_contractnatures_id"];
-      $input["_old_plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
+      $input["_old_name"] = $this->fields["name"];
+      $input["_old_firstname"] = $this->fields["firstname"];
+      $input["_old_plugin_resources_contracttypes_id"] = $this->fields["plugin_resources_contracttypes_id"];
+      $input["_old_users_id"] = $this->fields["users_id"];
+      $input["_old_users_id_sales"] = $this->fields["users_id_sales"];
+      $input["_old_users_id_recipient"] = $this->fields["users_id_recipient"];
+      $input["_old_date_declaration"] = $this->fields["date_declaration"];
+      $input["_old_date_begin"] = $this->fields["date_begin"];
+      $input["_old_date_end"] = $this->fields["date_end"];
+      $input["_old_quota"] = $this->fields["quota"];
+      $input["_old_plugin_resources_departments_id"] = $this->fields["plugin_resources_departments_id"];
+      $input["_old_plugin_resources_resourcestates_id"] = $this->fields["plugin_resources_resourcestates_id"];
+      $input["_old_plugin_resources_resourcesituations_id"] = $this->fields["plugin_resources_resourcesituations_id"];
+      $input["_old_plugin_resources_contractnatures_id"] = $this->fields["plugin_resources_contractnatures_id"];
+      $input["_old_plugin_resources_ranks_id"] = $this->fields["plugin_resources_ranks_id"];
       $input["_old_plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
-      $input["_old_locations_id"]                             = $this->fields["locations_id"];
-      $input["_old_is_leaving"]                               = $this->fields["is_leaving"];
-      $input["_old_date_declaration_leaving"]                 = $this->fields["date_declaration_leaving"];
-      $input["_old_plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
-      $input["_old_comment"]                                  = $this->fields["comment"];
-      $input["_old_sensitize_security"]                       = $this->fields["sensitize_security"];
-      $input["_old_read_chart"]                               = $this->fields["read_chart"];
+      $input["_old_locations_id"] = $this->fields["locations_id"];
+      $input["_old_is_leaving"] = $this->fields["is_leaving"];
+      $input["_old_date_declaration_leaving"] = $this->fields["date_declaration_leaving"];
+      $input["_old_plugin_resources_leavingreasons_id"] = $this->fields["plugin_resources_leavingreasons_id"];
+      $input["_old_comment"] = $this->fields["comment"];
+      $input["_old_sensitize_security"] = $this->fields["sensitize_security"];
+      $input["_old_read_chart"] = $this->fields["read_chart"];
 
       return $input;
    }
@@ -919,7 +970,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return nothing
     **/
-   function pre_updateInDB() {
+   function pre_updateInDB()
+   {
 
       $PluginResourcesResource_Item = new PluginResourcesResource_Item();
       //if leaving field is updated  && isset($this->input["withtemplate"]) && $this->input["withtemplate"]!=1
@@ -927,22 +979,22 @@ class PluginResourcesResource extends CommonDBTM {
       $this->input["checkbadge"] = 0;
 
       if (isset($this->input["is_leaving"])
-          && $this->input["is_leaving"] == 1
-          && in_array("is_leaving", $this->updates)) {
+         && $this->input["is_leaving"] == 1
+         && in_array("is_leaving", $this->updates)) {
 
          if ((!(isset($this->input["date_end"]))
-              || $this->input["date_end"] == 'NULL')
-             || (!(isset($this->fields["date_end"]))
-                 || $this->fields["date_end"] == 'NULL')) {
+               || $this->input["date_end"] == 'NULL')
+            || (!(isset($this->fields["date_end"]))
+               || $this->fields["date_end"] == 'NULL')) {
 
             Session::addMessageAfterRedirect(__('End date was not completed. Please try again.', 'resources'), false, ERROR);
             Html::back();
 
          } else {
             $this->fields["users_id_recipient_leaving"] = Session::getLoginUserID();
-            $this->fields["date_declaration_leaving"]   = date('Y-m-d H:i:s');
-            $this->updates[]                            = "users_id_recipient_leaving";
-            $this->updates[]                            = "date_declaration_leaving";
+            $this->fields["date_declaration_leaving"] = date('Y-m-d H:i:s');
+            $this->updates[] = "users_id_recipient_leaving";
+            $this->updates[] = "date_declaration_leaving";
 
             $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($this->fields["id"]);
             if (!$resources_checklist) {
@@ -951,32 +1003,32 @@ class PluginResourcesResource extends CommonDBTM {
             }
          }
       } else if (isset($this->input["is_leaving"])
-                 && $this->input["is_leaving"] == 0
-                 && in_array("is_leaving", $this->updates)) {
-         $this->fields["users_id_recipient_leaving"]         = 0;
-         $this->fields["date_declaration_leaving"]           = 'NULL';
-         $this->fields["date_end"]                           = 'NULL';
+         && $this->input["is_leaving"] == 0
+         && in_array("is_leaving", $this->updates)) {
+         $this->fields["users_id_recipient_leaving"] = 0;
+         $this->fields["date_declaration_leaving"] = 'NULL';
+         $this->fields["date_end"] = 'NULL';
          $this->fields["plugin_resources_leavingreasons_id"] = 0;
-         $this->updates[]                                    = "users_id_recipient_leaving";
-         $this->updates[]                                    = "date_declaration_leaving";
-         $this->updates[]                                    = "plugin_resources_leavingreasons_id";
-         $this->updates[]                                    = "date_end";
+         $this->updates[] = "users_id_recipient_leaving";
+         $this->updates[] = "date_declaration_leaving";
+         $this->updates[] = "plugin_resources_leavingreasons_id";
+         $this->updates[] = "date_end";
 
       }
 
       //if location field is updated
       if (isset ($this->fields["locations_id"])
-          && isset ($this->input["_old_locations_id"])
-          && !isset ($this->input["_UpdateFromUser_"])
-          && $this->fields["locations_id"] != $this->input["_old_locations_id"]) {
+         && isset ($this->input["_old_locations_id"])
+         && !isset ($this->input["_UpdateFromUser_"])
+         && $this->fields["locations_id"] != $this->input["_old_locations_id"]) {
 
          $PluginResourcesResource_Item->updateLocation($this->fields, "PluginResourcesResource");
       }
 
       $this->input["addchecklist"] = 0;
       if (isset ($this->fields["plugin_resources_contracttypes_id"])
-          && isset ($this->input["_old_plugin_resources_contracttypes_id"])
-          && $this->fields["plugin_resources_contracttypes_id"] != $this->input["_old_plugin_resources_contracttypes_id"]
+         && isset ($this->input["_old_plugin_resources_contracttypes_id"])
+         && $this->fields["plugin_resources_contracttypes_id"] != $this->input["_old_plugin_resources_contracttypes_id"]
       ) {
          $this->input["addchecklist"] = 1;
       }
@@ -990,29 +1042,30 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return nothing
     **/
-   function post_updateItem($history = 1) {
+   function post_updateItem($history = 1)
+   {
       global $CFG_GLPI, $DB;
 
       $PluginResourcesChecklist = new PluginResourcesChecklist();
       if (isset ($this->input["addchecklist"])
-          && $this->input["addchecklist"] == 1) {
+         && $this->input["addchecklist"] == 1) {
 
          $PluginResourcesChecklist->deleteByCriteria(['plugin_resources_resources_id' => $this->fields["id"]]);
 
          $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
       }
       $status = "update";
       if (isset($this->fields["is_leaving"])
-          && !empty($this->fields["is_leaving"])) {
-         $status                       = "LeavingResource";
+         && !empty($this->fields["is_leaving"])) {
+         $status = "LeavingResource";
          $PluginResourcesResource_Item = new PluginResourcesResource_Item();
-         $badge                        = $PluginResourcesResource_Item->searchAssociatedBadge($this->fields["id"]);
+         $badge = $PluginResourcesResource_Item->searchAssociatedBadge($this->fields["id"]);
          if ($badge) {
             $this->input["checkbadge"] = 1;
          }
@@ -1020,7 +1073,7 @@ class PluginResourcesResource extends CommonDBTM {
          //when a resource is leaving, current employment get default state
          if (isset($this->input['date_end'])) {
             $PluginResourcesEmployment = new PluginResourcesEmployment();
-            $default                   = PluginResourcesEmploymentState::getDefault();
+            $default = PluginResourcesEmploymentState::getDefault();
             // only current employment
             $restrict = "`plugin_resources_resources_id` = '" . $this->input["id"] . "'
                         AND ((`begin_date` < '" . $this->input['date_end'] . "'
@@ -1031,8 +1084,8 @@ class PluginResourcesResource extends CommonDBTM {
             $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
             while ($employment = $iterator->next()) {
                $values = ['plugin_resources_employmentstates_id' => $default,
-                          'end_date'                             => $this->input['date_end'],
-                          'id'                                   => $employment['id']
+                  'end_date' => $this->input['date_end'],
+                  'id' => $employment['id']
                ];
                $PluginResourcesEmployment->update($values);
             }
@@ -1041,14 +1094,14 @@ class PluginResourcesResource extends CommonDBTM {
 
       $picture = [0 => "picture", 1 => "date_mod"];
       if (count($this->updates)
-          && array_diff($this->updates, $picture)
-          && isset($this->input["withtemplate"])
-          && $this->input["withtemplate"] != 1
+         && array_diff($this->updates, $picture)
+         && isset($this->input["withtemplate"])
+         && $this->input["withtemplate"] != 1
       ) {
 
          if ($CFG_GLPI["notifications_mailing"]
-             && isset($this->input['send_notification'])
-             && $this->input['send_notification'] == 1
+            && isset($this->input['send_notification'])
+            && $this->input['send_notification'] == 1
          ) {
             NotificationEvent::raiseEvent($status, $this);
          }
@@ -1061,7 +1114,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool : true if item need to be deleted else false
     **/
-   function pre_deleteItem() {
+   function pre_deleteItem()
+   {
       global $CFG_GLPI;
 
       if (isset($this->input['picture']) && $this->input['picture'] != "" && $this->input['picture'] != "null" && $this->input['picture'] != "NULL") {
@@ -1069,10 +1123,10 @@ class PluginResourcesResource extends CommonDBTM {
          unlink($filename);
       }
       if ($CFG_GLPI["notifications_mailing"]
-          && $this->fields["is_template"] != 1
-          && isset($this->input['_delete'])
-          && isset($this->input['send_notification'])
-          && $this->input['send_notification'] == 1
+         && $this->fields["is_template"] != 1
+         && isset($this->input['_delete'])
+         && isset($this->input['send_notification'])
+         && $this->input['send_notification'] == 1
       ) {
          NotificationEvent::raiseEvent("delete", $this);
       }
@@ -1086,15 +1140,16 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return int|string
     */
-   function dropdownTemplate($name, $value = 0) {
+   function dropdownTemplate($name, $value = 0)
+   {
       $dbu = new DbUtils();
 
       $restrict = ["is_template" => 1] +
-                  $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
-                  ["ORDER" => "template_name"] +
-                  ["GROUPBY" => "template_name"];
+         $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
+         ["ORDER" => "template_name"] +
+         ["GROUPBY" => "template_name"];
 
-      $dbu       = new DbUtils();
+      $dbu = new DbUtils();
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
       $option[-1] = __('Without contract', 'resources');
@@ -1116,7 +1171,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return a SQL command which return a set of (itemtype, items_id)
     */
-   function getSelectLinkedItem() {
+   function getSelectLinkedItem()
+   {
       return "SELECT `itemtype`, `items_id`
               FROM `glpi_plugin_resources_resources_items`
               WHERE `plugin_resources_resources_id`='" . $this->fields['id'] . "'";
@@ -1128,7 +1184,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm($ID, $options = []) {
+   function showForm($ID, $options = [])
+   {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
@@ -1142,8 +1199,8 @@ class PluginResourcesResource extends CommonDBTM {
          $input['entities_id'] = $_SESSION['glpiactive_entity'];
       }
       $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
-      $required                                   = $this->checkRequiredFields($input);
-      $alert                                      = " class='red' ";
+      $required = $this->checkRequiredFields($input);
+      $alert = " class='red' ";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td";
@@ -1163,7 +1220,7 @@ class PluginResourcesResource extends CommonDBTM {
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                 "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+               "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
             </object> ";
             echo "<input type='hidden' name='picture' value='" . $this->fields["picture"] . "'>";
          } else {
@@ -1175,15 +1232,15 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<br>" . __('Photo', 'resources') . "<br>";
       echo "<input type='file' name='picture' value=\"" .
-           $this->fields["picture"] . "\" size='25'>&nbsp;";
+         $this->fields["picture"] . "\" size='25'>&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
          Html::showSimpleForm($CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php",
-                              'delete_picture',
-                              _x('button', 'Delete permanently'),
-                              ['id'      => $ID,
-                               'picture' => $this->fields["picture"]],
-                              "../pics/puce-delete2.png");
+            'delete_picture',
+            _x('button', 'Delete permanently'),
+            ['id' => $ID,
+               'picture' => $this->fields["picture"]],
+            "../pics/puce-delete2.png");
       }
       echo "</td></tr>";
 
@@ -1203,8 +1260,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td>";
       if (Session::getCurrentInterface() == 'central') {
          Dropdown::show('PluginResourcesResourceState',
-                        ['value'  => $this->fields["plugin_resources_resourcestates_id"],
-                         'entity' => $this->fields["entities_id"]]);
+            ['value' => $this->fields["plugin_resources_resourcestates_id"],
+               'entity' => $this->fields["entities_id"]]);
       } else {
          echo Dropdown::getDropdownName("glpi_plugin_resources_resourcestates", $this->fields["plugin_resources_resourcestates_id"]);
       }
@@ -1213,8 +1270,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr class='tab_bg_1'><td>" . PluginResourcesContractType::getTypeName(1) . "</td>";
       echo "<td>";
       Dropdown::show('PluginResourcesContractType',
-                     ['value'  => $this->fields["plugin_resources_contracttypes_id"],
-                      'entity' => $this->fields["entities_id"]]);
+         ['value' => $this->fields["plugin_resources_contracttypes_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1226,7 +1283,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Quota', 'resources') . "</td>";
       echo "<td>";
       echo "<input type='text' name='quota' value='" . Html::formatNumber($this->fields["quota"], true, 4) .
-           "' size='14'>";
+         "' size='14'>";
       echo "</td>";
       echo "</tr>";
 
@@ -1242,11 +1299,11 @@ class PluginResourcesResource extends CommonDBTM {
          echo PluginResourcesResourceSituation::getTypeName(1) . "</td>";
          echo "<td>";
 
-         $params = ['name'   => 'plugin_resources_resourcesituations_id',
-                    'value'  => $this->fields['plugin_resources_resourcesituations_id'],
-                    'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
-                    'span'   => 'span_contractnature'
+         $params = ['name' => 'plugin_resources_resourcesituations_id',
+            'value' => $this->fields['plugin_resources_resourcesituations_id'],
+            'entity' => $this->fields["entities_id"],
+            'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
+            'span' => 'span_contractnature'
          ];
          self::showGenericDropdown('PluginResourcesResourceSituation', $params);
          echo "<td";
@@ -1259,7 +1316,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<span id='span_contractnature' name='span_contractnature'>";
          if ($this->fields["plugin_resources_contractnatures_id"] > 0) {
             echo Dropdown::getDropdownName('glpi_plugin_resources_contractnatures',
-                                           $this->fields["plugin_resources_contractnatures_id"]);
+               $this->fields["plugin_resources_contractnatures_id"]);
          } else {
             echo __('None');
          }
@@ -1276,11 +1333,11 @@ class PluginResourcesResource extends CommonDBTM {
          echo PluginResourcesRank::getTypeName(1) . "</td>";
          echo "<td>";
 
-         $params = ['name'   => 'plugin_resources_ranks_id',
-                    'value'  => $this->fields['plugin_resources_ranks_id'],
-                    'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
-                    'span'   => 'span_speciality'
+         $params = ['name' => 'plugin_resources_ranks_id',
+            'value' => $this->fields['plugin_resources_ranks_id'],
+            'entity' => $this->fields["entities_id"],
+            'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
+            'span' => 'span_speciality'
          ];
          self::showGenericDropdown('PluginResourcesRank', $params);
          echo "</td>";
@@ -1294,7 +1351,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<span id='span_speciality' name='span_speciality'>";
          if ($this->fields["plugin_resources_resourcespecialities_id"] > 0) {
             echo Dropdown::getDropdownName('glpi_plugin_resources_resourcespecialities',
-                                           $this->fields["plugin_resources_resourcespecialities_id"]);
+               $this->fields["plugin_resources_resourcespecialities_id"]);
          } else {
             echo __('None');
          }
@@ -1314,8 +1371,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Location') . "</td>";
       echo "<td>";
       Dropdown::show('Location',
-                     ['value'  => $this->fields["locations_id"],
-                      'entity' => $this->fields["entities_id"]]);
+         ['value' => $this->fields["locations_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</td>";
       echo "<td";
       if (in_array("plugin_resources_departments_id", $required)) {
@@ -1325,8 +1382,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo PluginResourcesDepartment::getTypeName(1) . "</td>";
       echo "<td>";
       Dropdown::show('PluginResourcesDepartment',
-                     ['value'  => $this->fields["plugin_resources_departments_id"],
-                      'entity' => $this->fields["entities_id"]]);
+         ['value' => $this->fields["plugin_resources_departments_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -1338,10 +1395,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Resource manager', 'resources') . "</td>";
       echo "<td>";
-      User::dropdown(['value'  => $this->fields["users_id"],
-                      'name'   => "users_id",
-                      'entity' => $this->fields["entities_id"],
-                      'right'  => 'all']);
+      User::dropdown(['value' => $this->fields["users_id"],
+         'name' => "users_id",
+         'entity' => $this->fields["entities_id"],
+         'right' => 'all']);
       echo "</td>";
       echo "<td";
       if (in_array("date_begin", $required)) {
@@ -1362,10 +1419,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Sales manager', 'resources') . "</td>";
       echo "<td>";
-      User::dropdown(['value'  => $this->fields["users_id_sales"],
-                      'name'   => "users_id_sales",
-                      'entity' => $this->fields["entities_id"],
-                      'right'  => 'all']);
+      User::dropdown(['value' => $this->fields["users_id_sales"],
+         'name' => "users_id_sales",
+         'entity' => $this->fields["entities_id"],
+         'right' => 'all']);
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
@@ -1388,10 +1445,10 @@ class PluginResourcesResource extends CommonDBTM {
          $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
          if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
 
-            User::dropdown(['value'  => $this->fields["users_id_recipient"],
-                            'name'   => "users_id_recipient",
-                            'entity' => $this->fields["entities_id"],
-                            'right'  => 'all']);
+            User::dropdown(['value' => $this->fields["users_id_recipient"],
+               'name' => "users_id_recipient",
+               'entity' => $this->fields["entities_id"],
+               'right' => 'all']);
          } else {
             echo $users_id_recipient->getName();
          }
@@ -1414,7 +1471,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td></td><td></td><td>" . __('Send a notification') . "</td><td>";
       echo "<input type='checkbox' name='send_notification' checked = true";
       if (Session::getCurrentInterface() != 'central'
-          || (isset($options['withtemplate']) && $options['withtemplate'])
+         || (isset($options['withtemplate']) && $options['withtemplate'])
       ) {
          echo " disabled='true' ";
       }
@@ -1432,7 +1489,7 @@ class PluginResourcesResource extends CommonDBTM {
       Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
 
       if ($ID != -1 && $options['withtemplate'] != 1 && $this->fields["is_leaving"] == 1
-          && isset($this->fields["users_id_recipient_leaving"])
+         && isset($this->fields["users_id_recipient_leaving"])
       ) {
          echo "&nbsp;" . __('By') . "&nbsp;";
          $users_id_recipient_leaving = new User();
@@ -1441,7 +1498,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
 
          if (isset($this->fields["date_declaration_leaving"])
-             && $this->fields["date_declaration_leaving"] != null
+            && $this->fields["date_declaration_leaving"] != null
          ) {
             echo "&nbsp;-&nbsp;";
             echo Html::convDateTime($this->fields["date_declaration_leaving"]);
@@ -1457,8 +1514,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo PluginResourcesLeavingReason::getTypeName(1) . "</td>";
       echo "<td>";
       Dropdown::show('PluginResourcesLeavingReason',
-                     ['value'  => $this->fields["plugin_resources_leavingreasons_id"],
-                      'entity' => $this->fields["entities_id"]]);
+         ['value' => $this->fields["plugin_resources_leavingreasons_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</td>";
 
       echo "<td";
@@ -1523,7 +1580,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function sendReport($options) {
+   function sendReport($options)
+   {
       global $CFG_GLPI;
 
       if (!$this->getFromDB($options["id"])) {
@@ -1536,17 +1594,17 @@ class PluginResourcesResource extends CommonDBTM {
 
          if ($report->fields['send_report_notif']) {
             $notification = new PluginResourcesNotification();
-            $notification->add(['users_id'                      => Session::getLoginUserID(),
-                                'plugin_resources_resources_id' => $options["id"],
-                                'type'                          => 'report']);
+            $notification->add(['users_id' => Session::getLoginUserID(),
+               'plugin_resources_resources_id' => $options["id"],
+               'type' => 'report']);
             NotificationEvent::raiseEvent('report', $this, ['reports_id' => $options["reports_id"]]);
          }
 
          if ($report->fields['send_other_notif']) {
             $notification = new PluginResourcesNotification();
-            $notification->add(['users_id'                      => Session::getLoginUserID(),
-                                'plugin_resources_resources_id' => $options["id"],
-                                'type'                          => 'other']);
+            $notification->add(['users_id' => Session::getLoginUserID(),
+               'plugin_resources_resources_id' => $options["id"],
+               'type' => 'other']);
             NotificationEvent::raiseEvent('other', $this, ['reports_id' => $options["reports_id"]]);
          }
       }
@@ -1557,7 +1615,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function reSendResourceCreation($options) {
+   function reSendResourceCreation($options)
+   {
       global $CFG_GLPI;
 
       if (!$this->getFromDB($options["id"])) {
@@ -1573,7 +1632,8 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * @param $options
     */
-   static function showReportForm($options) {
+   static function showReportForm($options)
+   {
 
       $reportconfig = new PluginResourcesReportConfig();
       $reportconfig->getFromDBByResource($options['id']);
@@ -1597,7 +1657,8 @@ class PluginResourcesResource extends CommonDBTM {
       $notification->listItems($options['id']);
    }
 
-   function wizardFirstForm() {
+   function wizardFirstForm()
+   {
       global $CFG_GLPI;
 
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
@@ -1646,7 +1707,8 @@ class PluginResourcesResource extends CommonDBTM {
     * @param       $ID
     * @param array $options
     */
-   function wizardSecondForm($ID, $options = []) {
+   function wizardSecondForm($ID, $options = [])
+   {
       global $CFG_GLPI;
 
       $empty = 0;
@@ -1666,23 +1728,23 @@ class PluginResourcesResource extends CommonDBTM {
       }
       if (($options['withtemplate'] == 2 || $options["new"] != 1) && $options["requiredfields"] != 1) {
 
-         $options["name"]                                     = $this->fields["name"];
-         $options["firstname"]                                = $this->fields["firstname"];
-         $options["locations_id"]                             = $this->fields["locations_id"];
-         $options["users_id"]                                 = $this->fields["users_id"];
-         $options["users_id_sales"]                           = $this->fields["users_id_sales"];
-         $options["plugin_resources_departments_id"]          = $this->fields["plugin_resources_departments_id"];
-         $options["date_begin"]                               = $this->fields["date_begin"];
-         $options["date_end"]                                 = $this->fields["date_end"];
-         $options["comment"]                                  = $this->fields["comment"];
-         $options["quota"]                                    = $this->fields["quota"];
-         $options["plugin_resources_resourcesituations_id"]   = $this->fields["plugin_resources_resourcesituations_id"];
-         $options["plugin_resources_contractnatures_id"]      = $this->fields["plugin_resources_contractnatures_id"];
-         $options["plugin_resources_ranks_id"]                = $this->fields["plugin_resources_ranks_id"];
+         $options["name"] = $this->fields["name"];
+         $options["firstname"] = $this->fields["firstname"];
+         $options["locations_id"] = $this->fields["locations_id"];
+         $options["users_id"] = $this->fields["users_id"];
+         $options["users_id_sales"] = $this->fields["users_id_sales"];
+         $options["plugin_resources_departments_id"] = $this->fields["plugin_resources_departments_id"];
+         $options["date_begin"] = $this->fields["date_begin"];
+         $options["date_end"] = $this->fields["date_end"];
+         $options["comment"] = $this->fields["comment"];
+         $options["quota"] = $this->fields["quota"];
+         $options["plugin_resources_resourcesituations_id"] = $this->fields["plugin_resources_resourcesituations_id"];
+         $options["plugin_resources_contractnatures_id"] = $this->fields["plugin_resources_contractnatures_id"];
+         $options["plugin_resources_ranks_id"] = $this->fields["plugin_resources_ranks_id"];
          $options["plugin_resources_resourcespecialities_id"] = $this->fields["plugin_resources_resourcespecialities_id"];
-         $options["plugin_resources_leavingreasons_id"]       = $this->fields["plugin_resources_leavingreasons_id"];
-         $options["sensitize_security"]                       = $this->fields["sensitize_security"];
-         $options["read_chart"]                               = $this->fields["read_chart"];
+         $options["plugin_resources_leavingreasons_id"] = $this->fields["plugin_resources_leavingreasons_id"];
+         $options["sensitize_security"] = $this->fields["sensitize_security"];
+         $options["read_chart"] = $this->fields["read_chart"];
 
       }
 
@@ -1707,11 +1769,11 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $required = [];
-      $input    = [];
+      $input = [];
       if (isset($this->fields["entities_id"]) || $empty == 1) {
          if ($empty == 1) {
             $input['plugin_resources_contracttypes_id'] = 0;
-            $input['entities_id']                       = $_SESSION['glpiactive_entity'];
+            $input['entities_id'] = $_SESSION['glpiactive_entity'];
             echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
          } else {
             $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
@@ -1725,7 +1787,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
       $required = $this->checkRequiredFields($input);
-      $alert    = " red ";
+      $alert = " red ";
 
       echo "<div class=\"bt-row\">";
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
@@ -1738,7 +1800,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</span>&nbsp;";
       if ($this->fields["plugin_resources_contracttypes_id"]) {
          echo Dropdown::getDropdownName("glpi_plugin_resources_contracttypes",
-                                        $this->fields["plugin_resources_contracttypes_id"]);
+            $this->fields["plugin_resources_contracttypes_id"]);
       } else {
          echo __('Without contract', 'resources');
       }
@@ -1757,7 +1819,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo PluginResourcesResourceState::getTypeName(1);
          echo "</span>&nbsp;";
          echo Dropdown::getDropdownName("glpi_plugin_resources_resourcestates",
-                                        $this->fields["plugin_resources_resourcestates_id"]);
+            $this->fields["plugin_resources_resourcestates_id"]);
          echo "</div>";
       }
       echo "</div>";
@@ -1797,8 +1859,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('First name');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      $option = ['value'  => $options["firstname"],
-                 'option' => "onChange='javascript:this.value=First2UpperCase(this.value);' style='text-transform:capitalize;'"];
+      $option = ['value' => $options["firstname"],
+         'option' => "onChange='javascript:this.value=First2UpperCase(this.value);' style='text-transform:capitalize;'"];
       Html::autocompletionTextField($this, "firstname", $option);
       echo "</div>";
 
@@ -1825,7 +1887,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       echo "<input type='text' name='quota' value='" . Html::formatNumber($options["quota"], true, 4) .
-           "' size='14'>";
+         "' size='14'>";
       echo "</div>";
 
       echo "</div>";
@@ -1848,11 +1910,11 @@ class PluginResourcesResource extends CommonDBTM {
          echo PluginResourcesResourceSituation::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-         $params = ['name'   => 'plugin_resources_resourcesituations_id',
-                    'value'  => $options['plugin_resources_resourcesituations_id'],
-                    'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
-                    'span'   => 'span_contractnature'
+         $params = ['name' => 'plugin_resources_resourcesituations_id',
+            'value' => $options['plugin_resources_resourcesituations_id'],
+            'entity' => $this->fields["entities_id"],
+            'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
+            'span' => 'span_contractnature'
          ];
          self::showGenericDropdown('PluginResourcesResourceSituation', $params);
          echo "</div>";
@@ -1868,7 +1930,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<span id='span_contractnature' name='span_contractnature'>";
          if ($options["plugin_resources_contractnatures_id"] > 0) {
             echo Dropdown::getDropdownName('glpi_plugin_resources_contractnatures',
-                                           $options["plugin_resources_contractnatures_id"]);
+               $options["plugin_resources_contractnatures_id"]);
          } else {
             echo "<input type='hidden' name='plugin_resources_contractnatures_id' value='0'>";
             echo __('None');
@@ -1888,11 +1950,11 @@ class PluginResourcesResource extends CommonDBTM {
          echo PluginResourcesRank::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-         $params = ['name'   => 'plugin_resources_ranks_id',
-                    'value'  => $options['plugin_resources_ranks_id'],
-                    'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
-                    'span'   => 'span_speciality'
+         $params = ['name' => 'plugin_resources_ranks_id',
+            'value' => $options['plugin_resources_ranks_id'],
+            'entity' => $this->fields["entities_id"],
+            'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
+            'span' => 'span_speciality'
          ];
          self::showGenericDropdown('PluginResourcesRank', $params);
 
@@ -1909,7 +1971,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<span id='span_speciality' name='span_speciality'>";
          if ($options["plugin_resources_resourcespecialities_id"] > 0) {
             echo Dropdown::getDropdownName('glpi_plugin_resources_resourcespecialities',
-                                           $options["plugin_resources_resourcespecialities_id"]);
+               $options["plugin_resources_resourcespecialities_id"]);
          } else {
             echo "<input type='hidden' name='plugin_resources_resourcespecialities_id' value='0'>";
             echo __('None');
@@ -1941,10 +2003,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Resource manager', 'resources');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value'  => $options["users_id"],
-                      'name'   => "users_id",
-                      'entity' => $input['entities_id'],
-                      'right'  => 'all']);
+      User::dropdown(['value' => $options["users_id"],
+         'name' => "users_id",
+         'entity' => $input['entities_id'],
+         'right' => 'all']);
       echo "</div>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
@@ -1955,10 +2017,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Sales manager', 'resources');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value'  => $options["users_id_sales"],
-                      'name'   => "users_id_sales",
-                      'entity' => $input['entities_id'],
-                      'right'  => 'all']);
+      User::dropdown(['value' => $options["users_id_sales"],
+         'name' => "users_id_sales",
+         'entity' => $input['entities_id'],
+         'right' => 'all']);
       echo "</div>";
       echo "</div>";
 
@@ -1973,9 +2035,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       Dropdown::show('PluginResourcesDepartment',
-                     ['name'   => "plugin_resources_departments_id",
-                      'value'  => $options["plugin_resources_departments_id"],
-                      'entity' => $this->fields["entities_id"]]);
+         ['name' => "plugin_resources_departments_id",
+            'value' => $options["plugin_resources_departments_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</div>";
 
       echo "</div>";
@@ -2139,7 +2201,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function wizardFiveForm($ID, $options = []) {
+   function wizardFiveForm($ID, $options = [])
+   {
       global $CFG_GLPI;
 
       if ($ID > 0) {
@@ -2174,7 +2237,7 @@ class PluginResourcesResource extends CommonDBTM {
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                 "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+               "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
             </object> ";
          } else {
             echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/nobody.png'>";
@@ -2189,7 +2252,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo __('Photo format : JPG', 'resources') . "<br>";
       echo "<input type='file' name='picture' value=\"" .
-           $this->fields["picture"] . "\" size='25'>&nbsp;";
+         $this->fields["picture"] . "\" size='25'>&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
 
       echo "</div></div>";
@@ -2225,18 +2288,19 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array|string
     */
-   static function getResourceName($ID, $link = 0) {
+   static function getResourceName($ID, $link = 0)
+   {
       global $DB, $CFG_GLPI;
 
       $user = "";
       if ($link == 2) {
-         $user = ["name"    => "",
-                  "link"    => "",
-                  "comment" => ""];
+         $user = ["name" => "",
+            "link" => "",
+            "comment" => ""];
       }
 
       if ($ID) {
-         $query  = "SELECT `glpi_plugin_resources_resources`.*,
+         $query = "SELECT `glpi_plugin_resources_resources`.*,
                           `glpi_users`.`registration_number`,
                           `glpi_users`.`name` AS username
                    FROM `glpi_plugin_resources_resources`
@@ -2251,21 +2315,21 @@ class PluginResourcesResource extends CommonDBTM {
          $result = $DB->query($query);
 
          if ($link == 2) {
-            $user = ["name"    => "",
-                     "comment" => "",
-                     "link"    => ""];
+            $user = ["name" => "",
+               "comment" => "",
+               "link" => ""];
          }
 
          $dbu = new DbUtils();
 
          if ($DB->numrows($result) == 1) {
-            $data     = $DB->fetch_assoc($result);
+            $data = $DB->fetch_assoc($result);
             $username = $dbu->formatUserName($data["id"], $data["username"], $data["name"],
-                                             $data["firstname"], $link);
+               $data["firstname"], $link);
 
             if ($link == 2) {
-               $user["name"]    = $username;
-               $user["link"]    = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $ID;
+               $user["name"] = $username;
+               $user["link"] = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $ID;
                $user["comment"] = "";
 
                if (isset($data["picture"]) && !empty($data["picture"])) {
@@ -2273,7 +2337,7 @@ class PluginResourcesResource extends CommonDBTM {
                   if (file_exists($path)) {
                      $user["comment"] .= "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
                       <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                                         "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
+                        "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
                      </object><br> ";
 
                   } else {
@@ -2287,19 +2351,19 @@ class PluginResourcesResource extends CommonDBTM {
 
                if ($data["plugin_resources_ranks_id"] > 0) {
                   $user["comment"] .= PluginResourcesRank::getTypeName(1) . "&nbsp;: " .
-                                      Dropdown::getDropdownName("glpi_plugin_resources_ranks",
-                                                                $data["plugin_resources_ranks_id"]) . "<br>";
+                     Dropdown::getDropdownName("glpi_plugin_resources_ranks",
+                        $data["plugin_resources_ranks_id"]) . "<br>";
                }
 
                if ($data["locations_id"] > 0) {
                   $user["comment"] .= __('Location') . "&nbsp;: " .
-                                      Dropdown::getDropdownName("glpi_locations",
-                                                                $data["locations_id"]) . "<br>";
+                     Dropdown::getDropdownName("glpi_locations",
+                        $data["locations_id"]) . "<br>";
                }
 
                if ($data["registration_number"] > 0) {
                   $user["comment"] .= __('Administrative number') . "&nbsp;: " .
-                                      $data["registration_number"] . "<br>";
+                     $data["registration_number"] . "<br>";
                }
 
             } else {
@@ -2318,18 +2382,19 @@ class PluginResourcesResource extends CommonDBTM {
     * @param array ($myname,$value,$entity_restrict)
     */
 
-   static function dropdown($options = []) {
+   static function dropdown($options = [])
+   {
       global $CFG_GLPI;
 
-      $params['value']            = 0;
-      $params['valuename']        = Dropdown::EMPTY_VALUE;
-      $params['customcomments']   = true;
-      $params['comments']         = false;
-      $params['entity']           = $_SESSION['glpiactive_entity'];
-      $params['name']             = 'plugin_resources_resources_id';
+      $params['value'] = 0;
+      $params['valuename'] = Dropdown::EMPTY_VALUE;
+      $params['customcomments'] = true;
+      $params['comments'] = false;
+      $params['entity'] = $_SESSION['glpiactive_entity'];
+      $params['name'] = 'plugin_resources_resources_id';
       $params['addUnlinkedUsers'] = false;
-      $params['rand']             = mt_rand();
-      $params['display']          = false;
+      $params['rand'] = mt_rand();
+      $params['display'] = false;
       if (!empty($options)) {
          foreach ($options as $key => $val) {
             $params[$key] = $val;
@@ -2337,7 +2402,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $params['value2'] = $params['value'];
-      $user             = self::getResourceName($params['value'], 2);
+      $user = self::getResourceName($params['value'], 2);
       if (!empty($params['value'])) {
          //         $params['valuename'] = Dropdown::getDropdownName(self::getTable(), $params['value']);
          $params['valuename'] = $user['name'];
@@ -2345,42 +2410,42 @@ class PluginResourcesResource extends CommonDBTM {
 
       $field_id = Html::cleanId("dropdown_" . $params['name'] . $params['rand']);
 
-      $item   = new self();
+      $item = new self();
       $output = "<span class='no-wrap'>";
       $output .= Html::jsAjaxDropdown($params['name'], $field_id,
-                                      $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/dropdownResources.php",
-                                      $params);
+         $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/dropdownResources.php",
+         $params);
       if (class_exists('PluginPositionsPosition')) {
          $output .= PluginPositionsPosition::showGeolocLink('PluginResourcesResource', $params['value']);
       }
       // Display comment
       if ($params['customcomments']) {
          $table = $item->getTable();
-         $user  = self::getResourceName($params['value'], 2);
+         $user = self::getResourceName($params['value'], 2);
 
          $comment_id = Html::cleanId("comment_" . $params['name'] . $params['rand']);
-         $link_id    = Html::cleanId("comment_link_" . $params['name'] . $params['rand']);
+         $link_id = Html::cleanId("comment_link_" . $params['name'] . $params['rand']);
 
          if (empty($user["link"])) {
             $user["link"] = $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.php";
          }
 
          $output .= "&nbsp;" . Html::showToolTip($user["comment"],
-                                                 ['contentid'  => $comment_id,
-                                                  'link'       => $user["link"],
-                                                  'linkid'     => $link_id,
-                                                  'linktarget' => '_blank',
-                                                  'display'    => false]);
+               ['contentid' => $comment_id,
+                  'link' => $user["link"],
+                  'linkid' => $link_id,
+                  'linktarget' => '_blank',
+                  'display' => false]);
 
          $paramscomment = ['value' => '__VALUE__',
-                           'table' => $table];
+            'table' => $table];
          if ($item->canView()) {
             $paramscomment['withlink'] = $link_id;
          }
 
          $output .= Ajax::updateItemOnSelectEvent($field_id, $comment_id,
-                                                  $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/comments.php",
-                                                  $paramscomment, false);
+            $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/comments.php",
+            $paramscomment, false);
 
       }
       $output .= Ajax::commonDropdownUpdateItem($params, false);
@@ -2392,7 +2457,8 @@ class PluginResourcesResource extends CommonDBTM {
       return $output;
    }
 
-   static function fastResourceAddForm() {
+   static function fastResourceAddForm()
+   {
 
       echo "<table class='tab_cadre'>";
       // ContractType
@@ -2402,7 +2468,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       PluginResourcesDepartment::getTypeName(1) . "</td><td>";
       Dropdown::show('PluginResourcesContractType',
-                     ['name' => "plugin_resources_contracttypes_id"]);
+         ['name' => "plugin_resources_contracttypes_id"]);
 
       echo "</td>";
       echo "</tr>";
@@ -2412,9 +2478,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td>";
       echo __('Resource manager', 'resources') . "</td>";
       echo "<td width='70%'>";
-      User::dropdown(['name'   => "users_id_recipient",
-                      'entity' => $_SESSION['glpiactive_entity'],
-                      'right'  => 'all']);
+      User::dropdown(['name' => "users_id_recipient",
+         'entity' => $_SESSION['glpiactive_entity'],
+         'right' => 'all']);
       echo "<td>";
       echo "</tr>";
 
@@ -2423,7 +2489,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td>";
       echo PluginResourcesDepartment::getTypeName(1) . "</td><td>";
       Dropdown::show('PluginResourcesDepartment',
-                     ['name' => "plugin_resources_departments_id"]);
+         ['name' => "plugin_resources_departments_id"]);
 
       echo '<input type="hidden" name="itemtype" value="User">';
       echo "</td>";
@@ -2437,68 +2503,69 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array
     */
-   static function fastResourceAdd($userId, $options) {
+   static function fastResourceAdd($userId, $options)
+   {
       global $DB;
 
       $params['plugin_resources_contracttypes_id'] = 0;
-      $params['plugin_resources_departments_id']   = 0;
-      $params['users_id_recipient']                = 0;
-      $params['itemtype']                          = 'User';
-      $params['entities_id']                       = $_SESSION['glpiactive_entity'];
+      $params['plugin_resources_departments_id'] = 0;
+      $params['users_id_recipient'] = 0;
+      $params['itemtype'] = 'User';
+      $params['entities_id'] = $_SESSION['glpiactive_entity'];
 
       foreach ($options as $key => $val) {
          $params[$key] = $val;
       }
 
-      $message        = null;
-      $idResource     = 0;
+      $message = null;
+      $idResource = 0;
       $error['right'] = 0;
       $error['error'] = 0;
 
       $user = new User();
       if ($user->getFromDB($userId)) {
          $resource = new PluginResourcesResource();
-         $resource->getFromDBByCrit(['name'       => $user->fields['realname'],
-                                     'firstname'  => $user->fields['firstname'],
-                                     'is_deleted' => 0]);
+         $resource->getFromDBByCrit(['name' => $user->fields['realname'],
+            'firstname' => $user->fields['firstname'],
+            'is_deleted' => 0]);
 
          if (!isset($resource->fields['id']) || $resource->fields['id'] <= 0) {
             $resource->fields['entities_id'] = $params['entities_id'];
-            $resource->fields['name']        = isset($user->fields['realname']) ? $user->fields['realname'] : '';
-            $resource->fields['firstname']   = isset($user->fields['firstname']) ? $user->fields['firstname'] : '';
+            $resource->fields['name'] = isset($user->fields['realname']) ? $user->fields['realname'] : '';
+            $resource->fields['firstname'] = isset($user->fields['firstname']) ? $user->fields['firstname'] : '';
 
             $resource->fields['plugin_resources_contracttypes_id'] = $params['plugin_resources_contracttypes_id'];
-            $resource->fields['users_id_recipient']                = Session::getLoginUserID();
-            $resource->fields['users_id']                          = $params["users_id_recipient"];
-            $resource->fields['users_id_sales']                    = 0;
+            $resource->fields['users_id_recipient'] = Session::getLoginUserID();
+            $resource->fields['users_id'] = $params["users_id_recipient"];
+            $resource->fields['users_id_sales'] = 0;
 
             $resource->fields['date_declaration'] = date('Y-m-d');
-            $resource->fields['date_begin']       = null;
-            $resource->fields['date_end']         = null;
+            $resource->fields['date_begin'] = null;
+            $resource->fields['date_end'] = null;
 
             $resource->fields['plugin_resources_departments_id'] = $params['plugin_resources_departments_id'];
-            $resource->fields['locations_id']                    = 0;
-            $resource->fields['is_leaving']                      = 0;
-            $resource->fields['users_id_recipient_leaving']      = 0;
-            $resource->fields['comment']                         = '';
-            $resource->fields['notepad']                         = '';
-            $resource->fields['is_template']                     = 0;
-            $resource->fields['template_name']                   = '';
-            $resource->fields['is_deleted']                      = 0;
-            $resource->fields['is_helpdesk_visible']             = 1;
-            $resource->fields['date_mod']                        = date('Y-m-d');
+            $resource->fields['locations_id'] = 0;
+            $resource->fields['is_leaving'] = 0;
+            $resource->fields['users_id_recipient_leaving'] = 0;
+            $resource->fields['comment'] = '';
+            $resource->fields['notepad'] = '';
+            $resource->fields['is_template'] = 0;
+            $resource->fields['template_name'] = '';
+            $resource->fields['is_deleted'] = 0;
+            $resource->fields['is_helpdesk_visible'] = 1;
+            $resource->fields['date_mod'] = date('Y-m-d');
 
-            $resource->fields['plugin_resources_resourcestates_id']       = 0;
-            $resource->fields['picture']                                  = null;
-            $resource->fields['is_recursive']                             = 0;
-            $resource->fields['quota']                                    = 1;
-            $resource->fields['plugin_resources_resourcesituations_id']   = 0;
-            $resource->fields['plugin_resources_contractnatures_id']      = 0;
-            $resource->fields['plugin_resources_ranks_id']                = 0;
+            $resource->fields['plugin_resources_resourcestates_id'] = 0;
+            $resource->fields['picture'] = null;
+            $resource->fields['is_recursive'] = 0;
+            $resource->fields['quota'] = 1;
+            $resource->fields['plugin_resources_resourcesituations_id'] = 0;
+            $resource->fields['plugin_resources_contractnatures_id'] = 0;
+            $resource->fields['plugin_resources_ranks_id'] = 0;
             $resource->fields['plugin_resources_resourcespecialities_id'] = 0;
-            $resource->fields['plugin_resources_leavingreasons_id']       = 0;
-            $resource->fields['sensitize_security']                       = 0;
-            $resource->fields['read_chart']                               = 0;
+            $resource->fields['plugin_resources_leavingreasons_id'] = 0;
+            $resource->fields['sensitize_security'] = 0;
+            $resource->fields['read_chart'] = 0;
 
             $resourceItem = new PluginResourcesResource_Item();
             if ($resourceItem->can(-1, UPDATE, $resource)) {
@@ -2510,9 +2577,9 @@ class PluginResourcesResource extends CommonDBTM {
                   }
 
                   $resourceItem->fields['plugin_resources_resources_id'] = $idResource;
-                  $resourceItem->fields['items_id']                      = $user->fields['id'];
-                  $resourceItem->fields['itemtype']                      = $params['itemtype'];
-                  $resourceItem->fields['comment']                       = null;
+                  $resourceItem->fields['items_id'] = $user->fields['id'];
+                  $resourceItem->fields['itemtype'] = $params['itemtype'];
+                  $resourceItem->fields['comment'] = null;
 
                   $idResourceItem = $resourceItem->add($resourceItem->fields);
                   if ($idResourceItem) {
@@ -2525,7 +2592,7 @@ class PluginResourcesResource extends CommonDBTM {
                      }
                   } else {
                      $error['error'] = 1;
-                     $message        = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
+                     $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
                      $resource->delete($resource->fields, 1);
                   }
                } else {
@@ -2536,7 +2603,7 @@ class PluginResourcesResource extends CommonDBTM {
             }
          } else {
             $error['error'] = 1;
-            $message        = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
+            $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
          }
       } else {
          $error['error'] = 1;
@@ -2546,16 +2613,17 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
    /**
-    * @param bool   $count
-    * @param int    $entity_restrict
-    * @param int    $value
-    * @param array  $used
+    * @param bool $count
+    * @param int $entity_restrict
+    * @param int $value
+    * @param array $used
     * @param string $search
-    * @param bool   $showOnlyLinkedResources
+    * @param bool $showOnlyLinkedResources
     *
     * @return bool|\mysqli_result
     */
-   static function getSqlSearchResult($count = true, $entity_restrict = -1, $value = 0, $used = [], $search = '', $showOnlyLinkedResources = false) {
+   static function getSqlSearchResult($count = true, $entity_restrict = -1, $value = 0, $used = [], $search = '', $showOnlyLinkedResources = false)
+   {
       global $DB, $CFG_GLPI;
 
       // No entity define : use active ones
@@ -2563,7 +2631,7 @@ class PluginResourcesResource extends CommonDBTM {
          $entity_restrict = $_SESSION["glpiactiveentities"];
       }
 
-      $dbu         = new DbUtils();
+      $dbu = new DbUtils();
       $joinprofile = false;
 
       $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0
@@ -2572,7 +2640,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $where .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', $entity_restrict, true);
       if ((is_numeric($value) && $value)
-          || count($used)
+         || count($used)
       ) {
 
          $where .= " AND `glpi_plugin_resources_resources`.`id` NOT IN (0";
@@ -2624,7 +2692,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       if (!Session::haveRight("plugin_resources_all", READ)) {
-         $who   = Session::getLoginUserID();
+         $who = Session::getLoginUserID();
          $where .= " AND (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
       }
 
@@ -2637,7 +2705,7 @@ class PluginResourcesResource extends CommonDBTM {
                              OR `glpi_users`.`registration_number` " . Search::makeTextSearch($search) . "
                              OR `glpi_users`.`name` " . Search::makeTextSearch($search) . "
                              OR CONCAT(`glpi_plugin_resources_resources`.`name`,' ',`glpi_plugin_resources_resources`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) " .
-                      Search::makeTextSearch($search) . ")";
+               Search::makeTextSearch($search) . ")";
          }
          $query .= " WHERE $where ";
 
@@ -2661,12 +2729,13 @@ class PluginResourcesResource extends CommonDBTM {
     * @param     $target
     * @param int $add
     */
-   function listOfTemplates($target, $add = 0) {
+   function listOfTemplates($target, $add = 0)
+   {
       $dbu = new DbUtils();
 
       $restrict = ["is_template" => 1] +
-                  $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
-                  ["ORDER" => "name"];
+         $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
+         ["ORDER" => "name"];
 
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -2711,9 +2780,9 @@ class PluginResourcesResource extends CommonDBTM {
             }
             echo "<td class='center tab_bg_2'>";
             Html::showSimpleForm($target,
-                                 'purge',
-                                 _x('button', 'Delete permanently'),
-                                 ['id' => $template["id"], 'withtemplate' => 1]);
+               'purge',
+               _x('button', 'Delete permanently'),
+               ['id' => $template["id"], 'withtemplate' => 1]);
             echo "</td>";
 
          } else {
@@ -2738,7 +2807,8 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
    //Show form from heelpdesk to remove a resource
-   function showResourcesToRemove() {
+   function showResourcesToRemove()
+   {
       global $CFG_GLPI;
 
       $dbu = new DbUtils();
@@ -2766,10 +2836,10 @@ class PluginResourcesResource extends CommonDBTM {
          echo self::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
-         self::dropdown(['name'      => 'plugin_resources_resources_id',
-                         'display'   => true,
-                         'entity'    => $_SESSION['glpiactiveentities'],
-                         'on_change' => "plugin_resources_pdf_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+         self::dropdown(['name' => 'plugin_resources_resources_id',
+            'display' => true,
+            'entity' => $_SESSION['glpiactiveentities'],
+            'on_change' => "plugin_resources_pdf_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
          echo "</div>";
          echo "</div>";
@@ -2789,7 +2859,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
          Dropdown::show('PluginResourcesLeavingReason',
-                        ['entity' => $_SESSION['glpiactiveentities']]);
+            ['entity' => $_SESSION['glpiactiveentities']]);
          echo "</div>";
          echo "</div>";
 
@@ -2817,7 +2887,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param array $options
     */
-   function showResourcesToChange($options = []) {
+   function showResourcesToChange($options = [])
+   {
       global $CFG_GLPI;
 
       $dbu = new DbUtils();
@@ -2845,10 +2916,10 @@ class PluginResourcesResource extends CommonDBTM {
          echo self::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
-         self::dropdown(['name'      => 'plugin_resources_resources_id',
-                                            'display'   => true,
-                                            'entity'    => $_SESSION['glpiactiveentities'],
-                                            'on_change' => "plugin_resources_change_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+         self::dropdown(['name' => 'plugin_resources_resources_id',
+            'display' => true,
+            'entity' => $_SESSION['glpiactiveentities'],
+            'on_change' => "plugin_resources_change_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
          echo "</div>";
          echo "</div>";
@@ -2861,8 +2932,8 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
          $actions = PluginResourcesResource_Change::getAllActions();
          Dropdown::showFromArray('change_action',
-                                 $actions,
-                                 ['on_change' => "plugin_resources_change_action(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+            $actions,
+            ['on_change' => "plugin_resources_change_action(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
          echo "</div>";
          echo "</div>";
 
@@ -2897,7 +2968,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param $plugin_resources_resources_id
     */
-   function showResourcesToTransfer($plugin_resources_resources_id) {
+   function showResourcesToTransfer($plugin_resources_resources_id)
+   {
       global $CFG_GLPI;
 
       $dbu = new DbUtils();
@@ -2918,7 +2990,7 @@ class PluginResourcesResource extends CommonDBTM {
             $resource = new PluginResourcesResource();
             if ($resource->getFromDB($plugin_resources_resources_id)) {
                $resource_item = new PluginResourcesResource_Item();
-               $linked        = $resource_item->find(['plugin_resources_resources_id' => $plugin_resources_resources_id]);
+               $linked = $resource_item->find(['plugin_resources_resources_id' => $plugin_resources_resources_id]);
 
                echo "<div class=\"bt-row\">";
                echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
@@ -2951,8 +3023,8 @@ class PluginResourcesResource extends CommonDBTM {
                echo "</div>";
                echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
                $transferentity = new PluginResourcesTransferEntity();
-               $data           = $transferentity->find();
-               $elements       = [Dropdown::EMPTY_VALUE];
+               $data = $transferentity->find();
+               $elements = [Dropdown::EMPTY_VALUE];
                foreach ($data as $val) {
                   $elements[$val['entities_id']] = Dropdown::getDropdownName("glpi_entities", $val['entities_id']);
                }
@@ -2986,7 +3058,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return $action
     */
-   function massiveActions($type) {
+   function massiveActions($type)
+   {
 
       $prefix = $this->getType() . MassiveAction::CLASS_ACTION_SEPARATOR;
 
@@ -3000,27 +3073,28 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * Get the specific massive actions
     *
-    * @since version 0.84
-    *
     * @param $checkitem link item to check right   (default NULL)
     *
     * @return an array of massive actions
-    * */
-   function getSpecificMassiveActions($checkitem = null) {
+    * *@since version 0.84
+    *
+    */
+   function getSpecificMassiveActions($checkitem = null)
+   {
       $isadmin = static::canUpdate();
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if ($isadmin && Session::getCurrentInterface() == 'central') {
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install']    = _x('button', 'Associate');
+         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install'] = _x('button', 'Associate');
          $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = _x('button', 'Dissociate');
 
          if (Session::haveRight('transfer', READ)
-             && Session::isMultiEntitiesMode()
+            && Session::isMultiEntitiesMode()
          ) {
             $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __('Transfer');
          }
          $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'AddHabilitation'] = __('Add additional habilitation', 'resources');
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send']            = __('Send a notification');
+         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send'] = __('Send a notification');
       }
       return $actions;
    }
@@ -3028,29 +3102,30 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * Class-specific method used to show the fields to specify the massive action
     *
-    * @since 0.85
-    *
     * @param MassiveAction $ma the current massive action object
     *
     * @return boolean false if parameters displayed ?
-    **/
-   static function showMassiveActionsSubForm(MassiveAction $ma) {
+    **@since 0.85
+    *
+    */
+   static function showMassiveActionsSubForm(MassiveAction $ma)
+   {
       $itemtype = $ma->getItemtype(false);
       switch ($ma->getAction()) {
          case "Install" :
             Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
-                                                   'itemtypes'     => self::getTypes()]);
+               'itemtypes' => self::getTypes()]);
             break;
          case "Desinstall" :
             Dropdown::showSelectItemFromItemtypes(['items_id_name' => "item_item",
-                                                   'itemtypes'     => self::getTypes()]);
+               'itemtypes' => self::getTypes()]);
             break;
          case "Transfert" :
             Dropdown::show('Entity');
             break;
          case "plugin_resources_add_item":
             echo "<input type='hidden' name='itemtype' value='$itemtype'>";
-            self::dropdown(['display'   => true]);
+            self::dropdown(['display' => true]);
             break;
          case "plugin_resources_generate_resources":
             echo "<input type='hidden' name='itemtype' value='$itemtype'>";
@@ -3058,7 +3133,7 @@ class PluginResourcesResource extends CommonDBTM {
             break;
          case "AddHabilitation":
             Dropdown::show('PluginResourcesHabilitation',
-                           ['entity' => $_SESSION['glpiactiveentities']]);
+               ['entity' => $_SESSION['glpiactiveentities']]);
             break;
       }
 
@@ -3070,12 +3145,13 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
     * */
-   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
+   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+   {
 
-      $input         = $ma->getInput();
+      $input = $ma->getInput();
       $resource_item = new PluginResourcesResource_Item();
-      $resource      = new PluginResourcesResource();
-      $itemtype      = $ma->getItemtype(false);
+      $resource = new PluginResourcesResource();
+      $itemtype = $ma->getItemtype(false);
 
       switch ($ma->getAction()) {
          case "Transfert" :
@@ -3094,8 +3170,8 @@ class PluginResourcesResource extends CommonDBTM {
             foreach ($ids as $key => $val) {
                if ($item->can($key, UPDATE)) {
                   $values = ['plugin_resources_resources_id' => $key,
-                             'items_id'                      => $input["item_item"],
-                             'itemtype'                      => $input['itemtype']];
+                     'items_id' => $input["item_item"],
+                     'itemtype' => $input['itemtype']];
                   if ($resource_item->add($values)) {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                   } else {
@@ -3131,8 +3207,8 @@ class PluginResourcesResource extends CommonDBTM {
             foreach ($ids as $key => $val) {
                if ($item->can($key, UPDATE)) {
                   $input = ['plugin_resources_resources_id' => $input['plugin_resources_resources_id'],
-                            'items_id'                      => $key,
-                            'itemtype'                      => $input['itemtype']];
+                     'items_id' => $key,
+                     'itemtype' => $input['itemtype']];
 
                   if ($resource_item->add($input)) {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
@@ -3175,12 +3251,12 @@ class PluginResourcesResource extends CommonDBTM {
                if ($item->can($key, UPDATE)) {
 
                   //check if habilitation already added
-                  if (!$habilitation->getFromDBByCrit(['plugin_resources_resources_id'     => $key,
-                                                       'plugin_resources_habilitations_id' => $input['plugin_resources_habilitations_id']])) {
+                  if (!$habilitation->getFromDBByCrit(['plugin_resources_resources_id' => $key,
+                     'plugin_resources_habilitations_id' => $input['plugin_resources_habilitations_id']])) {
                      if ($resource->getFromDB($key)) {
                         //TODO add verification entities
-                        $values = ['plugin_resources_resources_id'     => $key,
-                                   'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]];
+                        $values = ['plugin_resources_resources_id' => $key,
+                           'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]];
                         if ($habilitation->add($values)) {
                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
@@ -3212,11 +3288,12 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return boolean
     */
-   function transferResource($resources_id, $entities_id, $options = []) {
+   function transferResource($resources_id, $entities_id, $options = [])
+   {
       global $DB;
 
-      $params['users_id']          = 0;
-      $params['itemtype']          = 'User';
+      $params['users_id'] = 0;
+      $params['itemtype'] = 'User';
       $params['link_resources_id'] = 0;
 
       $dbu = new DbUtils();
@@ -3231,20 +3308,20 @@ class PluginResourcesResource extends CommonDBTM {
          list($tag, $users_id) = explode('-', $resources_id);
       }
 
-      $resourceOk    = $this->getFromDB($resources_id);
+      $resourceOk = $this->getFromDB($resources_id);
       $source_entity = $this->fields['entities_id'];
 
       if (!$resourceOk) {
          // Link user to resource
          if (!empty($params['link_resources_id'])) {
             $input = ['plugin_resources_resources_id' => $params['link_resources_id'],
-                      'items_id'                      => $users_id,
-                      'itemtype'                      => $params['itemtype']];
+               'items_id' => $users_id,
+               'itemtype' => $params['itemtype']];
             if ($resource_item->can(-1, 'w', $input)) {
                $resourceOk = $resource_item->add($input);
             }
             $resources_id = $params['link_resources_id'];
-            $resourceOk   = $this->getFromDB($resources_id);
+            $resourceOk = $this->getFromDB($resources_id);
 
             // Add resource
          } else {
@@ -3261,8 +3338,8 @@ class PluginResourcesResource extends CommonDBTM {
          // Link to a user if needed
          if (!empty($params['users_id'])) {
             $input = ['plugin_resources_resources_id' => $resources_id,
-                      'items_id'                      => $params['users_id'],
-                      'itemtype'                      => $params['itemtype']];
+               'items_id' => $params['users_id'],
+               'itemtype' => $params['itemtype']];
             if ($resource_item->can(-1, 'w', $input)) {
                $resource_item->add($input);
             }
@@ -3270,7 +3347,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $contracttype = PluginResourcesContractType::transfer($this->fields["plugin_resources_contracttypes_id"], $entities_id);
          if ($contracttype > 0) {
-            $values["id"]                                = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_contracttypes_id"] = $contracttype;
             $this->update($values);
          }
@@ -3279,7 +3356,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $resourcestate = PluginResourcesResourceState::transfer($this->fields["plugin_resources_resourcestates_id"], $entities_id);
          if ($resourcestate > 0) {
-            $values["id"]                                 = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_resourcestates_id"] = $resourcestate;
             $this->update($values);
          }
@@ -3288,7 +3365,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $department = PluginResourcesDepartment::transfer($this->fields["plugin_resources_departments_id"], $entities_id);
          if ($department > 0) {
-            $values["id"]                              = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_departments_id"] = $department;
             $this->update($values);
          }
@@ -3297,7 +3374,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $situation = PluginResourcesResourceSituation::transfer($this->fields["plugin_resources_resourcesituations_id"], $entities_id);
          if ($situation > 0) {
-            $values["id"]                                     = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_resourcesituations_id"] = $situation;
             $this->update($values);
          }
@@ -3306,7 +3383,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $contractnature = PluginResourcesContractNature::transfer($this->fields["plugin_resources_contractnatures_id"], $entities_id);
          if ($contractnature > 0) {
-            $values["id"]                                  = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_contractnatures_id"] = $contractnature;
             $this->update($values);
          }
@@ -3314,7 +3391,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $rank = PluginResourcesRank::transfer($this->fields["plugin_resources_ranks_id"], $entities_id);
          if ($rank > 0) {
-            $values["id"]                        = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_ranks_id"] = $rank;
             $this->update($values);
          }
@@ -3323,7 +3400,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          $speciality = PluginResourcesResourceSpeciality::transfer($this->fields["plugin_resources_resourcespecialities_id"], $entities_id);
          if ($speciality > 0) {
-            $values["id"]                                       = $resources_id;
+            $values["id"] = $resources_id;
             $values["plugin_resources_resourcespecialities_id"] = $speciality;
             $this->update($values);
          }
@@ -3351,18 +3428,18 @@ class PluginResourcesResource extends CommonDBTM {
          //         unset($values);
 
          $PluginResourcesTask = new PluginResourcesTask();
-         $restrict            = ["plugin_resources_resources_id" => $resources_id];
-         $tasks               = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
+         $restrict = ["plugin_resources_resources_id" => $resources_id];
+         $tasks = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
          if (!empty($tasks)) {
             foreach ($tasks as $task) {
                $PluginResourcesTask->getFromDB($task["id"]);
                $tasktype = PluginResourcesTaskType::transfer($PluginResourcesTask->fields["plugin_resources_tasktypes_id"], $entities_id);
                if ($tasktype > 0) {
-                  $values["id"]                            = $task["id"];
+                  $values["id"] = $task["id"];
                   $values["plugin_resources_tasktypes_id"] = $tasktype;
                   $PluginResourcesTask->update($values);
                }
-               $values["id"]          = $task["id"];
+               $values["id"] = $task["id"];
                $values["entities_id"] = $entities_id;
                $PluginResourcesTask->update($values);
             }
@@ -3371,25 +3448,25 @@ class PluginResourcesResource extends CommonDBTM {
          unset($values);
 
          $PluginResourcesEmployment = new PluginResourcesEmployment();
-         $restrict                  = ["plugin_resources_resources_id" => $resources_id];
-         $employments               = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
+         $restrict = ["plugin_resources_resources_id" => $resources_id];
+         $employments = $dbu->getAllDataFromTable("glpi_plugin_resources_employments", $restrict);
          if (!empty($employments)) {
             foreach ($employments as $employment) {
                $PluginResourcesEmployment->getFromDB($employment["id"]);
                $rank = PluginResourcesRank::transfer($PluginResourcesEmployment->fields["plugin_resources_ranks_id"], $entities_id);
                if ($rank > 0) {
-                  $values["id"]                        = $employment["id"];
+                  $values["id"] = $employment["id"];
                   $values["plugin_resources_ranks_id"] = $rank;
                   $PluginResourcesEmployment->update($values);
                }
                $PluginResourcesEmployment->getFromDB($employment["id"]);
                $profession = PluginResourcesProfession::transfer($PluginResourcesEmployment->fields["plugin_resources_professions_id"], $entities_id);
                if ($profession > 0) {
-                  $values["id"]                              = $employment["id"];
+                  $values["id"] = $employment["id"];
                   $values["plugin_resources_professions_id"] = $profession;
                   $PluginResourcesEmployment->update($values);
                }
-               $values["id"]          = $employment["id"];
+               $values["id"] = $employment["id"];
                $values["entities_id"] = $entities_id;
                $PluginResourcesEmployment->update($values);
             }
@@ -3399,20 +3476,20 @@ class PluginResourcesResource extends CommonDBTM {
 
          $PluginResourcesEmployee = new PluginResourcesEmployee();
 
-         $restrict  = ["plugin_resources_resources_id" => $resources_id];
+         $restrict = ["plugin_resources_resources_id" => $resources_id];
          $employees = $dbu->getAllDataFromTable("glpi_plugin_resources_employees", $restrict);
          if (!empty($employees)) {
             foreach ($employees as $employee) {
                $employer = PluginResourcesEmployer::transfer($employee["plugin_resources_employers_id"], $entities_id);
                if ($employer > 0) {
-                  $values["id"]                            = $employee["id"];
+                  $values["id"] = $employee["id"];
                   $values["plugin_resources_employers_id"] = $employer;
                   $PluginResourcesEmployee->update($values);
                }
 
                $client = PluginResourcesClient::transfer($employee["plugin_resources_clients_id"], $entities_id);
                if ($client > 0) {
-                  $values["id"]                          = $employee["id"];
+                  $values["id"] = $employee["id"];
                   $values["plugin_resources_clients_id"] = $client;
                   $PluginResourcesEmployee->update($values);
                }
@@ -3421,7 +3498,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          unset($values);
 
-         $values["id"]          = $resources_id;
+         $values["id"] = $resources_id;
          $values["entities_id"] = $entities_id;
          if ($this->update($values)) {
             // Check list
@@ -3430,7 +3507,7 @@ class PluginResourcesResource extends CommonDBTM {
             if ($checklist_exist) {
                $checklist = new PluginResourcesChecklist();
                $checklist->deleteByCriteria(['plugin_resources_resources_id' => $resources_id,
-                                             'checklist_type'                => PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER]);
+                  'checklist_type' => PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER]);
                $query = "UPDATE `glpi_plugin_resources_checklists`
                          SET `entities_id` = '" . $entities_id . "'
                          WHERE `plugin_resources_resources_id` ='$resources_id'";
@@ -3439,8 +3516,8 @@ class PluginResourcesResource extends CommonDBTM {
             $checklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
 
             // Notification
-            $restrict = ["itemtype"                      => 'User',
-                         "plugin_resources_resources_id" => $resources_id];
+            $restrict = ["itemtype" => 'User',
+               "plugin_resources_resources_id" => $resources_id];
 
             $data = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 
@@ -3478,7 +3555,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return array
     */
-   static function cronInfo($name) {
+   static function cronInfo($name)
+   {
 
       switch ($name) {
          case 'Resources':
@@ -3496,10 +3574,11 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * @return string
     */
-   function queryAlert() {
+   function queryAlert()
+   {
 
       $first = false;
-      $date  = date("Y-m-d H:i:s");
+      $date = date("Y-m-d H:i:s");
       $query = "SELECT *
             FROM `" . $this->getTable() . "`
             WHERE `date_end` IS NOT NULL
@@ -3510,7 +3589,7 @@ class PluginResourcesResource extends CommonDBTM {
       if ($this->maybeTemplate()) {
          $LINK = " AND ";
          if ($first) {
-            $LINK  = " ";
+            $LINK = " ";
             $first = false;
          }
          $query .= $LINK . "`" . $this->getTable() . "`.`is_template` = 0 ";
@@ -3519,7 +3598,7 @@ class PluginResourcesResource extends CommonDBTM {
       if ($this->maybeDeleted()) {
          $LINK = " AND ";
          if ($first) {
-            $LINK  = " ";
+            $LINK = " ";
             $first = false;
          }
          $query .= $LINK . "`" . $this->getTable() . "`.`is_deleted` = 0 ";
@@ -3535,30 +3614,31 @@ class PluginResourcesResource extends CommonDBTM {
     * @param $task for log, if NULL display
     *
     **/
-   static function cronResources($task = null) {
+   static function cronResources($task = null)
+   {
       global $DB, $CFG_GLPI;
 
       if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
 
-      $message     = [];
+      $message = [];
       $cron_status = 0;
 
-      $resource      = new self();
+      $resource = new self();
       $query_expired = $resource->queryAlert();
 
       $querys = [Alert::END => $query_expired];
 
-      $task_infos    = [];
+      $task_infos = [];
       $task_messages = [];
 
       foreach ($querys as $type => $query) {
          $task_infos[$type] = [];
          foreach ($DB->request($query) as $data) {
-            $entity                       = $data['entities_id'];
-            $message                      = $data["name"] . " " . $data["firstname"] . " : " .
-                                            Html::convDate($data["date_end"]) . "<br>\n";
+            $entity = $data['entities_id'];
+            $message = $data["name"] . " " . $data["firstname"] . " : " .
+               Html::convDate($data["date_end"]) . "<br>\n";
             $task_infos[$type][$entity][] = $data;
 
             if (!isset($task_messages[$type][$entity])) {
@@ -3574,28 +3654,28 @@ class PluginResourcesResource extends CommonDBTM {
             Plugin::loadLang('resources');
 
             if (NotificationEvent::raiseEvent("AlertLeavingResources",
-                                              new PluginResourcesResource(),
-                                              ['entities_id' => $entity,
-                                               'resources'   => $resources])
+               new PluginResourcesResource(),
+               ['entities_id' => $entity,
+                  'resources' => $resources])
             ) {
-               $message     = $task_messages[$type][$entity];
+               $message = $task_messages[$type][$entity];
                $cron_status = 1;
                if ($task) {
                   $task->log(Dropdown::getDropdownName("glpi_entities",
-                                                       $entity) . ":  $message\n");
+                        $entity) . ":  $message\n");
                   $task->addVolume(1);
                } else {
                   Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities",
-                                                                             $entity) . ":  $message");
+                        $entity) . ":  $message");
                }
 
             } else {
                if ($task) {
                   $task->log(Dropdown::getDropdownName("glpi_entities", $entity) .
-                             ":  Send leaving resources alert failed\n");
+                     ":  Send leaving resources alert failed\n");
                } else {
                   Session::addMessageAfterRedirect(Dropdown::getDropdownName("glpi_entities", $entity) .
-                                                   ":  Send leaving resources alert failed", false, ERROR);
+                     ":  Send leaving resources alert failed", false, ERROR);
                }
             }
          }
@@ -3610,14 +3690,15 @@ class PluginResourcesResource extends CommonDBTM {
     * @param $task for log, if NULL display
     *
     **/
-   static function cronAlertCommercialManager($task = null) {
+   static function cronAlertCommercialManager($task = null)
+   {
       global $DB, $CFG_GLPI;
 
       if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
 
-      $message     = [];
+      $message = [];
       $cron_status = 0;
 
       $query_commercial = $query = "SELECT DISTINCT(`users_id_sales`) 
@@ -3635,33 +3716,33 @@ class PluginResourcesResource extends CommonDBTM {
          foreach ($DB->request($query) as $data) {
             $resources[] = $data;
          }
-         $resource               = new PluginResourcesResource();
+         $resource = new PluginResourcesResource();
          $resource->fields['id'] = isset($resources[0]['id']) ? $resources[0]['id'] : 0;
 
          $dbu = new DbUtils();
 
          if (count($resources) > 0 && NotificationEvent::raiseEvent("AlertCommercialManager",
-                                                                    $resource,
-                                                                    ['resources'      => $resources,
-                                                                     'users_id_sales' => $commercial['users_id_sales']])
+               $resource,
+               ['resources' => $resources,
+                  'users_id_sales' => $commercial['users_id_sales']])
          ) {
             $cron_status = 1;
             if ($task) {
                $task->log($dbu->getUserName($commercial['users_id_sales']) . ": " .
-                          __('Send alert to the commercial manager', 'resources') . "\n");
+                  __('Send alert to the commercial manager', 'resources') . "\n");
                $task->addVolume(1);
             } else {
                Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
-                                                __('Send alert to the commercial manager', 'resources') . "\n");
+                  __('Send alert to the commercial manager', 'resources') . "\n");
             }
 
          } else {
             if ($task) {
                $task->log($dbu->getUserName($commercial['users_id_sales']) . ": " .
-                          __('Failed to Send alert to the commercial manager', 'resources') . "\n");
+                  __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             } else {
                Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
-                                                __('Failed to Send alert to the commercial manager', 'resources') . "\n");
+                  __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             }
          }
       }
@@ -3675,14 +3756,15 @@ class PluginResourcesResource extends CommonDBTM {
     * @param $myname select name
     * @param $target target for entity change action
     */
-   static function showSelector($target) {
+   static function showSelector($target)
+   {
       global $CFG_GLPI;
 
       $rand = mt_rand();
       Plugin::loadLang('resources');
       echo "<div class='center' ><span class='b'>" . __('Select the contract type', 'resources') . "</span><br>";
       echo "<a style='font-size:14px;' href='" . $target . "?reset=reset' title=\"" .
-           __('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a></div>";
+         __('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a></div>";
 
       echo "<div class='left' style='width:100%'>";
 
@@ -3736,13 +3818,14 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function sendEmail($items) {
+   function sendEmail($items)
+   {
 
       $users = [];
       foreach ($items as $key => $val) {
-         $restrict  = ["itemtype"                      => 'User',
-                       "plugin_resources_resources_id" => $key];
-         $dbu       = new DbUtils();
+         $restrict = ["itemtype" => 'User',
+            "plugin_resources_resources_id" => $key];
+         $dbu = new DbUtils();
          $resources = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
 
          if (!empty($resources)) {
@@ -3752,8 +3835,8 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-      $User  = new User();
-      $mail  = "";
+      $User = new User();
+      $mail = "";
       $first = true;
       foreach ($users as $key => $val) {
          if ($User->getFromDB($val)) {
@@ -3784,14 +3867,15 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return nothing
     **/
-   static function sendFile($file, $filename) {
+   static function sendFile($file, $filename)
+   {
 
       // Test securite : document in DOC_DIR
       $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/", "", $file);
 
       if (strstr($tmpfile, "../") || strstr($tmpfile, "..\\")) {
          Event::log($file, "sendFile", 1, "security",
-                    $_SESSION["glpiname"] . " try to get a non standard file.");
+            $_SESSION["glpiname"] . " try to get a non standard file.");
          die("Security attack !!!");
       }
 
@@ -3800,7 +3884,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $splitter = explode("/", $file);
-      $mime     = "application/octet-stream";
+      $mime = "application/octet-stream";
 
       if (preg_match('/\.(....?)$/', $file, $regs)) {
          switch ($regs[1]) {
@@ -3833,23 +3917,24 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param array ($itemtype,$myname,$value,$entity_restrict,$action,$span)
     */
-   static function showGenericDropdown($itemtype, $options = []) {
+   static function showGenericDropdown($itemtype, $options = [])
+   {
 
       if (isset($options['name'])) {
          // Set dropdown
          $options['on_change'] = "update" . $options['name'] . "();";
-         $options['entity']    = $_SESSION['glpiactive_entity'];
-         $options['addicon']   = true;
-         $rand                 = Dropdown::show($itemtype, $options);
+         $options['entity'] = $_SESSION['glpiactive_entity'];
+         $options['addicon'] = true;
+         $rand = Dropdown::show($itemtype, $options);
 
          // Set ajax load if needed
          if (isset($options['action']) && isset($options['span'])) {
-            $options[$options['name']]  = "__VALUE__";
+            $options[$options['name']] = "__VALUE__";
             $options['entity_restrict'] = $_SESSION['glpiactive_entity'];
-            $options['rand']            = $rand;
-            $script                     = "function update" . $options['name'] . "(){";
-            $script                     .= Ajax::updateItemJsCode($options['span'], $options['action'], $options, 'dropdown_' . $options['name'] . $rand, false);
-            $script                     .= "}";
+            $options['rand'] = $rand;
+            $script = "function update" . $options['name'] . "(){";
+            $script .= Ajax::updateItemJsCode($options['span'], $options['action'], $options, 'dropdown_' . $options['name'] . $rand, false);
+            $script .= "}";
             echo Html::scriptBlock($script);
          }
       }
@@ -3862,7 +3947,8 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return params
     **/
-   static function showResourceTreeview($params) {
+   static function showResourceTreeview($params)
+   {
       global $CFG_GLPI;
 
       if ($params['itemtype'] == "PluginResourcesResource") {
@@ -3886,8 +3972,9 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @return bool
     */
-   function checkTransferMandatoryFields($input) {
-      $msg     = [];
+   function checkTransferMandatoryFields($input)
+   {
+      $msg = [];
       $checkKo = false;
 
       $mandatory_fields = ['entities_id' => __('Entity'), 'plugin_resources_resources_id' => self::getTypeName(1)];
@@ -3895,7 +3982,7 @@ class PluginResourcesResource extends CommonDBTM {
       foreach ($input as $key => $value) {
          if (array_key_exists($key, $mandatory_fields)) {
             if (empty($value)) {
-               $msg[]   = $mandatory_fields[$key];
+               $msg[] = $mandatory_fields[$key];
                $checkKo = true;
             }
          }
@@ -3911,13 +3998,14 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * Get picture URL from picture field
     *
-    * @since version 0.85
-    *
     * @param $picture picture field
     *
     * @return string URL to show picture
-    **/
-   static function getThumbnailURLForPicture($picture) {
+    **@since version 0.85
+    *
+    */
+   static function getThumbnailURLForPicture($picture)
+   {
       global $CFG_GLPI;
 
       if (!empty($picture)) {
@@ -3936,11 +4024,12 @@ class PluginResourcesResource extends CommonDBTM {
     *
     * @param $client_id
     */
-   function showListResourcesForClient($client_id) {
+   function showListResourcesForClient($client_id)
+   {
       global $DB;
 
       //Retrieving resource ids for this client
-      $query  = "SELECT *  
+      $query = "SELECT *  
                 FROM `glpi_plugin_resources_resources` 
                 LEFT JOIN `glpi_plugin_resources_employees` 
                   ON `glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_resources_id`
@@ -3964,7 +4053,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</tr>";
 
          $resource = new PluginResourcesResource();
-         $dbu      = new DbUtils();
+         $dbu = new DbUtils();
 
          foreach ($DB->request($query) as $employee) {
             if ($resource->getFromDB($employee['plugin_resources_resources_id'])) {
@@ -3973,11 +4062,11 @@ class PluginResourcesResource extends CommonDBTM {
                   echo "<td>" . $resource->getLink() . "</td>";
                   echo "<td>" . $resource->fields['firstname'] . "</td>";
                   echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('PluginResourcesResourceState'),
-                                                          $resource->fields['plugin_resources_resourcestates_id']) . "</td>";
+                        $resource->fields['plugin_resources_resourcestates_id']) . "</td>";
                   echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('Location'),
-                                                          $resource->fields['locations_id']) . "</td>";
+                        $resource->fields['locations_id']) . "</td>";
                   echo "<td>" . Dropdown::getDropdownName($dbu->getTableForItemType('PluginResourcesDepartment'),
-                                                          $resource->fields['plugin_resources_departments_id']) . "</td>";
+                        $resource->fields['plugin_resources_departments_id']) . "</td>";
                   echo "</tr>";
                }
             }
@@ -3988,4 +4077,154 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
    }
+
+   /**
+    * Search if a resource exist with the same identifiers
+    *
+    * @param $importResourceID
+    */
+   function isExistingResourceByImportResourceID($importResourceID){
+
+      $pluginResourcesImportResource = new PluginResourcesImportResource();
+      $pluginResourcesImportResource->getFromDB($importResourceID);
+
+      // TODO : Don't get all resources at once
+      $resources = PluginResourcesResource::find();
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      // First level identifier
+      $firstLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 1);
+
+      // Second level identifier
+      $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 2);
+
+      foreach ($resources as $resource) {
+
+         $firstLevelIdentifierFounded = true;
+
+         foreach($firstLevelIdentifiers as $firstLevelIdentifier){
+
+            if ($this->hasDifferenciesWithValueByDataNameID(
+               $firstLevelIdentifier['resource_column'],
+               $firstLevelIdentifier['name'],
+               $firstLevelIdentifier['value'])) {
+
+               $firstLevelIdentifierFounded = false;
+               break;
+            }
+         }
+
+         if($firstLevelIdentifierFounded){
+            return $resource['id'];
+         }
+
+         $secondLevelIdentifierFounded = true;
+
+         foreach($secondLevelIdentifiers as $secondLevelIdentifier){
+
+            if ($this->hasDifferenciesWithValueByDataNameID(
+               $secondLevelIdentifier['resource_column'],
+               $secondLevelIdentifier['name'],
+               $secondLevelIdentifier['value'])) {
+
+               $secondLevelIdentifierFounded = false;
+               break;
+            }
+         }
+
+         if($secondLevelIdentifierFounded){
+            return $resource['id'];
+         }
+      }
+      return null;
+   }
+
+   function isDifferentFromImportResource($resourceID, $importResourceID){
+
+      $pluginResourcesResource = new self();
+      $pluginResourcesResource->getFromDB($resourceID);
+
+      $pluginResourcesImportResource = new PluginResourcesImportResource();
+      $pluginResourcesImportResource->getFromDB($importResourceID);
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      if(!$pluginResourcesResource->getID()){
+         Html::displayErrorAndDie("No resource for id ".$resourceID);
+      }
+      if(!$pluginResourcesImportResource->getID()){
+         Html::displayErrorAndDie("No importResource for id ".$importResourceID);
+      }
+
+      // Get all import data
+      $datas = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, null, ['resource_column']);
+
+      $hasDifferencies = false;
+
+      foreach($datas as $data){
+
+         if($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
+            $data['resource_column'], $data['name'], $data['value']
+         )){
+            return true;
+         }
+
+      }
+      return $hasDifferencies;
+   }
+
+   function getResourceImportValueByName($name){
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+      $pluginResourcesResourceImport->getFromDBByCrit([
+         PluginResourcesResourceImport::$items_id => $this->getID(),
+         'name' => $name
+      ]);
+
+      if($pluginResourcesResourceImport == null){
+         return null;
+      }
+      return $pluginResourcesResourceImport->getField('value');
+   }
+
+   function getFieldByDataNameID($dataNameID){
+      if(is_null($dataNameID)){
+         return null;
+      }
+
+      $resourceFieldName = $this->getResourceColumnNameFromDataNameID($dataNameID);
+
+      return $this->getField($resourceFieldName);
+   }
+
+   function hasDifferenciesWithValueByDataNameID($dataNameID, $name, $value){
+
+      switch($dataNameID){
+         case 10:
+            // Find in Resource Import
+            $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+            $pluginResourcesResourceImport->getFromDBByCrit([
+               PluginResourcesResourceImport::$items_id => $this->getID(),
+               'name' => $name
+            ]);
+
+            // Resource doesn't have the data
+            if($pluginResourcesResourceImport == null){
+               return true;
+            }
+
+            // Data are differents
+            if($pluginResourcesResourceImport->getField('value') != $value){
+               return true;
+            }
+            break;
+         default:
+            // Find in Resource Fields
+            $resourceFieldName = $this->getResourceColumnNameFromDataNameID($dataNameID);
+            return $this->getField($resourceFieldName) != $value;
+            break;
+      }
+      return false;
+   }
+
 }
