@@ -743,7 +743,7 @@ CREATE TABLE `glpi_plugin_resources_importcolumns` (
    `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
    `resource_column` varchar(255) COLLATE utf8_unicode_ci NULL,
    `is_identifier` tinyint(1) NOT NULL default '0',
-   `plugin_resources_imports_id` tinyint(1) NOT NULL DEFAULT '0',
+   `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -751,7 +751,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_importresources`;
 CREATE TABLE `glpi_plugin_resources_importresources` (
    `id` int(11) NOT NULL auto_increment,
    `date_creation` datetime DEFAULT NULL,
-   `plugin_resources_imports_id` tinyint(1) NOT NULL DEFAULT '0',
+   `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -760,8 +760,8 @@ CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci NULL,
-  `plugin_resources_importresources_id` tinyint(1) NOT NULL DEFAULT '0',
-  `plugin_resources_importcolumns_id` tinyint(1) NOT NULL DEFAULT '0',
+  `plugin_resources_importresources_id` int(11) NOT NULL DEFAULT '0',
+  `plugin_resources_importcolumns_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
@@ -770,7 +770,7 @@ CREATE TABLE `glpi_plugin_resources_resourceimports` (
    `id` int(11) NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
    `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `plugin_resources_resources_id` tinyint(1) NOT NULL DEFAULT '0',
+   `plugin_resources_resources_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

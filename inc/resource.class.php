@@ -125,7 +125,7 @@ class PluginResourcesResource extends CommonDBTM
       $columnNames = [
          "firstname",
          "name",
-         "plugin_resources_contracttypes_i",
+         "plugin_resources_contracttypes_id",
          "users_id",
          "locations_id",
          "users_id_recipient",
@@ -324,7 +324,7 @@ class PluginResourcesResource extends CommonDBTM
          $tab[2] += ['searchtype' => 'contains'];
       }
       $tab[] = [
-         'id' => '14',
+         'id' => '37',
          'table' => 'glpi_plugin_resources_contracttypes',
          'field' => 'name',
          'name' => PluginResourcesContractType::getTypeName(1),
@@ -4079,111 +4079,164 @@ class PluginResourcesResource extends CommonDBTM
    }
 
    /**
-    * Search if a resource exist with the same identifiers
     *
-    * @param $importResourceID
+    * Each identifiers must be formatted as follow:
+    * - name
+    * - value
+    * - type
+    * - resource_column
+    *
+    * @param array $identifiers
+    * @return |null
+    * @throws GlpitestSQLError
     */
+   function isExistingResourceByIdentifier($identifiers = []){
+
+      global $DB;
+
+      $tableResourceCriterias = [];
+      $tableResourceImportCriterias = [];
+
+      $query = "SELECT r.*";
+      $from = "FROM ".self::getTable() . " as r";
+      $join = "";
+      $where = "WHERE 1=1";
+
+      foreach($identifiers as $identifier){
+         switch($identifier['resource_column']){
+            case 10:
+               $tableResourceImportCriterias[] = [
+                  'name' => $identifier['name'],
+                  'value' => $identifier['value'],
+                  'type' => $identifier['type']
+               ];
+               break;
+            default:
+               $tableResourceCriterias[] = [
+                  'name' => $this->getColumnName($identifier['resource_column']),
+                  'value' => $identifier['value'],
+                  'type' => $identifier['type']
+               ];
+               break;
+         }
+      }
+
+      if(count($tableResourceImportCriterias) > 0){
+         $join .= " INNER JOIN ".PluginResourcesResourceImport::getTable() . " as ri";
+         $join .= " ON ri.plugin_resources_resources_id = r.id";
+
+         foreach($tableResourceImportCriterias as $tableResourceImportCriteria){
+
+            $where .= " AND ri.name = '".$tableResourceImportCriteria['name']."'";
+            $where .= " AND ri.value = ";
+            if(is_string($tableResourceImportCriteria['value'])){
+               $where.= "'".$tableResourceImportCriteria['value']."'";
+            }else{
+               $where = $tableResourceImportCriteria['value'];
+            }
+         }
+      }
+
+      if(count($tableResourceCriterias) > 0){
+         foreach($tableResourceCriterias as $tableResourceCriteria){
+
+            $where .= " AND r.".$tableResourceCriteria['name']." = ";
+
+            if(is_string($tableResourceCriteria['value'])){
+               $where.= "'".$tableResourceCriteria['value']."'";
+            }else{
+               $where = $tableResourceCriteria['value'];
+            }
+         }
+      }
+
+      $query .= " ".$from;
+      $query .= " ".$join;
+      $query .= " ".$where;
+
+      $results = $DB->query($query);
+
+      while($data = $results->fetch_array()){
+         return $data['id'];
+      }
+      return null;
+   }
+
    function isExistingResourceByImportResourceID($importResourceID){
-
-      $pluginResourcesImportResource = new PluginResourcesImportResource();
-      $pluginResourcesImportResource->getFromDB($importResourceID);
-
-      // TODO : Don't get all resources at once
-      $resources = PluginResourcesResource::find();
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
 
       // First level identifier
       $firstLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 1);
 
+      $resourceID = $this->isExistingResourceByIdentifier($firstLevelIdentifiers);
+
+      if(!is_null($resourceID)){
+         return $resourceID;
+      }
+
       // Second level identifier
       $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 2);
 
-      foreach ($resources as $resource) {
+      $resourceID = $this->isExistingResourceByIdentifier($secondLevelIdentifiers);
 
-         $firstLevelIdentifierFounded = true;
+      if(!is_null($resourceID)){
+         return $resourceID;
+      }
 
-         foreach($firstLevelIdentifiers as $firstLevelIdentifier){
+      return false;
+   }
 
-            if ($this->hasDifferenciesWithValueByDataNameID(
-               $firstLevelIdentifier['resource_column'],
-               $firstLevelIdentifier['name'],
-               $firstLevelIdentifier['value'])) {
+   function isDifferentFromImportResourceDatas($resourceID, $datas){
+      $pluginResourcesResource = new self();
 
-               $firstLevelIdentifierFounded = false;
-               break;
-            }
-         }
+      foreach($datas as $data){
 
-         if($firstLevelIdentifierFounded){
-            return $resource['id'];
-         }
-
-         $secondLevelIdentifierFounded = true;
-
-         foreach($secondLevelIdentifiers as $secondLevelIdentifier){
-
-            if ($this->hasDifferenciesWithValueByDataNameID(
-               $secondLevelIdentifier['resource_column'],
-               $secondLevelIdentifier['name'],
-               $secondLevelIdentifier['value'])) {
-
-               $secondLevelIdentifierFounded = false;
-               break;
-            }
-         }
-
-         if($secondLevelIdentifierFounded){
-            return $resource['id'];
+         if($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
+            $resourceID, $data['resource_column'], $data['name'], $data['value']
+         )){
+            return true;
          }
       }
-      return null;
+      return false;
    }
 
    function isDifferentFromImportResource($resourceID, $importResourceID){
 
       $pluginResourcesResource = new self();
-      $pluginResourcesResource->getFromDB($resourceID);
-
-      $pluginResourcesImportResource = new PluginResourcesImportResource();
-      $pluginResourcesImportResource->getFromDB($importResourceID);
-
-      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
-
-      if(!$pluginResourcesResource->getID()){
+      if(!$pluginResourcesResource->getFromDB($resourceID)){
          Html::displayErrorAndDie("No resource for id ".$resourceID);
       }
-      if(!$pluginResourcesImportResource->getID()){
+
+      $pluginResourcesImportResource = new PluginResourcesImportResource();
+      if(!$pluginResourcesImportResource->getFromDB($importResourceID)){
          Html::displayErrorAndDie("No importResource for id ".$importResourceID);
       }
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
 
       // Get all import data
       $datas = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, null, ['resource_column']);
 
-      $hasDifferencies = false;
-
-      foreach($datas as $data){
-
-         if($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-            $data['resource_column'], $data['name'], $data['value']
-         )){
-            return true;
-         }
-
-      }
-      return $hasDifferencies;
+      return $this->isDifferentFromImportResourceDatas($resourceID, $datas);
    }
 
-   function getResourceImportValueByName($name){
-      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
-      $pluginResourcesResourceImport->getFromDBByCrit([
-         PluginResourcesResourceImport::$items_id => $this->getID(),
-         'name' => $name
-      ]);
+   function getResourceImportValueByName($resourceID, $name){
 
-      if($pluginResourcesResourceImport == null){
-         return null;
+      $pluginResourcesResource = new self();
+      $pluginResourcesResource->getFromDB($resourceID);
+
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+
+      $crit = [
+         PluginResourcesResourceImport::$items_id => $pluginResourcesResource->getID(),
+         'name' => $name
+      ];
+
+      if(!$pluginResourcesResourceImport->getFromDBByCrit($crit)){
+         return "";
       }
+
       return $pluginResourcesResourceImport->getField('value');
    }
 
@@ -4197,31 +4250,37 @@ class PluginResourcesResource extends CommonDBTM
       return $this->getField($resourceFieldName);
    }
 
-   function hasDifferenciesWithValueByDataNameID($dataNameID, $name, $value){
+   function hasDifferenciesWithValueByDataNameID($resourceID, $dataNameID, $name, $value){
+
+      $pluginResourcesResource = new self();
+      if(!$pluginResourcesResource->getFromDB($resourceID)){
+         Html::displayErrorAndDie("No resource for id ".$resourceID);
+      }
 
       switch($dataNameID){
          case 10:
             // Find in Resource Import
             $pluginResourcesResourceImport = new PluginResourcesResourceImport();
-            $pluginResourcesResourceImport->getFromDBByCrit([
-               PluginResourcesResourceImport::$items_id => $this->getID(),
+
+            $crit = [
+               PluginResourcesResourceImport::$items_id => $resourceID,
                'name' => $name
-            ]);
+            ];
 
             // Resource doesn't have the data
-            if($pluginResourcesResourceImport == null){
+            if(!$pluginResourcesResourceImport->getFromDBByCrit($crit)){
                return true;
             }
 
-            // Data are differents
+            // Data are different
             if($pluginResourcesResourceImport->getField('value') != $value){
                return true;
             }
             break;
          default:
             // Find in Resource Fields
-            $resourceFieldName = $this->getResourceColumnNameFromDataNameID($dataNameID);
-            return $this->getField($resourceFieldName) != $value;
+            $resourceFieldName = $pluginResourcesResource->getResourceColumnNameFromDataNameID($dataNameID);
+            return $pluginResourcesResource->getField($resourceFieldName) != $value;
             break;
       }
       return false;

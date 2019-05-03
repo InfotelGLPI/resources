@@ -34,8 +34,7 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginResourcesImportResource
  */
-class PluginResourcesImportResource extends CommonDBTM
-{
+class PluginResourcesImportResource extends CommonDBTM {
 
    static $rightname = 'plugin_resources_importresources';
 
@@ -44,37 +43,30 @@ class PluginResourcesImportResource extends CommonDBTM
    const NEW_IMPORTS = 0;
    const CONFLICTED_IMPORTS = 1;
 
-   const IDENTIFIER_LEVELS = 2;
-
-
-   static function getIndexUrl()
-   {
+   static function getIndexUrl() {
       global $CFG_GLPI;
       return $CFG_GLPI["root_doc"] . "/plugins/resources/front/importresource.php";
    }
 
-   function updateDatas($datas, $importResourceID){
+   function updateDatas($datas, $importResourceID) {
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
       $importResourceDatas = $pluginResourcesImportResourceData->find([PluginResourcesImportResourceData::$items_id => $importResourceID]);
 
       // Delete all import data
-      foreach($importResourceDatas as $importResourceData){
+      foreach ($importResourceDatas as $importResourceData) {
 
-         foreach($datas as $data){
+         foreach ($datas as $data) {
 
-            if($data['name'] != $importResourceData['name']){
+            if ($data['name'] != $importResourceData['name']) {
                continue;
             }
 
-            if($data['value'] == $importResourceData['value']){
+            if ($data['value'] == $importResourceData['value']) {
                continue;
             }
 
-            $input = [
-               PluginResourcesImportResourceData::getIndexName() => $importResourceData['id'],
-               "value" => addslashes($data['value']),
-            ];
+            $input = [PluginResourcesImportResourceData::getIndexName() => $importResourceData['id'], "value" => addslashes($data['value']),];
 
             $pluginResourcesImportResourceData->update($input);
             break;
@@ -88,24 +80,27 @@ class PluginResourcesImportResource extends CommonDBTM
     * @param $datas
     * @param $importID
     */
-   function manageImport($datas, $importID){
+   function manageImport($datas, $importID) {
 
-      $importResourceID = $this->isExistingImportResourceByDataFromFile($datas, $importResourceID);
+      $importResourceID = $this->isExistingImportResourceByDataFromFile($datas);
 
       // Override data of existing importResource
-      if ($importResourceID) {
+      if (!is_null($importResourceID)) {
 
          $this->updateDatas($datas, $importResourceID);
 
       } else {
          // Create new Import Resource
-         $newImportId = $this->add([
+         $importResourceInput = [
             "date_creation" => date("Y-m-d H:i:s"),
             PluginResourcesImport::$keyInOtherTables => $importID
-         ]);
+         ];
+
+         $newImportId = $this->add($importResourceInput);
 
          $importResourceData = new PluginResourcesImportResourceData();
 
+         // Create new Import resource data
          foreach ($datas as $item) {
 
             $input = $importResourceData->prepareInput(
@@ -122,26 +117,24 @@ class PluginResourcesImportResource extends CommonDBTM
 
    /**
     * Search if a resource exist with the same identifiers
-    *
-    * @param $importResourceID
     */
-   function isExistingImportResourceByDataFromFile($columnDatas, &$importResourceID){
+   function isExistingImportResourceByDataFromFile($columnDatas) {
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
 
       // List of existing imports
       $existingImportResources = $this->find();
 
-      foreach($existingImportResources as $existingImportResource){
+      foreach ($existingImportResources as $existingImportResource) {
 
          $firstLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($existingImportResource['id'], 1);
          $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($existingImportResource['id'], 2);
 
          $firstLevelIdentifierFounded = true;
 
-         foreach($firstLevelIdentifiers as $firstLevelIdentifier){
+         foreach ($firstLevelIdentifiers as $firstLevelIdentifier) {
 
-            foreach($columnDatas as $columnData){
+            foreach ($columnDatas as $columnData) {
 
                if ($columnData['name'] != $firstLevelIdentifier['name']) {
                   continue;
@@ -160,9 +153,9 @@ class PluginResourcesImportResource extends CommonDBTM
 
          $secondLevelIdentifierFounded = true;
 
-         foreach($secondLevelIdentifiers as $secondLevelIdentifier){
+         foreach ($secondLevelIdentifiers as $secondLevelIdentifier) {
 
-            foreach($columnDatas as $columnData){
+            foreach ($columnDatas as $columnData) {
 
                if ($columnData['name'] != $secondLevelIdentifier['name']) {
                   continue;
@@ -174,15 +167,14 @@ class PluginResourcesImportResource extends CommonDBTM
             }
          }
 
-         if($secondLevelIdentifierFounded){
+         if ($secondLevelIdentifierFounded) {
             return $existingImportResource['id'];
          }
       }
-      return false;
+      return null;
    }
 
-   function importResourcesFromCSVFile($task)
-   {
+   function importResourcesFromCSVFile($task) {
       // glpi files folder
       $path = GLPI_PLUGIN_DOC_DIR . "/resources/import/";
       // List of files in path
@@ -231,7 +223,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return true;
    }
 
-   function checkHeader($header){
+   function checkHeader($header) {
 
       $pluginResourcesImport = new PluginResourcesImport();
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
@@ -265,8 +257,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return false;
    }
 
-   private function parseFileLine($header, $line, $importID)
-   {
+   private function parseFileLine($header, $line, $importID) {
 
       $column = new PluginResourcesImportColumn();
       $datas = [];
@@ -274,13 +265,19 @@ class PluginResourcesImportResource extends CommonDBTM
       $headerIndex = 0;
       foreach ($header as $columnName) {
 
-         $utf8ColumnName = str_replace("'", "\'", $columnName);
+         $utf8ColumnName = addslashes($columnName);
          $utf8ColumnName = $this->encodeUtf8($utf8ColumnName);
 
-         $column->getFromDBByCrit(['name' => $utf8ColumnName, PluginResourcesImport::$keyInOtherTables => $importID]);
+         $crit = [
+            'name' => $utf8ColumnName,
+            PluginResourcesImport::$keyInOtherTables => $importID
+         ];
+
+         if(!$column->getFromDBByCrit($crit)){
+            Html::displayErrorAndDie("Import column not found");
+         }
 
          $outType = PluginResourcesResource::getDataType($column->getField('resource_column'));
-//         $resColumnName = PluginResourcesResource::getColumnName($column->getField('resource_column'));
 
          $value = null;
          if ($this->isCastable($column->getField('type'), $outType)) {
@@ -290,7 +287,7 @@ class PluginResourcesImportResource extends CommonDBTM
          $datas[] = [
             "name" => $column->getName(),
             "value" => $value,
-            "plugin_resources_importcolumns_id" => intval($column->getID()),
+            "plugin_resources_importcolumns_id" => intval($column->getID())
          ];
 
          $headerIndex++;
@@ -299,7 +296,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return $datas;
    }
 
-   private function isCastable($in, $out){
+   private function isCastable($in, $out) {
 
       switch ($in) {
          case 0: //Integer
@@ -366,8 +363,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return false;
    }
 
-   private function castValue($value, $in, $out)
-   {
+   private function castValue($value, $in, $out) {
       switch ($in) {
          case 0: //Integer
             switch ($out) {
@@ -420,8 +416,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return null;
    }
 
-   private function formatDate($value)
-   {
+   private function formatDate($value) {
       if (trim($value) != "" && $value != null) {
          return DateTime::createFromFormat('d/m/Y', $value)->format('Y-m-d');
       } else {
@@ -429,8 +424,7 @@ class PluginResourcesImportResource extends CommonDBTM
       }
    }
 
-   private function encodeUtf8($value)
-   {
+   private function encodeUtf8($value) {
       if (preg_match('!!u', $value)) {
          return $value;
       } else {
@@ -443,12 +437,9 @@ class PluginResourcesImportResource extends CommonDBTM
     *
     * @param $fullname
     */
-   private function getUserByFullname($fullname)
-   {
+   private function getUserByFullname($fullname) {
       global $DB;
-      $query =
-         "SELECT id FROM " . User::getTable() .
-         ' WHERE CONCAT(firstname," ",realname) LIKE "' . $fullname . '"';
+      $query = "SELECT id FROM " . User::getTable() . ' WHERE CONCAT(firstname," ",realname) LIKE "' . $fullname . '"';
 
 
       $results = $DB->query($query);
@@ -460,8 +451,7 @@ class PluginResourcesImportResource extends CommonDBTM
       return $temp;
    }
 
-   private function getObjectIDByClassNameAndName($classname, $name)
-   {
+   private function getObjectIDByClassNameAndName($classname, $name) {
 
       $item = new $classname();
 
@@ -474,8 +464,8 @@ class PluginResourcesImportResource extends CommonDBTM
       return 0;
    }
 
-   function showHead($type, $import)
-   {
+   function showHead($type, $import) {
+
       global $CFG_GLPI;
       echo "<thead>";
       echo "<tr>";
@@ -486,9 +476,7 @@ class PluginResourcesImportResource extends CommonDBTM
 
          echo "<th colspan='16'>" . $title;
 
-         $title = sprintf(__('%1$s : %2$s'),
-            __('Be careful, the resources will be created in the entity', 'resources'),
-            Dropdown::getDropdownName('glpi_entities', $_SESSION['glpiactive_entity']));
+         $title = sprintf(__('%1$s : %2$s'), __('Be careful, the resources will be created in the entity', 'resources'), Dropdown::getDropdownName('glpi_entities', $_SESSION['glpiactive_entity']));
 
          echo "<br><span class='red'> " . $title . "</span></th>";
 
@@ -515,10 +503,7 @@ class PluginResourcesImportResource extends CommonDBTM
          echo "<th>";
          foreach ($importColumns as $importColumn) {
             if ($importColumn['resource_column'] == $i) {
-               echo "<img style='vertical-align: middle;' src='"
-                  . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'"
-                  . " title='" . __("Data from file", "resources") . "'"
-                  . " width='30' height='30'>";
+               echo "<img style='vertical-align: middle;' src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'" . " title='" . __("Data from file", "resources") . "'" . " width='30' height='30'>";
                break;
             }
          }
@@ -537,8 +522,7 @@ class PluginResourcesImportResource extends CommonDBTM
     *
     * @param $type
     */
-   function showList($type)
-   {
+   function showList($type) {
       global $CFG_GLPI;
 
       $pluginResourcesImport = new PluginResourcesImport();
@@ -547,11 +531,11 @@ class PluginResourcesImportResource extends CommonDBTM
       $imports = $pluginResourcesImport->find();
 
       // Message when no import configured
-      if(!count($imports)){
+      if (!count($imports)) {
          $link = $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
 
          echo "<div class='center'>";
-         echo "<h1>".__("No import configured", "resources")."</h1>";
+         echo "<h1>" . __("No import configured", "resources") . "</h1>";
          echo "<a href='$link'>";
          echo __("Configure a new import", "resources");
          echo "</a>";
@@ -562,6 +546,7 @@ class PluginResourcesImportResource extends CommonDBTM
       $existingImportResourceID = null;
       $pluginResourcesResource = new PluginResourcesResource();
 
+      // For each type of import
       foreach ($imports as $import) {
 
          $formURL = Toolbox::getItemTypeFormURL(PluginResourcesResourceImport::getType());
@@ -569,26 +554,24 @@ class PluginResourcesImportResource extends CommonDBTM
          // Get imports resource by type
          $importResources = $this->find(['plugin_resources_imports_id' => $import['id']]);
 
-         $resourceID = null;
-
+         // For each import resource of type
          foreach ($importResources as $key => $importResource) {
 
             // Find resource by importData identifiers (level 1 and level 2)
-            $resourceID = $pluginResourcesResource->isExistingResourceByImportResourceID($importResource['id']);
-
+            $importResources[$key]['resource_id'] = $pluginResourcesResource->isExistingResourceByImportResourceID($importResource['id']);
             switch ($type) {
                // Resource must not exist when NEW_IMPORTS
                case self::NEW_IMPORTS:
-                  if ($resourceID) {
+                  if ($importResources[$key]['resource_id']) {
                      unset($importResources[$key]);
                   }
                   break;
                // Resource must exist when CONFLICTED_IMPORTS
                // And resource need to have differencies with importResource
                case self::CONFLICTED_IMPORTS:
-                  if (!$resourceID) {
+                  if (!$importResources[$key]['resource_id']) {
                      unset($importResources[$key]);
-                  }else if($resourceID && $pluginResourcesResource->isDifferentFromImportResource($importResource['id'], $resourceID)){
+                  } else if ($importResources[$key]['resource_id'] && !$pluginResourcesResource->isDifferentFromImportResource($importResources[$key]['resource_id'], $importResource['id'], $importResources[$key]['resource_id'])) {
                      unset($importResources[$key]);
                   }
                   break;
@@ -611,7 +594,7 @@ class PluginResourcesImportResource extends CommonDBTM
                Html::showCheckbox(["name" => "select[" . $importResource['id'] . "]"]);
                echo "</td>";
 
-               $this->showOne($importResource['id'], $type, $resourceID);
+               $this->showOne($importResource['id'], $type, $importResource['resource_id']);
 
                echo "</tr>";
             }
@@ -626,7 +609,7 @@ class PluginResourcesImportResource extends CommonDBTM
                   break;
             }
 
-//      Html::printPager($limitBegin, $nb, $target, $parameters);
+//            Html::printPager($limitBegin, $nb, $target, $parameters);
             echo "</div>";
             Html::closeForm();
          } else {
@@ -644,9 +627,13 @@ class PluginResourcesImportResource extends CommonDBTM
       }
    }
 
-   function showOne($importResourceId, $type, $resourceID){
+   function showOne($importResourceId, $type, $resourceID) {
 
       global $CFG_GLPI;
+
+      $oldCSS = "display:block;border-bottom:solid 1px red";
+      $newCSS = "display:block;border-top:solid 1px green;margin-top:1px;";
+
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
 
       // Get all import data
@@ -655,7 +642,7 @@ class PluginResourcesImportResource extends CommonDBTM
       // Get resource data names
       $resourceColumnNames = PluginResourcesResource::getDataNames();
 
-      if(!is_null($resourceID)){
+      if (!is_null($resourceID)) {
          $pluginResourcesResource = new PluginResourcesResource();
          $pluginResourcesResource->getFromDB($resourceID);
       }
@@ -665,16 +652,18 @@ class PluginResourcesImportResource extends CommonDBTM
        * %s 2 : ColumnID
        */
       $postValues = "import[$importResourceId][%s][%s]";
-      $postOldValues = "resource[$importResourceId][%s][%s]";
+      $postOldValues = "old[$importResourceId][%s][%s]";
+
 
       if ($type == self::CONFLICTED_IMPORTS) {
-         echo "<input type='hidden' name='resource' value='$resourceID'>";
+         $postResourceID = "resource[$importResourceId]";
+         echo "<input type='hidden' name='$postResourceID' value='$resourceID'>";
       }
 
       $display = [];
 
-      // Add datas of import in associated column
       foreach ($datas as $data) {
+         // Add datas of import in associated column
          $display[$data['resource_column']][] = $data;
       }
 
@@ -682,12 +671,7 @@ class PluginResourcesImportResource extends CommonDBTM
       for ($i = 0; $i < count($resourceColumnNames); $i++) {
 
          if (!isset($display[$i])) {
-            $display[$i][] = [
-               'id' => 0,
-               'name' => "",
-               'value' => 0,
-               'resource_column' => $i
-            ];
+            $display[$i][] = ['id' => 0, 'name' => "", 'value' => 0, 'resource_column' => $i];
          }
       }
 
@@ -717,167 +701,154 @@ class PluginResourcesImportResource extends CommonDBTM
             echo "<span>";
             if (!empty($data['name']) && $data['resource_column'] != 10 && $data['value'] == -1) {
 
-               if($type == self::NEW_IMPORTS){
-                  echo "<img style='vertical-align:middle' src='"
-                     . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file_red.png'"
-                     . "title='" . __("Not Found in GLPI", "resources") . "'"
-                     . " width='30' height='30'>";
+               if ($type == self::NEW_IMPORTS) {
+                  echo "<img style='vertical-align:middle' src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file_red.png'" . "title='" . __("Not Found in GLPI", "resources") . "'" . " width='30' height='30'>";
                }
+            }
+
+            $oldValues = $resourceID && $pluginResourcesResource->hasDifferenciesWithValueByDataNameID($resourceID, $data['resource_column'], $data['name'], $data['value']);
+
+            if ($type == self::CONFLICTED_IMPORTS) {
+               $needToUpdate = "to_update[$importResourceId][" . $data['id'] . "]";
+               echo "<input type='hidden' name='$needToUpdate' value='" . intval($oldValues) . "'>";
             }
 
             switch ($data['resource_column']) {
                case 0:
                case 1:
                   echo sprintf($textInput, $data['value']);
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     echo "<span style='color:red'>"
-//                        . $pluginResourcesResource->getFieldByDataNameID($data['resource_column'])
-//                        . "->"
-//                        . "</span>";
-//                  }
+
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     $pluginResourcesResource->getFieldByDataNameID($data['resource_column']);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
                   echo $data['value'];
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 2:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     Dropdown::show(PluginResourcesContractType::class, [
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity']
-//                     ]);
-//                  }
-                  Dropdown::show(PluginResourcesContractType::class, [
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
-                  ]);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     Dropdown::show(PluginResourcesContractType::class, ['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity']]);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  Dropdown::show(PluginResourcesContractType::class, ['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity']]);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 3:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     User::dropdown([
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity'],
-//                        'right' => 'all'
-//                     ]);
-//                  }
-                  User::dropdown([
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity'],
-                     'right' => 'all'
-                  ]);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     User::dropdown(['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  User::dropdown(['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 4:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     Dropdown::show(Location::class, [
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity']
-//                     ]);
-//                  }
-                  Dropdown::show(Location::class, [
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
-                  ]);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     Dropdown::show(Location::class, ['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity']]);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  Dropdown::show(Location::class, ['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity'], 'as_map' => false]);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 5:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     User::dropdown([
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity'],
-//                        'right' => 'all']);
-//                  }
-                  User::dropdown([
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity'],
-                     'right' => 'all']);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     User::dropdown(['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  User::dropdown(['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 6:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     Dropdown::show(PluginResourcesDepartment::class, [
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity']
-//                     ]);
-//                  }
-                  Dropdown::show(PluginResourcesDepartment::class, [
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
-                  ]);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     Dropdown::show(PluginResourcesDepartment::class, ['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity']]);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  Dropdown::show(PluginResourcesDepartment::class, ['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity']]);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 7:
                case 8:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     $this->showDateFieldWithoutDiv($hoValue, [
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                     ]);
-//                  }
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     $this->showDateFieldWithoutDiv($hoValue, ['value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),]);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
                   $this->showDateFieldWithoutDiv($hValue, ['value' => $data['value']]);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 9:
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     User::dropdown([
-//                        'name' => $hoValue,
-//                        'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']),
-//                        'entity' => $_SESSION['glpiactive_entity'],
-//                        'right' => 'all']);
-//                  }
-                  User::dropdown([
-                     'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity'],
-                     'right' => 'all']);
+                  if ($oldValues) {
+                     echo "<ul>";
+                     echo "<li style='$oldCSS'>";
+                     User::dropdown(['name' => $hoValue, 'value' => $pluginResourcesResource->getFieldByDataNameID($data['resource_column']), 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                     echo "</li>";
+                     echo "<li style='$newCSS'>";
+                  }
+                  User::dropdown(['name' => $hValue, 'value' => $data['value'], 'entity' => $_SESSION['glpiactive_entity'], 'right' => 'all']);
+                  if ($oldValues) {
+                     echo "</li>";
+                     echo "</ul>";
+                  }
                   break;
                case 10:
                   echo sprintf($textInput, $data['value']);
+
                   echo "<div>" . $data['name'] . " : ";
-//                  if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-//                     $data['resource_column'],
-//                     $data['name'],
-//                     $data['value']
-//                  )) {
-//                     echo "<span style='color:red'>"
-//                        . $pluginResourcesResource->getResourceImportValueByName($data['name'])
-//                        . "->"
-//                        . "</span>";
-//                  }
-                  echo $data['value'] . "</div>";
+                  if ($oldValues) {
+
+                     $otherStyle = "border-bottom:1px solid red;";
+
+                     echo "<span style='$otherStyle'>&nbsp;";
+                     echo $pluginResourcesResource->getResourceImportValueByName($resourceID, $data['name']);
+                     echo "</span>";
+
+                     echo "<span style='border-bottom:1px solid green'>";
+                  }
+                  echo $data['value'];
+                  if ($oldValues) {
+                     echo "</span>";
+                  }
+                  echo "</div>";
                   break;
             }
             echo "</span>";
@@ -895,8 +866,7 @@ class PluginResourcesImportResource extends CommonDBTM
     * Change self reference to Html
     *
     **/
-   static function showDateFieldWithoutDiv($name, $options = [])
-   {
+   static function showDateFieldWithoutDiv($name, $options = []) {
       $p['value'] = '';
       $p['maybeempty'] = true;
       $p['canedit'] = true;
@@ -912,14 +882,10 @@ class PluginResourcesImportResource extends CommonDBTM
             $p[$key] = $val;
          }
       }
-      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " .
-         "value='" . Html::convDate($p['value']) . "'>";
-      $output .= Html::hidden($name, ['value' => $p['value'],
-         'id' => "hiddendate" . $p['rand']]);
+      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
+      $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
       if ($p['maybeempty'] && $p['canedit']) {
-         $output .= "<span class='fa fa-times-circle pointer' title='" . __s('Clear') .
-            "' id='resetdate" . $p['rand'] . "'>" .
-            "<span class='sr-only'>" . __('Clear') . "</span></span>";
+         $output .= "<span class='fa fa-times-circle pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
       }
 
       $js = '$(function(){';
@@ -990,13 +956,11 @@ class PluginResourcesImportResource extends CommonDBTM
     *
     * @return array
     */
-   static function cronInfo($name)
-   {
+   static function cronInfo($name) {
 
       switch ($name) {
          case 'ResourceImport':
-            return [
-               'description' => __('Resource files imports', 'resources')];   // Optional
+            return ['description' => __('Resource files imports', 'resources')];   // Optional
             break;
       }
       return [];
@@ -1005,13 +969,12 @@ class PluginResourcesImportResource extends CommonDBTM
    /**
     * Cron action
     *
-    * @global $DB
+    * @param  $task for log
     * @global $CFG_GLPI
     *
-    * @param  $task for log
+    * @global $DB
     */
-   static function cronResourceImport($task = NULL)
-   {
+   static function cronResourceImport($task = NULL) {
 
       $CronTask = new CronTask();
       if ($CronTask->getFromDBbyName(PluginResourcesImportResource::class, "ResourceImport")) {

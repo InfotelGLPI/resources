@@ -116,37 +116,59 @@ class PluginResourcesResourceImport extends CommonDBChild {
       return $resourceID;
    }
 
-   function update(array $input, $history = 1, $options = [])
-   {
-      $resourceID = $input['resource'];
+   function update(array $input, $history = 1, $options = []){
+
       $pluginResourcesResourceImport = new PluginResourcesResourceImport();
 
       if (isset($input['import'])) {
          foreach ($input['import'] as $importID => $datas) {
+
+            $resourceID = $input['resource'][$importID];
 
             $resourceInput = [];
             $resourceInput['entities_id'] = $_SESSION['glpiactive_entity'];
 
             foreach ($datas as $importColumnID => $data) {
 
-               if ($data['id'] == 0 && $data['value'] == "-1") {
+               $needToUpdate = $input['to_update'][$importID][$importColumnID];
+
+               // No need to update
+               if(!$needToUpdate){
                   continue;
                }
 
                switch($data['resource_column']){
                   case 10:
-                     $criterias = [PluginResourcesResourceImport::$items_id => $resourceID,'name' => $data['name']];
-
-                     $pluginResourcesResourceImport->getFromDBByCrit($criterias);
-
-                     $resourceImportInput = [
-                        PluginResourcesResourceImport::getIndexName() => $pluginResourcesResourceImport->getID(),
-                        'value' => $data['value']
+                     $criterias = [
+                        PluginResourcesResourceImport::$items_id => $resourceID,
+                        'name' => $data['name']
                      ];
 
-                     if(!parent::update($resourceImportInput)){
-                        Html::displayErrorAndDie('Error when updating Resource Import');
+                     // Resource Import already exist
+                     if($pluginResourcesResourceImport->getFromDBByCrit($criterias)){
+                        $resourceImportInput = [
+                           PluginResourcesResourceImport::getIndexName() => $pluginResourcesResourceImport->getID(),
+                           "plugin_resources_resources_id" => $resourceID,
+                           'value' => $data['value']
+                        ];
+
+                        if(!parent::update($resourceImportInput)){
+                           Html::displayErrorAndDie('Error when updating Resource Import');
+                        }
+                     // Resource import doesn't exist yet
+                     }else{
+                        $resourceImportInput = [
+                           "plugin_resources_resources_id" => $resourceID,
+                           'name' => $data['name'],
+                           'value' => $data['value']
+                        ];
+
+                        if(!parent::add($resourceImportInput)){
+                           Html::displayErrorAndDie('Error when creating Resource Import');
+                        }
                      }
+
+
                      break;
                   default:
 
@@ -167,25 +189,42 @@ class PluginResourcesResourceImport extends CommonDBChild {
                      }
                }
             }
+
+            $importResourceID = null;
+
             // Delete importResource and importResourceData
             foreach ($datas as $importColumnID => $data) {
 
-               if ($data['id'] == 0 && $data['value'] == "-1") {
+               if (empty($data['name'])) {
                   continue;
                }
 
+               $pluginResourcesImportResource = new PluginResourcesImportResource();
                $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+               if(!$pluginResourcesImportResourceData->getFromDB($data['id'])){
+                  Html::displayErrorAndDie('Undefined index for import resource data');
+               }
+               $importResourceID = $pluginResourcesImportResourceData->getField('plugin_resources_importresources_id');
 
                $importResourceDataInput = [PluginResourcesImportResourceData::getIndexName() => $data['id']];
 
-               // Delete resource column
+               // Delete import resource data
                if(!$pluginResourcesImportResourceData->delete($importResourceDataInput)){
                   Html::displayErrorAndDie('Error when deleting Import Resource Data');
                }
             }
-            $pluginResourcesImportResource = new PluginResourcesImportResource();
 
-            $importResourceInput = [];
+            if(!is_null($importResourceID)){
+               $importResourceInput = [PluginResourcesImportResource::getIndexName() => $importResourceID];
+
+               // Delete import resource
+               if(!$pluginResourcesImportResource->delete($importResourceInput)){
+                  Html::displayErrorAndDie('Error when deleting Import Resource');
+               }
+            }
+
+
          }
       }
    }
@@ -212,7 +251,33 @@ class PluginResourcesResourceImport extends CommonDBChild {
 
    static function showImportResources($item, $withtemplate){
 
-      echo "yolo";
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+      $resourceImports = $pluginResourcesResourceImport->find([
+         'plugin_resources_resources_id' => $item->getID()
+      ]);
 
+      echo "<div align='central'>";
+
+      echo "<table class='tab_cadrehov'>";
+      echo "<tr>".__("Imported values", 'resources')."</tr>";
+      echo "<tr>";
+      echo "<th>".__("Name")."</th>";
+      echo "<th>".__("Value")."</th>";
+      echo "</tr>";
+
+      foreach($resourceImports as $resourceImport){
+         echo "<tr>";
+         echo "<td style='text-align:center'>";
+         echo $resourceImport['name'];
+         echo "</td>";
+         echo "<td style='text-align:center'>";
+         echo $resourceImport['value'];
+         echo "</td>";
+         echo "<tr>";
+      }
+
+      echo "</table>";
+
+      echo "</div>";
    }
 }

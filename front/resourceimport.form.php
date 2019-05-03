@@ -43,11 +43,17 @@ if (isset($_POST["add"])) {
       Html::displayErrorAndDie('Wrong parameters');
    }
 
+   if(count($_POST['import']) != count($_POST['resource'])){
+      Html::displayErrorAndDie('Wrong parameters');
+   }
+
    // Remove not selected imports
    foreach($_POST['select'] as $importID=>$select){
       if($select == 0){
          if(isset($_POST['import'][$importID])){
             unset($_POST['import'][$importID]);
+            unset($_POST['resource'][$importID]);
+            unset($_POST['to_update'][$importID]);
          }
       }
    }

@@ -78,15 +78,25 @@ class PluginResourcesImport extends CommonDBTM {
       return $ong;
    }
 
-   function getChildColumns(){
+   /***
+    *
+    *
+    * @param $identifier
+    * @return array
+    */
+   function getChildColumns($importID, $identifier = null){
 
       $column = new PluginResourcesImportColumn();
-      $columns = $column->find(
-         [PluginResourcesImportColumn::$items_id => $this->getID()],
-         ['is_identifier']
-      );
 
-      return $columns;
+      $input = [
+         PluginResourcesImportColumn::$items_id => $importID
+      ];
+
+      if(!is_null($identifier)){
+         $input['is_identifier'] = $identifier;
+      }
+
+      return $column->find($input);
    }
 
    function showTitle($links = true, $display = true){
