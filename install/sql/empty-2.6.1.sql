@@ -769,7 +769,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimports`;
 CREATE TABLE `glpi_plugin_resources_resourceimports` (
    `id` int(11) NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+   `value` varchar(255) COLLATE utf8_unicode_ci NULL,
    `plugin_resources_resources_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
