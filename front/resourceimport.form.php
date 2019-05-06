@@ -37,7 +37,6 @@ if (isset($_POST["add"])) {
    Html::back();
 
 } else if (isset($_POST["update"])) {
-//   $import->check($_POST['resource'], UPDATE);
 
    if(!isset($_POST['select']) || !isset($_POST['import'])){
       Html::displayErrorAndDie('Wrong parameters');
