@@ -51,7 +51,12 @@ class PluginResourcesImportResource extends CommonDBTM {
    function updateDatas($datas, $importResourceID) {
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
-      $importResourceDatas = $pluginResourcesImportResourceData->find([PluginResourcesImportResourceData::$items_id => $importResourceID]);
+
+      $crit = [
+         PluginResourcesImportResourceData::$items_id => $importResourceID
+      ];
+
+      $importResourceDatas = $pluginResourcesImportResourceData->find($crit);
 
       // Delete all import data
       foreach ($importResourceDatas as $importResourceData) {
@@ -66,7 +71,10 @@ class PluginResourcesImportResource extends CommonDBTM {
                continue;
             }
 
-            $input = [PluginResourcesImportResourceData::getIndexName() => $importResourceData['id'], "value" => addslashes($data['value']),];
+            $input = [
+               PluginResourcesImportResourceData::getIndexName() => $importResourceData['id'],
+               "value" => addslashes($data['value'])
+            ];
 
             $pluginResourcesImportResourceData->update($input);
             break;
@@ -184,6 +192,8 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       foreach ($files as $file) {
 
+         $importSuccess = true;
+
          $filePath = $path . $file;
 
          // Just parse files
@@ -207,6 +217,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   $importID = $this->checkHeader($line);
 
                   if ($importID <= 0) {
+                     $importSuccess = false;
                      break;
                   }
                   $header = $line;
@@ -219,10 +230,26 @@ class PluginResourcesImportResource extends CommonDBTM {
                $lineIndex++;
             }
          }
+         if($importSuccess){
+            // Move file to done folder
+            Toolbox::logDebug("TODO move file to done");
+         }else{
+            // Move file to fail folder
+            Toolbox::logDebug("TODO move file to fail");
+         }
       }
+
       return true;
    }
 
+   /**
+    * Verify the header of the csv file
+    *
+    * Return the index of the configured import that match to this header
+    *
+    * @param $header
+    * @return bool
+    */
    function checkHeader($header) {
 
       $pluginResourcesImport = new PluginResourcesImport();
@@ -231,7 +258,12 @@ class PluginResourcesImportResource extends CommonDBTM {
       $imports = $pluginResourcesImport->find();
 
       foreach ($imports as $import) {
-         $nbOfColumns = count($pluginResourcesImportColumn->find([PluginResourcesImport::$keyInOtherTables => $import['id']]));
+
+         $crit = [
+            PluginResourcesImport::$keyInOtherTables => $import['id']
+         ];
+
+         $nbOfColumns = count($pluginResourcesImportColumn->find($crit));
 
          if ($nbOfColumns != count($header)) {
             continue;
@@ -243,7 +275,12 @@ class PluginResourcesImportResource extends CommonDBTM {
             $name = addslashes($item);
             $name = $this->encodeUtf8($name);
 
-            $pluginResourcesImportColumn->getFromDBByCrit(['name' => $name, PluginResourcesImport::$keyInOtherTables => $import['id']]);
+            $crit = [
+               'name' => $name,
+               PluginResourcesImport::$keyInOtherTables => $import['id']
+            ];
+
+            $pluginResourcesImportColumn->getFromDBByCrit($crit);
             if ($pluginResourcesImportColumn->getID() == -1) {
                $sameColumnNames = false;
                break;
@@ -257,6 +294,14 @@ class PluginResourcesImportResource extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Transform data in csv file to match glpi data types
+    *
+    * @param $header
+    * @param $line
+    * @param $importID
+    * @return array
+    */
    private function parseFileLine($header, $line, $importID) {
 
       $column = new PluginResourcesImportColumn();
@@ -296,6 +341,13 @@ class PluginResourcesImportResource extends CommonDBTM {
       return $datas;
    }
 
+   /**
+    * Test if input type is castable to output type
+    *
+    * @param $in
+    * @param $out
+    * @return bool
+    */
    private function isCastable($in, $out) {
 
       switch ($in) {
@@ -309,7 +361,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return true;
                case "Location":
                   return true;
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return true;
                case "Date":
                   return false;
@@ -324,7 +376,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return false;
                case "Location":
                   return false;
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return false;
                case "Date":
                   return false;
@@ -339,7 +391,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return true;
                case "Location":
                   return true;
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return true;
                case "Date":
                   return false;
@@ -354,7 +406,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return false;
                case "Location":
                   return false;
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return false;
                case "Date":
                   return true;
@@ -363,6 +415,14 @@ class PluginResourcesImportResource extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Cast value from input type to output type
+    *
+    * @param $value
+    * @param $in
+    * @param $out
+    * @return int|string|null
+    */
    private function castValue($value, $in, $out) {
       switch ($in) {
          case 0: //Integer
@@ -372,7 +432,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                case "Contract":
                case "User":
                case "Location":
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return $value;
             }
          case 1: //Decimal
@@ -402,7 +462,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 //                  return $this->getObjectIDByClassNameAndName("User", $utf8String);
                case "Location":
                   return $this->getObjectIDByClassNameAndName("Location", $utf8String);
-               case "PluginResourcesDepartment":
+               case PluginResourcesDepartment::class:
                   return $this->getObjectIDByClassNameAndName(PluginResourcesDepartment::class, $utf8String);
             }
          case 3: //Date
@@ -451,6 +511,13 @@ class PluginResourcesImportResource extends CommonDBTM {
       return $temp;
    }
 
+   /**
+    * Recover object from database by class and name
+    *
+    * @param $classname
+    * @param $name
+    * @return int
+    */
    private function getObjectIDByClassNameAndName($classname, $name) {
 
       $item = new $classname();
@@ -464,6 +531,12 @@ class PluginResourcesImportResource extends CommonDBTM {
       return 0;
    }
 
+   /**
+    * Display the header
+    *
+    * @param $type
+    * @param $import
+    */
    function showHead($type, $import) {
 
       global $CFG_GLPI;
@@ -627,6 +700,13 @@ class PluginResourcesImportResource extends CommonDBTM {
       }
    }
 
+   /**
+    * Display an import line
+    *
+    * @param $importResourceId
+    * @param $type
+    * @param $resourceID
+    */
    function showOne($importResourceId, $type, $resourceID) {
 
       global $CFG_GLPI;

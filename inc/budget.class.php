@@ -60,7 +60,7 @@ class PluginResourcesBudget extends CommonDBTM {
     *
     * May be overloaded if needed
     *
-    * @return booleen
+    * @return bool
     **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
@@ -70,7 +70,7 @@ class PluginResourcesBudget extends CommonDBTM {
     * Have I the global right to "create" the Object
     * May be overloaded if needed (ex KnowbaseItem)
     *
-    * @return booleen
+    * @return bool
     **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
@@ -97,8 +97,8 @@ class PluginResourcesBudget extends CommonDBTM {
    /**
     * allow to control data before adding in bdd
     *
-    * @param datas $input
-    * @return array|datas|the
+    * @param $input
+    * @return array
     */
    function prepareInputForAdd($input) {
 
@@ -113,8 +113,8 @@ class PluginResourcesBudget extends CommonDBTM {
    /**
     * allow to control data before updating in bdd
     *
-    * @param datas $input
-    * @return array|datas|the
+    * @param $input
+    * @return array
     */
    function prepareInputForUpdate($input) {
 
