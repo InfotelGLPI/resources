@@ -606,7 +606,7 @@ class PluginResourcesImportResource extends CommonDBTM {
     *
     * @param $type
     */
-   function showList($type) {
+   function showList($type, $limit) {
       global $CFG_GLPI;
 
       $pluginResourcesImport = new PluginResourcesImport();
@@ -638,6 +638,8 @@ class PluginResourcesImportResource extends CommonDBTM {
          // Get imports resource by type
          $importResources = $this->find(['plugin_resources_imports_id' => $import['id']]);
 
+         Html::printPager(0, $limit, $_SERVER['PHP_SELF'], "type=".$type);
+
          // For each import resource of type
          foreach ($importResources as $key => $importResource) {
 
@@ -667,7 +669,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          if (count($importResources)) {
 
-            $importResources = array_splice($importResources, 0, 9);
+            $importResources = array_splice($importResources, 0, $limit);
 
             echo "<form name='form' method='post' id='massimport' action ='$formURL' >";
             echo "<div align='center'>";
@@ -698,7 +700,6 @@ class PluginResourcesImportResource extends CommonDBTM {
                   break;
             }
 
-//            Html::printPager($limitBegin, $nb, $target, $parameters);
             echo "</div>";
             Html::closeForm();
          } else {

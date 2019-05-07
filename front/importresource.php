@@ -21,7 +21,14 @@ $importResource = new PluginResourcesImportResource();
 
 if ($import->canView()) {
 
-   $importResource->showList($_GET["type"]);
+   $limit = 0;
+   if(isset($_POST['glpilist_limit'])){
+      $limit = $_POST['glpilist_limit'];
+   }else if(isset($_SESSION['glpilist_limit'])){
+      $limit = $_SESSION['glpilist_limit'];
+   }
+
+   $importResource->showList($_GET["type"],$limit);
 
 } else {
    Html::displayRightError();
