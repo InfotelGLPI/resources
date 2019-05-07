@@ -780,8 +780,16 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       foreach ($display as $key => $item) {
 
-         echo "<td style='text-align:center;'>";
+         echo "<td style='text-align:center;padding:0;'>";
 
+         $numberOfOthersValues = 0;
+
+         foreach ($item as $key2 => $data){
+            if($data['resource_column'] == 10){
+               $numberOfOthersValues++;
+            }
+         }
+         $otherIndex = 0;
          foreach ($item as $key2 => $data) {
 
             if(empty($data['name'])){
@@ -994,22 +1002,32 @@ class PluginResourcesImportResource extends CommonDBTM {
                case 10:
                   echo sprintf($textInput, $data['value']);
 
-                  echo "<div>" . $data['name'] . " : ";
+                  // TEST
+
+                  if($otherIndex == 0){
+                     echo "<table class='tab_cadrehov' style='margin:0;width:100%;'>";
+                  }
+
+                  echo "<tr>";
+
+                  echo "<td>".$data['name']."</td>";
+
+                  echo "<td style='color: red;'>";
+
                   if ($oldValues) {
-
-                     $otherStyle = "border-bottom:1px solid red;";
-
-                     echo "<span style='$otherStyle'>&nbsp;";
                      echo $pluginResourcesResource->getResourceImportValueByName($resourceID, $data['name']);
-                     echo "</span>";
+                  }
+                  echo "</td>";
 
-                     echo "<span style='border-bottom:1px solid green'>";
+                  echo "<td style='color: green;'>".$data['value']."</td>";
+
+                  echo "</tr>";
+
+                  if($otherIndex == $numberOfOthersValues -1){
+                     echo "</table>";
                   }
-                  echo $data['value'];
-                  if ($oldValues) {
-                     echo "</span>";
-                  }
-                  echo "</div>";
+
+                  $otherIndex++;
                   break;
             }
             echo "</span>";
