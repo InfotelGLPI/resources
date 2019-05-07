@@ -15,7 +15,7 @@ CREATE TABLE `glpi_plugin_resources_importcolumns` (
    `id` int(11) NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
    `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `resource_column` varchar(255) COLLATE utf8_unicode_ci NULL,
+   `resource_column` int(11) NOT NULL,
    `is_identifier` tinyint(1) NOT NULL default '0',
    `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
 PRIMARY KEY  (`id`)

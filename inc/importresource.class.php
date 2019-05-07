@@ -43,10 +43,23 @@ class PluginResourcesImportResource extends CommonDBTM {
    const NEW_IMPORTS = 0;
    const CONFLICTED_IMPORTS = 1;
 
+   private $existingImports = null;
+
    static function getIndexUrl() {
       global $CFG_GLPI;
       return $CFG_GLPI["root_doc"] . "/plugins/resources/front/importresource.php";
    }
+
+   private function resetExistingImportsArray(){
+      $this->existingImports = null;
+   }
+
+   private function initExistingImportsArray(){
+      if(is_null($this->existingImports)){
+         $this->existingImports = $this->find();
+      }
+   }
+
 
    function updateDatas($datas, $importResourceID) {
 
@@ -111,14 +124,14 @@ class PluginResourcesImportResource extends CommonDBTM {
          // Create new Import resource data
          foreach ($datas as $item) {
 
-            $input = $importResourceData->prepareInput(
+            $importResourceDataInput = $importResourceData->prepareInput(
                addslashes($item['name']),
-               $item['value'],
+               addslashes($item['value']),
                $newImportId,
                $item['plugin_resources_importcolumns_id']
             );
 
-            $importResourceData->add($input);
+            $importResourceData->add($importResourceDataInput);
          }
       }
    }
@@ -131,12 +144,11 @@ class PluginResourcesImportResource extends CommonDBTM {
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
 
       // List of existing imports
-      $existingImportResources = $this->find();
+      $this->initExistingImportsArray();
 
-      foreach ($existingImportResources as $existingImportResource) {
+      foreach ($this->existingImports as $existingImportResource) {
 
          $firstLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($existingImportResource['id'], 1);
-         $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($existingImportResource['id'], 2);
 
          $firstLevelIdentifierFounded = true;
 
@@ -159,6 +171,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             return $existingImportResource['id'];
          }
 
+         $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($existingImportResource['id'], 2);
          $secondLevelIdentifierFounded = true;
 
          foreach ($secondLevelIdentifiers as $secondLevelIdentifier) {
@@ -205,6 +218,10 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          if (file_exists($filePath)) {
             $handle = fopen($filePath, 'r');
+
+            // Initialize existingImports Array
+            $this->resetExistingImportsArray();
+            $this->initExistingImportsArray();
 
             $importID = null;
             $header = null;
@@ -573,28 +590,31 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo Html::getCheckAllAsCheckbox('massimport');
       echo "</th>";
 
+      if ($type == self::CONFLICTED_IMPORTS) {
+         echo "<th>";
+         echo __('Resource', 'resources');
+         echo "</th>";
+      }
+
       $resourceColumnNames = PluginResourcesResource::getDataNames();
 
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
-      $importColumns = $pluginResourcesImportColumn->find(
-         [PluginResourcesImport::$keyInOtherTables => $import['id']]
-      );
 
-      for ($i = 0; $i < count($resourceColumnNames); $i++) {
+      $importColumns = $pluginResourcesImportColumn->getColumnsByImport($import['id'], true);
+
+      foreach ($importColumns as $importColumn) {
          echo "<th>";
-         foreach ($importColumns as $importColumn) {
-            if ($importColumn['resource_column'] == $i) {
-               echo "<img style='vertical-align: middle;' src='" .
-                  $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'" .
-                  " title='" . __("Data from file", "resources") . "'" .
-                  " width='30' height='30'>";
-               break;
-            }
-         }
+         echo "<img style='vertical-align: middle;' src='" .
+            $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'" .
+            " title='" . __("Data from file", "resources") . "'" .
+            " width='30' height='30'>";
 
-         echo "<span style='vertical-align:middle'>" . $resourceColumnNames[$i] . "</span>";
+         $name = $resourceColumnNames[$importColumn['resource_column']];
+
+         echo "<span style='vertical-align:middle'>" . $name . "</span>";
          echo "</th>";
       }
+
       echo "</tr>";
 
 
@@ -681,10 +701,6 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                echo "<tr valign='center'>";
 
-               echo "<td width='10'>";
-               Html::showCheckbox(["name" => "select[" . $importResource['id'] . "]"]);
-               echo "</td>";
-
                $this->showOne($importResource['id'], $type, $importResource['resource_id']);
 
                echo "</tr>";
@@ -736,9 +752,6 @@ class PluginResourcesImportResource extends CommonDBTM {
       // Get all import data
       $datas = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceId, null, ['resource_column']);
 
-      // Get resource data names
-      $resourceColumnNames = PluginResourcesResource::getDataNames();
-
       if (!is_null($resourceID)) {
          $pluginResourcesResource = new PluginResourcesResource();
          $pluginResourcesResource->getFromDB($resourceID);
@@ -755,46 +768,33 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo "<input type='hidden' name='$postResourceID' value='$resourceID'>";
       }
 
-      $display = [];
+      echo "<td width='10'>";
+      Html::showCheckbox(["name" => "select[" . $importResourceId . "]"]);
+      echo "</td>";
 
-      foreach ($datas as $data) {
-         // Add datas of import in associated column
-         $display[$data['resource_column']][] = $data;
+      if($type == self::CONFLICTED_IMPORTS){
+
+         $pluginResourcesResource = new PluginResourcesResource();
+         $pluginResourcesResource->getFromDB($resourceID);
+
+         $link = Toolbox::getItemTypeFormURL(PluginResourcesResource::getType());
+
+         echo "<td style='text-align:center'><a href='$link'>".$resourceID."</a></td>";
       }
 
-      // Fill empty categories with default values
-      for ($i = 0; $i < count($resourceColumnNames); $i++) {
+      $numberOfOthersValues = 0;
 
-         if (!isset($display[$i])) {
-            $display[$i][] = [
-               'id' => 0,
-               'name' => "",
-               'value' => 0,
-               'resource_column' => $i
-            ];
+      foreach ($datas as $data){
+         if($data['resource_column'] == 10){
+            $numberOfOthersValues++;
          }
       }
 
-      // Order the display by index of resourceColumns
-      ksort($display);
+      $otherIndex = 0;
 
-      foreach ($display as $key => $item) {
+      foreach ($datas as $key => $data) {
 
          echo "<td style='text-align:center;padding:0;'>";
-
-         $numberOfOthersValues = 0;
-
-         foreach ($item as $key2 => $data){
-            if($data['resource_column'] == 10){
-               $numberOfOthersValues++;
-            }
-         }
-         $otherIndex = 0;
-         foreach ($item as $key2 => $data) {
-
-            if(empty($data['name'])){
-               continue;
-            }
 
             $hId = sprintf($postValues, $data['id'], "id");
             $hName = sprintf($postValues, $data['id'], "name");
@@ -1002,8 +1002,6 @@ class PluginResourcesImportResource extends CommonDBTM {
                case 10:
                   echo sprintf($textInput, $data['value']);
 
-                  // TEST
-
                   if($otherIndex == 0){
                      echo "<table class='tab_cadrehov' style='margin:0;width:100%;'>";
                   }
@@ -1031,7 +1029,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   break;
             }
             echo "</span>";
-         }
+
 
          echo "</td>";
       }

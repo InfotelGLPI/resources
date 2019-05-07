@@ -4074,10 +4074,10 @@ class PluginResourcesResource extends CommonDBTM {
 
          foreach ($tableResourceImportCriterias as $tableResourceImportCriteria) {
 
-            $where .= " AND ri.name = '" . $tableResourceImportCriteria['name'] . "'";
+            $where .= " AND ri.name = '" . addslashes($tableResourceImportCriteria['name']) . "'";
             $where .= " AND ri.value = ";
             if (is_string($tableResourceImportCriteria['value'])) {
-               $where .= "'" . $tableResourceImportCriteria['value'] . "'";
+               $where .= "'" . addslashes($tableResourceImportCriteria['value']) . "'";
             } else {
                $where = $tableResourceImportCriteria['value'];
             }
@@ -4087,10 +4087,10 @@ class PluginResourcesResource extends CommonDBTM {
       if (count($tableResourceCriterias) > 0) {
          foreach ($tableResourceCriterias as $tableResourceCriteria) {
 
-            $where .= " AND r." . $tableResourceCriteria['name'] . " = ";
+            $where .= " AND r." . addslashes($tableResourceCriteria['name']) . " = ";
 
             if (is_string($tableResourceCriteria['value'])) {
-               $where .= "'" . $tableResourceCriteria['value'] . "'";
+               $where .= "'" . addslashes($tableResourceCriteria['value']) . "'";
             } else {
                $where = $tableResourceCriteria['value'];
             }

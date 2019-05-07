@@ -62,6 +62,34 @@ class PluginResourcesImportColumn extends CommonDBChild {
    }
 
    /**
+    * Alternative to find to order array by resource_column
+    */
+   function getColumnsByImport($importID, $distinctResourceColumns = false){
+
+      global $DB;
+
+      $query = 'SELECT * from '.self::getTable();
+      $query.= " WHERE ".self::$items_id." = ".$importID;
+
+      if($distinctResourceColumns){
+         $query.= " GROUP BY resource_column";
+      }
+
+      $query.= " ORDER BY resource_column";
+
+      $results = $DB->query($query);
+
+      $temp = [];
+
+      $it = 0;
+      while ($data = $DB->fetch_assoc($results)) {
+         $temp[$it] = $data;
+         $it++;
+      }
+      return $temp;
+   }
+
+   /**
     * Get Tab Name used for itemtype
     *
     * NB : Only called for existing object
