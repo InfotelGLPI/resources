@@ -41,6 +41,8 @@ $resource = new PluginResourcesResource();
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
    if (Session::haveRight("plugin_resources_all", READ)) {
 
+      global $CFG_GLPI;
+
       //Have right to see all resources
       //Have not right to see all resources
       echo "<div align='center'>";
@@ -57,7 +59,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
                                'height' => 400]);
    }
 
-   Search::show("PluginResourcesResource");
+   Search::show(PluginResourcesResource::class);
 
 } else {
    Html::displayRightError();

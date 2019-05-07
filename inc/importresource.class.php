@@ -576,7 +576,9 @@ class PluginResourcesImportResource extends CommonDBTM {
       $resourceColumnNames = PluginResourcesResource::getDataNames();
 
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
-      $importColumns = $pluginResourcesImportColumn->find([PluginResourcesImport::$keyInOtherTables => $import['id']]);
+      $importColumns = $pluginResourcesImportColumn->find(
+         [PluginResourcesImport::$keyInOtherTables => $import['id']]
+      );
 
       for ($i = 0; $i < count($resourceColumnNames); $i++) {
          echo "<th>";
@@ -664,6 +666,8 @@ class PluginResourcesImportResource extends CommonDBTM {
          }
 
          if (count($importResources)) {
+
+            $importResources = array_splice($importResources, 0, 9);
 
             echo "<form name='form' method='post' id='massimport' action ='$formURL' >";
             echo "<div align='center'>";
@@ -778,6 +782,10 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo "<td style='text-align:center;'>";
 
          foreach ($item as $key2 => $data) {
+
+            if(empty($data['name'])){
+               continue;
+            }
 
             $hId = sprintf($postValues, $data['id'], "id");
             $hName = sprintf($postValues, $data['id'], "name");
