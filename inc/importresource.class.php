@@ -1089,14 +1089,14 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                   echo "<td>".$data['name']."</td>";
 
-                  echo "<td style='color: red;'>";
-
                   if ($oldValues) {
+                     echo "<td style='color: red;'>";
                      echo $pluginResourcesResource->getResourceImportValueByName($resourceID, $data['name']);
+                     echo "</td>";
+                     echo "<td style='color: green;'>".$data['value']."</td>";
+                  }else{
+                     echo "<td>".$data['value']."</td>";
                   }
-                  echo "</td>";
-
-                  echo "<td style='color: green;'>".$data['value']."</td>";
 
                   echo "</tr>";
 
