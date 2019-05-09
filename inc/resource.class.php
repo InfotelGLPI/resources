@@ -882,7 +882,6 @@ class PluginResourcesResource extends CommonDBTM {
       imagejpeg($tmp, $tmpfile, 100);
 
       rename($tmpfile, $filename);
-      //Document::renameForce($tmpfile, $filename);
 
       imagedestroy($src);
       imagedestroy($tmp);
@@ -1824,10 +1823,6 @@ class PluginResourcesResource extends CommonDBTM {
       echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
       echo "</span>";
       echo "</div>";
-
-      //      echo "<td rowspan='2' class='plugin_resources_wizard_comment red'>";
-      //      echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
-      //      echo "</td>";
 
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
       if (in_array("firstname", $required)) {
@@ -3365,27 +3360,6 @@ class PluginResourcesResource extends CommonDBTM {
             $this->update($values);
          }
          unset($values);
-
-         //TODO
-         //         $PluginResourcesTask = new PluginResources();
-         //         $restrict            = "`plugin_resources_resources_id` = '".$resources_id."'";
-         //         $tasks               = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
-         //         if (!empty($tasks)) {
-         //            foreach ($tasks as $task) {
-         //               $PluginResourcesTask->getFromDB($task["id"]);
-         //               $tasktype = PluginResourcesTaskType::transfer($PluginResourcesTask->fields["plugin_resources_tasktypes_id"], $entities_id);
-         //               if ($tasktype > 0) {
-         //                  $values["id"]                            = $task["id"];
-         //                  $values["plugin_resources_tasktypes_id"] = $tasktype;
-         //                  $PluginResourcesTask->update($values);
-         //               }
-         //               $values["id"]          = $task["id"];
-         //               $values["entities_id"] = $entities_id;
-         //               $PluginResourcesTask->update($values);
-         //            }
-         //         }
-         //
-         //         unset($values);
 
          $PluginResourcesTask = new PluginResourcesTask();
          $restrict = ["plugin_resources_resources_id" => $resources_id];

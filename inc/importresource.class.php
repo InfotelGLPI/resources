@@ -60,7 +60,42 @@ class PluginResourcesImportResource extends CommonDBTM {
       }
    }
 
+   /**
+    * Delete Import Resources and all child Import Resources Datas
+    *
+    * @param array $input
+    * @param int $force
+    * @param int $history
+    * @return bool|void
+    */
+   function delete(array $input, $force = 0, $history = 1) {
 
+      if(!isset($input[self::getIndexName()])){
+         Html::displayErrorAndDie("Import resources not found");
+      }
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      $dataCrit = [
+         self::$keyInOtherTables => $input[self::getIndexName()]
+      ];
+
+      $datas = $pluginResourcesImportResourceData->find($dataCrit);
+      // Remove datas
+      foreach($datas as $data){
+         $pluginResourcesImportResourceData->delete([PluginResourcesImportResourceData::getIndexName() => $data['id']]);
+      }
+
+      // Remove item
+      parent::delete($input, $force, $history);
+   }
+
+   /**
+    * Update child Import Resources Datas
+    *
+    * @param $datas
+    * @param $importResourceID
+    */
    function updateDatas($datas, $importResourceID) {
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
@@ -71,7 +106,6 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $importResourceDatas = $pluginResourcesImportResourceData->find($crit);
 
-      // Delete all import data
       foreach ($importResourceDatas as $importResourceData) {
 
          foreach ($datas as $data) {
@@ -138,6 +172,9 @@ class PluginResourcesImportResource extends CommonDBTM {
 
    /**
     * Search if a resource exist with the same identifiers
+    *
+    * @param $columnDatas
+    * @return mixed|null
     */
    function isExistingImportResourceByDataFromFile($columnDatas) {
 
@@ -209,7 +246,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          $filePath = $path . $file;
 
-         // Just parse files
+         // Ignore directories
          if (is_dir($filePath)) {
             continue;
          }
@@ -220,6 +257,8 @@ class PluginResourcesImportResource extends CommonDBTM {
             $handle = fopen($filePath, 'r');
 
             // Initialize existingImports Array
+            // Used to prevent multiple get imports from database
+            // Speed up execution time
             $this->resetExistingImportsArray();
             $this->initExistingImportsArray();
 
@@ -229,6 +268,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             $lineIndex = 0;
             while (($line = fgetcsv($handle, 1000, ";")) !== FALSE) {
 
+               // First line is header description
                if ($lineIndex == 0) {
 
                   $importID = $this->checkHeader($line);
@@ -238,7 +278,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                      break;
                   }
                   $header = $line;
-
+               // Each line contain import data
                } else {
 
                   $datas = $this->parseFileLine($header, $line, $importID);
@@ -249,10 +289,13 @@ class PluginResourcesImportResource extends CommonDBTM {
          }
          if ($importSuccess) {
             // Move file to done folder
-            Toolbox::logDebug("TODO move file to done");
+            $output = $path . "done/" . $file;
+            rename(str_replace('\\', '/', $filePath), str_replace('\\','/', $output));
+
          } else {
             // Move file to fail folder
-            Toolbox::logDebug("TODO move file to fail");
+            $output = $path . "fail/" . $file;
+            rename(str_replace('\\', '/', $filePath), str_replace('\\','/', $output));
          }
       }
 
@@ -476,7 +519,6 @@ class PluginResourcesImportResource extends CommonDBTM {
                   }
 
                   return -1;
-//                  return $this->getObjectIDByClassNameAndName("User", $utf8String);
                case "Location":
                   return $this->getObjectIDByClassNameAndName("Location", $utf8String);
                case PluginResourcesDepartment::class:
@@ -513,6 +555,8 @@ class PluginResourcesImportResource extends CommonDBTM {
     * The fullname must be firstname + 1 space + lastname
     *
     * @param $fullname
+    * @return array
+    * @throws GlpitestSQLError
     */
    private function getUserByFullname($fullname) {
       global $DB;
@@ -549,7 +593,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    }
 
    /**
-    * Display the header
+    * Display the header of the form
     *
     * @param $type
     * @param $import
@@ -653,55 +697,98 @@ class PluginResourcesImportResource extends CommonDBTM {
       // For each type of import
       foreach ($imports as $import) {
 
-         $formURL = Toolbox::getItemTypeFormURL(PluginResourcesResourceImport::getType());
-
-         // Get imports resource by type
-         $importResources = $this->find(['plugin_resources_imports_id' => $import['id']]);
-
          Html::printPager(0, $limit, $_SERVER['PHP_SELF'], "type=".$type);
 
-         // For each import resource of type
-         foreach ($importResources as $key => $importResource) {
+         $formURL = Toolbox::getItemTypeFormURL(PluginResourcesResourceImport::getType());
 
-            // Find resource by importData identifiers (level 1 and level 2)
-            $importResources[$key]['resource_id'] = $pluginResourcesResource->isExistingResourceByImportResourceID($importResource['id']);
-            switch ($type) {
-               // Resource must not exist when NEW_IMPORTS
-               case self::NEW_IMPORTS:
-                  if ($importResources[$key]['resource_id']) {
-                     unset($importResources[$key]);
-                  }
+         $importResources = [];
+
+         $limitStart = 0;
+         $limitEnd = 30;
+
+         // Break when no next rows
+         // Use this loop to don't get all resources from database at ones
+         while(count($importResources) < $limit){
+
+            // find method does not permit to set limit offset
+            $where = "plugin_resources_imports_id = ".$import['id'];
+            $where.= " LIMIT $limitStart, $limitEnd";
+
+            $tempImportResources = $this->find($where);
+
+            // If no importResources available break the while
+            if(count($tempImportResources) == 0){
+               break;
+            }
+
+            $limitStart = $limitEnd;
+            $limitEnd = $limit;
+
+            // For each import resource of type
+            foreach ($tempImportResources as $key => $tempImportResource) {
+
+               // Find resource by importData identifiers (level 1 and level 2)
+               $resourceID = $pluginResourcesResource->isExistingResourceByImportResourceID($tempImportResource['id']);
+               switch ($type) {
+                  // Resource must not exist when NEW_IMPORTS
+                  case self::NEW_IMPORTS:
+                     if ($resourceID) {
+                        continue 2;
+                     }
+                     break;
+                  // Resource must exist when CONFLICTED_IMPORTS
+                  // And resource need to have differencies with importResource
+                  case self::CONFLICTED_IMPORTS:
+                     if (!$resourceID) {
+                        continue 2;
+                     } else if ($resourceID
+                        && !$pluginResourcesResource->isDifferentFromImportResource(
+                           $resourceID,
+                           $tempImportResource['id'])) {
+                        continue 2;
+                     }
+                     $tempImportResource['resource_id'] = $resourceID;
+                     break;
+               }
+               // list of import resources is full
+               if(count($importResources) == $limit){
                   break;
-               // Resource must exist when CONFLICTED_IMPORTS
-               // And resource need to have differencies with importResource
-               case self::CONFLICTED_IMPORTS:
-                  if (!$importResources[$key]['resource_id']) {
-                     unset($importResources[$key]);
-                  } else if ($importResources[$key]['resource_id']
-                     && !$pluginResourcesResource->isDifferentFromImportResource(
-                        $importResources[$key]['resource_id'],
-                        $importResource['id'])) {
-                     unset($importResources[$key]);
-                  }
-                  break;
+               }
+               $importResources[] = $tempImportResource;
             }
          }
 
          if (count($importResources)) {
 
-            $importResources = array_splice($importResources, 0, $limit);
-
             echo "<form name='form' method='post' id='massimport' action ='$formURL' >";
             echo "<div align='center'>";
+
+            switch ($type) {
+               case self::NEW_IMPORTS:
+                  echo "<input type='submit' name='add' class='submit' value='" . _sx('button', 'Add') . "' >";
+                  break;
+               case self::CONFLICTED_IMPORTS:
+                  echo "<input type='submit' name='update' class='submit' value='" . _sx('button', 'Save') . "' >";
+                  break;
+            }
+
+            echo "<input type='submit' name='delete' class='submit' value='" . _sx('button', 'Remove an item') . "' >";
+
             echo "<table border='0' class='tab_cadrehov'>";
 
             $this->showHead($type, $import);
 
             foreach ($importResources as $importResource) {
-
                echo "<tr valign='center'>";
 
-               $this->showOne($importResource['id'], $type, $importResource['resource_id']);
+               switch($type){
+                  case self::NEW_IMPORTS:
+                     $this->showOne($importResource['id'], $type);
+                     break;
+                  case self::CONFLICTED_IMPORTS:
+                     $this->showOne($importResource['id'], $type, $importResource['resource_id']);
+                     break;
+               }
 
                echo "</tr>";
             }
@@ -715,6 +802,8 @@ class PluginResourcesImportResource extends CommonDBTM {
                   echo "<input type='submit' name='update' class='submit' value='" . _sx('button', 'Save') . "' >";
                   break;
             }
+
+            echo "<input type='submit' name='delete' class='submit' value='" . _sx('button', 'Remove an item') . "' >";
 
             echo "</div>";
             Html::closeForm();
@@ -740,9 +829,22 @@ class PluginResourcesImportResource extends CommonDBTM {
     * @param $type
     * @param $resourceID
     */
-   function showOne($importResourceId, $type, $resourceID) {
+   function showOne($importResourceId, $type, $resourceID = null) {
 
       global $CFG_GLPI;
+
+      /*
+      The date need to be send to form are :
+         - ResourceID
+         - Data
+            - resource_column
+            - value
+      */
+
+      $inputs = "import[$importResourceId][%s]";
+      $resourceInput = "resource[$importResourceId]";
+
+      echo "<input type='hidden' name='$resourceInput' value='" . intval($resourceID) . "'>";
 
       $oldCSS = "display:block;border-bottom:solid 1px red";
       $newCSS = "display:block;border-top:solid 1px green;margin-top:1px;";
@@ -761,12 +863,6 @@ class PluginResourcesImportResource extends CommonDBTM {
        * %s 1 : ImportID
        * %s 2 : ColumnID
        */
-      $postValues = "import[$importResourceId][%s][%s]";
-
-      if ($type == self::CONFLICTED_IMPORTS) {
-         $postResourceID = "resource[$importResourceId]";
-         echo "<input type='hidden' name='$postResourceID' value='$resourceID'>";
-      }
 
       echo "<td width='10'>";
       Html::showCheckbox(["name" => "select[" . $importResourceId . "]"]);
@@ -778,6 +874,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          $pluginResourcesResource->getFromDB($resourceID);
 
          $link = Toolbox::getItemTypeFormURL(PluginResourcesResource::getType());
+         $link.= "?id=$resourceID";
 
          echo "<td style='text-align:center'><a href='$link'>".$resourceID."</a></td>";
       }
@@ -796,14 +893,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          echo "<td style='text-align:center;padding:0;'>";
 
-            $hId = sprintf($postValues, $data['id'], "id");
-            $hName = sprintf($postValues, $data['id'], "name");
-            $hValue = sprintf($postValues, $data['id'], "value");
-            $hRc = sprintf($postValues, $data['id'], "resource_column");
-
-            echo "<input type='hidden' name='" . $hId . "' value='" . $data['id'] . "'>";
-            echo '<input type="hidden" name="' . $hName . '" value="' . $data['name'] . '">';
-            echo "<input type='hidden' name='" . $hRc . "' value='" . $data['resource_column'] . "'>";
+            $hValue = sprintf($inputs, $data['id']);
 
             $textInput = "<input name='$hValue' type='hidden' value='%s'>";
 
@@ -824,11 +914,6 @@ class PluginResourcesImportResource extends CommonDBTM {
                   $data['name'],
                   $data['value']
                );
-
-            if ($type == self::CONFLICTED_IMPORTS) {
-               $needToUpdate = "to_update[$importResourceId][" . $data['id'] . "]";
-               echo "<input type='hidden' name='$needToUpdate' value='" . intval($oldValues) . "'>";
-            }
 
             switch ($data['resource_column']) {
                case 0:

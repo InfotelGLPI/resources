@@ -15,19 +15,18 @@ if (isset($_POST["add"])) {
       Html::displayErrorAndDie('Wrong parameters');
    }
 
-   // Remove not selected imports
-   foreach($_POST['select'] as $importID=>$select){
-      if($select == 0){
-         if(isset($_POST['import'][$importID])){
-            unset($_POST['import'][$importID]);
-         }
+   foreach($_POST['select'] as $key=>$selected) {
+
+      if ($selected) {
+
+         $input = [
+            'importID' => $key,
+            'datas' => $_POST['import'][$key]
+         ];
+
+         $pluginResourcesResourceImport->add($input);
       }
    }
-   if(!count($_POST['import'])){
-      Html::back();
-   }
-
-   $pluginResourcesResourceImport->add($_POST);
    Html::back();
 
 } else if (isset($_POST["purge"])) {
@@ -42,25 +41,34 @@ if (isset($_POST["add"])) {
       Html::displayErrorAndDie('Wrong parameters');
    }
 
-   if(count($_POST['import']) != count($_POST['resource'])){
-      Html::displayErrorAndDie('Wrong parameters');
-   }
+   foreach($_POST['select'] as $key=>$selected) {
 
-   // Remove not selected imports
-   foreach($_POST['select'] as $importID=>$select){
-      if($select == 0){
-         if(isset($_POST['import'][$importID])){
-            unset($_POST['import'][$importID]);
-            unset($_POST['resource'][$importID]);
-            unset($_POST['to_update'][$importID]);
-         }
+      if ($selected) {
+
+         $input = [
+           'resourceID' => $_POST['resource'][$key],
+           'datas' => $_POST['import'][$key]
+         ];
+
+         $pluginResourcesResourceImport->update($input);
       }
    }
-   if(!count($_POST['import'])){
-      Html::back();
+   Html::back();
+} else if (isset($_POST["delete"])){
+   $t = 1;
+
+   foreach($_POST['select'] as $key=>$selected){
+      if($selected){
+         $pluginResourcesImportResource = new PluginResourcesImportResource();
+
+         $input = [
+            PluginResourcesImportResource::getIndexName() => $key
+         ];
+
+         $pluginResourcesImportResource->delete($input);
+      }
    }
 
-   $pluginResourcesResourceImport->update($_POST);
    Html::back();
 }
 Html::displayErrorAndDie('Lost');
