@@ -715,7 +715,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                break;
             }
 
-            $limitStart = $limitEnd;
+            $limitStart += $limitEnd;
             $limitEnd = $limit;
 
             // For each import resource of type
@@ -828,7 +828,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       global $CFG_GLPI;
 
       /*
-      The date need to be send to form are :
+      The data need to be send to form are :
          - ResourceID
          - Data
             - resource_column
