@@ -19,6 +19,7 @@ Ce plugin vous permet de gérer les ressources humaines afin de gérer correctem
 > * Utilisable avec le plugin "PDF":https://forge.glpi-project.org/projects/show/pdf
 > * Utilisable avec le plugin "Cartographie":https://github.com/InfotelGLPI/positions
 > * GLPI > 0.84 : Utilisable avec le plugin "Arborescence":https://forge.glpi-project.org/projects/show/treeview
+> * Import de fichier csv
 
 Mode d'emploi - pdf : https://forge.glpi-project.org/attachments/1329/Guide_Utilisateur_Resource.pdf
 
@@ -36,3 +37,4 @@ This plugin allows you to manage resources to properly manage the allocation of 
 > * Can be used with "PDF":https://forge.glpi-project.org/projects/show/pdf plugin
 > * Can be used with "Positions":https://github.com/InfotelGLPI/positions
 > * GLPI > 0.84 : Can be used with "Tree View":https://forge.glpi-project.org/projects/show/treeview
+> * Import csv file
