@@ -917,7 +917,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   if ($oldValues) {
                      echo "<ul>";
                      echo "<li style='$oldCSS'>";
-                     $pluginResourcesResource->getFieldByDataNameID($data['resource_column']);
+                     echo $pluginResourcesResource->getFieldByDataNameID($data['resource_column']);
                      echo "</li>";
                      echo "<li style='$newCSS'>";
                   }
