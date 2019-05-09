@@ -606,7 +606,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       if ($type == self::NEW_IMPORTS) {
 
-         $title = sprintf(__("New Resource from Import named: %s", "resources"), $import['name']);
+         $title = sprintf(__("New Resources from Import : %s", "resources"), $import['name']);
 
          echo "<th colspan='16'>" . $title;
 
@@ -621,7 +621,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       } else if ($type == self::CONFLICTED_IMPORTS) {
 
          $title = sprintf(
-            _n("Inconsistency from Import named: %s", 'Inconsistencies from Import named: %s', 2, "resources"),
+            _n("Inconsistency between Resources and Import: %s", 'Inconsistencies between Resources and Import: %s', 2, "resources"),
             $import['name']);
 
          echo "<th colspan='21'>" . $title . "</th>";
