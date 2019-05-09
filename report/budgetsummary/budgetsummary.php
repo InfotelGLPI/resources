@@ -465,6 +465,8 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
  * Build the ORDER BY clause
  *
  * @param $default string, name of the column used by default
+ * @param $columns
+ *
  * @return string
  */
 function getOrderBy($default, $columns) {

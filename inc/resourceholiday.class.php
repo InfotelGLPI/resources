@@ -31,25 +31,58 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResourceHoliday
+ */
 class PluginResourcesResourceHoliday extends CommonDBTM {
 
    static $rightname = 'plugin_resources_holiday';
 
    public $dohistory=true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Holiday', 'Holidays', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
 
       if (!isset ($input["date_begin"]) || $input["date_begin"] == 'NULL') {
@@ -78,6 +111,13 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       }
    }
 
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForUpdate($input) {
       if (!isset ($input["date_begin"]) || $input["date_begin"] == 'NULL') {
          Session::addMessageAfterRedirect(__('The begin date of the forced holiday period must be filled', 'resources'), false, ERROR);
@@ -91,19 +131,26 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       //unset($input['picture']);
       $this->getFromDB($input["id"]);
 
-      $input["_old_date_begin"]=$this->fields["date_begin"];
-      $input["_old_date_end"]=$this->fields["date_end"];
-      $input["_old_comment"]=$this->fields["comment"];
+      $input["_old_date_begin"] = $this->fields["date_begin"];
+      $input["_old_date_end"]   = $this->fields["date_end"];
+      $input["_old_comment"]    = $this->fields["comment"];
 
       return $input;
    }
 
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @param boolean $history store changes history ? (default 1)
+    *
+    * @return void
+    **/
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
       if ($CFG_GLPI["notifications_mailing"] && count($this->updates)) {
-         $options = ['holiday_id' => $this->fields["id"],
-                           'oldvalues' => $this->oldvalues];
+         $options                 = ['holiday_id' => $this->fields["id"],
+                                     'oldvalues'  => $this->oldvalues];
          $PluginResourcesResource = new PluginResourcesResource();
          if ($PluginResourcesResource->getFromDB($this->fields["plugin_resources_resources_id"])) {
             NotificationEvent::raiseEvent("updateholiday", $PluginResourcesResource, $options);
@@ -111,6 +158,12 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       }
    }
 
+   /**
+    * Actions done before the DELETE of the item in the database /
+    * Maybe used to add another check for deletion
+    *
+    * @return boolean true if item need to be deleted else false
+    **/
    function pre_deleteItem() {
       global $CFG_GLPI;
 
@@ -124,6 +177,18 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       return true;
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function getSearchOptions() {
 
       $tab = [];
@@ -199,6 +264,11 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
    }
 
    //Show form from helpdesk to add holiday of a resource
+
+   /**
+    * @param       $ID
+    * @param array $options
+    */
    function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
@@ -298,14 +368,15 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
    }
 
    /**
-   * Print generic search form
-   *
-   *@param $itemtype type to display the form
-   *@param $params parameters array may include field, contains, sort, is_deleted, link, link2, contains2, field2, type2
-   *
-   *@return nothing (displays)
-   *
-   **/
+    * Print generic search form
+    *
+    * @param $itemtype type to display the form
+    * @param $params parameters array may include field, contains, sort, is_deleted, link, link2, contains2, field2,
+    *    type2
+    *
+    * @return nothing (displays)
+    *
+    **/
    function showGenericSearch($params) {
       global $CFG_GLPI;
 
@@ -573,6 +644,9 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       Html::closeForm();
    }
 
+   /**
+    * @param $params
+    */
    function showMinimalList($params) {
       global $DB,$CFG_GLPI;
 
@@ -600,7 +674,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       $p['contains2']   = '';//
       $p['field2']      = '';//
       $p['itemtype2']   = '';
-      $p['searchtype2']  = '';
+      $p['searchtype2'] = '';
 
       foreach ($params as $key => $val) {
             $p[$key]=$val;
@@ -933,13 +1007,13 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       if ($result = $DB->query($query)) {
          $numrows =  $DB->numrows($result);
 
-         $globallinkto = Search::getArrayUrlLink("field", $p['field']).
-                        Search::getArrayUrlLink("link", $p['link']).
-                        Search::getArrayUrlLink("contains", $p['contains']).
-                        Search::getArrayUrlLink("field2", $p['field2']).
-                        Search::getArrayUrlLink("contains2", $p['contains2']).
-                        Search::getArrayUrlLink("itemtype2", $p['itemtype2']).
-                        Search::getArrayUrlLink("link2", $p['link2']);
+         $globallinkto = Search::getArrayUrlLink("field", $p['field']) .
+                         Search::getArrayUrlLink("link", $p['link']) .
+                         Search::getArrayUrlLink("contains", $p['contains']) .
+                         Search::getArrayUrlLink("field2", $p['field2']) .
+                         Search::getArrayUrlLink("contains2", $p['contains2']) .
+                         Search::getArrayUrlLink("itemtype2", $p['itemtype2']) .
+                         Search::getArrayUrlLink("link2", $p['link2']);
 
          $parameters = "sort=".$p['sort']."&amp;order=".$p['order'].$globallinkto;
 

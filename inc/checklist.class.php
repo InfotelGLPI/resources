@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesChecklist
+ */
 class PluginResourcesChecklist extends CommonDBTM {
 
    static $rightname = 'plugin_resources_checklist';
@@ -38,15 +41,38 @@ class PluginResourcesChecklist extends CommonDBTM {
    const RESOURCES_CHECKLIST_OUT      = 2;
    const RESOURCES_CHECKLIST_TRANSFER = 3;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Checklist', 'Checklists', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -64,6 +90,19 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if (!$withtemplate) {
@@ -77,6 +116,17 @@ class PluginResourcesChecklist extends CommonDBTM {
       return '';
    }
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       $ID = $item->getField('id');
@@ -95,6 +145,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $item
+    *
+    * @return int
+    */
    static function countForItem($item) {
 
       if ($item->getField('is_leaving') == 1) {
@@ -110,6 +165,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $nb;
    }
 
+   /**
+    * @param $ID
+    *
+    * @return bool
+    */
    static function checkifChecklistExist($ID) {
 
       $restrict   = "`plugin_resources_resources_id` = '" . $ID . "'";
@@ -125,6 +185,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $input
+    *
+    * @return bool
+    */
    static function checkifChecklistFinished($input) {
 
       $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
@@ -149,6 +214,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $input
+    *
+    * @return bool
+    */
    function openFinishedChecklist($input) {
 
       $restrict   = "`plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
@@ -166,6 +236,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $data
+    *
+    * @return bool
+    */
    static function createTicket($data) {
 
       $result = false;
@@ -250,6 +325,12 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $result;
    }
 
+   /**
+    * @param     $name
+    * @param int $value
+    *
+    * @return bool|int|string
+    */
    function dropdownChecklistType($name, $value = 0) {
 
       $checklists = [self::RESOURCES_CHECKLIST_IN       => __('At the arriving of a resource', 'resources'),
@@ -263,6 +344,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $value
+    *
+    * @return string
+    */
    static function getChecklistType($value) {
 
       switch ($value) {
@@ -277,6 +363,13 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
       global $DB;
 
@@ -292,6 +385,9 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param $ID
+    */
    static function showAddForm($ID) {
 
       echo "<div align='center'>";
@@ -365,6 +461,12 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm($ID, $options = []) {
 
       if (!$this->canView()) {
@@ -450,7 +552,15 @@ class PluginResourcesChecklist extends CommonDBTM {
       return true;
    }
 
-   //show from resources
+   /**
+    * show from resources
+    *
+    * @param        $plugin_resources_resources_id
+    * @param        $checklist_type
+    * @param string $withtemplate
+    *
+    * @return bool
+    */
    static function showFromResources($plugin_resources_resources_id, $checklist_type, $withtemplate = '') {
       global $CFG_GLPI;
 
@@ -782,6 +892,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $actions;
    }
 
+   /**
+    * @param \MassiveAction $ma
+    *
+    * @return bool
+    */
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       $input = $ma->getInput();
@@ -921,6 +1036,9 @@ class PluginResourcesChecklist extends CommonDBTM {
       }
    }
 
+   /**
+    * @return array
+    */
    function getForbiddenStandardMassiveAction() {
 
       $forbidden = parent::getForbiddenStandardMassiveAction();
@@ -931,6 +1049,9 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $forbidden;
    }
 
+   /**
+    * @param $is_leaving
+    */
    function showOnCentral($is_leaving) {
       global $DB, $CFG_GLPI;
 
@@ -1048,6 +1169,12 @@ class PluginResourcesChecklist extends CommonDBTM {
    }
 
    // Cron action
+
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -1059,6 +1186,12 @@ class PluginResourcesChecklist extends CommonDBTM {
       return [];
    }
 
+   /**
+    * @param     $entity_restrict
+    * @param int $is_leaving
+    *
+    * @return string
+    */
    static function queryChecklists($entity_restrict, $is_leaving = 0) {
 
       $resource = new PluginResourcesResource();
@@ -1108,6 +1241,12 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $query;
    }
 
+   /**
+    * @param $ID
+    * @param $checklist_type
+    *
+    * @return string
+    */
    static function queryListChecklists($ID, $checklist_type) {
 
       $query = "SELECT `glpi_plugin_resources_checklists`.*  ";
@@ -1187,6 +1326,13 @@ class PluginResourcesChecklist extends CommonDBTM {
       return $cron_status;
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -1261,6 +1407,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       $pdf->displaySpace();
    }
 
+   /**
+    * @param $menu
+    *
+    * @return mixed
+    */
    static function getMenuOptions($menu) {
 
       $plugin_page = '/plugins/resources/front/checklistconfig.php';

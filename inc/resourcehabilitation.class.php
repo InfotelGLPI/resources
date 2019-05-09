@@ -44,6 +44,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * Should be overloaded in each new class
     *
     * @param int $nb
+    *
     * @return string
     */
    static function getTypeName($nb = 0) {
@@ -74,6 +75,19 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
@@ -87,6 +101,17 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource') {

@@ -31,19 +31,45 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesNotification
+ */
 class PluginResourcesNotification extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return __('Notification history', 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRight(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
@@ -153,7 +179,11 @@ class PluginResourcesNotification extends CommonDBTM {
       return $tab;
    }
 
-   //if profile deleted
+   /**
+    * if profile deleted
+    *
+    * @param \PluginResourcesResource $resource
+    */
    static function purgeNotification(PluginResourcesResource $resource) {
       $temp = new self();
       $temp->deleteByCriteria(['plugin_resources_resources_id' => $resource->getField("id")]);

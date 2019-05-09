@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmployment
+ */
 class PluginResourcesEmployment extends CommonDBTM {
 
    static $rightname = 'plugin_resources_employment';
@@ -41,15 +44,38 @@ class PluginResourcesEmployment extends CommonDBTM {
    // From CommonDBTM
    public $dohistory = true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Employment', 'Employments', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -411,6 +437,11 @@ class PluginResourcesEmployment extends CommonDBTM {
 
    ////// CRON FUNCTIONS ///////
    //Cron action
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {

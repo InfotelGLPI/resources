@@ -31,21 +31,49 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesClient
+ */
 class PluginResourcesClient extends CommonDropdown {
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Affected client', 'Affected clients', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight('plugin_resources', READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * @param array $options
+    *
+    * @return array
+    */
    public function defineTabs($options = []) {
       $ong = parent::defineTabs();
       $this->addStandardTab('PluginResourcesResource', $ong, $options);
@@ -54,6 +82,11 @@ class PluginResourcesClient extends CommonDropdown {
       return $ong;
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       $config = new PluginResourcesConfig();
@@ -80,6 +113,12 @@ class PluginResourcesClient extends CommonDropdown {
       }
    }
 
+   /**
+    * @param $ID
+    * @param $entity
+    *
+    * @return int|\the
+    */
    static function transfer($ID, $entity) {
       global $DB;
 
@@ -110,7 +149,10 @@ class PluginResourcesClient extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
+   /**
+    * @return array
+    */
+   function rawSearchOptions() {
 
       $tab = parent::getSearchOptions();
 
@@ -141,6 +183,11 @@ class PluginResourcesClient extends CommonDropdown {
       return $tab;
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function isSecurityCompliance($id) {
       $client = new self();
 
@@ -149,6 +196,11 @@ class PluginResourcesClient extends CommonDropdown {
 
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function isSecurityAND($id) {
       $client = new self();
 
@@ -159,6 +211,11 @@ class PluginResourcesClient extends CommonDropdown {
 
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function isSecurityFIFOUR($id) {
       $client = new self();
 
@@ -169,6 +226,11 @@ class PluginResourcesClient extends CommonDropdown {
 
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function isSecurityGISF($id) {
       $client = new self();
 
@@ -179,6 +241,11 @@ class PluginResourcesClient extends CommonDropdown {
 
    }
 
+   /**
+    * @param $id
+    *
+    * @return bool
+    */
    static function isSecurityCFI($id) {
       $client = new self();
 

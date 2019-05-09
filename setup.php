@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+define('PLUGIN_RESOURCES_VERSION', '2.4.7');
+
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
    global $PLUGIN_HOOKS;
@@ -114,7 +116,7 @@ function plugin_init_resources() {
               && !class_exists('PluginServicecatalogDashboard'))
           || (class_exists('PluginServicecatalogDashboard')
               && !Session::haveRight("plugin_servicecatalog", READ))) {
-         $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesResource'];
+         $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
       // Resource menu
       if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
@@ -175,7 +177,7 @@ function plugin_version_resources() {
 
    return [
       'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => '2.4.4',
+      'version'        => PLUGIN_RESOURCES_VERSION,
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/resources',

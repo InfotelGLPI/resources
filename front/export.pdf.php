@@ -29,8 +29,8 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_SESSION["glpiactiveprofile"])
-    || ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk")) {
+if (Session::getCurrentInterface()
+    && (Session::getCurrentInterface() == "helpdesk")) {
    Session::checkHelpdeskAccess();
 } else {
    Session::checkCentralAccess();
@@ -66,7 +66,5 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
             readfile($file) or die ("Error opening file $file");
          }
       }
-
-
    }
 }

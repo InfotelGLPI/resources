@@ -31,25 +31,63 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesDirectory
+ */
 class PluginResourcesDirectory extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
    static protected $notable = true;
    private $table = "glpi_users";
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Directory', 'Directories', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function getSearchOptions() {
 
       $tab = [];
@@ -905,10 +943,22 @@ class PluginResourcesDirectory extends CommonDBTM {
    }
 
    //Massive action
+
+   /**
+    * Get the specific massive actions
+    *
+    * @since 0.84
+    *
+    * This should be overloaded in Class
+    *
+    * @param object $checkitem link item to check right (default NULL)
+    *
+    * @return array an array of massive actions
+    **/
    function getSpecificMassiveActions($checkitem = null) {
 
-      $actions = parent::getSpecificMassiveActions($checkitem);
-      if ($_SESSION["glpiactiveprofile"]["interface"] == "central") {
+      $actions = [];
+      if (Session::getCurrentInterface() == "central") {
          $actions['PluginResourcesDirectory'.MassiveAction::CLASS_ACTION_SEPARATOR.'Send'] = __('Send a notification');
       }
       return $actions;
@@ -937,6 +987,11 @@ class PluginResourcesDirectory extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $items
+    *
+    * @return bool
+    */
    function sendEmail($items) {
       $User  = new User();
       $mail  = "";

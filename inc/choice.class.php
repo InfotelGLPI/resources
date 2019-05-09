@@ -30,19 +30,42 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesChoice
+ */
 class PluginResourcesChoice extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
+   /**
+    * @param int $nb
+    *
+    * @return string
+    */
    static function getTypeName($nb = 0) {
 
       return _n('Need', 'Needs', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -60,6 +83,19 @@ class PluginResourcesChoice extends CommonDBTM {
       }
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       $wizard_need = PluginResourcesContractType::checkWizardSetup($item->getField('id'), "use_need_wizard");
@@ -77,6 +113,17 @@ class PluginResourcesChoice extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -87,6 +134,11 @@ class PluginResourcesChoice extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginResourcesResource $item
+    *
+    * @return int
+    */
    static function countForResource(PluginResourcesResource $item) {
 
       $restrict = "`plugin_resources_resources_id` = '" . $item->getField('id') . "' ";
@@ -95,6 +147,9 @@ class PluginResourcesChoice extends CommonDBTM {
       return $nb;
    }
 
+   /**
+    * @param $values
+    */
    function addHelpdeskItem($values) {
 
       $this->add(['plugin_resources_resources_id'   => $values["plugin_resources_resources_id"],
@@ -102,6 +157,9 @@ class PluginResourcesChoice extends CommonDBTM {
                   'comment'                         => '']);
    }
 
+   /**
+    * @param $values
+    */
    function addComment($values) {
 
       $resource = new PluginResourcesResource();
@@ -123,6 +181,9 @@ class PluginResourcesChoice extends CommonDBTM {
       $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
    }
 
+   /**
+    * @param $values
+    */
    function updateComment($values) {
 
       $resource = new PluginResourcesResource();
@@ -139,6 +200,9 @@ class PluginResourcesChoice extends CommonDBTM {
       $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
    }
 
+   /**
+    * @param $values
+    */
    function addNeedComment($values) {
 
       $this->update([
@@ -146,6 +210,13 @@ class PluginResourcesChoice extends CommonDBTM {
                        'comment' => $values['commentneed']]);
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
 
       $choice_item = new PluginResourcesChoiceItem();
@@ -184,6 +255,11 @@ class PluginResourcesChoice extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    *
+    * @return bool
+    */
    function wizardFourForm($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
@@ -377,6 +453,10 @@ class PluginResourcesChoice extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $item
+    * @param $rand
+    */
    static function showAddCommentForm($item, $rand) {
       global $CFG_GLPI;
 
@@ -402,6 +482,10 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "</script>\n";
    }
 
+   /**
+    * @param $item
+    * @param $rand
+    */
    static function showModifyCommentFrom($item, $rand) {
       global $CFG_GLPI;
 
@@ -438,6 +522,11 @@ class PluginResourcesChoice extends CommonDBTM {
 
    }
 
+   /**
+    * @param        $plugin_resources_resources_id
+    * @param        $exist
+    * @param string $withtemplate
+    */
    function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '') {
       global $CFG_GLPI;
 

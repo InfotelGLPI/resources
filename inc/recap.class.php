@@ -40,11 +40,25 @@ class PluginResourcesRecap extends CommonDBTM {
    static protected $notable = true;
    private $table = "glpi_users";
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('List Employment / Resource', 'List Employments / Resources', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       if (Session::haveRight('plugin_resources_employment', UPDATE)) {
          return true;
@@ -52,6 +66,15 @@ class PluginResourcesRecap extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       if (Session::haveRight('plugin_resources_employment', READ)) {
          return true;
@@ -59,6 +82,18 @@ class PluginResourcesRecap extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function getSearchOptions() {
 
       $tab = [];
@@ -984,6 +1019,22 @@ class PluginResourcesRecap extends CommonDBTM {
          }
          return $before.$specific_leftjoin;
       }
+   }
+
+   /**
+    * Get the specific massive actions
+    *
+    * @since 0.84
+    *
+    * This should be overloaded in Class
+    *
+    * @param object $checkitem link item to check right (default NULL)
+    *
+    * @return array an array of massive actions
+    **/
+   function getSpecificMassiveActions($checkitem = null) {
+      //To avoid masives action error as there is no table for recap.class.php
+      return [];
    }
 
 }

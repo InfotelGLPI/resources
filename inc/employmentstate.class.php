@@ -31,23 +31,51 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmploymentState
+ */
 class PluginResourcesEmploymentState extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Employment state', 'Employment states', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRight('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight('plugin_resources_employment', READ);
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       return [['name'  => 'short_name',
@@ -101,9 +129,10 @@ class PluginResourcesEmploymentState extends CommonDropdown {
       return 0;
    }
 
-   function getSearchOptions() {
-
-      $tab = parent::getSearchOptions();
+   /**
+    * @return array
+    */
+   function rawSearchOptions() {
 
       $tab[14]['table']         = $this->getTable();
       $tab[14]['field']         = 'short_name';

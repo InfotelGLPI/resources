@@ -30,18 +30,34 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesTaskPlanning
+ */
 class PluginResourcesTaskPlanning extends CommonDBTM {
 
    static $rightname = 'plugin_resources_task';
 
+   /**
+    * @return bool|\booleen
+    */
    static function canCreate() {
       return (Session::haveRight(self::$rightname, UPDATE));
    }
 
+   /**
+    * @param int $nb
+    *
+    * @return string
+    */
    static function getTypeName($nb = 0) {
       return sprintf(__('%1$s - %2$s'), _n('Human resource', 'Human resources', $nb, 'resources'), __('Tasks list', 'resources'));
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array|bool
+    */
    function prepareInputForAdd($input) {
 
       if (!isset($input["begin"]) || !isset($input["end"])) {
@@ -79,6 +95,11 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       }
    }
 
+   /**
+    * @param array $input
+    *
+    * @return array|bool
+    */
    function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
@@ -104,6 +125,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       return $input;
    }
 
+   /**
+    * @param int $history
+    */
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
@@ -142,6 +166,10 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param                      $resources
+    * @param \PluginResourcesTask $task
+    */
    function showFormForTask($resources, PluginResourcesTask $task) {
       global $CFG_GLPI;
 
@@ -211,7 +239,9 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
 
    /**
     * Add error message to message after redirect
+    *
     * @param $type error type : date / is_res / other
+    *
     * @return nothing
     * */
    static function displayError($type) {
@@ -352,6 +382,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
     * Display a Planning Item
     *
     * @param $parm Array of the item to display
+    *
     * @return Nothing (display function)
     * */
    static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {

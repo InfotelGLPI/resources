@@ -31,28 +31,58 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesBudget
+ */
 class PluginResourcesBudget extends CommonDBTM {
 
    static $rightname = 'plugin_resources_budget';
    // From CommonDBTM
    public $dohistory = true;
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Budget', 'Budgets', $nb);
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return bool
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return bool
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
    /**
     * Display Tab for each budget
-    * */
+    *
+    * @param array $options
+    *
+    * @return array
+    */
    function defineTabs($options = []) {
 
       $ong = [];
@@ -67,8 +97,8 @@ class PluginResourcesBudget extends CommonDBTM {
    /**
     * allow to control data before adding in bdd
     *
-    * @param datas $input
-    * @return array|datas|the
+    * @param $input
+    * @return array
     */
    function prepareInputForAdd($input) {
 
@@ -83,8 +113,8 @@ class PluginResourcesBudget extends CommonDBTM {
    /**
     * allow to control data before updating in bdd
     *
-    * @param datas $input
-    * @return array|datas|the
+    * @param $input
+    * @return array
     */
    function prepareInputForUpdate($input) {
 
@@ -252,6 +282,11 @@ class PluginResourcesBudget extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $menu
+    *
+    * @return mixed
+    */
    static function getMenuOptions($menu) {
 
       $plugin_page                                   = '/plugins/resources/front/budget.php';

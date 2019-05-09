@@ -30,7 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-// Class NotificationTarget
+/**
+ * Class PluginResourcesNotificationTargetResource
+ */
 class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
    const RESOURCE_MANAGER                     = 4300;
@@ -45,6 +47,12 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
    const RESOURCE_TARGET_ENTITY_GROUP_MANAGER = 4309;
    const RESOURCE_SALES_MANAGER               = 4310;
 
+   /**
+    * Return main notification events for the object type
+    * Internal use only => should use getAllEvents
+    *
+    * @return an array which contains : event => event label
+    **/
    function getEvents() {
 
       return ['new'                    => __('A resource has been added by', 'resources'),
@@ -110,6 +118,14 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * Add targets by a method not defined in NotificationTarget (specific to an itemtype)
+    *
+    * @param array $data    Data
+    * @param array $options Options
+    *
+    * @return void
+    **/
    function addSpecificTargets($data, $options) {
 
       //Look for all targets whose type is Notification::ITEM_USER
@@ -151,6 +167,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param        $options
+    * @param string $type
+    * @param bool   $supervisor
+    */
    function getEntityGroup($options, $type = 'source', $supervisor = false) {
       global $DB;
 
@@ -194,6 +215,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       return $this->addUserByField("users_id_recipient_leaving");
    }
 
+   /**
+    * @param array $options
+    */
    function getRessourceAddress($options = []) {
       global $DB;
 
@@ -215,6 +239,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param array $options
+    */
    function getTaskTechAddress($options = []) {
       global $DB;
 
@@ -235,6 +262,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @param array $options
+    */
    function getTaskGroupAddress($options = []) {
       global $DB;
 
@@ -257,6 +287,16 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * Get all data needed for template processing
+    * Provides minimum information for alerts
+    * Can be overridden by each NotificationTartget class if needed
+    *
+    * @param string $event   Event name
+    * @param array  $options Options
+    *
+    * @return void
+    **/
    function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI, $DB;
 
@@ -1253,6 +1293,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
    }
 
+   /**
+    * @return array|void
+    */
    function getTags() {
 
       $tags = ['resource.id'                => 'ID',
@@ -2316,6 +2359,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    }
 
 
+   /**
+    * @return string
+    */
    static function getContentTextResource() {
       return '##lang.resource.url##  : ##resource.url##
 
@@ -2366,6 +2412,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
    ##ENDIFtask.realtime## ----------##ENDFOREACHtasks## ';
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResource() {
       return "&lt;p&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;
                         &lt;strong&gt;##lang.resource.url##
@@ -2504,6 +2553,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                         &lt;/span&gt;##ENDIFtask.realtime##&lt;br /&gt;----------##ENDFOREACHtasks##&lt;/p&gt;";
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceReport() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.creationtitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
@@ -2574,6 +2626,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceResting() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.restingtitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;
@@ -2666,6 +2721,9 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 &lt;p&gt;##ENDFOREACHupdates##&lt;/p&gt;';
    }
 
+   /**
+    * @return string
+    */
    static function getContentHtmlResourceHoliday() {
       return '&lt;p style="text-align: center;"&gt;&lt;span style="font-size: 11px; font-family: verdana;"&gt;##lang.resource.holidaytitle##&lt;/span&gt;&lt;/p&gt;
 &lt;table border="1" cellspacing="2" cellpadding="3" width="590px" align="center"&gt;

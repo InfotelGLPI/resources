@@ -73,6 +73,11 @@ class PluginResourcesHabilitationLevel extends CommonDropdown {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       $tab = [['name'  => 'is_mandatory_creating_resource',
@@ -88,6 +93,9 @@ class PluginResourcesHabilitationLevel extends CommonDropdown {
       return $tab;
    }
 
+   /**
+    * @return array
+    */
    function getSearchOptions() {
 
       $tab = parent::getSearchOptions();

@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesConfig
+ */
 class PluginResourcesConfig extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
@@ -42,10 +45,25 @@ class PluginResourcesConfig extends CommonDBTM {
       return __('Setup');
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
@@ -61,6 +79,9 @@ class PluginResourcesConfig extends CommonDBTM {
       }
    }
 
+   /**
+    * @return bool
+    */
    function showForm() {
 
       if (!$this->canView()) {
@@ -99,6 +120,15 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
 
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Import external', 'resources');
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
@@ -123,6 +153,13 @@ class PluginResourcesConfig extends CommonDBTM {
     */
    function useSecurityCompliance() {
       return $this->fields['security_compliance'];
+   }
+
+   /**
+    * @return mixed
+    */
+   function useImportExternalDatas() {
+      return $this->fields['import_external_datas'];
    }
 
 

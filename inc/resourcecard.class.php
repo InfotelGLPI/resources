@@ -40,6 +40,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge'];
 
+   /**
+    * @param $ID
+    */
    static function resourceCard($ID) {
       global $CFG_GLPI;
 
@@ -247,6 +250,9 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    }
 
+   /**
+    * @param $user
+    */
    static function showItems($user) {
       global $CFG_GLPI, $DB;
 

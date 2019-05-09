@@ -31,15 +31,29 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesCost
+ */
 class PluginResourcesCost extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+   /**
+    * @since 0.85
+    *
+    * @param $nb
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Budget cost', 'Budget costs', $nb, 'resources');
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       if (Session::haveRight('dropdown', UPDATE)
          && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
@@ -48,6 +62,15 @@ class PluginResourcesCost extends CommonDropdown {
       return false;
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
@@ -89,6 +112,11 @@ class PluginResourcesCost extends CommonDropdown {
       return $input;
    }
 
+   /**
+    * Return Additional Fields for this type
+    *
+    * @return array
+    **/
    function getAdditionalFields() {
 
       return [['name' => 'plugin_resources_professions_id',
@@ -114,7 +142,10 @@ class PluginResourcesCost extends CommonDropdown {
       ];
    }
 
-   function getSearchOptions() {
+   /**
+    * @return array
+    */
+   function rawSearchOptions() {
 
       $tab = parent::getSearchOptions();
 

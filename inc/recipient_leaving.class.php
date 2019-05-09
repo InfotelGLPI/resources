@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesRecipient_Leaving
+ */
 class PluginResourcesRecipient_Leaving extends CommonDBTM {
 
 

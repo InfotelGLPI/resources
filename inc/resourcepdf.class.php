@@ -27,15 +27,29 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Class PluginResourcesResourcePDF
+ */
 class PluginResourcesResourcePDF extends PluginPdfCommon {
 
 
+   /**
+    * PluginResourcesResourcePDF constructor.
+    *
+    * @param \CommonGLPI|null $obj
+    */
    function __construct(CommonGLPI $obj = null) {
 
       $this->obj = ($obj ? $obj : new PluginResourcesResource());
    }
 
 
+   /**
+    * @param \PluginPdfSimplePDF      $pdf
+    * @param \PluginResourcesResource $res
+    *
+    * @return bool
+    */
    static function pdfMain(PluginPdfSimplePDF $pdf, PluginResourcesResource $res) {
 
       $ID = $res->getField('id');
@@ -76,6 +90,11 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       $pdf->displaySpace();
    }
 
+   /**
+    * @param array $options
+    *
+    * @return mixed
+    */
    function defineAllTabs($options = []) {
 
       $onglets = parent::defineAllTabs($options);
@@ -85,6 +104,13 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       return $onglets;
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       switch ($tab) {

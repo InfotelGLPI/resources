@@ -30,6 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesResource_Item
+ */
 class PluginResourcesResource_Item extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
@@ -41,14 +44,32 @@ class PluginResourcesResource_Item extends CommonDBTM {
    static public $itemtype_2 = 'itemtype';
    static public $items_id_2 = 'items_id';
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * @param \CommonDBTM $item
+    */
    static function cleanForItem(CommonDBTM $item) {
 
       $temp = new self();
@@ -58,6 +79,12 @@ class PluginResourcesResource_Item extends CommonDBTM {
       );
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return array|string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource'
@@ -80,6 +107,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
    }
 
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -91,6 +125,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -105,6 +146,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param \PluginResourcesResource $item
+    *
+    * @return int
+    */
    static function countForResource(PluginResourcesResource $item) {
 
       $types = implode("','", PluginResourcesResource::getTypes());
@@ -117,6 +163,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
    }
 
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
    static function countForItem(CommonDBTM $item) {
 
       return countElementsInTable('glpi_plugin_resources_resources_items',
@@ -124,6 +175,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
                                    AND `items_id` = '" . $item->getID() . "'");
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype) {
       global $DB;
 
@@ -145,6 +203,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
       return false;
    }
 
+   /**
+    * @param $options
+    *
+    * @return bool
+    */
    function addItem($options) {
 
       if (!isset($options["plugin_resources_resources_id"])
@@ -173,6 +236,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    * @param $comment
+    */
    function updateItem($ID, $comment) {
 
       if ($ID > 0) {
@@ -182,11 +249,21 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    */
    function deleteItem($ID) {
 
       $this->delete(['id' => $ID]);
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    * @param $items_id
+    * @param $itemtype
+    *
+    * @return bool
+    */
    function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype) {
 
       if ($this->getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)) {
@@ -222,6 +299,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $values
+    * @param $itemtype
+    */
    function updateLocation($values, $itemtype) {
       global $DB;
 
@@ -254,6 +335,11 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $ID
+    *
+    * @return int
+    */
    function searchAssociatedBadge($ID) {
 
       $plugin                  = new Plugin();
@@ -265,7 +351,6 @@ class PluginResourcesResource_Item extends CommonDBTM {
          $restrict = "`itemtype` = 'User' 
                      AND `plugin_resources_resources_id` = '" . $ID . "'";
          $dbu      = new DbUtils();
-
          $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
          if (!empty($resources)) {
@@ -285,6 +370,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
       }
    }
 
+   /**
+    * @param       $ID
+    * @param array $used
+    */
    function dropdownItems($ID, $used = []) {
       global $DB, $CFG_GLPI;
 

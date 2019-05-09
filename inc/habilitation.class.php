@@ -73,6 +73,9 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Return Additional Fileds for this type
+    **/
    function getAdditionalFields() {
 
       $tab = [['name'  => $this->getForeignKeyField(),
@@ -88,7 +91,12 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       return $tab;
    }
 
-   function getSearchOptions() {
+   /**
+    * Get search function for the class
+    *
+    * @return array of search option
+    **/
+   function rawSearchOptions() {
 
       $tab = parent::getSearchOptions();
 

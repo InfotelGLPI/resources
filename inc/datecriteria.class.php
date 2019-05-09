@@ -28,8 +28,22 @@
  */
 
 //Criteria which allows to select a date
+
+/**
+ * Class PluginResourcesDateCriteria
+ */
 class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
 
+   /**
+    * Contructor
+    * @param report              the report in which the criteria is added
+    * @param $name               the criteria's name
+    * @param $sql_field          the sql field associated with the criteria
+    *                            (can be set later with setSqlField).(default '')
+    *          - Sql_field can be prefixed with table name
+    *          - if sql_field=='' then sql_field=name
+    * @param $label     string   (default NULL)
+    **/
    function __construct($report, $name = 'date', $sql_field = '', $label = '') {
 
       parent::__construct($report, $name, $sql_field, $label);
@@ -38,11 +52,17 @@ class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
    }
 
 
+   /**
+    * @param $date
+    */
    public function setDate($date) {
       $this->addParameter($this->getName(), $date);
    }
 
 
+   /**
+    * @return \the
+    */
    public function getDate() {
 
       $date = $this->getParameter($this->getName());
@@ -70,6 +90,9 @@ class PluginResourcesDateCriteria extends PluginReportsAutoCriteria {
 
    }
 
+   /**
+    * Get the criteria's title
+    **/
    function getSubName() {
       //TODO
       global $LANG;

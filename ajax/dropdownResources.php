@@ -59,6 +59,10 @@ if (isset($_GET['used'])) {
    }
 }
 
+if (!isset($_GET['searchText'])) {
+  $_GET['searchText'] = '';
+}
+
 $plugin_resources_contracttypes_id=0;
 if (isset($_GET["plugin_resources_contracttypes_id"])&&
    $_GET["plugin_resources_contracttypes_id"]>0) {
@@ -107,6 +111,12 @@ if ($_GET['addUnlinkedUsers']) {
 }
 
 if (!function_exists('dpuser_cmp')) {
+   /**
+    * @param $a
+    * @param $b
+    *
+    * @return int
+    */
    function dpuser_cmp($a, $b) {
       return strcasecmp($a['text'], $b['text']);
    }

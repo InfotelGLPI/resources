@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmploymentProfession
+ */
 class PluginResourcesEmploymentProfession extends CommonDropdown {
 
    var $can_be_translated  = true;

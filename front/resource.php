@@ -31,51 +31,35 @@ include ('../../../inc/includes.php');
 
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   Html::helpHeader(PluginResourcesMenu::getTypeName(2));
 }
 
 $resource = new PluginResourcesResource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-   if (Session::haveRight("plugin_resources_all", UPDATE)) {
+   if (Session::haveRight("plugin_resources_all", READ)) {
+
+      global $CFG_GLPI;
 
       //Have right to see all resources
       //Have not right to see all resources
       echo "<div align='center'>";
-      //      echo "var account_window=new Ext.Window({
-      //               layout:'fit',
-      //               width:800,
-      //               height:400,
-      //               closeAction:'hide',
-      //               modal: true,
-      //               autoScroll: true,
-      //               title: \"".__('View by contract type', 'resources')."\",
-      //               autoLoad: '".$CFG_GLPI['root_doc']."/plugins/resources/ajax/resourcetree.php'
-      //            });";
-      //      echo "</script>";
 
-      $script =  "cleanhide('modal_resource_content');";
-      $script .= "var account_window=$('<div />').dialog({
-               width:800,
-               autoOpen: false,
-               height:400,
-               modal: true,
-               title: \"".__('View by contract type', 'resources')."\",
-               open: function (){
-                  $(this).load('".$CFG_GLPI['root_doc']."/plugins/resources/ajax/resourcetree.php');
-               }
-            });";
-      echo Html::scriptBlock($script);
-
-      echo "<a onclick=\"account_window.dialog('open');\" href=\"#modal_resource_content\"title=\"".
+      echo "<a onclick=\"resource_viewtype.dialog('open');\" href=\"#modal_resource_content\"title=\"".
       __('View by contract type', 'resources')."\">".
       __('View by contract type', 'resources')."</a>";
       echo "</div>";
+
+      Ajax::createModalWindow('resource_viewtype',
+                              $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/resourcetree.php",
+                              ['title' => __('View by contract type', 'resources'),
+                               'width' => 800,
+                               'height' => 400]);
    }
 
-   Search::show("PluginResourcesResource", $_GET);
+   Search::show(PluginResourcesResource::class);
 
 } else {
    Html::displayRightError();

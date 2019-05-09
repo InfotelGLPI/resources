@@ -38,8 +38,17 @@ class PluginResourcesResource extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
-   static $types = ['Computer', 'Monitor', 'NetworkEquipment', 'Peripheral',
-                         'Phone', 'Printer', 'Software', 'ConsumableItem', 'User'];
+   static $types = [
+      Computer::class,
+      Monitor::class,
+      NetworkEquipment::class,
+      Peripheral::class,
+      Phone::class,
+      Printer::class,
+      Software::class,
+      ConsumableItem::class,
+      User::class
+   ];
 
    protected $usenotepad = true;
 
@@ -54,6 +63,91 @@ class PluginResourcesResource extends CommonDBTM {
    static function getTypeName($nb = 0) {
 
       return _n('Human resource', 'Human resources', $nb, 'resources');
+   }
+
+   static function getDataNames() {
+      return [
+         __("Firstname", "resources"),
+         __("Lastname", "resources"),
+         __("Contract", "resources"),
+         __("Associed User", "resources"),
+         __("Location", "resources"),
+         __("Resource manager", "resources"),
+         __("Department", "resources"),
+         __("Arrival date", "resources"),
+         __("Departure date", "resources"),
+         __("Sales manager", "resources"),
+         __("Other", "resources")
+      ];
+   }
+
+   static function getResourceColumnNameFromDataNameID($dataNameID) {
+
+      $dataNames = [
+         "firstname",
+         "name",
+         "plugin_resources_contracttypes_id",
+         "users_id_recipient",
+         "locations_id",
+         "users_id",
+         "plugin_resources_departments_id",
+         "date_begin",
+         "date_end",
+         "users_id_sales",
+      ];
+
+      if (!array_key_exists($dataNameID, $dataNames)) {
+         Html::displayErrorAndDie("Resource column name not found");
+         return null;
+      }
+      return $dataNames[$dataNameID];
+   }
+
+   static function getDataType($dataNameId) {
+
+      $dataTypes = [
+         "String",
+         "String",
+         "Contract",
+         "User",
+         "Location",
+         "User",
+         "PluginResourcesDepartment",
+         "Date",
+         "Date",
+         "User",
+         "String"
+      ];
+
+      if (!array_key_exists($dataNameId, $dataTypes)) {
+         Html::displayErrorAndDie("Data Type not found");
+         return null;
+      }
+      return $dataTypes[$dataNameId];
+   }
+
+   static function getColumnName($dataNameId) {
+
+      $columnNames = [
+         "firstname",
+         "name",
+         "plugin_resources_contracttypes_id",
+         "users_id",
+         "locations_id",
+         "users_id_recipient",
+         "plugin_resources_departments_id",
+         "date_begin",
+         "date_end",
+         "users_id_sales",
+         "others"
+      ];
+
+      if (!array_key_exists($dataNameId, $columnNames)) {
+         Html::displayErrorAndDie("Resource column name not found");
+         return null;
+      }
+
+      return $columnNames[$dataNameId];
    }
 
    /**
@@ -142,13 +236,26 @@ class PluginResourcesResource extends CommonDBTM {
       $type = get_class($item);
       $temp = new PluginResourcesResource_Item();
       $temp->deleteByCriteria(['itemtype' => $type,
-                                    'items_id' => $item->getField('id')]);
+         'items_id' => $item->getField('id')]);
 
       $task = new PluginResourcesTask_Item();
       $task->deleteByCriteria(['itemtype' => $type,
-                                    'items_id' => $item->getField('id')]);
+         'items_id' => $item->getField('id')]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @param CommonGLPI $item Item on which the tab need to be displayed
+    * @param boolean $withtemplate is a template object ? (default 0)
+    *
+    * @return string tab name
+    **@since 0.83
+    *
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType()=='PluginResourcesClient'
@@ -159,6 +266,17 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @param CommonGLPI $item Item on which the tab need to be displayed
+    * @param integer $tabnum tab number (default 1)
+    * @param boolean $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **@since 0.83
+    *
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType()=='PluginResourcesClient') {
@@ -451,26 +569,27 @@ class PluginResourcesResource extends CommonDBTM {
       $ong = [];
 
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginResourcesResource_Item', $ong, $options);
-      $this->addStandardTab('PluginResourcesChoice', $ong, $options);
-      $this->addStandardTab('PluginResourcesResourceHabilitation', $ong, $options);
-      $this->addStandardTab('PluginResourcesEmployment', $ong, $options);
-      $this->addStandardTab('PluginResourcesEmployee', $ong, $options);
-      $this->addStandardTab('PluginResourcesChecklist', $ong, $options);
-      $this->addStandardTab('PluginResourcesTask', $ong, $options);
+      $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesResourceHabilitation::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesEmployment::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesEmployee::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesChecklist::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesTask::class, $ong, $options);
+      $this->addStandardTab(PluginResourcesResourceImport::class, $ong, $options);
 
       if (Session::getCurrentInterface() == 'central') {
 
-         $this->addStandardTab('PluginResourcesReportConfig', $ong, $options);
-         $this->addStandardTab('Document_Item', $ong, $options);
+         $this->addStandardTab(PluginResourcesReportConfig::class, $ong, $options);
+         $this->addStandardTab(Document_Item::class, $ong, $options);
 
          if (!isset($options['withtemplate']) || empty($options['withtemplate'])) {
-            $this->addStandardTab('Ticket', $ong, $options);
-            $this->addStandardTab('Item_Problem', $ong, $options);
+            $this->addStandardTab(Ticket::class, $ong, $options);
+            $this->addStandardTab(Item_Problem::class, $ong, $options);
          }
 
-         $this->addStandardTab('Notepad', $ong, $options);
-         $this->addStandardTab('Log', $ong, $options);
+         $this->addStandardTab(Notepad::class, $ong, $options);
+         $this->addStandardTab(Log::class, $ong, $options);
       }
       return $ong;
    }
@@ -482,7 +601,7 @@ class PluginResourcesResource extends CommonDBTM {
     */
    function checkRequiredFields($input) {
 
-      $need           = [];
+      $need = [];
       $rulecollection = new PluginResourcesRuleContracttypeCollection($input['entities_id']);
 
       $fields = [];
@@ -501,13 +620,13 @@ class PluginResourcesResource extends CommonDBTM {
       if (count($field) > 0) {
          foreach ($field as $key => $val) {
             if (!isset($input[$val])
-             || empty($input[$val])
-             || is_null($input[$val])
-             || $input[$val] == "NULL"
+               || empty($input[$val])
+               || is_null($input[$val])
+               || $input[$val] == "NULL"
             ) {
                if (!$rank->canCreate()
-                   && in_array($val,
-                            ['plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id'])
+                  && in_array($val,
+                     ['plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id'])
                ) {
                } else {
                   $need[] = $val;
@@ -552,7 +671,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       if (!isset($input['plugin_resources_resourcestates_id'])
-          || empty($input['plugin_resources_resourcestates_id'])
+         || empty($input['plugin_resources_resourcestates_id'])
       ) {
          $input['plugin_resources_resourcestates_id'] = '0';
       }
@@ -561,7 +680,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
-             || $_FILES['picture']['type'] == "image/pjpeg"
+            || $_FILES['picture']['type'] == "image/pjpeg"
          ) {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
@@ -661,29 +780,28 @@ class PluginResourcesResource extends CommonDBTM {
     */
    function addPhoto($class) {
       $uploadedfile = $_FILES['picture']['tmp_name'];
-      $src          = imagecreatefromjpeg($uploadedfile);
+      $src = imagecreatefromjpeg($uploadedfile);
 
       list($width, $height) = getimagesize($uploadedfile);
 
-      $newwidth  = 75;
+      $newwidth = 75;
       $newheight = ($height / $width) * $newwidth;
-      $tmp       = imagecreatetruecolor($newwidth, $newheight);
+      $tmp = imagecreatetruecolor($newwidth, $newheight);
 
       imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-      $ext                 = strtolower(substr(strrchr($_FILES['picture']['name'], '.'), 1));
-      $resources_name      = str_replace(" ", "", strtolower($class->fields["name"]));
+      $ext = strtolower(substr(strrchr($_FILES['picture']['name'], '.'), 1));
+      $resources_name = str_replace(" ", "", strtolower($class->fields["name"]));
       $resources_firstname = str_replace(" ", "", strtolower($class->fields["firstname"]));
-      $name                = $resources_name . "_" . $resources_firstname . "." . $ext;
+      $name = $resources_name . "_" . $resources_firstname . "." . $ext;
 
       $name = $this->replace_accents($name);
 
-      $tmpfile  = GLPI_DOC_DIR . "/_uploads/" . $name;
+      $tmpfile = GLPI_DOC_DIR . "/_uploads/" . $name;
       $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $name;
 
       imagejpeg($tmp, $tmpfile, 100);
 
       rename($tmpfile, $filename);
-      //Document::renameForce($tmpfile, $filename);
 
       imagedestroy($src);
       imagedestroy($tmp);
@@ -701,12 +819,12 @@ class PluginResourcesResource extends CommonDBTM {
    function prepareInputForUpdate($input) {
 
       if (isset($input['date_begin'])
-          && empty($input['date_begin'])
+         && empty($input['date_begin'])
       ) {
          $input['date_begin'] = 'NULL';
       }
       if (isset($input['date_end'])
-          && empty($input['date_end'])
+         && empty($input['date_end'])
       ) {
          $input['date_end'] = 'NULL';
       }
@@ -716,7 +834,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
-             || $_FILES['picture']['type'] == "image/pjpeg"
+            || $_FILES['picture']['type'] == "image/pjpeg"
          ) {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
@@ -766,19 +884,18 @@ class PluginResourcesResource extends CommonDBTM {
    function pre_updateInDB() {
 
       $PluginResourcesResource_Item = new PluginResourcesResource_Item();
-      $PluginResourcesChecklist     = new PluginResourcesChecklist();
       //if leaving field is updated  && isset($this->input["withtemplate"]) && $this->input["withtemplate"]!=1
 
       $this->input["checkbadge"] = 0;
 
       if (isset($this->input["is_leaving"])
-          && $this->input["is_leaving"] == 1
-          && in_array("is_leaving", $this->updates)) {
+         && $this->input["is_leaving"] == 1
+         && in_array("is_leaving", $this->updates)) {
 
          if ((!(isset($this->input["date_end"]))
-              || $this->input["date_end"] == 'NULL')
-             || (!(isset($this->fields["date_end"]))
-                 || $this->fields["date_end"] == 'NULL')) {
+               || $this->input["date_end"] == 'NULL')
+            || (!(isset($this->fields["date_end"]))
+               || $this->fields["date_end"] == 'NULL')) {
 
             Session::addMessageAfterRedirect(__('End date was not completed. Please try again.', 'resources'), false, ERROR);
             Html::back();
@@ -846,11 +963,11 @@ class PluginResourcesResource extends CommonDBTM {
 
          $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
          $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
+            PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
       }
       $status = "update";
       if (isset($this->fields["is_leaving"])
@@ -888,14 +1005,14 @@ class PluginResourcesResource extends CommonDBTM {
 
       $picture = [0 => "picture", 1 => "date_mod"];
       if (count($this->updates)
-          && array_diff($this->updates, $picture)
-          && isset($this->input["withtemplate"])
-          && $this->input["withtemplate"] != 1
+         && array_diff($this->updates, $picture)
+         && isset($this->input["withtemplate"])
+         && $this->input["withtemplate"] != 1
       ) {
 
          if ($CFG_GLPI["notifications_mailing"]
-             && isset($this->input['send_notification'])
-             && $this->input['send_notification'] == 1
+            && isset($this->input['send_notification'])
+            && $this->input['send_notification'] == 1
          ) {
             NotificationEvent::raiseEvent($status, $this);
          }
@@ -956,7 +1073,7 @@ class PluginResourcesResource extends CommonDBTM {
       return Dropdown::showFromArray($name, $option, ['value' => $value]);
    }
 
-   /*
+   /**
     * Return the SQL command to retrieve linked object
     *
     * @return a SQL command which return a set of (itemtype, items_id)
@@ -980,7 +1097,6 @@ class PluginResourcesResource extends CommonDBTM {
       $options['formoptions'] = " enctype='multipart/form-data'";
       $this->showFormHeader($options);
 
-      $required = [];
       if (isset($this->fields["entities_id"])) {
          $input['entities_id'] = $this->fields["entities_id"];
       } else {
@@ -1024,11 +1140,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
          Html::showSimpleForm($CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php",
-                              'delete_picture',
-                              _x('button', 'Delete permanently'),
-                              ['id'      => $ID,
-                                    'picture' => $this->fields["picture"]],
-                              "../pics/puce-delete2.png");
+            'delete_picture',
+            _x('button', 'Delete permanently'),
+            ['id' => $ID,
+               'picture' => $this->fields["picture"]],
+            "../pics/puce-delete2.png");
       }
       echo "</td></tr>";
 
@@ -1047,9 +1163,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr class='tab_bg_1'><td>" . PluginResourcesResourceState::getTypeName(1) . "</td>";
       echo "<td>";
       if (Session::getCurrentInterface() == 'central') {
-         Dropdown::show('PluginResourcesResourceState',
-                        ['value'  => $this->fields["plugin_resources_resourcestates_id"],
-                              'entity' => $this->fields["entities_id"]]);
+         Dropdown::show(PluginResourcesResourceState::class,
+            ['value' => $this->fields["plugin_resources_resourcestates_id"],
+               'entity' => $this->fields["entities_id"]]);
       } else {
          echo Dropdown::getDropdownName("glpi_plugin_resources_resourcestates", $this->fields["plugin_resources_resourcestates_id"]);
       }
@@ -1057,9 +1173,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . PluginResourcesContractType::getTypeName(1) . "</td>";
       echo "<td>";
-      Dropdown::show('PluginResourcesContractType',
-                     ['value'  => $this->fields["plugin_resources_contracttypes_id"],
-                           'entity' => $this->fields["entities_id"]]);
+      Dropdown::show(PluginResourcesContractType::class,
+         ['value' => $this->fields["plugin_resources_contracttypes_id"],
+            'entity' => $this->fields["entities_id"]]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1071,7 +1187,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Quota', 'resources') . "</td>";
       echo "<td>";
       echo "<input type='text' name='quota' value='" . Html::formatNumber($this->fields["quota"], true, 4) .
-           "' size='14'>";
+         "' size='14'>";
       echo "</td>";
       echo "</tr>";
 
@@ -1441,204 +1557,6 @@ class PluginResourcesResource extends CommonDBTM {
       $notification = new PluginResourcesNotification();
       $notification->listItems($options['id']);
    }
-
-   /**
-    * Display menu
-    */
-   function showMenu() {
-      global $CFG_GLPI;
-
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='6'>" . __('Menu', 'resources') . "</th></tr>";
-
-      $canresting       = Session::haveright('plugin_resources_resting', UPDATE);
-      $canholiday       = Session::haveright('plugin_resources_holiday', UPDATE);
-      $canhabilitation  = Session::haveright('plugin_resources_habilitation', UPDATE);
-      $canemployment    = Session::haveright('plugin_resources_employment', UPDATE);
-      $canseeemployment = Session::haveright('plugin_resources_employment', READ);
-      $canseebudget     = Session::haveright('plugin_resources_budget', READ);
-      $canbadges        = Session::haveright('plugin_badges', READ);
-
-      if ($this->canCreate()) {
-         echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
-
-         echo "<tr class='tab_bg_1'>";
-
-         //Add a resource
-         echo "<td class='center' colspan='2' width='200'>";
-         echo "<a href=\"./wizard.form.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/newresource.png' alt='" . __('Declare an arrival', 'resources') . "'>";
-         echo "<br>" . __('Declare an arrival', 'resources') . "</a>";
-         echo "</td>";
-
-         //Add a change
-         echo "<td class='center' colspan='2'  width='200'>";
-         echo "<a href=\"./resource.change.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap.png' alt='" . __('Declare a change', 'resources') . "'>";
-         echo "<br>" . __('Declare a change', 'resources') . "</a>";
-         echo "</td>";
-
-         //Remove resources
-         echo "<td class='center' colspan='2'  width='200'>";
-         echo "<a href=\"./resource.remove.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/removeresource.png' alt='" . __('Declare a departure', 'resources') . "'>";
-         echo "<br>" . __('Declare a departure', 'resources') . "</a>";
-         echo "</td>";
-
-         echo "</tr>";
-      }
-
-      $plugin = new Plugin();
-
-      if ($canresting || $canholiday || $canbadges || $canhabilitation) {
-         echo "<tr><th colspan='6'>" . __('Others declarations', 'resources') . "</th></tr>";
-         $num_col = 0;
-         if ($canresting) {
-            $num_col += 1;
-         }
-         if ($canholiday) {
-            $num_col += 1;
-         }
-         if ($canhabilitation && $plugin->isActivated("metademands")) {
-            $num_col += 1;
-         }
-         if ($canbadges && $plugin->isActivated("badges")) {
-            $num_col += 1;
-         }
-         if ($num_col == 0) {
-            $colspan = 0;
-         } else {
-            $colspan = floor(6 / $num_col);
-         }
-
-         echo "<tr class='tab_bg_1'>";
-         if ($colspan == 1) {
-            echo "<td></td>";
-         }
-         if ($canresting) {
-            //Management of a non contract period
-            echo "<td colspan=$colspan class='center'>";
-            echo "<a href=\"./resourceresting.form.php?menu\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/deleteresting.png' alt='" . _n('Non contract period management', 'Non contract periods management', 2, 'resources') . "'>";
-            echo "<br>" . _n('Non contract period management', 'Non contract periods management', 2, 'resources') . "</a>";
-            echo "</td>";
-         }
-
-         if ($canholiday) {
-            //Management of a non contract period
-            echo "<td colspan=$colspan class='center'>";
-            echo "<a href=\"./resourceholiday.form.php?menu\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidayresource.png' alt='" . __('Forced holiday management', 'resources') . "'>";
-            echo "<br>" . __('Forced holiday management', 'resources') . "</a>";
-            echo "</td>";
-         }
-
-         if ($canhabilitation && $plugin->isActivated("metademands")) {
-            //Management of a super habilitation
-            echo "<td colspan=$colspan class='center'>";
-            echo "<a href=\"./confighabilitation.form.php?menu\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitation.png' alt='" . PluginResourcesConfigHabilitation::getTypeName(1) . "'>";
-            echo "<br>" . PluginResourcesConfigHabilitation::getTypeName(1) . "</a>";
-            echo "</td>";
-         }
-
-         if ($canbadges && $plugin->isActivated("badges")) {
-            //Management of a non contract period
-            echo "<td colspan=$colspan class='center'>";
-            echo "<a href=\"./resourcebadge.form.php?menu\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/badges/badges.png' alt='" . _n('Badge management', 'Badges management', 2, 'resources') . "'>";
-            echo "<br>" . _n('Badge management', 'Badges management', 2, 'resources') . "</a>";
-            echo "</td>";
-         }
-         if ($colspan == 1) {
-            echo "<td></td>";
-         }
-         echo "</tr>";
-      }
-
-      if ($this->canView()) {
-         echo "<tr><th colspan='6'>" . __('Others actions', 'resources') . "</th></tr>";
-         echo "<tr class='tab_bg_1'>";
-
-         //See resources
-         echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./resource.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resourcelist.png' alt='" . __('Search resources', 'resources') . "'>";
-         echo "<br>" . __('Search resources', 'resources') . "</a>";
-         echo "</td>";
-
-         echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./resource.card.form.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/detailresource.png' alt='" . __('See details of a resource', 'resources') . "'>";
-         echo "<br>" . __('See details of a resource', 'resources') . "</a>";
-         echo "</td>";
-
-         echo "<td class='center' colspan='2'>";
-         echo "<a href=\"./directory.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory.png' alt='" . PluginResourcesDirectory::getTypeName(1) . "'>";
-         echo "<br>" . PluginResourcesDirectory::getTypeName(1) . "</a>";
-         echo "</td>";
-         echo "</tr>";
-      }
-
-      if ($canseeemployment || $canseebudget) {
-         $colspan = 0;
-
-         echo "<tr><th colspan='6'>" . __('Employments / budgets management', 'resources') . "</th></tr>";
-
-         echo "<tr class='tab_bg_1'>";
-         echo "<td class='center'>";
-         echo "</td>";
-
-         if ($canseeemployment) {
-            if ($canemployment) {
-               //Add an employment
-               echo "<td class='center'>";
-               echo "<a href=\"./employment.form.php\">";
-               echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employment.png' alt='" . __('Declare an employment', 'resources') . "'>";
-               echo "<br>" . __('Declare an employment', 'resources') . "</a>";
-               echo "</td>";
-            } else {
-               $colspan += 1;
-            }
-            //See managment employments
-            echo "<td class='center'>";
-            echo "<a href=\"./employment.php\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist.png' alt='" . __('Employment management', 'resources') . "'>";
-            echo "<br>" . __('Employment management', 'resources') . "</a>";
-            echo "</td>";
-         } else {
-            $colspan += 1;
-         }
-         if ($canseebudget) {
-            //See managment budgets
-            echo "<td class='center'>";
-            echo "<a href=\"./budget.php\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/budgetlist.png' alt='" . __('Budget management', 'resources') . "'>";
-            echo "<br>" . __('Budget management', 'resources') . "</a>";
-            echo "</td>";
-         } else {
-            $colspan += 1;
-         }
-
-         if ($canseeemployment) {
-            //See recap ressource / employment
-            echo "<td class='center'>";
-            echo "<a href=\"./recap.php\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap.png' alt='" . __('List Employments / Resources', 'resources') . "'>";
-            echo "<br>" . __('List Employments / Resources', 'resources') . "</a>";
-            echo "</td>";
-         } else {
-            $colspan += 1;
-         }
-
-         echo "<td class='center' colspan='" . ($colspan + 1) . "'></td>";
-
-         echo "</tr>";
-      }
-      echo " </table></div>";
-   }
-
 
    function wizardFirstForm() {
       global $CFG_GLPI;
@@ -2421,94 +2339,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          return $params['rand'];
       }
-
-      //      // Default values
-      //      $p['name']           = 'plugin_resources_resources_id';
-      //      $p['value']          = '';
-      //      $p['all']            = 0;
-      //      $p['on_change']      = '';
-      //      $p['comments']       = 1;
-      //      $p['entity']         = -1;
-      //      $p['entity_sons']    = false;
-      //      $p['used']           = array();
-      //      $p['toupdate']       = '';
-      //      $p['rand']           = mt_rand();
-      //      $p['plugin_resources_contracttypes_id'] = 0;
-      //
-      //      if (is_array($options) && count($options)) {
-      //         foreach ($options as $key => $val) {
-      //            $p[$key] = $val;
-      //         }
-      //      }
-      //
-      //      if (!($p['entity']<0) && $p['entity_sons']) {
-      //         if (is_array($p['entity'])) {
-      //            echo "entity_sons options is not available with array of entity";
-      //         } else {
-      //            $p['entity'] = getSonsOf('glpi_entities',$p['entity']);
-      //         }
-      //      }
-      //
-      //      // Make a select box with all glpi users
-      //      $use_ajax = false;
-      //
-      //      if ($CFG_GLPI["use_ajax"]) {
-      //         $res = self::getSqlSearchResult (true, $p['entity'], $p['value'], $p['used'],'',$p['plugin_resources_contracttypes_id']);
-      //         $nb = ($res ? $DB->result($res,0,"cpt") : 0);
-      //         if ($nb > $CFG_GLPI["ajax_limit_count"]) {
-      //            $use_ajax = true;
-      //         }
-      //      }
-      //      $user = self::getResourceName($p['value'],2);
-      //
-      //      $default_display  = "<select id='dropdown_".$p['name'].$p['rand']."' name='".$p['name']."'>";
-      //      $default_display .= "<option value='".$p['value']."'>";
-      //      $default_display .= Toolbox::substr($user["name"], 0, $_SESSION["glpidropdown_chars_limit"]);
-      //      $default_display .= "</option></select>";
-      //
-      //      //$view_users = (Session::haveRight("user", "r"));
-      //
-      //      $params = array('searchText'       => '__VALUE__',
-      //                      'value'            => $p['value'],
-      //                      'myname'           => $p['name'],
-      //                      'all'              => $p['all'],
-      //                      'comment'          => $p['comments'],
-      //                      'rand'             => $p['rand'],
-      //                      'on_change'        => $p['on_change'],
-      //                      'entity_restrict'  => $p['entity'],
-      //                      'used'             => $p['used'],
-      //                      'update_item'      => $p['toupdate'],
-      //                      'plugin_resources_contracttypes_id' => $p['plugin_resources_contracttypes_id']);
-      //
-      //      $default = "";
-      //      if (!empty($p['value']) && $p['value']>0) {
-      //         $default = $default_display;
-      //
-      //      } else {
-      //         $default = "<select name='".$p['name']."' id='dropdown_".$p['name'].$p['rand']."'>";
-      //         if ($p['all']) {
-      //            $default.= "<option value='0'>[ ".__('All')." ]</option></select>";
-      //         } else {
-      //            $default.= "<option value='0'>".Dropdown::EMPTY_VALUE."</option></select>\n";
-      //         }
-      //      }
-      //      Ajax::dropdown($use_ajax, "/plugins/resources/ajax/dropdownResources.php", $params, $default, $p['rand']);
-      //
-      //      if (class_exists('PluginPositionsPosition')) {
-      //         PluginPositionsPosition::showGeolocLink('PluginResourcesResource',$params["value"]);
-      //      }
-      //      // Display comment
-      //      if ($p['comments']) {
-      //         if (empty($user["link"])) {
-      //            $user["link"] = $CFG_GLPI['root_doc']."/plugins/resources/front/resource.php";
-      //         }
-      //         Html::showToolTip($user["comment"],
-      //                           array('contentid' => "comment_".$p['name'].$p['rand'],
-      //                                 'link'      => $user["link"],
-      //                                 'linkid'    => "comment_link_".$p["name"].$p['rand']));
-      //      }
-      //
-      //      return $p['rand'];
+      return $output;
    }
 
    static function fastResourceAddForm() {
@@ -2657,6 +2488,16 @@ class PluginResourcesResource extends CommonDBTM {
       return [$idResource, $error, $message];
    }
 
+   /**
+    * @param bool $count
+    * @param int $entity_restrict
+    * @param int $value
+    * @param array $used
+    * @param string $search
+    * @param bool $showOnlyLinkedResources
+    *
+    * @return bool|\mysqli_result
+    */
    static function getSqlSearchResult($count = true, $entity_restrict = -1, $value = 0, $used = [], $search = '', $showOnlyLinkedResources = false) {
       global $DB, $CFG_GLPI;
 
@@ -2664,8 +2505,6 @@ class PluginResourcesResource extends CommonDBTM {
       if ($entity_restrict < 0) {
          $entity_restrict = $_SESSION["glpiactiveentities"];
       }
-
-      $joinprofile = false;
 
       $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0
                   AND `glpi_plugin_resources_resources`.`is_leaving` = 0
@@ -2758,6 +2597,10 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 
+   /**
+    * @param     $target
+    * @param int $add
+    */
    function listOfTemplates($target, $add = 0) {
 
       $restrict = "`is_template` = 1";
@@ -3008,8 +2851,6 @@ class PluginResourcesResource extends CommonDBTM {
          if (isset($plugin_resources_resources_id)) {
             $resource = new PluginResourcesResource();
             if ($resource->getFromDB($plugin_resources_resources_id)) {
-               $resource_item = new PluginResourcesResource_Item();
-               $linked        = $resource_item->find("`plugin_resources_resources_id` = " . $plugin_resources_resources_id);
 
                echo "<div class=\"bt-row\">";
                echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
@@ -3091,8 +2932,6 @@ class PluginResourcesResource extends CommonDBTM {
    /**
     * Get the specific massive actions
     *
-    * @since version 0.84
-    *
     * @param $checkitem link item to check right   (default NULL)
     *
     * @return an array of massive actions
@@ -3102,16 +2941,16 @@ class PluginResourcesResource extends CommonDBTM {
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if ($isadmin && Session::getCurrentInterface() == 'central') {
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install']    = _x('button', 'Associate');
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = _x('button', 'Dissociate');
+         $actions[PluginResourcesResource::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install'] = _x('button', 'Associate');
+         $actions[PluginResourcesResource::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = _x('button', 'Dissociate');
 
          if (Session::haveRight('transfer', READ)
-             && Session::isMultiEntitiesMode()
+            && Session::isMultiEntitiesMode()
          ) {
-            $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __('Transfer');
+            $actions[PluginResourcesResource::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __('Transfer');
          }
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'AddHabilitation'] = __('Add additional habilitation', 'resources');
-         $actions['PluginResourcesResource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send']            = __('Send a notification');
+         $actions[PluginResourcesResource::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'AddHabilitation'] = __('Add additional habilitation', 'resources');
+         $actions[PluginResourcesResource::class . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send'] = __('Send a notification');
       }
       return $actions;
    }
@@ -3132,11 +2971,11 @@ class PluginResourcesResource extends CommonDBTM {
             break;
          case "plugin_resources_add_item":
             echo "<input type='hidden' name='itemtype' value='$itemtype'>";
-            PluginResourcesResource::dropdown();
+            self::dropdown(['display' => true]);
             break;
          case "plugin_resources_generate_resources":
             echo "<input type='hidden' name='itemtype' value='$itemtype'>";
-            PluginResourcesResource::fastResourceAddForm();
+            self::fastResourceAddForm();
             break;
          case "AddHabilitation":
             Dropdown::show('PluginResourcesHabilitation',
@@ -3161,7 +3000,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       switch ($ma->getAction()) {
          case "Transfert" :
-            if ($itemtype == 'PluginResourcesResource') {
+            if ($itemtype == PluginResourcesResource::class) {
                foreach ($ids as $key => $val) {
                   if ($item->transferResource($key, $input['entities_id'])) {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
@@ -3410,27 +3249,6 @@ class PluginResourcesResource extends CommonDBTM {
          }
          unset($values);
 
-         //TODO
-         //         $PluginResourcesTask = new PluginResources();
-         //         $restrict            = "`plugin_resources_resources_id` = '".$resources_id."'";
-         //         $tasks               = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
-         //         if (!empty($tasks)) {
-         //            foreach ($tasks as $task) {
-         //               $PluginResourcesTask->getFromDB($task["id"]);
-         //               $tasktype = PluginResourcesTaskType::transfer($PluginResourcesTask->fields["plugin_resources_tasktypes_id"], $entities_id);
-         //               if ($tasktype > 0) {
-         //                  $values["id"]                            = $task["id"];
-         //                  $values["plugin_resources_tasktypes_id"] = $tasktype;
-         //                  $PluginResourcesTask->update($values);
-         //               }
-         //               $values["id"]          = $task["id"];
-         //               $values["entities_id"] = $entities_id;
-         //               $PluginResourcesTask->update($values);
-         //            }
-         //         }
-         //
-         //         unset($values);
-
          $PluginResourcesTask = new PluginResourcesTask();
          $restrict            = "`plugin_resources_resources_id` = '" . $resources_id . "'";
          $dbu                 = new DbUtils();
@@ -3554,6 +3372,12 @@ class PluginResourcesResource extends CommonDBTM {
 
 
    // Cron action
+
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -3569,6 +3393,9 @@ class PluginResourcesResource extends CommonDBTM {
       return [];
    }
 
+   /**
+    * @return string
+    */
    function queryAlert() {
 
       $first = false;
@@ -3859,6 +3686,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param $items
+    *
+    * @return bool
+    */
    function sendEmail($items) {
 
       $users = [];
@@ -4004,95 +3836,11 @@ class PluginResourcesResource extends CommonDBTM {
       return $params;
    }
 
-   static function getMenuContent() {
-      global $CFG_GLPI;
-
-      $plugin_page = "/plugins/resources/front/menu.php";
-      $menu        = [];
-      //Menu entry in admin
-      $menu['title']           = self::getTypeName(2);
-      $menu['page']            = $plugin_page;
-      $menu['links']['search'] = "/plugins/resources/front/resource.php";
-
-      if (Session::haveright("plugin_resources", CREATE)) {
-         $menu['links']['add']      = '/plugins/resources/front/wizard.form.php';
-         $menu['links']['template'] = '/plugins/resources/front/setup.templates.php?add=0';
-      }
-
-      // Resource directory
-      $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory18.png' 
-      title='" . __('Directory', 'resources') . "' alt='" . __('Directory', 'resources') . "'>"] = '/plugins/resources/front/directory.php';
-
-      // Resting
-      if (Session::haveright("plugin_resources_resting", UPDATE)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/restinglist18.png' 
-         title='" . __('List of non contract periods', 'resources') . "' 
-         alt='" . __('List of non contract periods', 'resources') . "'>"] = '/plugins/resources/front/resourceresting.php';
-      }
-
-      // Holiday
-      if (Session::haveright("plugin_resources_holiday", UPDATE)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist18.png' 
-         title='" . __('List of forced holidays', 'resources') . "' 
-         alt='" . __('List of forced holidays', 'resources') . "'>"] = '/plugins/resources/front/resourceholiday.php';
-      }
-
-      // Employment
-      if (Session::haveright("plugin_resources_employment", READ)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/employmentlist18.png' 
-         title='" . __('Employment management', 'resources') . "' alt='" . __('Employment management', 'resources') . "'>"]      = '/plugins/resources/front/employment.php';
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap18.png' 
-         title='" . __('List Employments / Resources', 'resources') . "' 
-         alt='" . __('List Employments / Resources', 'resources') . "'>"] = '/plugins/resources/front/recap.php';
-      }
-
-      // Budget
-      if (Session::haveright("plugin_resources_budget", READ)) {
-         $menu['links']["<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/budgetlist18.png' 
-         title='" . __('Budget management', 'resources') . "' 
-         alt='" . __('Budget management', 'resources') . "'>"] = '/plugins/resources/front/budget.php';
-      }
-
-      // Task
-      if (Session::haveright("plugin_resources_task", READ)) {
-         $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/pics/menu_showall.png' 
-         title='" . __('Tasks list', 'resources') . "' 
-         alt='" . __('Tasks list', 'resources') . "'>"] = '/plugins/resources/front/task.php';
-      }
-
-      // Checklist
-      if (Session::haveright("plugin_resources_checklist", READ)) {
-         $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/pics/reservation-3.png' 
-         title='" . _n('Checklist', 'Checklists', 2, 'resources') . "' 
-         alt='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = '/plugins/resources/front/checklistconfig.php';
-      }
-
-      $opt                              = [];
-      $opt['reset']                     = 'reset';
-      $opt['criteria'][0]['field']      = 27; // validation status
-      $opt['criteria'][0]['searchtype'] = 'equals';
-      $opt['criteria'][0]['value']      = Session::getLoginUserID();
-      $opt['criteria'][0]['link']       = 'AND';
-
-      $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt,'&amp;');
-
-      $menu['links']["<img  src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/commmercial.png' 
-      title='" . __('View my resources as a commercial', 'resources') . "' 
-      alt='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = $url;
-
-      // Config page
-      if (Session::haveRight("config", UPDATE)) {
-         $menu['links']['config'] = '/plugins/resources/front/config.form.php';
-      }
-
-      // Add menu to class
-      $menu = PluginResourcesBudget::getMenuOptions($menu);
-      $menu = PluginResourcesChecklist::getMenuOptions($menu);
-      $menu = PluginResourcesEmployment::getMenuOptions($menu);
-
-      return $menu;
-   }
-
+   /**
+    * @param $input
+    *
+    * @return bool
+    */
    function checkTransferMandatoryFields($input) {
       $msg     = [];
       $checkKo = false;
@@ -4193,6 +3941,257 @@ class PluginResourcesResource extends CommonDBTM {
       }
       echo "</div>";
 
+   }
+
+   /**
+    * Each identifiers must be formatted as follow:
+    * - name
+    * - value
+    * - type
+    * - resource_column
+    *
+    * @param array $identifiers
+    * @return |null
+    * @throws GlpitestSQLError
+    */
+   function isExistingResourceByIdentifier($identifiers = []) {
+
+      global $DB;
+
+      $tableResourceCriterias = [];
+      $tableResourceImportCriterias = [];
+
+      $query = "SELECT r.*";
+      $from = "FROM " . self::getTable() . " as r";
+      $join = "";
+      $where = "WHERE 1=1";
+
+      foreach ($identifiers as $identifier) {
+         switch ($identifier['resource_column']) {
+            case 10:
+               $tableResourceImportCriterias[] = [
+                  'name' => $identifier['name'],
+                  'value' => $identifier['value'],
+                  'type' => $identifier['type']
+               ];
+               break;
+            default:
+               $tableResourceCriterias[] = [
+                  'name' => $this->getColumnName($identifier['resource_column']),
+                  'value' => $identifier['value'],
+                  'type' => $identifier['type']
+               ];
+               break;
+         }
+      }
+
+      if (count($tableResourceImportCriterias) > 0) {
+         $join .= " INNER JOIN " . PluginResourcesResourceImport::getTable() . " as ri";
+         $join .= " ON ri.plugin_resources_resources_id = r.id";
+
+         foreach ($tableResourceImportCriterias as $tableResourceImportCriteria) {
+
+            $where .= " AND ri.name = '" . addslashes($tableResourceImportCriteria['name']) . "'";
+            $where .= " AND ri.value = ";
+            if (is_string($tableResourceImportCriteria['value'])) {
+               $where .= "'" . addslashes($tableResourceImportCriteria['value']) . "'";
+            } else {
+               $where = $tableResourceImportCriteria['value'];
+            }
+         }
+      }
+
+      if (count($tableResourceCriterias) > 0) {
+         foreach ($tableResourceCriterias as $tableResourceCriteria) {
+
+            $where .= " AND r." . addslashes($tableResourceCriteria['name']) . " = ";
+
+            if (is_string($tableResourceCriteria['value'])) {
+               $where .= "'" . addslashes($tableResourceCriteria['value']) . "'";
+            } else {
+               $where = $tableResourceCriteria['value'];
+            }
+         }
+      }
+
+      $query .= " " . $from;
+      $query .= " " . $join;
+      $query .= " " . $where;
+
+      $results = $DB->query($query);
+
+      while ($data = $results->fetch_array()) {
+         return $data['id'];
+      }
+      return null;
+   }
+
+   /**
+    * Test if a resource exist in database by testing (1st and 2nd level) identifiers of importResource
+    *
+    * @param $importResourceID
+    * @return bool|null
+    * @throws GlpitestSQLError
+    */
+   function isExistingResourceByImportResourceID($importResourceID) {
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      // First level identifier
+      $firstLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 1);
+
+      $resourceID = $this->isExistingResourceByIdentifier($firstLevelIdentifiers);
+
+      if (!is_null($resourceID)) {
+         return $resourceID;
+      }
+
+      // Second level identifier
+      $secondLevelIdentifiers = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, 2);
+
+      $resourceID = $this->isExistingResourceByIdentifier($secondLevelIdentifiers);
+
+      if (!is_null($resourceID)) {
+         return $resourceID;
+      }
+
+      return false;
+   }
+
+   /**
+    * Test if datas from csv file are different to resource field and resourceimports
+    *
+    * @param $resourceID
+    * @param $datas
+    * @return bool
+    */
+   function isDifferentFromImportResourceDatas($resourceID, $datas) {
+      $pluginResourcesResource = new self();
+
+      foreach ($datas as $data) {
+
+         if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
+            $resourceID, $data['resource_column'], $data['name'], $data['value']
+         )) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   /**
+    * Test if resource and importresources are differents
+    *
+    * @param $resourceID
+    * @param $importResourceID
+    * @return bool
+    */
+   function isDifferentFromImportResource($resourceID, $importResourceID) {
+
+      $pluginResourcesResource = new self();
+      if (!$pluginResourcesResource->getFromDB($resourceID)) {
+         Html::displayErrorAndDie("No resource for id " . $resourceID);
+      }
+
+      $pluginResourcesImportResource = new PluginResourcesImportResource();
+      if (!$pluginResourcesImportResource->getFromDB($importResourceID)) {
+         Html::displayErrorAndDie("No importResource for id " . $importResourceID);
+      }
+
+      $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
+
+      // Get all import data
+      $datas = $pluginResourcesImportResourceData->getFromParentAndIdentifierLevel($importResourceID, null, ['resource_column']);
+
+      return $this->isDifferentFromImportResourceDatas($resourceID, $datas);
+   }
+
+   /**
+    * Get resourceimports value by name
+    *
+    * @param $resourceID
+    * @param $name
+    * @return mixed|string
+    */
+   function getResourceImportValueByName($resourceID, $name) {
+
+      $pluginResourcesResource = new self();
+      $pluginResourcesResource->getFromDB($resourceID);
+
+      $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+
+      $crit = [
+         PluginResourcesResourceImport::$items_id => $pluginResourcesResource->getID(),
+         'name' => $name
+      ];
+
+      if (!$pluginResourcesResourceImport->getFromDBByCrit($crit)) {
+         return "";
+      }
+
+      return $pluginResourcesResourceImport->getField('value');
+   }
+
+   /**
+    * Get resource field matching dataNameID
+    *
+    * @param $dataNameID
+    * @return mixed|null
+    */
+   function getFieldByDataNameID($dataNameID) {
+      if (is_null($dataNameID)) {
+         return null;
+      }
+
+      $resourceFieldName = $this->getResourceColumnNameFromDataNameID($dataNameID);
+
+      return $this->getField($resourceFieldName);
+   }
+
+   /**
+    * Test if value in resource fields or resourceimports have differences
+    * with passed pair of name and value
+    *
+    * @param $resourceID
+    * @param $dataNameID
+    * @param $name
+    * @param $value
+    * @return bool
+    */
+   function hasDifferenciesWithValueByDataNameID($resourceID, $dataNameID, $name, $value) {
+
+      $pluginResourcesResource = new self();
+      if (!$pluginResourcesResource->getFromDB($resourceID)) {
+         Html::displayErrorAndDie("No resource for id " . $resourceID);
+      }
+
+      switch ($dataNameID) {
+         case 10:
+            // Find in Resource Import
+            $pluginResourcesResourceImport = new PluginResourcesResourceImport();
+
+            $crit = [
+               PluginResourcesResourceImport::$items_id => $resourceID,
+               'name' => $name
+            ];
+
+            // Resource doesn't have the data
+            if (!$pluginResourcesResourceImport->getFromDBByCrit($crit)) {
+               return true;
+            }
+
+            // Data are different
+            if ($pluginResourcesResourceImport->getField('value') != $value) {
+               return true;
+            }
+            break;
+         default:
+            // Find in Resource Fields
+            $resourceFieldName = $pluginResourcesResource->getResourceColumnNameFromDataNameID($dataNameID);
+            return $pluginResourcesResource->getField($resourceFieldName) != $value;
+            break;
+      }
+      return false;
    }
 
 }

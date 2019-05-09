@@ -31,10 +31,21 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesEmployee
+ */
 class PluginResourcesEmployee extends CommonDBTM {
 
    static $rightname = 'plugin_resources_employee';
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    static function getTypeName($nb = 0) {
 
       return _n('Employee', 'Employees', $nb, 'resources');
@@ -53,14 +64,42 @@ class PluginResourcesEmployee extends CommonDBTM {
       }
    }
 
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
    static function canView() {
       return Session::haveRight(self::$rightname, READ);
    }
 
+   /**
+    * Have I the global right to "create" the Object
+    * May be overloaded if needed (ex KnowbaseItem)
+    *
+    * @return booleen
+    **/
    static function canCreate() {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       $wizard_employee = PluginResourcesContractType::checkWizardSetup($item->getField('id'), "use_employee_wizard");
@@ -75,6 +114,17 @@ class PluginResourcesEmployee extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
@@ -85,6 +135,11 @@ class PluginResourcesEmployee extends CommonDBTM {
       return true;
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    *
+    * @return bool
+    */
    function getFromDBbyResources($plugin_resources_resources_id) {
       global $DB;
 
@@ -105,6 +160,13 @@ class PluginResourcesEmployee extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
       // Not attached to resource -> not added
       if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
@@ -141,6 +203,13 @@ class PluginResourcesEmployee extends CommonDBTM {
       }
    }
 
+   /**
+    * @param        $plugin_resources_resources_id
+    * @param        $users_id
+    * @param string $withtemplate
+    *
+    * @return bool
+    */
    function showForm($plugin_resources_resources_id, $users_id, $withtemplate = '') {
       global $CFG_GLPI;
 
@@ -291,6 +360,11 @@ class PluginResourcesEmployee extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    *
+    * @return bool
+    */
    function wizardThirdForm($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
@@ -395,6 +469,12 @@ class PluginResourcesEmployee extends CommonDBTM {
       }
    }
 
+   /**
+    * @param $plugin_resources_resources_id
+    * @param $exist
+    *
+    * @return bool
+    */
    function showFormHelpdesk($plugin_resources_resources_id, $exist) {
       global $CFG_GLPI;
 
@@ -491,6 +571,13 @@ class PluginResourcesEmployee extends CommonDBTM {
       }
    }
 
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
 
       if ($item->getType() == 'PluginResourcesResource') {
@@ -554,17 +641,19 @@ class PluginResourcesEmployee extends CommonDBTM {
       $pdf->displaySpace();
    }
 
-   function getSearchOptions() {
-
-      $tab = [];
-
-      $tab['common'] = self::getTypeName(2);
-
-      $tab[1]['table']         = 'glpi_plugin_resources_resources';
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
+   function rawSearchOptions() {
 
       $tab[2]['table']    = 'glpi_plugin_resources_employers';
       $tab[2]['field']    = 'name';

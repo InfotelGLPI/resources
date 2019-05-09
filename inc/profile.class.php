@@ -31,10 +31,19 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginResourcesProfile
+ */
 class PluginResourcesProfile extends Profile {
 
    static $rightname = "profile";
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $withtemplate
+    *
+    * @return string
+    */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
@@ -43,44 +52,60 @@ class PluginResourcesProfile extends Profile {
       return '';
    }
 
+   /**
+    * @param \CommonGLPI $item
+    * @param int         $tabnum
+    * @param int         $withtemplate
+    *
+    * @return bool
+    */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
          $ID = $item->getID();
          $prof = new self();
 
-         self::addDefaultProfileInfos($ID, ['plugin_resources'                  => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                                  'plugin_resources_task'            => 0,
-                                                  'plugin_resources_checklist'       => 0,
-                                                  'plugin_resources_employee'        => 0,
-                                                  'plugin_resources_resting'         => 0,
-                                                  'plugin_resources_holiday'         => 0,
-                                                  'plugin_resources_habilitation'    => 0,
-                                                  'plugin_resources_employment'      => 0,
-                                                  'plugin_resources_budget'          => 0,
-                                                  'plugin_resources_dropdown_public' => 0,
-                                                  'plugin_resources_open_ticket'     => 0,
-                                                  'plugin_resources_all'             => 0]);
+         self::addDefaultProfileInfos($ID, [
+            'plugin_resources' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+            'plugin_resources_task' => 0,
+            'plugin_resources_checklist' => 0,
+            'plugin_resources_employee' => 0,
+            'plugin_resources_resting' => 0,
+            'plugin_resources_holiday' => 0,
+            'plugin_resources_habilitation' => 0,
+            'plugin_resources_employment' => 0,
+            'plugin_resources_budget' => 0,
+            'plugin_resources_dropdown_public' => 0,
+            'plugin_resources_import' => 0,
+            'plugin_resources_open_ticket' => 0,
+            'plugin_resources_all' => 0
+         ]);
          $prof->showForm($ID);
       }
 
       return true;
    }
 
-   static function createFirstAccess($profiles_id) {
-      self::addDefaultProfileInfos($profiles_id,
-                                   ['plugin_resources'                 => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                         'plugin_resources_task'            => ALLSTANDARDRIGHT,
-                                         'plugin_resources_checklist'       => ALLSTANDARDRIGHT,
-                                         'plugin_resources_employee'        => ALLSTANDARDRIGHT,
-                                         'plugin_resources_resting'         => ALLSTANDARDRIGHT,
-                                         'plugin_resources_holiday'         => ALLSTANDARDRIGHT,
-                                         'plugin_resources_habilitation'    => ALLSTANDARDRIGHT,
-                                         'plugin_resources_employment'      => ALLSTANDARDRIGHT,
-                                         'plugin_resources_budget'          => ALLSTANDARDRIGHT,
-                                         'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
-                                         'plugin_resources_open_ticket'     => 1,
-                                         'plugin_resources_all'             => 1], true);
+   /**
+    * @param $profiles_id
+    */
+   static function createFirstAccess($profiles_id)
+   {
+      self::addDefaultProfileInfos($profiles_id, [
+         'plugin_resources' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+         'plugin_resources_task' => ALLSTANDARDRIGHT,
+         'plugin_resources_checklist' => ALLSTANDARDRIGHT,
+         'plugin_resources_employee' => ALLSTANDARDRIGHT,
+         'plugin_resources_resting' => ALLSTANDARDRIGHT,
+         'plugin_resources_holiday' => ALLSTANDARDRIGHT,
+         'plugin_resources_habilitation' => ALLSTANDARDRIGHT,
+         'plugin_resources_employment' => ALLSTANDARDRIGHT,
+         'plugin_resources_budget' => ALLSTANDARDRIGHT,
+         'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
+         'plugin_resources_import' => 0,
+         'plugin_resources_open_ticket' => 1,
+         'plugin_resources_all' => 1
+      ], true);
 
    }
 
@@ -109,6 +134,13 @@ class PluginResourcesProfile extends Profile {
       }
    }
 
+   /**
+    * @param int  $profiles_id
+    * @param bool $openform
+    * @param bool $closeform
+    *
+    * @return bool|void
+    */
    function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
       echo "<div class='firstbloc'>";
@@ -155,6 +187,14 @@ class PluginResourcesProfile extends Profile {
       $profile->displayRightsChoiceMatrix($publicRights, ['canedit'       => $canedit,
                                                                'default_class' => 'tab_bg_2',
                                                                'title'         => __('Public service management', 'resources')]);
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if($config->getField('import_external_datas')==1){
+         $importRights = $this->getAllRights(false, ['import']);
+         $profile->displayRightsChoiceMatrix($importRights, ['canedit'       => $canedit,
+                                                             'default_class' => 'tab_bg_2',
+                                                             'title'         => __('Import external', 'resources')]);
+      }
 
       if ($canedit
           && $closeform) {
@@ -173,56 +213,67 @@ class PluginResourcesProfile extends Profile {
    static function getAllRights($all = true, $types = []) {
 
       $rights = [
-          ['itemtype'  => 'PluginResourcesResource',
-                'label'     => _n('Human resource', 'Human resources', 1, 'resources'),
-                'field'     => 'plugin_resources',
-                'type'      => 'general'
-          ],
-          ['itemtype'  => 'PluginResourcesTask',
-                'label'     => _n('Task', 'Tasks', 1),
-                'field'     => 'plugin_resources_task',
-                'type'      => 'general'
-          ],
-          ['itemtype'  => 'PluginResourcesBudget',
-                'label'     => _n('Budget', 'Budgets', 1),
-                'field'     => 'plugin_resources_budget',
-                'type'      => 'public'
-          ],
-          ['itemtype'  => 'PluginResourcesChecklist',
-                'label'     => _n('Checklist', 'Checklists', 1, 'resources'),
-                'field'     => 'plugin_resources_checklist',
-                'type'      => 'general'
-          ],
-          ['itemtype'  => 'PluginResourcesEmployee',
-                'label'     => _n('Employee', 'Employees', 1, 'resources'),
-                'field'     => 'plugin_resources_employee',
-                'type'      => 'general'
-          ],
-          ['itemtype'  => 'PluginResourcesResourceResting',
-                'label'     => _n('Non contract period management', 'Non contract periods management', 1, 'resources'),
-                'field'     => 'plugin_resources_resting',
-                'type'      => 'ssii'
-          ],
-          ['itemtype'  => 'PluginResourcesResourceHoliday',
-                'label'     => _n('Holiday', 'Holidays', 1, 'resources'),
-                'field'     => 'plugin_resources_holiday',
-                'type'      => 'ssii'
-          ],
-          ['itemtype'  => 'PluginResourcesResourceHabilitation',
-                'label'     => _n('Super habilitation', 'Super habilitations', 1, 'resources'),
-                'field'     => 'plugin_resources_habilitation',
-                'type'      => 'ssii'
-          ],
-          ['itemtype'  => 'PluginResourcesEmployment',
-                'label'     => _n('Employment', 'Employments', 1, 'resources'),
-                'field'     => 'plugin_resources_employment',
-                'type'      => 'public'
-          ],
-          ['itemtype'  => 'PluginResourcesResource',
-                'label'     => __('Dropdown management', 'resources'),
-                'field'     => 'plugin_resources_dropdown_public',
-                'type'      => 'public'
-          ]
+         ['itemtype' => 'PluginResourcesResource',
+            'label' => _n('Human resource', 'Human resources', 1, 'resources'),
+            'field' => 'plugin_resources',
+            'type' => 'general'
+         ],
+         ['itemtype' => 'PluginResourcesTask',
+            'label' => _n('Task', 'Tasks', 1),
+            'field' => 'plugin_resources_task',
+            'type' => 'general'
+         ],
+         ['itemtype' => 'PluginResourcesBudget',
+            'label' => _n('Budget', 'Budgets', 1),
+            'field' => 'plugin_resources_budget',
+            'type' => 'public'
+         ],
+         ['itemtype' => 'PluginResourcesChecklist',
+            'label' => _n('Checklist', 'Checklists', 1, 'resources'),
+            'field' => 'plugin_resources_checklist',
+            'type' => 'general'
+         ],
+         ['itemtype' => 'PluginResourcesEmployee',
+            'label' => _n('Employee', 'Employees', 1, 'resources'),
+            'field' => 'plugin_resources_employee',
+            'type' => 'general'
+         ],
+         ['itemtype' => 'PluginResourcesResourceResting',
+            'label' => _n('Non contract period management', 'Non contract periods management', 1, 'resources'),
+            'field' => 'plugin_resources_resting',
+            'type' => 'ssii'
+         ],
+         ['itemtype' => 'PluginResourcesResourceHoliday',
+            'label' => _n('Holiday', 'Holidays', 1, 'resources'),
+            'field' => 'plugin_resources_holiday',
+            'type' => 'ssii'
+         ],
+         ['itemtype' => 'PluginResourcesResourceHabilitation',
+            'label' => _n('Super habilitation', 'Super habilitations', 1, 'resources'),
+            'field' => 'plugin_resources_habilitation',
+            'type' => 'ssii'
+         ],
+         ['itemtype' => 'PluginResourcesEmployment',
+            'label' => _n('Employment', 'Employments', 1, 'resources'),
+            'field' => 'plugin_resources_employment',
+            'type' => 'public'
+         ],
+         ['itemtype' => 'PluginResourcesResource',
+            'label' => __('Dropdown management', 'resources'),
+            'field' => 'plugin_resources_dropdown_public',
+            'type' => 'public'
+         ],
+         ['itemtype' => 'PluginResourcesImport',
+            'label' => __('Import external', 'resources'),
+            'field' => 'plugin_resources_import',
+            'type' => 'import',
+            'rights' => [
+               READ => __('Read'),
+               UPDATE => __('Update'),
+               CREATE => __('Create'),
+               PURGE => __('Purge')
+            ]
+         ]
       ];
 
       if ($all) {
@@ -286,18 +337,21 @@ class PluginResourcesProfile extends Profile {
       foreach ($DB->request('glpi_plugin_resources_profiles',
                             "`profiles_id`='$profiles_id'") as $profile_data) {
 
-         $matching = ['resources'       => 'plugin_resources',
-                           'task'            => 'plugin_resources_task',
-                           'checklist'       => 'plugin_resources_checklist',
-                           'employee'        => 'plugin_resources_employee' ,
-                           'resting'         => 'plugin_resources_resting',
-                           'holiday'         => 'plugin_resources_holiday',
-                           'habilitation'    => 'plugin_resources_habilitation',
-                           'employment'      => 'plugin_resources_employment',
-                           'budget'          => 'plugin_resources_budget',
-                           'dropdown_public' => 'plugin_resources_dropdown_public',
-                           'open_ticket'     => 'plugin_resources_open_ticket',
-                           'all'             => 'plugin_resources_all'];
+         $matching = [
+            'resources' => 'plugin_resources',
+            'task' => 'plugin_resources_task',
+            'checklist' => 'plugin_resources_checklist',
+            'employee' => 'plugin_resources_employee',
+            'resting' => 'plugin_resources_resting',
+            'holiday' => 'plugin_resources_holiday',
+            'habilitation' => 'plugin_resources_habilitation',
+            'employment' => 'plugin_resources_employment',
+            'budget' => 'plugin_resources_budget',
+            'dropdown_public' => 'plugin_resources_dropdown_public',
+            'import'          => 'plugin_resources_import',
+            'open_ticket' => 'plugin_resources_open_ticket',
+            'all' => 'plugin_resources_all'
+         ];
 
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
