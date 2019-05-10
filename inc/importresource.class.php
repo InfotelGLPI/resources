@@ -698,7 +698,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          $importResources = [];
 
          $limitStart = 0;
-         $limitEnd = 30;
+         $limitEnd = 50;
 
          // Break when no next rows
          // Use this loop to don't get all resources from database at ones
