@@ -716,7 +716,6 @@ class PluginResourcesImportResource extends CommonDBTM {
             }
 
             $limitStart += $limitEnd;
-            $limitEnd;
 
             // For each import resource of type
             foreach ($tempImportResources as $key => $tempImportResource) {
