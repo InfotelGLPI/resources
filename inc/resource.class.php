@@ -4180,15 +4180,26 @@ class PluginResourcesResource extends CommonDBTM {
                return true;
             }
 
+            $importValue = $pluginResourcesResourceImport->getField('value');
+
             // Data are different
-            if ($pluginResourcesResourceImport->getField('value') != $value) {
+            if ($importValue != $value) {
                return true;
             }
             break;
          default:
             // Find in Resource Fields
             $resourceFieldName = $pluginResourcesResource->getResourceColumnNameFromDataNameID($dataNameID);
-            return $pluginResourcesResource->getField($resourceFieldName) != $value;
+
+            $resourceValue = $pluginResourcesResource->getField($resourceFieldName);
+
+            // When firstname and lastname
+            if($dataNameID == 0 || $dataNameID == 1){
+               $resourceValue = strtolower($resourceValue);
+               $value = strtolower($value);
+            }
+
+            return $resourceValue != $value;
             break;
       }
       return false;
