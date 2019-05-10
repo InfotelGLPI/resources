@@ -241,12 +241,13 @@ class PluginResourcesMenu extends CommonDBTM{
     * @return array array for menu
     **/
    static function getMenuContent() {
+      global $CFG_GLPI;
       $plugin_page = "/plugins/resources/front/menu.php";
 
-      $menu        = [];
+      $menu = [];
       //Menu entry in admin
-      $menu['title']           = PluginResourcesResource::getTypeName(2);
-      $menu['page']            = $plugin_page;
+      $menu['title'] = PluginResourcesResource::getTypeName(2);
+      $menu['page'] = $plugin_page;
       $menu['links']['search'] = "/plugins/resources/front/resource.php";
 
       if (Session::haveright("plugin_resources", CREATE)) {
@@ -255,54 +256,58 @@ class PluginResourcesMenu extends CommonDBTM{
          $menu['links']['template'] = '/plugins/resources/front/setup.templates.php?add=0';
       }
 
+      $pluginPicsFolder = $CFG_GLPI['root_doc'] . "/plugins/resources/pics";
+      $glpiPicsFolder = $CFG_GLPI['root_doc'] . "/pics";
+      $iconSize = 'width="18" height="18"';
+
       // Resource directory
-      $menu['links']["<i class='far fa-address-book fa-2x' title='" . __('Directory', 'resources') . "'></i>"] = '/plugins/resources/front/directory.php';
+      $menu['links']["<img src='$pluginPicsFolder/directory.png' $iconSize title='" . __('Directory', 'resources') . "'>"] = PluginResourcesDirectory::getSearchURL(false);
 
       // Resting
       if (Session::haveright("plugin_resources_resting", UPDATE)) {
-         $menu['links']["<i class='fas fa-file-signature fa-2x' title='" . __('List of non contract periods', 'resources') . "'></i>"] = '/plugins/resources/front/resourceresting.php';
+         $menu['links']["<img src='$pluginPicsFolder/restinglist18.png' $iconSize title='" . __('List of non contract periods', 'resources') . "'>"] = PluginResourcesResourceResting::getSearchURL(false);
       }
 
       // Holiday
       if (Session::haveright("plugin_resources_holiday", UPDATE)) {
-         $menu['links']["<i class='fas fa-atlas fa-2x' title='" . __('List of forced holidays', 'resources') . "'></i>"] = '/plugins/resources/front/resourceholiday.php';
+         $menu['links']["<img src='$pluginPicsFolder/holidaylist18.png' $iconSize title='" . __('List of forced holidays', 'resources') . "'>"] = PluginResourcesResourceHoliday::getSearchURL(false);
       }
 
       // Employment
       if (Session::haveright("plugin_resources_employment", READ)) {
-         $menu['links']["<i class='fas fa-list-ul fa-2x' title='" . __('Employment management', 'resources') . "'></i>"]     = '/plugins/resources/front/employment.php';
-         $menu['links']["<i class='fas fa-city fa-2x' title='" . __('List Employments / Resources', 'resources') . "'></i>"] = '/plugins/resources/front/recap.php';
+         $menu['links']["<img src='$pluginPicsFolder/employmentlist18.png' $iconSize title='" . __('Employment management', 'resources') . "'>"] = PluginResourcesEmployment::getSearchURL(false);
+         $menu['links']["<img src='$pluginPicsFolder/recap18.png' $iconSize title='" . __('List Employments / Resources', 'resources') . "'>"] = PluginResourcesRecap::getSearchURL(false);
       }
 
       // Budget
       if (Session::haveright("plugin_resources_budget", READ)) {
-         $menu['links']["<i class='fas fa-coins fa-2x' title='" . __('Budget management', 'resources') . "'></i>"] = '/plugins/resources/front/budget.php';
+         $menu['links']["<img src='$pluginPicsFolder/budgetlist18.png' $iconSize title='" . __('Budget management', 'resources') . "'>"] = PluginResourcesBudget::getSearchURL(false);
       }
 
       // Task
       if (Session::haveright("plugin_resources_task", READ)) {
-         $menu['links']["<i class='fas fa-tasks fa-2x' title='" . __('Tasks list', 'resources') . "'></i>"] = '/plugins/resources/front/task.php';
+         $menu['links']["<img src='$glpiPicsFolder/menu_showall.png' $iconSize title='" . __('Tasks list', 'resources') . "'></i>"] = PluginResourcesTask::getSearchURL(false);
       }
 
       // Checklist
       if (Session::haveright("plugin_resources_checklist", READ)) {
-         $menu['links']["<i class='far fa-calendar-check fa-2x' title='" . _n('Checklist', 'Checklists', 2, 'resources') . "'></i>"] = '/plugins/resources/front/checklistconfig.php';
+         $menu['links']["<img src='$glpiPicsFolder/reservation-3.png' $iconSize title='" . _n('Checklist', 'Checklists', 2, 'resources') . "'>"] = PluginResourcesChecklistconfig::getSearchURL(false);
       }
 
-      $opt                              = [];
-      $opt['reset']                     = 'reset';
-      $opt['criteria'][0]['field']      = 27; // validation status
+      $opt = [];
+      $opt['reset'] = 'reset';
+      $opt['criteria'][0]['field'] = 27; // validation status
       $opt['criteria'][0]['searchtype'] = 'equals';
-      $opt['criteria'][0]['value']      = Session::getLoginUserID();
-      $opt['criteria'][0]['link']       = 'AND';
+      $opt['criteria'][0]['value'] = Session::getLoginUserID();
+      $opt['criteria'][0]['link'] = 'AND';
 
       $url = "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
-      $menu['links']["<i class='fas fa-user-tie fa-2x' title='" . __('View my resources as a commercial', 'resources') . "'></i>"] = $url;
+      $menu['links']["<img src='$pluginPicsFolder/commercial.png' $iconSize title='" . __('View my resources as a commercial', 'resources') . "'>"] = $url;
 
       // Import page
-      if(Session::haveRight('plugin_resources_import', READ)){
-         $menu['links']["<i class='fas fa-cog fa-2x' title='" . __('Import configuration','resources') . "'></i>"]
+      if (Session::haveRight('plugin_resources_import', READ)) {
+         $menu['links']["<img src='$pluginPicsFolder/conf.png' $iconSize title='" . __('Import configuration', 'resources') . "'>"]
             = '/plugins/resources/front/import.php';
       }
 
