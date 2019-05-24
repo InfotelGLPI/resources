@@ -778,7 +778,14 @@ class PluginResourcesImportResource extends CommonDBTM {
             $this->showHead($type, $import);
 
             foreach ($importResources as $importResource) {
-               echo "<tr valign='center'>";
+               echo "<tr valign='center' ";
+               $Res = new PluginResourcesResource();
+               if (isset($importResource['resource_id']) && $Res->getFromDB($importResource['resource_id'])) {
+                  if ($Res->fields['is_deleted'] == 1) {
+                     echo "class='red'";
+                  }
+               }
+               echo ">";
 
                switch($type){
                   case self::NEW_IMPORTS:
