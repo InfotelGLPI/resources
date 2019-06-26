@@ -58,7 +58,11 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $actions[self::CHANGE_ACCESSPROFIL]    = self::getNameActions(self::CHANGE_ACCESSPROFIL);
       $actions[self::CHANGE_CONTRACTYPE]     = self::getNameActions(self::CHANGE_CONTRACTYPE);
       $actions[self::CHANGE_AGENCY]          = self::getNameActions(self::CHANGE_AGENCY);
-      $actions[self::CHANGE_TRANSFER]        = self::getNameActions(self::CHANGE_TRANSFER);
+      $transfer = new PluginResourcesTransferEntity();
+      $dataEntity = $transfer->find();
+      if (is_array($dataEntity) && count($dataEntity) > 0) {
+         $actions[self::CHANGE_TRANSFER]        = self::getNameActions(self::CHANGE_TRANSFER);
+      }
 
       return $actions;
    }
