@@ -523,6 +523,9 @@ function plugin_resources_install() {
    if (!is_dir($rep_files_resources."/import/fail")) {
       mkdir($rep_files_resources."/import/fail");
    }
+   if (!is_dir($rep_files_resources."/import/verify")) {
+      mkdir($rep_files_resources."/import/verify");
+   }
 
    CronTask::Register(PluginResourcesResource::class, 'Resources', DAY_TIMESTAMP);
    CronTask::Register(PluginResourcesTask::class, 'ResourcesTask', DAY_TIMESTAMP);
