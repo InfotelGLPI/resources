@@ -44,6 +44,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    const NEW_IMPORTS = 0;
    const CONFLICTED_IMPORTS = 1;
    const VERIFY_FILE = 2;
+   const VERIFY_GLPI = 3;
 
    // Status
    const IDENTICAL = 0;
@@ -687,6 +688,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       switch($params['type']){
          case self::VERIFY_FILE:
+         case self::VERIFY_GLPI:
             $this->verifyFile($params);
             break;
          case self::NEW_IMPORTS:
@@ -763,10 +765,10 @@ class PluginResourcesImportResource extends CommonDBTM {
       Html::closeForm();
    }
 
-   private function showFileSelector($locationOfFiles, $defaultFileSelected){
+   private function showFileSelector($locationOfFiles, $type, $defaultFileSelected){
 
       $action = PluginResourcesImportResource::getIndexUrl();
-      $action .= "?type=".PluginResourcesImportResource::VERIFY_FILE;
+      $action .= "?type=".$type;
 
       echo "<form name='file-selector' method='post' action ='".$action."' >";
       echo "<div align='center'>";
@@ -790,6 +792,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    }
 
    private function verifyFile($params = []){
+
       $type = $params['type'];
       $start = $params['start'];
       $limit = $params['limit'];
@@ -815,7 +818,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo "</td>";
       }
       echo "<td>";
-      self::showFileSelector($locationOfFiles, $defaultFileSelected);
+      self::showFileSelector($locationOfFiles, $type, $defaultFileSelected);
       echo "</td>";
       echo "</tr>";
 
@@ -823,17 +826,33 @@ class PluginResourcesImportResource extends CommonDBTM {
          $listParams = [
             'start' => $start,
             'limit' => $limit,
-            'type' => self::VERIFY_FILE,
+            'type' => $type,
             self::VERIFY_SELECTED_FILE_DROPDOWN_NAME => $params[self::VERIFY_SELECTED_FILE_DROPDOWN_NAME]
          ];
 
-         self::showVerificationList($listParams);
+         if($type == self::VERIFY_FILE){
+            self::showVerificationFileList($listParams);
+         }
+         else{
+            echo "<tr>";
+            echo "<td class='center'>";
+            echo "NOT IMPLEMENTED YET";
+            echo "</td>";
+            echo "</tr>";
+         }
       }
 
       echo "</table>";
       echo "</div>";
    }
 
+   /**
+    * Display the error header
+    *
+    * @param $title
+    * @param null $linkText
+    * @param null $url
+    */
    function showErrorHeader($title, $linkText = null, $url = null){
       echo "<thead>";
       echo "<tr>";
@@ -853,7 +872,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    }
 
    /**
-    * Display the header of the form
+    * Display the header of the view
     *
     * @param $type
     * @param $import
@@ -889,7 +908,10 @@ class PluginResourcesImportResource extends CommonDBTM {
             break;
          case self::VERIFY_FILE:
             $title = __("Compare File with GLPI Resources","resources");
-
+            echo "<th colspan='21'>" . $title . "</th>";
+            break;
+         case self::VERIFY_GLPI:
+            $title = __("Compare GLPI Resources with File","resources");
             echo "<th colspan='21'>" . $title . "</th>";
             break;
       }
@@ -918,6 +940,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             echo "</tr>";
             break;
          case self::VERIFY_FILE:
+         case self::VERIFY_GLPI:
             echo "<tr>";
             if(self::FILE_IMPORTER){
                echo "<th>";
@@ -1474,7 +1497,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       return $nb;
    }
 
-   private function showVerificationList(array $params){
+   private function showVerificationFileList(array $params){
 
       global $CFG_GLPI;
 
@@ -1574,21 +1597,21 @@ class PluginResourcesImportResource extends CommonDBTM {
                $pluginResourcesImportColumn = new PluginResourcesImportColumn();
                $pluginResourcesImportColumn->getFromDB($data['plugin_resources_importcolumns_id']);
 
-               $identifier = [
+               $element = [
                   'name' => $data['name'],
                   'value' => $data['value'],
                   'type' => $data['plugin_resources_importcolumns_id'],
                   'resource_column' => $pluginResourcesImportColumn->getField('resource_column')
                ];
 
-               $allDatas[] = $identifier;
+               $allDatas[] = $element;
 
                switch($pluginResourcesImportColumn->getField('is_identifier')){
                   case 1:
-                     $firstLevelIdentifiers[] = $identifier;
+                     $firstLevelIdentifiers[] = $element;
                      break;
                   case 2:
-                     $secondLevelIdentifiers[] = $identifier;
+                     $secondLevelIdentifiers[] = $element;
                      break;
                }
             }
@@ -1600,26 +1623,31 @@ class PluginResourcesImportResource extends CommonDBTM {
                $resourceID = $this->findResource($secondLevelIdentifiers);
             }
 
+            $pluginResourcesResource = new PluginResourcesResource();
+
             if(!$resourceID){
                $status = self::NOT_IN_GLPI;
             }else{
-               $pluginResourcesResource = new PluginResourcesResource();
-
                // Test Field in resources
                if($pluginResourcesResource->isDifferentFromImportResourceDatas($resourceID,$allDatas)){
-                  $status = self::IDENTICAL;
-               } else{
                   $status = self::DIFFERENT;
+               } else{
+                  $status = self::IDENTICAL;
                }
             }
 
             echo "<tr>";
 
-            foreach($datas as $data){
-               echo "<td class='center'>";
+            foreach($allDatas as $data){
+               if(!$resourceID || $pluginResourcesResource->isDifferentFromImportResourceData($resourceID, $data)){
+                  echo "<td class='center' style='color:red'>";
+               }
+               else{
+                  echo "<td class='center'>";
+               }
+
                echo $data['value'];
                echo "</td>";
-
             }
 
             echo "<td class='center'>";

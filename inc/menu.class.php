@@ -233,6 +233,12 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<tr>";
 
          echo "<td class='center' colspan='2'>";
+         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::VERIFY_GLPI."'>";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/conf.png' />";
+         echo "<br>" . __('Verify GLPI resources', 'resources') . "</a>";
+         echo "</td>";
+
+         echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImport::getIndexUrl()."'>";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/conf.png' />";
          echo "<br>" . __('Configure Imports', 'resources') . "</a>";
