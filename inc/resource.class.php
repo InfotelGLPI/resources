@@ -765,7 +765,7 @@ class PluginResourcesResource extends CommonDBTM {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
 
-               if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/")) {
+               if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/")) {
                   $input['picture'] = $this->addPhoto($this);
                }
             } else {
@@ -877,7 +877,7 @@ class PluginResourcesResource extends CommonDBTM {
       $name = $this->replace_accents($name);
 
       $tmpfile = GLPI_DOC_DIR . "/_uploads/" . $name;
-      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $name;
+      $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $name;
 
       imagejpeg($tmp, $tmpfile, 100);
 
@@ -1107,7 +1107,7 @@ class PluginResourcesResource extends CommonDBTM {
       global $CFG_GLPI;
 
       if (isset($this->input['picture']) && $this->input['picture'] != "" && $this->input['picture'] != "null" && $this->input['picture'] != "NULL") {
-         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->input['picture'];
+         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->input['picture'];
          unlink($filename);
       }
       if ($CFG_GLPI["notifications_mailing"]
@@ -1200,7 +1200,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<td rowspan='6' colspan='2' align='center'>";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
-         $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->fields["picture"];
+         $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -2205,7 +2205,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
 
       if (isset($this->fields["picture"])) {
-         $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $this->fields["picture"];
+         $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
             echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -2304,7 +2304,7 @@ class PluginResourcesResource extends CommonDBTM {
                $user["comment"] = "";
 
                if (isset($data["picture"]) && !empty($data["picture"])) {
-                  $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $data["picture"];
+                  $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
                   if (file_exists($path)) {
                      $user["comment"] .= "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
                       <param name='src' value='" . $CFG_GLPI['root_doc'] .
@@ -3798,7 +3798,7 @@ class PluginResourcesResource extends CommonDBTM {
    static function sendFile($file, $filename) {
 
       // Test securite : document in DOC_DIR
-      $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/", "", $file);
+      $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/", "", $file);
 
       if (strstr($tmpfile, "../") || strstr($tmpfile, "..\\")) {
          Event::log($file, "sendFile", 1, "security",
