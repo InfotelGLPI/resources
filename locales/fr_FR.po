@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-16 14:20+0200\n"
-"PO-Revision-Date: 2019-07-16 14:27+0200\n"
+"POT-Creation-Date: 2019-07-16 14:38+0200\n"
+"PO-Revision-Date: 2019-07-16 14:39+0200\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_resources/"
 "language/fr_FR/)\n"
@@ -796,31 +796,27 @@ msgstr "Import de fichier"
 msgid "Verify file"
 msgstr "Vérification de fichier"
 
-#: inc/importresource.class.php:830
-msgid "Set file ready to import"
-msgstr "Rendre le fichier prêt pour l'import"
-
-#: inc/importresource.class.php:845
+#: inc/importresource.class.php:846
 msgid "No imports configured"
 msgstr "Aucun import de configuré"
 
-#: inc/importresource.class.php:846
+#: inc/importresource.class.php:847
 msgid "Configure a new import"
 msgstr "Créer un nouvel import"
 
-#: inc/importresource.class.php:864
+#: inc/importresource.class.php:865
 msgid "Choose"
 msgstr "Choisir"
 
-#: inc/importresource.class.php:898
+#: inc/importresource.class.php:899
 msgid "File not found"
 msgstr "Fichier non trouvé"
 
-#: inc/importresource.class.php:907
+#: inc/importresource.class.php:908
 msgid "The selected file doesn't match any configured import"
 msgstr "Le fichier sélectionné ne correspond à aucun import configuré"
 
-#: inc/importresource.class.php:1000
+#: inc/importresource.class.php:1001
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:49
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:51
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:53
@@ -828,72 +824,72 @@ msgstr "Le fichier sélectionné ne correspond à aucun import configuré"
 msgid "Resource"
 msgstr "Ressource"
 
-#: inc/importresource.class.php:1035
+#: inc/importresource.class.php:1036
 msgid "Identification"
 msgstr "Identification"
 
-#: inc/importresource.class.php:1039
+#: inc/importresource.class.php:1040
 msgid "Informations from file"
 msgstr "Données du fichier"
 
-#: inc/importresource.class.php:1061
+#: inc/importresource.class.php:1062
 msgid "Import new Resources"
 msgstr "Import de nouvelles ressources"
 
-#: inc/importresource.class.php:1065
+#: inc/importresource.class.php:1066
 msgid "Be careful, the resources will be created in the entity"
 msgstr "Attention, les ressources seront créées dans l'entité"
 
-#: inc/importresource.class.php:1072
+#: inc/importresource.class.php:1073
 msgid "Inconsistencies between import and GLPI"
 msgstr "Conflits entre les imports et GLPI"
 
-#: inc/importresource.class.php:1076
+#: inc/importresource.class.php:1077
 msgid "Compare File with GLPI Resources"
 msgstr "Comparer un fichier avec les ressources de GLPI"
 
-#: inc/importresource.class.php:1080
+#: inc/importresource.class.php:1081
 msgid "Compare GLPI Resources with File"
 msgstr "Comparer les ressources de GLPI avec un fichier"
 
-#: inc/importresource.class.php:1129
+#: inc/importresource.class.php:1130
 msgid "Data from file"
 msgstr "Données du fichier"
 
-#: inc/importresource.class.php:1258
+#: inc/importresource.class.php:1259
 msgid "No new Imports"
 msgstr "Pas de nouveaux Imports"
 
-#: inc/importresource.class.php:1261
+#: inc/importresource.class.php:1262
 msgid "No Imports inconsistencies"
 msgstr "Aucun import en confli"
 
-#: inc/importresource.class.php:1407
+#: inc/importresource.class.php:1408
 msgid "Not Found in GLPI"
 msgstr "Pas trouvé dans GLPI"
 
-#: inc/importresource.class.php:1934
+#: inc/importresource.class.php:1935
 msgid "Not in file"
 msgstr "Pas dans le fichier"
 
-#: inc/importresource.class.php:1939
+#: inc/importresource.class.php:1940
 msgid "first level"
 msgstr "premier niveau"
 
-#: inc/importresource.class.php:1942
+#: inc/importresource.class.php:1943
 msgid "second level"
 msgstr "deuxième niveau"
 
-#: inc/importresource.class.php:1945
+#: inc/importresource.class.php:1946
 #, php-format
 msgid "Find in file with %s identifier"
 msgstr "Trouvé dans le fichier avec un identifiant de %s"
 
-#: inc/importresource.class.php:1994
+#: inc/importresource.class.php:1995
 msgid "Number of titles and values of tooltip doesn't match"
 msgstr "le nombre de titres et de valeurs ne correspond pas"
 
-#: inc/importresource.class.php:2269
+#: inc/importresource.class.php:2270
 msgid "Resource files imports"
 msgstr "Import de fichier Resources"
 
@@ -1827,6 +1823,9 @@ msgstr "Solde budget-emploi (€)"
 #: report/budgetsummary/budgetsummary.php:396
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "Set file ready to import"
+#~ msgstr "Rendre le fichier prêt pour l'import"
 
 #~ msgid "New Resources from Import : %s"
 #~ msgstr "Nouvelles Resources à partir de l'import : %s"
