@@ -1024,11 +1024,11 @@ class PluginResourcesImportResource extends CommonDBTM {
             echo "</th>";
 
             echo "<th>";
-            echo __("name");
+            echo __('Last name');
             echo "</th>";
 
             echo "<th>";
-            echo __("firstname");
+            echo __('First name');
             echo "</th>";
 
             echo "<th>";
