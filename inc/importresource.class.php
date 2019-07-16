@@ -826,9 +826,10 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "<td>";
       echo "<input type='submit' name='verify' class='submit' value='" . __('Verify file', 'resources') . "' >";
       echo "</td>";
-      echo "<td>";
-      echo "<input type='submit' name='valid' class='submit' value='" . __('Set file ready to import', 'resources') . "' >";
-      echo "</td>";
+      // TODO Move the verified file to parent folder to import it auto
+//      echo "<td>";
+//      echo "<input type='submit' name='valid' class='submit' value='" . __('Set file ready to import', 'resources') . "' >";
+//      echo "</td>";
       echo "</tr>";
 
       echo "</table>";
