@@ -27,13 +27,13 @@ if (isset($_POST["add"])) {
          $pluginResourcesResourceImport->add($input);
       }
    }
-   Html::back();
+   redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 
 } else if (isset($_POST["purge"])) {
 
    $import->check($_POST['id'], PURGE);
    $pluginResourcesResourceImport->delete($_POST);
-   Html::back();
+   redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 
 } else if (isset($_POST["update"])) {
 
@@ -53,10 +53,8 @@ if (isset($_POST["add"])) {
          $pluginResourcesResourceImport->update($input);
       }
    }
-   Html::back();
+   redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 } else if (isset($_POST["delete"])){
-   $t = 1;
-
    foreach($_POST['select'] as $key=>$selected){
       if($selected){
          $pluginResourcesImportResource = new PluginResourcesImportResource();
@@ -68,7 +66,24 @@ if (isset($_POST["add"])) {
          $pluginResourcesImportResource->delete($input);
       }
    }
-
-   Html::back();
+   redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 }
 Html::displayErrorAndDie('Lost');
+
+function redirectWithParameters($url, array $parameters){
+
+   $params = "";
+   if(count($parameters)){
+      $iterator = 0;
+      foreach($parameters as $key=>$parameter){
+         if($iterator===0){
+            $params.= "?$key=$parameter";
+         }
+         else{
+            $params.= "&$key=$parameter";
+         }
+         $iterator++;
+      }
+   }
+   Html::redirect($url.$params);
+}

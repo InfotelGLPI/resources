@@ -224,7 +224,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::VERIFY_FILE."'>";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/conf.png' />";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_check.png' />";
          echo "<br>" . __('Verify CSV file', 'resources') . "</a>";
          echo "</td>";
 
@@ -234,7 +234,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::VERIFY_GLPI."'>";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/conf.png' />";
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resource_check.png' />";
          echo "<br>" . __('Verify GLPI resources', 'resources') . "</a>";
          echo "</td>";
 

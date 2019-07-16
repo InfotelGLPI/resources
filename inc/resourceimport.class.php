@@ -62,7 +62,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
     * @param bool $history
     * @return int|null
     */
-   function add(array $input, $options = [], $history = true) {
+   function add(array $input, $options = [], $history = true){
 
       $importID = $input['importID'];
 
@@ -74,8 +74,9 @@ class PluginResourcesResourceImport extends CommonDBChild {
          Html::displayErrorAndDie('ImportResource not found');
       }
 
-      $resourceInput = [];
-      $resourceInput['entities_id'] = $_SESSION['glpiactive_entity'];
+      $resourceInputs = [];
+      $resourceInputs['entities_id'] = $_SESSION['glpiactive_entity'];
+
       $resourceImportInputs = [];
 
       foreach ($input['datas'] as $importResourceDataID => $inputValue) {
@@ -99,22 +100,22 @@ class PluginResourcesResourceImport extends CommonDBChild {
                $resourceTableColumnName = PluginResourcesResource::getResourceColumnNameFromDataNameID(
                   $pluginResourcesImportColumn->getField('resource_column')
                );
-               $resourceInput[$resourceTableColumnName] = $inputValue;
+               $resourceInputs[$resourceTableColumnName] = $inputValue;
                break;
          }
+      }
 
-         $resource = new PluginResourcesResource();
-         $resourceID = $resource->add($resourceInput);
+      $resource = new PluginResourcesResource();
+      $resourceID = $resource->add($resourceInputs);
 
-         if (!$resourceID) {
-            Html::displayErrorAndDie('Failed to create resources');
-         }
+      if (!$resourceID) {
+         Html::displayErrorAndDie('Failed to create resources');
+      }
 
-         foreach ($resourceImportInputs as $resourceImportInput) {
-            $resourceImportInput[PluginResourcesResourceImport::$items_id] = $resourceID;
-            if (!parent::add($resourceImportInput)) {
-               Html::displayErrorAndDie('Failed to create resourceimports');
-            }
+      foreach ($resourceImportInputs as $resourceImportInput) {
+         $resourceImportInput[PluginResourcesResourceImport::$items_id] = $resourceID;
+         if (!parent::add($resourceImportInput)) {
+            Html::displayErrorAndDie('Failed to create resourceimports');
          }
       }
    }

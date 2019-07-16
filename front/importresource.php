@@ -44,11 +44,19 @@ if ($import->canView()) {
       $params['filename'] = $_GET['_file_to_compare'][0];
    }
 
-   $dropdownName = PluginResourcesImportResource::VERIFY_SELECTED_FILE_DROPDOWN_NAME;
+   $dropdownName = PluginResourcesImportResource::SELECTED_FILE_DROPDOWN_NAME;
 
-   if(isset($_POST[$dropdownName]) && !empty($_POST[$dropdownName]) == 1){
+   if(isset($_POST[$dropdownName]) && !empty($_POST[$dropdownName])){
       $params[$dropdownName] = $_POST[$dropdownName];
-   } else if(isset($_GET[$dropdownName]) && !empty($_GET[$dropdownName]) == 1){
+   } else if(isset($_GET[$dropdownName]) && !empty($_GET[$dropdownName])){
+      $params[$dropdownName] = $_GET[$dropdownName];
+   }
+
+   $dropdownName = PluginResourcesImportResource::SELECTED_IMPORT_DROPDOWN_NAME;
+
+   if(isset($_POST[$dropdownName]) && !empty($_POST[$dropdownName])){
+      $params[$dropdownName] = $_POST[$dropdownName];
+   } else if(isset($_GET[$dropdownName]) && !empty($_GET[$dropdownName])){
       $params[$dropdownName] = $_GET[$dropdownName];
    }
 

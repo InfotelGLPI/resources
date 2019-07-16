@@ -46,9 +46,9 @@ if (($directory->canView() || Session::haveRight("config", UPDATE))) {
       $_GET["order"] = "ASC";
    }
 
-   $params = Search::manageParams("PluginResourcesDirectory", $_GET);
-   Search::showGenericSearch("PluginResourcesDirectory", $params);
-   $directory->showList("PluginResourcesDirectory", $params);
+   $params = Search::manageParams(PluginResourcesDirectory::class, $_GET);
+   Search::showGenericSearch(PluginResourcesDirectory::class, $params);
+   $directory->showList(PluginResourcesDirectory::class, $params);
 
 } else {
    Html::displayRightError();
