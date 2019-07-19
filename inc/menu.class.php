@@ -230,7 +230,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "</tr>";
 
-         echo "<tr>";
+         echo "<tr class='tab_bg_1'>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::VERIFY_GLPI."'>";
