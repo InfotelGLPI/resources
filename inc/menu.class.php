@@ -244,7 +244,7 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<br>" . __('Configure Imports', 'resources') . "</a>";
          echo "</td>";
 
-         echo "<td></td>";
+         echo "<td colspan='2'></td>";
 
          echo "</tr>";
       }
