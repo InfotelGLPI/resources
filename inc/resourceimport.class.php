@@ -128,6 +128,8 @@ class PluginResourcesResourceImport extends CommonDBChild {
       $pluginResourcesResourceImport = new PluginResourcesResourceImport();
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
 
+      $resourceInputs = ['id' => $resourceID];
+
       foreach ($input['datas'] as $importResourceDataID => $inputValue) {
 
          if (!$pluginResourcesImportResourceData->getFromDB($importResourceDataID)) {
@@ -138,7 +140,9 @@ class PluginResourcesResourceImport extends CommonDBChild {
             Html::displayErrorAndDie('ImportColumn not found');
          }
 
-         switch ($pluginResourcesImportColumn->getField('resource_column')) {
+         $resourceColumn = $pluginResourcesImportColumn->getField('resource_column');
+
+         switch ($resourceColumn) {
             case 10:
                $criterias = [
                   PluginResourcesResourceImport::$items_id => $resourceID,
@@ -176,19 +180,15 @@ class PluginResourcesResourceImport extends CommonDBChild {
                   $pluginResourcesImportColumn->getField('resource_column')
                );
 
-               // Prepare inputs
-               $resourceInput = [
-                  PluginResourcesResource::getIndexName() => $resourceID,
-                  $fieldName => $inputValue
-               ];
-
-               $resource = new PluginResourcesResource();
-
-               // Update resource column
-               if (!$resource->update($resourceInput)) {
-                  Html::displayErrorAndDie('Error when updating Resource Import');
-               }
+               $resourceInputs[$fieldName] = $inputValue;
          }
+      }
+
+      $resource = new PluginResourcesResource();
+
+      // Update resource column
+      if (!$resource->update($resourceInputs)) {
+         Html::displayErrorAndDie('Error when updating Resource Import');
       }
    }
 

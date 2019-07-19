@@ -1450,7 +1450,8 @@ class PluginResourcesImportResource extends CommonDBTM {
                   Dropdown::show(PluginResourcesContractType::class, [
                      'name' => $hValue,
                      'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
+                     'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true
                   ]);
                   if ($oldValues) {
                      echo "</li>";
@@ -1485,18 +1486,21 @@ class PluginResourcesImportResource extends CommonDBTM {
                      echo "<ul>";
                      echo "<li style='$oldCSS'>";
 
-                     $location = new Location();
-                     $location->getFromDB($pluginResourcesResource->getFieldByDataNameID($data['resource_column']));
+                     $oldLocation = new Location();
+                     $oldLocation->getFromDB($pluginResourcesResource->getFieldByDataNameID($data['resource_column']));
 
-                     echo $location->getName();
+                     echo $oldLocation->getField('completename');
                      echo "</li>";
                      echo "<li style='$newCSS'>";
                   }
-                  Dropdown::show(Location::class, [
+
+                  Dropdown::show(Location::class,[
                      'name' => $hValue,
-                     'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
+                     'value' => ($data['value'] == -1) ? 0 : $data['value'],
+                     'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true
                   ]);
+
                   if ($oldValues) {
                      echo "</li>";
                      echo "</ul>";
@@ -1518,6 +1522,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                      'name' => $hValue,
                      'value' => $data['value'],
                      'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true,
                      'right' => 'all'
                   ]);
                   if ($oldValues) {
@@ -1540,7 +1545,8 @@ class PluginResourcesImportResource extends CommonDBTM {
                   Dropdown::show(PluginResourcesDepartment::class, [
                      'name' => $hValue,
                      'value' => $data['value'],
-                     'entity' => $_SESSION['glpiactive_entity']
+                     'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true
                   ]);
                   if ($oldValues) {
                      echo "</li>";
@@ -1579,6 +1585,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                      'name' => $hValue,
                      'value' => $data['value'],
                      'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true,
                      'right' => 'all'
                   ]);
                   if ($oldValues) {

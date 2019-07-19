@@ -25,6 +25,8 @@ if (isset($_POST["add"])) {
          ];
 
          $pluginResourcesResourceImport->add($input);
+         $pluginResourcesImportResource = new PluginResourcesImportResource();
+         $pluginResourcesImportResource->delete(['id' => $key]);
       }
    }
    redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
@@ -51,6 +53,8 @@ if (isset($_POST["add"])) {
          ];
 
          $pluginResourcesResourceImport->update($input);
+         $pluginResourcesImportResource = new PluginResourcesImportResource();
+         $pluginResourcesImportResource->delete(['id' => $key]);
       }
    }
    redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
