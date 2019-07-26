@@ -455,14 +455,24 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo PluginResourcesResource::getTypeName(1);
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
-      $rand = PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
-                                                 'on_change' => 'plugin_resources_load_user_resting()',
-                                                 'entity'    => $_SESSION['glpiactiveentities']]);
+      $rand = PluginResourcesResource::dropdown([
+         'name' => 'plugin_resources_resources_id',
+         'on_change' => 'plugin_resources_load_user_resting()',
+         'entity' => $_SESSION['glpiactiveentities'],
+         'display' => true
+      ]);
 
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_user_resting(){";
-      $params = ['action' => 'loadResting', 'plugin_resources_resources_id' => '__VALUE__'];
-      Ajax::updateItemJsCode('plugin_resources_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resources_id'.$rand);
+      $params = [
+         'action' => 'loadResting',
+         'plugin_resources_resources_id' => '__VALUE__'
+      ];
+      Ajax::updateItemJsCode(
+         'plugin_resources_resting',
+         $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php',
+         $params,
+         'dropdown_plugin_resources_resources_id'.$rand);
       echo "}";
 
       echo "</script>";
