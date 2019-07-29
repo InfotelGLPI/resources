@@ -437,6 +437,9 @@ class PluginResourcesChoice extends CommonDBTM {
          if ($this->canCreate()) {
             echo "<div class=\"bt-row\">";
             echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class='preview'>";
+            echo "<input type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+            echo "</div>";
             echo "<div class='next'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "<input type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
