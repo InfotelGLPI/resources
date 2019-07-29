@@ -27,14 +27,14 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.6.1');
+define('PLUGIN_RESOURCES_VERSION', '2.6.2');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['resources']   = true;
-   $PLUGIN_HOOKS['change_profile']['resources']   = ['PluginResourcesProfile', 'initProfile'];
+   $PLUGIN_HOOKS['change_profile']['resources']   = [PluginResourcesProfile::class, 'initProfile'];
    $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
 
    if (Session::getLoginUserID()) {
@@ -44,7 +44,7 @@ function plugin_init_resources() {
          $noupdate = true;
       }
 
-      Plugin::registerClass('PluginResourcesResource', [
+      Plugin::registerClass(PluginResourcesResource::class, [
          'linkuser_types'               => true,
          'document_types'               => true,
          'ticket_types'                 => true,
@@ -55,34 +55,34 @@ function plugin_init_resources() {
          'massiveaction_noupdate_types' => $noupdate
       ]);
 
-      Plugin::registerClass('PluginResourcesDirectory', [
+      Plugin::registerClass(PluginResourcesDirectory::class, [
          'massiveaction_nodelete_types' => true,
          'massiveaction_noupdate_types' => true
       ]);
 
-      Plugin::registerClass('PluginResourcesRecap', [
+      Plugin::registerClass(PluginResourcesRecap::class, [
          'massiveaction_nodelete_types' => true,
          'massiveaction_noupdate_types' => true
       ]);
 
-      Plugin::registerClass('PluginResourcesTaskPlanning', [
+      Plugin::registerClass(PluginResourcesTaskPlanning::class, [
          'planning_types' => true
       ]);
 
-      Plugin::registerClass('PluginResourcesRuleChecklistCollection', [
+      Plugin::registerClass(PluginResourcesRuleChecklistCollection::class, [
          'rulecollections_types' => true
 
       ]);
 
-      Plugin::registerClass('PluginResourcesRuleContracttypeCollection', [
+      Plugin::registerClass(PluginResourcesRuleContracttypeCollection::class, [
          'rulecollections_types' => true
 
       ]);
 
-      Plugin::registerClass('PluginResourcesProfile',
+      Plugin::registerClass(PluginResourcesProfile::class,
                             ['addtabon' => 'Profile']);
 
-      Plugin::registerClass('PluginResourcesEmployment', [
+      Plugin::registerClass(PluginResourcesEmployment::class, [
          'massiveaction_nodelete_types' => true]);
 
       if (class_exists('PluginServicecatalogDashboard')) {
@@ -101,14 +101,14 @@ function plugin_init_resources() {
       }
 
       if (class_exists('PluginBehaviorsCommon')) {
-         PluginBehaviorsCommon::addCloneType('PluginResourcesRuleChecklist', 'PluginBehaviorsRule');
-         PluginBehaviorsCommon::addCloneType('PluginResourcesRuleContracttype', 'PluginBehaviorsRule');
+         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleChecklist::class, 'PluginBehaviorsRule');
+         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttype::class, 'PluginBehaviorsRule');
       }
 
       if (class_exists('PluginTreeviewConfig')) {
-         PluginTreeviewConfig::registerType('PluginResourcesResource');
+         PluginTreeviewConfig::registerType(PluginResourcesResource::class);
          $PLUGIN_HOOKS['treeview']['PluginResourcesResource'] = '../resources/pics/miniresources.png';
-         $PLUGIN_HOOKS['treeview_params']['resources']        = ['PluginResourcesResource', 'showResourceTreeview'];
+         $PLUGIN_HOOKS['treeview_params']['resources']        = [PluginResourcesResource::class, 'showResourceTreeview'];
       }
 
       if (((Session::haveRight("plugin_resources", READ)
@@ -236,7 +236,7 @@ function plugin_resources_check_config() {
  * @return mixed
  */
 function plugin_datainjection_migratetypes_resources($types) {
-   $types[4300] = 'PluginResourcesResource';
+   $types[4300] = PluginResourcesResource::class;
    return $types;
 }
 

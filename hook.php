@@ -261,7 +261,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.4.4.sql");
    }
 
-   //Version 2.5.1
+   //Version 2.6.1
    if (!$DB->tableExists("glpi_plugin_resources_imports")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.6.1.sql");
    }
@@ -382,20 +382,20 @@ function plugin_resources_install() {
             $choice = new PluginResourcesChoice();
             $choice_item = new PluginResourcesChoiceItem();
 
-            $types = [__('Computer') => 'Computer',
-                      __('Monitor') => 'Monitor',
-                      __('Software') => 'Software',
-                      __('Network device') => 'NetworkEquipment',
-                      __('Printer') => 'Printer',
-                      __('Peripheral') => 'Peripheral',
-                      __('Phone') => 'Phone',
-                      __('Consumable model') => 'ConsumableItem',
+            $types = [__('Computer') => Computer::class,
+                      __('Monitor') => Monitor::class,
+                      __('Software') => Software::class,
+                      __('Network device') => NetworkEquipment::class,
+                      __('Printer') => Printer::class,
+                      __('Peripheral') => Peripheral::class,
+                      __('Phone') => Phone::class,
+                      __('Consumable model') => ConsumableItem::class,
                       __('Specific network rights', 'resources') => '4303',
                       __('Access to the applications', 'resources') => '4304',
                       __('Specific securities groups', 'resources') => '4305',
                       __('Specific distribution lists', 'resources') => '4306',
                       __('Others needs', 'resources') => '4307',
-                      'PluginBadgesBadge' => 'PluginBadgesBadge'];
+                      'PluginBadgesBadge' => PluginBadgesBadge::class];
 
             if ($choice->getFromDB($key)) {
                $key = array_search($choice->fields["itemtype"], $types);
@@ -522,6 +522,9 @@ function plugin_resources_install() {
    }
    if (!is_dir($rep_files_resources."/import/fail")) {
       mkdir($rep_files_resources."/import/fail");
+   }
+   if (!is_dir($rep_files_resources."/import/verify")) {
+      mkdir($rep_files_resources."/import/verify");
    }
 
    CronTask::Register(PluginResourcesResource::class, 'Resources', DAY_TIMESTAMP);

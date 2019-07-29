@@ -13,5 +13,8 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["update"])) {
    $importResource->update($_POST);
    Html::back();
+} else if (isset($_POST["import-file"])){
+   $importResource->importFileToVerify($_POST);
+   Html::back();
 }
 Html::displayErrorAndDie('Lost');

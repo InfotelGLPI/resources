@@ -4123,15 +4123,19 @@ class PluginResourcesResource extends CommonDBTM {
     * @return bool
     */
    function isDifferentFromImportResourceDatas($resourceID, $datas) {
-      $pluginResourcesResource = new self();
-
       foreach ($datas as $data) {
-
-         if ($pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
-            $resourceID, $data['resource_column'], $data['name'], $data['value']
-         )) {
+         if (self::isDifferentFromImportResourceData($resourceID, $data)) {
             return true;
          }
+      }
+      return false;
+   }
+
+   function isDifferentFromImportResourceData($resourceID, $data) {
+      if (self::hasDifferenciesWithValueByDataNameID(
+         $resourceID, $data['resource_column'], $data['name'], $data['value']
+      )) {
+         return true;
       }
       return false;
    }
