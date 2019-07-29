@@ -262,7 +262,7 @@ function plugin_resources_install() {
    }
 
    //Version 2.6.1
-   if (!!$DB->tableExists("glpi_plugin_resources_imports")) {
+   if (!$DB->tableExists("glpi_plugin_resources_imports")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.6.1.sql");
    }
 
