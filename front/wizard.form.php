@@ -394,16 +394,10 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
 } else if(isset($_POST["seven_step"])){
 
-   $_POST['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-
-   //TODO delete
-   $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
-
-// TODO UNCOMMENT
-//   $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-//   $resource->fields['resources_step']                = 'six_step';
-//   Plugin::doHook('item_show', $resource);
-//   $resource->redirectToList();
+   $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+   $resource->fields['resources_step']                = 'six_step';
+   Plugin::doHook('item_show', $resource);
+   $resource->redirectToList();
 
 } else if(isset($_POST["undo_seven_step"])){
 

@@ -2318,7 +2318,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-row\">";
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
 
-      Document_item::showListForItem($self);
+      Document_item::showListForItem($self, 99); // With template 99 to disable massive action
 
       echo "</div></div>";
 
