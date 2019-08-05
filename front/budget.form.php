@@ -67,7 +67,7 @@ if (isset($_POST["add"])) {
 
 } else {
    $budget->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourcesbudget");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesBudget::getType()));
    $budget->display(['id' => $_GET["id"]]);
    Html::footer();
 }

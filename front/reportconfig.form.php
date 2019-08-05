@@ -73,7 +73,7 @@ if (isset($_POST["add"])) {
 
 } else {
    $reportconfig->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
    $reportconfig->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]);
    Html::footer();
 }

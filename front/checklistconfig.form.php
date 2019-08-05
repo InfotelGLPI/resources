@@ -62,7 +62,7 @@ if (isset($_POST["add"])) {
 
 } else {
    $checklistconfig->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourceschecklist");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
    $checklistconfig->display(['id' => $_GET["id"]]);
    Html::footer();
 }

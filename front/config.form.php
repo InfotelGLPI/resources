@@ -58,7 +58,7 @@ if ($plugin->isActivated("resources")) {
       Html::back();
 
    } else {
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
       //setup
       $config->showForm();
 

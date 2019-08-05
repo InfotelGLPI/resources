@@ -38,7 +38,7 @@ $resource->checkGlobal(READ);
 
 if (Session::getCurrentInterface() == 'central') {
    //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    //from helpdesk
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
