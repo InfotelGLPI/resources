@@ -91,7 +91,7 @@ else if (isset($_POST["deletetaskitem"])) {
 
 } else {
    $task->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
    $task->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"], 'withtemplate' => $_GET["withtemplate"]]);
    Html::footer();
 }

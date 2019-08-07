@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourceschecklist");
+Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
 
 $checklistconfig = new PluginResourcesChecklistconfig();
 if (($checklistconfig->canView() || Session::haveRight("config", UPDATE))) {

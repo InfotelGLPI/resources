@@ -42,7 +42,7 @@ if (isset($_POST['add_entity_category'])) {
 
 } else {
    $resource_change->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourcesconfig");
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesConfig::getType()));
    $resource_change->showFormActions();
    Html::footer();
 }

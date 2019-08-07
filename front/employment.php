@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", "pluginresourcesresource", "pluginresourcesemployment");
+Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesEmployment::getType()));
 
 $employment = new PluginResourcesEmployment();
 
