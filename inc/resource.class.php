@@ -2384,10 +2384,6 @@ class PluginResourcesResource extends CommonDBTM {
       $extraction4 = substr_replace($extraction4, "name='upload_seven_step'", $addNewFilePos, strlen($stringToFind));
 
       echo $extraction4;
-
-
-
-//      echo "youpi";
    }
 
    /**
