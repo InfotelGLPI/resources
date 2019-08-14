@@ -2235,8 +2235,6 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
       echo "</div></div>";
 
-      echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
-
       if ($this->canCreate() && (!empty($ID))) {
          echo "<div class=\"bt-row\">";
          echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
@@ -2255,6 +2253,137 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "</div>";
       echo "</div>";
+   }
+
+   function widgetSevenForm($ID, $options = []){
+
+      if ($ID > 0) {
+         $this->check($ID, READ);
+      }
+
+      $self = new self();
+      $self->getFromDB($ID);
+
+      $entities = "";
+      $entity   = $_SESSION["glpiactive_entity"];
+
+      $doc_item   = new Document_Item();
+      $used_found = $doc_item->find([
+         'items_id'  => $self->getID(),
+         'itemtype'  => $self->getType()
+      ]);
+      $used       = array_keys($used_found);
+      $used       = array_combine($used, $used);
+
+      if ($self->isEntityAssign()) {
+         /// Case of personal items : entity = -1 : create on active entity (Reminder case))
+         if ($self->getEntityID() >=0) {
+            $entity = $self->getEntityID();
+         }
+
+         if ($self->isRecursive()) {
+            $entities = getSonsOf('glpi_entities', $entity);
+         } else {
+            $entities = $entity;
+         }
+      }
+
+
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+      echo "<div id ='content'>";
+      echo "<div class='bt-container resources_wizard_resp'> ";
+      echo "<div class='bt-block bt-features' > ";
+
+      echo "<form action='" . $options['target'] . "' enctype='multipart/form-data' method='post'>";
+
+      echo "<div class=\"bt-row\">";
+      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+      echo "<h4 class=\"bt-title-divider\">";
+      echo __('Add documents to the resource', 'resources');
+      echo "</h4></div></div>";
+
+      if (!$this->canView()) {
+         return false;
+      }
+
+      echo "<div class=\"bt-row\">";
+      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+
+      $this->displayResourceDocumentForm($ID);
+
+      echo "</div></div>";
+
+      echo "<div class=\"bt-row\">";
+      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+
+      Document_item::showListForItem($self, 99); // With template 99 to disable massive action
+
+      echo "</div></div>";
+
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
+
+      if ($this->canCreate() && (!empty($ID))) {
+         echo "<div class=\"bt-row\">";
+         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+         echo "<div class='preview'>";
+         echo "<input type='submit' name='undo_seven_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+         echo "</div>";
+         echo "<div class='next'>";
+         echo "<input type='submit' name='seven_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
+         echo "</div>";
+         echo "</div></div>";
+      }
+
+      Html::closeForm();
+
+      echo "</div>";
+      echo "</div>";
+      echo "</div>";
+   }
+
+   public function displayResourceDocumentForm($ID){
+
+      $item = new self();
+      $item->getFromDB($ID);
+
+      $rand = mt_rand();
+      ob_start();
+      Document_item::showAddFormForItem($item, 0, ['rand' => $rand]);
+      $extraction = ob_get_contents();
+      ob_end_clean();
+
+      // Remove form brackets
+      // First form start
+      $beginStartFormPos = strpos($extraction, '<form');
+      $endStartFormPos = strpos($extraction, ">", $beginStartFormPos);
+
+      $extraction2 = substr($extraction, 0, $beginStartFormPos);
+      $extraction2.= substr($extraction, $endStartFormPos + 1, strlen($extraction));
+
+      // Second form start
+      $beginStartFormPos = strpos($extraction2, '<form');
+      $endStartFormPos = strpos($extraction2, ">", $beginStartFormPos);
+
+      $extraction3 = substr($extraction2, 0, $beginStartFormPos);
+      $extraction3.= substr($extraction2, $endStartFormPos + 1, strlen($extraction2));
+
+      $extraction4 = str_replace("</form>", "", $extraction3);
+//      $finalExtraction = str_replace("name='add'", "name='upload_seven_step'", $extraction3);
+
+      // Replace name of input type submit
+
+      $stringToFind = "name='add'";
+
+      $existingDocPos = strrpos($extraction4, $stringToFind);
+      $extraction4 = substr_replace($extraction4, "name='add_doc_seven_step'", $existingDocPos, strlen($stringToFind));
+
+      $addNewFilePos = strrpos($extraction4, $stringToFind);
+      $extraction4 = substr_replace($extraction4, "name='upload_seven_step'", $addNewFilePos, strlen($stringToFind));
+
+      echo $extraction4;
    }
 
    /**
