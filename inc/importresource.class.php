@@ -913,31 +913,36 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                switch ($dataType) {
                   case User::class:
-                     User::dropdown([
-                        'value' => $data['value'],
-                        'name' => "users_id",
-                        'entity' => $_SESSION['glpiactive_entity'],
-                        'right' => 'all',
-                        'enable' => false
-                     ]);
+                     echo "<a href='".User::getFormURLWithID($data['value'])."'> ";
+                     echo getUserName($data['value']);
+                     echo "</a>";
                      break;
                   case Location::class:
-                     Dropdown::show(Location::class, [
-                        'value' => $data['value'],
-                        'entity' => $_SESSION['glpiactive_entity']
-                     ]);
+
+                     $locationDBTM = new Location();
+                     $locationDBTM->getFromDB($data['value']);
+
+                     echo "<a href='".Location::getFormURLWithID($data['value'])."'> ";
+                     echo $locationDBTM->getField('name');
+                     echo "</a>";
                      break;
                   case PluginResourcesDepartment::class:
-                     Dropdown::show(PluginResourcesDepartment::class, [
-                        'value' => $data['value'],
-                        'entity' => $_SESSION['glpiactive_entity']
-                     ]);
+
+                     $pluginResourcesDepartmentDBTM = new PluginResourcesDepartment();
+                     $pluginResourcesDepartmentDBTM->getFromDB($data['value']);
+
+                     echo "<a href='".PluginResourcesDepartment::getFormURLWithID($data['value'])."'> ";
+                     echo $pluginResourcesDepartmentDBTM->getField('name');
+                     echo "</a>";
                      break;
                   case PluginResourcesContractType::class:
-                     Dropdown::show(PluginResourcesContractType::class, [
-                        'value' => $data['value'],
-                        'entity' => $_SESSION['glpiactive_entity']
-                     ]);
+
+                     $pluginResourcesContractType = new PluginResourcesContractType();
+                     $pluginResourcesContractType->getFromDB($data['value']);
+
+                     echo "<a href='".PluginResourcesContractType::getFormURLWithID($data['value'])."'> ";
+                     echo $pluginResourcesContractType->getField('name');
+                     echo "</a>";
                      break;
                   default:
                      echo $data['value'];
