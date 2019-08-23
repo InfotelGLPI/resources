@@ -69,7 +69,7 @@ class PluginResourcesResource extends CommonDBTM {
       return [
          __("Firstname", "resources"),
          __("Lastname", "resources"),
-         __("Contract", "resources"),
+         __("ContractType", "resources"),
          __("Associed User", "resources"),
          __("Location", "resources"),
          __("Resource manager", "resources"),
@@ -103,12 +103,12 @@ class PluginResourcesResource extends CommonDBTM {
       return $dataNames[$dataNameID];
    }
 
-   static function getDataType($dataNameId) {
+   static function getDataTypes(){
 
       $dataTypes = [
          "String",
          "String",
-         "Contract",
+         "PluginResourcesContractType",
          "User",
          "Location",
          "User",
@@ -118,6 +118,13 @@ class PluginResourcesResource extends CommonDBTM {
          "User",
          "String"
       ];
+
+      return $dataTypes;
+   }
+
+   static function getDataType($dataNameId) {
+
+      $dataTypes = self::getDataTypes();
 
       if (!array_key_exists($dataNameId, $dataTypes)) {
          Html::displayErrorAndDie("Data Type not found");
