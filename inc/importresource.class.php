@@ -1448,7 +1448,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       // Get resources
       $resources = self::getResources($start, $limit);
-      $nbOfResources = (new DBUtils)->countElementsInTable(PluginResourcesResource::getTable(), ['is_deleted' => 1]);
+      $nbOfResources = (new DBUtils)->countElementsInTable(PluginResourcesResource::getTable(), ['is_deleted' => 0]);
 
       // Generate pager parameters
       $parameters = "type=" . $type;
