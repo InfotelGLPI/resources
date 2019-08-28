@@ -4392,10 +4392,11 @@ class PluginResourcesResource extends CommonDBTM {
 
             // When firstname and lastname
             if($dataNameID == 0 || $dataNameID == 1){
-               $resourceValue = strtolower($resourceValue);
-               $value = strtolower($value);
+               return strcasecmp($resourceValue, $value) != 0;
+            }else{
+               return $resourceValue != $value;
             }
-            return $resourceValue != $value;
+
             break;
       }
       return false;

@@ -63,6 +63,12 @@ class PluginResourcesImportResource extends CommonDBTM {
    const SESSION_IMPORT_ID = 'import-display-last-id';
    const SESSION_IMPORT_START = 'import-display-last-start';
    const FILE_IMPORTER = false;
+
+   // Display types
+   const DISPLAY_HTML = 0;
+   const DISPLAY_STATISTICS = 1;
+   const DISPLAY_CSV = 2;
+
    static $rightname = 'plugin_resources_importresources';
    static $keyInOtherTables = 'plugin_resources_importresources_id';
    static $currentStart;
@@ -640,7 +646,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                echo '</li>';
                echo '<li>';
                echo 'Non Trouvé dans GLPI';
-               echo "&nbsp;&nbsp;&nbsp;<span id='not_founded'>?</span>";
+               echo "&nbsp;&nbsp;&nbsp;<span id='not_found'>?</span>";
                echo '</li>';
                echo '<li>';
                echo 'Different de GLPI';
@@ -663,7 +669,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                $updateResultJs = "
                   $('#identical').html(results.identical);
-                  $('#not_found').html(results.not_founded);
+                  $('#not_found').html(results.not_found);
                   $('#different').html(results.different);
                   $('#total').html(results.total);";
 
@@ -1227,14 +1233,16 @@ class PluginResourcesImportResource extends CommonDBTM {
                $title = __("The selected file doesn't match any configured import", "resources");
                self::showErrorHeader($title);
             } else {
-               $listParams = [
-                  'start' => $params['start'],
-                  'limit' => $params['limit'],
-                  'type' => $params['type'],
-                  'file-path' => $absoluteFilePath,
-                  'import-id' => $importId,
-                  self::SELECTED_FILE_DROPDOWN_NAME => $params[self::SELECTED_FILE_DROPDOWN_NAME]
-               ];
+
+               $listParams = $this->fillVerifyParams(
+                  $params['start'],
+                  $params['limit'],
+                  $params['type'],
+                  $absoluteFilePath,
+                  $importId,
+                  $params[self::SELECTED_FILE_DROPDOWN_NAME],
+                  self::DISPLAY_HTML
+               );
 
                switch ($params['type']) {
                   case self::VERIFY_FILE:
@@ -1413,13 +1421,26 @@ class PluginResourcesImportResource extends CommonDBTM {
       ]);
    }
 
-   private function showVerificationFileList(array $params) {
+   public function fillVerifyParams($start, $limit, $type, $filePath, $importId, $fileSelected, $display){
+      return [
+         'start' => $start,
+         'limit' => $limit,
+         'type' => $type,
+         'file-path' => $filePath,
+         'import-id' => $importId,
+         self::SELECTED_FILE_DROPDOWN_NAME => $fileSelected,
+         'display' => $display
+      ];
+   }
+
+   public function showVerificationFileList(array $params) {
 
       $start = $params['start'];
       $type = $params['type'];
       $limit = $params['limit'];
       $importId = $params['import-id'];
       $absoluteFilePath = $params['file-path'];
+      $display = $params['display'];
 
       // Number of lines in csv - header
       $nbLines = self::countCSVLines($absoluteFilePath) - 1;
@@ -1430,31 +1451,42 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $lines = self::readCSVLines($absoluteFilePath, $startLine, $limitLine);
 
-      // Generate pager parameters
-      $parameters = "type=" . $type;
-      $parameters .= "&" . self::SELECTED_FILE_DROPDOWN_NAME;
-      $parameters .= "=" . $params[self::SELECTED_FILE_DROPDOWN_NAME];
-
-      $formURL = self::getIndexUrl() . "?" . $parameters;
-
       // Recover the header of file FIRST LINE
       $temp = self::readCSVLines($absoluteFilePath, 0, 1);
       $header = array_shift($temp);
 
-      echo "<form name='form' method='post' id='verify' action ='$formURL' >";
-      echo "<div align='center'>";
+      switch($display){
+         case self::DISPLAY_HTML:
+            // Generate pager parameters
+            $parameters = "type=" . $type;
+            $parameters .= "&" . self::SELECTED_FILE_DROPDOWN_NAME;
+            $parameters .= "=" . $params[self::SELECTED_FILE_DROPDOWN_NAME];
 
-      Html::printPager($start, $nbLines, $_SERVER['PHP_SELF'], $parameters);
+            $formURL = self::getIndexUrl() . "?" . $parameters;
 
-      echo "<table border='0' class='tab_cadrehov'>";
+            echo "<form name='form' method='post' id='verify' action ='$formURL' >";
+            echo "<div align='center'>";
 
-      $listHeaderParams = [
-         'type' => $params['type'],
-         'titles' => $header
-      ];
+            Html::printPager($start, $nbLines, $_SERVER['PHP_SELF'], $parameters);
 
-      self::showListHeader($listHeaderParams);
+            echo "<table border='0' class='tab_cadrehov'>";
 
+            $listHeaderParams = [
+               'type' => $params['type'],
+               'titles' => $header
+            ];
+
+            self::showListHeader($listHeaderParams);
+            break;
+         case self::DISPLAY_STATISTICS:
+            $result = [
+               'identical' => 0,
+               'different' => 0,
+               'not_found' => 0,
+               'total' => 0
+            ];
+            break;
+      }
 
       foreach ($lines as $line) {
 
@@ -1498,82 +1530,105 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          $pluginResourcesResource = new PluginResourcesResource();
 
-         if (!$resourceID) {
-            $status = self::NOT_IN_GLPI;
-         } else {
-            // Test Field in resources
-            if ($pluginResourcesResource->isDifferentFromImportResourceDatas($resourceID, $allDatas)) {
-               $status = self::DIFFERENT;
-            } else {
-               $status = self::IDENTICAL;
-            }
-         }
-
-         echo "<tr>";
-
-         foreach ($allDatas as $data) {
-            if (!$resourceID || $pluginResourcesResource->isDifferentFromImportResourceData($resourceID, $data)) {
-               echo "<td class='center' style='color:red'>";
-            } else {
-               echo "<td class='center'>";
-            }
-
-            if ($data['value'] == -1) {
-               echo "";
-            } else {
-               $dataType = $data['resource_column'] > count(PluginResourcesResource::getDataTypes()) ? null : PluginResourcesResource::getDataType($data['resource_column']);
-
-               switch ($dataType) {
-                  case User::class:
-                     echo "<a href='" . User::getFormURLWithID($data['value']) . "'> ";
-                     echo getUserName($data['value']);
-                     echo "</a>";
-                     break;
-                  case Location::class:
-
-                     $locationDBTM = new Location();
-                     $locationDBTM->getFromDB($data['value']);
-
-                     echo "<a href='" . Location::getFormURLWithID($data['value']) . "'> ";
-                     echo $locationDBTM->getField('name');
-                     echo "</a>";
-                     break;
-                  case PluginResourcesDepartment::class:
-
-                     $pluginResourcesDepartmentDBTM = new PluginResourcesDepartment();
-                     $pluginResourcesDepartmentDBTM->getFromDB($data['value']);
-
-                     echo "<a href='" . PluginResourcesDepartment::getFormURLWithID($data['value']) . "'> ";
-                     echo $pluginResourcesDepartmentDBTM->getField('name');
-                     echo "</a>";
-                     break;
-                  case PluginResourcesContractType::class:
-
-                     $pluginResourcesContractType = new PluginResourcesContractType();
-                     $pluginResourcesContractType->getFromDB($data['value']);
-
-                     echo "<a href='" . PluginResourcesContractType::getFormURLWithID($data['value']) . "'> ";
-                     echo $pluginResourcesContractType->getField('name');
-                     echo "</a>";
-                     break;
-                  default:
-                     echo $data['value'];
+         switch($display){
+            case self::DISPLAY_HTML:
+               if (!$resourceID) {
+                  $status = self::NOT_IN_GLPI;
+               } else {
+                  // Test Field in resources
+                  if ($pluginResourcesResource->isDifferentFromImportResourceDatas($resourceID, $allDatas)) {
+                     $status = self::DIFFERENT;
+                  } else {
+                     $status = self::IDENTICAL;
+                  }
                }
-            }
 
-            echo "</td>";
+               echo "<tr>";
+
+               foreach ($allDatas as $data) {
+                  if (!$resourceID || $pluginResourcesResource->isDifferentFromImportResourceData($resourceID, $data)) {
+                     echo "<td class='center' style='color:red'>";
+                  } else {
+                     echo "<td class='center'>";
+                  }
+
+                  if ($data['value'] == -1) {
+                     echo "";
+                  } else {
+                     $dataType = $data['resource_column'] > count(PluginResourcesResource::getDataTypes()) ? null : PluginResourcesResource::getDataType($data['resource_column']);
+
+                     switch ($dataType) {
+                        case User::class:
+                           echo "<a href='" . User::getFormURLWithID($data['value']) . "'> ";
+                           echo getUserName($data['value']);
+                           echo "</a>";
+                           break;
+                        case Location::class:
+
+                           $locationDBTM = new Location();
+                           $locationDBTM->getFromDB($data['value']);
+
+                           echo "<a href='" . Location::getFormURLWithID($data['value']) . "'> ";
+                           echo $locationDBTM->getField('name');
+                           echo "</a>";
+                           break;
+                        case PluginResourcesDepartment::class:
+
+                           $pluginResourcesDepartmentDBTM = new PluginResourcesDepartment();
+                           $pluginResourcesDepartmentDBTM->getFromDB($data['value']);
+
+                           echo "<a href='" . PluginResourcesDepartment::getFormURLWithID($data['value']) . "'> ";
+                           echo $pluginResourcesDepartmentDBTM->getField('name');
+                           echo "</a>";
+                           break;
+                        case PluginResourcesContractType::class:
+
+                           $pluginResourcesContractType = new PluginResourcesContractType();
+                           $pluginResourcesContractType->getFromDB($data['value']);
+
+                           echo "<a href='" . PluginResourcesContractType::getFormURLWithID($data['value']) . "'> ";
+                           echo $pluginResourcesContractType->getField('name');
+                           echo "</a>";
+                           break;
+                        default:
+                           echo $data['value'];
+                     }
+                  }
+
+                  echo "</td>";
+               }
+
+               echo "<td class='center'>";
+               echo self::getStatusTitle($status);
+               echo "</td>";
+
+               echo "</tr>";
+               break;
+            case self::DISPLAY_STATISTICS:
+               if (!$resourceID) {
+                  $result['not_found'] ++;
+               } else {
+                  // Test Field in resources
+                  if ($pluginResourcesResource->isDifferentFromImportResourceDatas($resourceID, $allDatas)) {
+                     $result['different'] ++;
+                  } else {
+                     $result['identical'] ++;
+                  }
+               }
+               break;
          }
-
-         echo "<td class='center'>";
-         echo self::getStatusTitle($status);
-         echo "</td>";
-
-         echo "</tr>";
-
       }
-      echo "</table>";
-      echo "</div>";
-      Html::closeForm();
+
+      switch($display){
+         case self::DISPLAY_HTML:
+            echo "</table>";
+            echo "</div>";
+            Html::closeForm();
+            break;
+         case self::DISPLAY_STATISTICS:
+            echo json_encode($result);
+            break;
+      }
    }
 
    private function countCSVLines($absoluteFilePath) {
@@ -1947,13 +2002,14 @@ class PluginResourcesImportResource extends CommonDBTM {
       }
    }
 
-   private function showVerificationGLPIFromFileList(array $params) {
+   public function showVerificationGLPIFromFileList(array $params) {
 
       $start = $params['start'];
       $type = $params['type'];
       $limit = $params['limit'];
       $importId = $params['import-id'];
       $absoluteFilePath = $params['file-path'];
+      $display = $params['display'];
 
       // Resource identifiers
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
@@ -1961,27 +2017,51 @@ class PluginResourcesImportResource extends CommonDBTM {
       $columns = $pluginResourcesImportColumn->find($crit);
 
       // Get resources
-      $resources = self::getResources($start, $limit);
+
+      switch($display){
+         case self::DISPLAY_STATISTICS:
+            $pluginResourcesResource = new PluginResourcesResource();
+            $resources = $pluginResourcesResource->find(['is_deleted' => 0], ['date_declaration DESC']);
+
+            $result = [
+               'found_first_identifier' => 0,
+               'found_second_identifier' => 0,
+               'not_found' => 0,
+               'total' => 0
+            ];
+            break;
+         case self::DISPLAY_HTML:
+            $resources = self::getResources($start, $limit);
+            break;
+      }
+
       $nbOfResources = (new DBUtils)->countElementsInTable(PluginResourcesResource::getTable(), ['is_deleted' => 0]);
 
-      // Generate pager parameters
-      $parameters = "type=" . $type;
-      $parameters .= "&" . self::SELECTED_FILE_DROPDOWN_NAME;
-      $parameters .= "=" . $params[self::SELECTED_FILE_DROPDOWN_NAME];
-      $formURL = self::getIndexUrl() . "?" . $parameters;
+      switch($display){
+         case self::DISPLAY_STATISTICS:
+            $result['total'] = $nbOfResources;
+            break;
+         case self::DISPLAY_HTML:
+            // Generate pager parameters
+            $parameters = "type=" . $type;
+            $parameters .= "&" . self::SELECTED_FILE_DROPDOWN_NAME;
+            $parameters .= "=" . $params[self::SELECTED_FILE_DROPDOWN_NAME];
+            $formURL = self::getIndexUrl() . "?" . $parameters;
 
-      echo "<form name='form' method='post' id='verify' action ='$formURL' >";
-      echo "<div align='center'>";
+            echo "<form name='form' method='post' id='verify' action ='$formURL' >";
+            echo "<div align='center'>";
 
-      Html::printPager($start, $nbOfResources, $_SERVER['PHP_SELF'], $parameters);
+            Html::printPager($start, $nbOfResources, $_SERVER['PHP_SELF'], $parameters);
 
-      echo "<table border='0' class='tab_cadrehov'>";
+            echo "<table border='0' class='tab_cadrehov'>";
 
-      $listHeaderParams = [
-         'type' => $params['type']
-      ];
+            $listHeaderParams = [
+               'type' => $params['type']
+            ];
 
-      self::showListHeader($listHeaderParams);
+            self::showListHeader($listHeaderParams);
+            break;
+      }
 
       $firstLevelResourceColumns = [];
       $secondLevelResourceColumns = [];
@@ -2153,45 +2233,68 @@ class PluginResourcesImportResource extends CommonDBTM {
             unset($lines[$foundedLineIndex]);
          }
 
-         echo "<tr>";
-         echo "<td class='center'>";
-         $link = Toolbox::getItemTypeFormURL(PluginResourcesResource::getType());
-         $link .= "?id=" . $resource['id'];
-         echo "<a href='$link'>" . $resource['id'] . "</a>";
-         echo "</td>";
-         echo "<td class='center'>";
-         echo $resource['name'];
-         echo "</td>";
-         echo "<td class='center'>";
-         echo $resource['firstname'];
-         echo "</td>";
-         echo "<td class='center'>";
+         switch($display){
+            case self::DISPLAY_STATISTICS:
+               if (!$firstLevel && !$secondLevel) {
+                  $result['not_found'] ++;
+               } else {
+                  if ($firstLevel) {
+                     $result['found_first_identifier'] ++;
+                  } else if ($secondLevel) {
+                     $result['found_second_identifier'] ++;
+                  }
+               }
+               break;
+            case self::DISPLAY_HTML:
+               echo "<tr>";
+               echo "<td class='center'>";
+               $link = Toolbox::getItemTypeFormURL(PluginResourcesResource::getType());
+               $link .= "?id=" . $resource['id'];
+               echo "<a href='$link'>" . $resource['id'] . "</a>";
+               echo "</td>";
+               echo "<td class='center'>";
+               echo $resource['name'];
+               echo "</td>";
+               echo "<td class='center'>";
+               echo $resource['firstname'];
+               echo "</td>";
+               echo "<td class='center'>";
 
-         if (!$firstLevel && !$secondLevel) {
-            echo __("Not in file", "resources");
-         } else {
-            $level = "";
-            if ($firstLevel) {
-               $level = __("first level", "resources");
-            } else if ($secondLevel) {
-               $level = __("second level", "resources");
-            }
+               if (!$firstLevel && !$secondLevel) {
+                  echo __("Not in file", "resources");
+               } else {
+                  $level = "";
+                  if ($firstLevel) {
+                     $level = __("first level", "resources");
+                  } else if ($secondLevel) {
+                     $level = __("second level", "resources");
+                  }
 
-            $identificationText = __("Find in file with %s identifier", "resources");
+                  $identificationText = __("Find in file with %s identifier", "resources");
 
-            echo sprintf($identificationText, $level);
+                  echo sprintf($identificationText, $level);
+               }
+               echo "</td>";
+               echo "<td class='center'>";
+               if ($firstLevel || $secondLevel) {
+                  self::showToolTipWithArray($columnTitles, $tooltipArray);
+               }
+               echo "</td>";
+               echo "</tr>";
+               break;
          }
-         echo "</td>";
-         echo "<td class='center'>";
-         if ($firstLevel || $secondLevel) {
-            self::showToolTipWithArray($columnTitles, $tooltipArray);
-         }
-         echo "</td>";
-         echo "</tr>";
       }
-      echo "</table>";
-      echo "</div>";
-      Html::closeForm();
+
+      switch($display){
+         case self::DISPLAY_STATISTICS:
+            echo json_encode($result);
+            break;
+         case self::DISPLAY_HTML:
+            echo "</table>";
+            echo "</div>";
+            Html::closeForm();
+            break;
+      }
    }
 
    public function getResources($start, $limit) {
