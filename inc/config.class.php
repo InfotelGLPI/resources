@@ -129,6 +129,52 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
 
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Resource manager', 'resources');
+         echo "</td>";
+         echo "<td>";
+         echo Html::hidden("resource_manager");
+         $possible_values = [];
+         $profileITIL = new Profile();
+         $profiles = $profileITIL->find([]);
+         if (!empty($profiles)) {
+            foreach ($profiles as $profile) {
+               $possible_values[$profile['id']] = $profile['name'];
+            }
+         }
+         $values = json_decode($this->fields['resource_manager']);
+         if (!is_array($values)) {
+            $values = [];
+         }
+         Dropdown::showFromArray("resource_manager",
+            $possible_values,
+            ['values'   => $values,
+               'multiple' => 'multiples']);
+
+         echo "</td>";
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Sales manager', 'resources');
+         echo "</td>";
+         echo "<td>";
+         echo Html::hidden("sales_manager");
+
+
+         $values = json_decode($this->fields['sales_manager']);
+         if (!is_array($values)) {
+            $values = [];
+         }
+         Dropdown::showFromArray("sales_manager",
+            $possible_values,
+            ['values'   => $values,
+               'multiple' => 'multiples']);
+
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
@@ -160,6 +206,42 @@ class PluginResourcesConfig extends CommonDBTM {
     */
    function useImportExternalDatas() {
       return $this->fields['import_external_datas'];
+   }
+
+   /**
+    * @param $input
+    *
+    * @return array|\type
+    */
+   function prepareInputForAdd($input) {
+      return $this->encodeSubtypes($input);
+   }
+
+   /**
+    * @param $input
+    *
+    * @return array|\type
+    */
+   function prepareInputForUpdate($input) {
+      return $this->encodeSubtypes($input);
+   }
+
+   /**
+    * Encode sub types
+    *
+    * @param type $input
+    *
+    * @return \type
+    */
+   function encodeSubtypes($input) {
+      if (!empty($input['resource_manager'])) {
+         $input['resource_manager'] = json_encode(array_values($input['resource_manager']));
+      }
+      if (!empty($input['sales_manager'])) {
+         $input['sales_manager'] = json_encode(array_values($input['sales_manager']));
+      }
+
+      return $input;
    }
 
 
