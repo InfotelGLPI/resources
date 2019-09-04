@@ -2449,7 +2449,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $importResources = self::getImportResourcesLinkedWithType($getImportResourcesParams);
 
-      if (!is_countable($importResources) || !count($importResources)) {
+      if (!is_array($importResources) || !count($importResources)) {
          switch ($params['type']) {
             case self::NEW_IMPORTS:
                self::showErrorHeader(__('No new Imports', 'resources'));
