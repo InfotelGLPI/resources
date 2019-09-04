@@ -103,7 +103,7 @@ class PluginResourcesDashboard extends CommonGLPI {
                $widget->setTabDatas($datas);
                $widget->setOption("bSort", false);
                $widget->toggleWidgetRefresh();
-               $widget->setWidgetTitle(__('New resource - checklist needs to verificated', 'resources'));
+               $widget->setWidgetTitle(__('New resource - checklist needs to verificated', 'resources')." : ".count($datas));
                return $widget;
              break;
 
@@ -142,7 +142,7 @@ class PluginResourcesDashboard extends CommonGLPI {
                $widget->setTabDatas($datas);
                $widget->setOption("bSort", false);
                $widget->toggleWidgetRefresh();
-               $widget->setWidgetTitle(__('Leaving resource - checklist needs to verificated', 'resources'));
+               $widget->setWidgetTitle(__('Leaving resource - checklist needs to verificated', 'resources')." : ".count($datas));
                return $widget;
              break;
       }
