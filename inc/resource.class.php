@@ -1982,13 +1982,42 @@ class PluginResourcesResource extends CommonDBTM {
       echo " \" >";
       echo __('Resource manager', 'resources');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value' => $options["users_id"],
-         'name' => "users_id",
-         'entity' => $input['entities_id'],
-         'right' => 'all']);
-      echo "</div>";
+      $config = new PluginResourcesConfig();
+      if ($config->getField('resource_manager') != "") {
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
 
+
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('resource_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+         $ids = join("','", $prof);
+         $profiles_User = $profile_User->find([$tableProfileUser . ".profiles_id" => [$ids], "entities_id" => $input['entities_id']]);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+
+         Dropdown::showFromArray("users_id", $used, ['value' => $options["users_id"], 'display_emptychoice' => true]);
+         echo "</div>";
+      }else{
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+
+         User::dropdown(  ['value' => $options["users_id"],
+            'name' => "users_id",
+            'entity' => $input['entities_id'],
+            'right' => 'all',
+         ]);
+         echo "</div>";
+
+
+      }
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
       if (in_array("users_id_sales", $required)) {
          echo " red";
@@ -1996,12 +2025,47 @@ class PluginResourcesResource extends CommonDBTM {
       echo " \" >";
       echo __('Sales manager', 'resources');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value' => $options["users_id_sales"],
-         'name' => "users_id_sales",
-         'entity' => $input['entities_id'],
-         'right' => 'all']);
-      echo "</div>";
+
+      if(($config->getField('sales_manager') != "")){
+
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('sales_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+
+         $ids = join("','", $prof);
+         $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id',$input['entities_id'],true);
+         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+//         $profiles_User = $profile_User->find([$tableProfileUser . ".profiles_id" => [$ids], "entities_id" => $input['entities_id']]);
+         $profiles_User = $profile_User->find($restrict);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+         Dropdown::showFromArray("users_id_sales",$used,['value'=>$options["users_id_sales"],'display_emptychoice'=>true]);
+//         Dropdown::show(User::getType(), ['value' => $options["users_id_sales"],
+//            'name' => "users_id_sales",
+//            'entity' => $input['entities_id'],
+//            'right' => 'all',
+//            'condition' => [$tableUser . ".id" => [$ids]]]);
+         echo "</div>";
+      }else{
+
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         User::dropdown( ['value' => $options["users_id_sales"],
+            'name' => "users_id_sales",
+            'entity' => $input['entities_id'],
+            'right' => 'all',
+            ]);
+         echo "</div>";
+      }
       echo "</div>";
 
       echo "<div class=\"bt-row\">";
