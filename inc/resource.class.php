@@ -736,11 +736,16 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!isset ($input["is_template"])) {
 
-         $required = $this->checkRequiredFields($input);
+         if(!isset($input['force'])){
+            $required = $this->checkRequiredFields($input);
 
-         if (count($required) > 0) {
-            Session::addMessageAfterRedirect(__('Required fields are not filled. Please try again.', 'resources'), false, ERROR);
-            return [];
+            if (count($required) > 0) {
+               Session::addMessageAfterRedirect(__('Required fields are not filled. Please try again.', 'resources'), false, ERROR);
+               return [];
+            }
+         }
+         else{
+            unset($input['force']);
          }
       }
 
@@ -1386,10 +1391,37 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Resource manager', 'resources') . "</td>";
       echo "<td>";
-      User::dropdown(['value' => $this->fields["users_id"],
-         'name' => "users_id",
-         'entity' => $this->fields["entities_id"],
-         'right' => 'all']);
+      $config = new PluginResourcesConfig();
+      if ($config->getField('resource_manager') != "") {
+
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('resource_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+         $ids = join("','", $prof);
+         $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id', $this->fields["entities_id"],true);
+         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+         $profiles_User = $profile_User->find($restrict);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+
+         Dropdown::showFromArray("users_id", $used, ['value' => $this->fields["users_id"], 'display_emptychoice' => true]);
+
+      }else{
+         User::dropdown(['value' => $this->fields["users_id"],
+            'name' => "users_id",
+            'entity' => $this->fields["entities_id"],
+            'right' => 'all']);
+      }
+
       echo "</td>";
       echo "<td";
       if (in_array("date_begin", $required)) {
@@ -1410,10 +1442,38 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Sales manager', 'resources') . "</td>";
       echo "<td>";
-      User::dropdown(['value' => $this->fields["users_id_sales"],
-         'name' => "users_id_sales",
-         'entity' => $this->fields["entities_id"],
-         'right' => 'all']);
+      $config = new PluginResourcesConfig();
+      if(($config->getField('sales_manager') != "")){
+
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('sales_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+
+         $ids = join("','", $prof);
+         $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id', $this->fields["entities_id"],true);
+         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+         $profiles_User = $profile_User->find($restrict);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+         Dropdown::showFromArray("users_id_sales",$used,['value'=>$this->fields["users_id_sales"],'display_emptychoice'=>true]);
+         ;
+      }else{
+         User::dropdown(['value' => $this->fields["users_id_sales"],
+            'name' => "users_id_sales",
+            'entity' => $this->fields["entities_id"],
+            'right' => 'all']);
+      }
+
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
@@ -1982,13 +2042,44 @@ class PluginResourcesResource extends CommonDBTM {
       echo " \" >";
       echo __('Resource manager', 'resources');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value' => $options["users_id"],
-         'name' => "users_id",
-         'entity' => $input['entities_id'],
-         'right' => 'all']);
-      echo "</div>";
+      $config = new PluginResourcesConfig();
+      if ($config->getField('resource_manager') != "") {
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
 
+
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('resource_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+         $ids = join("','", $prof);
+         $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id', $_SESSION['glpiactive_entity'],true);
+         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+         $profiles_User = $profile_User->find($restrict);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+
+         Dropdown::showFromArray("users_id", $used, ['value' => $options["users_id"], 'display_emptychoice' => true]);
+         echo "</div>";
+      }else{
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+
+         User::dropdown(  ['value' => $options["users_id"],
+            'name' => "users_id",
+            'entity' => $input['entities_id'],
+            'right' => 'all',
+         ]);
+         echo "</div>";
+
+
+      }
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
       if (in_array("users_id_sales", $required)) {
          echo " red";
@@ -1996,12 +2087,47 @@ class PluginResourcesResource extends CommonDBTM {
       echo " \" >";
       echo __('Sales manager', 'resources');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
-      User::dropdown(['value' => $options["users_id_sales"],
-         'name' => "users_id_sales",
-         'entity' => $input['entities_id'],
-         'right' => 'all']);
-      echo "</div>";
+
+      if(($config->getField('sales_manager') != "")){
+
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         $tableProfileUser = Profile_User::getTable();
+         $tableUser = User::getTable();
+         $profile_User = new  Profile_User();
+         $prof=[];
+         foreach (json_decode($config->getField('sales_manager')) as $profs){
+            $prof[$profs] = $profs;
+         }
+
+         $ids = join("','", $prof);
+         $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id',$input['entities_id'],true);
+         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+//         $profiles_User = $profile_User->find([$tableProfileUser . ".profiles_id" => [$ids], "entities_id" => $input['entities_id']]);
+         $profiles_User = $profile_User->find($restrict);
+         $used = [];
+         foreach ($profiles_User as $profileUser) {
+            $user = new User();
+            $user->getFromDB($profileUser["users_id"]);
+            $used[$profileUser["users_id"]] = $user->getRawName();
+         }
+
+         Dropdown::showFromArray("users_id_sales",$used,['value'=>$options["users_id_sales"],'display_emptychoice'=>true]);
+//         Dropdown::show(User::getType(), ['value' => $options["users_id_sales"],
+//            'name' => "users_id_sales",
+//            'entity' => $input['entities_id'],
+//            'right' => 'all',
+//            'condition' => [$tableUser . ".id" => [$ids]]]);
+         echo "</div>";
+      }else{
+
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         User::dropdown( ['value' => $options["users_id_sales"],
+            'name' => "users_id_sales",
+            'entity' => $input['entities_id'],
+            'right' => 'all',
+            ]);
+         echo "</div>";
+      }
       echo "</div>";
 
       echo "<div class=\"bt-row\">";
@@ -4392,10 +4518,11 @@ class PluginResourcesResource extends CommonDBTM {
 
             // When firstname and lastname
             if($dataNameID == 0 || $dataNameID == 1){
-               $resourceValue = strtolower($resourceValue);
-               $value = strtolower($value);
+               return strcasecmp($resourceValue, $value) != 0;
+            }else{
+               return $resourceValue != $value;
             }
-            return $resourceValue != $value;
+
             break;
       }
       return false;

@@ -50,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.6.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.6.3.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -264,6 +264,10 @@ function plugin_resources_install() {
    //Version 2.6.1
    if (!$DB->tableExists("glpi_plugin_resources_imports")) {
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/update-2.6.1.sql");
+   }
+   if (!$DB->fieldExists("glpi_plugin_resources_configs", "resource_manager")) {
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.6.3.sql");
+
    }
 
    if ($update80) {
