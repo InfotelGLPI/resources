@@ -736,11 +736,16 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!isset ($input["is_template"])) {
 
-         $required = $this->checkRequiredFields($input);
+         if(!isset($input['force'])){
+            $required = $this->checkRequiredFields($input);
 
-         if (count($required) > 0) {
-            Session::addMessageAfterRedirect(__('Required fields are not filled. Please try again.', 'resources'), false, ERROR);
-            return [];
+            if (count($required) > 0) {
+               Session::addMessageAfterRedirect(__('Required fields are not filled. Please try again.', 'resources'), false, ERROR);
+               return [];
+            }
+         }
+         else{
+            unset($input['force']);
          }
       }
 

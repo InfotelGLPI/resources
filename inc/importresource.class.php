@@ -764,7 +764,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo '<thead>';
       echo '<tr>';
 
-      echo "'<th colspan='21'>'" . $title;
+      echo '<th colspan="21">' . $title;
 
       if (!is_null($linkText) && !is_null($url)) {
          echo '<br>';
@@ -1405,7 +1405,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    }
 
    private function dropdownImports($params) {
-      $defaultValue = isset($params['default']) ? $params['default'] : null;
+      $defaultValue = isset($params['selected-import']) ? $params['selected-import'] : null;
 
       $pluginResourcesImport = new PluginResourcesImport();
 

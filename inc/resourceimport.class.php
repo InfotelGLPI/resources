@@ -106,6 +106,23 @@ class PluginResourcesResourceImport extends CommonDBChild {
       }
 
       $resource = new PluginResourcesResource();
+
+      // Bypass check required fields
+      $keys = array_keys($resourceInputs);
+
+      if(!in_array('locations_id', $keys)){
+         $resourceInputs['locations_id'] = 0;
+      }
+
+      if(!in_array('users_id_sales', $keys)){
+         $resourceInputs['users_id_sales'] = 0;
+      }
+
+      if(!in_array('plugin_resources_departments_id', $keys)){
+         $resourceInputs['plugin_resources_departments_id'] = 0;
+      }
+
+      $resourceInputs['force'] = 1;
       $resourceID = $resource->add($resourceInputs);
 
       if (!$resourceID) {
