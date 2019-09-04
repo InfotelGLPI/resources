@@ -1067,13 +1067,43 @@ class PluginResourcesImportResource extends CommonDBTM {
                   echo "</li>";
                   echo "<li style='$newCSS'>";
                }
-               User::dropdown([
-                  'name' => $hValue,
-                  'value' => $data['value'],
-                  'entity' => $_SESSION['glpiactive_entity'],
-                  'entity_sons' => true,
-                  'right' => 'all'
-               ]);
+               $config = new PluginResourcesConfig();
+               if ($config->getField('resource_manager') != "") {
+
+                  $tableProfileUser = Profile_User::getTable();
+                  $tableUser = User::getTable();
+                  $profile_User = new  Profile_User();
+                  $prof=[];
+                  foreach (json_decode($config->getField('resource_manager')) as $profs){
+                     $prof[$profs] = $profs;
+                  }
+                  $ids = join("','", $prof);
+                  $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id',$_SESSION['glpiactive_entity'],true);
+                  $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+                  $profiles_User = $profile_User->find($restrict);
+                  $used = [];
+                  foreach ($profiles_User as $profileUser) {
+                     $user = new User();
+                     $user->getFromDB($profileUser["users_id"]);
+                     $used[$profileUser["users_id"]] = $user->getRawName();
+                  }
+
+
+                  Dropdown::showFromArray($hValue, $used, ['value' => $data['value'], 'display_emptychoice' => true]);
+
+               }else{
+
+
+                  User::dropdown([
+                     'name' => $hValue,
+                     'value' => $data['value'],
+                     'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true,
+                     'right' => 'all'
+                  ]);
+
+               }
+
                if ($oldValues) {
                   echo "</li>";
                   echo "</ul>";
@@ -1091,6 +1121,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   echo "</li>";
                   echo "<li style='$newCSS'>";
                }
+
                Dropdown::show(PluginResourcesDepartment::class, [
                   'name' => $hValue,
                   'value' => $data['value'],
@@ -1129,14 +1160,44 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                   echo "</li>";
                   echo "<li style='$newCSS'>";
+
                }
-               User::dropdown([
-                  'name' => $hValue,
-                  'value' => $data['value'],
-                  'entity' => $_SESSION['glpiactive_entity'],
-                  'entity_sons' => true,
-                  'right' => 'all'
-               ]);
+               $config = new PluginResourcesConfig();
+               if(($config->getField('sales_manager') != "")){
+
+                  echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+                  $tableProfileUser = Profile_User::getTable();
+                  $tableUser = User::getTable();
+                  $profile_User = new  Profile_User();
+                  $prof=[];
+                  foreach (json_decode($config->getField('sales_manager')) as $profs){
+                     $prof[$profs] = $profs;
+                  }
+
+                  $ids = join("','", $prof);
+                  $restrict = getEntitiesRestrictCriteria($tableProfileUser,'entities_id',$_SESSION['glpiactive_entity'],true);
+                  $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]],$restrict);
+                  $profiles_User = $profile_User->find($restrict);
+                  $used = [];
+                  foreach ($profiles_User as $profileUser) {
+                     $user = new User();
+                     $user->getFromDB($profileUser["users_id"]);
+                     $used[$profileUser["users_id"]] = $user->getRawName();
+                  }
+
+                  Dropdown::showFromArray($hValue,$used,['value'=>$data['value'],'display_emptychoice'=>true]);
+;
+               }else{
+                  User::dropdown([
+                     'name' => $hValue,
+                     'value' => $data['value'],
+                     'entity' => $_SESSION['glpiactive_entity'],
+                     'entity_sons' => true,
+                     'right' => 'all'
+                  ]);
+               }
+
+
                if ($oldValues) {
                   echo "</li>";
                   echo "</ul>";
