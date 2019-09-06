@@ -801,7 +801,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             foreach ($params['titles'] as $key => $title) {
 
                echo '<th>';
-               echo iconv(mb_detect_encoding($title, mb_detect_order(), true),"UTF-8", $title);
+               echo encodeUtf8($title);
                echo '</th>';
             }
 
@@ -1250,11 +1250,14 @@ class PluginResourcesImportResource extends CommonDBTM {
    }
 
    private function encodeUtf8($value) {
-      if (preg_match('!!u', $value)) {
-         return $value;
-      } else {
-         return iconv(mb_detect_encoding($value, mb_detect_order(), true),"UTF-8", $value);
+
+      $detectEncoding = mb_detect_encoding($value);
+
+      if($detectEncoding){
+         return mb_convert_encoding($value, "UTF-8", $detectEncoding);
       }
+      Toolbox::logDebug("Can't detect encoding of string");
+      return $value;
    }
 
    private function verifyFilePage($params = []) {
@@ -2170,7 +2173,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       foreach($lines as $keyLine=>$line){
          foreach($line as $keyData=>$data){
             if(is_string($data) && !empty($data)){
-               $temp = iconv(mb_detect_encoding($data, mb_detect_order(), true),"UTF-8", $data);
+               $temp = encodeUtf8($data);
                $lines[$keyLine][$keyData] = $temp;
             }
          }
@@ -2194,9 +2197,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             switch ($firstLevelResourceColumn['target']) {
                case PluginResourcesResourceImport::class:
-                  $name = iconv(
-                     mb_detect_encoding($firstLevelResourceColumn['name'], mb_detect_order(), true),
-                     "UTF-8", $firstLevelResourceColumn['name']);
+                  $name = encodeUtf8($firstLevelResourceColumn['name']);
                   $crit = [
                      $pluginResourcesResourceImport::$items_id => $resource['id'],
                      'name' => $name
@@ -2218,9 +2219,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             switch ($secondLevelResourceColumn['target']) {
                case PluginResourcesResourceImport::class:
-                  $name = iconv(
-                     mb_detect_encoding($firstLevelResourceColumn['name'], mb_detect_order(), true),
-                     "UTF-8", $firstLevelResourceColumn['name']);
+                  $name = encodeUtf8($secondLevelResourceColumn['name']);
                   $crit = [
                      $pluginResourcesResourceImport::$items_id => $resource['id'],
                      'name' => $name
