@@ -801,7 +801,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             foreach ($params['titles'] as $key => $title) {
 
                echo '<th>';
-               echo encodeUtf8($title);
+               echo $this->encodeUtf8($title);
                echo '</th>';
             }
 
@@ -1251,7 +1251,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
    private function encodeUtf8($value) {
 
-      $detectEncoding = mb_detect_encoding($value);
+      $detectEncoding = mb_detect_encoding($value, 'ASCII,UTF-8,ISO-8859-15');
 
       if($detectEncoding){
          return mb_convert_encoding($value, "UTF-8", $detectEncoding);
@@ -2173,7 +2173,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       foreach($lines as $keyLine=>$line){
          foreach($line as $keyData=>$data){
             if(is_string($data) && !empty($data)){
-               $temp = encodeUtf8($data);
+               $temp = $this->encodeUtf8($data);
                $lines[$keyLine][$keyData] = $temp;
             }
          }
@@ -2197,7 +2197,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             switch ($firstLevelResourceColumn['target']) {
                case PluginResourcesResourceImport::class:
-                  $name = encodeUtf8($firstLevelResourceColumn['name']);
+                  $name = $this->encodeUtf8($firstLevelResourceColumn['name']);
                   $crit = [
                      $pluginResourcesResourceImport::$items_id => $resource['id'],
                      'name' => $name
@@ -2219,7 +2219,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             switch ($secondLevelResourceColumn['target']) {
                case PluginResourcesResourceImport::class:
-                  $name = encodeUtf8($secondLevelResourceColumn['name']);
+                  $name = $this->encodeUtf8($secondLevelResourceColumn['name']);
                   $crit = [
                      $pluginResourcesResourceImport::$items_id => $resource['id'],
                      'name' => $name
