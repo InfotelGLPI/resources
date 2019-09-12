@@ -39,7 +39,10 @@ if (isset($_GET['page']) && isset($_GET['file'])) {
 
    $absoluteFilePath = $pluginResourcesImportResource::getLocationOfVerificationFiles() . "/" . $_GET['file'];
 
-   $importId = $pluginResourcesImportResource->verifyFileHeader($absoluteFilePath);
+   $temp = self::readCSVLines($absoluteFilePath, 0, 1);
+   $header = array_shift($temp);
+
+   $importId = $pluginResourcesImportResource->checkHeader($header);
 
    $listParams = $pluginResourcesImportResource->fillVerifyParams(
       0,

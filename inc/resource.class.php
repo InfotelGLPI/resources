@@ -4397,12 +4397,15 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
    function isDifferentFromImportResourceData($resourceID, $data) {
-      if (self::hasDifferenciesWithValueByDataNameID(
-         $resourceID, $data['resource_column'], $data['name'], $data['value']
-      )) {
-         return true;
-      }
-      return false;
+
+      $result = self::hasDifferenciesWithValueByDataNameID(
+         $resourceID,
+         $data['resource_column'],
+         $data['name'],
+         $data['value']
+      );
+
+      return $result;
    }
 
    /**
@@ -4518,7 +4521,10 @@ class PluginResourcesResource extends CommonDBTM {
 
             // When firstname and lastname
             if($dataNameID == 0 || $dataNameID == 1){
-               return strcasecmp($resourceValue, $value) != 0;
+
+               $result = strcasecmp($resourceValue, $value) == 0;
+
+               return !$result;
             }else{
                return $resourceValue != $value;
             }

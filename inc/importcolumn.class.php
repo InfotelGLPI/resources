@@ -308,7 +308,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
-      echo "<td><input type='text' name='name' value='$name'></td>";
+      echo "<td><input type='text' name='name' value=\"$name\"></td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";

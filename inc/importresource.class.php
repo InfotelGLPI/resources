@@ -234,40 +234,28 @@ class PluginResourcesImportResource extends CommonDBTM {
             continue;
          }
 
-         $import = null;
-
          if (file_exists($filePath)) {
-            $handle = fopen($filePath, 'r');
-
             // Initialize existingImports Array
             // Used to prevent multiple get imports from database
             // Speed up execution time
             $this->resetExistingImportsArray();
             $this->initExistingImportsArray();
 
-            $importID = null;
-            $header = null;
+            $temp = self::readCSVLines($filePath, 0, 1);
+            $header = array_shift($temp);
 
-            $lineIndex = 0;
-            while (($line = fgetcsv($handle, 1000, ';')) !== FALSE) {
+            $importID = $this->checkHeader($header);
 
-               // First line is header description
-               if ($lineIndex == 0) {
+            if(!$importID){
+               $importSuccess = false;
+               continue;
+            }
 
-                  $importID = $this->checkHeader($line);
+            $lines = self::readCSVLines($filePath, 1, INF);
 
-                  if ($importID <= 0) {
-                     $importSuccess = false;
-                     break;
-                  }
-                  $header = $line;
-                  // Each line contain import data
-               } else {
-
-                  $datas = $this->parseFileLine($header, $line, $importID);
-                  $this->manageImport($datas, $importID);
-               }
-               $lineIndex++;
+            foreach($lines as $line){
+               $datas = $this->parseFileLine($header, $line, $importID);
+               $this->manageImport($datas, $importID);
             }
          }
          if ($importSuccess) {
@@ -431,28 +419,19 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $filePath = GLPI_DOC_DIR . '/_tmp/' . $params['_filename'][0];
 
+      $temp = self::readCSVLines($filePath, 0, 1);
+      $header = array_shift($temp);
+
+      $importId = $this->checkHeader($header);
+
       // Verify file compatibility
-      if (is_null(self::verifyFileHeader($filePath))) {
+      if (is_null($importId)) {
          return;
       }
 
       if (!document::moveDocument($params, $params['_filename'][0])) {
          die('ERROR WHEN MOVING FILE !');
       }
-   }
-
-   function verifyFileHeader($filePath) {
-      if (file_exists($filePath)) {
-         $handle = fopen($filePath, 'r');
-
-         $importID = null;
-         while (($line = fgetcsv($handle, 1000, ';')) !== FALSE) {
-
-            $importID = $this->checkHeader($line);
-            break;
-         }
-      }
-      return $importID;
    }
 
    /**
@@ -472,35 +451,32 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       foreach ($imports as $import) {
 
-         $crit = [
+         $columns = $pluginResourcesImportColumn->find([
             PluginResourcesImport::$keyInOtherTables => $import['id']
-         ];
+         ]);
 
-         $nbOfColumns = count($pluginResourcesImportColumn->find($crit));
-
-         if ($nbOfColumns != count($header)) {
+         // Test number of columns
+         if (count($columns) != count($header)) {
             continue;
          }
-         $sameColumnNames = true;
-         $columnIndex = 0;
-         foreach ($header as $item) {
 
-            $name = addslashes($item);
-            $name = $this->encodeUtf8($name);
+         $foundImport = true;
+         foreach($columns as $column){
 
-            $crit = [
-               'name' => $name,
-               PluginResourcesImport::$keyInOtherTables => $import['id']
-            ];
-
-            $pluginResourcesImportColumn->getFromDBByCrit($crit);
-            if ($pluginResourcesImportColumn->getID() == -1) {
-               $sameColumnNames = false;
+            $foundColumnInHeader = false;
+            foreach ($header as $item) {
+               if($item == $column['name']){
+                  $foundColumnInHeader = true;
+                  break;
+               }
+            }
+            // Import column not found in header
+            if(!$foundColumnInHeader){
+               $foundImport = false;
                break;
             }
-            $columnIndex++;
          }
-         if ($sameColumnNames) {
+         if($foundImport){
             return $import['id'];
          }
       }
@@ -883,7 +859,7 @@ class PluginResourcesImportResource extends CommonDBTM {
     * @param $type
     * @param $resourceID
     */
-   function showOne($importResourceId, $type, $resourceID = null) {
+   function showOne($importResourceId, $type, $resourceID = null, $displayRedBorder = false) {
 
       global $CFG_GLPI;
 
@@ -915,7 +891,14 @@ class PluginResourcesImportResource extends CommonDBTM {
        * %s 2 : ColumnID
        */
 
-      echo "<td class='center' width='10'>";
+      echo "<td class='center' width='10'";
+
+      if($displayRedBorder){
+         echo " style='border-left:solid 5px red'";
+      }
+
+      echo ">";
+
       Html::showCheckbox(["name" => "select[" . $importResourceId . "]"]);
       echo "</td>";
 
@@ -1290,7 +1273,10 @@ class PluginResourcesImportResource extends CommonDBTM {
             self::showErrorHeader($title);
          } else {
 
-            $importId = self::verifyFileHeader($absoluteFilePath);
+            $temp = self::readCSVLines($absoluteFilePath, 0, 1);
+            $header = array_shift($temp);
+
+            $importId = $this->checkHeader($header);
 
             // Verify file header match a configured import
             if (!$importId) {
@@ -1715,12 +1701,21 @@ class PluginResourcesImportResource extends CommonDBTM {
     * @param $limit
     */
    public function readCSVLines($absoluteFilePath, $start, $limit = INF) {
+
       $lines = [];
       if (file_exists($absoluteFilePath)) {
          $handle = fopen($absoluteFilePath, 'r');
 
          $lineIndex = 0;
          while (($line = fgetcsv($handle, 1024, ';')) !== FALSE) {
+
+            // Loop through each field
+            foreach($line as &$field)
+            {
+               // Remove any invalid or hidden characters
+               $field = $this->encodeUtf8($field);
+            }
+
 
             if ($lineIndex >= $start) {
                // Read line
@@ -2489,11 +2484,14 @@ class PluginResourcesImportResource extends CommonDBTM {
          self::showListHeader($headParams);
 
          foreach ($importResources as $importResource) {
+
+            $displayRedBorder = false;
+
             echo "<tr valign='center' ";
             $res = new PluginResourcesResource();
             if (isset($importResource['resource_id']) && $res->getFromDB($importResource['resource_id'])) {
-               if ($res->fields['is_deleted'] == 1) {
-                  echo "class='red'";
+               if ($res->fields['is_deleted']) {
+                  $displayRedBorder = true; // Red border is used to identify deleted resources
                }
             }
             echo ">";
@@ -2503,10 +2501,10 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             switch ($params['type']) {
                case self::NEW_IMPORTS:
-                  $this->showOne($importResource['id'], $params['type']);
+                  $this->showOne($importResource['id'], $params['type'], null, $displayRedBorder);
                   break;
                case self::CONFLICTED_IMPORTS:
-                  $this->showOne($importResource['id'], $params['type'], $importResource['resource_id']);
+                  $this->showOne($importResource['id'], $params['type'], $importResource['resource_id'], $displayRedBorder);
                   break;
             }
 
