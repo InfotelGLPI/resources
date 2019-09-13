@@ -241,7 +241,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             $this->resetExistingImportsArray();
             $this->initExistingImportsArray();
 
-            $temp = self::readCSVLines($filePath, 0, 1);
+            $temp = $this->readCSVLines($filePath, 0, 1);
             $header = array_shift($temp);
 
             $importID = $this->checkHeader($header);
@@ -251,7 +251,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                continue;
             }
 
-            $lines = self::readCSVLines($filePath, 1, INF);
+            $lines = $this->readCSVLines($filePath, 1, INF);
 
             foreach($lines as $line){
                $datas = $this->parseFileLine($header, $line, $importID);
@@ -419,7 +419,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $filePath = GLPI_DOC_DIR . '/_tmp/' . $params['_filename'][0];
 
-      $temp = self::readCSVLines($filePath, 0, 1);
+      $temp = $this->readCSVLines($filePath, 0, 1);
       $header = array_shift($temp);
 
       $importId = $this->checkHeader($header);
@@ -1273,7 +1273,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             self::showErrorHeader($title);
          } else {
 
-            $temp = self::readCSVLines($absoluteFilePath, 0, 1);
+            $temp = $this->readCSVLines($absoluteFilePath, 0, 1);
             $header = array_shift($temp);
 
             $importId = $this->checkHeader($header);
@@ -1493,16 +1493,16 @@ class PluginResourcesImportResource extends CommonDBTM {
       $display = $params['display'];
 
       // Number of lines in csv - header
-      $nbLines = self::countCSVLines($absoluteFilePath) - 1;
+      $nbLines = $this->countCSVLines($absoluteFilePath) - 1;
 
       // The first line is header
       $startLine = ($start === 0) ? 1 : $start;
       $limitLine = ($start === 0) ? $limit + 1 : $limit;
 
-      $lines = self::readCSVLines($absoluteFilePath, $startLine, $limitLine);
+      $lines = $this->readCSVLines($absoluteFilePath, $startLine, $limitLine);
 
       // Recover the header of file FIRST LINE
-      $temp = self::readCSVLines($absoluteFilePath, 0, 1);
+      $temp = $this->readCSVLines($absoluteFilePath, 0, 1);
       $header = array_shift($temp);
 
       switch($display){
@@ -2090,6 +2090,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             ];
             break;
          case self::DISPLAY_HTML:
+//            $resources = self::getResources($start, 1);
             $resources = self::getResources($start, $limit);
             break;
       }
@@ -2163,16 +2164,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $fileReadStart = 1;
 
       // Find resource in file
-      $lines = self::readCSVLines($absoluteFilePath, $fileReadStart);
-
-      foreach($lines as $keyLine=>$line){
-         foreach($line as $keyData=>$data){
-            if(is_string($data) && !empty($data)){
-               $temp = $this->encodeUtf8($data);
-               $lines[$keyLine][$keyData] = $temp;
-            }
-         }
-      }
+      $lines = $this->readCSVLines($absoluteFilePath, $fileReadStart);
 
       $pluginResourcesResourceImport = new PluginResourcesResourceImport();
 
@@ -2256,7 +2248,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                      break;
                   }
                }
-               if ($firstLevelToFind == $firstLevelFound) {
+               if ($firstLevelToFind > 0 && $firstLevelToFind == $firstLevelFound) {
                   $firstLevel = true;
                   $tooltipArray = $line;
                   $foundedLineIndex = $key;
@@ -2274,7 +2266,8 @@ class PluginResourcesImportResource extends CommonDBTM {
                         break;
                      }
                   }
-                  if ($secondLevelToFind == $secondLevelFound) {
+                  // If
+                  if ($secondLevelToFind > 0 && $secondLevelToFind == $secondLevelFound) {
                      $secondLevel = true;
                      $tooltipArray = $line;
                      $foundedLineIndex = $key;
@@ -2623,11 +2616,5 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "&nbsp;&nbsp;<input type='submit' name='delete' class='submit' value='" . _sx('button', 'Remove an item') . "' >";
       echo "</td>";
       echo "</tr>";
-   }
-
-   static function printCSV(){
-
-      echo "yolo !";
-
    }
 }
