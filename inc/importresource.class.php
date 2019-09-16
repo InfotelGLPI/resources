@@ -2203,6 +2203,12 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                switch($firstLevelResourceColumn['target']){
                   case PluginResourcesResourceImport::class:
+
+                     $crit = [
+                        'plugin_resources_resources_id' => $resource['id'],
+                        'name' => $pluginResourcesResourceImport->getField('name')
+                     ];
+
                      if ($pluginResourcesResourceImport->getFromDBByCrit($crit)) {
                         if(is_string($lineValue)){
                            $foundedFirstLevel = strcasecmp($lineValue, $pluginResourcesResourceImport->getField('value') == 0);
@@ -2252,6 +2258,12 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                   switch($secondLevelResourceColumn['target']){
                      case PluginResourcesResourceImport::class:
+
+                        $crit = [
+                           'plugin_resources_resources_id' => $resource['id'],
+                           'name' => $pluginResourcesResourceImport->getField('name')
+                        ];
+
                         if ($pluginResourcesResourceImport->getFromDBByCrit($crit)) {
                            if(is_string($lineValue)){
                               $foundedSecondLevel = strcasecmp($lineValue, $pluginResourcesResourceImport->getField('value') == 0);
