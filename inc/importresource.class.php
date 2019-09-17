@@ -225,7 +225,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       foreach ($files as $file) {
 
-         $importSuccess = true;
+         $importSuccess = false;
 
          $filePath = $path . $file;
 
@@ -246,16 +246,14 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             $importID = $this->checkHeader($header);
 
-            if(!$importID){
-               $importSuccess = false;
-               continue;
-            }
+            if($importID){
+               $lines = $this->readCSVLines($filePath, 1, INF);
 
-            $lines = $this->readCSVLines($filePath, 1, INF);
-
-            foreach($lines as $line){
-               $datas = $this->parseFileLine($header, $line, $importID);
-               $this->manageImport($datas, $importID);
+               foreach($lines as $line){
+                  $datas = $this->parseFileLine($header, $line, $importID);
+                  $this->manageImport($datas, $importID);
+               }
+               $importSuccess = true;
             }
          }
          if ($importSuccess) {
