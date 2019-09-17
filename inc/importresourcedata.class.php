@@ -53,6 +53,13 @@ class PluginResourcesImportResourceData extends CommonDBChild {
       ];
    }
 
+   public function purgeDatabase(){
+      global $DB;
+
+      $query = "DELETE FROM `".self::getTable()."`";
+      return $DB->query($query);
+   }
+
    public function purgeDataByImportResource($importResourceId){
       global $DB;
 

@@ -7,26 +7,35 @@ $import = new PluginResourcesImport();
 
 $pluginResourcesResourceImport = new PluginResourcesResourceImport();
 
-if (isset($_POST["add"])) {
-
-   $import->check(-1, CREATE, $_POST);
-
-   if(!isset($_POST['select']) || !isset($_POST['import'])){
-      Html::displayErrorAndDie('Wrong parameters');
-   }
+if (isset($_POST['save'])){
 
    foreach($_POST['select'] as $key=>$selected) {
 
       if ($selected) {
 
-         $input = [
-            'importID' => $key,
-            'datas' => $_POST['import'][$key]
-         ];
+         // Update
+         if($_POST['resource'][$key]){
+            $input = [
+               'resourceID' => $_POST['resource'][$key],
+               'datas' => $_POST['import'][$key]
+            ];
 
-         $pluginResourcesResourceImport->add($input);
-         $pluginResourcesImportResource = new PluginResourcesImportResource();
-         $pluginResourcesImportResource->delete(['id' => $key]);
+            $pluginResourcesResourceImport->update($input);
+            $pluginResourcesImportResource = new PluginResourcesImportResource();
+            $pluginResourcesImportResource->delete(['id' => $key]);
+         }
+         //New
+         else{
+            $import->check(-1, CREATE, $_POST);
+            $input = [
+               'importID' => $key,
+               'datas' => $_POST['import'][$key]
+            ];
+
+            $pluginResourcesResourceImport->add($input);
+            $pluginResourcesImportResource = new PluginResourcesImportResource();
+            $pluginResourcesImportResource->delete(['id' => $key]);
+         }
       }
    }
    redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
@@ -37,27 +46,6 @@ if (isset($_POST["add"])) {
    $pluginResourcesResourceImport->delete($_POST);
    redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 
-} else if (isset($_POST["update"])) {
-
-   if(!isset($_POST['select']) || !isset($_POST['import'])){
-      Html::displayErrorAndDie('Wrong parameters');
-   }
-
-   foreach($_POST['select'] as $key=>$selected) {
-
-      if ($selected) {
-
-         $input = [
-           'resourceID' => $_POST['resource'][$key],
-           'datas' => $_POST['import'][$key]
-         ];
-
-         $pluginResourcesResourceImport->update($input);
-         $pluginResourcesImportResource = new PluginResourcesImportResource();
-         $pluginResourcesImportResource->delete(['id' => $key]);
-      }
-   }
-   redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 } else if (isset($_POST["delete"])){
    foreach($_POST['select'] as $key=>$selected){
       if($selected){

@@ -4286,9 +4286,14 @@ class PluginResourcesResource extends CommonDBTM {
       $query = "SELECT r.*";
       $from = "FROM " . self::getTable() . " as r";
       $join = "";
-      $where = "WHERE 1=1";
+      $where = 'WHERE 1=1';
 
       foreach ($identifiers as $identifier) {
+
+         if(is_string($identifier['value']) && empty($identifier['value'])){
+            $identifier['value'] = null;
+         }
+
          switch ($identifier['resource_column']) {
             case 10:
                $tableResourceImportCriterias[] = [

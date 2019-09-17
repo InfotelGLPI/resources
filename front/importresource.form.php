@@ -16,5 +16,11 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["import-file"])){
    $importResource->importFileToVerify($_POST);
    Html::back();
+} else if (isset($_GET["reset-imports"])){
+   $importResource->purgeDatabase();
+
+   $importResourceDataDBTM = new PluginResourcesImportResourceData();
+   $importResourceDataDBTM->purgeDatabase();
+   Html::back();
 }
 Html::displayErrorAndDie('Lost');

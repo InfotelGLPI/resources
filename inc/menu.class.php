@@ -244,7 +244,11 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<br>" . __('Configure Imports', 'resources') . "</a>";
          echo "</td>";
 
-         echo "<td colspan='2'></td>";
+         echo "<td class='center' colspan='2'>";
+         echo "<a href='".PluginResourcesImportResource::getFormURL()."?reset-imports=1'>";
+         echo "<i class=\"fa fa-trash fa-2x\"></i>";
+         echo "<br>" . __('Purge imported resources', 'resources') . "</a>";
+         echo "</td>";
 
          echo "</tr>";
       }
