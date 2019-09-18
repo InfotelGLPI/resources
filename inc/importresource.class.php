@@ -36,12 +36,11 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesImportResource extends CommonDBTM {
 
-   const NEW_IMPORTS = 0;
-   const CONFLICTED_IMPORTS = 1;
+   const UPDATE_RESOURCES = 0;
 
    // Pages
-   const VERIFY_FILE = 2;
-   const VERIFY_GLPI = 3;
+   const VERIFY_FILE = 1;
+   const VERIFY_GLPI = 2;
    const IDENTICAL = 0;
    const DIFFERENT = 1;
 
@@ -537,8 +536,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          case self::VERIFY_GLPI:
             $this->verifyFilePage($params);
             break;
-         case self::NEW_IMPORTS:
-         case self::CONFLICTED_IMPORTS:
+         case self::UPDATE_RESOURCES:
             $this->importFilePage($params);
             break;
          default:
@@ -562,8 +560,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo '<tr>';
 
       switch ($params['type']) {
-         case self::NEW_IMPORTS:
-         case self::CONFLICTED_IMPORTS:
+         case self::UPDATE_RESOURCES:
             echo "<th colspan='16'>" . __('Update GLPI Resources', 'resources');
 
             $title = sprintf(
@@ -600,8 +597,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             self::showFileSelector($params);
             echo '</td>';
             break;
-         case self::CONFLICTED_IMPORTS:
-         case self::NEW_IMPORTS:
+         case self::UPDATE_RESOURCES:
             echo '<td>';
             self::showImportSelector($params);
             echo '</td>';
@@ -759,8 +755,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    function showListHeader($params) {
 
       switch ($params['type']) {
-         case self::NEW_IMPORTS:
-         case self::CONFLICTED_IMPORTS:
+         case self::UPDATE_RESOURCES:
             echo '<tr>';
             self::displayCheckAll();
             echo '<th>';
@@ -929,15 +924,6 @@ class PluginResourcesImportResource extends CommonDBTM {
          $textInput = "<input name='$hValue' type='hidden' value='%s'>";
 
          echo "<span>";
-         if (!empty($data['name']) && $data['resource_column'] != 10 && $data['value'] == -1) {
-
-            if ($type == self::NEW_IMPORTS) {
-               echo "<img style='vertical-align:middle' src='" .
-                  $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file_red.png'" .
-                  "title='" . __("Not Found in GLPI", "resources") . "'" .
-                  " width='30' height='30'>";
-            }
-         }
 
          $oldValues = $resourceID && $pluginResourcesResource->hasDifferenciesWithValueByDataNameID(
                $resourceID,

@@ -210,16 +210,9 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
-         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::NEW_IMPORTS."'>";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/add.png' />";
-         echo "<br>" . __('Add new resources', 'resources') . "</a>";
-         echo "</td>";
-
-
-         echo "<td class='center' colspan='2'>";
-         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::CONFLICTED_IMPORTS."'>";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/database.png' />";
-         echo "<br>" . __('Incoherences', 'resources') . "</a>";
+         echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::UPDATE_RESOURCES."'>";
+         echo "<i class=\"fa fa-user-edit fa-4x\"></i>";
+         echo "<br>" . __('Update GLPI Resources', 'resources') . "</a>";
          echo "</td>";
 
          echo "<td class='center' colspan='2'>";
@@ -228,15 +221,15 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<br>" . __('Verify CSV file', 'resources') . "</a>";
          echo "</td>";
 
-         echo "</tr>";
-
-         echo "<tr class='tab_bg_1'>";
-
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::VERIFY_GLPI."'>";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resource_check.png' />";
          echo "<br>" . __('Verify GLPI resources', 'resources') . "</a>";
          echo "</td>";
+
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImport::getIndexUrl()."'>";
@@ -246,9 +239,11 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getFormURL()."?reset-imports=1'>";
-         echo "<i class=\"fa fa-trash fa-2x\"></i>";
+         echo "<i class=\"fa fa-trash fa-4x\"></i>";
          echo "<br>" . __('Purge imported resources', 'resources') . "</a>";
          echo "</td>";
+
+         echo "<td colspan='2'></td>";
 
          echo "</tr>";
       }
