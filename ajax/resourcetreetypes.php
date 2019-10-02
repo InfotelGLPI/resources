@@ -71,7 +71,7 @@ if (isset($_GET['node'])) {
             'id'   => $ID,
             'text' => Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID),
             'a_attr' => ["onclick" => 'window.location.replace("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
-                                      '?criteria[0][field]=12&criteria[0][searchtype]=equals&criteria[0][value]=' . $ID. '&search=Rechercher&itemtype=PluginResourcesResource&start=0")']
+                                      '?criteria[0][field]=37&criteria[0][searchtype]=equals&criteria[0][value]=' . $ID. '&search=Rechercher&itemtype=PluginResourcesResource&start=0")']
          ];
       }
    }
