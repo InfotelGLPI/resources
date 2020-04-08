@@ -27,5 +27,5 @@
  --------------------------------------------------------------------------
  */
 
-$LANG['plugin_resources']['checkgroup'] = "Rapport listant les goupes non présents dans les habilitations de la ressource";
+$LANG['plugin_resources']['checkgroup'] = "Rapport listant les groupes non présents dans les habilitations de la ressource";
 $LANG['plugin_resources']['missinghabilitation'] = "Habilitation manquante";
