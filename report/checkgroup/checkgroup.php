@@ -39,6 +39,20 @@ include("../../../../inc/includes.php");
 $titre  = $LANG['plugin_resources']['checkgroup'];
 $report = new PluginReportsAutoReport($titre);
 
+//Report's search criterias
+$tab = [0 => __('No'),
+        1 => __('Yes')];
+$filter1 = new PluginReportsArrayCriteria($report, 'groupsN0', __('Display N0 Groups'), $tab);
+$tab = [0 => __('No'),
+        1 => __('Yes')];
+$filter2 = new PluginReportsArrayCriteria($report, 'groupsN1', __('Display N1 Groups'), $tab);
+$tab = [0 => __('No'),
+        1 => __('Yes')];
+$filter3 = new PluginReportsArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
+
+//Display criterias form is needed
+$report->displayCriteriasForm();
+
 //colname with sort allowed
 $columns = ['entity'              => ['sorton' => 'entity'],
    'name'                => ['sorton' => 'name'],
@@ -52,31 +66,33 @@ $columns = ['entity'              => ['sorton' => 'entity'],
 
 $output_type = Search::HTML_OUTPUT;
 
-if (isset ($_POST['list_limit'])) {
-   $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-   unset ($_POST['list_limit']);
-}
-if (!isset ($_REQUEST['sort'])) {
-   $_REQUEST['sort']  = "entity";
-   $_REQUEST['order'] = "ASC";
-}
-
-$limit = $_SESSION['glpilist_limit'];
-
-if (isset ($_POST["display_type"])) {
-   $output_type = $_POST["display_type"];
-   if ($output_type < 0) {
-      $output_type = -$output_type;
-      $limit       = 0;
+// Form validate
+if ($report->criteriasValidated()) {
+   if (isset ($_POST['list_limit'])) {
+      $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+      unset ($_POST['list_limit']);
    }
-} else {
-   $output_type = Search::HTML_OUTPUT;
-}
+   if (!isset ($_REQUEST['sort'])) {
+      $_REQUEST['sort'] = "entity";
+      $_REQUEST['order'] = "ASC";
+   }
 
-$title = $report->getFullTitle();
-$dbu   = new DbUtils();
+   $limit = $_SESSION['glpilist_limit'];
 
-$query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
+   if (isset ($_POST["display_type"])) {
+      $output_type = $_POST["display_type"];
+      if ($output_type < 0) {
+         $output_type = -$output_type;
+         $limit = 0;
+      }
+   } else {
+      $output_type = Search::HTML_OUTPUT;
+   }
+
+   $title = $report->getFullTitle();
+   $dbu = new DbUtils();
+
+   $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
                         FROM `glpi_plugin_resources_resources` 
                         LEFT JOIN glpi_plugin_resources_resources_items ON glpi_plugin_resources_resources_items.plugin_resources_resources_id = glpi_plugin_resources_resources.id
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'
@@ -86,165 +102,183 @@ $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id 
                         AND `glpi_plugin_resources_resources`.`is_template` = 0 
                         AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
 
-$query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
-$query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
+   $query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+   $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 
 
+   $result_resource_user = $DB->query($query_resource_user);
 
-$result_resource_user = $DB->query($query_resource_user);
+   $dataAll = [];
+   while ($data = $DB->fetch_assoc($result_resource_user)) {
+      $habilitations = [];
+      $groups = [];
+      if (!empty($data['glpi_users_id'])) {
+         $users_id = $data['glpi_users_id'];
+         $resources_id = $data['id'];
 
-$dataAll = [];
-while ($data = $DB->fetch_assoc($result_resource_user)) {
-   $habilitations = [];
-   $groups        = [];
-   if (!empty($data['glpi_users_id'])) {
-      $users_id     = $data['glpi_users_id'];
-      $resources_id = $data['id'];
-
-      $query_resources  = "SELECT `glpi_plugin_resources_resources`.`date_end`
+         $query_resources = "SELECT `glpi_plugin_resources_resources`.`date_end`
                               FROM `glpi_plugin_resources_resources`
                               WHERE `id` = $resources_id";
-      $result_resources = $DB->query($query_resources);
-      $date_end = $DB->result($result_resources, 0, 'date_end');
+         $result_resources = $DB->query($query_resources);
+         $date_end = $DB->result($result_resources, 0, 'date_end');
 
-      $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
+         $query_habilitations = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
                               LEFT JOIN `glpi_plugin_resources_habilitations` 
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
                               WHERE `plugin_resources_resources_id` = $resources_id";
-      $result_habilitations = $DB->query($query_habilitations);
+         $result_habilitations = $DB->query($query_habilitations);
 
-      while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
-         $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
-      }
+         while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
+            $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+         }
 
-      $query_groups  = "SELECT `glpi_groups`.* 
+         $query_groups = "SELECT `glpi_groups`.* 
                         FROM `glpi_groups_users` 
                         LEFT JOIN `glpi_groups` ON `glpi_groups`.`id` = `glpi_groups_users`.`groups_id`
                         WHERE `glpi_groups_users`.`users_id` = $users_id";
-      $result_groups = $DB->query($query_groups);
-      while ($data_group = $DB->fetch_assoc($result_groups)) {
-         $groups[$data_group['id']] = $data_group['name'];
+         $result_groups = $DB->query($query_groups);
+         while ($data_group = $DB->fetch_assoc($result_groups)) {
+            $groups[$data_group['id']] = $data_group['name'];
+         }
+
+         $array_diff = array_diff($groups, $habilitations);
+
+         // Traitement post diff
+         $display_habilitation = [];
+         foreach ($array_diff as $value){
+            $test_group_level = explode("-",$value);
+            if(isset($test_group_level[1])) {
+               if (!$filter1->getParameterValue() && $test_group_level[1] == "N0") {
+                  continue;
+               } elseif (!$filter2->getParameterValue() && $test_group_level[1] == "N1") {
+                  continue;
+               } elseif (!$filter3->getParameterValue() && $test_group_level[1] == "N2") {
+                  continue;
+               } else {
+                  array_push($display_habilitation, $value);
+               }
+            }
+         }
+
+         if (count($array_diff) > 0) {
+            $dataAll[] = [
+               'resources_id' => $resources_id,
+               'resources_date_end' => $date_end,
+               'users_id' => $users_id,
+               'groups' => $groups,
+               'diff' => $display_habilitation
+            ];
+         }
+
       }
-
-      $array_diff = array_diff($groups, $habilitations);
-
-      if (count($array_diff) > 0) {
-         $dataAll[] = [
-            'resources_id'       => $resources_id,
-            'resources_date_end' => $date_end,
-            'users_id'           => $users_id,
-            'groups'             => $groups,
-            'diff'               => $array_diff
-         ];
-      }
-
    }
-}
 
-$nbtot = count($dataAll);
-if ($limit) {
-   $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
-   if ($start >= $nbtot) {
+   $nbtot = count($dataAll);
+   if ($limit) {
+      $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+      if ($start >= $nbtot) {
+         $start = 0;
+      }
+   } else {
       $start = 0;
    }
-} else {
-   $start = 0;
-}
 
-if ($nbtot == 0) {
-   if (!$HEADER_LOADED) {
-      Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-      Report::title();
-   }
-   echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No item found') . "</span></div>";
-   Html::footer();
-} else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-   include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
-} else if ($output_type == Search::HTML_OUTPUT) {
-   if (!$HEADER_LOADED) {
-      Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-      Report::title();
-   }
-   echo "<div class='center'><table class='tab_cadre_fixe'>";
-   echo "<tr><th>$title</th></tr>\n";
-   echo "<tr class='tab_bg_2 center'><td class='center'>";
-   echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+   if ($nbtot == 0) {
+      if (!$HEADER_LOADED) {
+         Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+         Report::title();
+      }
+      echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No item found') . "</span></div>";
+      Html::footer();
+   } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
+      include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
+   } else if ($output_type == Search::HTML_OUTPUT) {
+      if (!$HEADER_LOADED) {
+         Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+         Report::title();
+      }
+      echo "<div class='center'><table class='tab_cadre_fixe'>";
+      echo "<tr><th>$title</th></tr>\n";
+      echo "<tr class='tab_bg_2 center'><td class='center'>";
+      echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
 
-   $param = "";
-   foreach ($_POST as $key => $val) {
-      if (is_array($val)) {
-         foreach ($val as $k => $v) {
-            echo "<input type='hidden' name='" . $key . "[$k]' value='$v' >";
+      $param = "";
+      foreach ($_POST as $key => $val) {
+         if (is_array($val)) {
+            foreach ($val as $k => $v) {
+               echo "<input type='hidden' name='" . $key . "[$k]' value='$v' >";
+               if (!empty ($param)) {
+                  $param .= "&";
+               }
+               $param .= $key . "[" . $k . "]=" . urlencode($v);
+            }
+         } else {
+            echo "<input type='hidden' name='$key' value='$val' >";
             if (!empty ($param)) {
                $param .= "&";
             }
-            $param .= $key . "[" . $k . "]=" . urlencode($v);
+            $param .= "$key=" . urlencode($val);
          }
-      } else {
-         echo "<input type='hidden' name='$key' value='$val' >";
-         if (!empty ($param)) {
-            $param .= "&";
-         }
-         $param .= "$key=" . urlencode($val);
       }
-   }
-   Dropdown::showOutputFormat();
-   Html::closeForm();
-   echo "</td></tr>";
-   echo "</table></div>";
+      Dropdown::showOutputFormat();
+      Html::closeForm();
+      echo "</td></tr>";
+      echo "</table></div>";
 
-   Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
-}
-
-if ($nbtot > 0) {
-   $nbcols = 4;
-   $nbrows = count($dataAll);
-   $num    = 1;
-   $link   = $_SERVER['PHP_SELF'];
-   $order  = 'ASC';
-   $issort = false;
-
-   echo Search::showHeader($output_type, $nbrows, $nbcols, true);
-
-   echo Search::showNewLine($output_type);
-
-   echo Search::showHeaderItem($output_type, PluginResourcesResource::getTypeName(1), $num);
-   echo Search::showHeaderItem($output_type, Location::getTypeName(1), $num);
-   echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
-   echo Search::showHeaderItem($output_type, __('Group'), $num);
-   echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
-   echo Search::showHeaderItem($output_type, __('Login'), $num);
-   echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinghabilitation'], $num);
-
-   echo Search::showEndLine($output_type);
-
-   if ($limit) {
-      $dataAll = array_slice($dataAll, $start, $limit);
+      Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
    }
 
-   foreach ($dataAll as $key => $data) {
+   if ($nbtot > 0) {
+      $nbcols = 4;
+      $nbrows = count($dataAll);
+      $num = 1;
+      $link = $_SERVER['PHP_SELF'];
+      $order = 'ASC';
+      $issort = false;
+
+      echo Search::showHeader($output_type, $nbrows, $nbcols, true);
+
       echo Search::showNewLine($output_type);
-      $resource = new PluginResourcesResource();
-      $resource->getFromDB($data['resources_id']);
 
-      echo Search::showItem($output_type, $resource->getLink(), $num, $key);
-      echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_locations',
-         $resource->getField('locations_id')), $num, $key);
-      echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
-      echo Search::showItem($output_type, implode('<br>', $data['groups']), $num, $key);
-      $user = new User();
-      $user->getFromDB($data['users_id']);
-      echo Search::showItem($output_type, $user->getLink(), $num, $key);
-      echo Search::showItem($output_type, $user->getField('name'), $num, $key);
-      echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
+      echo Search::showHeaderItem($output_type, PluginResourcesResource::getTypeName(1), $num);
+      echo Search::showHeaderItem($output_type, Location::getTypeName(1), $num);
+      echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
+      echo Search::showHeaderItem($output_type, __('Group'), $num);
+      echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
+      echo Search::showHeaderItem($output_type, __('Login'), $num);
+      echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinghabilitation'], $num);
 
       echo Search::showEndLine($output_type);
+
+      if ($limit) {
+         $dataAll = array_slice($dataAll, $start, $limit);
+      }
+
+      foreach ($dataAll as $key => $data) {
+         if(!empty($data['diff'])) {
+            echo Search::showNewLine($output_type);
+            $resource = new PluginResourcesResource();
+            $resource->getFromDB($data['resources_id']);
+
+            echo Search::showItem($output_type, $resource->getLink(), $num, $key);
+            echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_locations',
+               $resource->getField('locations_id')), $num, $key);
+            echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
+            echo Search::showItem($output_type, implode('<br>', $data['groups']), $num, $key);
+            $user = new User();
+            $user->getFromDB($data['users_id']);
+            echo Search::showItem($output_type, $user->getLink(), $num, $key);
+            echo Search::showItem($output_type, $user->getField('name'), $num, $key);
+            echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
+
+            echo Search::showEndLine($output_type);
+         }
+      }
+
+      echo Search::showFooter($output_type, $title);
    }
-
-   echo Search::showFooter($output_type, $title);
 }
-
 if ($output_type == Search::HTML_OUTPUT) {
    Html::footer();
 }
