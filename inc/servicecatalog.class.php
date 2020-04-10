@@ -54,7 +54,14 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getMenuLogo() {
       global $CFG_GLPI;
 
-      return "<a class='bt-interface bt-resources' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'></a>";
+      $display =  "<a class='bt-interface' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php'>";
+      $fasize  = "fa-6x";
+      $display .= "<div class='bt-img-responsive center'>";
+      $display .= "<i class='fa-menu-sc fas fa-users $fasize'></i>";//$style
+      $display .= "</div>";
+      $display .= "</a>";
+
+      return $display;
 
    }
 
@@ -64,7 +71,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getMenuTitle() {
       global $CFG_GLPI;
 
-      return "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php' class='de-em'>
+      return "<a class='bt-buttons' href='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php' class='de-em'>
       <span class='de-em'>" . __('Manage', 'servicecatalog') . " </span><span class='em'>" . __('human resources', 'resources') . "</span></a>";
 
    }

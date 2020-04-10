@@ -959,10 +959,10 @@ class PluginResourcesChecklist extends CommonDBTM {
                   foreach ($ids as $key => $val) {
                      $item->getFromDB($key);
 
-                     $input2["content"]           = addslashes($item->fields["comment"]);
-                     $input2["name"]              = addslashes($item->fields["name"]);
+                     $input2["content"]           = $item->fields["comment"];
+                     $input2["name"]              = $item->fields["name"];
                      $input2["itemtype"]          = "PluginResourcesResource";
-                     $input2["items_id"]          = $item->fields["plugin_resources_resources_id"];
+                     $input2["items_id"]          = ["PluginResourcesResource" => [$item->fields["plugin_resources_resources_id"]]];
                      $input2["requesttypes_id"]   = "6";
                      $input2["urgency"]           = "3";
                      $input2["_users_id_assign"]  = 0;
