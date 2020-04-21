@@ -279,7 +279,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     * @return bool
     */
    function wizardSixForm($plugin_resources_resources_id) {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       if (!$this->canView()) {
          return false;
@@ -319,13 +319,13 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          if (count($levels) > 0) {
 
+            $cpt=1;
             //One line per level
             foreach ($levels as $level) {
                echo "<div class=\"bt-row\">";
                echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
 
                if ($habilitation_level->getFromDB($level['id'])) {
-
                   $mandatory = "";
                   if ($habilitation_level->getField('is_mandatory_creating_resource')) {
                      $mandatory = "red";
@@ -333,6 +333,30 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   //list of habilitations according to level
                   $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
                                                                             $resource->fields["entities_id"]);
+                  // check if habilitation is already set for this level
+                  $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
+                              FROM `glpi_plugin_resources_resourcehabilitations`
+                              LEFT JOIN `glpi_plugin_resources_habilitations` 
+                              ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
+                              WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
+                              AND `plugin_resources_habilitationlevels_id` = $cpt";
+                  $result_habilitations = $DB->query($query_habilitations);
+                  while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
+                     if(!is_null($data_habilitation)) {
+                        $value = $data_habilitation['name'];
+                        $id = $data_habilitation['id'];
+                     }
+                  }
+                  if(isset($value) && isset($id)){
+                     $key = array_search($value,$habilitations);
+                     // Cleaning to avoid duplicate
+                     $cleaning_query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
+                                        WHERE plugin_resources_resources_id= $plugin_resources_resources_id
+                                        AND plugin_resources_habilitations_id= $id";
+                     $DB->query($cleaning_query);
+                  }
+                  $cpt++;
+
                   echo "<div class=\"bt-row\">";
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 $mandatory\">";
                   echo $habilitation_level->getName();
@@ -340,12 +364,18 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
                   if ($habilitation_level->getField('number')) {
                      Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
-                                             $habilitations,
-                                             ['multiple' => true,
-                                              'width'    => 200]);
+                        $habilitations,
+                        ['multiple' => true,
+                         'width'    => 200]);
                   } else {
-                     Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
-                                             $habilitations);
+                     if(isset($key)) {
+                        Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
+                           $habilitations,
+                           ['value' => $key]);
+                     }else{
+                        Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
+                           $habilitations);
+                     }
                   }
                   echo "</div></div>";
                }
