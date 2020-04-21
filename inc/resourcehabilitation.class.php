@@ -333,7 +333,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   //list of habilitations according to level
                   $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
                                                                             $resource->fields["entities_id"]);
-                  // check if a N0 or N1 habilitation is already set
+                  // check if habilitation is already set for this level
                   $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
                               LEFT JOIN `glpi_plugin_resources_habilitations` 
