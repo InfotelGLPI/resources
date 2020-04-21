@@ -175,9 +175,9 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
 
       foreach ($DB->request($query) as $habilitation) {
           $habilitations[$habilitation['id']] = $habilitation['name'];
-         if (isset($habilitation['comment']) && empty($habilitation['comment'])) {
+         /*if (isset($habilitation['comment']) && empty($habilitation['comment'])) {
             $habilitations[$habilitation['id']] .= " - " . $habilitation['comment'];
-         }
+         }*/
       }
 
       return $habilitations;
