@@ -333,6 +333,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   //list of habilitations according to level
                   $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
                                                                             $resource->fields["entities_id"]);
+
                   // check if habilitation is already set for this level
                   $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
@@ -345,6 +346,9 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                      if(!is_null($data_habilitation)) {
                         $value = $data_habilitation['name'];
                         $id = $data_habilitation['id'];
+                        if(!empty($data_habilitation["comment"])){
+                           $value .= " - " . $data_habilitation["comment"];
+                        }
                      }
                   }
                   if(isset($value) && isset($id)){
