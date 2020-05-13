@@ -40,16 +40,6 @@ if (isset($_POST["add"])) {
    $newID = $checklistconfig->add($_POST);
    Html::back();
 
-} else if (isset($_POST["delete"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $checklistconfig->delete($_POST);
-   $checklistconfig->redirectToList();
-
-} else if (isset($_POST["restore"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $checklistconfig->restore($_POST);
-   $checklistconfig->redirectToList();
-
 } else if (isset($_POST["purge"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
    $checklistconfig->delete($_POST, 1);

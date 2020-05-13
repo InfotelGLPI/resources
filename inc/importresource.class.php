@@ -150,7 +150,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
       $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
       if ($p['maybeempty'] && $p['canedit']) {
-         $output .= "<span class='fa fa-times-circle pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
+         $output .= "<span class='fas fa-times-circle pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
       }
 
       $js = '$(function(){';

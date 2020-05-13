@@ -657,10 +657,10 @@ class PluginResourcesTask extends CommonDBTM {
       $img = "";
       switch ($state) {
          case self::STATE_OK:
-            $img = "<i style='color:green' class='fa fa-check-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            $img = "<i style='color:green' class='fas fa-check-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
             break;
          case self::STATE_KO:
-            $img = "<i style='color:red' class='fa fa-times-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            $img = "<i style='color:red' class='fas fa-times-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
             break;
       }
       return $img;

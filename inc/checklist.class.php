@@ -74,7 +74,7 @@ class PluginResourcesChecklist extends CommonDBTM {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
+      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
    }
 
    /**
@@ -607,7 +607,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $isfinished                                  = self::checkifChecklistFinished($values);
 
       if ($isfinished) {
-         $title = "<i style='color:green' class='fa fa-check-circle fa-2x' ></i>";
+         $title = "<i style='color:green' class='fas fa-check-circle fa-2x' ></i>";
       }
       $title .= self::getChecklistType($checklist_type);
       if ($isfinished) {
@@ -622,7 +622,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       echo "<a href=\"javascript:showHideDiv('$viewId',
                         'checklistimg$rand','fa-angle-double-down fa-2x',
                         'fa-angle-double-up fa-2x')\">";
-      echo "<i id='checklistimg$rand' style='color:orange' class='fa fa-angle-double-up fa-2x' ></i>";
+      echo "<i id='checklistimg$rand' style='color:orange' class='fas fa-angle-double-up fa-2x' ></i>";
       echo "</a>";
       echo "</span>";
       echo "</th>";
@@ -727,7 +727,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo "<a href=\"javascript:showHideDiv('$viewId_finished',
                         'checklistfinished$rand','fa-eye fa-2x',
                         'fa-eye-slash fa-2x')\">";
-            echo "<i id='checklistfinished$rand' style='color:black' class='fa fa-eye fa-2x'></i>";
+            echo "<i id='checklistfinished$rand' style='color:black' class='fas fa-eye fa-2x'></i>";
             echo "</a>";
             echo "</span>";
             echo "</th>";

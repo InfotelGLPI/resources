@@ -52,8 +52,8 @@ class PluginResourcesDashboard extends CommonGLPI {
     */
    function getWidgetsForItem() {
       return [
-         $this->getType()."1" => __('New resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fa fa-table'></i>",
-         $this->getType()."2" => __('Leaving resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fa fa-table'></i>",
+         $this->getType()."1" => __('New resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fas fa-table'></i>",
+         $this->getType()."2" => __('Leaving resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fas fa-table'></i>",
       ];
    }
 

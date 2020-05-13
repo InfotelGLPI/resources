@@ -70,7 +70,7 @@ if ($plugin_resources_resources_id > 0) {
    PluginResourcesResourceCard::resourceCard($plugin_resources_resources_id);
 } else {
    echo "<div class='center'><br><br>".
-        "<i  class='fa fa-info-circle' alt='information'></i>";
+        "<i  class='fas fa-info-circle' alt='information'></i>";
    echo "&nbsp;<b>".__('Please select a user', 'resources')."</b></div>";
 }
 if (Session::getCurrentInterface() == 'central') {

@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.6.3');
+define('PLUGIN_RESOURCES_VERSION', '2.6.4');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {

@@ -37,10 +37,10 @@ $resource_change = new PluginResourcesResource_Change();
 
 if (isset($_POST['plugin_resources_clients_id'])) {
    if (PluginResourcesClient::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
-      $img = "<i style='color:green' class='fa fa-check-circle' alt=\"" . __('OK') . "\"></i>";
+      $img = "<i style='color:green' class='fas fa-check-circle' alt=\"" . __('OK') . "\"></i>";
       $color = "color: green;";
    } else {
-      $img = "<i style='color:red' class='fa fa-times-circle' alt=\"" . __('KO') . "\"></i>";
+      $img = "<i style='color:red' class='fas fa-times-circle' alt=\"" . __('KO') . "\"></i>";
       $color = "color: red;";
    }
    echo "<span style='$color'>";

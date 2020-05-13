@@ -109,7 +109,7 @@ class PluginResourcesImport extends CommonDBTM {
          $html.= $title.'</a>';
 
          if(Session::haveright(self::$rightname, CREATE)){
-            $html.= '<a href="'.self::getFormUrl().'" class="pointer" title="'.__("Add an Import").'"><i class="fa fa-plus fa-2x"></i>';
+            $html.= '<a href="'.self::getFormUrl().'" class="pointer" title="'.__("Add an Import").'"><i class="fas fa-plus fa-2x"></i>';
             $html .='</a>';
          }
 
