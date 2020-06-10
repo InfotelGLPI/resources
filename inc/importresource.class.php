@@ -1051,7 +1051,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   foreach ($profiles_User as $profileUser) {
                      $user = new User();
                      $user->getFromDB($profileUser["users_id"]);
-                     $used[$profileUser["users_id"]] = $user->getRawName();
+                     $used[$profileUser["users_id"]] = $user->getFriendlyName();
                   }
 
 
@@ -1148,7 +1148,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   foreach ($profiles_User as $profileUser) {
                      $user = new User();
                      $user->getFromDB($profileUser["users_id"]);
-                     $used[$profileUser["users_id"]] = $user->getRawName();
+                     $used[$profileUser["users_id"]] = $user->getFriendlyName();
                   }
 
                   Dropdown::showFromArray($hValue, $used, ['value' => $data['value'], 'display_emptychoice' => true]);;
@@ -1969,7 +1969,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $results = $DB->query($query);
       $result = [];
 
-      while ($data = $DB->fetch_assoc($results)) {
+      while ($data = $DB->fetchAssoc($results)) {
          $result[] = $data;
       }
       return $result;
@@ -2035,7 +2035,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $results = $DB->query($query);
 
-      while ($data = $results->fetch_array()) {
+      while ($data = $results->fetchArray()) {
          return $data['id'];
       }
 
@@ -2371,7 +2371,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $resources = [];
       if ($result = $DB->query($query)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $resources[] = $data;
          }
       }
@@ -2446,7 +2446,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $resourcesImports = [];
       if ($result = $DB->query($query)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $resourcesImports[] = $data;
          }
       }
@@ -2628,7 +2628,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $imports = [];
       if ($result = $DB->query($query)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $imports[] = $data;
          }
       }

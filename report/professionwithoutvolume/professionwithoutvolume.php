@@ -147,7 +147,7 @@ if ($report->criteriasValidated()) {
    $query.=$conditionAll." ".getOrderBy('profession', $columns);
 
    $result = $DB->query($query);
-   for ($row_num = 0; $data=$DB->fetch_assoc($result); $row_num++) {
+   for ($row_num = 0; $data=$DB->fetchAssoc($result); $row_num++) {
       if ($row_num == 0) {
          $dataAll[$row_num]['professionline']= PluginResourcesProfession::getTypeName(1);
          $row_num++;

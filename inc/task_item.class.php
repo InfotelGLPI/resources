@@ -123,7 +123,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          } else {
@@ -224,7 +224,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
 
                   if ($DB->numrows($result_linked)) {
 
-                     while ($data = $DB->fetch_assoc($result_linked)) {
+                     while ($data = $DB->fetchAssoc($result_linked)) {
                         $ID = "";
                         $itemID = $data["id"];
                         $used[] = $itemID;

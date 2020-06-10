@@ -82,7 +82,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
       $temp = [];
 
       $it = 0;
-      while ($data = $DB->fetch_assoc($results)) {
+      while ($data = $DB->fetchAssoc($results)) {
          $temp[$it] = $data;
          $it++;
       }

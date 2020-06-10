@@ -175,7 +175,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          } else {
@@ -329,7 +329,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
          echo "<div align='center'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='2'>" . __('Notification configuration', 'resources') . "</th></tr>";
 
-         while ($data = $DB->fetch_array($result)) {
+         while ($data = $DB->fetchArray($result)) {
             $i++;
             $row_num++;
             echo "<tr class='tab_bg_1'>";

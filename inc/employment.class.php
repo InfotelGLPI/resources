@@ -399,7 +399,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       echo "<input type='hidden' name='itemtype' value='" . $item->getType() . "'>";
       echo "<td class='center' class='tab_bg_2'>";
       echo self::getTypeName(1);
-      $restrict = " `plugin_resources_resources_id`='0'";
+      $restrict = ["plugin_resources_resources_id" => '0'];
       Dropdown::show('PluginResourcesEmployment',
                      ['condition' => $restrict,
                            'entity'    => $item->getField("entities_id")]);

@@ -94,7 +94,7 @@ $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 $result_resource_user = $DB->query($query_resource_user);
 
 $dataAll = [];
-while ($data = $DB->fetch_assoc($result_resource_user)) {
+while ($data = $DB->fetchAssoc($result_resource_user)) {
    $habilitations = [];
    $groups        = [];
    if (!empty($data['glpi_users_id'])) {
@@ -114,7 +114,7 @@ while ($data = $DB->fetch_assoc($result_resource_user)) {
                               WHERE `plugin_resources_resources_id` = $resources_id";
       $result_habilitations = $DB->query($query_habilitations);
 
-      while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
+      while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
          $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
       }
 

@@ -216,7 +216,7 @@ if ($report->criteriasValidated()) {
       $totalbudgetemployment = 0;
 
       //For each budget
-      for ($row_num = 2; $data=$DB->fetch_assoc($res); $row_num++) {
+      for ($row_num = 2; $data=$DB->fetchAssoc($res); $row_num++) {
 
          $num = 1;
          echo Search::showNewLine($output_type);
@@ -260,7 +260,7 @@ if ($report->criteriasValidated()) {
          }
 
          $result1 = $DB->query($calqtvolbudguse);
-         $data1=$DB->fetch_array($result1);
+         $data1=$DB->fetchArray($result1);
 
          //link to recap.php displaying only employments with same rank and profession
          $ratio ="";
@@ -311,7 +311,7 @@ if ($report->criteriasValidated()) {
          }
 
          $result2 = $DB->query($calqtvolreal);
-         $data2=$DB->fetch_array($result2);
+         $data2=$DB->fetchArray($result2);
 
          //link to recap.php displaying only resource with same rank and profession
          $quota ="";
@@ -346,7 +346,7 @@ if ($report->criteriasValidated()) {
                         OR `end_date` >= '".$date."'))";
 
          $result3 = $DB->query($query3);
-         $data3=$DB->fetch_array($result3);
+         $data3=$DB->fetchArray($result3);
 
          //ammount of budget voting
          $calvolbudgvot = $data3['cost'] * $data['qt_vol_budg_vot'];

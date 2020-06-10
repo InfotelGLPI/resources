@@ -50,7 +50,7 @@ function plugin_resources_install() {
    $install = false;
    if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.6.4.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.7.0.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -198,7 +198,7 @@ function plugin_resources_install() {
       $query = "SELECT * FROM `glpi_plugin_resources_employers`";
       $result = $DB->query($query);
       if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetch_array($result)) {
+         while ($data = $DB->fetchArray($result)) {
             $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
                             SET `completename`= '".$data["name"]."'
                             WHERE `id`= '".$data["id"]."'";
@@ -367,7 +367,7 @@ function plugin_resources_install() {
       $affectedchoices = [];
 
       if (!empty($number)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
 
             $restrictaffected = ["itemtype" => $data['raw']["ITEMtype"],
                                  "comment"  => addslashes($data["comment"])];
@@ -459,7 +459,7 @@ function plugin_resources_install() {
       $number = $DB->numrows($result);
 
       if (!empty($number)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
 
             $restrict = ["items_id" => $data["id"],
                          "itemtype" => 'User'];
@@ -1121,8 +1121,27 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
          if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
             $out = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_plugin_resources_resources", "plugin_resources_resources_id");
             $out.= " LEFT JOIN `glpi_plugin_resources_contracttypes` ON (`glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` = `glpi_plugin_resources_contracttypes`.`id`) ";
-         } else {
+            $transitemtype = getItemTypeForTable("glpi_plugin_resources_contracttypes");
+            $nt ="glpi_plugin_resources_contracttypes";
+            $transAS            = $nt.'_trans';
+            $out .= Search::joinDropdownTranslations(
+               $transAS,
+               $nt,
+               $transitemtype,
+               'name'
+            );
+         }
+         else {
             $out = " LEFT JOIN `glpi_plugin_resources_contracttypes` ON (`glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` = `glpi_plugin_resources_contracttypes`.`id`) ";
+            $nt ="glpi_plugin_resources_contracttypes";
+            $transitemtype = getItemTypeForTable("glpi_plugin_resources_contracttypes");
+            $transAS            = $nt.'_trans';
+            $out .= Search::joinDropdownTranslations(
+               $transAS,
+               $nt,
+               $transitemtype,
+               'name'
+            );
          }
          return $out;
          break;

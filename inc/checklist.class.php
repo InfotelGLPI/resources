@@ -450,7 +450,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
             if ($result2 = $DB->query($sql2)) {
                if ($DB->numrows($result2) == 1) {
-                  list($other_ID, $new_rank) = $DB->fetch_array($result2);
+                  list($other_ID, $new_rank) = $DB->fetchArray($result2);
 
                   return ($this->update(['id'   => $input['id'],
                                          'rank' => $new_rank]) && $this->update(['id'   => $other_ID,
@@ -1092,7 +1092,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo "<th>" . PluginResourcesContractType::getTypeName(1) . "</th>";
             echo "<th>" . __('Checklist needs to verificated', 'resources') . "</th></tr>";
 
-            while ($data = $DB->fetch_array($result)) {
+            while ($data = $DB->fetchArray($result)) {
                echo "<tr class='tab_bg_1'>";
 
                echo "<td class='center'>";
@@ -1145,7 +1145,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                $result_checklists = $DB->query($query_checklists);
 
                echo "<table class='tab_cadre' width='100%'>";
-               while ($data_checklists = $DB->fetch_array($result_checklists)) {
+               while ($data_checklists = $DB->fetchArray($result_checklists)) {
                   echo "<tr class='tab_bg_1'><td>";
                   if ($data_checklists["tag"]) {
                      echo "<span class='plugin_resources_date_over_color'>";

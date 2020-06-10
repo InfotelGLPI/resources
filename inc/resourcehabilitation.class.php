@@ -342,7 +342,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                               WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
                               AND `plugin_resources_habilitationlevels_id` = $cpt";
                   $result_habilitations = $DB->query($query_habilitations);
-                  while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
+                  while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
                      if(!is_null($data_habilitation)) {
                         $value = $data_habilitation['name'];
                         $id = $data_habilitation['id'];

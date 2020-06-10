@@ -109,7 +109,7 @@ if ($report->criteriasValidated()) {
    $result_resource_user = $DB->query($query_resource_user);
 
    $dataAll = [];
-   while ($data = $DB->fetch_assoc($result_resource_user)) {
+   while ($data = $DB->fetchAssoc($result_resource_user)) {
       $habilitations = [];
       $groups = [];
       if (!empty($data['glpi_users_id'])) {
@@ -129,7 +129,7 @@ if ($report->criteriasValidated()) {
                               WHERE `plugin_resources_resources_id` = $resources_id";
          $result_habilitations = $DB->query($query_habilitations);
 
-         while ($data_habilitation = $DB->fetch_assoc($result_habilitations)) {
+         while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
             $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
          }
 
@@ -138,7 +138,7 @@ if ($report->criteriasValidated()) {
                         LEFT JOIN `glpi_groups` ON `glpi_groups`.`id` = `glpi_groups_users`.`groups_id`
                         WHERE `glpi_groups_users`.`users_id` = $users_id";
          $result_groups = $DB->query($query_groups);
-         while ($data_group = $DB->fetch_assoc($result_groups)) {
+         while ($data_group = $DB->fetchAssoc($result_groups)) {
             $groups[$data_group['id']] = $data_group['name'];
          }
 

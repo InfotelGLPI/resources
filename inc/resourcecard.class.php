@@ -291,7 +291,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
          if ($DB->numrows($result) > 0) {
             $inv = true;
-            while ($data = $DB->fetch_assoc($result)) {
+            while ($data = $DB->fetchAssoc($result)) {
 
                $datas[$itemtype][$i] = $data;
                $i++;

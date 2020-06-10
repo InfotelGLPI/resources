@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.6.4');
+define('PLUGIN_RESOURCES_VERSION', '2.7.0');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
@@ -189,7 +189,7 @@ function plugin_version_resources() {
       'homepage'       => 'https://github.com/InfotelGLPI/resources',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.4',
+            'min' => '9.5',
             'dev' => false
          ]
       ]
@@ -204,10 +204,10 @@ function plugin_version_resources() {
  * @return bool
  */
 function plugin_resources_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.4', 'lt')
-       || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+       || version_compare(GLPI_VERSION, '9.6', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.4');
+         echo Plugin::messageIncompatible('core', '9.5');
       }
       return false;
    }

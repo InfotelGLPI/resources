@@ -29,7 +29,7 @@
 
 $AJAX_INCLUDE = 1;
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
@@ -43,35 +43,37 @@ if (isset($_GET['node'])) {
 
    // Root node
    if ($_GET['node'] == -1) {
-      $entity   = $_SESSION['glpiactive_entity'];
-      $dbu      = new DbUtils();
+      $entity = $_SESSION['glpiactive_entity'];
+      $dbu    = new DbUtils();
 
       $iterator = $DB->request([
-         'SELECT DISTINCT' => 'plugin_resources_contracttypes_id',
-         'FROM'            => 'glpi_plugin_resources_contracttypes',
-            'INNER JOIN' => [
-               'glpi_plugin_resources_resources' => [
-                  'FKEY' => [
-                     'glpi_plugin_resources_contracttypes' => 'id',
-                     'glpi_plugin_resources_resources'       => 'plugin_resources_contracttypes_id'
-                  ]
-               ]
-            ],
-            'WHERE'     => [
-              'is_deleted' => 0
-            ],
-         'ORDER'  => 'glpi_plugin_resources_contracttypes.name'
-         ]
+                                  'SELECT'     => 'plugin_resources_contracttypes_id',
+                                  'DISTINCT'   => true,
+                                  'FROM'       => 'glpi_plugin_resources_contracttypes',
+                                  'INNER JOIN' => [
+                                     'glpi_plugin_resources_resources' => [
+                                        'FKEY' => [
+                                           'glpi_plugin_resources_contracttypes' => 'id',
+                                           'glpi_plugin_resources_resources'     => 'plugin_resources_contracttypes_id'
+                                        ]
+                                     ]
+                                  ],
+                                  'WHERE'      => [
+                                     'is_deleted' => 0
+                                  ],
+                                  'ORDER'      => 'glpi_plugin_resources_contracttypes.name'
+                               ]
       );
 
       while ($contract = $iterator->next()) {
-         $ID   = $contract['plugin_resources_contracttypes_id'];
-
+         $ID = $contract['plugin_resources_contracttypes_id'];
+         $value = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID);
          $nodes[] = [
-            'id'   => $ID,
-            'text' => Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID),
+            'id'     => $ID,
+            'text'   => $value,
             'a_attr' => ["onclick" => 'window.location.replace("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
-                                      '?criteria[0][field]=37&criteria[0][searchtype]=equals&criteria[0][value]=' . $ID. '&search=Rechercher&itemtype=PluginResourcesResource&start=0")']
+                                      '?criteria[0][field]=37&criteria[0][searchtype]=contains&criteria[0][value]=^' .
+                                      rawurlencode($value) . '&itemtype=PluginResourcesResource&start=0")']
          ];
       }
    }

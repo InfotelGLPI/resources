@@ -1125,7 +1125,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
             while ($i < $numrows && $i < ($end_display)) {
 
                $item_num = 1;
-               $data     = $DB->fetch_array($result);
+               $data     = $DB->fetchArray($result);
                $i++;
                $row_num++;
 

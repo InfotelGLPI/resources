@@ -96,7 +96,7 @@ class PluginResourcesImportResourceData extends CommonDBChild {
       $results = $DB->query($query);
       $temp = [];
 
-      while ($data = $DB->fetch_assoc($results)) {
+      while ($data = $DB->fetchAssoc($results)) {
          $temp[] = $data;
       }
       return $temp;

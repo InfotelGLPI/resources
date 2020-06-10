@@ -16,14 +16,14 @@ class PluginResourcesMenu extends CommonDBTM{
 
       echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
       echo "<tr><th colspan='6'>" . __('Menu', 'resources') . "</th></tr>";
-
+      $plugin = new Plugin();
       $canresting       = Session::haveright('plugin_resources_resting', UPDATE);
       $canholiday       = Session::haveright('plugin_resources_holiday', UPDATE);
       $canhabilitation  = Session::haveright('plugin_resources_habilitation', UPDATE);
       $canemployment    = Session::haveright('plugin_resources_employment', UPDATE);
       $canseeemployment = Session::haveright('plugin_resources_employment', READ);
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
-      $canbadges        = Session::haveright('plugin_badges', READ);
+      $canbadges        = Session::haveright('plugin_badges', READ) && $plugin->isActivated("badges");
       $canImport        = Session::haveright('plugin_resources_import', READ);
 
       if ($item->canCreate()) {
@@ -54,8 +54,6 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "</tr>";
       }
-
-      $plugin = new Plugin();
 
       if ($canresting || $canholiday || $canbadges || $canhabilitation) {
          echo "<tr><th colspan='6'>" . __('Others declarations', 'resources') . "</th></tr>";
@@ -127,6 +125,21 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<tr><th colspan='6'>" . __('Others actions', 'resources') . "</th></tr>";
          echo "<tr class='tab_bg_1'>";
 
+         $opt                              = [];
+         $opt['reset']                     = 'reset';
+         $opt['criteria'][0]['field']      = 27;
+         $opt['criteria'][0]['searchtype'] = 'equals';
+         $opt['criteria'][0]['value']      = Session::getLoginUserID();
+         $opt['criteria'][0]['link']       = 'AND';
+
+         $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
+
+         echo "<td class='center' colspan='2'>";
+         echo "<a href=\"$url\">";
+         echo "<i class='fas fa-user-tie fa-5x' style='color:steelblue;' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
+         echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
+         echo "</td>";
+
          //See resources
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./resource.php\">";
@@ -140,10 +153,16 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<br>" . __('See details of a resource', 'resources') . "</a>";
          echo "</td>";
 
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./directory.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/directory.png' alt='" . PluginResourcesDirectory::getTypeName(1) . "'>";
          echo "<br>" . PluginResourcesDirectory::getTypeName(1) . "</a>";
+         echo "</td>";
+
+         echo "<td class='center' colspan='4'>";
          echo "</td>";
          echo "</tr>";
       }
@@ -211,7 +230,7 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::UPDATE_RESOURCES."'>";
-         echo "<i class=\"fa fa-user-edit fa-4x\"></i>";
+         echo "<i class=\"fas fa-user-edit fa-5x\"></i>";
          echo "<br>" . __('Update GLPI Resources', 'resources') . "</a>";
          echo "</td>";
 
@@ -239,7 +258,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getFormURL()."?reset-imports=1'>";
-         echo "<i class=\"fa fa-trash fa-4x\"></i>";
+         echo "<i class=\"fas fa-trash fa-5x\"></i>";
          echo "<br>" . __('Purge imported resources', 'resources') . "</a>";
          echo "</td>";
 
@@ -332,7 +351,13 @@ class PluginResourcesMenu extends CommonDBTM{
       $menu = PluginResourcesChecklist::getMenuOptions($menu);
       $menu = PluginResourcesEmployment::getMenuOptions($menu);
 
+      $menu['icon'] = self::getIcon();
+      
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-user-friends";
    }
 
 }

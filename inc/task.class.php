@@ -790,7 +790,7 @@ class PluginResourcesTask extends CommonDBTM {
             echo "<th>" . __('User') . "</th>";
             echo "</tr>";
 
-            while ($data = $DB->fetch_array($result)) {
+            while ($data = $DB->fetchArray($result)) {
 
                echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
                echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];

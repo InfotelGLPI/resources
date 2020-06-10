@@ -81,7 +81,7 @@ $dbu = new DbUtils();
 
 // Add linked resource users
 if ($DB->numrows($result)) {
-   while ($data = $DB->fetch_array($result)) {
+   while ($data = $DB->fetchArray($result)) {
       array_push($users, ['id'   => $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["username"],
                                                    $data["name"], $data["firstname"], 0)]);
@@ -106,7 +106,7 @@ if ($_GET['addUnlinkedUsers']) {
                   OR CONCAT(`glpi_users`.`name`,' ',`glpi_users`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) ".
                   Search::makeTextSearch($_GET['searchText']).");";
    $result = $DB->query($query);
-   while ($data = $DB->fetch_array($result)) {
+   while ($data = $DB->fetchArray($result)) {
       array_push($users, ['id'   => 'users-' . $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["name"],
                                                          $data["realname"], $data["firstname"], 0)]);

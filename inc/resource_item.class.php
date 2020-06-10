@@ -194,7 +194,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          } else {
@@ -408,7 +408,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
             if ($DB->numrows($result_linked)) {
 
-               if ($data = $DB->fetch_assoc($result_linked)) {
+               if ($data = $DB->fetchAssoc($result_linked)) {
                   $name = $data["name"];
                   if ($resource["itemtype"] == 'User') {
                      $name = $dbu->getUserName($data["id"]);
@@ -568,7 +568,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
 
                   Session::initNavigateListItems($itemType, PluginResourcesResource::getTypeName(2) . " = " . $resource->fields['name']);
 
-                  while ($data = $DB->fetch_assoc($result_linked)) {
+                  while ($data = $DB->fetchAssoc($result_linked)) {
 
                      $item->getFromDB($data["id"]);
 
@@ -720,7 +720,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $resources = [];
       $used      = [];
       if ($numrows = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $resources[$data['assocID']] = $data;
             $used[$data['id']]           = $data['id'];
          }
@@ -982,7 +982,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                if ($result_linked = $DB->query($query)) {
                   if ($DB->numrows($result_linked)) {
 
-                     while ($data = $DB->fetch_assoc($result_linked)) {
+                     while ($data = $DB->fetchAssoc($result_linked)) {
                         if (!$items->getFromDB($data["id"])) {
                            continue;
                         }
@@ -1086,7 +1086,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                __('Departure date', 'resources') . '</i></b>'
             );
          }
-         while ($data = $DB->fetch_array($result)) {
+         while ($data = $DB->fetchArray($result)) {
             $resourcesID = $data["id"];
 
             if (Session::isMultiEntitiesMode()) {

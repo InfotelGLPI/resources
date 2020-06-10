@@ -1196,7 +1196,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
       $required = $this->checkRequiredFields($input);
-      $alert = " class='red' ";
+      $alert = " style='color:red' ";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td";
@@ -1409,7 +1409,7 @@ class PluginResourcesResource extends CommonDBTM {
          foreach ($profiles_User as $profileUser) {
             $user = new User();
             $user->getFromDB($profileUser["users_id"]);
-            $used[$profileUser["users_id"]] = $user->getRawName();
+            $used[$profileUser["users_id"]] = $user->getFriendlyName();
          }
 
 
@@ -1462,7 +1462,7 @@ class PluginResourcesResource extends CommonDBTM {
          foreach ($profiles_User as $profileUser) {
             $user = new User();
             $user->getFromDB($profileUser["users_id"]);
-            $used[$profileUser["users_id"]] = $user->getRawName();
+            $used[$profileUser["users_id"]] = $user->getFriendlyName();
          }
 
          Dropdown::showFromArray("users_id_sales",$used,['value'=>$this->fields["users_id_sales"],'display_emptychoice'=>true]);
@@ -2062,7 +2062,7 @@ class PluginResourcesResource extends CommonDBTM {
          foreach ($profiles_User as $profileUser) {
             $user = new User();
             $user->getFromDB($profileUser["users_id"]);
-            $used[$profileUser["users_id"]] = $user->getRawName();
+            $used[$profileUser["users_id"]] = $user->getFriendlyName();
          }
 
 
@@ -2108,7 +2108,7 @@ class PluginResourcesResource extends CommonDBTM {
          foreach ($profiles_User as $profileUser) {
             $user = new User();
             $user->getFromDB($profileUser["users_id"]);
-            $used[$profileUser["users_id"]] = $user->getRawName();
+            $used[$profileUser["users_id"]] = $user->getFriendlyName();
          }
 
          Dropdown::showFromArray("users_id_sales",$used,['value'=>$options["users_id_sales"],'display_emptychoice'=>true]);
@@ -2559,7 +2559,7 @@ class PluginResourcesResource extends CommonDBTM {
          $dbu = new DbUtils();
 
          if ($DB->numrows($result) == 1) {
-            $data = $DB->fetch_assoc($result);
+            $data = $DB->fetchAssoc($result);
             $username = $dbu->formatUserName($data["id"], $data["username"], $data["name"],
                $data["firstname"], $link);
 
@@ -3963,12 +3963,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class='left' style='width:100%'>";
 
       $js = "   $(function() {
-                  $.getScript('{$CFG_GLPI["root_doc"]}/lib/jqueryplugins/jstree/jstree.min.js').done(function(data, textStatus, jqxhr) {
-                     $('#resource_tree_projectcategory$rand')
-                     // call `.jstree` with the options object
-                     .jstree({
+                  $.getScript('{$CFG_GLPI["root_doc"]}/public/lib/jstree.js', function(data, textStatus, jqxhr) {
+                     $('#resource_tree_projectcategory$rand').jstree({
                         // the `plugins` array allows you to configure the active plugins on this instance
-                        'plugins' : ['search', 'qload', 'conditionalselect'],
+                        'plugins' : ['search', 'qload'],
                         'search': {
                            'case_insensitive': true,
                            'show_only_matches': true,
@@ -3980,7 +3978,7 @@ class PluginResourcesResource extends CommonDBTM {
                         'qload': {
                            'prevLimit': 50,
                            'nextLimit': 30,
-                           'moreText': '" . __s('Load more entities...') . "'
+                           'moreText': '" . __s('Load more...') . "'
                         },
                         'core': {
                            'themes': {
@@ -3996,10 +3994,8 @@ class PluginResourcesResource extends CommonDBTM {
                            }
                         }
                      });
-
                   });
                });";
-
       echo Html::scriptBlock($js);
 
       echo "<div id='resource_tree_projectcategory$rand' ></div>";
@@ -4066,7 +4062,7 @@ class PluginResourcesResource extends CommonDBTM {
       $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/", "", $file);
 
       if (strstr($tmpfile, "../") || strstr($tmpfile, "..\\")) {
-         Event::log($file, "sendFile", 1, "security",
+         \Glpi\Event::log($file, "sendFile", 1, "security",
             $_SESSION["glpiname"] . " try to get a non standard file.");
          die("Security attack !!!");
       }
@@ -4347,7 +4343,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $results = $DB->query($query);
 
-      while ($data = $results->fetch_array()) {
+      while ($data = $results->fetchArray()) {
          return $data['id'];
       }
       return null;

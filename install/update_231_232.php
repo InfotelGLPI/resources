@@ -38,7 +38,7 @@ function update231_232() {
 
    if ($result = $DB->query($query)) {
       if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
 
             $query_add = "INSERT INTO `glpi_plugin_resources_habilitations` (entities_id, is_recursive, name, completename, 
                                                                               comment, allow_resource_creation) 
@@ -57,7 +57,7 @@ function update231_232() {
                                  WHERE `plugin_resources_habilitations_id` = '" . $data['id'] . "'";
                if ($result_resource = $DB->query($query_resource)) {
                   if ($DB->numrows($result_resource) > 0) {
-                     while ($data_resource = $DB->fetch_assoc($result_resource)) {
+                     while ($data_resource = $DB->fetchAssoc($result_resource)) {
                         if ($data_resource['is_template'] == 0) {
                            $query_insert = "INSERT INTO `glpi_plugin_resources_resourcehabilitations` 
                                              (`plugin_resources_resources_id`, `plugin_resources_habilitations_id`) 

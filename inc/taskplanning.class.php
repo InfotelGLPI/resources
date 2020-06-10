@@ -158,7 +158,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          }
@@ -357,7 +357,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       $result = $DB->query($query);
 
       if ($DB->numrows($result) > 0) {
-         for ($i = 0; $data = $DB->fetch_array($result); $i++) {
+         for ($i = 0; $data = $DB->fetchArray($result); $i++) {
 
             $key                                           = $parm["begin"] . $data["id"] . "$$$" . "plugin_resource";
             $output[$key]['color']                         = $parm['color'];

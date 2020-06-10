@@ -185,7 +185,7 @@ class PluginResourcesRank extends CommonDropdown {
 
             $values[0] = Dropdown::EMPTY_VALUE;
             if ($result = $DB->query($query)) {
-               while ($data = $DB->fetch_array($result)) {
+               while ($data = $DB->fetchArray($result)) {
                   $values[$data['id']] = $data['name'];
                }
             }
@@ -225,7 +225,7 @@ class PluginResourcesRank extends CommonDropdown {
 
          if ($result=$DB->query($query)) {
             if ($DB->numrows($result)) {
-               $data = $DB->fetch_assoc($result);
+               $data = $DB->fetchAssoc($result);
                $data = Toolbox::addslashes_deep($data);
                $input['name'] = $data['name'];
                $input['entities_id']  = $entity;
