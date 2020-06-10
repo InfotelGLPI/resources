@@ -84,7 +84,7 @@ if ($DB->numrows($result)) {
    while ($data = $DB->fetch_array($result)) {
       array_push($users, ['id'   => $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["username"],
-                                                   $data["name"], $data["firstname"])]);
+                                                   $data["name"], $data["firstname"], 0)]);
       //      $logins[$data["id"]] = $data["name"];
       $linkedUsers[] = $data["userid"];
    }
@@ -109,7 +109,7 @@ if ($_GET['addUnlinkedUsers']) {
    while ($data = $DB->fetch_array($result)) {
       array_push($users, ['id'   => 'users-' . $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["name"],
-                                                         $data["realname"], $data["firstname"])]);
+                                                         $data["realname"], $data["firstname"], 0)]);
       //      $logins['users-'.$data["id"]] = $data["name"];
    }
 }
