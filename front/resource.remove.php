@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
@@ -39,34 +39,34 @@ if (empty($_POST["date_end"])) {
    $_POST["date_end"] = date("Y-m-d");
 }
 
-$resource = new PluginResourcesResource();
+$resource        = new PluginResourcesResource();
 $checklistconfig = new PluginResourcesChecklistconfig();
 
 if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
 
-   $date = date("Y-m-d H:i:s");
+   $date     = date("Y-m-d H:i:s");
    $CronTask = new CronTask();
    $CronTask->getFromDBbyName("PluginResourcesEmployment", "ResourcesLeaving");
 
-   $input["id"] = $_POST["plugin_resources_resources_id"];
+   $input["id"]       = $_POST["plugin_resources_resources_id"];
    $input["date_end"] = $_POST["date_end"];
    if (($_POST["date_end"] < $date)
-           || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
-      $input["is_leaving"] = "1";
+       || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
+      $input["is_leaving"]               = "1";
       $input["date_declaration_leaving"] = date('Y-m-d H:i:s');
    } else {
-      $input["is_leaving"] = "0";
+      $input["is_leaving"]               = "0";
       $input["date_declaration_leaving"] = null;
    }
    $input["plugin_resources_leavingreasons_id"] = $_POST["plugin_resources_leavingreasons_id"];
-   $input["withtemplate"] = "0";
-   $input["users_id_recipient_leaving"] = Session::getLoginUserID();
-   $input['send_notification'] = 1;
+   $input["withtemplate"]                       = "0";
+   $input["users_id_recipient_leaving"]         = Session::getLoginUserID();
+   $input['send_notification']                  = 1;
    $resource->update($input);
 
    //test it
    $resource->getFromDB($_POST["plugin_resources_resources_id"]);
-   $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($_POST["plugin_resources_resources_id"]);
+   $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($_POST["plugin_resources_resources_id"], PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
    if (!$resources_checklist) {
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
    }
