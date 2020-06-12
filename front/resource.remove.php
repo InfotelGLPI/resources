@@ -66,7 +66,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
    //test it
    $resource->getFromDB($_POST["plugin_resources_resources_id"]);
-   $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($_POST["plugin_resources_resources_id"]);
+   $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($_POST["plugin_resources_resources_id"], PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
    if (!$resources_checklist) {
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
    }

@@ -998,7 +998,7 @@ class PluginResourcesResource extends CommonDBTM {
             $this->updates[] = "users_id_recipient_leaving";
             $this->updates[] = "date_declaration_leaving";
 
-            $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($this->fields["id"]);
+            $resources_checklist = PluginResourcesChecklist::checkIfChecklistExist($this->fields["id"], PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
             if (!$resources_checklist) {
                $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
                $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
