@@ -299,24 +299,24 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       }
 
       $who       = $parm['who'];
-      $who_group = $parm['who_group'];
+      $who_group = $parm['whogroup'];
       $begin     = $parm['begin'];
       $end       = $parm['end'];
       // Get items to print
       $ASSIGN = "";
 
-      if ($who_group === "mine") {
-         if (count($_SESSION["glpigroups"])) {
-            $groups = implode("','", $_SESSION['glpigroups']);
-            $ASSIGN = " `glpi_plugin_resources_tasks`.`users_id` IN (SELECT DISTINCT `users_id`
-                                    FROM `glpi_groups_users`
-                                    WHERE `groups_id` IN ('$groups'))
-                                          AND ";
-         } else { // Only personal ones
-            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` = '$who'
-                     AND ";
-         }
-      } else {
+//      if ($who_group === "mine") {
+//         if (count($_SESSION["glpigroups"])) {
+//            $groups = implode("','", $_SESSION['glpigroups']);
+//            $ASSIGN = " `glpi_plugin_resources_tasks`.`users_id` IN (SELECT DISTINCT `users_id`
+//                                    FROM `glpi_groups_users`
+//                                    WHERE `groups_id` IN ('$groups'))
+//                                          AND ";
+//         } else { // Only personal ones
+//            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` = '$who'
+//                     AND ";
+//         }
+//      } else {
          if ($who > 0) {
             $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` = '$who'
                      AND ";
@@ -327,7 +327,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                                     WHERE `groups_id` = '$who_group')
                                           AND ";
          }
-      }
+//      }
       if (empty($ASSIGN)) {
          $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` IN (SELECT DISTINCT `glpi_profiles_users`.`users_id`
                                  FROM `glpi_profiles`
