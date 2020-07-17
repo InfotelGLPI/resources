@@ -1285,7 +1285,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
             // End Line for column headers
             echo Search::showEndLine($output_type);
 
-            $DB->data_seek($result, $p['start']);
+            $DB->dataSeek($result, $p['start']);
 
             // Define begin and end var for loop
             // Search case
