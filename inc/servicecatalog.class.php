@@ -70,10 +70,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
     * @return string
     */
    static function getMenuTitle() {
-      global $CFG_GLPI;
-
       return __('Manage human resources', 'resources');
-
    }
 
 

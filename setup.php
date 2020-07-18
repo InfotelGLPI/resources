@@ -85,8 +85,14 @@ function plugin_init_resources() {
       Plugin::registerClass(PluginResourcesEmployment::class, [
          'massiveaction_nodelete_types' => true]);
 
-      if (class_exists('PluginServicecatalogDashboard')) {
+      if (Session::haveRight("plugin_servicecatalog", READ)) {
          $PLUGIN_HOOKS['servicecatalog']['resources'] = ['PluginResourcesServicecatalog'];
+      }
+
+      if ((Session::haveRight("plugin_resources", READ)
+            || Session::haveright("plugin_resources_employee", UPDATE))
+           && !Session::haveRight("plugin_servicecatalog", READ)) {
+         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
       }
 
       if (Session::haveright("plugin_resources_checklist", READ)
@@ -111,26 +117,15 @@ function plugin_init_resources() {
          $PLUGIN_HOOKS['treeview_params']['resources']        = [PluginResourcesResource::class, 'showResourceTreeview'];
       }
 
-      if (((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE))
-              && !class_exists('PluginServicecatalogDashboard'))
-          || (class_exists('PluginServicecatalogDashboard')
-              && !Session::haveRight("plugin_servicecatalog", READ))) {
+      if ((Session::haveRight("plugin_resources", READ)
+            || Session::haveright("plugin_resources_employee", UPDATE))
+           && !Session::haveRight("plugin_servicecatalog", READ)) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
       // Resource menu
-      if (Session::haveRight("plugin_resources", READ) || Session::haveright("plugin_resources_employee", UPDATE)) {
-
+      if (Session::haveRight("plugin_resources", READ)
+          || Session::haveright("plugin_resources_employee", UPDATE)) {
          $PLUGIN_HOOKS['redirect_page']['resources'] = "front/resource.form.php";
-      }
-
-      if (((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE))
-              && !class_exists('PluginServicecatalogDashboard'))
-          || (class_exists('PluginServicecatalogDashboard')
-              && !Session::haveRight("plugin_servicecatalog", READ))
-      ) {
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
       }
 
       //
@@ -145,10 +140,10 @@ function plugin_init_resources() {
       // Add specific files to add to the header : javascript or css
       $PLUGIN_HOOKS['add_css']['resources']        = ["resources.css"];
       $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
-                                                           "lib/plugins/jquery.address.js",
-                                                           "lib/plugins/jquery.mousewheel.js",
-                                                           "lib/plugins/jquery.scroll.js",
-                                                           "lib/resources_card.js",
+                                                      "lib/plugins/jquery.address.js",
+                                                      "lib/plugins/jquery.mousewheel.js",
+                                                      "lib/plugins/jquery.scroll.js",
+                                                      "lib/resources_card.js",
       ];
 
       //TODO : Check
@@ -182,12 +177,12 @@ function plugin_init_resources() {
 function plugin_version_resources() {
 
    return [
-      'name'           => _n('Human Resource', 'Human Resources', 2, 'resources'),
-      'version'        => PLUGIN_RESOURCES_VERSION,
-      'license'        => 'GPLv2+',
-      'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
-      'homepage'       => 'https://github.com/InfotelGLPI/resources',
-      'requirements'   => [
+      'name'         => _n('Human Resource', 'Human Resources', 2, 'resources'),
+      'version'      => PLUGIN_RESOURCES_VERSION,
+      'license'      => 'GPLv2+',
+      'author'       => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
+      'homepage'     => 'https://github.com/InfotelGLPI/resources',
+      'requirements' => [
          'glpi' => [
             'min' => '9.5',
             'dev' => false
