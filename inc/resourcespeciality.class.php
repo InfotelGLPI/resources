@@ -107,7 +107,7 @@ class PluginResourcesResourceSpeciality extends CommonDropdown {
 
       if ($rankId>0) {
 
-         $condition = " `plugin_resources_ranks_id` = '".$rankId."'";
+         $condition = ['plugin_resources_ranks_id' => $rankId];
 
          Dropdown::show('PluginResourcesResourceSpeciality', ['entity' => $entity,
                   'condition' => $condition]);

@@ -192,7 +192,7 @@ class PluginResourcesRank extends CommonDropdown {
             Dropdown::showFromArray('plugin_resources_ranks_id', $values);
 
          } else {
-            $condition = " `plugin_resources_professions_id` = '".$professionId."'";
+            $condition = ['plugin_resources_professions_id' => $professionId];
 
             Dropdown::show('PluginResourcesRank', ['entity' => $entity,
                'condition' => $condition]);

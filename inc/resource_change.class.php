@@ -689,7 +689,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       echo __('Category') . "&nbsp;";
       $rand = Dropdown::show('ITILCategory', ['name'      => 'itilcategories_id',
                                               'entity'    => $entities_id,
-                                              'condition' => 'is_request',
+                                              'condition' => ['is_request' => 1],
                                               'on_change' => 'plugin_resources_load_buttonadd();']);
 
       echo "<script type='text/javascript'>";
