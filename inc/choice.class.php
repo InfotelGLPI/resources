@@ -332,7 +332,7 @@ class PluginResourcesChoice extends CommonDBTM {
             Dropdown::show('PluginResourcesChoiceItem',
                            ['name'      => 'plugin_resources_choiceitems_id',
                             'entity'    => $_SESSION['glpiactive_entity'],
-                            'condition' => '`is_helpdesk_visible` = 1',
+                            'condition' => ['is_helpdesk_visible' => 1],
                             'used'      => $used]);
             echo "&nbsp;<input type='submit' name='addchoice' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
             echo "<br><br>";
@@ -608,9 +608,9 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "<td colspan='4' class='center'>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
 
-         $condition = "";
+         $condition = [];
          if (Session::getCurrentInterface() != 'central') {
-            $condition = '`is_helpdesk_visible` = 1';
+            $condition = ['is_helpdesk_visible' => 1];
          }
          Dropdown::show('PluginResourcesChoiceItem',
                         ['name'      => 'plugin_resources_choiceitems_id',
