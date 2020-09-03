@@ -1,29 +1,31 @@
 <?php
-
 /*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- Activity plugin for GLPI
- Copyright (C) 2013 by the Activity Development Team.
+ resources plugin for GLPI
+ Copyright (C) 2009-2016 by the resources Development Team.
+
+ https://github.com/InfotelGLPI/resources
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Activity.
+ This file is part of resources.
 
- Activity is free software; you can redistribute it and/or modify
+ resources is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- Activity is distributed in the hope that it will be useful,
+ resources is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Activity. If not, see <http://www.gnu.org/licenses/>.
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
-*/
+ */
 
 /**
  * Update from 2.3.1 to 2.3.2

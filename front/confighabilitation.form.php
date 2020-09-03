@@ -87,7 +87,7 @@ if (isset($_POST['add_metademand'])) {
       Html::header(__('Setup'), '', "config", "plugins");
       echo "<div align='center'><br><br>";
       echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
-      echo "<b>" . __('Please activate the plugin metademand', 'activity') . "</b></div>";
+      echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 
 } else if (isset($_GET['delete'])) {
@@ -107,7 +107,7 @@ if (isset($_POST['add_metademand'])) {
       Html::header(__('Setup'), '', "config", "plugins");
       echo "<div align='center'><br><br>";
       echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
-      echo "<b>" . __('Please activate the plugin metademand', 'activity') . "</b></div>";
+      echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 
 }
