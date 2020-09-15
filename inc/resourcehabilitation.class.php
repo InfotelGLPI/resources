@@ -328,7 +328,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                if ($habilitation_level->getFromDB($level['id'])) {
                   $mandatory = "";
                   if ($habilitation_level->getField('is_mandatory_creating_resource')) {
-                     $mandatory = "red";
+                     $mandatory = "style='color:red;'";
                   }
                   //list of habilitations according to level
                   $habilitations = $habilitation->getHabilitationsWithLevel($habilitation_level,
@@ -362,7 +362,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   $cpt++;
 
                   echo "<div class=\"bt-row\">";
-                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 $mandatory\">";
+                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4\" $mandatory>";
                   echo $habilitation_level->getName();
                   echo "</div>";
                   echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";

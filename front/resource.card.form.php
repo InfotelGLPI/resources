@@ -45,7 +45,7 @@ if (isset($_POST['plugin_resources_resources_id'])) {
                                     [1]);
 
    $resource = reset($resource);
-   $plugin_resources_resources_id = $resource['plugin_resources_resources_id'];
+   $plugin_resources_resources_id = isset($resource['plugin_resources_resources_id'])?$resource['plugin_resources_resources_id']:0;
 }
 
 if (Session::haveRight("plugin_resources", UPDATE)) {

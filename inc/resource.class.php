@@ -1874,26 +1874,26 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"bt-row\">";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("name", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Surname');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       $option = ['value' => $options["name"], 'option' => "onchange=\"javascript:this.value=this.value.toUpperCase();\""];
       Html::autocompletionTextField($this, "name", $option);
-      echo "<br><span class='plugin_resources_wizard_comment red'>";
+      echo "<br><span class='plugin_resources_wizard_comment' style='color:red;>";
       echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
       echo "</span>";
       echo "</div>";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("firstname", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('First name');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -1906,11 +1906,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"bt-row\">";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("locations_id", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Location');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -1940,11 +1940,11 @@ class PluginResourcesResource extends CommonDBTM {
 
          echo "<div class=\"bt-row\">";
 
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
          if (in_array("plugin_resources_resourcesituations_id", $required)) {
-            echo " red";
+            echo " style='color:red;'";
          }
-         echo " \" >";
+         echo ">";
          echo PluginResourcesResourceSituation::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -1957,11 +1957,11 @@ class PluginResourcesResource extends CommonDBTM {
          self::showGenericDropdown(PluginResourcesResourceSituation::class, $params);
          echo "</div>";
 
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
          if (in_array("plugin_resources_contractnatures_id", $required)) {
-            echo " red";
+            echo " style='color:red;'";
          }
-         echo " \" >";
+         echo ">";
          echo PluginResourcesContractNature::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -1980,11 +1980,11 @@ class PluginResourcesResource extends CommonDBTM {
 
          echo "<div class=\"bt-row\">";
 
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
          if (in_array("plugin_resources_ranks_id", $required)) {
-            echo " red";
+            echo " style='color:red;'";
          }
-         echo " \" >";
+         echo ">";
          echo PluginResourcesRank::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -1998,11 +1998,11 @@ class PluginResourcesResource extends CommonDBTM {
 
          echo "</div>";
 
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
          if (in_array("plugin_resources_resourcespecialities_id", $required)) {
-            echo " red";
+            echo " style='color:red;'";
          }
-         echo " \" >";
+         echo ">";
          echo PluginResourcesResourceSpeciality::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -2033,11 +2033,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"bt-row\">";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("users_id", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Resource manager', 'resources');
       echo "</div>";
       $config = new PluginResourcesConfig();
@@ -2078,11 +2078,11 @@ class PluginResourcesResource extends CommonDBTM {
 
 
       }
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("users_id_sales", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Sales manager', 'resources');
       echo "</div>";
 
@@ -2130,11 +2130,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"bt-row\">";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("plugin_resources_departments_id", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo PluginResourcesDepartment::getTypeName(1);
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -2148,22 +2148,22 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"bt-row\">";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("date_begin", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Arrival date', 'resources');
       echo "</div>";
       echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
       Html::showDateField("date_begin", ['value' => $options["date_begin"]]);
       echo "</div>";
 
-      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3";
+      echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\"";
       if (in_array("date_end", $required)) {
-         echo " red";
+         echo " style='color:red;'";
       }
-      echo " \" >";
+      echo ">";
       echo __('Departure date', 'resources') . "&nbsp;";
       if (!in_array("date_end", $required)) {
          Html::showToolTip(nl2br(__('Empty for non defined', 'resources')));
@@ -2245,7 +2245,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!empty($required)) {
          echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 red\">";
+         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\" style='color:red;>";
          echo __('The fields in red must be completed', 'resources');
          echo "</div>";
          echo "</div>";
