@@ -165,6 +165,7 @@ function plugin_init_resources() {
       $PLUGIN_HOOKS['display_planning']['resources']  = ['PluginResourcesTaskPlanning', 'displayPlanningItem'];
       $PLUGIN_HOOKS['migratetypes']['resources']      = 'plugin_datainjection_migratetypes_resources';
 
+      $PLUGIN_HOOKS['metademands']['resources'] = ['PluginResourcesMetademand'];
    }
    // End init, when all types are registered
    $PLUGIN_HOOKS['post_init']['resources'] = 'plugin_resources_postinit';
