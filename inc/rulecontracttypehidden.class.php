@@ -88,7 +88,7 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
    /**
     * @return bool
     */
-   function isEntityAssign() {
+   function isEntityassign() {
       return true;
    }
 
@@ -274,6 +274,26 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
          $actions['hiddenfields_plugin_resources_ranks_id']['type']  = "yesonly";
          $actions['hiddenfields_plugin_resources_ranks_id']['force_actions'] = ['assign'];
       }
+
+      $actions['hiddenfields_plugin_resources_contractnatures_id']['name']  =  PluginResourcesContractNature::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_contractnatures_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_contractnatures_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_ranks_id']['name']  = PluginResourcesRank::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_ranks_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_ranks_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_resourcespecialities_id']['name']  = PluginResourcesResourceSpeciality::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_resourcespecialities_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_resourcespecialities_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_charter']['name']  = __('Sensitized to security', 'resources');
+      $actions['hiddenfields_charter']['type']  = "yesonly";
+      $actions['hiddenfields_charter']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_security']['name']  =  __('Reading the security charter', 'resources');
+      $actions['hiddenfields_security']['type']  = "yesonly";
+      $actions['hiddenfields_security']['force_actions'] = ['assign'];
 
       return $actions;
    }

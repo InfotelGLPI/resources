@@ -42,7 +42,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
     * getTypeName(), canCreate(), canView()
     * */
    static function getTypeName($nb = 0) {
-      return __('Setup active directory');
+      return __('Setup LDAP directory','resources');
    }
 
    /**
@@ -103,7 +103,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('Active directory user login', 'resources');
+         echo __('RootDN (for non anonymous binds)');
          echo "</td>";
          echo "<td ><input type='text' name='login'  value=\"".
               $this->fields["login"]."\">";
@@ -118,7 +118,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
          echo "<tr>";
-         echo "<td colspan = ''>" . __('ldap server') . "</td>";
+         echo "<td colspan = ''>" . __('Server') . "</td>";
 
          echo "<td>";
          Dropdown::show(AuthLDAP::getType(),["name"=>'auth_id',"value"=>$this->getField("auth_id")]);
@@ -155,7 +155,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('Login', 'resources');
+         echo __('Login');
          echo "</td>";
          echo "<td>";
 
@@ -184,7 +184,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
 
          echo "<td>";
-         echo __("Firstname");
+         echo __("First name");
          echo "</td>";
          echo "<td>";
 
@@ -204,7 +204,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
 
          echo "<td>";
-         echo __("Mail");
+         echo __("Email");
          echo "</td>";
          echo "<td>";
 
@@ -214,7 +214,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __("Company",'resources');
+         echo PluginResourcesEmployer::getTypeName(1);
          echo "</td>";
          echo "<td>";
 
@@ -234,7 +234,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __("Cell phone",'resources');
+         echo __('Mobile phone');
          echo "</td>";
          echo "<td>";
 
@@ -270,7 +270,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __("OU disabled user",'resources');
+         echo __("Destination OU on user deactivation",'resources');
          echo "</td>";
          echo "<td>";
 
@@ -279,7 +279,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
 
          echo "<td>";
-         echo __("OU user",'resources');
+         echo __("Destination OU during user creation",'resources');
          echo "</td>";
          echo "<td>";
 

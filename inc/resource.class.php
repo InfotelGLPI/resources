@@ -1233,8 +1233,21 @@ class PluginResourcesResource extends CommonDBTM {
             $tohide[$k] = "hidden";
          }
       }
+      $config = new PluginResourcesConfig();
+      if ($config->useSecurity()) {
+         $tohide["security"] = "";
+         $tohide["charter"] = "";
+         if(in_array("security",$hidden)){
+            $tohide["security"] = "hidden";
+         }
+         if(in_array("charter",$hidden)){
+            $tohide["charter"] = "hidden";
+         }
+
+      }
 
       echo "<tr  class='tab_bg_1'>";
+
       echo "<td ".$tohide['name']."";
       if (in_array("name", $required)) {
          echo $alert;
@@ -1342,12 +1355,19 @@ class PluginResourcesResource extends CommonDBTM {
                     'span'   => 'span_contractnature'
          ];
          self::showGenericDropdown(PluginResourcesResourceSituation::class, $params);
+         echo '</td>';
+         if($tohide['plugin_resources_resourcesituations_id'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
          echo "<td  ".$tohide['plugin_resources_contractnatures_id']."";
          if (in_array("plugin_resources_contractnatures_id", $required)) {
             echo $alert;
          }
          echo ">";
+
          echo PluginResourcesContractNature::getTypeName(1) . "</td>";
+
+
          echo "<td ".$tohide['plugin_resources_contractnatures_id'].">";
          echo "<span id='span_contractnature' name='span_contractnature'>";
          if ($this->fields["plugin_resources_contractnatures_id"] > 0) {
@@ -1358,6 +1378,9 @@ class PluginResourcesResource extends CommonDBTM {
          }
          echo "</span>";
          echo "</td>";
+         if($tohide['plugin_resources_contractnatures_id'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
          echo "</tr>";
 
          echo "<tr class='tab_bg_1'>";
@@ -1377,6 +1400,10 @@ class PluginResourcesResource extends CommonDBTM {
          ];
          self::showGenericDropdown(PluginResourcesRank::class, $params);
          echo "</td>";
+
+         if($tohide['plugin_resources_ranks_id'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
          echo "<td ".$tohide['plugin_resources_resourcespecialities_id']." ";
          if (in_array("plugin_resources_resourcespecialities_id", $required)) {
             echo $alert;
@@ -1393,6 +1420,9 @@ class PluginResourcesResource extends CommonDBTM {
          }
          echo "</span>";
          echo "</td>";
+         if($tohide['plugin_resources_resourcespecialities_id'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
          echo "</tr>";
          echo "</table><table class='tab_cadre_fixe'>";
 
@@ -1410,6 +1440,9 @@ class PluginResourcesResource extends CommonDBTM {
                      ['value'  => $this->fields["locations_id"],
                       'entity' => $this->fields["entities_id"]]);
       echo "</td>";
+      if($tohide['locations_id'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       echo "<td ".$tohide['plugin_resources_departments_id']." ";
       if (in_array("plugin_resources_departments_id", $required)) {
          echo $alert;
@@ -1421,6 +1454,9 @@ class PluginResourcesResource extends CommonDBTM {
                      ['value'  => $this->fields["plugin_resources_departments_id"],
                       'entity' => $this->fields["entities_id"]]);
       echo "</td>";
+      if($tohide['plugin_resources_departments_id'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1463,6 +1499,9 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "</td>";
+      if($tohide['users_id'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       echo "<td ".$tohide['date_begin']." ";
       if (in_array("date_begin", $required)) {
          echo $alert;
@@ -1472,6 +1511,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td ".$tohide['date_begin']." >";
       Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
       echo "</td>";
+      if($tohide['date_begin'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       echo "</tr>";
 
       echo "<tr ".$tohide['users_id_sales']." class='tab_bg_1'>";
@@ -1514,6 +1556,9 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "</td>";
+      if($tohide['users_id_sales'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       echo "<td colspan='2'>";
       echo "</td>";
       echo "</tr>";
@@ -1623,6 +1668,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td ".$tohide['date_end'].">";
       Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
       echo "</td>";
+      if($tohide['date_end'] == "hidden"){
+         echo "<td colspan='2'></td>";
+      }
       if(!countDistinctElementsInTable(PluginResourcesLeavingReason::getTable(),'id')){
          echo "<td colspan='2'></td>";
       }
@@ -1638,16 +1686,18 @@ class PluginResourcesResource extends CommonDBTM {
       $config = new PluginResourcesConfig();
       if ($config->useSecurity()) {
          echo "<tr class='tab_bg_1'>";
-         echo "<td>" . __('Sensitized to security', 'resources') . "</td>";
-         echo "<td>";
+         echo "<td ".$tohide['security'].">" . __('Sensitized to security', 'resources') . "</td>";
+         echo "<td ".$tohide['security'].">";
          $checked = '';
          if ($this->fields['sensitize_security']) {
             $checked = "checked = true";
          }
          echo "<input type='checkbox' name='sensitize_security' $checked value='1'>";
          echo "</td>";
-
-         echo "<td>" . __('Reading the security charter', 'resources') . "</td><td>";
+         if($tohide['security'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
+         echo "<td ".$tohide['charter'].">" . __('Reading the security charter', 'resources') . "</td><td ".$tohide['charter'].">";
          $checked = '';
          if ($this->fields['read_chart']) {
             $checked = "checked = true";
@@ -1656,6 +1706,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<input type='hidden' value='" . (($this->fields['read_chart'] > 0) ? 0 : 1) . "' name='is_checked$ID'>";
 
          echo "</td>";
+         if($tohide['charter'] == "hidden"){
+            echo "<td colspan='2'></td>";
+         }
          echo "<td colspan='2'></td>";
          echo "</tr>";
       }

@@ -51,7 +51,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
     **/
    static function getTypeName($nb = 0) {
 
-      return __('Active Directory', 'resources');
+      return __('Update LDAP', 'resources');
    }
 
    /**
@@ -107,10 +107,22 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       if (!$withtemplate) {
          if ($item->getID() && $this->canView()) {
-            if ($_SESSION['glpishow_count_on_tabs']) {
-               return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
+
+            if($item->getType() == Ticket::getType()){
+               $items = new Item_Ticket();
+               if($items->getFromDBByCrit(["tickets_id"=>$item->getID(),"itemtype"=>PluginResourcesResource::getType()])){
+                  $adConfig = new PluginResourcesAdconfig();
+                  $adConfig->getFromDB(1);
+                  if ($item->getField('itilcategories_id') ==$adConfig->getField("creation_categories_id") || $item->getField('itilcategories_id') ==$adConfig->getField("modification_categories_id") || $item->getField('itilcategories_id') ==$adConfig->getField("deletion_categories_id") ){
+                     if ($_SESSION['glpishow_count_on_tabs']) {
+                        return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
+                     }
+                     return self::getTypeName(2);
+                  }
+
+               }
             }
-            return self::getTypeName(2);
+
          }
       }
       return '';
