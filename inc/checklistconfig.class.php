@@ -252,17 +252,19 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
                $resourceItem = new PluginResourcesResource_Item();
                $items = json_decode($checklist["items"]);
+               if(isset($items) && is_array($items)){
+                  foreach ($items as $item){
+                     $input = [];
+                     $input["plugin_resources_resources_id"] = $resource->getID();
+                     $input["items_id"] = $item;
+                     $input["itemtype"] = $checklist["itemtype"];
+                     if(!$resourceItem->getFromDBByCrit($input)){
+                        $resourceItem->add($input);
+                     }
 
-               foreach ($items as $item){
-                  $input = [];
-                  $input["plugin_resources_resources_id"] = $resource->getID();
-                  $input["items_id"] = $item;
-                  $input["itemtype"] = $checklist["itemtype"];
-                  if(!$resourceItem->getFromDBByCrit($input)){
-                     $resourceItem->add($input);
                   }
-
                }
+
 
             }
          }
