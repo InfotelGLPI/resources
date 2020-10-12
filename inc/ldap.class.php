@@ -287,9 +287,11 @@ class PluginResourcesLDAP extends CommonDBTM {
 
          // Create the users distinguished name.
          // We're adding an OU onto the users base DN to have it be saved in the specified OU.
-         $dn = $user->getDnBuilder()->addOu($adConfig->getField("ouUser")); // Built DN will be: "CN=John Doe,OU=Users,DC=acme,DC=org";
-         $dn->addCn($data["firstname"]." ".$data["name"]);
-         // Set the users DN, account name.
+//         $dn = $user->getDnBuilder()->addOu($adConfig->getField("ouUser")); // Built DN will be: "CN=John Doe,OU=Users,DC=acme,DC=org";
+//         $dn->addCn($data["firstname"]." ".$data["name"]);
+//         // Set the users DN, account name.
+//         $user->setDn($dn);
+         $dn = "CN=".$data["firstname"]." ".$data["name"].",".$adConfig->getField("ouUser");
          $user->setDn($dn);
          $user->setAccountName($data['login']);
          $user->setCommonName($data["firstname"]." ".$data["name"]);
@@ -425,10 +427,11 @@ class PluginResourcesLDAP extends CommonDBTM {
          $user->setUserAccountControl($ac);
 
          if($user->save()){
-            $newParentDn = $user->getDnBuilder()->addOu($adConfig->getField("ouDesactivateUserAD"));
-            $newParentDn = $newParentDn->removeOu($adConfig->getField("ouUser"));
-            $newParentDn = $newParentDn->removeCn($user->getCommonName());
-            if($user->move($newParentDn->get())){
+//            $newParentDn = $user->getDnBuilder()->addOu($adConfig->getField("ouDesactivateUserAD"));
+//            $newParentDn = $newParentDn->removeOu($adConfig->getField("ouUser"));
+//            $newParentDn = $newParentDn->removeCn($user->getCommonName());
+            $newParentDn = $adConfig->getField("ouDesactivateUserAD");
+            if($user->move($newParentDn)){
                return true;
             }
             return false;

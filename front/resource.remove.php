@@ -92,7 +92,8 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
       }
       $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]));
-      $ticket->fields["categories_id"] = $config->fields["categories_id"];
+      $ticket->fields["itilcomptecategories_id"] = $config->fields["categories_id"];
+      $ticket->fields["content"] = Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]).__("leave on","resources")." ".$input["date_declaration_leaving"];
       $ticket->fields["type"] = Ticket::DEMAND_TYPE;
       $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];
       unset($ticket->fields["id"]);
