@@ -176,7 +176,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       echo "</td>";
 
 
-      $items = json_decode($this->fields["items"]);
+      $items =$this->fields["items"];
 
       echo "<td>" . _n('Item', 'Items',
                        Session::getPluralNumber()) . "</td>";
@@ -251,18 +251,18 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
 
                $resourceItem = new PluginResourcesResource_Item();
-               $items = json_decode($checklist["items"]);
-               if(isset($items) && is_array($items)){
-                  foreach ($items as $item){
-                     $input = [];
-                     $input["plugin_resources_resources_id"] = $resource->getID();
-                     $input["items_id"] = $item;
-                     $input["itemtype"] = $checklist["itemtype"];
-                     if(!$resourceItem->getFromDBByCrit($input)){
-                        $resourceItem->add($input);
-                     }
+               $item_id = $checklist["items"];
+               if(isset($item_id) && !empty($item_id)){
 
+                  $input = [];
+                  $input["plugin_resources_resources_id"] = $resource->getID();
+                  $input["items_id"] = $item_id;
+                  $input["itemtype"] = $checklist["itemtype"];
+                  if(!$resourceItem->getFromDBByCrit($input)){
+                     $resourceItem->add($input);
                   }
+
+
                }
 
 

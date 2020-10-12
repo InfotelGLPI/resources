@@ -37,7 +37,6 @@ $checklistconfig = new PluginResourcesChecklistconfig();
 
 if (isset($_POST["add"])) {
    $checklistconfig->check(-1, UPDATE, $_POST);
-   $_POST['items'] = isset($_POST['items'])?json_encode($_POST['items']):json_encode([]);
    $newID = $checklistconfig->add($_POST);
    Html::back();
 
@@ -48,7 +47,6 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST["update"])) {
    $checklistconfig->check($_POST['id'], UPDATE);
-   $_POST['items'] = isset($_POST['items'])?json_encode($_POST['items']):json_encode([]);
    $checklistconfig->update($_POST);
    Html::back();
 

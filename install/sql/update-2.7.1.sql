@@ -58,4 +58,4 @@ ALTER TABLE `glpi_plugin_resources_configs` ADD `creat_ticket_departure` tinyint
 ALTER TABLE `glpi_plugin_resources_configs` ADD `categories_id` INT(11) NULL DEFAULT '0' AFTER `creat_ticket_departure`;
 
 ALTER TABLE `glpi_plugin_resources_checklistconfigs` ADD `itemtype` VARCHAR(255) NOT NULL DEFAULT '' AFTER `comment`;
-ALTER TABLE `glpi_plugin_resources_checklistconfigs` ADD `items` VARCHAR(255) NOT NULL DEFAULT '' AFTER `itemtype`;
+ALTER TABLE `glpi_plugin_resources_checklistconfigs` ADD `items` int(11) NOT NULL default '0' AFTER `itemtype`;

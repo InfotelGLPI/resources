@@ -37,32 +37,23 @@ if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
 Session::checkCentralAccess();
 
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
-   $values = [];
-   $data   = [];
+   $values = 0;
    if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
       if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
          $values = $_POST['values'];
       }
-      $dbu = new DbUtils();
 
 
-      $item      = new $_POST["type"]();
-      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $items     = $item->find();
-
-
-      foreach ($items as $vals) {
-         if ($_POST["type"] == User::getType()) {
-            $item->getFromDB($vals["id"]);
-            $data[$vals["id"]] = $item->getFriendlyName();
-         } else {
-            $data[$vals["id"]] = $vals["name"];
-         }
+      $option["name"] = "items";
+      if(isset($values)){
+         $option["value"] = $values;
+      }else{
+         $option["value"] = 0;
       }
+
+
+      $_POST["type"]::dropdown($option);
    }
 
-   Dropdown::showFromArray("items", $data, ['id'       => 'target',
-                                             'multiple' => true,
-                                             'values'   => (is_array($values) ? $values : []),
-                                             "display"  => true]);
+
 }
