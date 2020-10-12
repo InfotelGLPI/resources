@@ -52,7 +52,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `roleAD` varchar(255) collate utf8_unicode_ci default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','');
+INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','');
 
 ALTER TABLE `glpi_plugin_resources_configs` ADD `creat_ticket_departure` tinyint(1) NOT NULL default '0' AFTER `sales_manager`;
 ALTER TABLE `glpi_plugin_resources_configs` ADD `categories_id` INT(11) NULL DEFAULT '0' AFTER `creat_ticket_departure`;
