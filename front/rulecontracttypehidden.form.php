@@ -29,32 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
-}
+$rulecollection = new PluginResourcesRuleContracttypeHiddenCollection($_SESSION['glpiactive_entity']);
 
-$checklistconfig = new PluginResourcesChecklistconfig();
+include (GLPI_ROOT . "/front/rule.common.form.php");
 
-if (isset($_POST["add"])) {
-   $checklistconfig->check(-1, UPDATE, $_POST);
-   $_POST['items'] = isset($_POST['items'])?json_encode($_POST['items']):json_encode([]);
-   $newID = $checklistconfig->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["purge"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $checklistconfig->delete($_POST, 1);
-   $checklistconfig->redirectToList();
-
-} else if (isset($_POST["update"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $_POST['items'] = isset($_POST['items'])?json_encode($_POST['items']):json_encode([]);
-   $checklistconfig->update($_POST);
-   Html::back();
-
-} else {
-   $checklistconfig->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
-   $checklistconfig->display(['id' => $_GET["id"]]);
-   Html::footer();
-}

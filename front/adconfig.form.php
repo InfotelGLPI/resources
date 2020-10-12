@@ -31,57 +31,15 @@ include ('../../../inc/includes.php');
 Session::checkRight("config", UPDATE);
 $plugin = new Plugin();
 if ($plugin->isActivated("resources")) {
-   $cat = new PluginResourcesTicketCategory();
-   $transferEntity = new PluginResourcesTransferEntity();
-   $resourceChange = new PluginResourcesResource_Change();
-   $resourceAdConfig = new PluginResourcesAdconfig();
-   $resourceBadge = new PluginResourcesResourceBadge();
-   $config = new PluginResourcesConfig();
 
-   if (isset($_POST["add_ticket"])) {
-      $cat->addTicketCategory($_POST['ticketcategories_id']);
-      Html::back();
+   $config = new PluginResourcesAdconfig();
 
-   } else if (isset($_POST["delete_ticket"])) {
-      if (isset($_POST['id'])) {
-         $cat->delete(['id' => $_POST['id']]);
-      }
-      Html::back();
 
-   } else if (isset($_POST["add_transferentity"])) {
-      $transferEntity->check(-1, UPDATE, $_POST);
-      $transferEntity->add($_POST);
-      Html::back();
-
-   } else if (isset($_POST["update_setup"])) {
+  if (isset($_POST["update_setup"])) {
       $config->check(-1, UPDATE, $_POST);
       $config->update($_POST);
       Html::back();
 
-   } else {
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-      //setup
-      $config->showForm();
-
-      //changes
-      $resourceChange->showForm();
-
-      $resourceAdConfig->showForm();
-
-      //badges
-      $plugin = new Plugin();
-      if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
-         $resourceBadge->showFormConfig();
-      }
-
-      //metademand
-      if ($plugin->isActivated("metademands")) {
-         $configHabilitation = new PluginResourcesConfigHabilitation();
-         $configHabilitation->showFormConfig();
-      }
-
-      $cat->showForm($_SERVER['PHP_SELF']);
-      $transferEntity->showForm($_SERVER['PHP_SELF']);
    }
 
 } else {

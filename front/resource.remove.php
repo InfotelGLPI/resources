@@ -43,7 +43,9 @@ $resource        = new PluginResourcesResource();
 $checklistconfig = new PluginResourcesChecklistconfig();
 
 if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-
+   if(!isset($_POST["plugin_resources_leavingreasons_id"])){
+      $_POST["plugin_resources_leavingreasons_id"] = 0;
+   }
    $date     = date("Y-m-d H:i:s");
    $CronTask = new CronTask();
    $CronTask->getFromDBbyName("PluginResourcesEmployment", "ResourcesLeaving");
@@ -70,8 +72,42 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
    if (!$resources_checklist) {
       $checklistconfig->addChecklistsFromRules($resource, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
    }
-
+   $config = new PluginResourcesConfig();
+   $config->getFromDB(1);
    Session::addMessageAfterRedirect(__('Declaration of resource leaving OK', 'resources'));
+   if($config->fields["creat_ticket_departure"]){
+      $ticket = new Ticket();
+
+      $tt = $ticket->getITILTemplateToUse(0,Ticket::DEMAND_TYPE,$config->fields["categories_id"]);
+      if (isset($tt->predefined) && count($tt->predefined)) {
+         foreach ($tt->predefined as $predeffield => $predefvalue) {
+
+                                 // Load template data
+
+                  $ticket->fields[$predeffield]      = Toolbox::addslashes_deep($predefvalue);
+
+
+         }
+
+
+      }
+      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]));
+      $ticket->fields["categories_id"] = $config->fields["categories_id"];
+      $ticket->fields["type"] = Ticket::DEMAND_TYPE;
+      $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];
+      unset($ticket->fields["id"]);
+      $ticket->add($ticket->fields);
+      $linkad = new PluginResourcesLinkAd();
+      if($linkad->getFromDBByCrit(["plugin_resources_resources_id"=>$input['id']])){
+         $input2 = [];
+         $input2['action_done'] = 0;
+         $input2['id'] = $linkad->getID();
+         $linkad->update($input2);
+      }
+
+   }
+
+
    Html::back();
 
 } else {

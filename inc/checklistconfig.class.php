@@ -138,10 +138,10 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
     * @return bool
     */
    function showForm($ID, $options = []) {
-
+      global $CFG_GLPI;
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-
+      $rand    = mt_rand();
       echo "<tr class='tab_bg_1'>";
 
       echo "<td >".__('Name')."</td>";
@@ -165,6 +165,42 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "<td></td>";
       echo "<td></td>";
+
+      echo "</tr>";
+      echo "<tr class='tab_bg_1'>";
+
+      echo "<td >".__('Itemtype')."</td>";
+      echo "<td>";
+      $types   = PluginResourcesResource::getTypes();
+      $addrand = Dropdown::showItemTypes('itemtype', $types, ["id" => "itemtype", "value" => $this->fields["itemtype"]]);
+      echo "</td>";
+
+
+      $items = json_decode($this->fields["items"]);
+
+      echo "<td>" . _n('Item', 'Items',
+                       Session::getPluralNumber()) . "</td>";
+
+      echo "<td id='linkitems'>";
+
+      echo "</td>";
+      Ajax::updateItem("linkitems",
+                       $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/linkItems.php",
+                       ['type'         => $this->fields["itemtype"],
+                        'current_type' => $this->fields["itemtype"],
+                        'values'       => $items],
+                       true);
+      Ajax::updateItemOnSelectEvent("dropdown_itemtype" . $addrand, "linkitems",
+                                    $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/linkItems.php",
+                                    ['type'         => '__VALUE__',
+                                     'current_type' => $this->fields["itemtype"],
+                                     'values'       => $items],
+                                    true);
+      echo "</td>";
+
+
+
+
 
       echo "</tr>";
 
@@ -212,6 +248,22 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
                $checklist["entities_id"]                       = $resource->fields["entities_id"];
                $resource_checklist                             = new PluginResourcesChecklist();
                $resource_checklist->add($checklist);
+
+
+               $resourceItem = new PluginResourcesResource_Item();
+               $items = json_decode($checklist["items"]);
+
+               foreach ($items as $item){
+                  $input = [];
+                  $input["plugin_resources_resources_id"] = $resource->getID();
+                  $input["items_id"] = $item;
+                  $input["itemtype"] = $checklist["itemtype"];
+                  if(!$resourceItem->getFromDBByCrit($input)){
+                     $resourceItem->add($input);
+                  }
+
+               }
+
             }
          }
       }
