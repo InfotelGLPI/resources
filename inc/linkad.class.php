@@ -493,10 +493,10 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
    static function getMapping($val){
       $mapping["logAD"] = "login";
-      $mapping["nameAD"] = "firstname";
+      $mapping["nameAD"] = "name";
       $mapping["phoneAD"] = "phone";
 
-      $mapping["firstnameAD"] = "name";
+      $mapping["firstnameAD"] = "firstname";
       $mapping["mailAD"] = "mail";
 
       $mapping["cellPhoneAD"] = "cellphone";
