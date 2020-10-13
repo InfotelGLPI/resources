@@ -386,18 +386,26 @@ class PluginResourcesLDAP extends CommonDBTM {
                $rename = true;
             }
          }
+         $new_value = [];
+
+         $attributesEnd = $user->getAttributes();
+         foreach ($dirty as $k=>$d){
+            if(isset($attributesEnd[$k])){
+               $new_value[$k] = $attributesEnd[$k];
+            }
+         }
          if($user->save()){
             if($rename){
                $ncn = "cn=".$data["firstname"]." ".$data["name"];
                if($user->rename($ncn)){
-                  return [true,$dirty];
+                  return [true,$new_value];
                }
-               return [false,$dirty];
+               return [false,$new_value];
             }
 
-            return [true,$dirty];
+            return [true,$new_value];
          }else{
-            return [false,$dirty];
+            return [false,$new_value];
          }
 
       } catch (Adldap\Models\ModelNotFoundException $e) {

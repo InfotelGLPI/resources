@@ -93,7 +93,24 @@ if (isset($_POST["add"])) {
       $content = __(sprintf("%s %s have been updated in the AD",$_POST["firstname"],$_POST["name"]),'resources');
       $content .= __("Data changed",'resources')." <br />";
       foreach ($res[1] as $key => $oldData){
-         $content .= $key." : ".$oldData." <br />";
+         $i =1;
+         $nb =count($oldData);
+         $content .= $key." : ";
+         foreach ($oldData as $data){
+            if($key == "accountexpires"){
+               $time = $ldap->ldapTimeToUnixTime($data);
+               $data = date('Y-m-d',$time);
+               $data =  Html::convDate($data);
+
+            }
+            $content.=$data;
+            if($i<$nb){
+               $content.=", ";
+            }
+            $i++;
+         }
+         $content .= "<br />";
+
       }
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
