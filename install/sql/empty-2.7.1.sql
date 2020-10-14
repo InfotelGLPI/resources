@@ -729,7 +729,7 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','');
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
