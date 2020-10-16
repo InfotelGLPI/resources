@@ -473,24 +473,13 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
 
    static function processLogin(PluginResourcesResource $resource){
-      $name = strtolower($resource->fields["name"]);
-      $firstnametab = explode(" ",strtolower($resource->fields["firstname"]));
-      $firstname ="";
-      $firstname2 ="";
-      foreach($firstnametab as $namepart){
-         $firstname .= substr($namepart, 0, 1);
-          $firstname2 .=$namepart;
-      }
-      //TEST INFOTEL
-      $firstname = strtolower($resource->fields["firstname"]);
-      $name = substr($name, 0, 2);
-      $firstname = substr($firstname, 0, 2);
-     // FIN TEST INFOTEL
-      $login = $firstname.$name;
+      $config = new PluginResourcesAdconfig();
+      $config->getFromDB(1);
+      $login = self::getLoginFromRule($resource->fields["name"],$resource->fields["firstname"],$config->fields["first_form"]);
       $ldap =new PluginResourcesLDAP();
       $exist = $ldap->existingUser($login);
       if($exist){
-         $login =$firstname2.$name;
+         $login = self::getLoginFromRule($resource->fields["name"],$resource->fields["firstname"],$config->fields["second_form"]);
          $exist = $ldap->existingUser($login);
          if($exist){
             return [__("existing login","resources"),false];
@@ -503,6 +492,39 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
    }
 
+   static function getLoginFromRule($firstname,$name,$conf){
+      switch ($conf){
+         case 1:
+            $name = strtolower($name);
+            $firstnametab = explode(" ",strtolower($firstname));
+            $firstname ="";
+
+            foreach($firstnametab as $namepart){
+               $firstname .= substr($namepart, 0, 1);
+            }
+
+            $login = $firstname.$name;
+            break;
+         case 2:
+            $name = strtolower($name);
+            $firstnametab = explode(" ",strtolower($firstname));
+            $firstname ="";
+
+            foreach($firstnametab as $namepart){
+               $firstname .=$namepart;
+            }
+            $login = $firstname.$name;
+            break;
+         case 3:
+            $name = substr($name, 0, 2);
+            $firstname = substr($firstname, 0, 2);
+            $login = $firstname.$name;
+            break;
+         default:
+            $login = "";
+      }
+      return $login;
+   }
    static function getMapping($val){
       $mapping["logAD"] = "login";
       $mapping["nameAD"] = "name";

@@ -151,6 +151,26 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+
+         echo "<tr><th colspan='4'>".__("Login Creation",'resources')."</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('First Form');
+         echo "</td>";
+         echo "<td >";
+         $option = ["value"=>$this->fields["first_form"]];
+         Dropdown::showFromArray("first_form",$this->loginForm(),$option);
+         echo "</td>";
+         echo "<td>";
+         echo __('Second Form');
+         echo "</td>";
+         echo "<td >";
+         $option = ["value"=>$this->fields["second_form"]];
+         Dropdown::showFromArray("second_form",$this->loginForm(),$option);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr><th colspan='4'>".__('Field mapping','resources')."</th></tr>";
 
          echo "<tr class='tab_bg_1'>";
@@ -300,6 +320,14 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
    }
 
+   function loginForm(){
+      $options[0] = Dropdown::EMPTY_VALUE;
+      $options[1] = __("first letter of given name + name");
+      $options[2] = __("given name + name");
+      $options[3] = __("2 letters of given name + 2 letters of name");
+
+      return $options;
+   }
    function prepareInputForUpdate($input) {
 
       if (isset($input["password"])) {
