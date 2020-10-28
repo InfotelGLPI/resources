@@ -36,8 +36,7 @@ include("../../../../inc/includes.php");
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$titre  = $LANG['plugin_resources']['checkgroup'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("checkgroup_report_title", "resources"));
 
 //Report's search criterias
 $tab = [0 => __('No'),

@@ -36,8 +36,7 @@ include("../../../../inc/includes.php");
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$titre  = $LANG['plugin_resources']['checkmissingN0group'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("checkmissingN0group_report_title", "resources"));
 
 //colname with sort allowed
 $columns = ['entity'              => ['sorton' => 'entity'],

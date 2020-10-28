@@ -33,8 +33,7 @@ $DBCONNECTION_REQUIRED  = 0;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourceemploymentwithlapserank'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("resourceemploymentwithlapserank_report_title", "resources"));
 
 //"Rapport listant les ressources ou les emplois ayant un grade caduque"
 //"Report listing resource or employment with lapse rank";

@@ -34,8 +34,7 @@ $DBCONNECTION_REQUIRED  = 0;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourceemploymentwithlapseprofession'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("resourceemploymentwithlapseprofession_report_title", "resources"));
 
 //"Rapport listant les ressources ou les emplois ayant un corps caduque"
 //"Report listing resource or employment with lapse profession";
