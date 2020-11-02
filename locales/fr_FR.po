@@ -1,20 +1,20 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Resources Development Team
 # This file is distributed under the same license as the GLPI - Resources plugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Amandine Manceau, 2016-2018
-# Kevin HAINRY <kevin.hainry@infotel.com>, 2018-2019
-# Ludovic Dupont <ludovic.dupont@infotel.com>, 2015
-# Xavier CAILLAUD <thetsmr@gmail.com>, 2013-2016
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - resources plugin\n"
+"Project-Id-Version: GLPI - Resources plugin 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-19 08:47+0200\n"
-"PO-Revision-Date: 2019-09-19 06:56+0000\n"
-"Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
-"Language-Team: French (France) (http://www.transifex.com/infotelGLPI/GLPI_resources/language/fr_FR/)\n"
+"PO-Revision-Date: 2020-11-02 13:00+0000\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2020\n"
+"Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -138,13 +138,17 @@ msgstr "Conforme sécurité"
 
 #: ajax/pdfresource.php:76
 msgid "Please ensure that the return form is signed by the employee"
-msgstr "Merci de veiller à faire signer la fiche de restitution au collaborateur"
+msgstr ""
+"Merci de veiller à faire signer la fiche de restitution au collaborateur"
 
 #: ajax/pdfresource.php:78
 msgid ""
 "The sales manager is responsible for the complete return of the company's "
 "equipment held by the outgoing employee (badge, PC, smartphone, etc.)"
-msgstr "Le responsable commercial est responsable de la restitution intégrale du matériel de l’entreprise détenu par le collaborateur sortant (badge, PC, smartphone, etc.)"
+msgstr ""
+"Le responsable commercial est responsable de la restitution intégrale du "
+"matériel de l’entreprise détenu par le collaborateur sortant (badge, PC, "
+"smartphone, etc.)"
 
 #: ajax/pdfresource.php:80
 msgid "Download the restitution form"
@@ -180,7 +184,9 @@ msgstr "Notification envoyée"
 #: front/resource.form.php:310 inc/resource.class.php:3738
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
-msgstr "La notification ne peut pas être envoyée car la ressource n'est pas liée à un utilisateur"
+msgstr ""
+"La notification ne peut pas être envoyée car la ressource n'est pas liée à "
+"un utilisateur"
 
 #: front/resource.php:51 front/resource.php:52 front/resource.php:57
 msgid "View by contract type"
@@ -197,7 +203,8 @@ msgstr "Merci d'activer le plugin badge"
 #: front/wizard.form.php:114 front/wizard.form.php:333
 #: inc/resource.class.php:743
 msgid "Required fields are not filled. Please try again."
-msgstr "Un ou plusieurs champs obligatoires sont manquants. Merci de les renseigner."
+msgstr ""
+"Un ou plusieurs champs obligatoires sont manquants. Merci de les renseigner."
 
 #: inc/budget.class.php:106 inc/budget.class.php:122 inc/cost.class.php:91
 #: inc/cost.class.php:108
@@ -507,12 +514,14 @@ msgstr "Gestion de la conformité de sécurité"
 
 #: inc/config.class.php:115
 msgid "Display of four additional security fields in the clients"
-msgstr "Affichage de quatre champs de sécurité supplémentaires dans les clients"
+msgstr ""
+"Affichage de quatre champs de sécurité supplémentaires dans les clients"
 
 #: inc/config.class.php:116
 msgid ""
 "(If all four fields are enabled, the client is compliant with security)"
-msgstr "(Si les quatre champs sont activés, le client est conforme à la sécurité) "
+msgstr ""
+"(Si les quatre champs sont activés, le client est conforme à la sécurité) "
 
 #: inc/config.class.php:125 inc/profile.class.php:196
 #: inc/profile.class.php:273
@@ -668,13 +677,15 @@ msgstr "Affecter un emploi"
 
 #: inc/employment.class.php:471
 msgid "Updating leaving resources (declaring leaving, state of employment)"
-msgstr "Mise à jour des ressources partantes (déclaré partant, état des emplois)"
+msgstr ""
+"Mise à jour des ressources partantes (déclaré partant, état des emplois)"
 
 #: inc/employment.class.php:551
 msgid ""
 "These resources left the company, linked current employment have been "
 "updated"
-msgstr "Ces ressources ont quitté l'entreprise, les emplois liés sont mis à jour"
+msgstr ""
+"Ces ressources ont quitté l'entreprise, les emplois liés sont mis à jour"
 
 #: inc/employmentstate.class.php:89 inc/employmentstate.class.php:156
 msgid "Employment state at leaving's resource"
@@ -1162,7 +1173,8 @@ msgstr "Tâche effectuée"
 
 #: inc/notificationtargetresource.class.php:553
 msgid "Please check the leaving checklist of the resource"
-msgstr "Merci de vérifier la checklist de départ de la ressource si nécessaire"
+msgstr ""
+"Merci de vérifier la checklist de départ de la ressource si nécessaire"
 
 #: inc/notificationtargetresource.class.php:575
 #: inc/notificationtargetresource.class.php:669
@@ -1391,7 +1403,10 @@ msgstr "Entrez les informations générales concernant la ressource"
 msgid ""
 "Thank you for paying attention to the spelling of the name and the firstname"
 " of the resource. For compound firstnames, separate them with a dash \"-\"."
-msgstr "Merci de faire attention a l'orthographe du nom et du prénom de la ressource. Pour les prénoms composés, veuillez les séparer par un tiret \"-\"."
+msgstr ""
+"Merci de faire attention a l'orthographe du nom et du prénom de la "
+"ressource. Pour les prénoms composés, veuillez les séparer par un tiret "
+"\"-\"."
 
 #: inc/resource.class.php:2251
 msgid "The fields in red must be completed"
@@ -1624,7 +1639,9 @@ msgstr "Entrez les habilitations pour la ressource"
 
 #: inc/resourcehabilitation.class.php:360
 msgid "No habilitation level, you cannot add habilitation for this resource."
-msgstr "Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour cette ressource."
+msgstr ""
+"Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour"
+" cette ressource."
 
 #: inc/resourceholiday.class.php:89 inc/resourceholiday.class.php:123
 msgid "The begin date of the forced holiday period must be filled"
