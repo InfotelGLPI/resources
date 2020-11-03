@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 17:59+0100\n"
+"POT-Creation-Date: 2020-11-03 12:00+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2020\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -1818,9 +1818,17 @@ msgstr "Toplam"
 msgid "checkgroup_report_title"
 msgstr "checkgroup_report_title"
 
+#: report/checkgroup/checkgroup.php:249
+msgid "Missing habilitation"
+msgstr "Eksik güç"
+
 #: report/checkhabilitation/checkhabilitation.php:39
 msgid "checkhabilitation_report_title"
 msgstr "checkhabilitation_report_title"
+
+#: report/checkhabilitation/checkhabilitation.php:217
+msgid "Missing group"
+msgstr "Grup eksik"
 
 #: report/checkmissingN0group/checkmissingN0group.php:39
 msgid "checkmissingN0group_report_title"
