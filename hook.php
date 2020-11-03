@@ -48,7 +48,8 @@ function plugin_resources_install() {
    $update171 = false;
    $dbu        = new DbUtils();
    $install = false;
-   if (!$DB->tableExists("glpi_plugin_resources_resources") && !$DB->tableExists("glpi_plugin_resources_employments")) {
+   if (!$DB->tableExists("glpi_plugin_resources_resources")
+       && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
       $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.7.0.sql");
 

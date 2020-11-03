@@ -214,7 +214,7 @@ if ($nbtot > 0) {
    echo Search::showHeaderItem($output_type, PluginResourcesHabilitation::getTypeName(2), $num);
    echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
    echo Search::showHeaderItem($output_type, __('Login'), $num);
-   echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinggroup'], $num);
+   echo Search::showHeaderItem($output_type, __('Missing group', 'resources'), $num);
 
    echo Search::showEndLine($output_type);
 

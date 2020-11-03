@@ -246,7 +246,7 @@ if ($report->criteriasValidated()) {
       echo Search::showHeaderItem($output_type, __('Group'), $num);
       echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
       echo Search::showHeaderItem($output_type, __('Login'), $num);
-      echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinghabilitation'], $num);
+      echo Search::showHeaderItem($output_type, __('Missing habilitation', 'resources'), $num);
 
       echo Search::showEndLine($output_type);
 
