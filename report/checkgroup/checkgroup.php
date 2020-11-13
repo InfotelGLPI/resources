@@ -39,14 +39,14 @@ include("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("checkgroup_report_title", "resources"));
 
 //Report's search criterias
-$tab = [0 => __('No'),
-        1 => __('Yes')];
+$tab     = [0 => __('No'),
+            1 => __('Yes')];
 $filter1 = new PluginReportsArrayCriteria($report, 'groupsN0', __('Display N0 Groups'), $tab);
-$tab = [0 => __('No'),
-        1 => __('Yes')];
+$tab     = [0 => __('No'),
+            1 => __('Yes')];
 $filter2 = new PluginReportsArrayCriteria($report, 'groupsN1', __('Display N1 Groups'), $tab);
-$tab = [0 => __('No'),
-        1 => __('Yes')];
+$tab     = [0 => __('No'),
+            1 => __('Yes')];
 $filter3 = new PluginReportsArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
 
 //Display criterias form is needed
@@ -54,14 +54,14 @@ $report->displayCriteriasForm();
 
 //colname with sort allowed
 $columns = ['entity'              => ['sorton' => 'entity'],
-   'name'                => ['sorton' => 'name'],
-   'firstname'           => ['sorton' => 'firstname'],
-   'registration_number' => ['sorton' => 'registration_number'],
-   'rank'                => ['sorton' => 'rank'],
-   'date_begin'          => ['sorton' => 'date_begin'],
-   'date_end'            => ['sorton' => 'date_end'],
-   'begin_date'          => ['sorton' => 'begin_date'],
-   'end_date'            => ['sorton' => 'end_date'],];
+            'name'                => ['sorton' => 'name'],
+            'firstname'           => ['sorton' => 'firstname'],
+            'registration_number' => ['sorton' => 'registration_number'],
+            'rank'                => ['sorton' => 'rank'],
+            'date_begin'          => ['sorton' => 'date_begin'],
+            'date_end'            => ['sorton' => 'date_end'],
+            'begin_date'          => ['sorton' => 'begin_date'],
+            'end_date'            => ['sorton' => 'end_date'],];
 
 $output_type = Search::HTML_OUTPUT;
 
@@ -72,7 +72,7 @@ if ($report->criteriasValidated()) {
       unset ($_POST['list_limit']);
    }
    if (!isset ($_REQUEST['sort'])) {
-      $_REQUEST['sort'] = "entity";
+      $_REQUEST['sort']  = "entity";
       $_REQUEST['order'] = "ASC";
    }
 
@@ -82,14 +82,14 @@ if ($report->criteriasValidated()) {
       $output_type = $_POST["display_type"];
       if ($output_type < 0) {
          $output_type = -$output_type;
-         $limit = 0;
+         $limit       = 0;
       }
    } else {
       $output_type = Search::HTML_OUTPUT;
    }
 
    $title = $report->getFullTitle();
-   $dbu = new DbUtils();
+   $dbu   = new DbUtils();
 
    $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
                         FROM `glpi_plugin_resources_resources` 
@@ -108,20 +108,23 @@ if ($report->criteriasValidated()) {
    $result_resource_user = $DB->query($query_resource_user);
 
    $dataAll = [];
-   while ($data = $DB->fetchAssoc($result_resource_user)) {
+
+   $display_habilitation = [];
+
+   while ($data = $DB->fetchssoc($result_resource_user)) {
       $habilitations = [];
-      $groups = [];
+      $groups        = [];
       if (!empty($data['glpi_users_id'])) {
-         $users_id = $data['glpi_users_id'];
+         $users_id     = $data['glpi_users_id'];
          $resources_id = $data['id'];
 
-         $query_resources = "SELECT `glpi_plugin_resources_resources`.`date_end`
+         $query_resources  = "SELECT `glpi_plugin_resources_resources`.`date_end`
                               FROM `glpi_plugin_resources_resources`
                               WHERE `id` = $resources_id";
          $result_resources = $DB->query($query_resources);
-         $date_end = $DB->result($result_resources, 0, 'date_end');
+         $date_end         = $DB->result($result_resources, 0, 'date_end');
 
-         $query_habilitations = "SELECT `glpi_plugin_resources_habilitations` .*
+         $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
                               LEFT JOIN `glpi_plugin_resources_habilitations` 
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
@@ -129,51 +132,52 @@ if ($report->criteriasValidated()) {
          $result_habilitations = $DB->query($query_habilitations);
 
          while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
-            $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+            $test_hab = explode("-", $data_habilitation['name']);
+            if ($filter1->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N0")) {
+               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+            }
+            if ($filter2->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N1")) {
+               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+            }
+            if ($filter3->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N2")) {
+               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+            }
          }
 
-         $query_groups = "SELECT `glpi_groups`.* 
+         $query_groups  = "SELECT `glpi_groups`.* 
                         FROM `glpi_groups_users` 
                         LEFT JOIN `glpi_groups` ON `glpi_groups`.`id` = `glpi_groups_users`.`groups_id`
                         WHERE `glpi_groups_users`.`users_id` = $users_id";
          $result_groups = $DB->query($query_groups);
          while ($data_group = $DB->fetchAssoc($result_groups)) {
-            $groups[$data_group['id']] = $data_group['name'];
-         }
-
-         $array_diff = array_diff($groups, $habilitations);
-
-         // Traitement post diff
-         $display_habilitation = [];
-         foreach ($array_diff as $value){
-            $test_group_level = explode("-",$value);
-            if(isset($test_group_level[1])) {
-               if (!$filter1->getParameterValue() && $test_group_level[1] == "N0") {
-                  continue;
-               } elseif (!$filter2->getParameterValue() && $test_group_level[1] == "N1") {
-                  continue;
-               } elseif (!$filter3->getParameterValue() && $test_group_level[1] == "N2") {
-                  continue;
-               } else {
-                  array_push($display_habilitation, $value);
-               }
+            $test_group_level = explode("-", $data_group['name']);
+            if ($filter1->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N0")) {
+               $groups[$data_group['id']] = $data_group['name'];
+            }
+            if ($filter2->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N1")) {
+               $groups[$data_group['id']] = $data_group['name'];
+            }
+            if ($filter3->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N2")) {
+               $groups[$data_group['id']] = $data_group['name'];
             }
          }
 
-         if (count($array_diff) > 0) {
+         $display_habilitation = array_diff($groups, $habilitations);
+
+         if (count($display_habilitation) > 0) {
             $dataAll[] = [
-               'resources_id' => $resources_id,
+               'resources_id'       => $resources_id,
                'resources_date_end' => $date_end,
-               'users_id' => $users_id,
-               'groups' => $groups,
-               'diff' => $display_habilitation
+               'users_id'           => $users_id,
+               'groups'             => $groups,
+               'diff'               => $display_habilitation
             ];
          }
-
       }
    }
 
    $nbtot = count($dataAll);
+
    if ($limit) {
       $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
       if ($start >= $nbtot) {
@@ -231,9 +235,9 @@ if ($report->criteriasValidated()) {
    if ($nbtot > 0) {
       $nbcols = 4;
       $nbrows = count($dataAll);
-      $num = 1;
-      $link = $_SERVER['PHP_SELF'];
-      $order = 'ASC';
+      $num    = 1;
+      $link   = $_SERVER['PHP_SELF'];
+      $order  = 'ASC';
       $issort = false;
 
       echo Search::showHeader($output_type, $nbrows, $nbcols, true);
@@ -255,14 +259,14 @@ if ($report->criteriasValidated()) {
       }
 
       foreach ($dataAll as $key => $data) {
-         if(!empty($data['diff'])) {
+         if (!empty($data['diff'])) {
             echo Search::showNewLine($output_type);
             $resource = new PluginResourcesResource();
             $resource->getFromDB($data['resources_id']);
 
             echo Search::showItem($output_type, $resource->getLink(), $num, $key);
             echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_locations',
-               $resource->getField('locations_id')), $num, $key);
+                                                                          $resource->getField('locations_id')), $num, $key);
             echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
             echo Search::showItem($output_type, implode('<br>', $data['groups']), $num, $key);
             $user = new User();
