@@ -56,8 +56,9 @@ class PluginResourcesMetademand extends CommonGLPI {
     */
    static function addDropdownFieldItems() {
 
-      return ['PluginResourcesResource',
-      ];
+      return [PluginResourcesResource::getTypeName(2)=>['PluginResourcesResource'=>PluginResourcesResource::getTypeName()]];
+//		return ['PluginResourcesResource',
+//		];
    }
 
    /**
@@ -176,7 +177,7 @@ class PluginResourcesMetademand extends CommonGLPI {
                         $checklist_out =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_out"]);
                         if(isset($checkvalues) && is_array($checkvalues)){
                            foreach ($checkvalues as $k => $checkvalue){
-                              if($checkvalue == $values["fields"][$v["id"]]){
+                              if((!is_array($values["fields"][$v["id"]]) && $checkvalue == $values["fields"][$v["id"]]) ||(is_array($values["fields"][$v["id"]]) && in_array($checkvalue,$values["fields"][$v["id"]]))){
                                  if($checklist_in[$k] != 0){
                                     $c = $checklist_in[$k];
                                     $checklistConfig->addResourceChecklist($resource, $c, PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
