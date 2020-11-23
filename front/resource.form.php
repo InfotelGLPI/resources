@@ -326,32 +326,28 @@ else if (isset($_POST["add_checklist"])) {
 
 } else {
    $resource->checkGlobal(READ);
+   $plugin = new Plugin();
 
    if (Session::getCurrentInterface() == 'central') {
       //from central
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
    } else {
       //from helpdesk
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+      if ($plugin->isActivated('servicecatalog')) {
+         PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+         echo "<br>";
+      } else {
+         Html::helpHeader(PluginResourcesResource::getTypeName(2));
+      }
    }
 
    $resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
 
-   /* if (Session::getCurrentInterface() != 'central') {
+   if (Session::getCurrentInterface() != 'central'
+       && $plugin->isActivated('servicecatalog')) {
 
-     //with no template
-     if ($_GET["withtemplate"]<2 && (isset($_GET['id'])&&$_GET['id']!=-1)) {
-
-     //show employee form
-     if($employee->canCreate()) {
-     $employee->showFormHelpdesk($_GET["id"],1);
-     }
-     //show needs of a resource
-     $choice->showItemHelpdesk($_GET["id"],1);
-
-     }
-
-     } */
+      PluginServicecatalogMain::showNavBarFooter('resources');
+   }
 
    if (Session::getCurrentInterface() == 'central') {
       Html::footer();

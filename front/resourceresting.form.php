@@ -29,12 +29,18 @@
 
 include ('../../../inc/includes.php');
 
+$plugin = new Plugin();
 if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    //from helpdesk
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   if ($plugin->isActivated('servicecatalog')) {
+      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      echo "<br>";
+   } else {
+      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   }
 }
 
 if (!isset($_GET["id"])) {
@@ -73,6 +79,12 @@ if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_i
    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
       $resting->showForm($_GET["id"], []);
    }
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

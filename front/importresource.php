@@ -7,12 +7,7 @@ if (!isset($_GET["type"])) {
    $_GET["type"] = 0;
 }
 
-//central or helpdesk access
-if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
-} else {
-   Html::helpHeader(PluginResourcesMenu::getTypeName(2));
-}
+Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
 
 $import = new PluginResourcesImport();
 $import->checkGlobal(READ);

@@ -29,11 +29,17 @@
 
 include ('../../../inc/includes.php');
 
+$plugin = new Plugin();
 //show list of users linked with a resource
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   if ($plugin->isActivated('servicecatalog')) {
+      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      echo "<br>";
+   } else {
+      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   }
 }
 
 $directory = new PluginResourcesDirectory();
@@ -52,6 +58,12 @@ if (($directory->canView() || Session::haveRight("config", UPDATE))) {
 
 } else {
    Html::displayRightError();
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

@@ -9,6 +9,17 @@
 class PluginResourcesMenu extends CommonDBTM{
 
    /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @return string
+    **/
+   static function getTypeName($nb = 0) {
+
+      return _n('Human resource', 'Human resources', $nb, 'resources');
+   }
+
+   /**
     * Display menu
     */
    static function showMenu(CommonDBTM $item) {

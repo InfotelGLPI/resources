@@ -85,7 +85,8 @@ function plugin_init_resources() {
       Plugin::registerClass(PluginResourcesEmployment::class, [
          'massiveaction_nodelete_types' => true]);
 
-      if (Session::haveRight("plugin_servicecatalog", READ)) {
+      if (Session::haveRight("plugin_servicecatalog", READ)
+          || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
          $PLUGIN_HOOKS['servicecatalog']['resources'] = ['PluginResourcesServicecatalog'];
       }
 
