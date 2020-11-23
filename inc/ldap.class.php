@@ -291,10 +291,10 @@ class PluginResourcesLDAP extends CommonDBTM {
 //         $dn->addCn($data["firstname"]." ".$data["name"]);
 //         // Set the users DN, account name.
 //         $user->setDn($dn);
-         $dn = "CN=".$data["firstname"]." ".$data["name"].",".$adConfig->getField("ouUser");
+         $dn = "CN=".$data["name"]." ".$data["firstname"].",".$adConfig->getField("ouUser");
          $user->setDn($dn);
          $user->setAccountName($data['login']);
-         $user->setCommonName($data["firstname"]." ".$data["name"]);
+         $user->setCommonName($data["name"]." ".$data["firstname"]);
 
 
          $attributes = [];
@@ -396,7 +396,7 @@ class PluginResourcesLDAP extends CommonDBTM {
          }
          if($user->save()){
             if($rename){
-               $ncn = "cn=".$data["firstname"]." ".$data["name"];
+               $ncn = "cn=".$data["name"]." ".$data["firstname"];
                if($user->rename($ncn)){
                   return [true,$new_value];
                }

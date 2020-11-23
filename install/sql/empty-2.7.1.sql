@@ -835,7 +835,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `cellPhoneAD` varchar(255) collate utf8_unicode_ci default '',
    `roleAD` varchar(255) collate utf8_unicode_ci default '',
    `first_form`  int(11) NOT NULL default '0',
-   `second_dorm`  int(11) NOT NULL default '0',
+   `second_form`  int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0);
