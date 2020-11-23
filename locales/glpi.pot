@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-03 12:00+0000\n"
+"POT-Creation-Date: 2020-11-13 14:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -356,7 +356,7 @@ msgstr ""
 #: inc/resource.class.php:3076 inc/resource_item.class.php:821
 #: inc/resource_item.class.php:1076 inc/resource_item.class.php:1086
 #: inc/resourcepdf.class.php:85 inc/rulecontracttype.class.php:255
-#: report/checkgroup/checkgroup.php:245
+#: report/checkgroup/checkgroup.php:249
 #: report/checkhabilitation/checkhabilitation.php:213
 #: report/checkmissingN0group/checkmissingN0group.php:209
 #: report/checkmissingN1group/checkmissingN1group.php:209
@@ -1801,7 +1801,7 @@ msgstr ""
 msgid "checkgroup_report_title"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:249
+#: report/checkgroup/checkgroup.php:253
 msgid "Missing habilitation"
 msgstr ""
 
