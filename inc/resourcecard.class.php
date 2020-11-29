@@ -321,10 +321,11 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
             echo "<tr class='tab_bg_1'>";
             echo "<td class='center'  width='100'>";
-            if (file_exists("../pics/gallery/" . $type . ".jpg")) {
-               echo "<img src='../pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
+            $url = GLPI_ROOT."/plugins/resources/pics/gallery/" . $type . ".jpg";
+            if (file_exists($url)) {
+               echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
             } else {
-               echo "<img src='../pics/gallery/nothing.png' width = '50%' alt='' />";
+               echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/gallery/nothing.png' width = '50%' alt='' />";
             }
             echo "</td>";
 
