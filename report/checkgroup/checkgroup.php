@@ -111,7 +111,7 @@ if ($report->criteriasValidated()) {
 
    $display_habilitation = [];
 
-   while ($data = $DB->fetchssoc($result_resource_user)) {
+   while ($data = $DB->fetchAssoc($result_resource_user)) {
       $habilitations = [];
       $groups        = [];
       if (!empty($data['glpi_users_id'])) {
