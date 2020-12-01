@@ -922,7 +922,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->getFromDB($input["id"]);
 
-      if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
+      if (!isset($input['_UpdateFromUser_']) && isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
              || $_FILES['picture']['type'] == "image/pjpeg"
