@@ -34,8 +34,7 @@ $DBCONNECTION_REQUIRED = 1;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['professionwithoutcost'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("professionwithoutcost_report_title", "resources"));
 
 //Report's search criterias
 $professioncategory = New PluginReportsDropdownCriteria($report, 'plugin_resources_professioncategories_id',

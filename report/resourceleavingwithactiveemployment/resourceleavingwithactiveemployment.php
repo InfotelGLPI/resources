@@ -36,8 +36,7 @@ include ("../../../../inc/includes.php");
 //"Rapport listant les ressources partantes ayant des emplois actifs"
 //"Report listing resource leaving with employment active";
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourceleavingwithactiveemployment'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("resourceleavingwithactiveemployment_report_title", "resources"));
 
 // Columns title (optional), from $LANG
 $report->setColumns( [new PluginReportsColumnInteger('registration_number', __('Administrative number'),

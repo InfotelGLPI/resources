@@ -950,7 +950,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->getFromDB($input["id"]);
 
-      if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
+      if (!isset($input['_UpdateFromUser_']) && isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
              || $_FILES['picture']['type'] == "image/pjpeg"
@@ -2003,7 +2003,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('First name');
       echo "</div>";
+
       echo "<div ".$tohide['firstname']." class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+
       $option = ['value'  => $options["firstname"],
                  'option' => "onChange='javascript:this.value=First2UpperCase(this.value);' style='text-transform:capitalize;'"];
       Html::autocompletionTextField($this, "firstname", $option);
@@ -2286,10 +2288,11 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       $config = new PluginResourcesConfig();
-      if ($config->useSecurity()) {
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+      echo "<div class=\"bt-row\">";
+      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+
+      if ($config->useSecurity()) {
 
          echo "<div class=\"bt-row\">";
          echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
@@ -2320,9 +2323,11 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "<div class=\"bt-row\">";
+
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
 
       echo "<div ".$tohide['comment']." class=\"bt-row\">";
+
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
       echo __('Description');
       echo "</div>";
@@ -2334,7 +2339,6 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "</div>";
 
-//      echo "</td></tr>";
 
       echo "<div class=\"bt-row\">";
       echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
@@ -2352,7 +2356,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if (!empty($required)) {
          echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\" style='color:red;>";
+         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\" style='color:red;'>";
          echo __('The fields in red must be completed', 'resources');
          echo "</div>";
          echo "</div>";
@@ -2615,9 +2619,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $stringToFind = "name='add'";
 
-      $existingDocPos = strrpos($extraction4, $stringToFind);
-      $extraction4    = substr_replace($extraction4, "name='add_doc_seven_step'", $existingDocPos, strlen($stringToFind));
-
+//      $existingDocPos = strrpos($extraction4, $stringToFind);
+//      $extraction4    = substr_replace($extraction4, "name='add_doc_seven_step'", $existingDocPos, strlen($stringToFind));
+//
       $addNewFilePos = strrpos($extraction4, $stringToFind);
       $extraction4   = substr_replace($extraction4, "name='upload_seven_step'", $addNewFilePos, strlen($stringToFind));
 

@@ -30,7 +30,14 @@
 include ('../../../inc/includes.php');
 
 //from helpdesk
-Html::helpHeader(PluginResourcesResource::getTypeName(2));
+$plugin = new Plugin();
+
+if ($plugin->isActivated('servicecatalog')) {
+   PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+   echo "<br>";
+} else {
+   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+}
 
 $choice = new PluginResourcesChoice();
 $resource = new PluginResourcesResource();
@@ -71,6 +78,12 @@ else if (isset($_POST["deletehelpdeskitem"])) {
    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       $choice->showItemHelpdesk($_GET["id"], $_GET["exist"]);
    }
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 Html::helpFooter();

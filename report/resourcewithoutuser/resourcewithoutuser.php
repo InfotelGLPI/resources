@@ -36,8 +36,7 @@ include ("../../../../inc/includes.php");
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourcewithoutuser'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("resourcewithoutuser_report_title", "resources"));
 
 // Columns title (optional)
 $report->setColumns( [new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',

@@ -36,8 +36,7 @@ include("../../../../inc/includes.php");
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$titre  = $LANG['plugin_resources']['checkhabilitation'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("checkhabilitation_report_title", "resources"));
 
 //colname with sort allowed
 $columns = ['entity'              => ['sorton' => 'entity'],
@@ -215,7 +214,7 @@ if ($nbtot > 0) {
    echo Search::showHeaderItem($output_type, PluginResourcesHabilitation::getTypeName(2), $num);
    echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
    echo Search::showHeaderItem($output_type, __('Login'), $num);
-   echo Search::showHeaderItem($output_type, $LANG['plugin_resources']['missinggroup'], $num);
+   echo Search::showHeaderItem($output_type, __('Missing group', 'resources'), $num);
 
    echo Search::showEndLine($output_type);
 

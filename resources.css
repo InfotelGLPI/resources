@@ -335,7 +335,7 @@ nav ul li.active a:link, nav ul li a:hover {
    border: 1px solid #ccc;
    z-index:1;
    text-align: left;
-   font-size: 14px;
+   font-size: 12px;
    background-color: #ffffff;
 
    -moz-border-radius: 5px;

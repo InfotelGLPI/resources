@@ -30,7 +30,14 @@
 include ('../../../inc/includes.php');
 
 //from helpdesk
-Html::helpHeader(PluginResourcesResource::getTypeName(2));
+$plugin = new Plugin();
+
+if ($plugin->isActivated('servicecatalog')) {
+   PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+   echo "<br>";
+} else {
+   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+}
 
 $employee = new PluginResourcesEmployee();
 
@@ -43,6 +50,12 @@ if (isset($_POST["add_helpdesk_employee"])) {
 } else {
    //show form employee informations from helpdesk
    $employee->showFormHelpdesk($_GET["id"], 0);
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 Html::helpFooter();
