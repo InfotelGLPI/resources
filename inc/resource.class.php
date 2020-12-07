@@ -47,7 +47,10 @@ class PluginResourcesResource extends CommonDBTM {
       Printer::class,
       Software::class,
       ConsumableItem::class,
-      User::class
+      User::class,
+      Appliance::class,
+      ComputerType::class,
+      PhoneType::class
    ];
 
    protected $usenotepad = true;
