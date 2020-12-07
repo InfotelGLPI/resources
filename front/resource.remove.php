@@ -29,10 +29,16 @@
 
 include('../../../inc/includes.php');
 
+$plugin = new Plugin();
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   if ($plugin->isActivated('servicecatalog')) {
+      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      echo "<br>";
+   } else {
+      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   }
 }
 
 if (empty($_POST["date_end"])) {
@@ -116,6 +122,12 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
       //show remove resource form
       $resource->showResourcesToRemove();
    }
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

@@ -36,8 +36,7 @@ include ("../../../../inc/includes.php");
 //"Report listing resource without employment";
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['resourcewithoutemployment'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("resourcewithoutemployment_report_title", "resources"));
 
 // Columns title (optional)
 $report->setColumns( [new PluginReportsColumnInteger('registration_number', __('Administrative number'),

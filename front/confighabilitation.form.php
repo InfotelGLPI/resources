@@ -36,7 +36,12 @@ if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    //from helpdesk
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   if ($plugin->isActivated('servicecatalog')) {
+      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      echo "<br>";
+   } else {
+      Html::helpHeader(PluginResourcesResource::getTypeName(2));
+   }
 }
 
 if (!isset($_GET["id"])) {
@@ -110,6 +115,12 @@ if (isset($_POST['add_metademand'])) {
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 
+}
+
+if (Session::getCurrentInterface() != 'central'
+    && $plugin->isActivated('servicecatalog')) {
+
+   PluginServicecatalogMain::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

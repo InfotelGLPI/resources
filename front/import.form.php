@@ -21,12 +21,7 @@ if (isset($_POST["add"])) {
 } else {
    $import->checkGlobal(READ);
 
-   //central or helpdesk access
-   if (Session::getCurrentInterface() == 'central') {
-      Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
-   } else {
-      Html::helpHeader(PluginResourcesMenu::getTypeName(2));
-   }
+   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
 
    if ($import->canView()) {
       $import->showTitle(false);

@@ -56,7 +56,7 @@ class PluginResourcesLeavingReason extends CommonDropdown {
     * @return booleen
     **/
    static function canCreate() {
-      return Session::haveRight('dropdown', [CREATE, UPDATE, DELETE]);
+      return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
    /**

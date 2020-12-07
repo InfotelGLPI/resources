@@ -34,8 +34,7 @@ $DBCONNECTION_REQUIRED = 1;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['budgetsummary'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("budgetsummary_report_title", "resources"));
 
 //Report's search criterias
 $datecrit = new PluginResourcesDateCriteria($report, 'date_budget', '', PluginResourcesBudget::getTypeName(1)." - ".__('Date'));

@@ -32,17 +32,10 @@ include ('../../../inc/includes.php');
 $resource = new PluginResourcesResource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-   if (Session::getCurrentInterface() == 'central') {
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+
+   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 
    $resource->listOfTemplates($CFG_GLPI["root_doc"]."/plugins/resources/front/resource.form.php", $_GET["add"]);
 
-   if (Session::getCurrentInterface() == 'central') {
-      Html::footer();
-   } else {
-      Html::helpFooter();
-   }
+   Html::footer();
 }

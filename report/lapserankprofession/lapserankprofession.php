@@ -34,8 +34,7 @@ $DBCONNECTION_REQUIRED = 1;
 include ("../../../../inc/includes.php");
 
 // Instantiate Report with Name
-$titre = $LANG['plugin_resources']['lapserankprofession'];
-$report = new PluginReportsAutoReport($titre);
+$report = new PluginReportsAutoReport(__("lapserankprofession_report_title", "resources"));
 
 // Columns title (optional)
 $report->setColumns( [new PluginReportsColumnLink('rank_id', PluginResourcesRank::getTypeName(1), 'PluginResourcesRank',
