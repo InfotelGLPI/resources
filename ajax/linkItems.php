@@ -27,8 +27,33 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
+   $AJAX_INCLUDE = 1;
+   include('../../../inc/includes.php');
+   header("Content-Type: text/html; charset=UTF-8");
+   Html::header_nocache();
+}
 
-$rulecollection = new PluginResourcesRuleContracttypeCollection($_SESSION['glpiactive_entity']);
+Session::checkCentralAccess();
 
-include (GLPI_ROOT . "/front/rule.common.php");
+if (isset($_POST["type"]) && isset($_POST["current_type"])) {
+   $values = 0;
+   if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
+      if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
+         $values = $_POST['values'];
+      }
+
+
+      $option["name"] = "items";
+      if(isset($values)){
+         $option["value"] = $values;
+      }else{
+         $option["value"] = 0;
+      }
+
+
+      $_POST["type"]::dropdown($option);
+   }
+
+
+}

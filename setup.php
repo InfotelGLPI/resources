@@ -27,11 +27,18 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.7.0');
+define('PLUGIN_RESOURCES_VERSION', '2.7.1');
+
+if (!defined("PLUGIN_RESOURCES_DIR")) {
+   define("PLUGIN_RESOURCES_DIR", GLPI_ROOT . "/plugins/resources");
+}
 
 // Init the hooks of the plugins -Needed
 function plugin_init_resources() {
    global $PLUGIN_HOOKS;
+
+   // add autoload for vendor
+   include_once(PLUGIN_RESOURCES_DIR . "/vendor/autoload.php");
 
    $PLUGIN_HOOKS['csrf_compliant']['resources']   = true;
    $PLUGIN_HOOKS['change_profile']['resources']   = [PluginResourcesProfile::class, 'initProfile'];
@@ -78,6 +85,10 @@ function plugin_init_resources() {
          'rulecollections_types' => true
 
       ]);
+      Plugin::registerClass(PluginResourcesRuleContracttypeHiddenCollection::class, [
+         'rulecollections_types' => true
+
+      ]);
 
       Plugin::registerClass(PluginResourcesProfile::class,
                             ['addtabon' => 'Profile']);
@@ -110,6 +121,7 @@ function plugin_init_resources() {
       if (class_exists('PluginBehaviorsCommon')) {
          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleChecklist::class, 'PluginBehaviorsRule');
          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttype::class, 'PluginBehaviorsRule');
+         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttypeHidden::class, 'PluginBehaviorsRule'); // TODO Confirm usefull
       }
 
       if (class_exists('PluginTreeviewConfig')) {
@@ -123,6 +135,7 @@ function plugin_init_resources() {
            && !Session::haveRight("plugin_servicecatalog", READ)) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
+      Plugin::registerClass(PluginResourcesLinkAd::class, ['addtabon' => 'Ticket']);
       // Resource menu
       if (Session::haveRight("plugin_resources", READ)
           || Session::haveright("plugin_resources_employee", UPDATE)) {
@@ -161,6 +174,7 @@ function plugin_init_resources() {
       $PLUGIN_HOOKS['display_planning']['resources']  = ['PluginResourcesTaskPlanning', 'displayPlanningItem'];
       $PLUGIN_HOOKS['migratetypes']['resources']      = 'plugin_datainjection_migratetypes_resources';
 
+      $PLUGIN_HOOKS['metademands']['resources'] = ['PluginResourcesMetademand'];
    }
    // End init, when all types are registered
    $PLUGIN_HOOKS['post_init']['resources'] = 'plugin_resources_postinit';
@@ -207,6 +221,12 @@ function plugin_resources_check_prerequisites() {
       }
       return false;
    }
+
+   if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+      echo "Run composer install --no-dev in the plugin directory<br>";
+      return false;
+   }
+
    return true;
 }
 

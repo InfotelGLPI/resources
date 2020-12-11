@@ -51,7 +51,7 @@ function plugin_resources_install() {
    if (!$DB->tableExists("glpi_plugin_resources_resources")
        && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.7.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/resources/install/sql/empty-2.7.1.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '".__('Long term contract', 'resources')."', 0, 1)";
@@ -273,6 +273,10 @@ function plugin_resources_install() {
    //Version 2.6.4
    if ($DB->fieldExists("glpi_plugin_resources_checklistconfigs", "is_deleted")) {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.6.4.sql");
+   }
+   //Version 2.7.1
+   if (!$DB->fieldExists("glpi_plugin_resources_departments", "plugin_resources_employers_id")) {
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.7.1.sql");
    }
 
    if ($update80) {
@@ -709,7 +713,7 @@ function plugin_resources_postinit() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['pre_item_update']['resources'] = ['User' => 'plugin_pre_item_update_resources'];
-
+   $PLUGIN_HOOKS['pre_item_add']['resources'] = ['ITILSolution' => 'plugin_pre_item_add_solutions'];
    $PLUGIN_HOOKS['item_purge']['resources'] = [];
 
    foreach (PluginResourcesResource::getTypes(true) as $type) {
@@ -1672,6 +1676,53 @@ function plugin_pre_item_update_resources($item) {
                   $PluginResourcesResource->update($values);
                   Session::addMessageAfterRedirect(__("Modification of the associated resource's location", "resources"), true);
                }
+            }
+         }
+      }
+   }
+}
+
+
+
+// Hook done on before add item case
+/**
+ * @param $item
+ */
+function plugin_pre_item_add_solutions($item) {
+
+   $ticket = new $item->fields["itemtype"];
+   if($ticket->getFromDB($item->fields["items_id"])){
+      $adconfig = new PluginResourcesAdconfig();
+      $adconfig->getFromDB(1);
+      $linkad = new PluginResourcesLinkAd();
+      $items = new Item_Ticket();
+
+      if($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]){
+         if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
+            if(!$linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) && $linkad->getField('action_done') == 0)){
+               $item->input = null;
+               Session::addMessageAfterRedirect(
+                  __('You have to perform the action on the Active Directory before','resources'),
+                  false, ERROR);
+            }
+
+         }
+      }else if($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]){
+         if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
+            if(!$linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) && $linkad->getField('action_done') == 0)){
+               $item->input = null;
+               Session::addMessageAfterRedirect(
+                  __('You have to perform the action on the Active Directory before','resources'),
+                  false, ERROR);
+            }
+         }
+      }else if($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+         if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
+            if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+               $item->input = null;
+               Session::addMessageAfterRedirect(
+                  __('You have to perform the action on the Active Directory before', 'resources'),
+                  false, ERROR);
             }
          }
       }

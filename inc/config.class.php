@@ -174,7 +174,26 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Create a ticket with departure', 'resources');
+         echo "</td>";
+         echo "<td>";
 
+         Dropdown::showYesNo("creat_ticket_departure",$this->fields["creat_ticket_departure"]);
+
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Category of departure ticket', 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         ITILCategory::dropdown(["name"=>"categories_id","value"=>$this->fields["categories_id"]]);
+
+         echo "</td>";
+         echo "</tr>";
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";

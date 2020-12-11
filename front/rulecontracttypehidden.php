@@ -29,6 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-$rulecollection = new PluginResourcesRuleContracttypeCollection($_SESSION['glpiactive_entity']);
+$rulecollection = new PluginResourcesRuleContracttypeHiddenCollection($_SESSION['glpiactive_entity']);
 
 include (GLPI_ROOT . "/front/rule.common.php");
+

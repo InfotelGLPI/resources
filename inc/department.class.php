@@ -38,6 +38,8 @@ class PluginResourcesDepartment extends CommonDropdown {
 
    var $can_be_translated  = true;
 
+
+
    /**
     * @since 0.85
     *
@@ -69,6 +71,55 @@ class PluginResourcesDepartment extends CommonDropdown {
     **/
    static function canCreate() {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
+   }
+
+   function getAdditionalFields() {
+
+      return [
+         //         ['name'  => 'plugin_release_typerollbacks_id',
+         //            'label' => __('Type test','Type tests', 'release'),
+         //            'type'  => 'dropdownRollbacks',
+         //         ],
+                  ['name'  => 'plugin_resources_employers_id',
+                     'label' => _n('Employer', 'Employers', 1, 'resources'),
+                     'type'  => 'dropdownEmployers',
+                  ],
+
+
+      ];
+   }
+
+   /**
+    * @see CommonDropdown::displaySpecificTypeField()
+    **/
+   function displaySpecificTypeField($ID, $field = []) {
+
+      switch ($field['type']) {
+         //         case 'dropdownRollbacks' :
+         //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
+         //            break;
+         case 'dropdownEmployers' :
+            $this->getFromDB($ID);
+            PluginResourcesEmployer::dropdown(["name" => "plugin_resources_employers_id","value"=>$this->fields["plugin_resources_employers_id"]]);
+            break;
+
+      }
+   }
+
+   function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+
+
+      $tab[] = [
+         'id'       => '103',
+         'name'     => _n('Employer', 'Employers', 1, 'resources'),
+         'field'    => 'name',
+         'table'    => getTableForItemType('PluginResourcesEmployer'),
+         'datatype' => 'dropdown'
+      ];
+
+      return $tab;
    }
 
    /**
