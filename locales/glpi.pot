@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 13:55+0000\n"
+"POT-Creation-Date: 2020-12-12 18:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,7 @@ msgid "Modification of the associated resource's location"
 msgstr ""
 
 #: hook.php:1705 hook.php:1715 hook.php:1724
-msgid "You have to perform the action on the Active Directory before"
+msgid "You have to perform the action on the Annuary before"
 msgstr ""
 
 #: setup.php:195 inc/metademand.class.php:69
@@ -170,11 +170,11 @@ msgid "No advanced request found"
 msgstr ""
 
 #: front/linkad.form.php:70
-msgid "the user has been added to the AD"
+msgid "the user has been added to the annuary"
 msgstr ""
 
 #: front/linkad.form.php:73
-msgid "the user has not been added to the AD"
+msgid "the user has not been added to the annuary"
 msgstr ""
 
 #: front/linkad.form.php:94
@@ -182,19 +182,19 @@ msgid "Data changed"
 msgstr ""
 
 #: front/linkad.form.php:118
-msgid "the user has been updated to the AD"
+msgid "the user has been updated to the annuary"
 msgstr ""
 
 #: front/linkad.form.php:121
-msgid "the user has not been updated to the AD"
+msgid "the user has not been updated to the annuary"
 msgstr ""
 
 #: front/linkad.form.php:144
-msgid "the user has been disabled and moved to the AD"
+msgid "the user has been disabled and moved to the annuary"
 msgstr ""
 
 #: front/linkad.form.php:147
-msgid "the user has not been disabled and moved to the AD"
+msgid "the user has not been disabled and moved to the annuary"
 msgstr ""
 
 #: front/resource.card.form.php:80
