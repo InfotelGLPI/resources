@@ -63,14 +63,14 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = __(sprintf("%s %s have been added in the AD",$_POST["firstname"],$_POST["name"]),'resources');
+      $content = __(sprintf("%s %s have been added in the annuary",$_POST["firstname"],$_POST["name"]),'resources');
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
       $fup->add($toadd);
-      $message = __('the user has been added to the AD','resources');
+      $message = __('the user has been added to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, INFO);
    }else{
-      $message = __('the user has not been added to the AD','resources');
+      $message = __('the user has not been added to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, ERROR);
    }
    Html::back();
@@ -90,7 +90,7 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = __(sprintf("%s %s have been updated in the AD",$_POST["firstname"],$_POST["name"]),'resources');
+      $content = __(sprintf("%s %s have been updated in the annuary",$_POST["firstname"],$_POST["name"]),'resources');
       $content .= __("Data changed",'resources')." <br />";
       foreach ($res[1] as $key => $oldData){
          $i =1;
@@ -115,10 +115,10 @@ if (isset($_POST["add"])) {
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
       $fup->add($toadd);
-      $message = __('the user has been updated to the AD','resources');
+      $message = __('the user has been updated to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, INFO);
    }else{
-      $message = __('the user has not been updated to the AD','resources');
+      $message = __('the user has not been updated to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, ERROR);
    }
    Html::back();
@@ -137,14 +137,14 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = __(sprintf("%s %s have been disabled and moved in the AD",$_POST["firstname"],$_POST["name"]),'resources');
+      $content = __(sprintf("%s %s have been disabled and moved in the annuary",$_POST["firstname"],$_POST["name"]),'resources');
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
       $fup->add($toadd);
-      $message = __('the user has been disabled and moved to the AD','resources');
+      $message = __('the user has been disabled and moved to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, INFO);
    }else{
-      $message = __('the user has not been disabled and moved to the AD','resources');
+      $message = __('the user has not been disabled and moved to the annuary','resources');
       Session::addMessageAfterRedirect($message, false, ERROR);
    }
    Html::back();
