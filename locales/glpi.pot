@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-12 18:08+0000\n"
+"POT-Creation-Date: 2020-12-12 18:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,7 @@ msgid "Modification of the associated resource's location"
 msgstr ""
 
 #: hook.php:1705 hook.php:1715 hook.php:1724
-msgid "You have to perform the action on the Annuary before"
+msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
 #: setup.php:195 inc/metademand.class.php:69
@@ -170,11 +170,11 @@ msgid "No advanced request found"
 msgstr ""
 
 #: front/linkad.form.php:70
-msgid "the user has been added to the annuary"
+msgid "the user has been added to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:73
-msgid "the user has not been added to the annuary"
+msgid "the user has not been added to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:94
@@ -182,19 +182,19 @@ msgid "Data changed"
 msgstr ""
 
 #: front/linkad.form.php:118
-msgid "the user has been updated to the annuary"
+msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:121
-msgid "the user has not been updated to the annuary"
+msgid "the user has not been updated to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:144
-msgid "the user has been disabled and moved to the annuary"
+msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:147
-msgid "the user has not been disabled and moved to the annuary"
+msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/resource.card.form.php:80
@@ -978,7 +978,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/linkad.class.php:54
-msgid "Update LDAP"
+msgid "Update LDAP directory"
 msgstr ""
 
 #: inc/linkad.class.php:364
