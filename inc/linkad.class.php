@@ -51,7 +51,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
     **/
    static function getTypeName($nb = 0) {
 
-      return __('Update LDAP', 'resources');
+      return __('Update LDAP directory', 'resources');
    }
 
    /**

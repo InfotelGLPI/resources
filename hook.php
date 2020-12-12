@@ -1702,7 +1702,7 @@ function plugin_pre_item_add_solutions($item) {
             if(!$linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) && $linkad->getField('action_done') == 0)){
                $item->input = null;
                Session::addMessageAfterRedirect(
-                  __('You have to perform the action on the Annuary before','resources'),
+                  __('You have to perform the action on the LDAP directory before','resources'),
                   false, ERROR);
             }
 
@@ -1712,7 +1712,7 @@ function plugin_pre_item_add_solutions($item) {
             if(!$linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) && $linkad->getField('action_done') == 0)){
                $item->input = null;
                Session::addMessageAfterRedirect(
-                  __('You have to perform the action on the Annuary before','resources'),
+                  __('You have to perform the action on the LDAP directory before','resources'),
                   false, ERROR);
             }
          }
@@ -1721,7 +1721,7 @@ function plugin_pre_item_add_solutions($item) {
             if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
                $item->input = null;
                Session::addMessageAfterRedirect(
-                  __('You have to perform the action on the Annuary before', 'resources'),
+                  __('You have to perform the action on the LDAP directory before', 'resources'),
                   false, ERROR);
             }
          }
