@@ -117,7 +117,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
-         echo "<tr>";
+         echo "<tr class='tab_bg_1'>";
          echo "<td colspan = ''>" . __('Server') . "</td>";
 
          echo "<td>";
