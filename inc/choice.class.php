@@ -297,15 +297,15 @@ class PluginResourcesChoice extends CommonDBTM {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+         echo Html::script("/plugins/resources/lib/bootstrap/4.0.0/js/bootstrap.min.js");
          echo "<div id ='content'>";
          echo "<div class='bt-container resources_wizard_resp'> ";
          echo "<div class='bt-block bt-features' > ";
 
          echo "<form action='" . Toolbox::getItemTypeFormURL('PluginResourcesWizard') . "' name=\"choice\" method='post'>";
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+         echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+         echo "<div class=\"bt-feature col-md-12 \"'>";
          echo "<h4 class=\"bt-title-divider\">";
          echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter the computing needs of the resource', 'resources');
@@ -314,8 +314,8 @@ class PluginResourcesChoice extends CommonDBTM {
          $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
          $choices  = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+         echo "<div class=\"form-row\">";
+         echo "<div class=\"bt-feature col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
          echo "<h5 class=\"bt-title-divider\">";
          echo __('Add a need', 'resources');
          echo "</h5>";
@@ -340,8 +340,8 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "</div>";
          echo "</div>";
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+         echo "<div class=\"form-row\">";
+         echo "<div class=\"bt-feature col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
          echo "<h5 class=\"bt-title-divider\">";
          echo __('IT needs identified', 'resources');
          echo "</h5>";
@@ -350,18 +350,18 @@ class PluginResourcesChoice extends CommonDBTM {
             foreach ($choices as $choice) {
                $used[] = $choice["plugin_resources_choiceitems_id"];
 
-               echo "<div class=\"bt-row\" style='border:#CCC;border-style: dashed;'>";
+               echo "<div class=\"form-row\" style='border:#CCC;border-style: dashed;'>";
 
                $items = Dropdown::getDropdownName("glpi_plugin_resources_choiceitems",
                                                   $choice["plugin_resources_choiceitems_id"], 1);
 
-               echo "<br><div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
+               echo "<br><div class=\"bt-feature col-md-3 \">";
                echo $items["name"];
                echo "</div>";
-               echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
+               echo "<div class=\"bt-feature col-md-3 \">";
                echo nl2br($items["comment"]);
                echo "</div>";
-               echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 center\">";
+               echo "<div class=\"bt-feature col-md-4 center\">";
                $items_id = $choice["id"];
                $rand     = mt_rand();
                if (!empty($choice["comment"])) {
@@ -375,7 +375,7 @@ class PluginResourcesChoice extends CommonDBTM {
                }
                echo "</div>";
                if ($this->canCreate()) {
-                  echo "<div class=\"bt-feature bt-col-sm-2 bt-col-md-2 \">";
+                  echo "<div class=\"bt-feature col-md-2 \">";
                   Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/wizard.form.php',
                                        'deletechoice',
                                        _x('button', 'Delete permanently'),
@@ -386,8 +386,8 @@ class PluginResourcesChoice extends CommonDBTM {
                echo "</div><br><br>";
             }
          } else {
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \">";
             echo __('None');
             echo "</div>";
             echo "</div>";
@@ -397,8 +397,8 @@ class PluginResourcesChoice extends CommonDBTM {
          if ($this->canCreate()) {
 
             $rand = mt_rand();
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-top: #CCC;border-top-style: dashed;'>";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \" style='border-top: #CCC;border-top-style: dashed;'>";
             //            echo "<a href=\"javascript:showHideDiv('view_comment','commentimg$rand','" .
             //                 $CFG_GLPI["root_doc"] . "/pics/deplier_down.png','" .
             //                 $CFG_GLPI["root_doc"] . "/pics/deplier_up.png');\">";
@@ -412,8 +412,8 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "</div>";
 
             //            echo "<div align='center' style='display:none;' id='view_comment'>";
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \">";
             $comment = "";
             //            if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
 
@@ -435,8 +435,8 @@ class PluginResourcesChoice extends CommonDBTM {
          }
 
          if ($this->canCreate()) {
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
             echo "<input type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
             echo "</div>";

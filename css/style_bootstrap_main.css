@@ -9,7 +9,7 @@ body {
 }
 @media (min-width: 768px) {
     .bt-container {
-        width: 768px;
+        width: 600px;
     }
 }
 @media (min-width: 992px) {

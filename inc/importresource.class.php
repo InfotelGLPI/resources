@@ -1131,7 +1131,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                $config = new PluginResourcesConfig();
                if (($config->getField('sales_manager') != "")) {
 
-                  echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+                  echo "<div class=\"bt-feature col-md-3\">";
                   $tableProfileUser = Profile_User::getTable();
                   $tableUser = User::getTable();
                   $profile_User = new  Profile_User();

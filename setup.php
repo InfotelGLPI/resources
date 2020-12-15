@@ -152,7 +152,7 @@ function plugin_init_resources() {
       }
 
       // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_css']['resources']        = ["resources.css"];
+      $PLUGIN_HOOKS['add_css']['resources']        = ["css/resources.css"];
       $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
                                                       "lib/plugins/jquery.address.js",
                                                       "lib/plugins/jquery.mousewheel.js",

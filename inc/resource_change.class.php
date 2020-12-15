@@ -130,20 +130,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
       switch ($action_id) {
          case self::CHANGE_RESOURCEMANAGER :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Manager for the current resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id'));
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New resource manager', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id",
                                     'entity'    => $resource->fields["entities_id"],
                                     'right'     => 'all',
@@ -163,20 +163,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
          case self::CHANGE_RESOURCESALE :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Sales manager for the current resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id_sales'));
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New resource sales manager', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id_sales",
                                     'entity'    => $resource->fields["entities_id"],
                                     'right'     => 'all',
@@ -196,11 +196,11 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
          case self::CHANGE_ACCESSPROFIL :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Current access profile of the resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
                       FROM `glpi_plugin_resources_resourcehabilitations` 
                       LEFT JOIN `glpi_plugin_resources_habilitations` 
@@ -217,8 +217,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New access profile of the resource', 'resources');
             echo "</div>";
 
@@ -230,7 +230,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                $condition["plugin_resources_habilitationlevels_id"] = $level['id'];
             }
 
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesHabilitation::dropdown(['name'      => "plugin_resources_habilitations_id",
                                                            'entity'    => $resource->fields["entities_id"],
                                                            'right'     => 'all',
@@ -255,22 +255,22 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
          case self::CHANGE_CONTRACTYPE :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Current contract type of the resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
                                                       $resource->getField('plugin_resources_contracttypes_id'));
 
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New type of contract', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesContractType::dropdown(['name'      => "plugin_resources_contracttypes_id",
                                                            'entity'    => $resource->fields["entities_id"],
                                                            'right'     => 'all',
@@ -294,20 +294,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
          case self::CHANGE_AGENCY :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Current agency of the resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New resource agency', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = Location::dropdown(['name'      => "locations_id",
                                         'entity'    => $resource->fields["entities_id"],
                                         'right'     => 'all',
@@ -336,42 +336,42 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
 
          case self::CHANGE_RESOURCEINFORMATIONS :
-//            echo "<div class=\"bt-row\">";
-//            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+//            echo "<div class=\"form-row\">";
+//            echo "<div class=\"bt-feature col-md-4 \">";
 //            echo __("Current name of the resource", "resources");
 //            echo "</div>";
-//            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+//            echo "<div class=\"bt-feature col-md-4 \">";
 //            echo "&nbsp;" . $resource->getField('name');
 //
 //            echo "</div>";
 //            echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Name', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = mt_rand();
             $option = ['rand'=> $rand,'option' => "onChange=\"javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information();\" "];
             $rand1 = Html::autocompletionTextField($resource, "name", $option);
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Firstname', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $option = ['rand'=> $rand,'option' => "onChange='First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
             $rand2 = Html::autocompletionTextField($resource, "firstname", $option);
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Departure date', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $option = ['option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\""];
             $rand3 = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
 //            $rand = Html::autocompletionTextField($resource, "firstname", $option);
@@ -397,22 +397,22 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
          case self::CHANGE_RESOURCECOMPANY :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Current company of the resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
             $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"));
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New resource company', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesEmployer::dropdown(['name'      => "employer_id",
                                                        'right'     => 'all',
                                                        'used'      => [$employee->getField('plugin_resources_employers_id')],
@@ -431,22 +431,22 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
          case self::CHANGE_RESOURCEDEPARTMENT :
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __("Current department of the resource", "resources");
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
             $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"));
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             echo __('New resource company', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature bt-col-sm-6 bt-col-md-4 \">";
+            echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesDepartment::dropdown(['name'      => "department_id",
                                                          'entity'    => $resource->fields["entities_id"],
                                                        'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],

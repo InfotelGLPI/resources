@@ -300,7 +300,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+         echo Html::script("/plugins/resources/lib/bootstrap/4.0.0/js/bootstrap.min.js");
 
          echo "<div id ='content'>";
 
@@ -309,8 +309,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          echo "<form action='" . Toolbox::getItemTypeFormURL('PluginResourcesWizard') . "' method='post'>";
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\" style=\"border-bottom: #CCC;border-bottom-style: solid;\">";
+         echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+         echo "<div class=\"bt-feature col-md-12\">";
          echo "<h4 class=\"bt-title-divider\">";
          echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] .
               "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
@@ -322,8 +322,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             $cpt=1;
             //One line per level
             foreach ($levels as $level) {
-               echo "<div class=\"bt-row\">";
-               echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
+               echo "<div class=\"form-row\">";
+               echo "<div class=\"bt-feature col-md-12\">";
 
                if ($habilitation_level->getFromDB($level['id'])) {
                   $mandatory = "";
@@ -361,11 +361,11 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   }
                   $cpt++;
 
-                  echo "<div class=\"bt-row\">";
-                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4\" $mandatory>";
+                  echo "<div class=\"form-row\">";
+                  echo "<div class=\"bt-feature col-md-4\" $mandatory>";
                   echo $habilitation_level->getName();
                   echo "</div>";
-                  echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+                  echo "<div class=\"bt-feature col-md-4 \">";
                   if ($habilitation_level->getField('number')) {
                      Dropdown::showFromArray(str_replace(" ", "_", $habilitation_level->getName()) . "__" . $habilitation_level->getID(),
                         $habilitations,
@@ -389,16 +389,16 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          } else {
 
             //No level of habilitations no addition of authorizations to the resource
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12\">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12\">";
             echo __('No habilitation level, you cannot add habilitation for this resource.', 'resources');
             echo "</div></div>";
 
          }
 
          if ($this->canCreate()) {
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
             echo "<input type='submit' name='undo_six_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
             echo "</div>";

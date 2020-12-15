@@ -401,15 +401,15 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+         echo Html::script("/plugins/resources/lib/bootstrap/4.0.0/js/bootstrap.min.js");
          echo "<div id ='content'>";
          echo "<div class='bt-container resources_wizard_resp'> ";
          echo "<div class='bt-block bt-features' > ";
 
          echo "<form action='" . Toolbox::getItemTypeFormURL('PluginResourcesWizard') . "' method='post'>";
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+         echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+         echo "<div class=\"bt-feature col-md-12 \">";
          echo "<h4 class=\"bt-title-divider\">";
          echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter employer information about the resource', 'resources');
@@ -417,20 +417,20 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          $entity = $resource->fields["entities_id"];
 
-         echo "<div class=\"bt-row\">";
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
+         echo "<div class=\"form-row\">";
+         echo "<div class=\"bt-feature col-md-3 \">";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo PluginResourcesEmployer::getTypeName(1);
          echo "</div>";
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         echo "<div class=\"bt-feature col-md-3\">";
          Dropdown::show('PluginResourcesEmployer', ['name'   => "plugin_resources_employers_id",
                                                          'value'  => $this->fields["plugin_resources_employers_id"],
                                                          'entity' => $entity]);
          echo "</div>";
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3 \">";
+         echo "<div class=\"bt-feature col-md-3 \">";
          echo PluginResourcesClient::getTypeName(1);
          echo "</div>";
-         echo "<div class=\"bt-feature bt-col-sm-3 bt-col-md-3\">";
+         echo "<div class=\"bt-feature col-md-3\">";
          Dropdown::show('PluginResourcesClient', ['name'      => "plugin_resources_clients_id",
                                                        'value'     => $this->fields["plugin_resources_clients_id"],
                                                        'entity'    => $entity,
@@ -445,8 +445,8 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "</div>";
          echo "</div>";
          if ($this->canCreate()) {
-            echo "<div class=\"bt-row\">";
-            echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
             echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);

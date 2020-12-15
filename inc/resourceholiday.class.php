@@ -301,15 +301,15 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/3.2.0/js/bootstrap.min.js");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.0.0/js/bootstrap.min.js");
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
 
       echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourceholiday.form.php\">";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \" style='border-bottom: #CCC;border-bottom-style: solid;'>";
+      echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+      echo "<div class=\"bt-feature col-md-12 \">";
       echo "<h4 class=\"bt-title-divider\">";
       echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/holidayresource.png' alt='holidayresource'/>&nbsp;";
       $title = __('Declare a forced holiday', 'resources');
@@ -319,11 +319,11 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo $title;
       echo "</h4></div></div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       echo PluginResourcesResource::getTypeName(1);
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       PluginResourcesResource::dropdown(['name'    => 'plugin_resources_resources_id',
                                          'display' => true,
                                          'value'   => $this->fields["plugin_resources_resources_id"],
@@ -331,35 +331,35 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "</div>";
       echo "</div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       echo __('Begin date');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
       echo "</div>";
       echo "</div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       echo __('End date');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
       echo "</div>";
       echo "</div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       echo __('Comments');
       echo "</div>";
-      echo "<div class=\"bt-feature bt-col-sm-4 bt-col-md-4 \">";
+      echo "<div class=\"bt-feature col-md-4 \">";
       echo "<textarea cols='70' rows='4' name='comment' >" . $this->fields["comment"] . "</textarea>";
       echo "</div>";
       echo "</div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='preview'>";
       echo "<a href=\"./resourceholiday.form.php\">";
       echo __('Declare a forced holiday', 'resources');
@@ -370,8 +370,8 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "</div>";
       echo "</div></div>";
 
-      echo "<div class=\"bt-row\">";
-      echo "<div class=\"bt-feature bt-col-sm-12 bt-col-md-12 \">";
+      echo "<div class=\"form-row\">";
+      echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
       if ($ID > 0) {
          echo "<input type='hidden' name='id' value='" . $ID . "' />";
