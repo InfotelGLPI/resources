@@ -320,8 +320,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.form.php\">";
 
-      echo "<div class=\"form-row\">";
-      echo "<div class=\"bt-feature col-md-12 plugin_resources_wizard_margin'>";
+      echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+      echo "<div class=\"bt-feature col-md-12'>";
       echo "<h4 class=\"bt-title-divider\">";
       echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresting.png' alt='newresting'/>&nbsp;";
       $title = __('Declare a non contract period', 'resources');

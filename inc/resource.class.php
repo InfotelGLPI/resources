@@ -1979,8 +1979,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "</div>";
 
-      echo "<div class=\"form-row\">";
-      echo "<div class=\"bt-feature col-md-12 plugin_resources_wizard_margin\" >";
+      echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+      echo "<div class=\"bt-feature col-md-12\" >";
 
       echo "<div  class=\"form-row\">";
 
