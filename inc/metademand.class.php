@@ -113,7 +113,7 @@ class PluginResourcesMetademand extends CommonGLPI {
       $res ="";
       if ($p["hidden"]) {
          $res .= "<tr><td>";
-         $res .= __('Link a checklist in', 'metademands');
+         $res .= __('Link a checklist in', 'resources');
          $res .= '</br><span class="metademands_wizard_comments">' . __('If the value selected equals the value to check, the checklist in will be add', 'resources') . '</span>';
          $res .= '</td>';
          $res .= "<td>";
@@ -121,7 +121,7 @@ class PluginResourcesMetademand extends CommonGLPI {
          $res .= "</td></tr>";
 
          $res .= "<tr><td>";
-         $res .= __('Link a checklist out', 'metademands');
+         $res .= __('Link a checklist out', 'resources');
          $res .= '</br><span class="metademands_wizard_comments">' . __('If the value selected equals the value to check, the checklist out will be add', 'resources') . '</span>';
          $res .= '</td>';
          $res .= "<td>";
