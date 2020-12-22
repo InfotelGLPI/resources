@@ -287,7 +287,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT `itemtype`, `items_id`
+      $query = "SELECT `itemtype`, `items_id`, `comment`
                  FROM `glpi_plugin_resources_resources_items`
                  WHERE `plugin_resources_resources_id` = '$oldid';";
 

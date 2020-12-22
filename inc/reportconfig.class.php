@@ -188,13 +188,12 @@ class PluginResourcesReportConfig extends CommonDBTM {
    /**
     * Duplicate item resources from an item template to its clone
     *
-    * @since version 0.84
-    *
-    * @param $itemtype     itemtype of the item
     * @param $oldid        ID of the item to clone
     * @param $newid        ID of the item cloned
-    * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (default '')
-    * */
+    *
+    * @since version 0.84
+    *
+    */
    static function cloneItem($oldid, $newid) {
       global $DB;
 
