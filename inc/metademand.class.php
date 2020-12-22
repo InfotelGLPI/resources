@@ -169,7 +169,7 @@ class PluginResourcesMetademand extends CommonGLPI {
             $resource->getFromDB($options["resources_id"]);
             if(count($line["form"])){
                foreach ($line["form"] as $id => $v){
-                  if(array_key_exists ($v["id"],$values["fields"])){
+                  if(isset($values["fields"]) && is_array($values["fields"]) && array_key_exists ($v["id"],$values["fields"])){
                      $Pfield = new PluginResourcesLinkmetademand();
                      if($Pfield->getFromDBByCrit(["plugin_metademands_fields_id"=>$v["id"]])){
                         $checkvalues =  PluginMetademandsField::_unserialize($Pfield->fields["check_value"]);
