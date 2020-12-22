@@ -640,7 +640,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $tab[] = [
-         'id'            => '32',
+         'id'            => '38',
          'table'         => $this->getTable(),
          'field'         => 'sensitize_security',
          'name'          => __('Sensitized to security', 'resources'),
