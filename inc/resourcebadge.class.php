@@ -218,7 +218,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
             //Add resting resource
             echo "<td class='center'>";
             echo "<a href=\"./resourcebadge.form.php?new\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/badges/pics/badgerequest.png' alt='" . __('Request new badge', 'resources') . "'>";
+            echo "<i class='fas fa-id-badge fa-6x'></i>";
             echo "<br>" . __('Request new badge', 'resources') . "</a>";
             echo "</td>";
          } else {
@@ -227,7 +227,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
          //List resting resource
          echo "<td class='center' colspan='$colspan'>";
          echo "<a href=\"./resourcebadge.form.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/badges/pics/badgereturn.png' alt='" . __('Badge restitution', 'resources') . "'>";
+         echo "<i class='fas fa-arrow-alt-circle-left fa-6x'></i>";
          echo "<br>" . __('Badge restitution', 'resources') . "</a>";
          echo "</td>";
       }

@@ -147,7 +147,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"$url\">";
-         echo "<i class='fas fa-user-tie fa-5x' style='color:steelblue;' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
+         echo "<i class='fas fa-user-tie fa-5x' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
          echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
          echo "</td>";
 

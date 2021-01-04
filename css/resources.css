@@ -87,7 +87,7 @@
     text-align: left;
     font-size: 11px;
     width: 700px;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
@@ -261,7 +261,6 @@
 
 .plugin_resources_content table td {
     border: 1px solid #c9c9c9;
-    background: #fff;
     padding: 7px 10px;
     font-size: 12px;
 }
@@ -455,7 +454,7 @@ nav ul li.active a:link, nav ul li a:hover {
     z-index: 1;
     text-align: left;
     font-size: 12px;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
 
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
