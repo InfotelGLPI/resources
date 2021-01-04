@@ -3413,9 +3413,12 @@ class PluginResourcesResource extends CommonDBTM {
     */
    function massiveActions($type) {
 
+      $action = [];
       $prefix = $this->getType() . MassiveAction::CLASS_ACTION_SEPARATOR;
+      if(Session::haveRightsOr('plugin_resources',[CREATE,UPDATE])){
+         $action[$prefix . "plugin_resources_add_item"] = __('Associate a resource', 'resources');
+      }
 
-      $action[$prefix . "plugin_resources_add_item"] = __('Associate a resource', 'resources');
       if ($type == "User") {
          $action[$prefix . "plugin_resources_generate_resources"] = __('Generate resources', 'resources');
       }
