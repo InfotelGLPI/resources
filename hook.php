@@ -278,6 +278,10 @@ function plugin_resources_install() {
    if (!$DB->fieldExists("glpi_plugin_resources_departments", "plugin_resources_employers_id")) {
       $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.7.1.sql");
    }
+   //Version 2.7.1
+   if (!$DB->fieldExists("glpi_plugin_resources_configs", "mandatory_checklist")) {
+      $DB->runFile(GLPI_ROOT ."/plugins/resources/install/sql/update-2.7.2.sql");
+   }
 
    if ($update80) {
 
@@ -1697,16 +1701,28 @@ function plugin_pre_item_add_solutions($item) {
       $adconfig->getFromDB(1);
       $linkad = new PluginResourcesLinkAd();
       $items = new Item_Ticket();
-
+      $conf = new PluginResourcesConfig();
+      $conf->getFromDB(1);
       if($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]){
          if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
-            if(!$linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id'=>$items->getField('items_id')]) && $linkad->getField('action_done') == 0)){
-               $item->input = null;
-               Session::addMessageAfterRedirect(
-                  __('You have to perform the action on the LDAP directory before','resources'),
-                  false, ERROR);
+            if($conf->fields["mandatory_adcreation"] == 1) {
+               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                  $item->input = null;
+                  Session::addMessageAfterRedirect(
+                     __('You have to perform the action on the LDAP directory before', 'resources'),
+                     false, ERROR);
+               }
             }
-
+            if($conf->fields["mandatory_checklist"] == 1){
+               $checklist = new PluginResourcesChecklist();
+               $checklists = $checklist->find(["plugin_resources_resources_id"=>$items->getField('items_id'),"is_checked"=>0,"checklist_type"=>PluginResourcesChecklist::RESOURCES_CHECKLIST_IN]);
+               if(!empty($checklists)){
+                  $item->input = null;
+                  Session::addMessageAfterRedirect(
+                     __('You have to do all checklist in action before','resources'),
+                     false, ERROR);
+               }
+            }
          }
       }else if($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]){
          if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
@@ -1716,14 +1732,27 @@ function plugin_pre_item_add_solutions($item) {
                   __('You have to perform the action on the LDAP directory before','resources'),
                   false, ERROR);
             }
+
          }
       }else if($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
          if($items->getFromDBByCrit(["tickets_id"=>$ticket->getID(),"itemtype"=>PluginResourcesResource::getType()])){
-            if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-               $item->input = null;
-               Session::addMessageAfterRedirect(
-                  __('You have to perform the action on the LDAP directory before', 'resources'),
-                  false, ERROR);
+            if($conf->fields["mandatory_adcreation"] == 1) {
+               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                  $item->input = null;
+                  Session::addMessageAfterRedirect(
+                     __('You have to perform the action on the LDAP directory before', 'resources'),
+                     false, ERROR);
+               }
+            }
+            if($conf->fields["mandatory_checklist"] == 1){
+               $checklist = new PluginResourcesChecklist();
+               $checklists = $checklist->find(["plugin_resources_resources_id"=>$items->getField('items_id'),"is_checked"=>0,"checklist_type"=>PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT]);
+               if(!empty($checklists)){
+                  $item->input = null;
+                  Session::addMessageAfterRedirect(
+                     __('You have to do all checklist out action before','resources'),
+                     false, ERROR);
+               }
             }
          }
       }

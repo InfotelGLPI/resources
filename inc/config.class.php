@@ -194,6 +194,26 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('All checklist done is mandatory for arrival and departure to close ticket', 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         Dropdown::showYesNo("mandatory_checklist",$this->fields["mandatory_checklist"]);
+
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Create or delete user in ldap is mandatory to close ticket', 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         Dropdown::showYesNo("mandatory_adcreation",$this->fields["mandatory_adcreation"]);
+
+         echo "</td>";
+         echo "</tr>";
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";
