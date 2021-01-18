@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-04 16:05+0000\n"
+"POT-Creation-Date: 2021-01-18 08:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,27 +30,27 @@ msgstr ""
 msgid "Trainee"
 msgstr ""
 
-#: hook.php:406
+#: hook.php:410
 msgid "Specific network rights"
 msgstr ""
 
-#: hook.php:407
+#: hook.php:411
 msgid "Access to the applications"
 msgstr ""
 
-#: hook.php:408
+#: hook.php:412
 msgid "Specific securities groups"
 msgstr ""
 
-#: hook.php:409
+#: hook.php:413
 msgid "Specific distribution lists"
 msgstr ""
 
-#: hook.php:410 inc/choice.class.php:172 inc/choice.class.php:408
+#: hook.php:414 inc/choice.class.php:172 inc/choice.class.php:408
 msgid "Others needs"
 msgstr ""
 
-#: hook.php:914 inc/notificationtargetresource.class.php:407
+#: hook.php:918 inc/notificationtargetresource.class.php:407
 #: inc/notificationtargetresource.class.php:486
 #: inc/notificationtargetresource.class.php:629
 #: inc/notificationtargetresource.class.php:683
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Declared as leaving"
 msgstr ""
 
-#: hook.php:919 inc/department.class.php:84 inc/department.class.php:116
+#: hook.php:923 inc/department.class.php:84 inc/department.class.php:116
 #: inc/employer.class.php:48 inc/employment.class.php:204
 #: inc/employment.class.php:285
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:64
@@ -70,13 +70,13 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:923 inc/client.class.php:46
+#: hook.php:927 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:928 inc/config.class.php:134 inc/directory.class.php:198
+#: hook.php:932 inc/config.class.php:134 inc/directory.class.php:198
 #: inc/notificationtargetresource.class.php:92
 #: inc/notificationtargetresource.class.php:395
 #: inc/notificationtargetresource.class.php:474
@@ -93,7 +93,7 @@ msgstr[1] ""
 msgid "Resource manager"
 msgstr ""
 
-#: hook.php:940 inc/notificationtargetresource.class.php:95
+#: hook.php:944 inc/notificationtargetresource.class.php:95
 #: inc/notificationtargetresource.class.php:406
 #: inc/notificationtargetresource.class.php:485
 #: inc/notificationtargetresource.class.php:636
@@ -104,7 +104,7 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:946 inc/config.class.php:160
+#: hook.php:950 inc/config.class.php:160
 #: inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
 #: inc/notificationtargetresource.class.php:396
@@ -118,16 +118,24 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1425 inc/resource_item.class.php:879
+#: hook.php:1429 inc/resource_item.class.php:879
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:1678
+#: hook.php:1682
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1706 hook.php:1716 hook.php:1725
+#: hook.php:1712 hook.php:1732 hook.php:1743
 msgid "You have to perform the action on the LDAP directory before"
+msgstr ""
+
+#: hook.php:1722
+msgid "You have to do all checklist in action before"
+msgstr ""
+
+#: hook.php:1753
+msgid "You have to do all checklist out action before"
 msgstr ""
 
 #: setup.php:195 inc/metademand.class.php:69
@@ -613,6 +621,15 @@ msgstr ""
 
 #: inc/config.class.php:189
 msgid "Category of departure ticket"
+msgstr ""
+
+#: inc/config.class.php:199
+msgid ""
+"All checklist done is mandatory for arrival and departure to close ticket"
+msgstr ""
+
+#: inc/config.class.php:209
+msgid "Create or delete user in ldap is mandatory to close ticket"
 msgstr ""
 
 #: inc/confighabilitation.class.php:54
