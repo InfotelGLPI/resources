@@ -475,11 +475,11 @@ class PluginResourcesLinkAd extends CommonDBTM {
    static function processLogin(PluginResourcesResource $resource){
       $config = new PluginResourcesAdconfig();
       $config->getFromDB(1);
-      $login = self::getLoginFromRule($resource->fields["name"],$resource->fields["firstname"],$config->fields["first_form"]);
+      $login = self::getLoginFromRule($resource->fields["firstname"],$resource->fields["name"],$config->fields["first_form"]);
       $ldap =new PluginResourcesLDAP();
       $exist = $ldap->existingUser($login);
       if($exist){
-         $login = self::getLoginFromRule($resource->fields["name"],$resource->fields["firstname"],$config->fields["second_form"]);
+         $login = self::getLoginFromRule($resource->fields["firstname"],$resource->fields["name"],$config->fields["second_form"]);
          $exist = $ldap->existingUser($login);
          if($exist){
             return [__("existing login","resources"),false];
