@@ -989,6 +989,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   'name' => $hValue,
                   'value' => $data['value'],
                   'entity' => $_SESSION['glpiactive_entity'],
+                  'entity_sons' => true,
                   'right' => 'all'
                ]);
                if ($oldValues) {

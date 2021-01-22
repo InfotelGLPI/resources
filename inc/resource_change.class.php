@@ -146,6 +146,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id",
                                     'entity'    => $resource->fields["entities_id"],
+                                    'entity_sons' => true,
                                     'right'     => 'all',
                                     'used'      => [$resource->getField('users_id')],
                                     'on_change' => 'plugin_resources_load_button_changeresources_manager()']);
@@ -179,6 +180,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id_sales",
                                     'entity'    => $resource->fields["entities_id"],
+                                    'entity_sons' => true,
                                     'right'     => 'all',
                                     'used'      => [$resource->getField('users_id_sales')],
                                     'on_change' => 'plugin_resources_load_button_changeresources_sale()']);

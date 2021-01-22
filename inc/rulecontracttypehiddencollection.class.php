@@ -40,7 +40,7 @@ class PluginResourcesRuleContracttypeHiddenCollection extends RuleCollection {
 
    // From RuleCollection
    public $stop_on_first_match=true;
-   public $menu_option='contracttypes';
+   public $menu_option='contracttypehiddens';
 
    /**
     * Get title used in list of rules

@@ -1510,6 +1510,7 @@ class PluginResourcesResource extends CommonDBTM {
          User::dropdown(['value'  => $this->fields["users_id"],
                          'name'   => "users_id",
                          'entity' => $this->fields["entities_id"],
+                         'entity_sons' => true,
                          'right'  => 'all']);
       }
 
@@ -1567,6 +1568,7 @@ class PluginResourcesResource extends CommonDBTM {
          User::dropdown(['value'  => $this->fields["users_id_sales"],
                          'name'   => "users_id_sales",
                          'entity' => $this->fields["entities_id"],
+                         'entity_sons' => true,
                          'right'  => 'all']);
       }
 
@@ -1598,6 +1600,7 @@ class PluginResourcesResource extends CommonDBTM {
             User::dropdown(['value'  => $this->fields["users_id_recipient"],
                             'name'   => "users_id_recipient",
                             'entity' => $this->fields["entities_id"],
+                            'entity_sons' => true,
                             'right'  => 'all']);
          } else {
             echo $users_id_recipient->getName();
@@ -2196,6 +2199,7 @@ class PluginResourcesResource extends CommonDBTM {
          User::dropdown(['value'  => $options["users_id"],
                          'name'   => "users_id",
                          'entity' => $input['entities_id'],
+                         'entity_sons' => true,
                          'right'  => 'all',
                         ]);
          echo "</div>";
@@ -2246,6 +2250,7 @@ class PluginResourcesResource extends CommonDBTM {
          User::dropdown(['value'  => $options["users_id_sales"],
                          'name'   => "users_id_sales",
                          'entity' => $input['entities_id'],
+                         'entity_sons' => true,
                          'right'  => 'all',
                         ]);
          echo "</div>";
@@ -2838,6 +2843,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td width='70%'>";
       User::dropdown(['name'   => "users_id_recipient",
                       'entity' => $_SESSION['glpiactive_entity'],
+                      'entity_sons' => true,
                       'right'  => 'all']);
       echo "<td>";
       echo "</tr>";
