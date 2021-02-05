@@ -342,6 +342,9 @@ class PluginResourcesLinkAd extends CommonDBTM {
          $ret = self::processLogin($resource);
          $linkAD->fields["login"] = $ret[0];
          $logAvailable = $ret[1];
+
+         $mail = self::processMail($resource,$linkAD->fields["login"]);
+         $linkAD->fields["mail"] = $mail;
       }
       $ID = $linkAD->getID();
       echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(self::getType()) . "'>";
@@ -491,11 +494,45 @@ class PluginResourcesLinkAd extends CommonDBTM {
       }
 
    }
+   static function processMail(PluginResourcesResource $resource,$login){
+      $config = new PluginResourcesAdconfig();
+      $config->getFromDB(1);
+      $mail = "";
+      if($config->fields["mail_prefix"] == 2){
+         $mail = $login;
+      }else  if($config->fields["mail_prefix"] == 1){
+         $nametab = explode(" ",strtolower($resource->fields["name"]));
+         $name ="";
+
+         foreach($nametab as $namepart){
+            $name .=$namepart;
+         }
+
+         $firstnametab = explode(" ",strtolower($resource->fields["firstname"]));
+         $firstname ="";
+
+         foreach($firstnametab as $namepart){
+            $firstname .=$namepart;
+         }
+
+         $prefix =$firstname.".".$name;
+         $mail = $prefix;
+      }
+      $mail.="@".$config->fields["mail_suffix"];
+      return $mail;
+
+   }
 
    static function getLoginFromRule($firstname,$name,$conf){
       switch ($conf){
          case 1:
-            $name = strtolower($name);
+//            $name = strtolower($name);
+            $nametab = explode(" ",strtolower($name));
+            $name ="";
+
+            foreach($nametab as $namepart){
+               $name .=$namepart;
+            }
             $firstnametab = explode(" ",strtolower($firstname));
             $firstname ="";
 
@@ -506,7 +543,13 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $login = $firstname.$name;
             break;
          case 2:
-            $name = strtolower($name);
+//            $name = strtolower($name);
+            $nametab = explode(" ",strtolower($name));
+            $name ="";
+
+            foreach($nametab as $namepart){
+               $name .=$namepart;
+            }
             $firstnametab = explode(" ",strtolower($firstname));
             $firstname ="";
 
@@ -566,6 +609,180 @@ class PluginResourcesLinkAd extends CommonDBTM {
          return $mapping[$val];
       }
       return null;
+   }
+
+   /**
+    * Displaying message solution
+    *
+    * @param $params
+    *
+    * @return bool
+    */
+   static function messageSolution($params) {
+
+      if (isset($params['item'])) {
+         $item = $params['item'];
+         if ($item->getType() == 'ITILSolution') {
+
+            self::showMessage($params);
+         }
+
+      }
+   }
+   /**
+    * Displaying questions in GLPI's ticket satisfaction
+    *
+    * @param $params
+    *
+    * @return bool
+    */
+   static function deleteButtton($params) {
+
+      if (isset($params['item'])) {
+         $item = $params['item'];
+         if ($item->getType() == 'ITILSolution') {
+            if (self::cancelButtonSolution($params)){
+               $params['options']['canedit'] = false;
+               return $params;
+            }
+
+         }
+
+      }
+   }
+
+   /**
+    * show warning message
+    *
+    * @param $params
+    *
+    * @return bool
+    */
+   static function showMessage($params) {
+
+      if (isset($params['options'])) {
+         $options = $params['options'];
+         $ticket  = new Ticket();
+         if ($ticket->getFromDB($options['item']->fields["id"])) {
+            $adconfig = new PluginResourcesAdconfig();
+            $adconfig->getFromDB(1);
+            $linkad = new PluginResourcesLinkAd();
+            $items  = new Item_Ticket();
+            $conf   = new PluginResourcesConfig();
+            $conf->getFromDB(1);
+            if ($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if ($conf->fields["mandatory_adcreation"] == 1) {
+                     if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                        $ldapaction = true;
+
+                     }
+                  }
+                  if ($conf->fields["mandatory_checklist"] == 1) {
+                     $checklist  = new PluginResourcesChecklist();
+                     $checklists = $checklist->find(["plugin_resources_resources_id" => $items->getField('items_id'), "is_checked" => 0, "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_IN]);
+                     if (!empty($checklists)) {
+                        $checklistaction = true;
+
+                     }
+                  }
+               }
+            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                     $ldapaction = true;
+
+                  }
+
+               }
+            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if ($conf->fields["mandatory_adcreation"] == 1) {
+                     if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                        $ldapaction = true;
+
+                     }
+                  }
+                  if ($conf->fields["mandatory_checklist"] == 1) {
+                     $checklist  = new PluginResourcesChecklist();
+                     $checklists = $checklist->find(["plugin_resources_resources_id" => $items->getField('items_id'), "is_checked" => 0, "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT]);
+                     if (!empty($checklists)) {
+                        $checklistaction = true;
+
+                     }
+                  }
+               }
+            }
+            $text = "";
+            if (isset($ldapaction) && isset($checklistaction)) {
+               $text = __('You have to perform the action on the LDAP directory before and you have to do all checklist in action before', 'resources');
+            } else if (isset($ldapaction)) {
+               $text = __('You have to perform the action on the LDAP directory before', 'resources');
+            } else if (isset($checklistaction)) {
+               $text = __('You have to do all checklist in action before', 'resources');
+            }
+            echo "<tr class='tab_bg_1 warning'><td colspan='4'>$text</td></tr>";
+         }
+      }
+   }
+
+   static function cancelButtonSolution($params){
+      if (isset($params['options'])) {
+         $options = $params['options'];
+         $ticket  = new Ticket();
+         if ($ticket->getFromDB($options['item']->fields["id"])) {
+            $adconfig = new PluginResourcesAdconfig();
+            $adconfig->getFromDB(1);
+            $linkad = new PluginResourcesLinkAd();
+            $items  = new Item_Ticket();
+            $conf   = new PluginResourcesConfig();
+            $conf->getFromDB(1);
+            if ($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if ($conf->fields["mandatory_adcreation"] == 1) {
+                     if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                        return true;
+
+                     }
+                  }
+                  if ($conf->fields["mandatory_checklist"] == 1) {
+                     $checklist  = new PluginResourcesChecklist();
+                     $checklists = $checklist->find(["plugin_resources_resources_id" => $items->getField('items_id'), "is_checked" => 0, "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_IN]);
+                     if (!empty($checklists)) {
+                        return true;
+
+                     }
+                  }
+               }
+            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                     return true;
+
+                  }
+
+               }
+            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                  if ($conf->fields["mandatory_adcreation"] == 1) {
+                     if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+                        return true;
+
+                     }
+                  }
+                  if ($conf->fields["mandatory_checklist"] == 1) {
+                     $checklist  = new PluginResourcesChecklist();
+                     $checklists = $checklist->find(["plugin_resources_resources_id" => $items->getField('items_id'), "is_checked" => 0, "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT]);
+                     if (!empty($checklists)) {
+                        return true;
+
+                     }
+                  }
+               }
+            }
+            return false;
+         }
+      }
    }
 
 }

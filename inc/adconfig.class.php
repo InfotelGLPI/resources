@@ -156,18 +156,37 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('First Form');
+         echo __('First Form','resources');
          echo "</td>";
          echo "<td >";
          $option = ["value"=>$this->fields["first_form"]];
          Dropdown::showFromArray("first_form",$this->loginForm(),$option);
          echo "</td>";
          echo "<td>";
-         echo __('Second Form');
+         echo __('Second Form', 'resources');
          echo "</td>";
          echo "<td >";
          $option = ["value"=>$this->fields["second_form"]];
          Dropdown::showFromArray("second_form",$this->loginForm(),$option);
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr><th colspan='4'>".__("Mail Creation",'resources')."</th></tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Prefix','resources');
+         echo "</td>";
+         echo "<td >";
+         $option = ["value"=>$this->fields["mail_prefix"]];
+         Dropdown::showFromArray("mail_prefix",$this->prefixForm(),$option);
+         echo "</td>";
+         echo "<td>";
+         echo __('Suffix','resources');
+         echo "</td>";
+         echo "<td >";
+         $option = ["value"=>$this->fields["mail_suffix"]];
+         echo Html::input("mail_suffix",$option);
+//         Dropdown::showFromArray(,$this->loginForm(),$option);
          echo "</td>";
          echo "</tr>";
 
@@ -322,9 +341,16 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
    function loginForm(){
       $options[0] = Dropdown::EMPTY_VALUE;
-      $options[1] = __("first letter of given name + name");
-      $options[2] = __("given name + name");
-      $options[3] = __("2 letters of given name + 2 letters of name");
+      $options[1] = __("first letter of given name + name",'resources');
+      $options[2] = __("given name + name",'resources');
+      $options[3] = __("2 letters of given name + 2 letters of name",'resources');
+
+      return $options;
+   }
+   function prefixForm(){
+      $options[0] = Dropdown::EMPTY_VALUE;
+      $options[1] = __("given name.name",'resources');
+      $options[2] = __("Login");
 
       return $options;
    }

@@ -728,6 +728,9 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `categories_id` int(11) NOT NULL default '0',
    `mandatory_checklist` tinyint(1) NOT NULL default '0',
    `mandatory_adcreation` tinyint(1) NOT NULL default '0',
+   `plugin_resources_resourcetemplates_id` INT(11) NULL DEFAULT '0',
+   `plugin_resources_resourcestates_id_arrival` INT(11) NULL DEFAULT '0',
+   `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -838,6 +841,8 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `roleAD` varchar(255) collate utf8_unicode_ci default '',
    `first_form`  int(11) NOT NULL default '0',
    `second_form`  int(11) NOT NULL default '0',
+   `mail_prefix` int(11) NOT NULL default '0',
+   `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0);

@@ -214,6 +214,48 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __("If other contract are available don't display without contract", 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         Dropdown::showYesNo("allow_without_contract",$this->fields["allow_without_contract"]);
+
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Default contract template selected', 'resources');
+         echo "</td>";
+         echo "<td>";
+         $resource = new PluginResourcesResource();
+         $resource->dropdownTemplate("plugin_resources_resourcetemplates_id",$this->fields["plugin_resources_resourcetemplates_id"]);
+//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Resource state for working people', 'resources');
+         echo "</td>";
+         echo "<td>";
+         $resource = new PluginResourcesResource();
+         PluginResourcesResourceState::dropdown(['name'=>'plugin_resources_resourcestates_id_arrival','value'=>$this->fields['plugin_resources_resourcestates_id_arrival']]);
+         //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Resource state for left people', 'resources');
+         echo "</td>";
+         echo "<td>";
+         PluginResourcesResourceState::dropdown(['name'=>'plugin_resources_resourcestates_id_departure','value'=>$this->fields['plugin_resources_resourcestates_id_departure']]);
+         //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+         echo "</td>";
+         echo "</tr>";
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";

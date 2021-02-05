@@ -49,12 +49,14 @@ class PluginResourcesResource_Change extends CommonDBTM {
    CONST CHANGE_RESOURCEINFORMATIONS    = 8;
    CONST CHANGE_RESOURCECOMPANY   = 9;
    CONST CHANGE_RESOURCEDEPARTMENT    = 10;
+   CONST CHANGE_RESOURCEMATERIAL    = 11;
 
 
    /**
     * Returns all actions
     */
-   static function getAllActions() {
+   static function getAllActions($menu = false) {
+
       $actions                               = [];
       $actions[0]                            = self::getNameActions(0);
       $actions[self::CHANGE_RESOURCEMANAGER] = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
@@ -65,10 +67,24 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $actions[self::CHANGE_RESOURCEINFORMATIONS]          = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
       $actions[self::CHANGE_RESOURCECOMPANY]          = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
       $actions[self::CHANGE_RESOURCEDEPARTMENT]          = self::getNameActions(self::CHANGE_RESOURCEDEPARTMENT);
+      $actions[self::CHANGE_RESOURCEMATERIAL]          = self::getNameActions(self::CHANGE_RESOURCEMATERIAL);
       $transfer = new PluginResourcesTransferEntity();
       $dataEntity = $transfer->find();
       if (is_array($dataEntity) && count($dataEntity) > 0) {
          $actions[self::CHANGE_TRANSFER]        = self::getNameActions(self::CHANGE_TRANSFER);
+      }
+      if($menu == false){
+         foreach ($actions as $key => $val){
+            if( $key == 0){
+               continue;
+            }
+            $self = new self();
+            $conf = [];
+            $conf = $self->find(['actions_id'=>$key]);
+            if(count($conf) == 0){
+               unset($actions[$key]);
+            }
+         }
       }
 
       return $actions;
@@ -103,6 +119,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
             return __('Change company','resources');
          case self::CHANGE_RESOURCEDEPARTMENT :
             return __('Change department ','resources');
+         case self::CHANGE_RESOURCEMATERIAL :
+            return __('Change material ','resources');
          default :
             return Dropdown::EMPTY_VALUE;
       }
@@ -467,6 +485,27 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
 
             break;
+         case self::CHANGE_RESOURCEMATERIAL :
+
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
+            echo __("Change material", "resources");
+            echo "</div>";
+            echo "<div class=\"bt-feature col-md-4 \">";
+            Html::textarea(['name'      => "content"]);
+//            echo "<script type='text/javascript'>";
+
+            $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL];
+//            Ajax::updateItemJsCode();
+            echo Ajax::updateItemOnInputTextEvent('content','plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params);
+
+//            echo "</script>";
+            echo "</div>";
+            echo "</div>";
+
+
+
+            break;
       }
    }
 
@@ -538,11 +577,15 @@ class PluginResourcesResource_Change extends CommonDBTM {
             }
 
             break;
-            case self::CHANGE_RESOURCEDEPARTMENT :
+         case self::CHANGE_RESOURCEDEPARTMENT :
             if (isset($options['plugin_resources_departments_id'])
                 && !empty($options['plugin_resources_departments_id'])) {
                $display = true;
             }
+
+            break;
+         case self::CHANGE_RESOURCEMATERIAL :
+               $display = true;
 
             break;
       }
@@ -731,6 +774,14 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $input['plugin_resources_departments_id'] = $options['department_id'];
 
             break;
+         case self::CHANGE_RESOURCEMATERIAL :
+
+            $data['name']    = __("Change material for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] = $options['content'];
+
+
+            break;
       }
 
       $input['id']                = $plugin_resources_resources_id;
@@ -783,7 +834,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='3'>" . __("Managing change actions", 'resources') . "</th></tr>";
 
-      $actions                          = self::getAllActions();
+      $actions                          = self::getAllActions(true);
       $actions[self::BADGE_RESTITUTION] = self::getNameActions(self::BADGE_RESTITUTION);
       //delete mutation
       unset($actions[self::CHANGE_TRANSFER]);

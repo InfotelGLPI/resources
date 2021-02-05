@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.7.2');
+define('PLUGIN_RESOURCES_VERSION', '2.7.3');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", GLPI_ROOT . "/plugins/resources");
@@ -46,6 +46,8 @@ function plugin_init_resources() {
 
    if (Session::getLoginUserID()) {
 
+      $PLUGIN_HOOKS['pre_item_form']['resources'] = [PluginResourcesLinkAd::class, 'messageSolution'];
+      $PLUGIN_HOOKS['post_item_form']['resources'] = [PluginResourcesLinkAd::class, 'deleteButtton'];
       $noupdate = false;
       if (Session::getCurrentInterface() != 'central') {
          $noupdate = true;
@@ -176,6 +178,8 @@ function plugin_init_resources() {
 
       $PLUGIN_HOOKS['metademands']['resources'] = ['PluginResourcesMetademand'];
    }
+
+
    // End init, when all types are registered
    $PLUGIN_HOOKS['post_init']['resources'] = 'plugin_resources_postinit';
 

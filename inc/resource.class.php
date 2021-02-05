@@ -1193,7 +1193,14 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu       = new DbUtils();
       $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
-      $option[-1] = __('Without contract', 'resources');
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if($config->fields['allow_without_contract'] == 0){
+         $option[-1] = __('Without contract', 'resources');
+      }
+      if($value == 0){
+         $value = $config->fields['plugin_resources_resourcetemplates_id'];
+      }
 
       if (!empty($templates)) {
          foreach ($templates as $template) {
@@ -3902,6 +3909,10 @@ class PluginResourcesResource extends CommonDBTM {
             return [
                'description' => __('Resources list of commercial manager', 'resources')];   // Optional
             break;
+         case 'UpdateResourcesState':
+            return [
+               'description' => __('Update Resources state', 'resources')];   // Optional
+            break;
       }
       return [];
    }
@@ -4077,6 +4088,66 @@ class PluginResourcesResource extends CommonDBTM {
                                                 __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             }
          }
+      }
+
+      return $cron_status;
+   }
+
+   /**
+    * Cron action on tasks : UpdateResourcesState
+    *
+    * @param $task for log, if NULL display
+    *
+    **/
+   static function cronUpdateResourcesState($task = null) {
+      global $DB, $CFG_GLPI;
+
+      $resource               = new PluginResourcesResource();
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+
+
+      $message     = [];
+      $cron_status = 1;
+
+      $query_arrival = $query = "SELECT * 
+                                     FROM `glpi_plugin_resources_resources` 
+                                     WHERE `date_begin` IS NOT NULL 
+                                     AND `date_begin` <= NOW()
+                                     AND (`date_end` = NULL OR `date_end` > NOW())
+                                     AND `is_deleted` = 0";
+
+      foreach ($DB->request($query_arrival) as $resourceD) {
+
+
+         if($resourceD['plugin_resources_resourcestates_id'] != $config->fields['plugin_resources_resourcestates_id_arrival']){
+            $input = [];
+            $input['id'] = $resourceD['id'];
+            $input["plugin_resources_resourcestates_id"] = $config->fields['plugin_resources_resourcestates_id_arrival'];
+            $resource->update($input);
+            $task->addVolume(1);
+         }
+
+      }
+
+      $query_departure = $query = "SELECT * 
+                                     FROM `glpi_plugin_resources_resources` 
+                                     WHERE `date_begin` IS NOT NULL 
+                                     AND `date_begin` <= NOW()
+                                     AND `date_end` < NOW()
+                                     AND `is_deleted` = 0";
+
+      foreach ($DB->request($query_departure) as $resourceD) {
+
+
+         if($resourceD['plugin_resources_resourcestates_id'] != $config->fields['plugin_resources_resourcestates_id_departure']){
+            $input = [];
+            $input['id'] = $resourceD['id'];
+            $input["plugin_resources_resourcestates_id"] = $config->fields['plugin_resources_resourcestates_id_departure'];
+            $resource->update($input);
+            $task->addVolume(1);
+         }
+
       }
 
       return $cron_status;
