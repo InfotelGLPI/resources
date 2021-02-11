@@ -120,7 +120,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
          case self::CHANGE_RESOURCEDEPARTMENT :
             return __('Change department ','resources');
          case self::CHANGE_RESOURCEMATERIAL :
-            return __('Change material ','resources');
+            return __('Change material','resources');
          default :
             return Dropdown::EMPTY_VALUE;
       }
