@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-05 09:44+0000\n"
+"POT-Creation-Date: 2021-02-11 11:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1738,8 +1738,8 @@ msgstr ""
 msgid "Change department "
 msgstr ""
 
-#: inc/resource_change.class.php:123
-msgid "Change material "
+#: inc/resource_change.class.php:123 inc/resource_change.class.php:492
+msgid "Change material"
 msgstr ""
 
 #: inc/resource_change.class.php:139
@@ -1801,10 +1801,6 @@ msgstr ""
 
 #: inc/resource_change.class.php:456 inc/resource_change.class.php:769
 msgid "Current department of the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:492
-msgid "Change material"
 msgstr ""
 
 #: inc/resource_change.class.php:595
