@@ -4114,7 +4114,7 @@ class PluginResourcesResource extends CommonDBTM {
                                      FROM `glpi_plugin_resources_resources` 
                                      WHERE `date_begin` IS NOT NULL 
                                      AND `date_begin` <= NOW()
-                                     AND (`date_end` = NULL OR `date_end` > NOW())
+                                     AND (`date_end` IS NULL OR `date_end` > NOW())
                                      AND `is_deleted` = 0";
 
       foreach ($DB->request($query_arrival) as $resourceD) {
