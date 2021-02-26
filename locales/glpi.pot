@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 15:33+0000\n"
+"POT-Creation-Date: 2021-02-26 15:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,7 +118,7 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1435 inc/resource_item.class.php:879
+#: hook.php:1435 inc/resource_item.class.php:903
 msgid "Not defined"
 msgstr ""
 
@@ -310,8 +310,8 @@ msgstr[1] ""
 #: inc/resource.class.php:81 inc/resource.class.php:367
 #: inc/resource.class.php:1688 inc/resource.class.php:2303
 #: inc/resource.class.php:3215 inc/resource_change.class.php:392
-#: inc/resource_item.class.php:821 inc/resource_item.class.php:1076
-#: inc/resource_item.class.php:1086 inc/resourcepdf.class.php:85
+#: inc/resource_item.class.php:845 inc/resource_item.class.php:1100
+#: inc/resource_item.class.php:1110 inc/resourcepdf.class.php:85
 #: inc/rulecontracttype.class.php:255 inc/rulecontracttypehidden.class.php:255
 #: report/checkgroup/checkgroup.php:249
 #: report/checkhabilitation/checkhabilitation.php:213
@@ -512,8 +512,8 @@ msgstr ""
 #: inc/notificationtargetresource.class.php:1372 inc/recap.class.php:203
 #: inc/resource.class.php:80 inc/resource.class.php:360
 #: inc/resource.class.php:1533 inc/resource.class.php:2292
-#: inc/resource_item.class.php:820 inc/resource_item.class.php:1075
-#: inc/resource_item.class.php:1085 inc/resourcecard.class.php:151
+#: inc/resource_item.class.php:844 inc/resource_item.class.php:1099
+#: inc/resource_item.class.php:1109 inc/resourcecard.class.php:151
 #: inc/resourcecard.class.php:217 inc/resourcepdf.class.php:84
 #: inc/rulecontracttype.class.php:251 inc/rulecontracttypehidden.class.php:251
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:253
@@ -1644,7 +1644,7 @@ msgstr ""
 msgid "Current entity"
 msgstr ""
 
-#: inc/resource.class.php:3432 inc/resource_item.class.php:785
+#: inc/resource.class.php:3432 inc/resource_item.class.php:809
 msgid "Associate a resource"
 msgstr ""
 
@@ -1883,7 +1883,11 @@ msgstr ""
 msgid "Modification of the associated user's location"
 msgstr ""
 
-#: inc/resource_item.class.php:1043
+#: inc/resource_item.class.php:506
+msgid "This computer is already associated to a resource"
+msgstr ""
+
+#: inc/resource_item.class.php:1067
 msgid "Associated Human Resource"
 msgstr ""
 
