@@ -495,20 +495,44 @@ class PluginResourcesResource_Item extends CommonDBTM {
          echo "<tr class='tab_bg_1'><td colspan='" . (3 + $colsup) . "' class='center'>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $instID]);
          //echo "<input type='hidden' name='itemtype' value='User'>";
-         Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
+         $randDropdown = Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
                                                 'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
                                                 'itemtypes'       => $types]);
          //User::dropdown(array('name'        => 'items_id',
          //                        'entity'      => $resource->fields["entities_id"],
          //                        'right' => 'all',
          //                        'ldap_import' => true));
-         echo "</td>";
+         echo "<span id='warning' hidden><i class='fas fa-exclamation-triangle fa-2x' style='color:orange'></i>&nbsp";
+         echo  __('This computer is already associated to a resource','resources') . "</span>";
          echo "<td colspan='2' class='tab_bg_2'>";
          echo "<input type='submit' name='additem' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
          echo "</div>";
+
+         $js = "$(function(){
+             $('#show_items_id$randDropdown').change(function() {
+             let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
+               if (item_type == 'Computer') {     
+                  let computer_id = $('#show_items_id$randDropdown :selected').val();
+                  $.ajax({
+                             url   : CFG_GLPI.root_doc + '/plugins/resources/ajax/checkComputerResource.php',
+                             type  : 'POST',
+                             data  : {'computer_id': computer_id},
+                             success:function(data) {
+                                if (data) {
+                                    $('#warning').show();
+                                } else {
+                                    $('#warning').hide();
+                                }
+                             }
+                  });
+               }
+            });
+         });";
+
+         echo Html::scriptBlock($js);
       }
 
       echo "<div class='spaced'>";
