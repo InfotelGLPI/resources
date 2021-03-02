@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-05 09:44+0000\n"
+"POT-Creation-Date: 2021-02-26 15:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -122,7 +122,7 @@ msgstr "Ayrılma bilgileri"
 msgid "Sales manager"
 msgstr "Satış sorumlusu"
 
-#: hook.php:1435 inc/resource_item.class.php:879
+#: hook.php:1435 inc/resource_item.class.php:903
 msgid "Not defined"
 msgstr "Belirtilmemiş"
 
@@ -320,8 +320,8 @@ msgstr[1] "Bölümler"
 #: inc/resource.class.php:81 inc/resource.class.php:367
 #: inc/resource.class.php:1688 inc/resource.class.php:2303
 #: inc/resource.class.php:3215 inc/resource_change.class.php:392
-#: inc/resource_item.class.php:821 inc/resource_item.class.php:1076
-#: inc/resource_item.class.php:1086 inc/resourcepdf.class.php:85
+#: inc/resource_item.class.php:845 inc/resource_item.class.php:1100
+#: inc/resource_item.class.php:1110 inc/resourcepdf.class.php:85
 #: inc/rulecontracttype.class.php:255 inc/rulecontracttypehidden.class.php:255
 #: report/checkgroup/checkgroup.php:249
 #: report/checkhabilitation/checkhabilitation.php:213
@@ -523,8 +523,8 @@ msgstr "Yeni kaynak - kontrol listesi doğrulanmalıdır"
 #: inc/notificationtargetresource.class.php:1372 inc/recap.class.php:203
 #: inc/resource.class.php:80 inc/resource.class.php:360
 #: inc/resource.class.php:1533 inc/resource.class.php:2292
-#: inc/resource_item.class.php:820 inc/resource_item.class.php:1075
-#: inc/resource_item.class.php:1085 inc/resourcecard.class.php:151
+#: inc/resource_item.class.php:844 inc/resource_item.class.php:1099
+#: inc/resource_item.class.php:1109 inc/resourcecard.class.php:151
 #: inc/resourcecard.class.php:217 inc/resourcepdf.class.php:84
 #: inc/rulecontracttype.class.php:251 inc/rulecontracttypehidden.class.php:251
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:253
@@ -1672,7 +1672,7 @@ msgstr "Aktarım bildirin"
 msgid "Current entity"
 msgstr "Geçerli varlık"
 
-#: inc/resource.class.php:3432 inc/resource_item.class.php:785
+#: inc/resource.class.php:3432 inc/resource_item.class.php:809
 msgid "Associate a resource"
 msgstr "Bir kaynakla ilişkilendirin"
 
@@ -1766,9 +1766,9 @@ msgstr "Kuruluşu değiştir"
 msgid "Change department "
 msgstr "Bölümü değiştir"
 
-#: inc/resource_change.class.php:123
-msgid "Change material "
-msgstr "Malzemeyi değiştir "
+#: inc/resource_change.class.php:123 inc/resource_change.class.php:492
+msgid "Change material"
+msgstr "Malzemeyi değiştir"
 
 #: inc/resource_change.class.php:139
 msgid "Please select a resource"
@@ -1830,10 +1830,6 @@ msgstr "Yeni kaynak kuruluşu"
 #: inc/resource_change.class.php:456 inc/resource_change.class.php:769
 msgid "Current department of the resource"
 msgstr "Kaynağın geçerli bölümü"
-
-#: inc/resource_change.class.php:492
-msgid "Change material"
-msgstr "Malzemeyi değiştir"
 
 #: inc/resource_change.class.php:595
 msgid "Starting change"
@@ -1915,7 +1911,11 @@ msgstr "Değişiklik işlemleri yönetimi"
 msgid "Modification of the associated user's location"
 msgstr "İlgili kullanıcı konumunda değişiklik"
 
-#: inc/resource_item.class.php:1043
+#: inc/resource_item.class.php:506
+msgid "This computer is already associated to a resource"
+msgstr "Bu bilgisayar zaten bir kaynağa atanmış"
+
+#: inc/resource_item.class.php:1067
 msgid "Associated Human Resource"
 msgstr "İlgili İnsan Kaynağı"
 
