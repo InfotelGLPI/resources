@@ -983,6 +983,7 @@ function plugin_resources_addSelect($type, $ID, $num) {
       case "glpi_plugin_resources_managers.name":
       case "glpi_plugin_resources_recipients_leaving.name":
       case "glpi_plugin_resources_recipients.name":
+      case "glpi_plugin_resources_salemanagers.name":
          return "`".$table."`.`".$field."` AS ITEM_$num, `".$table."`.`id` AS ITEM_".$num."_2, `".$table."`.`firstname` AS ITEM_".$num."_3,`".$table."`.`realname` AS ITEM_".$num."_4, ";
          break;
    }
@@ -1072,6 +1073,7 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val) {
       case "glpi_plugin_resources_managers.name":
       case "glpi_plugin_resources_recipients_leaving.name":
       case "glpi_plugin_resources_recipients.name":
+      case "glpi_plugin_resources_salemanagers.name":
          $ADD = " OR `".$table."`.`firstname` LIKE '%".$val."%' OR `".$table."`.`realname` LIKE '%".$val."%' ";
          if ($nott && $val != "NULL") {
             $ADD = " OR `$table`.`$field` IS NULL";
@@ -1100,7 +1102,11 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
    $nt = "glpi_plugin_resources_resources";
    $nt_device = "glpi_plugin_resources_resources_items";
    // Multiple link possibilies case
-   if ($new_table == "glpi_plugin_resources_locations" || $new_table == "glpi_plugin_resources_managers" || $new_table == "glpi_plugin_resources_recipients" || $new_table == "glpi_plugin_resources_recipients_leaving") {
+   if ($new_table == "glpi_plugin_resources_locations"
+       || $new_table == "glpi_plugin_resources_managers"
+       || $new_table == "glpi_plugin_resources_salemanagers"
+       || $new_table == "glpi_plugin_resources_recipients"
+       || $new_table == "glpi_plugin_resources_recipients_leaving") {
       $AS = " AS glpi_plugin_resources_resources_".$linkfield;
       $AS_device = " AS glpi_plugin_resources_resources_items_".$linkfield;
       $nt.="_".$linkfield;
@@ -1168,6 +1174,16 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out.= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_managers` ON (`glpi_plugin_resources_resources`.`users_id` = `glpi_plugin_resources_managers`.`id`) ";
          } else {
             $out.= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_managers` ON (`$nt`.`users_id` = `glpi_plugin_resources_managers`.`id`) ";
+         }
+         return $out;
+         break;
+      case "glpi_plugin_resources_salemanagers" : // From items
+         $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
+         $out.= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
+         if ($type == PluginResourcesDirectory::class) {
+            $out.= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_salemanagers` ON (`glpi_plugin_resources_resources`.`users_id_sales` = `glpi_plugin_resources_salemanagers`.`id`) ";
+         } else {
+            $out.= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_salemanagers` ON (`$nt`.`users_id_sales` = `glpi_plugin_resources_salemanagers`.`id`) ";
          }
          return $out;
          break;
@@ -1532,15 +1548,10 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
 
          switch ($table.'.'.$field) {
 
+            case "glpi_plugin_resources_recipients_leaving.name":
+            case "glpi_plugin_resources_managers.name":
+            case "glpi_plugin_resources_salemanagers.name":
             case "glpi_plugin_resources_recipients.name" :
-               $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
-               return $out;
-               break;
-            case "glpi_plugin_resources_recipients_leaving.name" :
-               $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
-               return $out;
-               break;
-            case "glpi_plugin_resources_managers.name" :
                $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
                return $out;
                break;
@@ -1590,6 +1601,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
 
          switch ($table.'.'.$field) {
             case "glpi_plugin_resources_managers.name" :
+            case "glpi_plugin_resources_salemanagers.name" :
                $out = "";
                if (!empty($data['raw']["ITEM_".$num."_2"])) {
                   $out = $dbu->getUserName($data['raw']["ITEM_".$num."_2"]);
