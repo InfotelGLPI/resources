@@ -486,7 +486,8 @@ class PluginResourcesResource extends CommonDBTM {
          'name'     => __('Quota', 'resources'),
          'datatype' => 'decimal'
       ];
-      if (Session::getCurrentInterface() != 'central') {
+      //To have Field in dataInjection
+//      if (Session::getCurrentInterface() != 'central') {
 
          $tab[] = [
             'id'            => '21',
@@ -520,7 +521,7 @@ class PluginResourcesResource extends CommonDBTM {
             'massiveaction' => false,
             'datatype'      => 'dropdown'
          ];
-      }
+//      }
 
       $tab[] = [
          'id'       => '25',
@@ -1090,18 +1091,22 @@ class PluginResourcesResource extends CommonDBTM {
       global $CFG_GLPI, $DB;
 
       $PluginResourcesChecklist = new PluginResourcesChecklist();
-      if (isset ($this->input["addchecklist"])
-          && $this->input["addchecklist"] == 1) {
+      $config = new PluginResourcesConfig();
+      $config->getFromDB(1);
+      if ($config->fields["mandatory_adcreation"] == 1) {
+         if (isset ($this->input["addchecklist"])
+             && $this->input["addchecklist"] == 1) {
 
-         $PluginResourcesChecklist->deleteByCriteria(['plugin_resources_resources_id' => $this->fields["id"]]);
+            $PluginResourcesChecklist->deleteByCriteria(['plugin_resources_resources_id' => $this->fields["id"]]);
 
-         $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
-         $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
-         $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
-         $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
-                                                                 PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
+            $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
+            $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
+                                                                    PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
+            $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
+                                                                    PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
+            $PluginResourcesChecklistconfig->addChecklistsFromRules($this,
+                                                                    PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
+         }
       }
       $status = "update";
       if (isset($this->fields["is_leaving"])

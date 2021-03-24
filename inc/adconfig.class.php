@@ -128,7 +128,22 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
          echo "<td>";
 
-         ITILCategory::dropdown(["name"=>"creation_categories_id","value"=>$this->fields["creation_categories_id"]]);
+         $possible_values = [];
+         $ITILCategory = new ITILCategory();
+         $cats = $ITILCategory->find([]);
+         if (!empty($cats)) {
+            foreach ($cats as $cat) {
+               $possible_values[$cat['id']] = $cat['completename'];
+            }
+         }
+         $values = json_decode($this->fields['creation_categories_id']);
+         if (!is_array($values)) {
+            $values = [];
+         }
+         Dropdown::showFromArray("creation_categories_id",
+                                 $possible_values,
+                                 ['values'   => $values,
+                                  'multiple' => 'multiples']);
 
          echo "</td>";
          echo "</tr>";
@@ -137,8 +152,23 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __('Modification category', 'resources');
          echo "</td>";
          echo "<td>";
+         $possible_values = [];
+         $ITILCategory = new ITILCategory();
+         $cats = $ITILCategory->find([]);
+         if (!empty($cats)) {
+            foreach ($cats as $cat) {
+               $possible_values[$cat['id']] = $cat['completename'];
+            }
+         }
+         $values = json_decode($this->fields['modification_categories_id']);
+         if (!is_array($values)) {
+            $values = [];
+         }
+         Dropdown::showFromArray("modification_categories_id",
+                                 $possible_values,
+                                 ['values'   => $values,
+                                  'multiple' => 'multiples']);
 
-         ITILCategory::dropdown(["name"=>"modification_categories_id","value"=>$this->fields["modification_categories_id"]]);
 
          echo "</td>";
 
@@ -146,8 +176,22 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __('Deletion category', 'resources');
          echo "</td>";
          echo "<td>";
-
-         ITILCategory::dropdown(["name"=>"deletion_categories_id","value"=>$this->fields["deletion_categories_id"]]);
+         $possible_values = [];
+         $ITILCategory = new ITILCategory();
+         $cats = $ITILCategory->find([]);
+         if (!empty($cats)) {
+            foreach ($cats as $cat) {
+               $possible_values[$cat['id']] = $cat['completename'];
+            }
+         }
+         $values = json_decode($this->fields['deletion_categories_id']);
+         if (!is_array($values)) {
+            $values = [];
+         }
+         Dropdown::showFromArray("deletion_categories_id",
+                                 $possible_values,
+                                 ['values'   => $values,
+                                  'multiple' => 'multiples']);
 
          echo "</td>";
          echo "</tr>";
@@ -354,6 +398,37 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
       return $options;
    }
+   /**
+    * @param $input
+    *
+    * @return array|\type
+    */
+   function prepareInputForAdd($input) {
+      return $this->encodeSubtypes($input);
+   }
+
+
+
+   /**
+    * Encode sub types
+    *
+    * @param type $input
+    *
+    * @return \type
+    */
+   function encodeSubtypes($input) {
+      if (!empty($input['creation_categories_id'])) {
+         $input['creation_categories_id'] = json_encode(array_values($input['creation_categories_id']));
+      }
+      if (!empty($input['modification_categories_id'])) {
+         $input['modification_categories_id'] = json_encode(array_values($input['modification_categories_id']));
+      }
+      if (!empty($input['deletion_categories_id'])) {
+         $input['deletion_categories_id'] = json_encode(array_values($input['deletion_categories_id']));
+      }
+
+      return $input;
+   }
    function prepareInputForUpdate($input) {
 
       if (isset($input["password"])) {
@@ -367,6 +442,8 @@ class PluginResourcesAdconfig extends CommonDBTM {
       if (isset($input["_blank_passwd"]) && $input["_blank_passwd"]) {
          $input['password'] = '';
       }
+
+      $input = $this->encodeSubtypes($input);
 
 
       return $input;
@@ -397,6 +474,19 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
       $array = ["logAD","nameAD","phoneAD","companyAD","departmentAD","firstnameAD","mailAD","contractEndAD","contractTypeAD","cellPhoneAD","roleAD"];
       return $array;
+   }
+   function prepareFields($fields){
+
+         $fields['creation_categories_id'] = json_decode($fields['creation_categories_id']);
+
+
+         $fields['modification_categories_id'] = json_decode($fields['modification_categories_id']);
+
+
+         $fields['deletion_categories_id'] = json_decode($fields['deletion_categories_id']);
+
+         return $fields;
+
    }
 
 

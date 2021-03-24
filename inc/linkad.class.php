@@ -113,7 +113,8 @@ class PluginResourcesLinkAd extends CommonDBTM {
                if($items->getFromDBByCrit(["tickets_id"=>$item->getID(),"itemtype"=>PluginResourcesResource::getType()])){
                   $adConfig = new PluginResourcesAdconfig();
                   $adConfig->getFromDB(1);
-                  if ($item->getField('itilcategories_id') ==$adConfig->getField("creation_categories_id") || $item->getField('itilcategories_id') ==$adConfig->getField("modification_categories_id") || $item->getField('itilcategories_id') ==$adConfig->getField("deletion_categories_id") ){
+                  $adConfig->fields = $adConfig->prepareFields($adConfig->fields);
+                  if (in_array($item->getField('itilcategories_id') , $adConfig->getField("creation_categories_id")) || in_array($item->getField('itilcategories_id') , $adConfig->getField("modification_categories_id")) || in_array($item->getField('itilcategories_id') , $adConfig->getField("deletion_categories_id")) ){
                      if ($_SESSION['glpishow_count_on_tabs']) {
                         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
                      }
@@ -328,6 +329,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
       $configAD = new PluginResourcesAdconfig();
       $config->getFromDB(1);
       $configAD->getFromDB(1);
+      $configAD->fields = $configAD->prepareFields($configAD->fields);
       $resource        = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
       $canedit                           = $resource->can($plugin_resources_resources_id, UPDATE);
@@ -440,16 +442,16 @@ class PluginResourcesLinkAd extends CommonDBTM {
             echo "</tr>";
 
 
-            if(!$islink && !$linkAD->fields["action_done"] && $ticket->fields["itilcategories_id"] == $configAD->fields["creation_categories_id"] && $logAvailable){
+            if(!$islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["creation_categories_id"]) && $logAvailable){
                echo "<tr class='tab_bg_2'>";
                echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Create user in AD') . "' name='createAD'></td>";
             }
-            if($islink && !$linkAD->fields["action_done"] && $ticket->fields["itilcategories_id"] == $configAD->fields["modification_categories_id"] ){
+            if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["modification_categories_id"]) ){
                echo "<tr class='tab_bg_2'>";
                echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Modify user in AD') . "' name='updateAD'></td>";
             }
 
-            if($islink && !$linkAD->fields["action_done"] && $ticket->fields["itilcategories_id"] == $configAD->fields["deletion_categories_id"] ){
+            if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["deletion_categories_id"]) ){
                echo "<tr class='tab_bg_2'>";
                echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Disable user in AD') . "' name='disableAD'></td>";
             }
@@ -666,11 +668,12 @@ class PluginResourcesLinkAd extends CommonDBTM {
          if ($ticket->getFromDB($options['item']->fields["id"])) {
             $adconfig = new PluginResourcesAdconfig();
             $adconfig->getFromDB(1);
+            $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
             $linkad = new PluginResourcesLinkAd();
             $items  = new Item_Ticket();
             $conf   = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if ($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]) {
+            if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -687,15 +690,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
                      }
                   }
                }
-            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
-               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
-                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-                     $ldapaction = true;
-
-                  }
-
-               }
-            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+            }  else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -721,7 +716,9 @@ class PluginResourcesLinkAd extends CommonDBTM {
             } else if (isset($checklistaction)) {
                $text = __('You have to do all checklist in action before', 'resources');
             }
-            echo "<tr class='tab_bg_1 warning'><td colspan='4'>$text</td></tr>";
+            if (!empty($text)) {
+               echo "<tr class='tab_bg_1 warning'><td colspan='4'>$text</td></tr>";
+            }
          }
       }
    }
@@ -733,11 +730,12 @@ class PluginResourcesLinkAd extends CommonDBTM {
          if ($ticket->getFromDB($options['item']->fields["id"])) {
             $adconfig = new PluginResourcesAdconfig();
             $adconfig->getFromDB(1);
+            $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
             $linkad = new PluginResourcesLinkAd();
             $items  = new Item_Ticket();
             $conf   = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if ($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]) {
+            if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -754,15 +752,15 @@ class PluginResourcesLinkAd extends CommonDBTM {
                      }
                   }
                }
-            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
-               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
-                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-                     return true;
-
-                  }
-
-               }
-            } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+//            } else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["modification_categories_id"])) {
+//               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+//                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+//                     return true;
+//
+//                  }
+//
+//               }
+            } else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {

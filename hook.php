@@ -1705,11 +1705,12 @@ function plugin_pre_item_add_solutions($item) {
       if ($ticket->getFromDB($item->fields["items_id"])) {
          $adconfig = new PluginResourcesAdconfig();
          $adconfig->getFromDB(1);
+         $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
          $linkad = new PluginResourcesLinkAd();
          $items  = new Item_Ticket();
          $conf   = new PluginResourcesConfig();
          $conf->getFromDB(1);
-         if ($ticket->fields["itilcategories_id"] == $adconfig->fields["creation_categories_id"]) {
+         if (in_array($ticket->fields["itilcategories_id"], $adconfig->fields["creation_categories_id"])) {
             if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                if ($conf->fields["mandatory_adcreation"] == 1) {
                   if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -1730,17 +1731,17 @@ function plugin_pre_item_add_solutions($item) {
                   }
                }
             }
-         } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
-            if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
-               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-                  $item->input = null;
-                  Session::addMessageAfterRedirect(
-                     __('You have to perform the action on the LDAP directory before', 'resources'),
-                     false, ERROR);
-               }
-
-            }
-         } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["deletion_categories_id"]) {
+//         } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
+//            if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+//               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+//                  $item->input = null;
+//                  Session::addMessageAfterRedirect(
+//                     __('You have to perform the action on the LDAP directory before', 'resources'),
+//                     false, ERROR);
+//               }
+//
+//            }
+         } else if (in_array($ticket->fields["itilcategories_id"], $adconfig->fields["deletion_categories_id"])) {
             if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                if ($conf->fields["mandatory_adcreation"] == 1) {
                   if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
