@@ -117,7 +117,7 @@ class PluginResourcesMetademand extends CommonGLPI {
          $res .= '</br><span class="metademands_wizard_comments">' . __('If the value selected equals the value to check, the checklist in will be add', 'resources') . '</span>';
          $res .= '</td>';
          $res .= "<td>";
-         $res .= PluginResourcesLinkmetademand::showChecklistInDropdown($p["plugin_metademands_metademands_id"], $p['checklist_in'], false, $p["plugin_metademands_fields_id"]);
+         $res .= PluginResourcesLinkmetademand::showChecklistInDropdown($p["plugin_metademands_metademands_id"], $p['checklist_in'], $p["plugin_metademands_fields_id"], false);
          $res .= "</td></tr>";
 
          $res .= "<tr><td>";
@@ -125,7 +125,7 @@ class PluginResourcesMetademand extends CommonGLPI {
          $res .= '</br><span class="metademands_wizard_comments">' . __('If the value selected equals the value to check, the checklist out will be add', 'resources') . '</span>';
          $res .= '</td>';
          $res .= "<td>";
-         $res .= PluginResourcesLinkmetademand::showChecklistOutDropdown($p["plugin_metademands_metademands_id"], $p['checklist_out'], false, $p["plugin_metademands_fields_id"]);
+         $res .= PluginResourcesLinkmetademand::showChecklistOutDropdown($p["plugin_metademands_metademands_id"], $p['checklist_out'], $p["plugin_metademands_fields_id"], false);
          $res .= "</td></tr>";
       }
       return $res;

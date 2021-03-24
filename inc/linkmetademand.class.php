@@ -77,8 +77,15 @@ class PluginResourcesLinkmetademand extends CommonDBTM {
    }
 
 
-
-   static function showChecklistInDropdown($metademands_id, $selected_value, $display = true, $idF) {
+   /**
+    * @param      $metademands_id
+    * @param      $selected_value
+    * @param bool $display
+    * @param      $idF
+    *
+    * @return int|string
+    */
+   static function showChecklistInDropdown($metademands_id, $selected_value, $idF, $display = true) {
 
 
       $fields      = new self();
@@ -93,7 +100,15 @@ class PluginResourcesLinkmetademand extends CommonDBTM {
       return Dropdown::showFromArray('checklist_in[]', $data, ['value' => $selected_value, 'display' => $display]);
    }
 
-   static function showChecklistOutDropdown($metademands_id, $selected_value, $display = true, $idF) {
+   /**
+    * @param      $metademands_id
+    * @param      $selected_value
+    * @param bool $display
+    * @param      $idF
+    *
+    * @return int|string
+    */
+   static function showChecklistOutDropdown($metademands_id, $selected_value, $idF, $display = true) {
 
 
       $fields      = new self();
