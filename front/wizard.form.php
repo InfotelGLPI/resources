@@ -128,9 +128,22 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    } else {
       if ($resource->canCreate() && isset($_POST["second_step"])) {
          $newID = $resource->add($_POST);
+         if(isset($_POST['plugin_resources_employers_id'])){
+            $employee = new PluginResourcesEmployee();
+            $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+         }
       } else if ($resource->canCreate() && isset($_POST["second_step_update"])) {
          $resource->update($_POST);
          $newID = $_POST["id"];
+         if(isset($_POST['plugin_resources_employers_id'])) {
+            $employee = new PluginResourcesEmployee();
+            if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newID])) {
+               $employee->update(['id' => $employee->getID(), 'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+            } else {
+               $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+            }
+         }
+
       }
       //if employee right : next step
       if ($newID) {

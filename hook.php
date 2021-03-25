@@ -871,6 +871,7 @@ function plugin_resources_getDropdown() {
          PluginResourcesBudgetVolume::class       => PluginResourcesBudgetVolume::getTypeName(2),
          PluginResourcesHabilitation::class       => PluginResourcesHabilitation::getTypeName(2),
          PluginResourcesHabilitationLevel::class  => PluginResourcesHabilitationLevel::getTypeName(2),
+         PluginResourcesRole::class               => PluginResourcesRole::getTypeName(2),
          PluginResourcesCost::class               => PluginResourcesCost::getTypeName(2)];
    } else {
       return [];

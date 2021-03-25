@@ -256,6 +256,15 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Change checklists for resources during a contract change', 'resources');
+         echo "</td>";
+         echo "<td>";
+        Dropdown::showYesNo('reaffect_checklist_change',$this->fields['reaffect_checklist_change']);
+
+         echo "</td>";
+         echo "</tr>";
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";

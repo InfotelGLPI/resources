@@ -50,6 +50,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
    CONST CHANGE_RESOURCECOMPANY   = 9;
    CONST CHANGE_RESOURCEDEPARTMENT    = 10;
    CONST CHANGE_RESOURCEMATERIAL    = 11;
+   CONST CHANGE_RESOURCEITEMAPPLICATION    = 12;
 
 
    /**
@@ -68,6 +69,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $actions[self::CHANGE_RESOURCECOMPANY]          = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
       $actions[self::CHANGE_RESOURCEDEPARTMENT]          = self::getNameActions(self::CHANGE_RESOURCEDEPARTMENT);
       $actions[self::CHANGE_RESOURCEMATERIAL]          = self::getNameActions(self::CHANGE_RESOURCEMATERIAL);
+      $actions[self::CHANGE_RESOURCEITEMAPPLICATION]          = self::getNameActions(self::CHANGE_RESOURCEITEMAPPLICATION);
       $transfer = new PluginResourcesTransferEntity();
       $dataEntity = $transfer->find();
       if (is_array($dataEntity) && count($dataEntity) > 0) {
@@ -121,6 +123,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
             return __('Change department ','resources');
          case self::CHANGE_RESOURCEMATERIAL :
             return __('Change material','resources');
+         case self::CHANGE_RESOURCEITEMAPPLICATION :
+            return __('Add application','resources');
          default :
             return Dropdown::EMPTY_VALUE;
       }
@@ -506,6 +510,38 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
 
             break;
+         case self::CHANGE_RESOURCEITEMAPPLICATION:
+            echo "<div class=\"form-row\">";
+
+            echo "<div class=\"form-row\">";
+            echo "<div class=\"bt-feature col-md-4 \">";
+            echo __('New Application to add to the resource', 'resources');
+            echo "</div>";
+            echo "<div class=\"bt-feature col-md-4 \">";
+            $appliance = new Appliance();
+            $resource_item = new PluginResourcesResource_Item();
+
+            $resource_items = $resource_item->find(['plugin_resources_resources_id' => $resource->fields['id'], 'itemtype' => Appliance::getType()]);
+            $appliances = [];
+            foreach ($resource_items as $it){
+               array_push($appliances,$it["items_id"]);
+            }
+            $rand = Appliance::dropdown(['name'      => "appliances_id",
+                                                         'entity'    => $resource->fields["entities_id"],
+                                                         'right'     => 'all',
+                                                         'used'      => $appliances,
+                                                         'on_change' => 'plugin_resources_load_button_changeresources_application();'
+                                                        ]);
+
+            echo "<script type='text/javascript'>";
+            echo "function plugin_resources_load_button_changeresources_application(){";
+            $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEITEMAPPLICATION, 'appliances_id' => '__VALUE__'];
+            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_appliances_id' . $rand);
+            echo "}";
+            echo "</script>";
+            echo "</div>";
+            echo "</div>";
+            break;
       }
    }
 
@@ -585,6 +621,10 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             break;
          case self::CHANGE_RESOURCEMATERIAL :
+               $display = true;
+
+            break;
+         case self::CHANGE_RESOURCEITEMAPPLICATION :
                $display = true;
 
             break;
@@ -781,6 +821,17 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $data['content'] = $options['content'];
 
 
+            break;
+         case self::CHANGE_RESOURCEITEMAPPLICATION :
+            $data['name']    = __("Add application for", 'resources') . " " .
+                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content'] =  sprintf(__("The added appliance is %s ",'resources'), Dropdown::getDropdownName('glpi_appliances', $options['appliances_id']));
+            $resource_item = new PluginResourcesResource_Item();
+            $inputInfo = [];
+            $inputInfo['itemtype'] = Appliance::getType();
+            $inputInfo['items_id'] = $options['appliances_id'];
+            $inputInfo['plugin_resources_resources_id'] = $plugin_resources_resources_id;
+            $resource_item->add($inputInfo);
             break;
       }
 

@@ -33,6 +33,8 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `is_deleted` tinyint(1) NOT NULL default '0',
    `sensitize_security` tinyint(1) NOT NULL default '0',
    `read_chart` tinyint(1) NOT NULL default '0',
+   `plugin_resources_roles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_roles (id)',
+   `matricule` varchar(255) NOT NULL default '' ,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -731,6 +733,7 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `plugin_resources_resourcetemplates_id` INT(11) NULL DEFAULT '0',
    `plugin_resources_resourcestates_id_arrival` INT(11) NULL DEFAULT '0',
    `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
+   `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -846,6 +849,19 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0,'','');
+
+DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
+CREATE TABLE `glpi_plugin_resources_roles` (
+   `id` int(11) NOT NULL auto_increment,
+   `entities_id` int(11) NOT NULL default '0',
+   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `comment` text collate utf8_unicode_ci,
+   PRIMARY KEY  (`id`),
+   KEY `name` (`name`),
+   KEY `entities_id` (`entities_id`),
+   KEY `is_recursive` (`is_recursive`),
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','3','2','0');

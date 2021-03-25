@@ -264,6 +264,18 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
       $actions['hiddenfields_comment']['type']  = "yesonly";
       $actions['hiddenfields_comment']['force_actions'] = ['assign'];
 
+      $actions['hiddenfields_matricule']['name']  = __('Matricule','resources');
+      $actions['hiddenfields_matricule']['type']  = "yesonly";
+      $actions['hiddenfields_matricule']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_roles_id']['name']  = __('Role','resources');
+      $actions['hiddenfields_plugin_resources_roles_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_roles_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_employers_id']['name']  = PluginResourcesEmployer::getTypeName();
+      $actions['hiddenfields_plugin_resources_employers_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_employers_id']['force_actions'] = ['assign'];
+
       if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
 
          $actions['hiddenfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);

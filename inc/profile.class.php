@@ -70,6 +70,7 @@ class PluginResourcesProfile extends Profile {
             'plugin_resources_task' => 0,
             'plugin_resources_checklist' => 0,
             'plugin_resources_employee' => 0,
+            'plugin_resources_role' => 0,
             'plugin_resources_resting' => 0,
             'plugin_resources_holiday' => 0,
             'plugin_resources_habilitation' => 0,
@@ -78,7 +79,8 @@ class PluginResourcesProfile extends Profile {
             'plugin_resources_dropdown_public' => 0,
             'plugin_resources_import' => 0,
             'plugin_resources_open_ticket' => 0,
-            'plugin_resources_all' => 0
+            'plugin_resources_all' => 0,
+            'plugin_resources_employee_core_form' => 0
          ]);
          $prof->showForm($ID);
       }
@@ -96,6 +98,7 @@ class PluginResourcesProfile extends Profile {
          'plugin_resources_task' => ALLSTANDARDRIGHT,
          'plugin_resources_checklist' => ALLSTANDARDRIGHT,
          'plugin_resources_employee' => ALLSTANDARDRIGHT,
+         'plugin_resources_role' => ALLSTANDARDRIGHT,
          'plugin_resources_resting' => ALLSTANDARDRIGHT,
          'plugin_resources_holiday' => ALLSTANDARDRIGHT,
          'plugin_resources_habilitation' => ALLSTANDARDRIGHT,
@@ -104,7 +107,8 @@ class PluginResourcesProfile extends Profile {
          'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
          'plugin_resources_import' => 0,
          'plugin_resources_open_ticket' => 1,
-         'plugin_resources_all' => 1
+         'plugin_resources_all' => 1,
+         'plugin_resources_employee_core_form' => 0
       ], true);
 
    }
@@ -158,10 +162,12 @@ class PluginResourcesProfile extends Profile {
                                                                 'default_class' => 'tab_bg_2',
                                                                 'title'         => __('General')]);
 
+
+
       echo "<table class='tab_cadre_fixehov'>";
       echo "<tr class='tab_bg_1'><th colspan='4'>".__('Helpdesk')."</th></tr>\n";
 
-      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_resources_open_ticket', 'plugin_resources_all']);
+      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_resources_open_ticket', 'plugin_resources_all', 'plugin_resources_employee_core_form']);
       echo "<tr class='tab_bg_2'>";
       echo "<td width='20%'>".__('Associable items to a ticket')."</td>";
       echo "<td colspan='5'>";
@@ -174,6 +180,13 @@ class PluginResourcesProfile extends Profile {
       echo "<td colspan='5'>";
       Html::showCheckbox(['name'    => '_plugin_resources_all',
                                'checked' => $effective_rights['plugin_resources_all']]);
+      echo "</td></tr>\n";
+
+      echo "<tr class='tab_bg_2'>";
+      echo "<td width='20%'>".__('View employer in core form ', 'resources')."</td>";
+      echo "<td colspan='5'>";
+      Html::showCheckbox(['name'    => '_plugin_resources_employee_core_form',
+                          'checked' => $effective_rights['plugin_resources_employee_core_form']]);
       echo "</td></tr>\n";
 
       echo "</table>";
@@ -244,6 +257,12 @@ class PluginResourcesProfile extends Profile {
             'field' => 'plugin_resources_employee',
             'type' => 'general'
          ],
+         ['itemtype' => 'PluginResourcesRole',
+          'label' => _n('Role', 'Roles', 1, 'resources'),
+          'field' => 'plugin_resources_role',
+          'type' => 'general'
+         ],
+
          ['itemtype' => 'PluginResourcesResourceResting',
             'label' => _n('Non contract period management', 'Non contract periods management', 1, 'resources'),
             'field' => 'plugin_resources_resting',
@@ -290,6 +309,10 @@ class PluginResourcesProfile extends Profile {
          $rights[] = ['itemtype' => 'PluginResourcesResource',
                            'label'    =>  __('Associable items to a ticket'),
                            'field'    => 'plugin_resources_open_ticket'];
+
+         $rights[] = ['itemtype' => 'PluginResourcesResource',
+                      'label'    =>  __('Display employee in core form'),
+                      'field'    => 'plugin_resources_employee_core_form'];
       }
       if (!$all) {
          $customRights = [];
