@@ -248,11 +248,11 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourcebadge.form.php\">";
 
-      echo "<table class='plugin_resources_wizard' style='margin-top:1px;'>";
+      echo "<table class='' style='margin-top:1px;'>";
       echo "<tr>";
       echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
-      echo "<div class='plugin_resources_presentation_logo'>";
-      echo "<img src='../pics/newresting.png' alt='newresting' /></div>";
+//      echo "<div class='plugin_resources_presentation_logo'>";
+//      echo "<img src='../pics/newresting.png' alt='newresting' /></div>";
       echo "</td>";
 
       echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
@@ -332,7 +332,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<td class='left'>";
       $rand = PluginBadgesBadge::dropdown(['name'      => 'badges_id',
-                                           'condition' => "`users_id` IN ('" . implode("','", $users) . "')",
+                                           'condition' => ['users_id' => $users],
                                            'on_change' => 'plugin_resources_load_badge_restitution()'
                                           ]);
 

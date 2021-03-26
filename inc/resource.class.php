@@ -1832,6 +1832,7 @@ class PluginResourcesResource extends CommonDBTM {
       if (Session::getCurrentInterface() != 'central') {
          $options['candel'] = false;
       }
+      $options['colspan'] = 6;
       $this->showFormButtons($options);
 
       return true;
