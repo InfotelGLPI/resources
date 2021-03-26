@@ -63,7 +63,8 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = sprintf(__("%s %s have been added in the LDAP directory",'resources'),$_POST["firstname"],$_POST["name"]);
+
+      $content = sprintf(__('%1$s %2$s have been added in the LDAP directory','resources'),$_POST["firstname"],$_POST["name"]);
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
       $fup->add($toadd);
@@ -90,7 +91,7 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = sprintf(__("%s %s have been updated in the LDAP directory",'resources'),$_POST["firstname"],$_POST["name"]);
+      $content = sprintf(__('%1$s %2$s have been updated in the LDAP directory','resources'),$_POST["firstname"],$_POST["name"]);
       $content .= __("Data changed",'resources')." <br />";
       foreach ($res[1] as $key => $oldData){
          $i =1;
@@ -137,7 +138,7 @@ if (isset($_POST["add"])) {
                 'itemtype' => 'Ticket',
                 'is_private' => 1];
 
-      $content = sprintf(__("%s %s have been disabled and moved in the LDAP directory",'resources'),$_POST["firstname"],$_POST["name"]);
+      $content = sprintf(__('%1$s %2$s have been disabled and moved in the LDAP directory','resources'),$_POST["firstname"],$_POST["name"]);
       $toadd["content"] = htmlentities($content,ENT_NOQUOTES);
 
       $fup->add($toadd);
