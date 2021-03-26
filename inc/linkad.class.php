@@ -444,16 +444,16 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
             if(!$islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["creation_categories_id"]) && $logAvailable){
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Create user in AD') . "' name='createAD'></td>";
+               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Create user in AD','resources') . "' name='createAD'></td>";
             }
             if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["modification_categories_id"]) ){
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Modify user in AD') . "' name='updateAD'></td>";
+               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Modify user in AD','resources') . "' name='updateAD'></td>";
             }
 
             if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["deletion_categories_id"]) ){
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Disable user in AD') . "' name='disableAD'></td>";
+               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Disable user in AD','resources') . "' name='disableAD'></td>";
             }
             echo "</tr>";
          }
