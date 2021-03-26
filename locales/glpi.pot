@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-26 10:36+0000\n"
+"POT-Creation-Date: 2021-03-26 10:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,12 +177,22 @@ msgstr ""
 msgid "No advanced request found"
 msgstr ""
 
+#: front/linkad.form.php:66
+#, php-format
+msgid "%s %s have been added in the LDAP directory"
+msgstr ""
+
 #: front/linkad.form.php:70
 msgid "the user has been added to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:73
 msgid "the user has not been added to the LDAP directory"
+msgstr ""
+
+#: front/linkad.form.php:93
+#, php-format
+msgid "%s %s have been updated in the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:94
@@ -195,6 +205,11 @@ msgstr ""
 
 #: front/linkad.form.php:121
 msgid "the user has not been updated to the LDAP directory"
+msgstr ""
+
+#: front/linkad.form.php:140
+#, php-format
+msgid "%s %s have been disabled and moved in the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:144
