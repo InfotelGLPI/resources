@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-25 16:16+0000\n"
+"POT-Creation-Date: 2021-03-26 08:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -424,7 +424,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/checklist.class.php:317 inc/checklist.class.php:690
-#: inc/resource_change.class.php:1111 inc/resourcebadge.class.php:437
+#: inc/resource_change.class.php:1112 inc/resourcebadge.class.php:437
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -1756,7 +1756,7 @@ msgstr ""
 msgid "Change department "
 msgstr ""
 
-#: inc/resource_change.class.php:125 inc/resource_change.class.php:496
+#: inc/resource_change.class.php:125 inc/resource_change.class.php:497
 msgid "Change material"
 msgstr ""
 
@@ -1768,15 +1768,15 @@ msgstr ""
 msgid "Please select a resource"
 msgstr ""
 
-#: inc/resource_change.class.php:157 inc/resource_change.class.php:684
+#: inc/resource_change.class.php:157 inc/resource_change.class.php:685
 msgid "Manager for the current resource"
 msgstr ""
 
-#: inc/resource_change.class.php:166 inc/resource_change.class.php:686
+#: inc/resource_change.class.php:166 inc/resource_change.class.php:687
 msgid "New resource manager"
 msgstr ""
 
-#: inc/resource_change.class.php:191 inc/resource_change.class.php:697
+#: inc/resource_change.class.php:191 inc/resource_change.class.php:698
 msgid "Sales manager for the current resource"
 msgstr ""
 
@@ -1784,27 +1784,27 @@ msgstr ""
 msgid "New resource sales manager"
 msgstr ""
 
-#: inc/resource_change.class.php:225 inc/resource_change.class.php:711
+#: inc/resource_change.class.php:225 inc/resource_change.class.php:712
 msgid "Current access profile of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:246 inc/resource_change.class.php:725
+#: inc/resource_change.class.php:246 inc/resource_change.class.php:726
 msgid "New access profile of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:284 inc/resource_change.class.php:737
+#: inc/resource_change.class.php:284 inc/resource_change.class.php:738
 msgid "Current contract type of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:295 inc/resource_change.class.php:740
+#: inc/resource_change.class.php:295 inc/resource_change.class.php:741
 msgid "New type of contract"
 msgstr ""
 
-#: inc/resource_change.class.php:323 inc/resource_change.class.php:752
+#: inc/resource_change.class.php:323 inc/resource_change.class.php:753
 msgid "Current agency of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:332 inc/resource_change.class.php:754
+#: inc/resource_change.class.php:332 inc/resource_change.class.php:755
 msgid "New resource agency"
 msgstr ""
 
@@ -1812,105 +1812,104 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: inc/resource_change.class.php:426 inc/resource_change.class.php:790
+#: inc/resource_change.class.php:426 inc/resource_change.class.php:791
 msgid "Current company of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:437 inc/resource_change.class.php:471
-#: inc/resource_change.class.php:792
+#: inc/resource_change.class.php:437 inc/resource_change.class.php:793
 msgid "New resource company"
 msgstr ""
 
-#: inc/resource_change.class.php:460 inc/resource_change.class.php:809
+#: inc/resource_change.class.php:460 inc/resource_change.class.php:810
 msgid "Current department of the resource"
 msgstr ""
 
-#: inc/resource_change.class.php:518
-msgid "New Application to add to the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:635
-msgid "Starting change"
-msgstr ""
-
-#: inc/resource_change.class.php:680 inc/resource_change.class.php:682
-msgid "Change manager for"
-msgstr ""
-
-#: inc/resource_change.class.php:693 inc/resource_change.class.php:695
-msgid "Change of sales manager for"
-msgstr ""
-
-#: inc/resource_change.class.php:699
-msgid "New sales manager for the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:706 inc/resource_change.class.php:708
-msgid "Change the access profile for"
-msgstr ""
-
-#: inc/resource_change.class.php:733 inc/resource_change.class.php:735
-msgid "Change the type of contract for"
-msgstr ""
-
-#: inc/resource_change.class.php:748 inc/resource_change.class.php:750
-msgid "Change of agency for"
-msgstr ""
-
-#: inc/resource_change.class.php:761 inc/resource_change.class.php:763
-msgid "Change information for"
-msgstr ""
-
-#: inc/resource_change.class.php:765
-msgid "Current name of the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:767
-msgid "New resource name"
-msgstr ""
-
-#: inc/resource_change.class.php:769
-msgid "Current firstname of the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:771
-msgid "New resource firstname"
-msgstr ""
-
-#: inc/resource_change.class.php:773
-msgid "Current departure date of the resource"
-msgstr ""
-
-#: inc/resource_change.class.php:775
-msgid "New resource departure date"
-msgstr ""
-
-#: inc/resource_change.class.php:784 inc/resource_change.class.php:786
-msgid "Change of company for"
-msgstr ""
-
-#: inc/resource_change.class.php:803 inc/resource_change.class.php:805
-msgid "Change of department for"
-msgstr ""
-
-#: inc/resource_change.class.php:811
+#: inc/resource_change.class.php:471 inc/resource_change.class.php:812
 msgid "New resource department"
 msgstr ""
 
-#: inc/resource_change.class.php:819
+#: inc/resource_change.class.php:519
+msgid "New Application to add to the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:636
+msgid "Starting change"
+msgstr ""
+
+#: inc/resource_change.class.php:681 inc/resource_change.class.php:683
+msgid "Change manager for"
+msgstr ""
+
+#: inc/resource_change.class.php:694 inc/resource_change.class.php:696
+msgid "Change of sales manager for"
+msgstr ""
+
+#: inc/resource_change.class.php:700
+msgid "New sales manager for the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:707 inc/resource_change.class.php:709
+msgid "Change the access profile for"
+msgstr ""
+
+#: inc/resource_change.class.php:734 inc/resource_change.class.php:736
+msgid "Change the type of contract for"
+msgstr ""
+
+#: inc/resource_change.class.php:749 inc/resource_change.class.php:751
+msgid "Change of agency for"
+msgstr ""
+
+#: inc/resource_change.class.php:762 inc/resource_change.class.php:764
+msgid "Change information for"
+msgstr ""
+
+#: inc/resource_change.class.php:766
+msgid "Current name of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:768
+msgid "New resource name"
+msgstr ""
+
+#: inc/resource_change.class.php:770
+msgid "Current firstname of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:772
+msgid "New resource firstname"
+msgstr ""
+
+#: inc/resource_change.class.php:774
+msgid "Current departure date of the resource"
+msgstr ""
+
+#: inc/resource_change.class.php:776
+msgid "New resource departure date"
+msgstr ""
+
+#: inc/resource_change.class.php:785 inc/resource_change.class.php:787
+msgid "Change of company for"
+msgstr ""
+
+#: inc/resource_change.class.php:804 inc/resource_change.class.php:806
+msgid "Change of department for"
+msgstr ""
+
+#: inc/resource_change.class.php:820
 msgid "Change material for"
 msgstr ""
 
-#: inc/resource_change.class.php:826
+#: inc/resource_change.class.php:827
 msgid "Add application for"
 msgstr ""
 
-#: inc/resource_change.class.php:828
+#: inc/resource_change.class.php:829
 #, php-format
 msgid "The added appliance is %s "
 msgstr ""
 
-#: inc/resource_change.class.php:861 inc/resource_change.class.php:886
+#: inc/resource_change.class.php:862 inc/resource_change.class.php:887
 msgid "Managing change actions"
 msgstr ""
 
