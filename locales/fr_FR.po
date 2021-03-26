@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-26 10:41+0000\n"
+"POT-Creation-Date: 2021-03-26 13:27+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Alban Lesellier <alban.lesellier@infotel.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -187,46 +187,46 @@ msgstr "Merci d'activer le plugin metademand"
 msgid "No advanced request found"
 msgstr "Aucune demande avancée n'a été trouvée"
 
-#: front/linkad.form.php:66
+#: front/linkad.form.php:67
 #, php-format
-msgid "%s %s have been added in the LDAP directory"
-msgstr "%s%s a été ajouté dans l'annuaire LDAP"
+msgid "%1$s %2$s have been added in the LDAP directory"
+msgstr "%1$s %2$s a été ajouté dans l'annuaire LDAP"
 
-#: front/linkad.form.php:70
+#: front/linkad.form.php:71
 msgid "the user has been added to the LDAP directory"
 msgstr "l'utilisateur a été ajouté dans l'annuaire LDAP"
 
-#: front/linkad.form.php:73
+#: front/linkad.form.php:74
 msgid "the user has not been added to the LDAP directory"
 msgstr "l'utilisateur n'a pas été ajouté à l'annuaire LDAP"
 
-#: front/linkad.form.php:93
-#, php-format
-msgid "%s %s have been updated in the LDAP directory"
-msgstr "%s%s a été mis à jour dans l'annuaire LDAP"
-
 #: front/linkad.form.php:94
+#, php-format
+msgid "%1$s %2$s have been updated in the LDAP directory"
+msgstr "%1$s %2$s a été mis à jour dans l'annuaire LDAP"
+
+#: front/linkad.form.php:95
 msgid "Data changed"
 msgstr "Données modifiées"
 
-#: front/linkad.form.php:118
+#: front/linkad.form.php:119
 msgid "the user has been updated to the LDAP directory"
 msgstr "l'utilisateur a été mis à jour dans l'annuaire LDAP"
 
-#: front/linkad.form.php:121
+#: front/linkad.form.php:122
 msgid "the user has not been updated to the LDAP directory"
 msgstr "l'utilisateur n'a pas été mis à jour dans l'annuaire LDAP"
 
-#: front/linkad.form.php:140
+#: front/linkad.form.php:141
 #, php-format
-msgid "%s %s have been disabled and moved in the LDAP directory"
-msgstr "%s%sa été désactivé et déplacé dans l'annuaire LDAP"
+msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
+msgstr "%1$s %2$s a été désactivé et déplacé dans l'annuaire LDAP "
 
-#: front/linkad.form.php:144
+#: front/linkad.form.php:145
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr "l'utilisateur a été désactivé et déplacé dans l'annuaire LDAP"
 
-#: front/linkad.form.php:147
+#: front/linkad.form.php:148
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr "l'utilisateur n'a pas été désactivé et déplacé dans l'annuaire LDAP"
 
