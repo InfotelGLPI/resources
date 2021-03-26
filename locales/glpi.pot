@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-26 17:31+0000\n"
+"POT-Creation-Date: 2021-03-26 17:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Others needs"
 msgstr ""
 
-#: hook.php:921 inc/notificationtargetresource.class.php:407
+#: hook.php:922 inc/notificationtargetresource.class.php:407
 #: inc/notificationtargetresource.class.php:486
 #: inc/notificationtargetresource.class.php:629
 #: inc/notificationtargetresource.class.php:683
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Declared as leaving"
 msgstr ""
 
-#: hook.php:926 inc/department.class.php:84 inc/department.class.php:116
+#: hook.php:927 inc/department.class.php:84 inc/department.class.php:116
 #: inc/employer.class.php:48 inc/employment.class.php:204
 #: inc/employment.class.php:285
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:64
@@ -70,13 +70,13 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:930 inc/client.class.php:46
+#: hook.php:931 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:935 inc/config.class.php:134 inc/directory.class.php:198
+#: hook.php:936 inc/directory.class.php:198
 #: inc/notificationtargetresource.class.php:92
 #: inc/notificationtargetresource.class.php:395
 #: inc/notificationtargetresource.class.php:474
@@ -93,7 +93,7 @@ msgstr[1] ""
 msgid "Resource manager"
 msgstr ""
 
-#: hook.php:947 inc/notificationtargetresource.class.php:95
+#: hook.php:948 inc/notificationtargetresource.class.php:95
 #: inc/notificationtargetresource.class.php:406
 #: inc/notificationtargetresource.class.php:485
 #: inc/notificationtargetresource.class.php:636
@@ -104,8 +104,7 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:953 inc/config.class.php:160
-#: inc/notificationtargetresource.class.php:93
+#: hook.php:954 inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
 #: inc/notificationtargetresource.class.php:396
 #: inc/notificationtargetresource.class.php:475
@@ -118,27 +117,27 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1447 inc/resource_item.class.php:903
+#: hook.php:1448 inc/resource_item.class.php:903
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:1696
+#: hook.php:1697
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1726 hook.php:1757 inc/linkad.class.php:715
+#: hook.php:1727 hook.php:1758 inc/linkad.class.php:720
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:1736 inc/linkad.class.php:717
+#: hook.php:1737 inc/linkad.class.php:722
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:1767
+#: hook.php:1768
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: setup.php:199 inc/metademand.class.php:69
+#: setup.php:195 inc/metademand.class.php:69
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
@@ -307,7 +306,7 @@ msgid "Field mapping"
 msgstr ""
 
 #: inc/adconfig.class.php:250 inc/department.class.php:50
-#: inc/linkad.class.php:380 inc/linkad.class.php:606 inc/resource.class.php:79
+#: inc/linkad.class.php:385 inc/linkad.class.php:611 inc/resource.class.php:79
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] ""
@@ -315,7 +314,7 @@ msgstr[1] ""
 
 #: inc/adconfig.class.php:309 inc/checklist.class.php:1089
 #: inc/dashboard.class.php:138 inc/directory.class.php:215
-#: inc/linkad.class.php:608 inc/notificationtargetresource.class.php:400
+#: inc/linkad.class.php:613 inc/notificationtargetresource.class.php:400
 #: inc/notificationtargetresource.class.php:479
 #: inc/notificationtargetresource.class.php:619
 #: inc/notificationtargetresource.class.php:680
@@ -340,7 +339,7 @@ msgstr[1] ""
 msgid "Departure date"
 msgstr ""
 
-#: inc/adconfig.class.php:329 inc/linkad.class.php:437 inc/linkad.class.php:603
+#: inc/adconfig.class.php:329 inc/linkad.class.php:442 inc/linkad.class.php:608
 #: inc/profile.class.php:261 inc/resource.class.php:1562 inc/role.class.php:48
 #: inc/rulecontracttype.class.php:267 inc/rulecontracttypehidden.class.php:271
 msgid "Role"
@@ -455,18 +454,18 @@ msgstr ""
 msgid "At the transfer of a resource"
 msgstr ""
 
-#: inc/checklist.class.php:404 inc/linkad.class.php:206
+#: inc/checklist.class.php:404 inc/linkad.class.php:211
 msgid "Create checklists"
 msgstr ""
 
 #: inc/checklist.class.php:528 inc/checklist.class.php:759
 #: inc/checklistconfig.class.php:118 inc/checklistconfig.class.php:153
-#: inc/linkad.class.php:277
+#: inc/linkad.class.php:282
 msgid "Important"
 msgstr ""
 
 #: inc/checklist.class.php:537 inc/checklistconfig.class.php:161
-#: inc/linkad.class.php:286
+#: inc/linkad.class.php:291
 msgid "Link"
 msgstr ""
 
@@ -668,6 +667,14 @@ msgstr ""
 
 #: inc/config.class.php:125 inc/profile.class.php:209 inc/profile.class.php:292
 msgid "Import external"
+msgstr ""
+
+#: inc/config.class.php:134
+msgid "Resource managers selection : only these users with these profiles"
+msgstr ""
+
+#: inc/config.class.php:160
+msgid "Sales managers selection : only these users with these profiles"
 msgstr ""
 
 #: inc/config.class.php:179
@@ -1073,47 +1080,47 @@ msgstr[1] ""
 msgid "Update LDAP directory"
 msgstr ""
 
-#: inc/linkad.class.php:369
+#: inc/linkad.class.php:374
 msgid "Resources data"
 msgstr ""
 
-#: inc/linkad.class.php:393 inc/linkad.class.php:596 inc/resource.class.php:73
+#: inc/linkad.class.php:398 inc/linkad.class.php:601 inc/resource.class.php:73
 #: inc/resource_change.class.php:386
 msgid "Firstname"
 msgstr ""
 
-#: inc/linkad.class.php:401
+#: inc/linkad.class.php:406
 msgid "Phone"
 msgstr ""
 
-#: inc/linkad.class.php:411 inc/linkad.class.php:605
+#: inc/linkad.class.php:416 inc/linkad.class.php:610
 msgid "Company"
 msgstr ""
 
-#: inc/linkad.class.php:433
+#: inc/linkad.class.php:438
 msgid "Cell phone"
 msgstr ""
 
-#: inc/linkad.class.php:447
+#: inc/linkad.class.php:452
 msgctxt "button"
 msgid "Create user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:451
+#: inc/linkad.class.php:456
 msgctxt "button"
 msgid "Modify user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:456
+#: inc/linkad.class.php:461
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:490
+#: inc/linkad.class.php:495
 msgid "existing login"
 msgstr ""
 
-#: inc/linkad.class.php:713
+#: inc/linkad.class.php:718
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
