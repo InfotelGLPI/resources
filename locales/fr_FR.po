@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-26 13:27+0000\n"
+"POT-Creation-Date: 2021-03-26 14:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Alban Lesellier <alban.lesellier@infotel.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -1118,6 +1118,21 @@ msgstr "Société"
 #: inc/linkad.class.php:433
 msgid "Cell phone"
 msgstr "Téléphone portable"
+
+#: inc/linkad.class.php:447
+msgctxt "button"
+msgid "Create user in AD"
+msgstr "Créer l'utilisateur dans l'annuaire"
+
+#: inc/linkad.class.php:451
+msgctxt "button"
+msgid "Modify user in AD"
+msgstr "Modifier l'utilisateur dans l'annuaire"
+
+#: inc/linkad.class.php:456
+msgctxt "button"
+msgid "Disable user in AD"
+msgstr "Désactiver l'utilisateur dans l'annuaire"
 
 #: inc/linkad.class.php:490
 msgid "existing login"
