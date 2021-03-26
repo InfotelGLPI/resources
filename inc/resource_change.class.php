@@ -468,12 +468,13 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
-            echo __('New resource company', 'resources');
+            echo __('New resource department', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesDepartment::dropdown(['name'      => "department_id",
                                                          'entity'    => $resource->fields["entities_id"],
-                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
+// TODO relink departement with resource employer and department with no employer
+//                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
                                                        'right'     => 'all',
                                                        'used'      => [$resource->getField('plugin_resources_departments_id')],
                                                        'on_change' => 'plugin_resources_load_button_changeresources_department();'
