@@ -611,7 +611,8 @@ function plugin_resources_uninstall() {
       "glpi_plugin_resources_importresourcedatas",
       "glpi_plugin_resources_importresources",
       "glpi_plugin_resources_resourceimports",
-      "glpi_plugin_resources_adconfigs"
+      "glpi_plugin_resources_adconfigs",
+      "glpi_plugin_resources_roles"
    ];
 
    foreach ($tables as $table) {

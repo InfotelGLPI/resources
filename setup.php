@@ -46,9 +46,9 @@ function plugin_init_resources() {
 
    if (Session::getLoginUserID()) {
 
-      $PLUGIN_HOOKS['pre_item_form']['resources'] = [PluginResourcesLinkAd::class, 'messageSolution'];
+      $PLUGIN_HOOKS['pre_item_form']['resources']  = [PluginResourcesLinkAd::class, 'messageSolution'];
       $PLUGIN_HOOKS['post_item_form']['resources'] = [PluginResourcesLinkAd::class, 'deleteButtton'];
-      $noupdate = false;
+      $noupdate                                    = false;
       if (Session::getCurrentInterface() != 'central') {
          $noupdate = true;
       }
@@ -104,8 +104,8 @@ function plugin_init_resources() {
       }
 
       if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveright("plugin_resources_employee", UPDATE))
-           && !Session::haveRight("plugin_servicecatalog", READ)) {
+           || Session::haveright("plugin_resources_employee", UPDATE))
+          && !Session::haveRight("plugin_servicecatalog", READ)) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
       }
 
@@ -133,8 +133,8 @@ function plugin_init_resources() {
       }
 
       if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveright("plugin_resources_employee", UPDATE))
-           && !Session::haveRight("plugin_servicecatalog", READ)) {
+           || Session::haveright("plugin_resources_employee", UPDATE))
+          && !Session::haveRight("plugin_servicecatalog", READ)) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
       Plugin::registerClass(PluginResourcesLinkAd::class, ['addtabon' => 'Ticket']);
@@ -186,10 +186,6 @@ function plugin_init_resources() {
 }
 
 // Get the name and the version of the plugin - Needed
-
-/**
- * @return array
- */
 /**
  * @return array
  */
@@ -238,18 +234,10 @@ function plugin_resources_check_prerequisites() {
 /**
  * @return bool
  */
-/**
- * @return bool
- */
 function plugin_resources_check_config() {
    return true;
 }
 
-/**
- * @param $types
- *
- * @return mixed
- */
 /**
  * @param $types
  *

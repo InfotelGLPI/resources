@@ -114,7 +114,12 @@ class PluginResourcesLinkAd extends CommonDBTM {
                   $adConfig = new PluginResourcesAdconfig();
                   $adConfig->getFromDB(1);
                   $adConfig->fields = $adConfig->prepareFields($adConfig->fields);
-                  if (in_array($item->getField('itilcategories_id') , $adConfig->getField("creation_categories_id")) || in_array($item->getField('itilcategories_id') , $adConfig->getField("modification_categories_id")) || in_array($item->getField('itilcategories_id') , $adConfig->getField("deletion_categories_id")) ){
+                  if ((is_array($adConfig->fields["creation_categories_id"])
+                      && in_array($item->getField('itilcategories_id') , $adConfig->getField("creation_categories_id")))
+                      || (is_array($adConfig->fields["modification_categories_id"])
+                          && in_array($item->getField('itilcategories_id') , $adConfig->getField("modification_categories_id")))
+                      || (is_array($adConfig->fields["deletion_categories_id"])
+                          && in_array($item->getField('itilcategories_id') , $adConfig->getField("deletion_categories_id")))){
                      if ($_SESSION['glpishow_count_on_tabs']) {
                         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
                      }

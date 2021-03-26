@@ -131,7 +131,7 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('Resource manager', 'resources');
+         echo __('Resource managers selection : only these users with these profiles', 'resources');
          echo "</td>";
          echo "<td>";
          echo Html::hidden("resource_manager");
@@ -157,7 +157,7 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __('Sales manager', 'resources');
+         echo __('Sales managers selection : only these users with these profiles', 'resources');
          echo "</td>";
          echo "<td>";
          echo Html::hidden("sales_manager");
