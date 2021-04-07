@@ -34,9 +34,9 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `auth_id` int(11) NOT NULL default '0',
    `login` varchar(255) collate utf8_unicode_ci default '',
    `password` varchar(255) collate utf8_unicode_ci default '',
-   `creation_categories_id` TEXT NOT NULL default '[]',
-   `modification_categories_id` TEXT NOT NULL default '[]',
-   `deletion_categories_id` TEXT NOT NULL default '[]',
+   `creation_categories_id` TEXT NOT NULL ,
+   `modification_categories_id` TEXT NOT NULL ,
+   `deletion_categories_id` TEXT NOT NULL ,
    `logAD` varchar(255) collate utf8_unicode_ci default '',
    `nameAD` varchar(255) collate utf8_unicode_ci default '',
    `phoneAD` varchar(255) collate utf8_unicode_ci default NULL,
@@ -56,8 +56,8 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0);
 
-ALTER TABLE `glpi_plugin_resources_configs` ADD `creat_ticket_departure` tinyint(1) NOT NULL default '0' AFTER `sales_manager`;
-ALTER TABLE `glpi_plugin_resources_configs` ADD `categories_id` INT(11) NULL DEFAULT '0' AFTER `creat_ticket_departure`;
+ALTER TABLE `glpi_plugin_resources_configs` ADD `create_ticket_departure` tinyint(1) NOT NULL default '0' AFTER `sales_manager`;
+ALTER TABLE `glpi_plugin_resources_configs` ADD `categories_id` INT(11) NULL DEFAULT '0' AFTER `create_ticket_departure`;
 
 ALTER TABLE `glpi_plugin_resources_checklistconfigs` ADD `itemtype` VARCHAR(255) NOT NULL DEFAULT '' AFTER `comment`;
 ALTER TABLE `glpi_plugin_resources_checklistconfigs` ADD `items` int(11) NOT NULL default '0' AFTER `itemtype`;

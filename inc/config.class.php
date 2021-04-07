@@ -180,7 +180,7 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "<td>";
 
-         Dropdown::showYesNo("creat_ticket_departure",$this->fields["creat_ticket_departure"]);
+         Dropdown::showYesNo("create_ticket_departure",$this->fields["create_ticket_departure"]);
 
          echo "</td>";
          echo "</tr>";
