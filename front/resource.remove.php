@@ -99,7 +99,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
       }
       $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]));
       $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
-      $ticket->fields["content"] = Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]).__("leave on","resources")." ".$input["date_declaration_leaving"];
+      $ticket->fields["content"] = Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"])." ".__("leave on","resources")." ".Html::convDateTime($input["date_declaration_leaving"]);
       $ticket->fields["type"] = Ticket::DEMAND_TYPE;
       $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
       $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];
