@@ -63,9 +63,9 @@ $date      = date("Y-m-d");
 $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
                  `glpi_plugin_resources_resources`.`name` as resource_name,
                  `glpi_plugin_resources_resources`.`firstname`,
-                 `glpi_plugin_resources_ranks`.`name` AS rank,
-                 `glpi_plugin_resources_resourcesituations`.`name` AS situation,
-                 `glpi_plugin_resources_resourcestates`.`name` AS state,
+                 `glpi_plugin_resources_ranks`.`name` as `rank`,
+                 `glpi_plugin_resources_resourcesituations`.`name` as situation,
+                 `glpi_plugin_resources_resourcestates`.`name` as state,
                  `glpi_plugin_resources_resources`.`date_begin`,
                  `glpi_plugin_resources_resources`.`date_end`
           FROM `glpi_plugin_resources_resources`
