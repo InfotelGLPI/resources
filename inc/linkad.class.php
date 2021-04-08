@@ -678,7 +678,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $items  = new Item_Ticket();
             $conf   = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
+            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -695,7 +695,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
                      }
                   }
                }
-            }  else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
+            }  else if ( is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -740,7 +740,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $items  = new Item_Ticket();
             $conf   = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
+            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -765,7 +765,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
 //                  }
 //
 //               }
-            } else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
+            } else if (is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {

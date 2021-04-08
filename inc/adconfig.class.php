@@ -419,12 +419,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
    function encodeSubtypes($input) {
       if (!empty($input['creation_categories_id'])) {
          $input['creation_categories_id'] = json_encode(array_values($input['creation_categories_id']));
+      } else {
+         $input['creation_categories_id'] = json_encode([]);
       }
       if (!empty($input['modification_categories_id'])) {
          $input['modification_categories_id'] = json_encode(array_values($input['modification_categories_id']));
+      }else {
+         $input['modification_categories_id'] = json_encode([]);
       }
       if (!empty($input['deletion_categories_id'])) {
          $input['deletion_categories_id'] = json_encode(array_values($input['deletion_categories_id']));
+      }else {
+         $input['deletion_categories_id'] = json_encode([]);
       }
 
       return $input;
