@@ -133,11 +133,13 @@ class PluginResourcesImport extends CommonDBTM {
     * @return bool
     */
    function showForm($ID, $options = []) {
+
       if (!$this->canView()) {
          return false;
       }
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
+
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
@@ -147,11 +149,13 @@ class PluginResourcesImport extends CommonDBTM {
       echo "<td>";
       echo "<textarea cols='60' rows='6' name='comment' >" . $this->fields["comment"] . "</textarea>";
       echo "</td></tr>";
+
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Active') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo "</td><td colspan='2'></td></tr>";
+
       $this->showFormButtons($options);
       Html::closeForm();
       return true;

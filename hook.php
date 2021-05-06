@@ -271,7 +271,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.6.4.sql");
    }
    //Version 2.7.1
-   if (!$DB->fieldExists("glpi_plugin_resources_departments", "plugin_resources_employers_id")) {
+   if (!$DB->tableExists("glpi_plugin_resources_adconfigs")) {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.1.sql");
    }
    //Version 2.7.2

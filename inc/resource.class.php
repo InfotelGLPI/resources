@@ -68,6 +68,9 @@ class PluginResourcesResource extends CommonDBTM {
       return _n('Human resource', 'Human resources', $nb, 'resources');
    }
 
+   /**
+    * @return array
+    */
    static function getDataNames() {
       return [
          __("Firstname", "resources"),
@@ -84,9 +87,15 @@ class PluginResourcesResource extends CommonDBTM {
       ];
    }
 
+   /**
+    * @param $dataNameID
+    *
+    * @return string|null
+    */
    static function getResourceColumnNameFromDataNameID($dataNameID) {
 
       $dataNames = [
+//         "id",
          "firstname",
          "name",
          "plugin_resources_contracttypes_id",
@@ -100,12 +109,15 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (!array_key_exists($dataNameID, $dataNames)) {
-         Html::displayErrorAndDie("Resource column name not found");
+         Html::displayErrorAndDie(__("Resource column $dataNameID not found", "resources"));
          return null;
       }
       return $dataNames[$dataNameID];
    }
 
+   /**
+    * @return string[]
+    */
    static function getDataTypes() {
 
       $dataTypes = [
@@ -130,7 +142,7 @@ class PluginResourcesResource extends CommonDBTM {
       $dataTypes = self::getDataTypes();
 
       if (!array_key_exists($dataNameId, $dataTypes)) {
-         Html::displayErrorAndDie("Data Type not found");
+         Html::displayErrorAndDie(__("Data Type not found", "resources"));
          return null;
       }
       return $dataTypes[$dataNameId];
@@ -153,7 +165,7 @@ class PluginResourcesResource extends CommonDBTM {
       ];
 
       if (!array_key_exists($dataNameId, $columnNames)) {
-         Html::displayErrorAndDie("Resource column name not found");
+         Html::displayErrorAndDie(__("Resource column name not found", "resources"));
          return null;
       }
 

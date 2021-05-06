@@ -154,13 +154,20 @@ function plugin_init_resources() {
       }
 
       // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_css']['resources']        = ["css/resources.css"];
-      $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
-                                                      "lib/plugins/jquery.address.js",
-                                                      "lib/plugins/jquery.mousewheel.js",
-                                                      "lib/plugins/jquery.scroll.js",
-                                                      "lib/resources_card.js",
-      ];
+      if (Session::haveRight("plugin_resources", READ)) {
+         $PLUGIN_HOOKS['add_css']['resources']        = ["css/resources.css"];
+         $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
+                                                         "lib/plugins/jquery.address.js",
+                                                         "lib/plugins/jquery.mousewheel.js",
+                                                         "lib/plugins/jquery.scroll.js",
+         ];
+
+         if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
+            $PLUGIN_HOOKS['add_javascript']['resources'][] = "lib/resources_card.js";
+            $PLUGIN_HOOKS['add_css']['resources'][]        = "css/resourcecard.css";
+         }
+      }
+
 
       //TODO : Check
       $PLUGIN_HOOKS['plugin_pdf']['PluginResourcesResource'] = 'PluginResourcesResourcePDF';
