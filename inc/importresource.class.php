@@ -448,12 +448,28 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       // Verify file compatibility
       if (is_null($importId)) {
+         Session::addMessageAfterRedirect(__('The file does not match any template','resources'));
          return;
       }
 
-      if (!document::moveDocument($params, $params['_filename'][0])) {
-         die('ERROR WHEN MOVING FILE !');
-      }
+      $fullpath = GLPI_TMP_DIR."/".$params['_filename'][0];
+      $filename = str_replace($params['_prefix_filename'], '', $params['_filename'][0]);
+      $origin_filename = $filename;
+      $exist = false;
+      $i =1;
+      do {
+         if(is_file(GLPI_PLUGIN_DOC_DIR."/resources/import/verify/".$filename)){
+            $exist = true;
+            $filename = $i."_".$origin_filename;
+            $i++;
+         }else {
+            $exist = false;
+         }
+      } while ($exist == true);
+
+
+
+      Document::renameForce($fullpath,GLPI_PLUGIN_DOC_DIR."/resources/import/verify/".$filename);
    }
 
    /**
@@ -613,11 +629,11 @@ class PluginResourcesImportResource extends CommonDBTM {
       switch ($params['type']) {
          case self::VERIFY_FILE:
          case self::VERIFY_GLPI:
-            if (self::FILE_IMPORTER) {
+//            if (self::FILE_IMPORTER) {
                echo '<td>';
                self::showFileImporter();
                echo '</td>';
-            }
+//            }
             echo '<td>';
             self::showFileSelector($params);
             echo '</td>';
@@ -711,6 +727,16 @@ class PluginResourcesImportResource extends CommonDBTM {
                break;
          }
          echo '</div>';
+         echo '</td>';
+         echo '<td>';
+         echo "<form name='import_file_form' id='import_file_form' method='post'
+//            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
+         echo "<div align='center'>";
+         echo Html::hidden('filename',['value' => $params[self::SELECTED_FILE_DROPDOWN_NAME]]);
+         echo "<input type='submit' name='verify-file' class='submit' value='" . __('Validate file', 'resources') . "' >";
+
+         echo "</div>";
+         Html::closeForm();
          echo '</td>';
          echo '</tr>';
 
@@ -1334,7 +1360,9 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       $formURL = self::getResourceImportFormUrl();
 
-      echo "<form name='file-importer' method='post' action ='" . $formURL . "' >";
+//      echo "<form name='file-importer' method='post' action ='" . $formURL . "' >";
+      echo "<form name='import_file_form' id='import_file_form' method='post'
+//            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
       echo "<div align='center'>";
       echo "<table>";
 
@@ -1350,6 +1378,24 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       Html::closeForm();
+//      echo "<form name='import_file_form' id='import_file_form' method='post'
+//            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
+//      echo " <table class='tab_cadre' width='30%' cellpadding='5'>";
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>";
+//      echo __("Verifying file to import", 'metademands');
+//      echo "</td>";
+//      echo "<td>";
+//      echo "<input type='file' name='verify_file' accept='text/*'>";
+//      echo "</td>";
+//      echo "</tr>";
+//      echo "<tr>";
+//      echo "<td  class='center' colspan='2'>";
+//      echo Html::submit(__('Import', 'metademands'), ['name' => 'import_file']);
+//      echo "</td>";
+//      echo "</tr>";
+//      echo "</table>";
+//      Html::closeForm();
    }
 
    /**
@@ -2722,5 +2768,11 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "&nbsp;&nbsp;<input type='submit' name='delete' class='submit' value='" . _sx('button', 'Remove an item') . "' >";
       echo "</td>";
       echo "</tr>";
+   }
+
+   function setFileVerify($params) {
+
+      Document::renameForce(GLPI_PLUGIN_DOC_DIR."/resources/import/verify/".$params['filename'],GLPI_PLUGIN_DOC_DIR."/resources/import/".$params['filename']);
+
    }
 }

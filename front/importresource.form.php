@@ -16,6 +16,9 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["import-file"])){
    $importResource->importFileToVerify($_POST);
    Html::back();
+} else if (isset($_POST["verify-file"])){
+   $importResource->setFileVerify($_POST);
+   Html::back();
 } else if (isset($_GET["reset-imports"])){
    $importResource->purgeDatabase();
 

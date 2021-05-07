@@ -734,10 +734,11 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `plugin_resources_resourcestates_id_arrival` INT(11) NULL DEFAULT '0',
    `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
    `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
+   `allow_without_contract`  int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0);
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
@@ -860,7 +861,7 @@ CREATE TABLE `glpi_plugin_resources_roles` (
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
-   KEY `is_recursive` (`is_recursive`),
+   KEY `is_recursive` (`is_recursive`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
