@@ -96,9 +96,9 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
     *
     * @return mixed
     */
-   function defineAllTabs($options = []) {
+   function defineAllTabsPDF($options = []) {
 
-      $onglets = parent::defineAllTabs($options);
+      $onglets = parent::defineAllTabsPDF($options);
       unset($onglets['PluginResourcesChoice####1']);
       unset($onglets['PluginResourcesReportConfig####1']);
        unset($onglets['Item_Problem$1']); // TODO add method to print linked Problems
