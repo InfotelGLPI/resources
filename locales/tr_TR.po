@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-08 08:28+0000\n"
+"POT-Creation-Date: 2021-05-12 16:00+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -972,7 +972,7 @@ msgstr "Bir sütunu düzenle"
 msgid "Resource files imports"
 msgstr "Kaynak dosyaları içe aktarmaları"
 
-#: inc/importresource.class.php:451
+#: inc/importresource.class.php:451 inc/importresource.class.php:2845
 msgid "The file does not match any template"
 msgstr "Dosya herhangi bir kalıp ile eşleşmiyor"
 
@@ -992,15 +992,15 @@ msgstr "Dosyayı GLPI kaynakları ile karşılaştır"
 msgid "Compare GLPI Resources with File"
 msgstr "GLPI kaynaklarını dosya ile karşılaştır"
 
-#: inc/importresource.class.php:659 inc/importresource.class.php:2147
+#: inc/importresource.class.php:659 inc/importresource.class.php:2150
 msgid "Identical to GLPI"
 msgstr "GLPI ile aynı"
 
-#: inc/importresource.class.php:663 inc/importresource.class.php:2151
+#: inc/importresource.class.php:663 inc/importresource.class.php:2154
 msgid "Not in GLPI"
 msgstr "GLPI üzerinde yok"
 
-#: inc/importresource.class.php:667 inc/importresource.class.php:2149
+#: inc/importresource.class.php:667 inc/importresource.class.php:2152
 msgid "Different to GLPI"
 msgstr "GLPI ile aynı değil"
 
@@ -1035,8 +1035,8 @@ msgid "Total lines in the file"
 msgstr "Dosyadaki satır sayısı"
 
 #: inc/importresource.class.php:736
-msgid "Validate file"
-msgstr "Dosyayı doğrula"
+msgid "Validate and pre-import file"
+msgstr "Dosyayı doğrula ve içe aktarmaya hazırlan"
 
 #: inc/importresource.class.php:813
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:48
@@ -1054,7 +1054,7 @@ msgstr "Belirleme"
 msgid "Informations from file"
 msgstr "Dosyadaki bilgiler"
 
-#: inc/importresource.class.php:956
+#: inc/importresource.class.php:956 inc/importresource.class.php:2655
 msgid "New resource"
 msgstr "Yeni kaynak"
 
@@ -1074,54 +1074,70 @@ msgstr "Dosyayı içe aktar"
 msgid "Verify file"
 msgstr "Dosyayı doğrula"
 
-#: inc/importresource.class.php:1471
+#: inc/importresource.class.php:1432
+msgid "Delete file"
+msgstr "Dosyayı sil"
+
+#: inc/importresource.class.php:1474
 msgid "no file to compare"
 msgstr "karşılaştırılacak bir dosya yok"
 
-#: inc/importresource.class.php:1488
+#: inc/importresource.class.php:1491
 msgid "The folder you expected to display content doesn't exist."
 msgstr "İçeriği görüntülenmesi beklenen bir klasör bulunamadı."
 
-#: inc/importresource.class.php:1501
+#: inc/importresource.class.php:1504
 msgid "No imports configured"
 msgstr "Henüz bir içe aktarma yapılandırılmamış"
 
-#: inc/importresource.class.php:1502
+#: inc/importresource.class.php:1505
 msgid "Configure a new import"
 msgstr "Yeni bir içe aktarma yapılandırın"
 
-#: inc/importresource.class.php:1519
+#: inc/importresource.class.php:1522
 msgid "Choose"
 msgstr "Seçin"
 
-#: inc/importresource.class.php:1840
+#: inc/importresource.class.php:1843
 msgid "Data from file"
 msgstr "Dosyadaki veriler"
 
-#: inc/importresource.class.php:2430
+#: inc/importresource.class.php:2433
 msgid "Not in file"
 msgstr "Dosyada yok"
 
-#: inc/importresource.class.php:2434
+#: inc/importresource.class.php:2437
 msgid "first level"
 msgstr "birinci düzey"
 
-#: inc/importresource.class.php:2436
+#: inc/importresource.class.php:2439
 msgid "second level"
 msgstr "ikinci düzey"
 
-#: inc/importresource.class.php:2439
+#: inc/importresource.class.php:2442
 #, php-format
 msgid "Find in file with %s identifier"
 msgstr "Dosyada %s belirteci ile bul"
 
-#: inc/importresource.class.php:2527
+#: inc/importresource.class.php:2530
 msgid "Number of titles and values of tooltip doesn't match"
 msgstr "İpuçlarının başlıkları ile değerleri eşleşmiyor"
 
-#: inc/importresource.class.php:2620
+#: inc/importresource.class.php:2623
 msgid "No Imports"
 msgstr "Herhangi bir içe aktarma yok"
+
+#: inc/importresource.class.php:2645
+msgid "Deleted resource"
+msgstr "Kaynak silindi"
+
+#: inc/importresource.class.php:2650
+msgid "Updated resource"
+msgstr "Kaynak güncellendi"
+
+#: inc/importresource.class.php:2839
+msgid "The file has been pre-import"
+msgstr "Dosya içe aktarılmaya hazırlanmış"
 
 #: inc/ldap.class.php:53
 msgid "LDAP"
