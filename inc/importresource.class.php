@@ -733,7 +733,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 //            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
          echo "<div align='center'>";
          echo Html::hidden('filename',['value' => $params[self::SELECTED_FILE_DROPDOWN_NAME]]);
-         echo "<input type='submit' name='verify-file' class='submit' value='" . __('Validate file', 'resources') . "' >";
+         echo "<input type='submit' name='verify-file' class='submit' value='" . __('Validate and pre-import file', 'resources') . "' >";
 
          echo "</div>";
          Html::closeForm();
@@ -1427,6 +1427,9 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "</td>";
       echo "<td>";
       echo "<input type='submit' name='verify' class='submit' value='" . __('Verify file', 'resources') . "' >";
+      echo "</td>";
+      echo "<td>";
+      echo "<input type='submit' name='delete_file' class='submit' value='" . __('Delete file', 'resources') . "' >";
       echo "</td>";
       // TODO Move the verified file to parent folder to import it auto
 //      echo "<td>";
@@ -2632,6 +2635,30 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo "<div align='center'>";
          echo "<table border='0' class='tab_cadrehov'>";
 
+         echo "<tr class='center'>";
+         echo "<td class='center' colspan='100'>";
+         echo "<table>";
+         echo "<tr>";
+         echo "<td class='center' style='width: 10px;height: 10px;background-color:red;'>";
+         echo "</td>";
+         echo "<td>";
+         echo __("Deleted resource",'resources');
+         echo "</td>";
+         echo "<td class='center' style='width: 10px;height: 10px;background-color:orange;'>";
+         echo "</td>";
+         echo "<td>";
+         echo __("Updated resource",'resources');
+         echo "</td>";
+         echo "<td class='center' style='width: 10px;height: 10px;background-color:green;'>";
+         echo "</td>";
+         echo "<td>";
+         echo __("New resource",'resources');
+         echo "</td>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</td>";
+         echo "</tr>";
+
          self::showImportListButtons();
 
          $headParams = [
@@ -2774,5 +2801,55 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       Document::renameForce(GLPI_PLUGIN_DOC_DIR."/resources/import/verify/".$params['filename'],GLPI_PLUGIN_DOC_DIR."/resources/import/".$params['filename']);
 
+      $importSuccess = false;
+
+      $path = GLPI_PLUGIN_DOC_DIR."/resources/import/";
+      $file = $params['filename'];
+      $filePath = $path . $file;
+
+
+
+      if (file_exists($filePath)) {
+         // Initialize existingImports Array
+         // Used to prevent multiple get imports from database
+         // Speed up execution time
+         $this->purgeDatabase();
+         $this->resetExistingImportsArray();
+         $this->initExistingImportsArray();
+
+         $temp = $this->readCSVLines($filePath, 0, 1);
+         $header = array_shift($temp);
+
+         $importID = $this->checkHeader($header);
+
+         if ($importID) {
+            $lines = $this->readCSVLines($filePath, 1, INF);
+
+            foreach ($lines as $line) {
+               $datas = $this->parseFileLine($header, $line, $importID);
+               $this->manageImport($datas, $importID);
+            }
+            $importSuccess = true;
+         }
+      }
+      if ($importSuccess) {
+         // Move file to done folder
+         $output = $path . 'done/' . $file;
+         rename(str_replace('\\', '/', $filePath), str_replace('\\', '/', $output));
+         Session::addMessageAfterRedirect(__('The file has been pre-import','resources'));
+
+      } else {
+         // Move file to fail folder
+         $output = $path . 'fail/' . $file;
+         rename(str_replace('\\', '/', $filePath), str_replace('\\', '/', $output));
+         Session::addMessageAfterRedirect(__('The file does not match any template','resources'));
+      }
+
+   }
+
+
+   static function deleteFile($filename) {
+      $filepath = GLPI_PLUGIN_DOC_DIR."/resources/import/verify/".$filename;
+      unlink($filepath);
    }
 }

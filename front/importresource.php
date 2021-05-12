@@ -16,6 +16,10 @@ $importResource = new PluginResourcesImportResource();
 
 if ($import->canView()) {
 
+   if(isset($_POST['delete_file'])) {
+      PluginResourcesImportResource::deleteFile($_POST['selected-file']);
+   }
+
    $params = [
       "type" => $_GET['type'],
       "start"=> 0
