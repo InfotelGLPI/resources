@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-12 16:00+0000\n"
+"POT-Creation-Date: 2021-05-21 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,15 +125,15 @@ msgstr ""
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1727 hook.php:1758 inc/linkad.class.php:720
+#: hook.php:1729 hook.php:1761 inc/linkad.class.php:720
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:1737 inc/linkad.class.php:722
+#: hook.php:1739 inc/linkad.class.php:722
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:1768
+#: hook.php:1771
 msgid "You have to do all checklist out action before"
 msgstr ""
 
@@ -223,15 +223,15 @@ msgstr ""
 msgid "Please select a user"
 msgstr ""
 
-#: front/resource.form.php:292
+#: front/resource.form.php:302
 msgid "The checklist is not finished"
 msgstr ""
 
-#: front/resource.form.php:318
+#: front/resource.form.php:328
 msgid "Notification sent"
 msgstr ""
 
-#: front/resource.form.php:320 inc/resource.class.php:4061
+#: front/resource.form.php:330 inc/resource.class.php:4061
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
