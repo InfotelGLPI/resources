@@ -173,9 +173,11 @@ else if (isset($_POST["deleteemployee"])) {
 } else if (isset($_POST["add"])) {
    $resource->check(-1, UPDATE, $_POST);
    $newID = $resource->add($_POST);
-   if(isset($_POST['plugin_resources_employers_id'])){
+   if (isset($_POST['plugin_resources_employers_id'])) {
       $employee = new PluginResourcesEmployee();
-      $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+      $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                      'plugin_resources_resources_id' => $newID,
+                      'plugin_resources_clients_id'   => 0]);
    }
    Html::back();
 } //from central
@@ -183,12 +185,20 @@ else if (isset($_POST["deleteemployee"])) {
 else if (isset($_POST["update"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->update($_POST);
-   $employee = new PluginResourcesEmployee();
-   if($employee->getFromDBByCrit(['plugin_resources_resources_id'=> $_POST['id']])){
-      $employee->update(['id'=>$employee->getID(),'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $_POST['id'], 'plugin_resources_clients_id' => 0]);
-   } else {
-      $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $_POST['id'], 'plugin_resources_clients_id' => 0]);
+   if (isset($_POST['plugin_resources_employers_id'])) {
+      $employee = new PluginResourcesEmployee();
+      if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $_POST['id']])) {
+         $employee->update(['id'                            => $employee->getID(),
+                            'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                            'plugin_resources_resources_id' => $_POST['id'],
+                            'plugin_resources_clients_id'   => 0]);
+      } else {
+         $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                         'plugin_resources_resources_id' => $_POST['id'],
+                         'plugin_resources_clients_id'   => 0]);
+      }
    }
+
    Html::back();
 } //from central
 //delete resource
@@ -308,8 +318,8 @@ else if (isset($_POST["add_checklist"])) {
    Html::back();
 
 } else if (isset($_POST["report"])) {
-   $restrict = ["itemtype"                      => 'User',
-                "plugin_resources_resources_id" => $_POST["id"]];
+   $restrict   = ["itemtype"                      => 'User',
+                  "plugin_resources_resources_id" => $_POST["id"]];
    $dbu        = new DbUtils();
    $linkeduser = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 
