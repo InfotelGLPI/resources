@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-16 14:32+0000\n"
+"POT-Creation-Date: 2021-06-16 15:02+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Alban Lesellier <alban.lesellier@infotel.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -823,6 +823,12 @@ msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Coût budgétaire"
 msgstr[1] "Coûts budgétaire"
+
+#: inc/department_service.class.php:59
+msgid "Link Department/Service"
+msgid_plural "Links Department/Service"
+msgstr[0] "Lien Département/Service"
+msgstr[1] "Liens Département/Service"
 
 #: inc/directory.class.php:53 inc/menu.class.php:305
 msgid "Directory"
@@ -2270,6 +2276,12 @@ msgid "Resource state"
 msgid_plural "Resource states"
 msgstr[0] "Statut de ressource"
 msgstr[1] "Statuts de ressource"
+
+#: inc/role_service.class.php:59
+msgid "Link Role/Service"
+msgid_plural "Links Role/Service"
+msgstr[0] "Lien Rôle/Service"
+msgstr[1] "Liens Rôle/Service"
 
 #: inc/rulechecklist.class.php:142
 msgid "Checklist type"
