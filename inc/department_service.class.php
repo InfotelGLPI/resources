@@ -56,7 +56,7 @@ class PluginResourcesDepartment_Service extends CommonDBRelation{
 
 
    static function getTypeName($nb = 0) {
-      return _n('Link Department/Service', 'Links Department/Service', $nb);
+      return _n('Link Department/Service', 'Links Department/Service', $nb,'resources');
    }
 
 
