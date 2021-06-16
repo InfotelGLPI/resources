@@ -51,7 +51,7 @@ function plugin_resources_install() {
    if (!$DB->tableExists("glpi_plugin_resources_resources")
        && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/empty-2.7.2.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/empty-2.7.3.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -277,6 +277,10 @@ function plugin_resources_install() {
    //Version 2.7.2
    if (!$DB->fieldExists("glpi_plugin_resources_configs", "mandatory_checklist")) {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.2.sql");
+   }
+   //Version 2.7.3
+   if (!$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_functions_id")) {
+      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.3.sql");
    }
 
    if ($update80) {
@@ -612,7 +616,12 @@ function plugin_resources_uninstall() {
       "glpi_plugin_resources_importresources",
       "glpi_plugin_resources_resourceimports",
       "glpi_plugin_resources_adconfigs",
-      "glpi_plugin_resources_roles"
+      "glpi_plugin_resources_roles",
+      "glpi_plugin_resources_functions",
+      "glpi_plugin_resources_teams",
+      "glpi_plugin_resources_services",
+      "glpi_plugin_resources_roles_services",
+      "glpi_plugin_resources_departments_services",
    ];
 
    foreach ($tables as $table) {
@@ -869,6 +878,9 @@ function plugin_resources_getDropdown() {
          PluginResourcesHabilitation::class       => PluginResourcesHabilitation::getTypeName(2),
          PluginResourcesHabilitationLevel::class  => PluginResourcesHabilitationLevel::getTypeName(2),
          PluginResourcesRole::class               => PluginResourcesRole::getTypeName(2),
+         PluginResourcesFunction::class               => PluginResourcesFunction::getTypeName(2),
+         PluginResourcesService::class               => PluginResourcesService::getTypeName(2),
+         PluginResourcesTeam::class               => PluginResourcesTeam::getTypeName(2),
          PluginResourcesCost::class               => PluginResourcesCost::getTypeName(2)];
    } else {
       return [];

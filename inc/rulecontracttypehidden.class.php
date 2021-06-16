@@ -268,6 +268,10 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
       $actions['hiddenfields_matricule']['type']  = "yesonly";
       $actions['hiddenfields_matricule']['force_actions'] = ['assign'];
 
+      $actions['hiddenfields_matricule_second']['name']  = __('Second matricule','resources');
+      $actions['hiddenfields_matricule_second']['type']  = "yesonly";
+      $actions['hiddenfields_matricule_second']['force_actions'] = ['assign'];
+
       $actions['hiddenfields_plugin_resources_roles_id']['name']  = __('Role','resources');
       $actions['hiddenfields_plugin_resources_roles_id']['type']  = "yesonly";
       $actions['hiddenfields_plugin_resources_roles_id']['force_actions'] = ['assign'];
@@ -306,6 +310,18 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
       $actions['hiddenfields_security']['name']  =  __('Reading the security charter', 'resources');
       $actions['hiddenfields_security']['type']  = "yesonly";
       $actions['hiddenfields_security']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_services_id']['name']  = PluginResourcesService::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_services_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_services_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_teams_id']['name']  = PluginResourcesTeam::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_teams_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_teams_id']['force_actions'] = ['assign'];
+
+      $actions['hiddenfields_plugin_resources_functions_id']['name']  = PluginResourcesFunction::getTypeName(1);
+      $actions['hiddenfields_plugin_resources_functions_id']['type']  = "yesonly";
+      $actions['hiddenfields_plugin_resources_functions_id']['force_actions'] = ['assign'];
 
       return $actions;
    }

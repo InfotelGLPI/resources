@@ -87,7 +87,13 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
                ['name'  => 'locations_id',
                 'label' => __('Location'),
                 'type'  => 'dropdownValue',
-                'list'  => true]];
+                'list'  => true],
+               ['name'  => 'second_list',
+                'label' => __('Second part list of employer','resources'),
+                'type'  => 'bool',
+                'list'  => true],
+
+      ];
    }
 
    /**
@@ -111,6 +117,13 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
          'field'    => 'short_name',
          'name'     => __('Short name', 'resources'),
          'datatype' => 'text'
+      ];
+      $tab[] = [
+         'id'       => '16',
+         'table'    => $this->getTable(),
+         'field'    => 'second_list',
+         'name'     => __('Second part list of employer', 'resources'),
+         'datatype' => 'bool'
       ];
       $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 

@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.7.2');
+define('PLUGIN_RESOURCES_VERSION', '2.7.3');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", GLPI_ROOT . "/plugins/resources");

@@ -221,6 +221,8 @@ class PluginResourcesProfile extends Profile {
 
       $this->showLegend();
 
+      PluginResourcesContracttypeprofile::addContracttype($profiles_id, $canedit);
+
    }
 
    /**

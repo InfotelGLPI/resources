@@ -103,6 +103,14 @@ class PluginResourcesContractType extends CommonDropdown {
               ['name'  => 'use_habilitation_wizard',
                'label' => __('Enter habilitation information ', 'resources'),
                'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_second_list_employer',
+               'label' => __('Use second list of employer', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_second_matricule',
+               'label' => __('Use second matricule', 'resources'),
+               'type'  => 'bool',
                'list'  => true]
       ];
 

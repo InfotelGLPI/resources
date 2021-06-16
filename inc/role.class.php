@@ -70,7 +70,10 @@ class PluginResourcesRole extends CommonDropdown {
    function getAdditionalFields() {
 
       return [
-
+         ['name'  => 'roles_services',
+          'label' => PluginResourcesRole_Service::getTypeName(2),
+          'type'  => 'multiple_roles_services',
+          'list'  => true],
       ];
    }
 
@@ -149,6 +152,80 @@ class PluginResourcesRole extends CommonDropdown {
    function post_getEmpty() {
 
       $this->fields['is_active'] = 1;
+   }
+
+   /**
+    * @since 0.85
+    * @see CommonDropdown::displaySpecificTypeField()
+    **/
+   function displaySpecificTypeField($ID, $field = []) {
+
+      switch ($field['type']) {
+         case 'multiple_roles_services' :
+            $service = new PluginResourcesService();
+            $values = $service->find(['entities_id' => $_SESSION['glpiactiveentities']]);
+            $datas = [];
+            foreach ($values as $key => $v) {
+               $datas[$v['id']] = $v['name'];
+            }
+            $role_service = new PluginResourcesRole_Service();
+            $role_service_values = $role_service->find(['plugin_resources_roles_id'=>$this->fields['id']]);
+            $values_selected = [];
+            foreach ($role_service_values as $role_service_value) {
+               $values_selected[] = $role_service_value['plugin_resources_services_id'];
+            }
+
+            Dropdown::showFromArray('roles_services', $datas,
+                                    ['values'   => $values_selected,'multiple'=> true,'display' => true]);
+            break;
+      }
+   }
+
+   function post_addItem() {
+      $test = true;
+      $roles_services = $this->input["roles_services"];
+      if(is_array($roles_services)) {
+         $role_service = new PluginResourcesRole_Service();
+         foreach ($roles_services as $key => $id_service) {
+            $role_service->add(['plugin_resources_roles_id'=>$this->getID(),'plugin_resources_services_id'=>$id_service]);
+         }
+      }
+   }
+
+   function post_updateItem($history = 1) {
+      $roles_services = $this->input["roles_services"];
+      $role_service = new PluginResourcesRole_Service();
+      $roleServices = $role_service->find(['plugin_resources_roles_id'=>$this->fields['id']]);
+      $current_roles_services = [];
+      foreach ($roleServices as $key => $val){
+         $current_roles_services[] = $val['plugin_resources_services_id'];
+      }
+
+      foreach ($roles_services as $id_service){
+         if(!$role_service->getFromDBByCrit(['plugin_resources_roles_id'=>$this->getID(),'plugin_resources_services_id'=>$id_service])) {
+            $role_service->add(['plugin_resources_roles_id'=>$this->getID(),'plugin_resources_services_id'=>$id_service]);
+         }
+      }
+
+      foreach ($current_roles_services as $id_service) {
+         if(!in_array($id_service,$roles_services)) {
+            if($role_service->getFromDBByCrit(['plugin_resources_roles_id'=>$this->getID(),'plugin_resources_services_id'=>$id_service])) {
+               $role_service->deleteByCriteria(['plugin_resources_roles_id'=>$this->getID(),'plugin_resources_services_id'=>$id_service]);
+            }
+         }
+      }
+
+   }
+
+   static function dropdownFromService($services_id,$opt) {
+      $role_service = new PluginResourcesRole_Service();
+      $role_services = $role_service->find(['plugin_resources_services_id'=>$services_id]);
+      $roles = [0];
+      foreach ($role_services as $s) {
+         $roles[] = $s['plugin_resources_roles_id'];
+      }
+      $options = array_merge(['condition' => ['id' => $roles]],$opt);
+      return self::dropdown($options);
    }
 
 }

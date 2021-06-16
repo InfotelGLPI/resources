@@ -81,7 +81,7 @@ class PluginResourcesResourceInjection extends PluginResourcesResource
       //Remove some options because some fields cannot be imported
       $notimportable = [8, 16, 18, 19, 31, 32, 33, 34, 80];
       $options['ignore_fields'] = $notimportable;
-      $options['displaytype'] = ["dropdown"       => [3, 11, 12, 17, 21, 22, 23, 24, 25, 26,  40],
+      $options['displaytype'] = ["dropdown"       => [3, 11, 12, 17, 21, 22, 23, 24, 25, 26,  40, 41, 42, 43],
                                  "user"           => [4, 10, 14, 27],
                                  "multiline_text" => [7],
                                  "date"           => [5, 6, 9],
