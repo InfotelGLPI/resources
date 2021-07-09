@@ -264,11 +264,11 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       global $CFG_GLPI;
 
       echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='2'>" . __('Forced holiday management', 'resources') . "</th></tr>";
+      echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Forced holiday management', 'resources') . "</th></tr>";
 
       $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canholiday) {
          echo "<td class='center'>";
          echo "<a href=\"./resourceholiday.form.php\">";
@@ -373,14 +373,23 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
+
       if ($ID > 0) {
-         echo "<input type='hidden' name='id' value='" . $ID . "' />";
+         echo "<input type='hidden' name='id' value='".$ID."' />";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
-         echo "<input type='submit' name='updateholidayresources' value=\"" . _sx('button', 'Update') . "\" class='submit' />";
-         echo "&nbsp;&nbsp;<input type='submit' name='deleteholidayresources' value=\"" . _sx('button', 'Delete permanently') . "\" class='submit' />";
+
+         echo "<button type='submit' name='updateholidayresources' value='" ._sx('button', 'Update'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Update') . "</button>";
+
+         echo "&nbsp;&nbsp;<button type='submit' name='deleteholidayresources' value='" ._sx('button', 'Delete permanently'). "' class='btn btn-danger btn-sm' />
+      " . _sx('button', 'Delete permanently') . "</button>";
+
       } else {
-         echo "<input type='submit' name='addholidayresources' value='" . _sx('button', 'Add') . "' class='submit' />";
+
+         echo "<button type='submit' name='addholidayresources' value='" ._sx('button', 'Add'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Add') . "</button>";
       }
+
       echo "</div>";
       echo "</div></div>";
 

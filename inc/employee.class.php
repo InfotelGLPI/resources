@@ -451,10 +451,12 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "<input type='hidden' name='withtemplate' value=\"0\">";
-            echo "<input type='submit' name='undo_second_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='undo_second_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
             echo "</div>";
             echo "<div class='next'>";
-            echo "<input type='submit' name='third_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='third_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
             echo "</div>";
             echo "</div>";
             echo "</div>";

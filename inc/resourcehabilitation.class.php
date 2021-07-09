@@ -399,10 +399,12 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<input type='submit' name='undo_six_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='undo_six_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
             echo "</div>";
             echo "<div class='next'>";
-            echo "<input type='submit' name='six_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='six_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "</div>";
             echo "</div>";

@@ -233,7 +233,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       $canresting = Session::haveright('plugin_resources_habilitation', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canresting) {
          $colspan = 1;
          if ($plugin->isActivated("metademands")) {

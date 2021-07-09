@@ -823,7 +823,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
       if ($display) {
          echo "<div class='next'>";
-         echo "<input type='submit' name='changeresources' value=\"" . __s('Starting change', 'resources') . "\" class='submit'>";
+         echo "<button type='submit' name='changeresources' value='" . __s('Starting change', 'resources'). "' class='btn btn-success btn-sm' />
+      " . __s('Starting change', 'resources') . "</button>";
          echo "</div>";
 
       }

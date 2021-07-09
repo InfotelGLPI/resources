@@ -77,7 +77,8 @@ if ($plugin->isActivated("useditemsexport")) {
             echo "<span class='red'>" .
                  __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources') .
                  "</span><br><br>";
-            echo "<a class='vsubmit' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('Download the restitution form', 'resources') . "</a>";
+
+            echo "<a class='btn btn-warning btn-sm' style='color: white;' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('Download the restitution form', 'resources') . "</a>";
 
             Html::closeForm();
          }

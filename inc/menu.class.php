@@ -40,7 +40,7 @@ class PluginResourcesMenu extends CommonDBTM{
       if ($item->canCreate()) {
          echo "<tr><th colspan='6'>" . __('Resources management', 'resources') . "</th></tr>";
 
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
 
          //Add a resource
          echo "<td class='center' colspan='2' width='200'>";
@@ -67,7 +67,7 @@ class PluginResourcesMenu extends CommonDBTM{
       }
 
       if ($canresting || $canholiday || $canbadges || $canhabilitation) {
-         echo "<tr><th colspan='6'>" . __('Others declarations', 'resources') . "</th></tr>";
+         echo "<tr class='tab_bg_1'><th colspan='6'>" . __('Others declarations', 'resources') . "</th></tr>";
          $num_col = 0;
          if ($canresting) {
             $num_col += 1;
@@ -87,7 +87,7 @@ class PluginResourcesMenu extends CommonDBTM{
             $colspan = floor(6 / $num_col);
          }
 
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
          if ($colspan == 1) {
             echo "<td></td>";
          }
@@ -133,8 +133,8 @@ class PluginResourcesMenu extends CommonDBTM{
       }
 
       if ($item->canView()) {
-         echo "<tr><th colspan='6'>" . __('Others actions', 'resources') . "</th></tr>";
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class='tab_bg_1'><th colspan='6'>" . __('Others actions', 'resources') . "</th></tr>";
+         echo "<tr class=''>";
 
          $opt                              = [];
          $opt['reset']                     = 'reset';
@@ -165,7 +165,7 @@ class PluginResourcesMenu extends CommonDBTM{
          echo "</td>";
 
          echo "</tr>";
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href=\"./directory.php\">";
@@ -181,9 +181,9 @@ class PluginResourcesMenu extends CommonDBTM{
       if ($canseeemployment || $canseebudget) {
          $colspan = 0;
 
-         echo "<tr><th colspan='6'>" . __('Employments / budgets management', 'resources') . "</th></tr>";
+         echo "<tr class='tab_bg_1'><th colspan='6'>" . __('Employments / budgets management', 'resources') . "</th></tr>";
 
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
          echo "<td class='center'>";
          echo "</td>";
 
@@ -236,9 +236,9 @@ class PluginResourcesMenu extends CommonDBTM{
 
       if ($canImport) {
          //See import External
-         echo "<tr><th colspan='6'>" . __('Import resources', 'resources') . "</th></tr>";
+         echo "<tr class='tab_bg_1'><th colspan='6'>" . __('Import resources', 'resources') . "</th></tr>";
 
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImportResource::getIndexUrl()."?type=".PluginResourcesImportResource::UPDATE_RESOURCES."'>";
          echo "<i class=\"fas fa-user-edit fa-5x\"></i>";
@@ -259,7 +259,7 @@ class PluginResourcesMenu extends CommonDBTM{
 
          echo "</tr>";
 
-         echo "<tr class='tab_bg_1'>";
+         echo "<tr class=''>";
 
          echo "<td class='center' colspan='2'>";
          echo "<a href='".PluginResourcesImport::getIndexUrl()."'>";

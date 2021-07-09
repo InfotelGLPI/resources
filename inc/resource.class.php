@@ -1310,9 +1310,11 @@ class PluginResourcesResource extends CommonDBTM {
       if($value == 0){
          $value = $config->fields['plugin_resources_resourcetemplates_id'];
       }
+      $available_contracttype = false;
       $contracttypeprofile = new PluginResourcesContracttypeprofile();
-      $contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']]);
-      $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+      if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+         $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+      }
       $skip = false;
       if($available_contracttype === false || !is_array($available_contracttype)) {
          $skip = true;
@@ -2149,7 +2151,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
       echo "<input type='hidden' name='withtemplate' value='2' >";
-      echo "<input type='submit' name='first_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+      echo "<button type='submit' name='first_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
       echo "</div>";
       echo "</div></div>";
 
@@ -2868,10 +2871,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<input type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
          echo "</div>";
          echo "<div class='next'>";
-         echo "<input type='submit' name='second_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='second_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
@@ -2881,10 +2886,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<input type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
          echo "</div>";
          echo "<div class='next'>";
-         echo "<input type='submit' name='second_step_update' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='second_step_update' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
@@ -2960,7 +2967,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12 \">";
-      echo "<input type='submit' name='upload_five_step' value='" . _sx('button', 'Add') . "' class='submit' />";
+      echo "<button type='submit' name='upload_five_step' value='" . _sx('button', 'Add') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Add') . "</button>";
       echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
       echo "</div></div>";
 
@@ -2968,10 +2976,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<input type='submit' name='undo_five_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='undo_five_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
          echo "</div>";
          echo "<div class='next'>";
-         echo "<input type='submit' name='five_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='five_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div></div>";
@@ -3045,7 +3055,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div></div>";
 
       echo "<div class=\"form-row\">";
-      echo "<div class=\"bt-feature col-md-12 \">";
+      echo "<div class=\"bt-feature col-md-12\">";
 
       Document_item::showListForItem($self, 99); // With template 99 to disable massive action
 
@@ -3055,12 +3065,14 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($this->canCreate() && (!empty($ID))) {
          echo "<div class=\"form-row\">";
-         echo "<div class=\"bt-feature col-md-12 \">";
+         echo "<div class=\"bt-feature col-md-11\">";
          echo "<div class='preview'>";
-         echo "<input type='submit' name='undo_seven_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='undo_seven_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
          echo "</div>";
          echo "<div class='next'>";
-         echo "<input type='submit' name='seven_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+         echo "<button type='submit' name='seven_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div></div>";
@@ -3670,9 +3682,11 @@ class PluginResourcesResource extends CommonDBTM {
          echo self::getTypeName(1);
          echo "</div>";
          echo "<div class=\"bt-feature col-md-4 \">";
+         $available_contracttype = false;
          $contracttypeprofile = new PluginResourcesContracttypeprofile();
-         $contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']]);
-         $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+         if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+            $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+         }
 
          $cond = [];
 
@@ -3718,7 +3732,8 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='next'>";
-         echo "<input type='submit' name='removeresources' value=\"" . __s('Declare a departure', 'resources') . "\" class='submit'>";
+         echo "<button type='submit' name='removeresources' value='" . __s('Declare a departure', 'resources') . "' class='btn btn-success btn-sm' />
+      " . __s('Declare a departure', 'resources') . "</button>";
          echo "</div>";
          echo "</div></div>";
 
@@ -3882,7 +3897,8 @@ class PluginResourcesResource extends CommonDBTM {
                echo "<div class=\"bt-feature col-md-12 \">";
                echo "<div class='next'>";
                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-               echo "<input type='submit' name='transferresources' value=\"" . __s('Declare a transfer', 'resources') . "\" class='submit'>";
+               echo "<button type='submit' name='transferresources' value='" . __s('Declare a transfer', 'resources') . "' class='btn btn-success btn-sm' />
+      " . __s('Declare a transfer', 'resources') . "</button>";
                echo "</div>";
                echo "</div></div>";
 

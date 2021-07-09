@@ -438,11 +438,13 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<input type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
             echo "</div>";
             echo "<div class='next'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "<input type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
             echo "</div>";
             echo "</div></div>";
          }
