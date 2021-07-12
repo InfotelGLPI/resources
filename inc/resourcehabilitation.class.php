@@ -296,10 +296,15 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          $condition  = $dbu->getEntitiesRestrictCriteria($habilitation_level->getTable(), 'entities_id',$resource->getEntityID(), $habilitation_level->maybeRecursive());
          $levels    = $habilitation_level->find($condition, "name");
-
+         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
          echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+         echo "<h3><div class='alert alert-secondary' role='alert' >";
+         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo __('Resources management', 'resources');
+         echo "</div></h3>";
 
          echo "<div id ='content'>";
 
@@ -399,10 +404,12 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<input type='submit' name='undo_six_step' value='" . _sx('button', '< Previous', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='undo_six_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
+      " . _sx('button', '< Previous', 'resources') . "</button>";
             echo "</div>";
             echo "<div class='next'>";
-            echo "<input type='submit' name='six_step' value='" . _sx('button', 'Next >', 'resources') . "' class='submit' />";
+            echo "<button type='submit' name='six_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Next >', 'resources') . "</button>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "</div>";
             echo "</div>";

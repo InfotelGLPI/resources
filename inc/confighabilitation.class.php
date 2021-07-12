@@ -228,17 +228,26 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='2'>" . self::getTypeName(2) . "</th></tr>";
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo self::getTypeName(2);
+      echo "</div></h3>";
+
+      echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
       $canresting = Session::haveright('plugin_resources_habilitation', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canresting) {
          $colspan = 1;
          if ($plugin->isActivated("metademands")) {
             //new habilitation
-            echo "<td class='center'>";
+            echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./confighabilitation.form.php?new\">";
             echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationnew.png' 
                   alt='" . __('Declare a super habilitation', 'resources') . "'>";
@@ -246,7 +255,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             echo "</td>";
 
             //delete habilitation
-            echo "<td class='center' colspan='$colspan'>";
+            echo "<td class='tab_td_menu center' colspan='$colspan'>";
             echo "<a href=\"./confighabilitation.form.php?delete\">";
             echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationdelete.png' 
                   alt='" . __('Remove a super habilitation', 'resources') . "'>";
@@ -260,8 +269,6 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       }
       echo "</tr></table>";
-      Html::closeForm();
-
       echo "</div>";
 
    }

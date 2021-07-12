@@ -264,37 +264,44 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='3'>" . _n('Non contract period management', 'Non contract periods management', 2, 'resources') . "</th></tr>";
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo _n('Non contract period management', 'Non contract periods management', 2, 'resources');
+      echo "</div></h3>";
+
+      echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
       $canresting = Session::haveright('plugin_resources_resting', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canresting) {
          //Add resting resource
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.form.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/newresting.png' alt='" . __('Declare a non contract period', 'resources') . "'>";
          echo "<br>" . __('Declare a non contract period', 'resources') . "</a>";
          echo "</td>";
 
          //delete resting resource
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.form.php?end\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/closeresting.png' alt='" . __('Declaring the end of non contract periods', 'resources') . "'>";
          echo "<br>" . __('Declaring the end of non contract periods', 'resources') . "</a>";
          echo "</td>";
 
          //List resting resource
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/restinglist.png' alt='" . __('List of non contract periods', 'resources') . "'>";
          echo "<br>" . __('List of non contract periods', 'resources') . "</a>";
          echo "</td>";
       }
       echo "</tr></table>";
-      Html::closeForm();
 
       echo "</div>";
 
@@ -311,9 +318,15 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       $this->initForm($ID, $options);
 
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -321,7 +334,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.form.php\">";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-      echo "<div class=\"bt-feature col-md-12'>";
+      echo "<div class=\"bt-feature col-md-12 \">";
       echo "<h4 class=\"bt-title-divider\">";
       echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresting.png' alt='newresting'/>&nbsp;";
       $title = __('Declare a non contract period', 'resources');
@@ -408,10 +421,17 @@ class PluginResourcesResourceResting extends CommonDBTM {
       if ($ID > 0) {
          echo "<input type='hidden' name='id' value='".$ID."' />";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
-         echo "<input type='submit' name='updaterestingresources' value=\""._sx('button', 'Update')."\" class='submit' />";
-         echo "&nbsp;&nbsp;<input type='submit' name='deleterestingresources' value=\""._sx('button', 'Delete permanently')."\" class='submit' />";
+
+         echo "<button type='submit' name='updaterestingresources' value='" ._sx('button', 'Update'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Update') . "</button>";
+
+         echo "&nbsp;&nbsp;<button type='submit' name='deleterestingresources' value='" ._sx('button', 'Delete permanently'). "' class='btn btn-danger btn-sm' />
+      " . _sx('button', 'Delete permanently') . "</button>";
+
       } else {
-         echo "<input type='submit' name='addrestingresources' value='"._sx('button', 'Add')."' class='submit' />";
+
+         echo "<button type='submit' name='addrestingresources' value='" ._sx('button', 'Add'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Add') . "</button>";
       }
       echo "</div>";
       echo "</div></div>";
@@ -434,9 +454,16 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+      
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -576,7 +603,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function loadButtonResting($plugin_resources_resting_id) {
 
-      echo "<input type='submit' name='addenddaterestingresources' value='" . _sx('button', 'Save') . "' class='submit' />";
+      echo "<button type='submit' name='addenddaterestingresources' value='" ._sx('button', 'Save'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Save') . "</button>";
    }
 
 

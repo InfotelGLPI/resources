@@ -262,28 +262,34 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='2'>" . __('Forced holiday management', 'resources') . "</th></tr>";
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Forced holiday management', 'resources');
+      echo "</div></h3>";
+
+      echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
       $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canholiday) {
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.form.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidayresource.png' alt='" . __('Declare a forced holiday', 'resources') . "'>";
          echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
          echo "</td>";
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist.png' alt='" . __('List of forced holidays', 'resources') . "'>";
          echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
          echo "</td>";
       }
       echo "</tr></table>";
-      Html::closeForm();
-
       echo "</div>";
 
    }
@@ -298,10 +304,16 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -373,14 +385,23 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
+
       if ($ID > 0) {
-         echo "<input type='hidden' name='id' value='" . $ID . "' />";
+         echo "<input type='hidden' name='id' value='".$ID."' />";
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
-         echo "<input type='submit' name='updateholidayresources' value=\"" . _sx('button', 'Update') . "\" class='submit' />";
-         echo "&nbsp;&nbsp;<input type='submit' name='deleteholidayresources' value=\"" . _sx('button', 'Delete permanently') . "\" class='submit' />";
+
+         echo "<button type='submit' name='updateholidayresources' value='" ._sx('button', 'Update'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Update') . "</button>";
+
+         echo "&nbsp;&nbsp;<button type='submit' name='deleteholidayresources' value='" ._sx('button', 'Delete permanently'). "' class='btn btn-danger btn-sm' />
+      " . _sx('button', 'Delete permanently') . "</button>";
+
       } else {
-         echo "<input type='submit' name='addholidayresources' value='" . _sx('button', 'Add') . "' class='submit' />";
+
+         echo "<button type='submit' name='addholidayresources' value='" ._sx('button', 'Add'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Add') . "</button>";
       }
+
       echo "</div>";
       echo "</div></div>";
 
