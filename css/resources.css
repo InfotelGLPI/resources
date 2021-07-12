@@ -6,6 +6,18 @@
     color: green;
 }
 
+.tab_menu {
+    border-collapse: separate;
+    border-spacing: 20px;
+}
+
+.tab_td_menu {
+    border: solid #CCC 1px;
+    padding: 30px;
+    box-shadow: 5px 5px 5px #ccc;
+    min-width: 150px;
+}
+
 /**************************************************************/
 
 /**********************Wizard table****************************/

@@ -206,17 +206,26 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr><th colspan='2'>" . _n('Badge management', 'Badges management', 2, 'resources') . "</th></tr>";
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo _n('Badge management', 'Badges management', 2, 'resources');
+      echo "</div></h3>";
+
+      echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
       $canresting = Session::haveright('plugin_resources_resting', UPDATE);
 
-      echo "<tr class='tab_bg_1'>";
+      echo "<tr class=''>";
       if ($canresting) {
          $colspan = 1;
          if ($plugin->isActivated("metademands")) {
             //Add resting resource
-            echo "<td class='center'>";
+            echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./resourcebadge.form.php?new\">";
             echo "<i class='fas fa-id-badge fa-6x'></i>";
             echo "<br>" . __('Request new badge', 'resources') . "</a>";
@@ -225,7 +234,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
             $colspan = 2;
          }
          //List resting resource
-         echo "<td class='center' colspan='$colspan'>";
+         echo "<td class='tab_td_menu center' colspan='$colspan'>";
          echo "<a href=\"./resourcebadge.form.php\">";
          echo "<i class='fas fa-arrow-alt-circle-left fa-6x'></i>";
          echo "<br>" . __('Badge restitution', 'resources') . "</a>";
@@ -243,9 +252,18 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     */
    function showForm() {
       global $CFG_GLPI;
+      
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo _n('Badge management', 'Badges management', 2, 'resources');
+      echo "</div></h3>";
 
       echo "<div align='center'>";
-
       echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourcebadge.form.php\">";
 
       echo "<table class='' style='margin-top:1px;'>";
@@ -351,7 +369,9 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     */
    function loadBadgeRestitution() {
 
-      echo "<input type='submit' name='plugin_resources_badge_restitution' value='" . _sx('button', 'Save') . "' class='submit' />";
+      echo "<button type='submit' name='plugin_resources_badge_restitution' value='" ._sx('button', 'Save'). "' class='btn btn-success btn-sm' />
+      " . _sx('button', 'Save') . "</button>";
+
    }
 
 

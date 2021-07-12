@@ -49,7 +49,7 @@ $resource        = new PluginResourcesResource();
 $checklistconfig = new PluginResourcesChecklistconfig();
 
 if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   if(!isset($_POST["plugin_resources_leavingreasons_id"])){
+   if (!isset($_POST["plugin_resources_leavingreasons_id"])) {
       $_POST["plugin_resources_leavingreasons_id"] = 0;
    }
    $date     = date("Y-m-d H:i:s");
@@ -81,40 +81,42 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
    $config = new PluginResourcesConfig();
    $config->getFromDB(1);
    Session::addMessageAfterRedirect(__('Declaration of resource leaving OK', 'resources'));
-   if($config->fields["create_ticket_departure"]){
+   if ($config->fields["create_ticket_departure"]) {
       $ticket = new Ticket();
 
-      $tt = $ticket->getITILTemplateToUse(0,Ticket::DEMAND_TYPE,$config->fields["categories_id"]);
+      $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
       if (isset($tt->predefined) && count($tt->predefined)) {
          foreach ($tt->predefined as $predeffield => $predefvalue) {
-
-                                 // Load template data
-
-                  $ticket->fields[$predeffield]      = Toolbox::addslashes_deep($predefvalue);
-
-
+            // Load template data
+            $ticket->fields[$predeffield] = Toolbox::addslashes_deep($predefvalue);
          }
-
-
       }
-      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]));
+      $resource->getFromDB($input["id"]);
+      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".$resource->fields['name']." ".$resource->fields['firstname']);
       $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
-      $ticket->fields["content"] = Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"])." ".__("leave on","resources")." ".Html::convDateTime($input["date_declaration_leaving"]);
-      $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-      $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
-      $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];
+
+      $ticket->fields["content"] = $resource->fields['name']." ".$resource->fields['firstname']." ".__("leave on","resources")." ".Html::convDateTime($input["date_end"]);
+      if(isset($input['plugin_resources_leavingreasons_id']) && !empty($input['plugin_resources_leavingreasons_id'])) {
+         $ticket->fields["content"] .= "<br>".PluginResourcesLeavingReason::getTypeName(0)." : ".Dropdown::getDropdownName(PluginResourcesLeavingReason::getTable(),$input["plugin_resources_leavingreasons_id"]);
+      }
+      if(($resource->fields['plugin_resources_contracttypes_id']) > 0) {
+         $ticket->fields["content"] .= "<br>".PluginResourcesContractType::getTypeName(0)." : ".Dropdown::getDropdownName(PluginResourcesContractType::getTable(),$resource->fields['plugin_resources_contracttypes_id']);
+      } else {
+         $ticket->fields["content"] .= "<br>".PluginResourcesContractType::getTypeName(0)." : ". __("Without contract",'resources');
+      }
+      $ticket->fields["type"]              = Ticket::DEMAND_TYPE;
+      $ticket->fields["entities_id"]       = $_SESSION['glpiactive_entity'];
+      $ticket->fields['items_id']          = ['PluginResourcesResource' => [$input['id']]];
       unset($ticket->fields["id"]);
       $ticket->add($ticket->fields);
       $linkad = new PluginResourcesLinkAd();
-      if($linkad->getFromDBByCrit(["plugin_resources_resources_id"=>$input['id']])){
-         $input2 = [];
+      if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $input['id']])) {
+         $input2                = [];
          $input2['action_done'] = 0;
-         $input2['id'] = $linkad->getID();
+         $input2['id']          = $linkad->getID();
          $linkad->update($input2);
       }
-
    }
-
 
    Html::back();
 

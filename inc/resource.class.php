@@ -2120,9 +2120,16 @@ class PluginResourcesResource extends CommonDBTM {
    function wizardFirstForm() {
       global $CFG_GLPI;
 
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");;
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -2213,10 +2220,16 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_employers_id"]            = 0;
 
       }
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'>";
       echo "<div class='bt-block bt-features' >";
@@ -2916,10 +2929,16 @@ class PluginResourcesResource extends CommonDBTM {
       if ($ID > 0) {
          $this->check($ID, READ);
       }
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -3027,10 +3046,16 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
@@ -3660,10 +3685,16 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-
+         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
          echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+         echo "<h3><div class='alert alert-secondary' role='alert' >";
+         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo __('Resources management', 'resources');
+         echo "</div></h3>";
+
          echo "<div id ='content'>";
          echo "<div class='bt-container resources_wizard_resp'>";
          echo "<div class='bt-block bt-features' >";
@@ -3758,10 +3789,16 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-
+         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
          echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+         echo "<h3><div class='alert alert-secondary' role='alert' >";
+         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo __('Resources management', 'resources');
+         echo "</div></h3>";
+
          echo "<div id ='content'>";
          echo "<div class='bt-container resources_wizard_resp'> ";
          echo "<div class='bt-block bt-features' > ";
@@ -3839,10 +3876,16 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
          echo "<div align='center'>";
-
+         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
          echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+         echo "<h3><div class='alert alert-secondary' role='alert' >";
+         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo __('Resources management', 'resources');
+         echo "</div></h3>";
+
          echo "<div id ='content'>";
          echo "<div class='bt-container resources_wizard_resp'>";
          echo "<div class='bt-block bt-features' >";

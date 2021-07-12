@@ -262,28 +262,34 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
+      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
-      echo "<div align='center'><table class='tab_cadre' width='30%' cellpadding='5'>";
-      echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Forced holiday management', 'resources') . "</th></tr>";
+      echo "<h3><div class='alert alert-secondary' role='alert'>";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Forced holiday management', 'resources');
+      echo "</div></h3>";
+
+      echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
       $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
 
       echo "<tr class=''>";
       if ($canholiday) {
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.form.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidayresource.png' alt='" . __('Declare a forced holiday', 'resources') . "'>";
          echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
          echo "</td>";
-         echo "<td class='center'>";
+         echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.php\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist.png' alt='" . __('List of forced holidays', 'resources') . "'>";
          echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
          echo "</td>";
       }
       echo "</tr></table>";
-      Html::closeForm();
-
       echo "</div>";
 
    }
@@ -298,10 +304,16 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-
+      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
       echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo "<h3><div class='alert alert-secondary' role='alert' >";
+      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo __('Resources management', 'resources');
+      echo "</div></h3>";
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
