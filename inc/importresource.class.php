@@ -507,10 +507,11 @@ class PluginResourcesImportResource extends CommonDBTM {
 //            foreach ($header as $item) {
 //               Toolbox::logWarning($item);
 //               Toolbox::logWarning($column['name']);
-               if (in_array($column['name'],$header)) {
-                  $foundColumnInHeader = true;
-                  break;
-               }
+	            $val =$column['name'];
+	            if (in_array($val,$header,true)) {
+	               $foundColumnInHeader = true;
+	//                  break;
+	            }
 //            }
             // Import column not found in header
             if (!$foundColumnInHeader) {

@@ -97,9 +97,20 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
 
       }
-      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"]));
+      $resource->getFromDB($input["id"]);
+      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".$resource->fields['name']." ".$resource->fields['firstname']);
       $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
-      $ticket->fields["content"] = Dropdown::getDropdownName(PluginResourcesResource::getTable(),$input["id"])." ".__("leave on","resources")." ".Html::convDateTime($input["date_declaration_leaving"]);
+
+      $ticket->fields["content"] = $resource->fields['name']." ".$resource->fields['firstname']." ".__("leave on","resources")." ".Html::convDateTime($input["date_end"]);
+      if(isset($input['plugin_resources_leavingreasons_id']) && !empty($input['plugin_resources_leavingreasons_id'])) {
+         $ticket->fields["content"] .= "\\n\\r".PluginResourcesLeavingReason::getTypeName(0)." : ".Dropdown::getDropdownName(PluginResourcesLeavingReason::getTable(),$input["plugin_resources_leavingreasons_id"]);
+      }
+      if(($resource->fields['plugin_resources_contracttypes_id']) == 0) {
+         $ticket->fields["content"] .= "\\n\\r".PluginResourcesContractType::getTypeName(0)." : ".Dropdown::getDropdownName(PluginResourcesContractType::getTable(),$resource->fields['plugin_resources_contracttypes_id']);
+      } else {
+         $ticket->fields["content"] .= "\\n\\r".PluginResourcesContractType::getTypeName(0)." : ". __("Without contract",'resources');
+      }
+
       $ticket->fields["type"] = Ticket::DEMAND_TYPE;
       $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
       $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];

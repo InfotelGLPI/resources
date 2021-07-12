@@ -894,9 +894,12 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $template_resources = new Self();
-      if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'], 'is_template' => 1])) {
-         $input["_oldID"] = $this->input['plugin_resources_resources_id'];
+      if(isset($this->input['plugin_resources_resources_id'])) {
+         if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'], 'is_template' => 1])) {
+            $input["_oldID"] = $this->input['plugin_resources_resources_id'];
+         }
       }
+
 
       unset($input['id']);
 
@@ -1312,7 +1315,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       $contracttypeprofile = new PluginResourcesContracttypeprofile();
       $contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']]);
-      $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+      $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']??"");
       $skip = false;
       if($available_contracttype === false || !is_array($available_contracttype)) {
          $skip = true;
@@ -3672,7 +3675,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"bt-feature col-md-4 \">";
          $contracttypeprofile = new PluginResourcesContracttypeprofile();
          $contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']]);
-         $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']);
+         $available_contracttype = json_decode($contracttypeprofile->fields['plugin_resources_contracttypes_id']?? "");
 
          $cond = [];
 

@@ -283,6 +283,13 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.3.sql");
    }
 
+   if (!$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
+      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
+      $DB->query($query) or die($DB->error());
+      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
+      $DB->query($query) or die($DB->error());
+   }
+
    if ($update80) {
 
       $restrict = ["plugin_resources_resources_id" => -1];

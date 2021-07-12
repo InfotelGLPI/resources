@@ -70,7 +70,14 @@ class PluginResourcesTeam extends CommonDropdown {
    function getAdditionalFields() {
 
       return [
-
+         ['name'  => 'users_id',
+               'label' => __('Manager of the team'),
+               'type'  => 'UserDropdown',
+               'right' => 'all'],
+         ['name'  => 'users_id_substitute',
+               'label' => __('Substitute manager of the team'),
+               'type'  => 'UserDropdown',
+               'right' => 'all'],
       ];
    }
 
