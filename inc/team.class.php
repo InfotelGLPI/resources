@@ -71,11 +71,11 @@ class PluginResourcesTeam extends CommonDropdown {
 
       return [
          ['name'  => 'users_id',
-               'label' => __('Manager of the team'),
+               'label' => __('Manager of the team', 'resources'),
                'type'  => 'UserDropdown',
                'right' => 'all'],
          ['name'  => 'users_id_substitute',
-               'label' => __('Substitute manager of the team'),
+               'label' => __('Substitute manager of the team', 'resources'),
                'type'  => 'UserDropdown',
                'right' => 'all'],
       ];
