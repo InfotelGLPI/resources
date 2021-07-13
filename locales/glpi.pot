@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 07:23+0000\n"
+"POT-Creation-Date: 2021-07-13 07:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1736,13 +1736,17 @@ msgstr ""
 msgid "Matricule"
 msgstr ""
 
-#: inc/resource.class.php:1106
-msgid "End date was not completed. Please try again."
+#: inc/resource.class.php:711 inc/resource.class.php:1487
+#: inc/resource.class.php:2386 inc/rulecontracttypehidden.class.php:271
+msgid "Second matricule"
 msgstr ""
 
-#: inc/resource.class.php:1487 inc/resource.class.php:2386
-#: inc/rulecontracttypehidden.class.php:271
-msgid "Second matricule"
+#: inc/resource.class.php:717
+msgid "Society"
+msgstr ""
+
+#: inc/resource.class.php:1106
+msgid "End date was not completed. Please try again."
 msgstr ""
 
 #: inc/resource.class.php:1982 inc/resource.class.php:2784
@@ -2305,6 +2309,14 @@ msgid "Team"
 msgid_plural "Teams"
 msgstr[0] ""
 msgstr[1] ""
+
+#: inc/team.class.php:74
+msgid "Manager of the team"
+msgstr ""
+
+#: inc/team.class.php:78
+msgid "Substitute manager of the team"
+msgstr ""
 
 #: inc/ticketcategory.class.php:93 inc/ticketcategory.class.php:111
 msgid "Category of created tickets"
