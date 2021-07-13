@@ -708,13 +708,13 @@ class PluginResourcesResource extends CommonDBTM {
          'id'    => '44',
          'table' => $this->getTable(),
          'field' => 'matricule_second',
-         'name'  => __('Second matricule'),
+         'name'  => __('Second matricule', 'resources'),
       ];
       $tab[] = [
          'id'    => '45',
          'table' => $this->getTable(),
          'field' => 'society',
-         'name'  => __('Society'),
+         'name'  => __('Society', 'resources'),
       ];
 
       return $tab;
