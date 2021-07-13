@@ -29,6 +29,8 @@
 
 include ('../../../inc/includes.php');
 
+Session::checkLoginUser();
+
 $resource_change = new PluginResourcesResource_Change();
 
 if (isset($_POST['load_button_changeresources'])) {
