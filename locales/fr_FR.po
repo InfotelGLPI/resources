@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 07:23+0000\n"
+"POT-Creation-Date: 2021-07-13 07:42+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -1775,14 +1775,18 @@ msgstr "Client sensibilisé à la sécurité"
 msgid "Matricule"
 msgstr "Matricule"
 
+#: inc/resource.class.php:711 inc/resource.class.php:1487
+#: inc/resource.class.php:2386 inc/rulecontracttypehidden.class.php:271
+msgid "Second matricule"
+msgstr "Deuxième matricule"
+
+#: inc/resource.class.php:717
+msgid "Society"
+msgstr "Société"
+
 #: inc/resource.class.php:1106
 msgid "End date was not completed. Please try again."
 msgstr "La date de départ n'a pas été indiquée. Merci de la spécifier."
-
-#: inc/resource.class.php:1487 inc/resource.class.php:2386
-#: inc/rulecontracttypehidden.class.php:271
-msgid "Second matricule"
-msgstr "Deuxième matricule"
 
 #: inc/resource.class.php:1982 inc/resource.class.php:2784
 msgid "Empty for non defined"
@@ -2349,6 +2353,14 @@ msgid "Team"
 msgid_plural "Teams"
 msgstr[0] "Equipe"
 msgstr[1] "Equipes"
+
+#: inc/team.class.php:74
+msgid "Manager of the team"
+msgstr "Responsable de l'équipe"
+
+#: inc/team.class.php:78
+msgid "Substitute manager of the team"
+msgstr "Responsable suppléant de l'équipe"
 
 #: inc/ticketcategory.class.php:93 inc/ticketcategory.class.php:111
 msgid "Category of created tickets"
