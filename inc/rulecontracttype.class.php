@@ -264,6 +264,10 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_matricule']['type']  = "yesonly";
       $actions['requiredfields_matricule']['force_actions'] = ['assign'];
 
+      $actions['requiredfields_matricule_second']['name']  = __('Second matricule','resources');
+      $actions['requiredfields_matricule_second']['type']  = "yesonly";
+      $actions['requiredfields_matricule_second']['force_actions'] = ['assign'];
+
       $actions['requiredfields_plugin_resources_roles_id']['name']  = __('Role','resources');
       $actions['requiredfields_plugin_resources_roles_id']['type']  = "yesonly";
       $actions['requiredfields_plugin_resources_roles_id']['force_actions'] = ['assign'];
