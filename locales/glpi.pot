@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-15 13:26+0000\n"
+"POT-Creation-Date: 2021-07-15 13:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -347,7 +347,7 @@ msgstr ""
 
 #: inc/adconfig.class.php:329 inc/linkad.class.php:442 inc/linkad.class.php:608
 #: inc/profile.class.php:263 inc/role.class.php:48
-#: inc/rulecontracttype.class.php:267 inc/rulecontracttypehidden.class.php:275
+#: inc/rulecontracttype.class.php:271 inc/rulecontracttypehidden.class.php:275
 msgid "Role"
 msgid_plural "Roles"
 msgstr[0] ""
@@ -1737,7 +1737,8 @@ msgid "Matricule"
 msgstr ""
 
 #: inc/resource.class.php:711 inc/resource.class.php:1486
-#: inc/resource.class.php:2385 inc/rulecontracttypehidden.class.php:271
+#: inc/resource.class.php:2385 inc/rulecontracttype.class.php:267
+#: inc/rulecontracttypehidden.class.php:271
 msgid "Second matricule"
 msgstr ""
 
