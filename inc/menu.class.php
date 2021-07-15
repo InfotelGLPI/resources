@@ -180,7 +180,7 @@ class PluginResourcesMenu extends CommonDBTM {
 
          //See resources
          echo "<td class='tab_td_menu center'>";
-         echo "<a href=\"./resource.php\">";
+         echo "<a href=\"./resource.php?reset=reset\">";
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/resourcelist.png' alt='" . __('Search resources', 'resources') . "'>";
          echo "<br>" . __('Search resources', 'resources') . "</a>";
          echo "</td>";

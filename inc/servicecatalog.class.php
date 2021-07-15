@@ -45,7 +45,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
     * @return bool
     */
    static function canUse() {
-      return Session::haveRight(self::$rightname, UPDATE);
+      return Session::haveRight(self::$rightname, READ);
    }
 
    /**

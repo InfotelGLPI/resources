@@ -105,10 +105,10 @@ class PluginResourcesProfile extends Profile {
          'plugin_resources_employment' => ALLSTANDARDRIGHT,
          'plugin_resources_budget' => ALLSTANDARDRIGHT,
          'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
-         'plugin_resources_import' => 0,
+         'plugin_resources_import' => 1,
          'plugin_resources_open_ticket' => 1,
          'plugin_resources_all' => 1,
-         'plugin_resources_employee_core_form' => 0
+         'plugin_resources_employee_core_form' => 1
       ], true);
 
    }
