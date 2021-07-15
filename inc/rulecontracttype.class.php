@@ -271,6 +271,18 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_plugin_resources_employers_id']['type']  = "yesonly";
       $actions['requiredfields_plugin_resources_employers_id']['force_actions'] = ['assign'];
 
+      $actions['requiredfields_plugin_resources_services_id']['name']  = PluginResourcesService::getTypeName(1);
+      $actions['requiredfields_plugin_resources_services_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_services_id']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_plugin_resources_teams_id']['name']  = PluginResourcesTeam::getTypeName(1);
+      $actions['requiredfields_plugin_resources_teams_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_teams_id']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_plugin_resources_functions_id']['name']  = PluginResourcesFunction::getTypeName(1);
+      $actions['requiredfields_plugin_resources_functions_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_functions_id']['force_actions'] = ['assign'];
+
       if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
 
          $actions['requiredfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);
