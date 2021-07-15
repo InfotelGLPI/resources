@@ -742,11 +742,9 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addStandardTab(PluginResourcesEmployee::class, $ong, $options);
       $this->addStandardTab(PluginResourcesChecklist::class, $ong, $options);
       $this->addStandardTab(PluginResourcesTask::class, $ong, $options);
-      $this->addStandardTab(PluginResourcesResourceImport::class, $ong, $options);
-
 
       if (Session::getCurrentInterface() == 'central') {
-
+         $this->addStandardTab(PluginResourcesResourceImport::class, $ong, $options);
          $this->addStandardTab(PluginResourcesReportConfig::class, $ong, $options);
          $this->addStandardTab(Document_Item::class, $ong, $options);
 
