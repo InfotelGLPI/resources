@@ -1305,6 +1305,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       $config = new PluginResourcesConfig();
       $config->getFromDB(1);
+      $option = [];
       if($config->fields['allow_without_contract'] == 0){
          $option[-1] = __('Without contract', 'resources');
       }
