@@ -230,7 +230,8 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "<td>";
          $resource = new PluginResourcesResource();
-         $resource->dropdownTemplate("plugin_resources_resourcetemplates_id",$this->fields["plugin_resources_resourcetemplates_id"]);
+         $resource->dropdownTemplate("plugin_resources_resourcetemplates_id",
+                                     $this->fields["plugin_resources_resourcetemplates_id"], false);
 //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
 
          echo "</td>";
