@@ -1253,6 +1253,30 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                $otherIndex++;
                break;
+            case 11:
+               if ($oldValues) {
+                  echo "<ul>";
+                  echo "<li style='$oldCSS'>";
+
+                  $pluginResourcesTeam = new PluginResourcesTeam();
+                  $pluginResourcesTeam->getFromDB($pluginResourcesResource->getFieldByDataNameID($data['resource_column']));
+                  echo $pluginResourcesTeam->getName();
+
+                  echo "</li>";
+                  echo "<li style='$newCSS'>";
+               }
+
+               Dropdown::show(PluginResourcesTeam::class, [
+                  'name' => $hValue,
+                  'value' => $data['value'],
+                  'entity' => $_SESSION['glpiactive_entity'],
+                  'entity_sons' => true
+               ]);
+               if ($oldValues) {
+                  echo "</li>";
+                  echo "</ul>";
+               }
+               break;
          }
          echo "</span>";
 
@@ -1715,6 +1739,15 @@ class PluginResourcesImportResource extends CommonDBTM {
                            echo $pluginResourcesDepartmentDBTM->getField('name');
                            echo "</a>";
                            break;
+                        case PluginResourcesTeam::class:
+
+                           $pluginResourcesTeamDBTM = new PluginResourcesTeam();
+                           $pluginResourcesTeamDBTM->getFromDB($data['value']);
+
+                           echo "<a href='" . PluginResourcesTeam::getFormURLWithID($data['value']) . "'> ";
+                           echo $pluginResourcesTeamDBTM->getField('name');
+                           echo "</a>";
+                           break;
                         case PluginResourcesContractType::class:
 
                            $pluginResourcesContractType = new PluginResourcesContractType();
@@ -1914,6 +1947,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                case User::class:
                case Location::class:
                case PluginResourcesDepartment::class:
+               case PluginResourcesTeam::class:
                case "String":
                   return true;
                case "Date":
@@ -1925,6 +1959,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return true;
                case "Date":
                case PluginResourcesDepartment::class:
+               case PluginResourcesTeam::class:
                case Location::class:
                case User::class:
                case PluginResourcesContractType::class:
@@ -1933,6 +1968,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          case 2: //String
             switch ($out) {
                case PluginResourcesDepartment::class:
+               case PluginResourcesTeam::class:
                case Location::class:
                case User::class:
                case PluginResourcesContractType::class:
@@ -1949,6 +1985,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                case User::class:
                case Location::class:
                case PluginResourcesDepartment::class:
+               case PluginResourcesTeam::class:
                case PluginResourcesContractType::class:
                   return false;
             }
@@ -1974,6 +2011,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                case User::class:
                case Location::class:
                case PluginResourcesDepartment::class:
+               case PluginResourcesTeam::class:
                   return $value;
             }
          case 1: //Decimal
@@ -1996,12 +2034,31 @@ class PluginResourcesImportResource extends CommonDBTM {
 
                      // TODO find an alternative to find in code, maybe alternative_name variable with an array ?
                      $pluginResourcesContractTypeDBTM = new PluginResourcesContractType();
-                     if ($pluginResourcesContractTypeDBTM->getFromDBByCrit(['code' => $utf8String])) {
+//                     if (count($contracts = $pluginResourcesContractTypeDBTM->find(['code' => $utf8String])) > 0) {
+//                        if(count($contracts) == 1) {
+//                           $objectID = $contracts[0]['id'];
+//                        } else {
+//                           $objectID = $pluginResourcesContractTypeDBTM->getID();
+//                        }
+//
+//                     }
+                     if($pluginResourcesContractTypeDBTM->getFromDBByCrit(['code' => $utf8String])) {
                         $objectID = $pluginResourcesContractTypeDBTM->getID();
                      }
                   }
                   return $objectID;
+               case PluginResourcesTeam::class:
+                  $objectID = $this->getObjectIDByClassNameAndName(PluginResourcesTeam::class, $utf8String);
 
+                  if ($objectID === 0 || $objectID === -1) {
+
+                     // TODO find an alternative to find in code, maybe alternative_name variable with an array ?
+                     $pluginResourcesTeamDBTM = new PluginResourcesTeam();
+                     if ($pluginResourcesTeamDBTM->getFromDBByCrit(['code' => $utf8String])) {
+                        $objectID = $pluginResourcesTeamDBTM->getID();
+                     }
+                  }
+                  return $objectID;
                case User::class:
                   $userList = $this->getUserByFullname($utf8String);
 
@@ -2015,6 +2072,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                   return $this->getObjectIDByClassNameAndName(Location::class, $utf8String);
                case PluginResourcesDepartment::class:
                   return $this->getObjectIDByClassNameAndName(PluginResourcesDepartment::class, $utf8String);
+
             }
          case 3: //Date
             switch ($out) {
@@ -2102,7 +2160,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             $value = $identifier['value'];
          }
 
-         if ($identifier['resource_column'] !== "10") {
+         if ($identifier['resource_column'] != "10") {
             $crit[] = "r." . addslashes($pluginResourcesResource->getResourceColumnNameFromDataNameID($identifier['resource_column'])) . " = " . $value;
          } else {
             $needLink = true;

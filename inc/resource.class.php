@@ -83,7 +83,8 @@ class PluginResourcesResource extends CommonDBTM {
          __("Arrival date", "resources"),
          __("Departure date", "resources"),
          __("Sales manager", "resources"),
-         __("Other", "resources")
+         __("Other", "resources"),
+         PluginResourcesTeam::getTypeName(0),
       ];
    }
 
@@ -106,6 +107,8 @@ class PluginResourcesResource extends CommonDBTM {
          "date_begin",
          "date_end",
          "users_id_sales",
+         "other",
+         "plugin_resources_teams_id",
       ];
 
       if (!array_key_exists($dataNameID, $dataNames)) {
@@ -131,7 +134,8 @@ class PluginResourcesResource extends CommonDBTM {
          "Date",
          "Date",
          "User",
-         "String"
+         "String",
+         "PluginResourcesTeam"
       ];
 
       return $dataTypes;
@@ -161,7 +165,8 @@ class PluginResourcesResource extends CommonDBTM {
          "date_begin",
          "date_end",
          "users_id_sales",
-         "others"
+         "others",
+         "plugin_resources_teams_id"
       ];
 
       if (!array_key_exists($dataNameId, $columnNames)) {

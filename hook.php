@@ -289,6 +289,11 @@ function plugin_resources_install() {
       $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
       $DB->query($query) or die($DB->error());
    }
+   if (!$DB->fieldExists("glpi_plugin_resources_teams", "code")) {
+      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD   `code` varchar(255) collate utf8_unicode_ci default NULL;";
+      $DB->query($query) or die($DB->error());
+
+   }
 
    if ($update80) {
 

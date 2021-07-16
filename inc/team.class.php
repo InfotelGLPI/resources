@@ -78,6 +78,9 @@ class PluginResourcesTeam extends CommonDropdown {
                'label' => __('Substitute manager of the team', 'resources'),
                'type'  => 'UserDropdown',
                'right' => 'all'],
+         ['name'  => 'code',
+               'label' => __('Team code', 'resources'),
+               'type'  => 'text'],
       ];
    }
 
