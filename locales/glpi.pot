@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-16 09:32+0000\n"
+"POT-Creation-Date: 2021-07-19 08:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1003,39 +1003,39 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: inc/importresource.class.php:451 inc/importresource.class.php:2904
+#: inc/importresource.class.php:509 inc/importresource.class.php:2963
 msgid "The file does not match any template"
 msgstr ""
 
-#: inc/importresource.class.php:606 inc/menu.class.php:279
+#: inc/importresource.class.php:664 inc/menu.class.php:279
 msgid "Update GLPI Resources"
 msgstr ""
 
-#: inc/importresource.class.php:610
+#: inc/importresource.class.php:668
 msgid "Be careful, new resources will be created in the entity"
 msgstr ""
 
-#: inc/importresource.class.php:617
+#: inc/importresource.class.php:675
 msgid "Compare File with GLPI Resources"
 msgstr ""
 
-#: inc/importresource.class.php:621
+#: inc/importresource.class.php:679
 msgid "Compare GLPI Resources with File"
 msgstr ""
 
-#: inc/importresource.class.php:660 inc/importresource.class.php:2209
+#: inc/importresource.class.php:718 inc/importresource.class.php:2267
 msgid "Identical to GLPI"
 msgstr ""
 
-#: inc/importresource.class.php:664 inc/importresource.class.php:2213
+#: inc/importresource.class.php:722 inc/importresource.class.php:2271
 msgid "Not in GLPI"
 msgstr ""
 
-#: inc/importresource.class.php:668 inc/importresource.class.php:2211
+#: inc/importresource.class.php:726 inc/importresource.class.php:2269
 msgid "Different to GLPI"
 msgstr ""
 
-#: inc/importresource.class.php:672 report/budgetsummary/budgetsummary.php:388
+#: inc/importresource.class.php:730 report/budgetsummary/budgetsummary.php:388
 #: report/budgetsummary/budgetsummary.php:389
 #: report/budgetsummary/budgetsummary.php:390
 #: report/budgetsummary/budgetsummary.php:392
@@ -1045,31 +1045,31 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: inc/importresource.class.php:676 inc/importresource.class.php:712
+#: inc/importresource.class.php:734 inc/importresource.class.php:770
 msgid "Calculate"
 msgstr ""
 
-#: inc/importresource.class.php:696
+#: inc/importresource.class.php:754
 msgid "Found in the file with a top level id"
 msgstr ""
 
-#: inc/importresource.class.php:700
+#: inc/importresource.class.php:758
 msgid "Found in file with second level id"
 msgstr ""
 
-#: inc/importresource.class.php:704
+#: inc/importresource.class.php:762
 msgid "Not in the file"
 msgstr ""
 
-#: inc/importresource.class.php:708
+#: inc/importresource.class.php:766
 msgid "Total lines in the file"
 msgstr ""
 
-#: inc/importresource.class.php:737
+#: inc/importresource.class.php:795
 msgid "Validate and pre-import file"
 msgstr ""
 
-#: inc/importresource.class.php:814
+#: inc/importresource.class.php:872
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:48
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:50
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:52
@@ -1077,96 +1077,96 @@ msgstr ""
 msgid "Resource"
 msgstr ""
 
-#: inc/importresource.class.php:849
+#: inc/importresource.class.php:907
 msgid "Identification"
 msgstr ""
 
-#: inc/importresource.class.php:853
+#: inc/importresource.class.php:911
 msgid "Informations from file"
 msgstr ""
 
-#: inc/importresource.class.php:957 inc/importresource.class.php:2714
+#: inc/importresource.class.php:1015 inc/importresource.class.php:2772
 msgid "New resource"
 msgstr ""
 
-#: inc/importresource.class.php:1343
+#: inc/importresource.class.php:1401
 msgid "File not found"
 msgstr ""
 
-#: inc/importresource.class.php:1354
+#: inc/importresource.class.php:1412
 msgid "The selected file doesn't match any configured import"
 msgstr ""
 
-#: inc/importresource.class.php:1399
+#: inc/importresource.class.php:1457
 msgid "Import file"
 msgstr ""
 
-#: inc/importresource.class.php:1454
+#: inc/importresource.class.php:1512
 msgid "Verify file"
 msgstr ""
 
-#: inc/importresource.class.php:1457
+#: inc/importresource.class.php:1515
 msgid "Delete file"
 msgstr ""
 
-#: inc/importresource.class.php:1499
+#: inc/importresource.class.php:1557
 msgid "no file to compare"
 msgstr ""
 
-#: inc/importresource.class.php:1516
+#: inc/importresource.class.php:1574
 msgid "The folder you expected to display content doesn't exist."
 msgstr ""
 
-#: inc/importresource.class.php:1529
+#: inc/importresource.class.php:1587
 msgid "No imports configured"
 msgstr ""
 
-#: inc/importresource.class.php:1530
+#: inc/importresource.class.php:1588
 msgid "Configure a new import"
 msgstr ""
 
-#: inc/importresource.class.php:1547
+#: inc/importresource.class.php:1605
 msgid "Choose"
 msgstr ""
 
-#: inc/importresource.class.php:1877
+#: inc/importresource.class.php:1935
 msgid "Data from file"
 msgstr ""
 
-#: inc/importresource.class.php:2492
+#: inc/importresource.class.php:2550
 msgid "Not in file"
 msgstr ""
 
-#: inc/importresource.class.php:2496
+#: inc/importresource.class.php:2554
 msgid "first level"
 msgstr ""
 
-#: inc/importresource.class.php:2498
+#: inc/importresource.class.php:2556
 msgid "second level"
 msgstr ""
 
-#: inc/importresource.class.php:2501
+#: inc/importresource.class.php:2559
 #, php-format
 msgid "Find in file with %s identifier"
 msgstr ""
 
-#: inc/importresource.class.php:2589
+#: inc/importresource.class.php:2647
 msgid "Number of titles and values of tooltip doesn't match"
 msgstr ""
 
-#: inc/importresource.class.php:2682
+#: inc/importresource.class.php:2740
 msgid "No Imports"
 msgstr ""
 
-#: inc/importresource.class.php:2704
+#: inc/importresource.class.php:2762
 msgid "Deleted resource"
 msgstr ""
 
-#: inc/importresource.class.php:2709
+#: inc/importresource.class.php:2767
 msgid "Updated resource"
 msgstr ""
 
-#: inc/importresource.class.php:2898
+#: inc/importresource.class.php:2957
 msgid "The file has been pre-import"
 msgstr ""
 
