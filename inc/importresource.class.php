@@ -300,7 +300,7 @@ class PluginResourcesImportResource extends CommonDBTM {
     */
    function manageImport($datas, $importID) {
 
-      $importResourceID = $this->isExistingImportResourceByDataFromFile($datas);
+       $importResourceID = $this->isExistingImportResourceByDataFromFile($datas);
 
       // Override data of existing importResource
       if (!is_null($importResourceID)) {
@@ -314,21 +314,79 @@ class PluginResourcesImportResource extends CommonDBTM {
             PluginResourcesImport::$keyInOtherTables => $importID
          ];
 
-         $newImportId = $this->add($importResourceInput);
 
-         $importResourceData = new PluginResourcesImportResourceData();
+         $datas2 = $datas;
 
-         // Create new Import resource data
-         foreach ($datas as $item) {
+         //INFOTEL
 
-            $importResourceDataInput = $importResourceData->prepareInput(
-               addslashes($item['name']),
-               addslashes($item['value']),
-               $newImportId,
-               $item['plugin_resources_importcolumns_id']
-            );
+         // Find identifiers
+         $firstLevelIdentifiers = [];
+         $secondLevelIdentifiers = [];
+         $allDatas = [];
 
-            $importResourceData->add($importResourceDataInput);
+         foreach ($datas2 as $data) {
+
+            $pluginResourcesImportColumn = new PluginResourcesImportColumn();
+            $pluginResourcesImportColumn->getFromDB($data['plugin_resources_importcolumns_id']);
+
+            $element = [
+               'name' => $data['name'],
+               'value' => $data['value'],
+               'type' => $data['plugin_resources_importcolumns_id'],
+               'resource_column' => $pluginResourcesImportColumn->getField('resource_column')
+            ];
+
+            $allDatas[] = $element;
+
+            switch ($pluginResourcesImportColumn->getField('is_identifier')) {
+               case 1:
+                  $firstLevelIdentifiers[] = $element;
+                  break;
+               case 2:
+                  $secondLevelIdentifiers[] = $element;
+                  break;
+            }
+         }
+
+         $status = null;
+
+         $resourceID = $this->findResource($firstLevelIdentifiers);
+         if (is_null($resourceID) && count($secondLevelIdentifiers) > 0) {
+            $resourceID = $this->findResource($secondLevelIdentifiers);
+         }
+
+         $pluginResourcesResource = new PluginResourcesResource();
+         if (!$resourceID) {
+            $status = self::NOT_IN_GLPI;
+         } else {
+            // Test Field in resources
+            if ($pluginResourcesResource->isDifferentFromImportResourceDatas($resourceID, $allDatas)) {
+               $status = self::DIFFERENT;
+            } else {
+               $status = self::IDENTICAL;
+            }
+         }
+
+         if($status != self::IDENTICAL) {
+            $newImportId = $this->add($importResourceInput);
+            $importResourceData = new PluginResourcesImportResourceData();
+
+            // Create new Import resource data
+            foreach ($datas as $item) {
+               
+
+
+               $importResourceDataInput = $importResourceData->prepareInput(
+                  addslashes($item['name']),
+                  addslashes($item['value']),
+                  $newImportId,
+                  $item['plugin_resources_importcolumns_id']
+               );
+
+               $importResourceData->add($importResourceDataInput);
+
+
+            }
          }
       }
    }
@@ -2886,6 +2944,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             foreach ($lines as $line) {
                $datas = $this->parseFileLine($header, $line, $importID);
+
                $this->manageImport($datas, $importID);
             }
             $importSuccess = true;
