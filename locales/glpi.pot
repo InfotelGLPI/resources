@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-19 08:06+0000\n"
+"POT-Creation-Date: 2021-07-20 07:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -244,15 +244,15 @@ msgstr ""
 msgid "Declaration of resource leaving OK"
 msgstr ""
 
-#: front/resource.remove.php:95 front/resource.remove.php:103
+#: front/resource.remove.php:95
 msgid "Departure of"
 msgstr ""
 
-#: front/resource.remove.php:98 front/resource.remove.php:106
+#: front/resource.remove.php:98
 msgid "leave on"
 msgstr ""
 
-#: front/resource.remove.php:113 inc/contracttype.class.php:236
+#: front/resource.remove.php:105 inc/contracttype.class.php:236
 #: inc/contracttype.class.php:257 inc/contracttypeprofile.class.php:78
 #: inc/resource.class.php:1315 inc/resource.class.php:2301
 msgid "Without contract"
