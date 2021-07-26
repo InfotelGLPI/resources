@@ -2729,10 +2729,118 @@ class PluginResourcesImportResource extends CommonDBTM {
       }
 
       // Get all imports from the selected type of import
-      $importResources = $this->getResourcesImports($pluginResourcesImportDBTM->getID(), $start, $limit);
+      if(isset($params['filter'])){
+         $importResources = $this->find(['plugin_resources_imports_id' =>$pluginResourcesImportDBTM->getID() ]);
+         $importResourcesSave = $importResources;
+         foreach ($importResources as $key => $importResource) {
 
-      $critNbImports = ['plugin_resources_imports_id' => $pluginResourcesImportDBTM->getID()];
-      $nbImports = $dbu->countElementsInTable(PluginResourcesImportResource::getTable(), $critNbImports);
+            // Find identifiers
+            $firstLevelIdentifiers = [];
+            $secondLevelIdentifiers = [];
+
+            $datas = $pluginResourcesImportResourceDataDBTM->find(["plugin_resources_importresources_id" => $importResource['id']]);
+
+            foreach ($datas as $data) {
+
+               // Speed up loop
+               if (count($firstLevelIdentifiers) == $numberOfFirstLevelIdentifiers
+                   && count($secondLevelIdentifiers) == $numberOfSecondLevelIdentifiers) {
+                  break;
+               }
+
+               $column = $columns[$data['plugin_resources_importcolumns_id']];
+
+               switch ($column['is_identifier']) {
+                  case 1:
+                     $element = [
+                        'name' => $data['name'],
+                        'value' => $data['value'],
+                        'type' => $data['plugin_resources_importcolumns_id'],
+                        'resource_column' => $column['resource_column']
+                     ];
+
+                     if (is_string($element['value']) && empty($element['value'])) {
+                        $element['value'] = null;
+                     }
+                     $firstLevelIdentifiers[] = $element;
+                     break;
+                  case 2:
+                     $element = [
+                        'name' => $data['name'],
+                        'value' => $data['value'],
+                        'type' => $data['plugin_resources_importcolumns_id'],
+                        'resource_column' => $column['resource_column']
+                     ];
+
+                     if (is_string($element['value']) && empty($element['value'])) {
+                        $element['value'] = null;
+                     }
+                     $secondLevelIdentifiers[] = $element;
+                     break;
+               }
+            }
+
+            if (count($firstLevelIdentifiers) > 0) {
+               $resourceID = $this->findResource($firstLevelIdentifiers);
+            }
+
+            if (!$resourceID && count($secondLevelIdentifiers) > 0) {
+               $resourceID = $this->findResource($secondLevelIdentifiers);
+            }
+
+            $keep = false;
+            switch ($params['filter']) {
+               case "deleted" :
+                  if ($pluginResourcesResourcesDBTM->getFromDB($resourceID)) {
+                     if ($pluginResourcesResourcesDBTM->fields['is_deleted']) {
+                        $keep = true;
+                     }
+                  }
+                  break;
+               case "update" :
+                  if ($pluginResourcesResourcesDBTM->getFromDB($resourceID)) {
+                     if (!$pluginResourcesResourcesDBTM->fields['is_deleted']) {
+                        $keep = true;
+                     }
+                  }
+                  break;
+
+               case "new":
+                  if (!$pluginResourcesResourcesDBTM->getFromDB($resourceID)) {
+                     $keep = true;
+                  }
+                  break;
+
+            }
+
+            if($keep === false) {
+               unset($importResourcesSave[$key]);
+            }
+         }
+
+         $nbImports = count($importResourcesSave);
+         $importResources = [];
+         $i = 0;
+         foreach ($importResourcesSave as $importResource) {
+            if($i < $start) {
+               $i++;
+               continue;
+            }
+            if($i >= $start+$limit) {
+               break;
+            }
+            $importResources[] = $importResource;
+            $i++;
+         }
+
+      } else {
+         $importResources = $this->getResourcesImports($pluginResourcesImportDBTM->getID(), $start, $limit);
+         $critNbImports = ['plugin_resources_imports_id' => $pluginResourcesImportDBTM->getID()];
+         $nbImports = $dbu->countElementsInTable(PluginResourcesImportResource::getTable(), $critNbImports);
+      }
+
+
+
 
       $elementDisplayed = 0;
 
@@ -2744,9 +2852,14 @@ class PluginResourcesImportResource extends CommonDBTM {
          $parameters = "type=" . $params['type'];
          $parameters .= "&" . self::SELECTED_IMPORT_DROPDOWN_NAME;
          $parameters .= "=" . $params[self::SELECTED_IMPORT_DROPDOWN_NAME];
-         $formURL = self::getResourceImportFormUrl() . "?" . $parameters;
+         $parameters2 = "";
+         if(isset($params['filter'])) {
+            $parameters2 = "&" . "filter=".$params['filter'];
+         }
 
-         Html::printPager($params['start'], $nbImports, $_SERVER['PHP_SELF'], $parameters);
+         $formURL = self::getResourceImportFormUrl() . "?" . $parameters.$parameters2;
+
+         Html::printPager($params['start'], $nbImports, $_SERVER['PHP_SELF'], $parameters.$parameters2);
 
          echo "<form name='form' method='post' id='import' action ='$formURL' >";
          echo "<div align='center'>";
@@ -2759,17 +2872,17 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo "<td class='center' style='width: 10px;height: 10px;background-color:red;'>";
          echo "</td>";
          echo "<td>";
-         echo __("Deleted resource",'resources');
+         echo "<a href='".$_SERVER['PHP_SELF']."?".$parameters."&filter=deleted'>".__("Deleted resource",'resources')."</a>";
          echo "</td>";
          echo "<td class='center' style='width: 10px;height: 10px;background-color:orange;'>";
          echo "</td>";
          echo "<td>";
-         echo __("Updated resource",'resources');
+         echo "<a href='".$_SERVER['PHP_SELF']."?".$parameters."&filter=update'>".__("Updated resource",'resources')."</a>";
          echo "</td>";
          echo "<td class='center' style='width: 10px;height: 10px;background-color:green;'>";
          echo "</td>";
          echo "<td>";
-         echo __("New resource",'resources');
+         echo "<a href='".$_SERVER['PHP_SELF']."?".$parameters."&filter=new'>".__("New resource",'resources')."</a>";
          echo "</td>";
          echo "</tr>";
          echo "</table>";

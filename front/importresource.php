@@ -29,6 +29,10 @@ if ($import->canView()) {
       $params['start'] = $_GET['start'];
    }
 
+   if(isset($_GET['filter'])){
+      $params['filter'] = $_GET['filter'];
+   }
+
    if(isset($_POST['glpilist_limit'])){
       $params['limit'] = $_POST['glpilist_limit'];
    }else if(isset($_SESSION['glpilist_limit'])){
