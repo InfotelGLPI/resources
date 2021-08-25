@@ -715,12 +715,12 @@ class PluginResourcesResource extends CommonDBTM {
          'field' => 'matricule_second',
          'name'  => __('Second matricule', 'resources'),
       ];
-      $tab[] = [
-         'id'    => '45',
-         'table' => $this->getTable(),
-         'field' => 'society',
-         'name'  => __('Society', 'resources'),
-      ];
+//      $tab[] = [
+//         'id'    => '45',
+//         'table' => $this->getTable(),
+//         'field' => 'society',
+//         'name'  => __('Society', 'resources'),
+//      ];
 
       return $tab;
    }

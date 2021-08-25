@@ -979,6 +979,24 @@ function plugin_resources_getAddSearchOptions($itemtype) {
          $sopt[4325]['massiveaction'] = false;
 
       }
+   } else if ($itemtype == "Computer") {
+      if (Session::haveRight("plugin_resources", READ)) {
+         $sopt[4331]['table'] = 'glpi_plugin_resources_resources';
+         $sopt[4331]['field'] = 'name';
+         $sopt[4331]['datatype'] = 'itemlink';
+//         $sopt[4331]['forcegroupby'] = true;
+//         $sopt[4331]['usehaving'] = true;
+//         $sopt[4331]['joinparams'] =   [
+//            'jointype'           => 'items_id',
+//            'beforejoin'         => [
+//               'table'              => 'glpi_plugin_resources_resources_items',
+//               'joinparams'         => [
+//                  'jointype'           => 'itemtype_item'
+//               ]
+//            ]
+//         ];
+         $sopt[4331]['name']  = PluginResourcesResource::getTypeName(2) . " - " . PluginResourcesResource::getTypeName(1);
+      }
    }
    return $sopt;
 }
@@ -996,19 +1014,37 @@ function plugin_resources_addSelect($type, $ID, $num) {
    $table     = $searchopt[$ID]["table"];
    $field     = $searchopt[$ID]["field"];
 
+
    // Example of standard Select clause but use it ONLY for specific Select
    // No need of the function if you do not have specific cases
-   switch ($table . "." . $field) {
-      case "glpi_plugin_resources_resources.name":
-         return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
+   switch ($type) {
+      case "Computer":
+         switch ($table . "." . $field) {
+            case "glpi_plugin_resources_resources.name":
+               return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`id`, '__NULL__'))
+                   ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
+               return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`$field`, '__NULL__'), '$#$',`$table`.`id`)
+                  ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
+               return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
+               break;
+
+         }
          break;
-      case "glpi_plugin_resources_managers.name":
-      case "glpi_plugin_resources_recipients_leaving.name":
-      case "glpi_plugin_resources_recipients.name":
-      case "glpi_plugin_resources_salemanagers.name":
-         return "`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, `" . $table . "`.`firstname` AS ITEM_" . $num . "_3,`" . $table . "`.`realname` AS ITEM_" . $num . "_4, ";
+      default:
+         switch ($table . "." . $field) {
+            case "glpi_plugin_resources_resources.name":
+               return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
+               break;
+            case "glpi_plugin_resources_managers.name":
+            case "glpi_plugin_resources_recipients_leaving.name":
+            case "glpi_plugin_resources_recipients.name":
+            case "glpi_plugin_resources_salemanagers.name":
+               return "`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, `" . $table . "`.`firstname` AS ITEM_" . $num . "_3,`" . $table . "`.`realname` AS ITEM_" . $num . "_4, ";
+               break;
+         }
          break;
    }
+
    return "";
 }
 
@@ -1420,7 +1456,6 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
    $field     = $searchopt[$ID]["field"];
 
    $dbu = new DbUtils();
-
    $output_type = Search::HTML_OUTPUT;
    if (isset($_GET['display_type'])) {
       $output_type = $_GET['display_type'];
@@ -1648,6 +1683,31 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
                   $out .= "</a>";
                }
                return $out;
+               break;
+         }
+         return "";
+         break;
+      case Computer::class:
+
+         switch ($ID) {
+
+            case 4331 :
+               $result = "";
+               if (isset($data["Computer_4331"]) && !is_null($data["Computer_4331"])) {
+                  if (isset($data["Computer_4331"]["count"])) {
+                     $count = $data["Computer_4331"]["count"];
+                     $i     = 0;
+                     for ($i; $i < $count; $i++) {
+                        if ($i != 0) {
+                           $result .= "\n";
+                        }
+                        $result .= PluginResourcesResource::getResourceName($data["Computer_4331"][$i]["name"]);
+
+
+                     }
+                  }
+               }
+               return $result;
                break;
          }
          return "";
