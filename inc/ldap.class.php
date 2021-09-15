@@ -321,6 +321,8 @@ class PluginResourcesLDAP extends CommonDBTM {
             }
 
          }
+         $attributes['displayName'] = $data["firstname"] . " ".$data["name"];
+         $attributes['description'] = $data["role"];
          $user->fill($attributes);
 
          if($user->save()){

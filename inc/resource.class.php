@@ -3835,6 +3835,18 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div class=\"bt-feature col-md-4 \">";
          $actions = PluginResourcesResource_Change::getAllActions();
+         $actionProfile = new PluginResourcesActionprofile();
+         if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+            $available_action = json_decode($actionProfile->fields['actions_id']);
+         }
+         if(isset($available_action) && !empty($available_action)) {
+            foreach ($actions as $id => $action) {
+               if(!in_array($id,$available_action)) {
+                  unset($actions[$id]);
+               }
+            }
+
+         }
          Dropdown::showFromArray('change_action',
                                  $actions,
                                  ['on_change' => "plugin_resources_change_action(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);

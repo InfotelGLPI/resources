@@ -806,6 +806,7 @@ CREATE TABLE `glpi_plugin_resources_linkads` (
    `mail` varchar(255) collate utf8_unicode_ci default NULL,
    `phone` varchar(255) collate utf8_unicode_ci default NULL,
    `role` varchar(255) collate utf8_unicode_ci default NULL,
+   `service` varchar(255) collate utf8_unicode_ci default NULL,
    `cellphone` varchar(255) collate utf8_unicode_ci default NULL,
    `action_done` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
@@ -829,6 +830,7 @@ CREATE TABLE `glpi_plugin_resources_linkmetademands` (
 
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `glpi_plugin_resources_adconfigs`;
 CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `id` int(11) NOT NULL auto_increment,
    `auth_id` int(11) NOT NULL default '0',
@@ -850,6 +852,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `ouUser` varchar(255) collate utf8_unicode_ci default '',
    `cellPhoneAD` varchar(255) collate utf8_unicode_ci default '',
    `roleAD` varchar(255) collate utf8_unicode_ci default '',
+   `serviceAD` varchar(255) collate utf8_unicode_ci default '',
    `first_form`  int(11) NOT NULL default '0',
    `second_form`  int(11) NOT NULL default '0',
    `mail_prefix` int(11) NOT NULL default '0',
@@ -933,6 +936,14 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_contracttypeprofiles`;
 CREATE TABLE `glpi_plugin_resources_contracttypeprofiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_resources_contracttypes_id` varchar(255) NOT NULL default '0',
+  `profiles_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS `glpi_plugin_resources_actionprofiles`;
+CREATE TABLE `glpi_plugin_resources_actionprofiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `actions_id` varchar(255) NOT NULL default '0',
   `profiles_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
