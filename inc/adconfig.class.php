@@ -345,6 +345,12 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
 
          echo "<td>";
+         echo PluginResourcesService::getTypeName(1);
+         echo "</td>";
+         echo "<td>";
+
+         Html::autocompletionTextField($this, "serviceAD",['entity' => -1]);
+
          echo "</td>";
          echo "<td>";
 
