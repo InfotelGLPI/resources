@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-15 11:40+0000\n"
+"POT-Creation-Date: 2021-09-16 14:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,11 +125,11 @@ msgstr ""
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1813 hook.php:1845 inc/linkad.class.php:737
+#: hook.php:1813 hook.php:1845 inc/linkad.class.php:740
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:1823 inc/linkad.class.php:739
+#: hook.php:1823 inc/linkad.class.php:742
 msgid "You have to do all checklist in action before"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgid "Field mapping"
 msgstr ""
 
 #: inc/adconfig.class.php:250 inc/department.class.php:50
-#: inc/linkad.class.php:389 inc/linkad.class.php:628 inc/resource.class.php:82
+#: inc/linkad.class.php:391 inc/linkad.class.php:631 inc/resource.class.php:82
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] ""
@@ -328,7 +328,7 @@ msgstr[1] ""
 
 #: inc/adconfig.class.php:309 inc/checklist.class.php:1089
 #: inc/dashboard.class.php:138 inc/directory.class.php:215
-#: inc/linkad.class.php:630 inc/notificationtargetresource.class.php:400
+#: inc/linkad.class.php:633 inc/notificationtargetresource.class.php:400
 #: inc/notificationtargetresource.class.php:479
 #: inc/notificationtargetresource.class.php:619
 #: inc/notificationtargetresource.class.php:680
@@ -353,7 +353,7 @@ msgstr[1] ""
 msgid "Departure date"
 msgstr ""
 
-#: inc/adconfig.class.php:329 inc/linkad.class.php:446 inc/linkad.class.php:624
+#: inc/adconfig.class.php:329 inc/linkad.class.php:448 inc/linkad.class.php:627
 #: inc/profile.class.php:264 inc/role.class.php:48
 #: inc/rulecontracttype.class.php:271 inc/rulecontracttypehidden.class.php:275
 msgid "Role"
@@ -361,27 +361,27 @@ msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/adconfig.class.php:362
+#: inc/adconfig.class.php:376
 msgid "Destination OU on user deactivation"
 msgstr ""
 
-#: inc/adconfig.class.php:371
+#: inc/adconfig.class.php:385
 msgid "Destination OU during user creation"
 msgstr ""
 
-#: inc/adconfig.class.php:394
+#: inc/adconfig.class.php:408
 msgid "first letter of given name + name"
 msgstr ""
 
-#: inc/adconfig.class.php:395
+#: inc/adconfig.class.php:409
 msgid "given name + name"
 msgstr ""
 
-#: inc/adconfig.class.php:396
+#: inc/adconfig.class.php:410
 msgid "2 letters of given name + 2 letters of name"
 msgstr ""
 
-#: inc/adconfig.class.php:402
+#: inc/adconfig.class.php:416
 msgid "given name.name"
 msgstr ""
 
@@ -1192,47 +1192,47 @@ msgstr[1] ""
 msgid "Update LDAP directory"
 msgstr ""
 
-#: inc/linkad.class.php:378
+#: inc/linkad.class.php:380
 msgid "Resources data"
 msgstr ""
 
-#: inc/linkad.class.php:402 inc/linkad.class.php:617 inc/resource.class.php:76
+#: inc/linkad.class.php:404 inc/linkad.class.php:620 inc/resource.class.php:76
 #: inc/resource_change.class.php:419
 msgid "Firstname"
 msgstr ""
 
-#: inc/linkad.class.php:410
+#: inc/linkad.class.php:412
 msgid "Phone"
 msgstr ""
 
-#: inc/linkad.class.php:420 inc/linkad.class.php:627
+#: inc/linkad.class.php:422 inc/linkad.class.php:630
 msgid "Company"
 msgstr ""
 
-#: inc/linkad.class.php:442
+#: inc/linkad.class.php:444
 msgid "Cell phone"
 msgstr ""
 
-#: inc/linkad.class.php:467
+#: inc/linkad.class.php:469
 msgctxt "button"
 msgid "Create user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:471
+#: inc/linkad.class.php:473
 msgctxt "button"
 msgid "Modify user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:476
+#: inc/linkad.class.php:478
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr ""
 
-#: inc/linkad.class.php:510
+#: inc/linkad.class.php:512
 msgid "existing login"
 msgstr ""
 
-#: inc/linkad.class.php:735
+#: inc/linkad.class.php:738
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
