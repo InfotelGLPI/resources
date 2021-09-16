@@ -80,4 +80,6 @@ CREATE TABLE `glpi_plugin_resources_actionprofiles` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 ALTER TABLE `glpi_plugin_resources_linkads` ADD `service` varchar(255) NOT NULL default '' ;
+ALTER TABLE `glpi_plugin_resources_linkads` ADD `location` varchar(255) NOT NULL default '' ;
 ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `serviceAD` varchar(255) NOT NULL default '' ;
+ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `location` varchar(255) NOT NULL default '' ;

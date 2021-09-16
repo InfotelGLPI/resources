@@ -352,10 +352,24 @@ class PluginResourcesAdconfig extends CommonDBTM {
          Html::autocompletionTextField($this, "serviceAD",['entity' => -1]);
 
          echo "</td>";
+
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo Location::getTypeName();
+         echo "</td>";
          echo "<td>";
 
+         Html::autocompletionTextField($this, "locationAD",['entity' => -1]);
 
          echo "</td>";
+
+         echo "<td>";
+         echo "</td>";
+         echo "<td>";
+         echo "</td>";
+
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
@@ -484,7 +498,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
    function getArrayAttributes(){
 
-      $array = ["logAD","nameAD","phoneAD","companyAD","departmentAD","firstnameAD","mailAD","contractEndAD","contractTypeAD","cellPhoneAD","roleAD"];
+      $array = ["logAD","nameAD","phoneAD","companyAD","departmentAD","firstnameAD","mailAD","contractEndAD","contractTypeAD","cellPhoneAD","roleAD","serviceAD","locationAD"];
       return $array;
    }
    function prepareFields($fields){

@@ -853,6 +853,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `cellPhoneAD` varchar(255) collate utf8_unicode_ci default '',
    `roleAD` varchar(255) collate utf8_unicode_ci default '',
    `serviceAD` varchar(255) collate utf8_unicode_ci default '',
+   `locationAD` varchar(255) collate utf8_unicode_ci default '',
    `first_form`  int(11) NOT NULL default '0',
    `second_form`  int(11) NOT NULL default '0',
    `mail_prefix` int(11) NOT NULL default '0',

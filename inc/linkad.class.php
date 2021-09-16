@@ -356,6 +356,8 @@ class PluginResourcesLinkAd extends CommonDBTM {
          $linkAD->fields["role"] = $role;
          $service = Dropdown::getDropdownName(PluginResourcesService::getTable(),$resource->fields['plugin_resources_services_id']);
          $linkAD->fields["service"] = $service;
+         $location = Dropdown::getDropdownName(Location::getTable(),$resource->fields['locations_id']);
+         $linkAD->fields["location"] = $location;
       }
       $ID = $linkAD->getID();
       echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(self::getType()) . "'>";
@@ -454,9 +456,9 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
             echo "<td><input type='text' name='service'value='".$linkAD->fields["service"]."'></td>";
 
-            echo "<td>"."</td>";
+             echo "<td>" . Location::getTypeName(1) . "</td>";
 
-            echo "<td></td>";
+             echo "<td><input type='text' name='service'value='".$linkAD->fields["location"]."'></td>";
 
 
             echo "</tr>";
@@ -601,6 +603,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
       $mapping["cellPhoneAD"] = "cellphone";
       $mapping["roleAD"] = "role";
       $mapping["serviceAD"] = "service";
+      $mapping["locationAD"] = "location";
       $mapping["companyAD"] = "company";
       $mapping["departmentAD"] = "department";
       $mapping["contractTypeAD"] = "contract";
