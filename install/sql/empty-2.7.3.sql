@@ -807,6 +807,7 @@ CREATE TABLE `glpi_plugin_resources_linkads` (
    `phone` varchar(255) collate utf8_unicode_ci default NULL,
    `role` varchar(255) collate utf8_unicode_ci default NULL,
    `service` varchar(255) collate utf8_unicode_ci default NULL,
+   `location` varchar(255) collate utf8_unicode_ci default NULL,
    `cellphone` varchar(255) collate utf8_unicode_ci default NULL,
    `action_done` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
