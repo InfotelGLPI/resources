@@ -102,6 +102,13 @@ class PluginResourcesMetademand extends CommonGLPI {
          $params['checklist_out'] = $params['checklist_out'][$p["nbOpt"]];
       }
 
+      $params['habilitation'] = PluginMetademandsField::_unserialize($linkmeta->fields["habilitation"]);
+      if (!isset($params['habilitation'][$p["nbOpt"]])) {
+         $params['habilitation'] = "";
+      } else {
+         $params['habilitation'] = $params['habilitation'][$p["nbOpt"]];
+      }
+
       return $params;
    }
 
@@ -127,6 +134,14 @@ class PluginResourcesMetademand extends CommonGLPI {
          $res .= "<td>";
          $res .= PluginResourcesLinkmetademand::showChecklistOutDropdown($p["plugin_metademands_metademands_id"], $p['checklist_out'], $p["plugin_metademands_fields_id"], false);
          $res .= "</td></tr>";
+
+         $res .= "<tr><td>";
+         $res .= __('Habilitation', 'resources');
+         $res .= '</br><span class="metademands_wizard_comments">' . __('If the value selected equals the value to check, the habilitation will be add', 'resources') . '</span>';
+         $res .= '</td>';
+         $res .= "<td>";
+         $res .= PluginResourcesLinkmetademand::showHabilitationDropdown($p["plugin_metademands_metademands_id"], $p['habilitation'], $p["plugin_metademands_fields_id"], false);
+         $res .= "</td></tr>";
       }
       return $res;
    }
@@ -143,6 +158,9 @@ class PluginResourcesMetademand extends CommonGLPI {
       }
       if (isset($_POST["checklist_out"])) {
          $input["checklist_out"] = PluginMetademandsField::_serialize($_POST["checklist_out"]);
+      }
+      if (isset($_POST["habilitation"])) {
+         $input["habilitation"] = PluginMetademandsField::_serialize($_POST["habilitation"]);
       }
       if ($linkmeta->getFromDBByCrit(["plugin_metademands_fields_id" => $_POST["id"], "plugin_metademands_metademands_id" => $_POST["plugin_metademands_metademands_id"]])) {
          $input["id"] = $linkmeta->getID();
@@ -165,6 +183,7 @@ class PluginResourcesMetademand extends CommonGLPI {
       if(plugin::isPluginActive('resources')){
          if(isset($options["resources_id"])){
             $checklistConfig = new PluginResourcesChecklistconfig();
+            $habilitationConfig = new PluginResourcesResourceHabilitation();
             $resource = new PluginResourcesResource();
             $resource->getFromDB($options["resources_id"]);
             if(count($line["form"])){
@@ -175,6 +194,7 @@ class PluginResourcesMetademand extends CommonGLPI {
                         $checkvalues =  PluginMetademandsField::_unserialize($Pfield->fields["check_value"]);
                         $checklist_in =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_in"]);
                         $checklist_out =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_out"]);
+                        $habilitation =  PluginMetademandsField::_unserialize($Pfield->fields["habilitation"]);
                         if(isset($checkvalues) && is_array($checkvalues)){
                            foreach ($checkvalues as $k => $checkvalue){
                               if((!is_array($values["fields"][$v["id"]]) && $checkvalue == $values["fields"][$v["id"]]) ||(is_array($values["fields"][$v["id"]]) && in_array($checkvalue,$values["fields"][$v["id"]]))){
@@ -185,6 +205,15 @@ class PluginResourcesMetademand extends CommonGLPI {
                                  if($checklist_out[$k] != 0){
                                     $c = $checklist_out[$k];
                                     $checklistConfig->addResourceChecklist($resource,$c , PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
+                                 }
+                                 if($habilitation[$k] != 0){
+                                    $c = $habilitation[$k];
+                                    $idResource = $resource->getField('id');
+                                    if (!$habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                         'plugin_resources_habilitations_id' => $c])) {
+                                       $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
+                                                                 'plugin_resources_habilitations_id' =>$c]);
+                                    }
                                  }
 
                               }

@@ -83,3 +83,5 @@ ALTER TABLE `glpi_plugin_resources_linkads` ADD `service` varchar(255) NOT NULL 
 ALTER TABLE `glpi_plugin_resources_linkads` ADD `location` varchar(255) NOT NULL default '' ;
 ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `serviceAD` varchar(255) NOT NULL default '' ;
 ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `locationAD` varchar(255) NOT NULL default '' ;
+
+ALTER TABLE `glpi_plugin_resources_linkmetademands` ADD `habilitation` TEXT collate utf8_unicode_ci default NULL;

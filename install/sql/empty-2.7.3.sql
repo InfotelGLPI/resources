@@ -362,6 +362,7 @@ CREATE TABLE `glpi_plugin_resources_resourcerestings` (
    KEY `locations_id` (`locations_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `glpi_plugin_resources_resourceholidays`;
 CREATE TABLE `glpi_plugin_resources_resourceholidays` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
@@ -825,6 +826,7 @@ CREATE TABLE `glpi_plugin_resources_linkmetademands` (
    `check_value` TEXT collate utf8_unicode_ci default NULL,
    `checklist_in` TEXT collate utf8_unicode_ci default NULL,
    `checklist_out` TEXT collate utf8_unicode_ci default NULL,
+   `haibilitation` TEXT collate utf8_unicode_ci default NULL,
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_metademands_fields_id`),
    KEY `plugin_metademands_fields_id` (`plugin_metademands_fields_id`)
@@ -861,7 +863,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0,'','');
+INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0,'','',0,'');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
 CREATE TABLE `glpi_plugin_resources_roles` (

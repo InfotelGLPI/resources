@@ -124,6 +124,28 @@ class PluginResourcesLinkmetademand extends CommonDBTM {
    }
 
 
+   /**
+    * @param      $metademands_id
+    * @param      $selected_value
+    * @param bool $display
+    * @param      $idF
+    *
+    * @return int|string
+    */
+   static function showHabilitationDropdown($metademands_id, $selected_value, $idF, $display = true) {
+
+      $fields      = new self();
+      $data        = [Dropdown::EMPTY_VALUE];
+      $habilitation = new PluginResourcesHabilitation();
+      $habilitations = $habilitation->find();
+      foreach ($habilitations as $id => $value) {
+         $data[$id] = urldecode(html_entity_decode($value['name']));
+      }
+
+      return Dropdown::showFromArray('habilitation[]', $data, ['value' => $selected_value, 'display' => $display]);
+   }
+
+
 
 
 
