@@ -1866,4 +1866,5 @@ function plugin_datainjection_populate_resources() {
    global $INJECTABLE_TYPES;
    $INJECTABLE_TYPES[PluginResourcesResourceInjection::class] = 'resources';
    $INJECTABLE_TYPES[PluginResourcesClientInjection::class]   = 'resources';
+   $INJECTABLE_TYPES[PluginResourcesHabilitationInjection::class]   = 'resources';
 }
