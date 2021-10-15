@@ -2338,7 +2338,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div " . $tohide['name'] . " class=\"bt-feature col-md-3\">";
       $option = ['value' => $options["name"], 'option' => "onchange=\"javascript:this.value=this.value.toUpperCase();\""];
       Html::autocompletionTextField($this, "name", $option);
-      echo "<br><span class='plugin_resources_wizard_comment' style='color:red;>";
+      echo "<br><span class='plugin_resources_wizard_comment' style='color:red;'>";
       echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
       echo "</span>";
       echo "</div>";
