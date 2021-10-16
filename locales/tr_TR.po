@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-15 11:40+0000\n"
+"POT-Creation-Date: 2021-10-15 11:57+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -129,11 +129,11 @@ msgstr "Belirtilmemiş"
 msgid "Modification of the associated resource's location"
 msgstr "İlgili kaynak konumunda değişiklik"
 
-#: hook.php:1813 hook.php:1845 inc/linkad.class.php:737
+#: hook.php:1813 hook.php:1845 inc/linkad.class.php:740
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "İşlemi önce LDAP dizini üzerinde yapmalısınız"
 
-#: hook.php:1823 inc/linkad.class.php:739
+#: hook.php:1823 inc/linkad.class.php:742
 msgid "You have to do all checklist in action before"
 msgstr "İşlemden önce kontrol listesindeki tüm girişler tamamlanmalıdır"
 
@@ -144,8 +144,8 @@ msgstr "İşlemden önce kontrol listesindeki tüm çıkışlar tamamlanmalıdı
 #: setup.php:202 inc/metademand.class.php:69
 msgid "Human Resource"
 msgid_plural "Human Resources"
-msgstr[0] "İnsan Kaynağı"
-msgstr[1] "İnsan Kaynakları"
+msgstr[0] "İnsan kaynağı"
+msgstr[1] "İnsan kaynakları"
 
 #: ajax/employee.php:47 inc/employee.class.php:316 inc/employee.class.php:448
 msgid "Security compliance"
@@ -303,34 +303,34 @@ msgstr "Kategori silme"
 
 #: inc/adconfig.class.php:199
 msgid "Login Creation"
-msgstr "Oturum Oluşturma"
+msgstr "Oturum oluşturma"
 
 #: inc/adconfig.class.php:203
 msgid "First Form"
-msgstr "Birinci Form"
+msgstr "Birinci form"
 
 #: inc/adconfig.class.php:210
 msgid "Second Form"
-msgstr "İkinci Form"
+msgstr "İkinci form"
 
 #: inc/adconfig.class.php:217
 msgid "Mail Creation"
-msgstr "E-posta Oluşturma"
+msgstr "E-posta oluşturma"
 
 #: inc/adconfig.class.php:221
 msgid "Prefix"
-msgstr "Ön Ek"
+msgstr "Ön ek"
 
 #: inc/adconfig.class.php:228
 msgid "Suffix"
-msgstr "Son Ek"
+msgstr "Son ek"
 
 #: inc/adconfig.class.php:237
 msgid "Field mapping"
 msgstr "Alan eşleşmesi"
 
 #: inc/adconfig.class.php:250 inc/department.class.php:50
-#: inc/linkad.class.php:389 inc/linkad.class.php:628 inc/resource.class.php:82
+#: inc/linkad.class.php:391 inc/linkad.class.php:631 inc/resource.class.php:82
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] "Bölüm"
@@ -338,7 +338,7 @@ msgstr[1] "Bölümler"
 
 #: inc/adconfig.class.php:309 inc/checklist.class.php:1089
 #: inc/dashboard.class.php:138 inc/directory.class.php:215
-#: inc/linkad.class.php:630 inc/notificationtargetresource.class.php:400
+#: inc/linkad.class.php:633 inc/notificationtargetresource.class.php:400
 #: inc/notificationtargetresource.class.php:479
 #: inc/notificationtargetresource.class.php:619
 #: inc/notificationtargetresource.class.php:680
@@ -363,35 +363,35 @@ msgstr[1] "Bölümler"
 msgid "Departure date"
 msgstr "Gidiş tarihi"
 
-#: inc/adconfig.class.php:329 inc/linkad.class.php:446
-#: inc/linkad.class.php:624 inc/profile.class.php:264 inc/role.class.php:48
+#: inc/adconfig.class.php:329 inc/linkad.class.php:448
+#: inc/linkad.class.php:627 inc/profile.class.php:264 inc/role.class.php:48
 #: inc/rulecontracttype.class.php:271 inc/rulecontracttypehidden.class.php:275
 msgid "Role"
 msgid_plural "Roles"
 msgstr[0] "Rol"
 msgstr[1] "Roller"
 
-#: inc/adconfig.class.php:362
+#: inc/adconfig.class.php:376
 msgid "Destination OU on user deactivation"
 msgstr "Devre dışı bırakıldığında kullanıcının taşınacağı OU"
 
-#: inc/adconfig.class.php:371
+#: inc/adconfig.class.php:385
 msgid "Destination OU during user creation"
 msgstr "Oluşturulurken kullanıcının ekleneceği OU"
 
-#: inc/adconfig.class.php:394
+#: inc/adconfig.class.php:408
 msgid "first letter of given name + name"
 msgstr "belirtilen adın ilk harfi + ad"
 
-#: inc/adconfig.class.php:395
+#: inc/adconfig.class.php:409
 msgid "given name + name"
 msgstr "belirtilen ad + ad"
 
-#: inc/adconfig.class.php:396
+#: inc/adconfig.class.php:410
 msgid "2 letters of given name + 2 letters of name"
 msgstr "belirtilen adın 2 harfi + adın 2 harfi"
 
-#: inc/adconfig.class.php:402
+#: inc/adconfig.class.php:416
 msgid "given name.name"
 msgstr "belirtilen ad.ad"
 
@@ -480,7 +480,7 @@ msgstr "Bir kaynak aktarıldığında"
 
 #: inc/checklist.class.php:404 inc/linkad.class.php:211
 msgid "Create checklists"
-msgstr "Kontrol listeleri oluşturun"
+msgstr "Kontrol listeleri oluştur"
 
 #: inc/checklist.class.php:528 inc/checklist.class.php:759
 #: inc/checklistconfig.class.php:118 inc/checklistconfig.class.php:153
@@ -511,7 +511,7 @@ msgstr "Kontrol listesi tamamlandı"
 
 #: inc/checklist.class.php:716
 msgid "Reset the checklist"
-msgstr "Kontrol listesini sıfırlayın"
+msgstr "Kontrol listesini sıfırla"
 
 #: inc/checklist.class.php:761 inc/checklist.class.php:1388
 msgid "Linked task"
@@ -519,15 +519,15 @@ msgstr "Bağlantılı görev"
 
 #: inc/checklist.class.php:886
 msgid "Modify state"
-msgstr "Durumu değiştirin"
+msgstr "Durumu değiştir"
 
 #: inc/checklist.class.php:890
 msgid "Link a task"
-msgstr "Görevle ilişkilendirin"
+msgstr "Görevle ilişkilendir"
 
 #: inc/checklist.class.php:894
 msgid "Add ticket"
-msgstr "Destek kaydı ekleyin"
+msgstr "Destek kaydı ekle"
 
 #: inc/checklist.class.php:953 inc/checklist.class.php:996
 #: inc/checklist.class.php:1035
@@ -572,7 +572,7 @@ msgstr "Kontrol listesi doğrulanmalıdır"
 
 #: inc/checklist.class.php:1188 inc/checklist.class.php:1300
 msgid "Checklists Verification"
-msgstr "Kontrol Listesi Doğrulama"
+msgstr "Kontrol listesi doğrulama"
 
 #: inc/checklist.class.php:1388
 msgid "Checked"
@@ -590,7 +590,7 @@ msgstr[1] "Kontrol listeleri ayarları"
 
 #: inc/checklistconfig.class.php:369
 msgid "Generate a rule"
-msgstr "Bir kural oluşturun"
+msgstr "Bir kural oluştur"
 
 #: inc/choice.class.php:47
 msgid "Need"
@@ -619,7 +619,7 @@ msgstr "Kaynağın bilişim gereksinimlerini yazın"
 
 #: inc/choice.class.php:327 inc/choice.class.php:614
 msgid "Add a need"
-msgstr "Gereksinim ekleyin"
+msgstr "Gereksinim ekle"
 
 #: inc/choice.class.php:353
 msgid "IT needs identified"
@@ -656,7 +656,7 @@ msgstr "Sonraki >"
 
 #: inc/choice.class.php:485
 msgid "Add a comment"
-msgstr "Açıklama ekleyin"
+msgstr "Açıklama ekle"
 
 #: inc/choice.class.php:562
 msgid "Element(s) to be affected"
@@ -664,11 +664,11 @@ msgstr "Etkilenen bileşenler"
 
 #: inc/choice.class.php:638
 msgid "Terminate the declaration"
-msgstr "Duyuruyu kaldırın"
+msgstr "Duyuruyu kaldır"
 
 #: inc/choice.class.php:640
 msgid "Resend the declaration"
-msgstr "Duyuruyu yeniden gönderin"
+msgstr "Duyuruyu yeniden gönder"
 
 #: inc/choiceitem.class.php:46
 msgid "Type of need"
@@ -810,7 +810,7 @@ msgstr "Kaynakla ilgili işveren bilgilerini yazın"
 
 #: inc/contracttype.class.php:100 inc/contracttype.class.php:152
 msgid "Add a picture"
-msgstr "Görsel ekleyin"
+msgstr "Görsel ekle"
 
 #: inc/contracttype.class.php:104
 msgid "Enter habilitation information "
@@ -916,7 +916,7 @@ msgstr[1] "İş durumları"
 #: inc/recap.class.php:227
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:58
 msgid "Ratio Employment / Budget"
-msgstr "İş / Bütçe Oranı"
+msgstr "İş / bütçe oranı"
 
 #: inc/employment.class.php:384
 msgid "Declare a new employment"
@@ -946,7 +946,8 @@ msgid_plural "Functions"
 msgstr[0] "İşlev"
 msgstr[1] "İşlevler"
 
-#: inc/habilitation.class.php:50 inc/resourcehabilitation.class.php:52
+#: inc/habilitation.class.php:50 inc/metademand.class.php:139
+#: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
 msgstr[0] "Güç"
@@ -997,15 +998,15 @@ msgstr "Tarih"
 
 #: inc/importcolumn.class.php:140
 msgid "No Identifier"
-msgstr "Belirteç Yok"
+msgstr "Belirteç yok"
 
 #: inc/importcolumn.class.php:141
 msgid "Level 1 Identifier"
-msgstr "1. Düzey Belirteç"
+msgstr "1. düzey belirteç"
 
 #: inc/importcolumn.class.php:142
 msgid "Level 2 Identifier"
-msgstr "2. Düzey Belirteç"
+msgstr "2. düzey belirteç"
 
 #: inc/importcolumn.class.php:177 inc/importcolumn.class.php:287
 msgid "Add a column"
@@ -1017,7 +1018,7 @@ msgstr "Bu içe aktarmada herhangi bir sütun yok"
 
 #: inc/importcolumn.class.php:208 inc/importcolumn.class.php:327
 msgid "Resource Attribute"
-msgstr "Kaynak Özniteliği"
+msgstr "Kaynak özniteliği"
 
 #: inc/importcolumn.class.php:209 inc/importcolumn.class.php:339
 msgid "Identifiers"
@@ -1037,7 +1038,7 @@ msgstr "Dosya herhangi bir kalıp ile eşleşmiyor"
 
 #: inc/importresource.class.php:664 inc/menu.class.php:279
 msgid "Update GLPI Resources"
-msgstr "GLPI Kaynaklarını Güncelle"
+msgstr "GLPI kaynaklarını güncelle"
 
 #: inc/importresource.class.php:668
 msgid "Be careful, new resources will be created in the entity"
@@ -1212,47 +1213,47 @@ msgstr[1] "Ayrılma nedenleri"
 msgid "Update LDAP directory"
 msgstr "LDAP dizinini güncelle"
 
-#: inc/linkad.class.php:378
+#: inc/linkad.class.php:380
 msgid "Resources data"
 msgstr "Kaynak verileri"
 
-#: inc/linkad.class.php:402 inc/linkad.class.php:617 inc/resource.class.php:76
+#: inc/linkad.class.php:404 inc/linkad.class.php:620 inc/resource.class.php:76
 #: inc/resource_change.class.php:419
 msgid "Firstname"
 msgstr "Ad"
 
-#: inc/linkad.class.php:410
+#: inc/linkad.class.php:412
 msgid "Phone"
 msgstr "Telefon"
 
-#: inc/linkad.class.php:420 inc/linkad.class.php:627
+#: inc/linkad.class.php:422 inc/linkad.class.php:630
 msgid "Company"
 msgstr "Kuruluş"
 
-#: inc/linkad.class.php:442
+#: inc/linkad.class.php:444
 msgid "Cell phone"
 msgstr "Cep telefonu"
 
-#: inc/linkad.class.php:467
+#: inc/linkad.class.php:469
 msgctxt "button"
 msgid "Create user in AD"
-msgstr "Aktif Dizin kullanıcısı ekle"
+msgstr "Aktif dizin kullanıcısı ekle"
 
-#: inc/linkad.class.php:471
+#: inc/linkad.class.php:473
 msgctxt "button"
 msgid "Modify user in AD"
-msgstr "Aktif Dizin kullanıcısını düzenle"
+msgstr "Aktif dizin kullanıcısını düzenle"
 
-#: inc/linkad.class.php:476
+#: inc/linkad.class.php:478
 msgctxt "button"
 msgid "Disable user in AD"
-msgstr "Aktif Dizin kullanıcısını devre dışı bırak"
+msgstr "Aktif dizin kullanıcısını devre dışı bırak"
 
-#: inc/linkad.class.php:510
+#: inc/linkad.class.php:512
 msgid "existing login"
 msgstr "var olan kullanıcı adı"
 
-#: inc/linkad.class.php:735
+#: inc/linkad.class.php:738
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
@@ -1319,7 +1320,7 @@ msgstr "Kaynak arayın"
 
 #: inc/menu.class.php:209
 msgid "Employments / budgets management"
-msgstr "İş / Bütçe yönetimi"
+msgstr "İş / bütçe yönetimi"
 
 #: inc/menu.class.php:223 inc/menu.class.php:224
 msgid "Declare an employment"
@@ -1335,7 +1336,7 @@ msgstr "Bütçe yönetimi"
 
 #: inc/menu.class.php:253 inc/menu.class.php:254 inc/menu.class.php:356
 msgid "List Employments / Resources"
-msgstr "İş / Kaynak Listesi"
+msgstr "İş / kaynak listesi"
 
 #: inc/menu.class.php:270
 msgid "Import resources"
@@ -1351,7 +1352,7 @@ msgstr "GLPI kaynaklarını doğrula"
 
 #: inc/menu.class.php:301
 msgid "Configure Imports"
-msgstr "İçe Aktarmaları Yapılandır"
+msgstr "İçe aktarmaları yapılandır"
 
 #: inc/menu.class.php:307
 msgid "Purge imported resources"
@@ -1377,11 +1378,11 @@ msgstr "Görev listesi"
 msgid "Import configuration"
 msgstr "İçe aktarma yapılandırması"
 
-#: inc/metademand.class.php:116
+#: inc/metademand.class.php:123
 msgid "Link a checklist in"
 msgstr "Kontrol listesi girişi ile bağlantı kur"
 
-#: inc/metademand.class.php:117
+#: inc/metademand.class.php:124
 msgid ""
 "If the value selected equals the value to check, the checklist in will be "
 "add"
@@ -1389,17 +1390,24 @@ msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
 
-#: inc/metademand.class.php:124
+#: inc/metademand.class.php:131
 msgid "Link a checklist out"
 msgstr "Kontrol listesi çıkışı ile bağlantı kur"
 
-#: inc/metademand.class.php:125
+#: inc/metademand.class.php:132
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi çıkışı "
 "eklenir"
+
+#: inc/metademand.class.php:140
+msgid ""
+"If the value selected equals the value to check, the habilitation will be "
+"add"
+msgstr ""
+"Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
 #: inc/notification.class.php:51
 msgid "Notification history"
