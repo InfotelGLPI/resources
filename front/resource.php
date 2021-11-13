@@ -53,16 +53,17 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //Have not right to see all resources
       echo "<div align='center'>";
 
-      echo "<a onclick=\"resource_viewtype.dialog('open');\" href=\"#modal_resource_content\"title=\"".
-      __('View by contract type', 'resources')."\">".
-      __('View by contract type', 'resources')."</a>";
-      echo "</div>";
+      echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='btn btn-primary' title='" . __('View by contract type', 'resources') . "' >";
+      echo __('View by contract type', 'resources');
+      echo "</a>";
+      echo "</div><br>";
+      echo Ajax::createIframeModalWindow('seetypemodal',
+                                         $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/resourcetree.php",
+                                         ['title'   => __('View by contract type', 'resources'),
+                                          'display'       => false,
+                                          'width'         => 600,
+                                          'height'        => 500]);
 
-      Ajax::createModalWindow('resource_viewtype',
-                              $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/resourcetree.php",
-                              ['title' => __('View by contract type', 'resources'),
-                               'width' => 800,
-                               'height' => 400]);
    }
 
    Search::show(PluginResourcesResource::class);

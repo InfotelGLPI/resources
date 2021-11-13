@@ -34,8 +34,12 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (isset($_POST['name'])) {
-   echo "<textarea cols='30' rows='3' name='".
-         $_POST['name']."'>".Html::cleanInputText(rawurldecode(stripslashes($_POST["data"])));
-   echo "</textarea>";
+   echo Html::textarea([
+                          'name'    => $_POST['name'],
+                          'value'    => Html::cleanInputText(rawurldecode(stripslashes($_POST["data"]))),
+                          'cols'    => '30',
+                          'rows'    => '3',
+                          'display' => false,
+                       ]);
 }
 

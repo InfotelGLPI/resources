@@ -130,7 +130,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       if ($item->getType() == 'PluginResourcesResource') {
          $self = new self();
-         $self->showForm($item->getField('id'), 0, $withtemplate);
+         $self->showEmployeeForm($item->getField('id'), 0, $withtemplate);
       }
       return true;
    }
@@ -210,7 +210,7 @@ class PluginResourcesEmployee extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm($plugin_resources_resources_id, $users_id, $withtemplate = '') {
+   function showEmployeeForm($plugin_resources_resources_id, $users_id, $withtemplate = '') {
       global $CFG_GLPI;
 
       if (!$this->canView()) {
@@ -326,13 +326,14 @@ class PluginResourcesEmployee extends CommonDBTM {
                   echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                   if (!empty($plugin_resources_resources_id)) {
                      echo "<div align='center'>";
-                     echo "<input type='submit' name='addemployee' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+                     echo Html::submit(_sx('button', 'Add'), ['name' => 'addemployee', 'class' => 'btn btn-primary']);
                      echo "</div>";
                   } else {
                      echo "<div align='center'>";
                      $resource->dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]);
                      echo "<input type='hidden' name='users_id' value='$users_id'>";
-                     echo "&nbsp;<input type='submit' name='addressourceandemployee' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+                     echo "&nbsp;";
+                     echo Html::submit(_sx('button', 'Add'), ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary']);
                      echo "</div>";
                   }
                }
@@ -340,11 +341,13 @@ class PluginResourcesEmployee extends CommonDBTM {
 
                if ($this->canCreate() && $canedit) {
 
-                  echo "<input type='hidden' name='id' value=\"$ID\">";
+                  echo Html::hidden('id', ['value' => $ID]);
                   echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
                   echo "<div align='center'>";
-                  echo "<input type='submit' name='updateemployee' value=\"" . _sx('button', 'Update') . "\" class='submit' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='submit' name='deleteemployee' value=\"" . _sx('button', 'Delete permanently') . "\" class='submit'>";
+                  echo Html::submit(_sx('button', 'Update'), ['name' => 'updateemployee', 'class' => 'btn btn-primary']);
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                  echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'deleteemployee', 'class' => 'btn btn-primary']);
                   echo "</div>";
 
                }
@@ -399,10 +402,8 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       if ($employee_spotted && $plugin_resources_resources_id) {
 
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -455,15 +456,13 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
+            echo Html::hidden('id', ['value' => $ID]);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "<input type='hidden' name='withtemplate' value=\"0\">";
-            echo "<button type='submit' name='undo_second_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_second_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo "<button type='submit' name='third_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'third_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -550,23 +549,25 @@ class PluginResourcesEmployee extends CommonDBTM {
 
                echo "<tr><td class='tab_bg_2 top' colspan='4'>";
                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-               echo "<div align='center'><input type='submit' name='add_helpdesk_employee' value=\"" . _sx('button', 'Next step', 'resources') . "\" class='submit'>";
+               echo "<div align='center'>";
+               echo Html::submit(_sx('button', 'Next step', 'resources'), ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']);
                echo "</td></tr>";
 
             } else if (empty($ID)) {
 
                echo "<tr><td class='tab_bg_2 top' colspan='4'>";
                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-               echo "<div align='center'><input type='submit' name='add_helpdesk_employee' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+               echo Html::submit(_sx('button', 'Add'), ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']);
                echo "</td></tr>";
 
             } else {
 
                if ($resource->fields["is_leaving"] != 1) {
                   echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-                  echo "<input type='hidden' name='id' value=\"$ID\">";
+                  echo Html::hidden('id', ['value' => $ID]);
                   echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                  echo "<div align='center'><input type='submit' name='updateemployee' value=\"" . _sx('button', 'Update') . "\" class='submit' >";
+                  echo "<div align='center'>";
+                  echo Html::submit(_sx('button', 'Update'), ['name' => 'updateemployee', 'class' => 'btn btn-primary']);
                   echo "</div>";
                   echo "</td></tr>";
                }

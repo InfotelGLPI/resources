@@ -260,7 +260,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
             $PluginResourcesResource_Item->dropdownItems($plugin_resources_resources_id, $used);
             echo "</td>";
             echo "<td class='center' colspan='2' class='tab_bg_2'>";
-            echo "<input type='submit' name='addtaskitem' value=\""._sx('button', 'Add')."\" class='submit'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addtaskitem', 'class' => 'btn btn-primary']);
             echo "</td></tr>";
             echo "</table></div>";
          } else {

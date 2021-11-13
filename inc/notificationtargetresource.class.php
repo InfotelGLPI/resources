@@ -206,7 +206,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
 
       $iterator = $DB->request($criteria);
-      while ($data = $iterator->next()) {
+      foreach ($iterator as $data) {
          $this->addToRecipientsList($data);
       }
    }
@@ -308,7 +308,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $criteria['WHERE'] = ['glpi_plugin_resources_tasks.id' => $options['tasks_id']];
 
          $iterator = $DB->request($criteria);
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             $this->addToRecipientsList($data);
          }
       }

@@ -98,7 +98,7 @@ if ($plugin->isActivated("badges")) {
       Html::back();
    } else {
       if ($badge->canView() || Session::haveRight("config", UPDATE)) {
-         $badge->showForm();
+         $badge->showWizardForm();
       }
    }
 

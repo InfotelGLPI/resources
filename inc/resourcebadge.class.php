@@ -78,7 +78,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Display of the link to configure the badge interface
     */
-   function showFormConfig() {
+   function showConfigForm() {
       echo "<br>";
       echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -206,10 +206,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -250,13 +248,11 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Show form from helpdesk to badge restitution of a resource
     */
-   function showForm() {
+   function showWizardForm() {
       global $CFG_GLPI;
-      
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
+
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -369,8 +365,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     */
    function loadBadgeRestitution() {
 
-      echo "<button type='submit' name='plugin_resources_badge_restitution' value='" ._sx('button', 'Save'). "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Save') . "</button>";
+      echo Html::submit(_sx('button', 'Save'), ['name' => 'plugin_resources_badge_restitution', 'class' => 'btn btn-primary']);
 
    }
 

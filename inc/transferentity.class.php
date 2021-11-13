@@ -74,7 +74,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm($target) {
+   function showConfigForm($target) {
       global $CFG_GLPI;
 
       if (!$this->canView()) {
@@ -121,7 +121,7 @@ class PluginResourcesTransferEntity extends CommonDBTM {
 
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
-         echo "<input type='submit' name='add_transferentity' class='submit' value='"._sx('button', 'Add')."' >";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add_transferentity', 'class' => 'btn btn-primary']);
          echo "</td>";
          echo "</tr>";
          echo "</table></div>";

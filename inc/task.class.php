@@ -574,7 +574,7 @@ class PluginResourcesTask extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['size' => "50"]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 50]);
       echo "</td>";
       echo "<td>" . PluginResourcesTaskType::getTypeName(1) . "</td><td>";
       Dropdown::show('PluginResourcesTaskType',
@@ -623,7 +623,13 @@ class PluginResourcesTask extends CommonDBTM {
       echo "<td colspan='4'>" . __('Comments') . "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'><td colspan='4'>";
-      echo "<textarea cols='130' rows='4' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '130',
+                             'rows'    => '4',
+                             'display' => false,
+                          ]);
       echo "<input type='hidden' name='withtemplate' value=\"" . $options['withtemplate'] . "\" >";
       echo "</td></tr>";
 

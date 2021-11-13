@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.7.4');
+define('PLUGIN_RESOURCES_VERSION', '3.0.0');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", GLPI_ROOT . "/plugins/resources");
@@ -60,18 +60,18 @@ function plugin_init_resources() {
          'helpdesk_visible_types'       => true,
          'notificationtemplates_types'  => true,
          'unicity_types'                => true,
-         'massiveaction_nodelete_types' => $noupdate,
-         'massiveaction_noupdate_types' => $noupdate
+//         'massiveaction_nodelete_types' => $noupdate,
+//         'massiveaction_noupdate_types' => $noupdate
       ]);
 
       Plugin::registerClass(PluginResourcesDirectory::class, [
-         'massiveaction_nodelete_types' => true,
-         'massiveaction_noupdate_types' => true
+//         'massiveaction_nodelete_types' => true,
+//         'massiveaction_noupdate_types' => true
       ]);
 
       Plugin::registerClass(PluginResourcesRecap::class, [
-         'massiveaction_nodelete_types' => true,
-         'massiveaction_noupdate_types' => true
+//         'massiveaction_nodelete_types' => true,
+//         'massiveaction_noupdate_types' => true
       ]);
 
       Plugin::registerClass(PluginResourcesTaskPlanning::class, [
@@ -96,7 +96,8 @@ function plugin_init_resources() {
                             ['addtabon' => 'Profile']);
 
       Plugin::registerClass(PluginResourcesEmployment::class, [
-         'massiveaction_nodelete_types' => true]);
+//         'massiveaction_nodelete_types' => true
+      ]);
 
       if (Session::haveRight("plugin_servicecatalog", READ)
           || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
@@ -206,7 +207,7 @@ function plugin_version_resources() {
       'homepage'     => 'https://github.com/InfotelGLPI/resources',
       'requirements' => [
          'glpi' => [
-            'min' => '9.5',
+            'min' => '10.0',
             'dev' => false
          ]
       ]
@@ -221,10 +222,10 @@ function plugin_version_resources() {
  * @return bool
  */
 function plugin_resources_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
-       || version_compare(GLPI_VERSION, '9.6', 'ge')) {
+   if (version_compare(GLPI_VERSION, '10.0', 'lt')
+       || version_compare(GLPI_VERSION, '11.0', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.5');
+         echo Plugin::messageIncompatible('core', '10.0');
       }
       return false;
    }

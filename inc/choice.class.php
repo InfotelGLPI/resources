@@ -295,10 +295,8 @@ class PluginResourcesChoice extends CommonDBTM {
 
       if ($spotted && $plugin_resources_resources_id) {
 
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -341,7 +339,8 @@ class PluginResourcesChoice extends CommonDBTM {
                             'entity'    => $_SESSION['glpiactive_entity'],
                             'condition' => ['is_helpdesk_visible' => 1],
                             'used'      => $used]);
-            echo "&nbsp;<input type='submit' name='addchoice' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+            echo "&nbsp;";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addchoice', 'class' => 'btn btn-primary']);
             echo "<br><br>";
          }
          echo "</div>";
@@ -429,11 +428,19 @@ class PluginResourcesChoice extends CommonDBTM {
             }
             $comment = (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) ? $_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'] : $comment;
 
-            echo "<textarea cols='80' rows='6' name='comment'>" . Html::clean($comment) . "</textarea><br>";
+            echo "<br>";
+            echo Html::textarea([
+                                   'name'    => 'comment',
+                                   'value' => $comment,
+                                   'cols'    => '80',
+                                   'rows'    => '6',
+                                   'display' => false,
+                                ]);
+            echo "<br>";
             if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
-               echo "<input type='submit' name='updatecomment' value=\"" . _sx('button', 'Update') . "\" class='submit'>";
+               echo Html::submit(_sx('button', 'Update'), ['name' => 'updatecomment', 'class' => 'btn btn-primary']);
             } else {
-               echo "<input type='submit' name='addcomment' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+               echo Html::submit(_sx('button', 'Add'), ['name' => 'addcomment', 'class' => 'btn btn-primary']);
             }
             //            }
             //            echo "</div>";
@@ -445,13 +452,11 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<button type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_four_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "<button type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'four_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div></div>";
          }
@@ -637,7 +642,7 @@ class PluginResourcesChoice extends CommonDBTM {
             if ($exist != 1) {
                echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish']);
             } else {
-               echo "<input type='submit' name='resend' value=\"" . __('Resend the declaration', 'resources') . "\" class='submit'>";
+               echo Html::submit(__('Resend the declaration', 'resources'), ['name' => 'resend', 'class' => 'btn btn-primary']);
             }
          }
          echo "</td>";

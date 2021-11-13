@@ -118,8 +118,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
       $values["requiredfields"] = 1;
 
-      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>" .
-                                                    __('Required fields are not filled. Please try again.', 'resources') . "</span></h3>"];
+      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3>" .
+                                                    __('Required fields are not filled. Please try again.', 'resources') . "</h3>"];
 
       Html::displayMessageAfterRedirect();
 
@@ -130,7 +130,9 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          $newID = $resource->add($_POST);
          if(isset($_POST['plugin_resources_employers_id'])){
             $employee = new PluginResourcesEmployee();
-            $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+            $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                            'plugin_resources_resources_id' => $newID,
+                            'plugin_resources_clients_id' => 0]);
          }
       } else if ($resource->canCreate() && isset($_POST["second_step_update"])) {
          $resource->update($_POST);
@@ -138,9 +140,14 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          if(isset($_POST['plugin_resources_employers_id'])) {
             $employee = new PluginResourcesEmployee();
             if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newID])) {
-               $employee->update(['id' => $employee->getID(), 'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+               $employee->update(['id' => $employee->getID(),
+                                  'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                                  'plugin_resources_resources_id' => $newID,
+                                  'plugin_resources_clients_id' => 0]);
             } else {
-               $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'], 'plugin_resources_resources_id' => $newID, 'plugin_resources_clients_id' => 0]);
+               $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                               'plugin_resources_resources_id' => $newID,
+                               'plugin_resources_clients_id' => 0]);
             }
          }
 
@@ -349,8 +356,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
 
       } else {
-         $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>" .
-                                                       __('Required fields are not filled. Please try again.', 'resources') . "</span></h3>"];
+         $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3>" .
+                                                       __('Required fields are not filled. Please try again.', 'resources') . "</h3>"];
 
          Html::displayMessageAfterRedirect();
          $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);

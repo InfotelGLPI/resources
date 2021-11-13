@@ -81,7 +81,7 @@ class PluginResourcesTicketCategory extends CommonDBTM {
    /**
     * @param $target
     */
-   function showForm($target) {
+   function showConfigForm($target) {
 
       $dbu = new DbUtils();
       $categories = $dbu->getAllDataFromTable($this->getTable());
@@ -97,8 +97,8 @@ class PluginResourcesTicketCategory extends CommonDBTM {
          echo "<tr class='tab_bg_1'>";
          echo "<td>" . Dropdown::getDropdownName("glpi_itilcategories", $categorie["ticketcategories_id"]) . "</td>";
          echo "<td class='center'>";
-         echo "<input type='hidden' name='id' value='$ID'>";
-         echo "<input type='submit' class='submit' name='delete_ticket' value='" . __('Delete permanently') . "'>";
+         echo Html::hidden('id', ['value' => $ID]);
+         echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete_ticket', 'class' => 'btn btn-primary']);
          echo "</td>";
          echo "</tr>";
 
@@ -114,8 +114,7 @@ class PluginResourcesTicketCategory extends CommonDBTM {
          echo "</td>";
          echo "<td>";
          echo "<div align='center'>";
-         echo "<input type='submit' name='add_ticket' value=\""._sx('button', 'Add')."\" 
-                                                                                 class='submit'>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add_ticket', 'class' => 'btn btn-primary']);
          echo "</div></td></tr>";
          echo "</table>";
          Html::closeForm();

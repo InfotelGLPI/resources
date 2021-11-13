@@ -95,7 +95,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
    /**
     * Display of the link to configure the super habilitation interface
     */
-   function showFormConfig() {
+   function showConfigForm() {
       echo "<br>";
       echo "<form name='form' method='post' action='".self::getFormURL()."'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -228,10 +228,8 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";

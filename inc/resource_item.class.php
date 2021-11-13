@@ -505,7 +505,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
          echo "<span id='warning' hidden><i class='fas fa-exclamation-triangle fa-2x' style='color:orange'></i>&nbsp";
          echo  __('This computer is already associated to a resource','resources') . "</span>";
          echo "<td colspan='2' class='tab_bg_2'>";
-         echo "<input type='submit' name='additem' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'additem', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
@@ -805,8 +805,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                                                     'used'   => $used]);
 
             echo "</td><td class='center' width='20%'>";
-            echo "<input type='submit' name='additem' value=\"" .
-                 __s('Associate a resource', 'resources') . "\" class='submit'>";
+            echo Html::submit(__s('Associate a resource', 'resources'), ['name' => 'additem', 'class' => 'btn btn-primary']);
             echo "</td>";
             echo "</tr>";
             echo "</table>";

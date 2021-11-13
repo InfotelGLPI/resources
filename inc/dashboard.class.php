@@ -30,7 +30,8 @@
 /**
  * Class PluginResourcesDashboard
  */
-class PluginResourcesDashboard extends CommonGLPI {
+class PluginResourcesDashboard extends CommonGLPI
+{
 
    public $widgets = [];
    private $options;
@@ -41,7 +42,8 @@ class PluginResourcesDashboard extends CommonGLPI {
     *
     * @param array $options
     */
-   function __construct($options = []) {
+   function __construct($options = [])
+   {
       $this->options = $options;
       $this->interfaces = ["central"];
    }
@@ -50,11 +52,21 @@ class PluginResourcesDashboard extends CommonGLPI {
    /**
     * @return array
     */
-   function getWidgetsForItem() {
-      return [
-         $this->getType()."1" => __('New resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fas fa-table'></i>",
-         $this->getType()."2" => __('Leaving resource - checklist needs to verificated', 'resources') . "&nbsp;<i class='fas fa-table'></i>",
+   function getWidgetsForItem()
+   {
+
+      $widgets = [
+         __('Tables', "mydashboard") => [
+            $this->getType() . "1" => ["title" => __('New resource - checklist needs to verificated', 'resources'),
+               "icon" => "fas fa-table",
+               "comment" => ""],
+            $this->getType() . "2" => ["title" => __('Leaving resource - checklist needs to verificated', 'resources'),
+               "icon" => "fas fa-table",
+               "comment" => ""],
+         ],
       ];
+      return $widgets;
+
    }
 
    /**
@@ -62,89 +74,90 @@ class PluginResourcesDashboard extends CommonGLPI {
     *
     * @return \PluginMydashboardDatatable
     */
-   function getWidgetContentForItem($widgetId) {
+   function getWidgetContentForItem($widgetId)
+   {
       global $CFG_GLPI, $DB;
 
       switch ($widgetId) {
-         case $this->getType()."1" :
-               $query = PluginResourcesChecklist::queryChecklists(true);
-               $checklists = $DB->query($query);
-               $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
-               $datas = [];
+         case $this->getType() . "1" :
+            $query = PluginResourcesChecklist::queryChecklists(true);
+            $checklists = $DB->query($query);
+            $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
+            $datas = [];
 
             if (!empty($checklists)) {
                foreach ($checklists as $key => $checklist) {
 
-                  $name = "<a href='".$link."?id=".$checklist["plugin_resources_resources_id"]."' target='_blank'>";
-                  $name.= $checklist["resource_name"]." ".$checklist["resource_firstname"]."</a>";
+                  $name = "<a href='" . $link . "?id=" . $checklist["plugin_resources_resources_id"] . "' target='_blank'>";
+                  $name .= $checklist["resource_name"] . " " . $checklist["resource_firstname"] . "</a>";
                   $data["name"] = $name;
 
                   if ($checklist["date_begin"] <= date('Y-m-d') && !empty($checklist["date_begin"])) {
-                     $data["date"] ="<div class='deleted'>".Html::convDate($checklist["date_begin"])."</div>";
+                     $data["date"] = "<div class='deleted'>" . Html::convDate($checklist["date_begin"]) . "</div>";
                   } else {
-                     $data["date"] ="<div class='plugin_resources_date_day_color'>";
-                     $data["date"].= Html::convDate($checklist["date_begin"]);
-                     $data["date"].= "</div>";
+                     $data["date"] = "<div class='plugin_resources_date_day_color'>";
+                     $data["date"] .= Html::convDate($checklist["date_begin"]);
+                     $data["date"] .= "</div>";
                   }
 
                   $data["entity"] = Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']);
                   $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
                   $data["contracttypes"] = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes",
-                                          $checklist['plugin_resources_contracttypes_id']);
+                     $checklist['plugin_resources_contracttypes_id']);
 
                   $datas[] = $data;
                }
             }
 
-               $headers = [PluginResourcesResource::getTypeName(1), __('Arrival date', 'resources'),__('Entity'),__('Location'), PluginResourcesContractType::getTypeName(1)];
+            $headers = [PluginResourcesResource::getTypeName(1), __('Arrival date', 'resources'), __('Entity'), __('Location'), PluginResourcesContractType::getTypeName(1)];
 
-               $widget = new PluginMydashboardDatatable();
-               $widget->setTabNames($headers);
-               $widget->setTabDatas($datas);
-               $widget->setOption("bSort", false);
-               $widget->toggleWidgetRefresh();
-               $widget->setWidgetTitle(__('New resource - checklist needs to verificated', 'resources')." : ".count($datas));
-               return $widget;
-             break;
+            $widget = new PluginMydashboardDatatable();
+            $widget->setTabNames($headers);
+            $widget->setTabDatas($datas);
+            //               $widget->setOption("bSort", false);
+            $widget->toggleWidgetRefresh();
+            $widget->setWidgetTitle(__('New resource - checklist needs to verificated', 'resources') . " : " . count($datas));
+            return $widget;
+            break;
 
-         case $this->getType()."2" :
-               $query = PluginResourcesChecklist::queryChecklists(true, 1);
-               $checklists = $DB->query($query);
-               $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
-               $datas = [];
+         case $this->getType() . "2" :
+            $query = PluginResourcesChecklist::queryChecklists(true, 1);
+            $checklists = $DB->query($query);
+            $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
+            $datas = [];
             if (!empty($checklists)) {
                foreach ($checklists as $key => $checklist) {
 
-                  $name = "<a href='".$link."?id=".$checklist["plugin_resources_resources_id"]."' target='_blank'>";
-                  $name.= $checklist["resource_name"]." ".$checklist["resource_firstname"]."</a>";
+                  $name = "<a href='" . $link . "?id=" . $checklist["plugin_resources_resources_id"] . "' target='_blank'>";
+                  $name .= $checklist["resource_name"] . " " . $checklist["resource_firstname"] . "</a>";
                   $data["name"] = $name;
 
                   if ($checklist["date_end"] <= date('Y-m-d') && !empty($checklist["date_end"])) {
-                     $data["date"] ="<div class='deleted'>".Html::convDate($checklist["date_end"])."</div>";
+                     $data["date"] = "<div class='deleted'>" . Html::convDate($checklist["date_end"]) . "</div>";
                   } else {
-                     $data["date"] ="<div class='plugin_resources_date_day_color'>";
-                     $data["date"].= Html::convDate($checklist["date_end"]);
-                     $data["date"].= "</div>";
+                     $data["date"] = "<div class='plugin_resources_date_day_color'>";
+                     $data["date"] .= Html::convDate($checklist["date_end"]);
+                     $data["date"] .= "</div>";
                   }
 
                   $data["entity"] = Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']);
                   $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
                   $data["contracttypes"] = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes",
-                                          $checklist['plugin_resources_contracttypes_id']);
+                     $checklist['plugin_resources_contracttypes_id']);
 
                   $datas[] = $data;
                }
             }
-               $headers = [PluginResourcesResource::getTypeName(1),__('Departure date', 'resources'),__('Entity'),__('Location'), PluginResourcesContractType::getTypeName(1)];
+            $headers = [PluginResourcesResource::getTypeName(1), __('Departure date', 'resources'), __('Entity'), __('Location'), PluginResourcesContractType::getTypeName(1)];
 
-               $widget = new PluginMydashboardDatatable();
-               $widget->setTabNames($headers);
-               $widget->setTabDatas($datas);
-               $widget->setOption("bSort", false);
-               $widget->toggleWidgetRefresh();
-               $widget->setWidgetTitle(__('Leaving resource - checklist needs to verificated', 'resources')." : ".count($datas));
-               return $widget;
-             break;
+            $widget = new PluginMydashboardDatatable();
+            $widget->setTabNames($headers);
+            $widget->setTabDatas($datas);
+            //               $widget->setOption("bSort", false);
+            $widget->toggleWidgetRefresh();
+            $widget->setWidgetTitle(__('Leaving resource - checklist needs to verificated', 'resources') . " : " . count($datas));
+            return $widget;
+            break;
       }
    }
 }

@@ -409,8 +409,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = mt_rand();
             $option = ['rand'=> $rand,
-                       'option' => "onChange=\"javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information();\" "];
-            $rand1 = Html::autocompletionTextField($resource, "name", $option);
+                       'value' => $resource->fields["name"],
+                       'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
+            $rand1 = Html::input('name', $option);
             echo "</div>";
             echo "</div>";
 
@@ -420,8 +421,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $option = ['rand'=> $rand,
-                       'option' => "onChange='First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
-            $rand2 = Html::autocompletionTextField($resource, "firstname", $option);
+                       'value' => $resource->fields["firstname"],
+                       'onChange' => "'First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
+            $rand2 = Html::input('firstname', $option);
             echo "</div>";
             echo "</div>";
 
@@ -430,7 +432,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __('Departure date', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $option = ['option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\""];
+            $option = ['onChange' => "javascript:this.value=this.value.toUpperCase();"];
             $rand3 = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
 //            $rand = Html::autocompletionTextField($resource, "firstname", $option);
             echo "</div>";
@@ -865,8 +867,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
       if ($display) {
          echo "<div class='next'>";
-         echo "<button type='submit' name='changeresources' value='" . __s('Starting change', 'resources'). "' class='btn btn-success btn-sm' />
-      " . __s('Starting change', 'resources') . "</button>";
+         echo Html::submit( __s('Starting change', 'resources'), ['name' => 'changeresources', 'class' => 'btn btn-success']);
          echo "</div>";
 
       }
@@ -1151,7 +1152,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
    /**
     * Setup form
     */
-   function showForm() {
+   function showConfigForm() {
 
       echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -1352,7 +1353,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
     */
    static function displayButtonAdd($itilcategories_id) {
       if ($itilcategories_id != 0) {
-         echo "<input type='submit' name='add_entity_category' class='submit' value='" . _sx('button', 'Add') . "' >";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add_entity_category', 'class' => 'btn btn-primary']);
       }
    }
 

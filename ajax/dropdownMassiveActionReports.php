@@ -36,12 +36,13 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (isset($_POST["action"])||isset($_POST["id"])) {
-    echo "<input type='hidden' name='action' value='".$_POST["action"]."'>";
-    echo "<input type='hidden' name='id' value='".$_POST["id"]."'>";
+   echo Html::hidden('action', ['value' => $_POST["action"]]);
+   echo Html::hidden('id', ['value' => $_POST["id"]]);
    switch ($_POST["action"]) {
 
       case "delete":
-          echo "&nbsp;<input type=\"submit\" name=\"massiveaction_reports\" class=\"submit\" value=\""._sx('button', 'Post')."\" >";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction_reports', 'class' => 'btn btn-primary']);
         break;
 
    }

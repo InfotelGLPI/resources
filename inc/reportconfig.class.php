@@ -249,14 +249,26 @@ class PluginResourcesReportConfig extends CommonDBTM {
       echo __('Comments');
       echo "</td>";
       echo "<td>";
-      echo "<textarea cols='100' rows='6' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '100',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</td></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo _n('Information', 'Informations', 2);
       echo "</td>";
       echo "<td>";
-      echo "<textarea cols='100' rows='6' name='information' >" . $this->fields["information"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'information',
+                             'value' => $this->fields["information"],
+                             'cols'    => '100',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_2'>";
@@ -334,12 +346,24 @@ class PluginResourcesReportConfig extends CommonDBTM {
             echo "<tr class='tab_bg_1'>";
             echo "<td>" . __('Comments') . "</td>";
             echo "<td>";
-            echo "<textarea cols='100' rows='6' name='comment' >" . $data["comment"] . "</textarea>";
+            echo Html::textarea([
+                                   'name'    => 'comment',
+                                   'value' => $data["comment"],
+                                   'cols'    => '100',
+                                   'rows'    => '6',
+                                   'display' => false,
+                                ]);
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>" . _n('Information', 'Informations', 2) . "</td>";
             echo "<td>";
-            echo "<textarea cols='100' rows='6' name='information' >" . $data["information"] . "</textarea>";
+            echo Html::textarea([
+                                   'name'    => 'information',
+                                   'value' => $data["information"],
+                                   'cols'    => '100',
+                                   'rows'    => '6',
+                                   'display' => false,
+                                ]);
             echo "</td>";
             echo "</tr>";
 
@@ -373,15 +397,15 @@ class PluginResourcesReportConfig extends CommonDBTM {
             if ($withtemplate < 2 && $canedit) {
                echo "<tr class='tab_bg_1 center'>";
                echo "<td colspan='2'>";
-               echo "<input type='submit' name='update' value='" . _sx('button', 'Save') . "' class='submit' />";
+               echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
                echo "</td>";
                echo "</tr>";
 
                echo "<tr class='tab_bg_1 center'>";
                echo "<td colspan='2' class='right'>";
-               echo "<input type='submit' name='delete' value='" . _sx('button', 'Delete permanently') . "' class='submit' />";
-               echo "<input type='hidden' name='id' value='" . $data["id"] . "' />";
+               echo Html::hidden('id', ['value' => $data["id"]]);
                echo Html::hidden('plugin_resources_resources_id', ['value' => $ID]);
+               echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete', 'class' => 'btn btn-primary']);
                echo "</td>";
                echo "</tr>";
             }

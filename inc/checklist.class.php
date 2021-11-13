@@ -405,8 +405,8 @@ class PluginResourcesChecklist extends CommonDBTM {
       echo "</th></tr>";
       echo "<tr class='tab_bg_2 center'>";
       echo "<td colspan='2'>";
-      echo "<input type='submit' name='add_checklist_resources' value='" . _sx('button', 'Post') . "' class='submit' />";
-      echo "<input type='hidden' name='id' value='" . $ID . "'>";
+      echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
+      echo Html::hidden('id', ['value' => $ID]);
       echo "</td></tr></table>";
       Html::closeForm();
       echo "</div>";
@@ -521,7 +521,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       echo "<td >" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['size' => "40"]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>";
@@ -536,7 +536,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       echo "<td >" . __('Link', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "address", ['size' => "75"]);
+      echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
       echo "</td>";
 
       echo "<td></td>";
@@ -548,7 +548,13 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       echo "<td class='left' colspan = '4'>";
       echo __('Description') . "<br>";
-      echo "<textarea cols='150' rows='6' name='comment'>" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '150',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</td>";
 
       echo "</tr>";
@@ -638,7 +644,7 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       echo "<tr>";
       echo "<td class='center' colspan='2'>";
-      echo "<div align='center' id='$viewId'>";
+      echo "<div align='left' id='$viewId'>";
 
       // New check form
       if (self::canCreate() && $canedit) {
@@ -655,7 +661,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          Ajax::updateItemJsCode("viewchecklisttask" . "$rand", $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/viewchecklisttask.php", $params, false);
          echo "};";
          echo "</script>\n";
-         echo "<a class='vsubmit' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
+         echo "<a class='btn btn-primary' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
          echo "</div>";
       }
 
@@ -709,12 +715,16 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo "<td colspan='2'></td>";
             echo "</tr>";
             echo "<tr class='tab_bg_2'>";
-            echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Add') . "' name='close_checklist'></td>";
+            echo "<td colspan='4' class='center'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'close_checklist', 'class' => 'btn btn-primary']);
+            echo "</td>";
             echo "</tr>";
 
             echo "<tr class='tab_bg_2'>";
             echo "<th colspan = '2'>" . __('Reset the checklist', 'resources') . "</th>";
-            echo "<td colspan='2' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Post') . "' name='open_checklist'></td>";
+            echo "<td colspan='2' class='center'>";
+            echo Html::submit(_sx('button', 'Post'), ['name' => 'open_checklist', 'class' => 'btn btn-primary']);
+            echo "</td>";
             echo "</tr>";
 
             echo "</table>";

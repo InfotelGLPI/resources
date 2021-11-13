@@ -238,7 +238,7 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['value' => $this->fields["name"]]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>".__('Budget type', 'resources')."</td>";
@@ -272,8 +272,8 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Budget volume', 'resources')."</td>";
       echo "<td>";
-      $options = ['value' => 0];
-      Html::autocompletionTextField($this, 'volume', $options);
+      $option = ['value' => 0];
+      echo Html::input('volume', $option);
       echo "</td><td>".__('Type of budget volume', 'resources')."</td><td>";
       Dropdown::show('PluginResourcesBudgetVolume', ['value'  => $this->fields["plugin_resources_budgetvolumes_id"],
           'entity' => $this->fields["entities_id"]]);

@@ -1044,6 +1044,7 @@ class PluginResourcesResource extends CommonDBTM {
 
          if ($_FILES['picture']['type'] == "image/jpeg"
              || $_FILES['picture']['type'] == "image/pjpeg"
+
          ) {
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['picture']['size'] <= $max_size) {
@@ -1054,7 +1055,7 @@ class PluginResourcesResource extends CommonDBTM {
                Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);
             }
          } else {
-            Session::addMessageAfterRedirect(__('Invalid filename') . " : " . $_FILES['picture']['type'], false, ERROR);
+            Session::addMessageAfterRedirect(__('Invalid filename'), false, ERROR);
          }
       }
 
@@ -1240,7 +1241,7 @@ class PluginResourcesResource extends CommonDBTM {
                                     OR `end_date` IS NULL)) ";
 
             $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
-            while ($employment = $iterator->next()) {
+            foreach ($iterator as $employment) {
                $values = ['plugin_resources_employmentstates_id' => $default,
                           'end_date'                             => $this->input['date_end'],
                           'id'                                   => $employment['id']
@@ -1412,8 +1413,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Surname') . "</td>";
       echo "<td " . $tohide['name'] . ">";
-      $option = ['option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\""];
-      Html::autocompletionTextField($this, "name", $option);
+      $option = ['value' => $this->fields['name'], 'onchange' => "javascript:this.value=this.value.toUpperCase();"];
+      echo Html::input('name', $option);
       echo "</td>";
 
       if ($tohide["name"] == "hidden") {
@@ -1437,8 +1438,8 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "<br>" . __('Photo', 'resources') . "<br>";
-      echo "<input type='file' name='picture' value=\"" .
-           $this->fields["picture"] . "\" size='25'>&nbsp;";
+      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
          Html::showSimpleForm($CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php",
@@ -1446,7 +1447,7 @@ class PluginResourcesResource extends CommonDBTM {
                               _x('button', 'Delete permanently'),
                               ['id'      => $ID,
                                'picture' => $this->fields["picture"]],
-                              "../pics/puce-delete2.png");
+                              'fa-times-circle');
       }
       echo "</td></tr>";
 
@@ -1458,8 +1459,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('First name') . "</td>";
       echo "<td>";
-      $option = ['option' => "onChange='First2UpperCase(this.value);' style='text-transform:capitalize;'"];
-      Html::autocompletionTextField($this, "firstname", $option);
+      $option = ['value' => $this->fields['firstname'], 'onchange' => "First2UpperCase(this.value);' style='text-transform:capitalize;'"];
+      echo Html::input('firstname', $option);
       echo "</td></tr>";
 
       echo "<tr " . $tohide['matricule'] . " class='tab_bg_1'>";
@@ -1470,8 +1471,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Matricule', 'resources') . "</td>";
       echo "<td>";
-      $option = [];
-      Html::autocompletionTextField($this, "matricule", $option);
+      $option = ['value' => $this->fields['matricule']];
+      echo Html::input('matricule', $option);
       echo "</td>";
       echo "</tr>";
       $contractType     = new PluginResourcesContractType();
@@ -1491,8 +1492,8 @@ class PluginResourcesResource extends CommonDBTM {
          echo ">";
          echo __('Second matricule', 'resources') . "</td>";
          echo "<td>";
-         $option = [];
-         Html::autocompletionTextField($this, "matricule_second", $option);
+         $option = ['value' => $this->fields['matricule']];
+         echo Html::input('matricule_second', $option);
          echo "</td>";
          echo "</tr>";
       }
@@ -1524,8 +1525,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo ">";
       echo __('Quota', 'resources') . "</td>";
       echo "<td>";
-      echo "<input type='text' name='quota' value='" . Html::formatNumber($this->fields["quota"], true, 4) .
-           "' size='14'>";
+      echo Html::input('quota', ['value' => Html::formatNumber($this->fields["quota"], true, 4), 'size' => 14]);
       echo "</td>";
       echo "</tr>";
 
@@ -1886,7 +1886,13 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr " . $tohide['comment'] . " class='tab_bg_1'><td colspan='4'>" . __('Description') . "</td></tr>";
 
       echo "<tr " . $tohide['comment'] . " class='tab_bg_1'><td colspan='4'>";
-      echo "<textarea cols='130' rows='4' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '130',
+                             'rows'    => '4',
+                             'display' => false,
+                          ]);
       echo "<input type='hidden' name='withtemplate' value='" . $options['withtemplate'] . "'>";
       echo "</td></tr>";
 
@@ -2112,7 +2118,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<tr><th colspan='4'>" . PluginResourcesReportConfig::getTypeName(2) . "</th></tr>";
          echo "<tr class='tab_bg_2 center'>";
          echo "<td colspan='4'>";
-         echo "<input type='submit' name='report' value='" . __s('Send a notification') . "' class='submit' />";
+         echo Html::submit(__s('Send a notification'), ['name' => 'report', 'class' => 'btn btn-primary']);
          echo "<input type='hidden' name='id' value='" . $options['id'] . "'>";
          echo "<input type='hidden' name='reports_id' value='" . $reportconfig->fields["id"] . "'>";
          echo "</td></tr></table>";
@@ -2127,10 +2133,8 @@ class PluginResourcesResource extends CommonDBTM {
    function wizardFirstForm() {
       global $CFG_GLPI;
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -2165,8 +2169,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
       echo "<input type='hidden' name='withtemplate' value='2' >";
-      echo "<button type='submit' name='first_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+      echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'first_step', 'class' => 'btn btn-success']);
       echo "</div>";
       echo "</div></div>";
 
@@ -2227,10 +2230,8 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_employers_id"]            = 0;
 
       }
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -2336,8 +2337,10 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Surname');
       echo "</div>";
       echo "<div " . $tohide['name'] . " class=\"bt-feature col-md-3\">";
-      $option = ['value' => $options["name"], 'option' => "onchange=\"javascript:this.value=this.value.toUpperCase();\""];
-      Html::autocompletionTextField($this, "name", $option);
+      $option = ['value' => $options["name"],
+                 'size'  => 30,
+                 'onchange' => "javascript:this.value=this.value.toUpperCase();"];
+      echo Html::input('name', $option);
       echo "<br><span class='plugin_resources_wizard_comment' style='color:red;'>";
       echo __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".", "resources");
       echo "</span>";
@@ -2354,8 +2357,9 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div " . $tohide['firstname'] . " class=\"bt-feature col-md-3\">";
 
       $option = ['value'  => $options["firstname"],
-                 'option' => "onChange='javascript:this.value=First2UpperCase(this.value);' style='text-transform:capitalize;'"];
-      Html::autocompletionTextField($this, "firstname", $option);
+                 'size'  => 30,
+                 'onChange' => "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'"];
+      echo Html::input('firstname', $option);
       echo "</div>";
 
       echo "</div>";
@@ -2370,7 +2374,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "<div " . $tohide['matricule'] . " class=\"bt-feature col-md-3\">";
       $option = ['value' => $options['matricule']];
-      Html::autocompletionTextField($this, "matricule", $option);
+      echo Html::input('matricule', $option);
       echo "</div>";
       $contractType     = new PluginResourcesContractType();
       $second_matricule = false;
@@ -2391,7 +2395,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div " . $tohide['matricule_second'] . " class=\"bt-feature col-md-3\">";
          $option = ['value' => $options['matricule_second']];
-         Html::autocompletionTextField($this, "matricule_second", $option);
+         echo Html::input('matricule_second', $option);
          echo "</div>";
       }
 
@@ -2419,8 +2423,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Quota', 'resources');
       echo "</div>";
       echo "<div " . $tohide['quota'] . " class=\"bt-feature col-md-3\">";
-      echo "<input type='text' name='quota' value='" . Html::formatNumber($options["quota"], true, 4) .
-           "' size='14'>";
+      echo Html::input('quota', ['value' => Html::formatNumber($options["quota"], true, 4), 'size' => 14]);
       echo "</div>";
 
       echo "</div>";
@@ -2841,7 +2844,13 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div " . $tohide['comment'] . " class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12\">";
-      echo "<textarea cols='95' rows='6' name='comment' >" . $options["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $options["comment"],
+                             'cols'    => '95',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</div>";
       echo "</div>";
 
@@ -2849,7 +2858,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12\">";
       echo __('Send a notification');
-      echo "<input type='checkbox' name='send_notification' checked = true";
+      echo "&nbsp;<input type='checkbox' name='send_notification' checked = true";
       if (Session::getCurrentInterface() != 'central') {
          echo " disabled='true' ";
       }
@@ -2880,19 +2889,17 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<input type='hidden' name='withtemplate' value=\"" . $options['withtemplate'] . "\" >";
       echo "<input type='hidden' name='date_declaration' value=\"" . $_SESSION["glpi_currenttime"] . "\">";
       echo "<input type='hidden' name='users_id_recipient' value=\"" . Session::getLoginUserID() . "\">";
-      echo "<input type='hidden' name='id' value=\"" . $ID . "\">";
+      echo Html::hidden('id', ['value' => $ID]);
       echo "<input type='hidden' name='plugin_resources_leavingreasons_id' value='0'>";
 
       if ($this->canCreate() && (empty($ID) || $options['withtemplate'] == 2)) {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<button type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+         echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
          echo "</div>";
          echo "<div class='next'>";
-         echo "<button type='submit' name='second_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+         echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'second_step', 'class' => 'btn btn-success']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
@@ -2902,12 +2909,10 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<button type='submit' name='undo_first_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+         echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
          echo "</div>";
          echo "<div class='next'>";
-         echo "<button type='submit' name='second_step_update' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+         echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'second_step_update', 'class' => 'btn btn-success']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
@@ -2932,10 +2937,8 @@ class PluginResourcesResource extends CommonDBTM {
       if ($ID > 0) {
          $this->check($ID, READ);
       }
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -2981,16 +2984,15 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
 
       echo __('Photo format : JPG', 'resources') . "<br>";
-      echo "<input type='file' name='picture' value=\"" .
-           $this->fields["picture"] . "\" size='25'>&nbsp;";
+      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
 
       echo "</div></div>";
 
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12 \">";
-      echo "<button type='submit' name='upload_five_step' value='" . _sx('button', 'Add') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Add') . "</button>";
+      echo Html::submit(_sx('button', 'Add'), ['name' => 'upload_five_step', 'class' => 'btn btn-success']);
       echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
       echo "</div></div>";
 
@@ -2998,12 +3000,10 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='preview'>";
-         echo "<button type='submit' name='undo_five_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+         echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_five_step', 'class' => 'btn btn-primary']);
          echo "</div>";
          echo "<div class='next'>";
-         echo "<button type='submit' name='five_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+         echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'five_step', 'class' => 'btn btn-success']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div></div>";
@@ -3049,10 +3049,8 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3095,12 +3093,10 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-11\">";
          echo "<div class='preview'>";
-         echo "<button type='submit' name='undo_seven_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+         echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_seven_step', 'class' => 'btn btn-primary']);
          echo "</div>";
          echo "<div class='next'>";
-         echo "<button type='submit' name='seven_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+         echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'seven_step', 'class' => 'btn btn-success']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div></div>";
@@ -3688,10 +3684,8 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3766,8 +3760,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class=\"form-row\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<div class='next'>";
-         echo "<button type='submit' name='removeresources' value='" . __s('Declare a departure', 'resources') . "' class='btn btn-success btn-sm' />
-      " . __s('Declare a departure', 'resources') . "</button>";
+         echo Html::submit(__s('Declare a departure', 'resources'), ['name' => 'removeresources', 'class' => 'btn btn-success']);
          echo "</div>";
          echo "</div></div>";
 
@@ -3792,10 +3785,8 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3891,10 +3882,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
          echo "<div align='center'>";
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
          echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3955,8 +3944,7 @@ class PluginResourcesResource extends CommonDBTM {
                echo "<div class=\"bt-feature col-md-12 \">";
                echo "<div class='next'>";
                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-               echo "<button type='submit' name='transferresources' value='" . __s('Declare a transfer', 'resources') . "' class='btn btn-success btn-sm' />
-      " . __s('Declare a transfer', 'resources') . "</button>";
+               echo Html::submit(__s('Declare a transfer', 'resources'), ['name' => 'transferresources', 'class' => 'btn btn-success']);
                echo "</div>";
                echo "</div></div>";
 
@@ -4629,7 +4617,7 @@ class PluginResourcesResource extends CommonDBTM {
                           __('Send alert to the commercial manager', 'resources') . "\n");
                $task->addVolume(1);
             } else {
-               Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
+               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']) . ": " .
                                                 __('Send alert to the commercial manager', 'resources') . "\n");
             }
 
@@ -4638,7 +4626,7 @@ class PluginResourcesResource extends CommonDBTM {
                $task->log($dbu->getUserName($commercial['users_id_sales']) . ": " .
                           __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             } else {
-               Session::addMessageAfterRedirect($dbu->getUserName($commercial['users_id_sales']) . ": " .
+               Session::addMessageAfterRedirect(getUserName($commercial['users_id_sales']) . ": " .
                                                 __('Failed to Send alert to the commercial manager', 'resources') . "\n");
             }
          }
@@ -4718,15 +4706,19 @@ class PluginResourcesResource extends CommonDBTM {
 
       $rand = mt_rand();
       Plugin::loadLang('resources');
-      echo "<div class='center' ><span class='b'>" . __('Select the contract type', 'resources') . "</span><br>";
-      echo "<a style='font-size:14px;' href='" . $target . "?reset=reset' title=\"" .
-           __('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a></div>";
+      echo Html::css("/public/lib/base.css");
+      echo Html::script("public/lib/base.js");
+      echo Html::css("plugins/resources/lib/jstree/themes/default/style.min.css");
+
+      echo "<div class='alert alert-important alert-info d-flex'>" . __('Select the contract type', 'resources') . "</div><br>";
+      echo "<a href='" . $target . "?reset=reset' target='_blank' title=\"" .
+           __s('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a>";
 
       echo "<div class='left' style='width:100%'>";
 
       $js = "   $(function() {
-                  $.getScript('{$CFG_GLPI["root_doc"]}/public/lib/jstree.js', function(data, textStatus, jqxhr) {
-                     $('#resource_tree_projectcategory$rand').jstree({
+                  $.getScript('{$CFG_GLPI["root_doc"]}/plugins/resources/lib/jstree/jstree.min.js', function(data, textStatus, jqxhr) {
+                     $('#tree_resourcetypes$rand').jstree({
                         // the `plugins` array allows you to configure the active plugins on this instance
                         'plugins' : ['search', 'qload'],
                         'search': {
@@ -4743,9 +4735,9 @@ class PluginResourcesResource extends CommonDBTM {
                            'moreText': '" . __s('Load more...') . "'
                         },
                         'core': {
-                           'themes': {
-                              'name': 'glpi'
-                           },
+//                           'themes': {
+//                              'name': 'glpi'
+//                           },
                            'animation': 0,
                            'data': {
                               'url': function(node) {
@@ -4759,9 +4751,8 @@ class PluginResourcesResource extends CommonDBTM {
                   });
                });";
       echo Html::scriptBlock($js);
-
-      echo "<div id='resource_tree_projectcategory$rand' ></div>";
-
+      echo "<div class='left' style='width:100%'>";
+      echo "<div id='tree_resourcetypes$rand'></div>";
       echo "</div>";
    }
 

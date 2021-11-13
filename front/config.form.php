@@ -61,27 +61,27 @@ if ($plugin->isActivated("resources")) {
    } else {
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
       //setup
-      $config->showForm();
+      $config->showConfigForm();
 
       //changes
-      $resourceChange->showForm();
+      $resourceChange->showConfigForm();
 
-      $resourceAdConfig->showForm();
+      $resourceAdConfig->showConfigForm();
 
       //badges
       $plugin = new Plugin();
       if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
-         $resourceBadge->showFormConfig();
+         $resourceBadge->showConfigForm();
       }
 
       //metademand
       if ($plugin->isActivated("metademands")) {
          $configHabilitation = new PluginResourcesConfigHabilitation();
-         $configHabilitation->showFormConfig();
+         $configHabilitation->showConfigForm();
       }
 
-      $cat->showForm($_SERVER['PHP_SELF']);
-      $transferEntity->showForm($_SERVER['PHP_SELF']);
+      $cat->showConfigForm($_SERVER['PHP_SELF']);
+      $transferEntity->showConfigForm($_SERVER['PHP_SELF']);
    }
 
 } else {

@@ -264,10 +264,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -320,7 +318,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       echo Html::css("/plugins/resources/css/bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+//      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -399,7 +397,13 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo __('Comments');
       echo "</div>";
       echo "<div class=\"bt-feature col-md-4 \">";
-      echo "<textarea cols='70' rows='4' name='comment' >".$this->fields["comment"]."</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '70',
+                             'rows'    => '4',
+                             'display' => false,
+                          ]);
       echo "</div>";
       echo "</div>";
 
@@ -419,19 +423,14 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
       if ($ID > 0) {
-         echo "<input type='hidden' name='id' value='".$ID."' />";
+         echo Html::hidden('id', ['value' => $ID]);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["plugin_resources_resources_id"]]);
-
-         echo "<button type='submit' name='updaterestingresources' value='" ._sx('button', 'Update'). "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Update') . "</button>";
-
-         echo "&nbsp;&nbsp;<button type='submit' name='deleterestingresources' value='" ._sx('button', 'Delete permanently'). "' class='btn btn-danger btn-sm' />
-      " . _sx('button', 'Delete permanently') . "</button>";
+         echo Html::submit(_sx('button', 'Update'), ['name' => 'updaterestingresources', 'class' => 'btn btn-primary']);
+         echo "&nbsp;&nbsp;";
+         echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'deleterestingresources', 'class' => 'btn btn-primary']);
 
       } else {
-
-         echo "<button type='submit' name='addrestingresources' value='" ._sx('button', 'Add'). "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Add') . "</button>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'addrestingresources', 'class' => 'btn btn-primary']);
       }
       echo "</div>";
       echo "</div></div>";
@@ -454,10 +453,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
       echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -603,8 +600,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function loadButtonResting($plugin_resources_resting_id) {
 
-      echo "<button type='submit' name='addenddaterestingresources' value='" ._sx('button', 'Save'). "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Save') . "</button>";
+      echo Html::submit(_sx('button', 'Save'), ['name' => 'addenddaterestingresources', 'class' => 'btn btn-primary']);
    }
 
 
@@ -860,7 +856,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       // Display submit button
       echo "<td width='80' class='center'>";
-      echo "<input type='submit' value=\""._sx('button', 'Search')."\" class='submit' >";
+      echo Html::submit(_sx('button', 'Search'), ['name' => 'search', 'class' => 'btn btn-primary']);
       echo "</td><td>";
       //Bookmark::showSaveButton(Bookmark::SEARCH,$itemtype);
       echo "<a href='$target?reset=reset' >";

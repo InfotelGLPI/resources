@@ -37,14 +37,20 @@ if (isset($_POST["id"])) {
    $items_id = $_POST["id"];
    $rand = $_POST["rand"];
    echo "<div id='addcommentneed$items_id$rand'class='center'>";
-   echo "<textarea cols='30' rows='3' name='commentneed$items_id'></textarea>";
-   echo "<input type='hidden' name='id' value='".$items_id ."'>";
+   echo Html::textarea([
+                          'name'    => 'commentneed'.$items_id,
+                          'cols'    => '30',
+                          'rows'    => '3',
+                          'display' => false,
+                       ]);
+   echo Html::hidden('id', ['value' => $items_id]);
    echo "</div>";
    echo "<div id='viewaccept$items_id'class='center'>";
-   echo "<p><input type='submit' name='updateneedcomment[".$items_id."]' value=\"".
-         _sx('button', 'Add')."\" class='submit'>";
-   echo "&nbsp;<input type='button' onclick=\"hideAddForm$items_id();\" value=\"".
-         _sx('button', 'Cancel')."\" class='submit'></p>";
+   echo "<p>";
+   $name = "updateneedcomment[".$items_id."]";
+   echo Html::submit(_sx('button', 'Add'), ['name' => $name, 'class' => 'btn btn-primary']);
+   echo "&nbsp;";
+   echo Html::submit(_sx('button', 'Cancel'), ['name' => 'cancel', 'class' => 'btn btn-primary', 'onclick' => "hideAddForm$items_id();"]);
    echo "</div>";
 
 } else {

@@ -42,7 +42,7 @@ if (isset($_GET['node'])) {
    $nodes = [];
 
    // Root node
-   if ($_GET['node'] == -1) {
+   if ($_REQUEST['node'] == -1) {
       $entity = $_SESSION['glpiactive_entity'];
       $dbu    = new DbUtils();
 
@@ -65,13 +65,13 @@ if (isset($_GET['node'])) {
                                ]
       );
 
-      while ($contract = $iterator->next()) {
+      foreach ($iterator as $contract) {
          $ID = $contract['plugin_resources_contracttypes_id'];
          $value = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID);
          $nodes[] = [
             'id'     => $ID,
             'text'   => $value,
-            'a_attr' => ["onclick" => 'window.location.replace("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
+            'a_attr' => ["onclick" => 'window.open("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
                                       '?criteria[0][field]=37&criteria[0][searchtype]=contains&criteria[0][value]=^' .
                                       rawurlencode($value) . '&itemtype=PluginResourcesResource&start=0")']
          ];

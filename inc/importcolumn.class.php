@@ -286,12 +286,12 @@ class PluginResourcesImportColumn extends CommonDBChild {
          $importColumn->getEmpty();
          $title = "<tr><th colspan='4'>" . __('Add a column', 'resources') . "</th></tr>";
          $name = "";
-         $submitButton = "<input type='submit' name='add' class='submit' value='" . _sx('button', 'Add') . "' >";
+         $submitButton = Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
       } else {
          $importColumn->getFromDB($ID);
          $title = "<tr><th colspan='4'>" . __('Edit a column', 'resources') . "</th></tr>";
          $name = $importColumn->getField('name');
-         $submitButton = "<input type='submit' name='update' class='submit' value='" . _sx('button', 'Save') . "' >";
+         $submitButton = Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
       }
       if (!$importColumn->canView()) {
          return false;
@@ -308,7 +308,8 @@ class PluginResourcesImportColumn extends CommonDBChild {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
-      echo "<td><input type='text' name='name' value=\"$name\"></td>";
+      echo "<td>";
+      echo Html::input('name', ['value' => $name]);
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";

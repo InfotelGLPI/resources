@@ -146,7 +146,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "<td >".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['size' => "40"]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>";
@@ -160,7 +160,7 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "<td >".__('Link', 'resources')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "address", ['size' => "75"]);
+      echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
       echo "</td>";
 
       echo "<td></td>";
@@ -210,7 +210,13 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
       echo "<table cellpadding='2' cellspacing='2' border='0'><tr><td>";
       echo __('Description')."</td></tr>";
       echo "<tr><td class='center'>";
-      echo "<textarea cols='125' rows='6' name='comment'>".$this->fields["comment"];
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '125',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</textarea>";
       echo "</td></tr></table>";
       echo "</td>";
