@@ -382,7 +382,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $dbu       = new DbUtils();
       $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
-      echo "<select name='item_item'>";
+      echo "<select class='form-select' name='item_item'>";
       echo "<option value='0' selected>" . Dropdown::EMPTY_VALUE . "</option>";
 
       if (!empty($resources)) {
@@ -793,10 +793,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'>";
             echo "<td colspan='4' class='center'>";
-            echo "<input type='hidden' name='itemtype' value='" . $item->getType() . "'>";
-            echo "<input type='hidden' name='items_id' value='$ID'>";
+            echo Html::hidden('itemtype', ['value' => $item->getType()]);
+            echo Html::hidden('itemtype', ['value' => $ID]);
             if ($item->getType() == 'Ticket') {
-               echo "<input type='hidden' name='tickets_id' value='$ID'>";
+               echo Html::hidden('tickets_id', ['value' => $ID]);
             }
 
             PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',

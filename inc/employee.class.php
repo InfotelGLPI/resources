@@ -331,7 +331,7 @@ class PluginResourcesEmployee extends CommonDBTM {
                   } else {
                      echo "<div align='center'>";
                      $resource->dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]);
-                     echo "<input type='hidden' name='users_id' value='$users_id'>";
+                     echo Html::hidden('users_id', ['value' => $users_id]);
                      echo "&nbsp;";
                      echo Html::submit(_sx('button', 'Add'), ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary']);
                      echo "</div>";
@@ -458,7 +458,7 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo "<div class='preview'>";
             echo Html::hidden('id', ['value' => $ID]);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "<input type='hidden' name='withtemplate' value=\"0\">";
+            echo Html::hidden('withtemplate', ['value' => 0]);
             echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_second_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";

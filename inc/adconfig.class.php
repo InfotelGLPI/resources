@@ -97,7 +97,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          $ID = 1;
          $this->getFromDB($ID);
          echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
-         echo "<input type='hidden' name='id' value='$ID' data-glpicore-ma-tags='common'>";
+         echo Html::hidden('id', ['value' => $ID]);
          echo "<div align='center'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='4'>".self::getTypeName()."</th></tr>";
 

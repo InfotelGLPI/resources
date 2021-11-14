@@ -510,11 +510,11 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
       if ($ID > 0) {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='" . $this->fields["plugin_resources_contracttypes_id"] . "'>";
-         echo "<input type='hidden' name='checklist_type' value='" . $this->fields["checklist_type"] . "'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $this->fields["plugin_resources_contracttypes_id"]]);
+         echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
       } else {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id'>";
-         echo "<input type='hidden' name='checklist_type' value='$checklist_type'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('checklist_type', ['value' => $checklist_type]);
       }
 
       echo "<tr class='tab_bg_1'>";
@@ -684,10 +684,10 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginResourcesResource') . "'>";
          }
 
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='checklist_type' value='$checklist_type' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='entities_id' value='$entities_id' data-glpicore-ma-tags='common'>";
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+         echo Html::hidden('checklist_type', ['value' => $checklist_type]);
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('entities_id', ['value' => $entities_id]);
 
          // Actions on finished checklist
          if ($isfinished && self::canCreate() && $canedit) {
@@ -799,7 +799,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             echo $checklist["name"];
             echo "</a>&nbsp;";
 
-            echo "<input type='hidden' value='" . $checklist["comment"] . "' name='comment'>";
+            echo Html::hidden('comment', ['value' => $checklist["comment"]]);
 
             if (!empty($checklist["address"])) {
                echo "&nbsp;";
@@ -836,7 +836,8 @@ class PluginResourcesChecklist extends CommonDBTM {
                echo "checked";
             }
             echo " >";
-            echo "<input type='hidden' value='" . (($checklist["is_checked"] > 0) ? 0 : 1) . "' name='is_checked$ID' data-glpicore-ma-tags='common'>";
+            $name= 'is_checked'.$ID;
+            echo Html::hidden($name, ['value' => (($checklist["is_checked"] > 0) ? 0 : 1)]);
             echo "</td>";
 
             if ($i != 0 && self::canCreate() && $canedit && !$isfinished) {
@@ -917,7 +918,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $input = $ma->getInput();
       foreach ($input as $key => $val) {
          if (!is_array($val)) {
-            echo "<input type='hidden' name='$key' value='$val'>";
+            echo Html::hidden($key, ['value' => $val]);
          }
       }
 

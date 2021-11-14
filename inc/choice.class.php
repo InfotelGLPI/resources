@@ -333,7 +333,8 @@ class PluginResourcesChoice extends CommonDBTM {
                }
             }
 
-            echo "&nbsp;<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+            echo "&nbsp;";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             Dropdown::show('PluginResourcesChoiceItem',
                            ['name'      => 'plugin_resources_choiceitems_id',
                             'entity'    => $_SESSION['glpiactive_entity'],

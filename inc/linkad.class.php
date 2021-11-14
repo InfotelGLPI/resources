@@ -262,11 +262,11 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
       if ($ID > 0) {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='" . $this->fields["plugin_resources_contracttypes_id"] . "'>";
-         echo "<input type='hidden' name='checklist_type' value='" . $this->fields["checklist_type"] . "'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $this->fields["plugin_resources_contracttypes_id"]]);
+         echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
       } else {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id'>";
-         echo "<input type='hidden' name='checklist_type' value='$checklist_type'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('checklist_type', ['value' => $checklist_type]);
       }
 
       echo "<tr class='tab_bg_1'>";
@@ -371,13 +371,12 @@ class PluginResourcesLinkAd extends CommonDBTM {
       $dbu = new DbUtils();
 
       if (($islink) || !$islink) {
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='id' value='$ID' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='ticket_id' value='" . $ticket->getID() . "' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='entities_id' value='$entities_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='enddate' value='$enddate' data-glpicore-ma-tags='common'>";
-
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+         echo Html::hidden('ticket_id', ['value' => $ticket->getID()]);
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('entities_id', ['value' => $entities_id]);
+         echo Html::hidden('enddate', ['value' => $enddate]);
+         echo Html::hidden('id', ['value' => $ID]);
          // Actions on finished checklist
          if (self::canCreate() && $canedit) {
             echo "<tr><th colspan='4'>" . __('Resources data', 'resources') . "</th></tr>";
@@ -393,7 +392,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             echo "<td colspan = ''>" . __('Department', 'resources') . "</td>";
 
             echo "<td>";
-            echo "<input type='hidden' name='department' value='" . Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id")) . "' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('department', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"))]);
             echo Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"));
             echo "</td>";
             echo "</tr>";
@@ -433,7 +432,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $employee = new PluginResourcesEmployee();
             $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-            echo "<input type='hidden' name='company' value='" . Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id")) . "' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('company', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"))]);
 
             echo Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"));
             echo "</td>";
@@ -442,7 +441,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $employee = new PluginResourcesEmployee();
             $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-            echo "<input type='hidden' name='contract' value='" . Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")) . "' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('contract', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id"))]);
 
             echo Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id"));
             echo "</td>";

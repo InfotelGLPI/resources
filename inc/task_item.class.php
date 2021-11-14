@@ -255,7 +255,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
          }
          if ($canedit && $this->canCreate() && $withtemplate < 2) {
             echo "<tr class='tab_bg_1'><td colspan='2' class='right'>";
-            echo "<input type='hidden' name='plugin_resources_tasks_id' value='$instID'>";
+            echo Html::hidden('plugin_resources_tasks_id', ['value' => $instID]);
             $PluginResourcesResource_Item = new PluginResourcesResource_Item();
             $PluginResourcesResource_Item->dropdownItems($plugin_resources_resources_id, $used);
             echo "</td>";

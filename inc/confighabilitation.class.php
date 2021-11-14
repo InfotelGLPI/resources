@@ -159,7 +159,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
             echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
             value=\"" . _sx('button', 'Add') . "\" >";
-            echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+            echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
 
             echo "</td></tr>";
             echo "</table></div>";

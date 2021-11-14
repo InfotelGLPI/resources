@@ -466,23 +466,23 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
          // First line display add / delete images for normal and meta search items
          if ($i == 0) {
-            echo "<input type='hidden' disabled  id='add_search_count' name='add_search_count' value='1'>";
+            echo Html::hidden('add_search_count', ['value' => 1, 'id' => 'add_search_count']);
             echo "<a href='#' onClick = \"document.getElementById('add_search_count').disabled=false;document.forms['searchform$itemtype'].submit();\">";
             echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/plus.png\" alt='+' title='" .
                  __('Add a search criterion') . "'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             if ($_SESSION["glpisearchcount"][$itemtype] > 1) {
-               echo "<input type='hidden' disabled  id='delete_search_count' name='delete_search_count' value='1'>";
+               echo Html::hidden('delete_search_count', ['value' => 1, 'id' => 'delete_search_count']);
                echo "<a href='#' onClick = \"document.getElementById('delete_search_count').disabled=false;document.forms['searchform$itemtype'].submit();\">";
                echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/moins.png\" alt='-' title='" .
                     __('Delete a search criterion') . "'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
             if (is_array($linked) && count($linked) > 0) {
-               echo "<input type='hidden' disabled id='add_search_count2' name='add_search_count2' value='1'>";
+               echo Html::hidden('add_search_count2', ['value' => 1, 'id' => 'add_search_count2']);
                echo "<a href='#' onClick = \"document.getElementById('add_search_count2').disabled=false;document.forms['searchform$itemtype'].submit();\">";
                echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/meta_plus.png\" alt='+' title='" .
                     __('Add a global search criterion') . "'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                if ($_SESSION["glpisearchcount2"][$itemtype] > 0) {
-                  echo "<input type='hidden' disabled  id='delete_search_count2' name='delete_search_count2' value='1'>";
+                  echo Html::hidden('delete_search_count2', ['value' => 1, 'id' => 'delete_search_count2']);
                   echo "<a href='#' onClick = \"document.getElementById('delete_search_count2').disabled=false;document.forms['searchform$itemtype'].submit();\">";
                   echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/meta_moins.png\" alt='-' title='" .
                        __('Delete a global search criterion') . "'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -494,7 +494,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
          // Display link item
          if ($i > 0) {
-            echo "<select name='link[$i]'>";
+            echo "<select class='form-select' name='link[$i]'>";
             echo "<option value='AND' ";
             if (is_array($p["link"]) && isset($p["link"][$i]) && $p["link"][$i] == "AND") {
                echo "selected";
@@ -522,7 +522,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
          }
 
          // display select box to define serach item
-         echo "<select id='Search$itemtype$i' name=\"field[$i]\" size='1'>";
+         echo "<select class='form-select' id='Search$itemtype$i' name=\"field[$i]\" size='1'>";
          echo "<option value='view' ";
          if (is_array($p['field']) && isset($p['field'][$i]) && $p['field'][$i] == "view") {
             echo "selected";
@@ -592,7 +592,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
             $rand = mt_rand();
 
             // Display link item (not for the first item)
-            echo "<select name='link2[$i]'>";
+            echo "<select class='form-select' name='link2[$i]'>";
             echo "<option value='AND' ";
             if (is_array($p['link2']) && isset($p['link2'][$i]) && $p['link2'][$i] == "AND") {
                echo "selected";
@@ -619,7 +619,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
             echo "</select>&nbsp;";
 
             // Display select of the linked item type available
-            echo "<select name='itemtype2[$i]' id='itemtype2_" . $itemtype . "_" . $i . "_$rand'>";
+            echo "<select class='form-select' name='itemtype2[$i]' id='itemtype2_" . $itemtype . "_" . $i . "_$rand'>";
             echo "<option value=''>" . Dropdown::EMPTY_VALUE . "</option>";
             foreach ($linked as $key) {
                if (!isset($metanames[$key])) {
@@ -680,10 +680,8 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "</table>\n";
 
       // For dropdown
-      echo "<input type='hidden' name='itemtype' value='$itemtype'>";
-
-      // Reset to start when submit new search
-      echo "<input type='hidden' name='start' value='0'>";
+      echo Html::hidden('itemtype', ['value' => $itemtype]);
+      echo Html::hidden('start', ['value' => 0]);
       Html::closeForm();
    }
 

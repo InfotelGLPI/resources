@@ -113,7 +113,7 @@ class PluginResourcesResourceSpeciality extends CommonDropdown {
                   'condition' => $condition]);
 
       } else {
-         echo "<select name='plugin_resources_resourcespecialities_id'
+         echo "<select class='form-select' name='plugin_resources_resourcespecialities_id'
                         id='dropdown_plugin_resources_resourcespecialities_id$rand'>";
          echo "<option value='0'>".Dropdown::EMPTY_VALUE."</option></select>";
       }

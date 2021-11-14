@@ -401,8 +401,8 @@ class PluginResourcesEmployment extends CommonDBTM {
       echo __('To affect an employment', 'resources') . "</th>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
-      echo "<input type='hidden' name='items_id' value='" . $ID . "'>";
-      echo "<input type='hidden' name='itemtype' value='" . $item->getType() . "'>";
+      echo Html::hidden('items_id', ['value' => $ID]);
+      echo Html::hidden('itemtype', ['value' => $item->getType()]);
       echo "<td class='center' class='tab_bg_2'>";
       echo self::getTypeName(1);
       $restrict = ["plugin_resources_resources_id" => '0'];

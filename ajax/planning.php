@@ -35,7 +35,7 @@ Html::header_nocache();
 Session::checkCentralAccess();
 
 if (isset($_POST["id"]) && $_POST["id"]>0) {
-   echo "<input type='hidden' name='plan[id]' value='".$_POST["id"]."'>";
+   echo Html::hidden('plan[id]', ['value' => $_POST["id"]]);
 }
 
 if (isset($_POST["begin"]) && !empty($_POST["begin"])) {

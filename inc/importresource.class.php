@@ -1030,7 +1030,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          $hValue = sprintf($inputs, $data['id']);
 
-         $textInput = "<input name='$hValue' type='hidden' value='%s'>";
+         $textInput = Html::hidden($hValue, ['value' => '%s']);
 
          echo "<span>";
 
@@ -2970,8 +2970,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             echo ">";
 
             $resourceInput = "resource[" . $importResource['id'] . "]";
-            echo "<input type='hidden' name='$resourceInput' value='" . $resourceID . "'>";
-
+            echo Html::hidden($resourceInput, ['value' => $resourceID]);
             $this->showOne($importResource['id'], $params['type'], $resourceID, $borderColor);
 
             echo "</tr>";

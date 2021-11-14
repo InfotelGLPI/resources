@@ -1429,7 +1429,7 @@ class PluginResourcesResource extends CommonDBTM {
              <param name='src' value='" . $CFG_GLPI['root_doc'] .
                  "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
             </object> ";
-            echo "<input type='hidden' name='picture' value='" . $this->fields["picture"] . "'>";
+            echo Html::hidden('picture', ['value' => $this->fields["picture"]]);
          } else {
             echo "<img src='../pics/nobody.png'>";
          }
@@ -1893,7 +1893,7 @@ class PluginResourcesResource extends CommonDBTM {
                              'rows'    => '4',
                              'display' => false,
                           ]);
-      echo "<input type='hidden' name='withtemplate' value='" . $options['withtemplate'] . "'>";
+      echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1915,8 +1915,8 @@ class PluginResourcesResource extends CommonDBTM {
             echo $users_id_recipient->getName();
          }
       } else {
-         echo "<input type='hidden' name='users_id_recipient' value=\"" . Session::getLoginUserID() . "\" >";
-         echo "<input type='hidden' name='date_declaration' value=\"" . $_SESSION["glpi_currenttime"] . "\" >";
+         echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
+         echo Html::hidden('date_declaration', ['value' => $_SESSION["glpi_currenttime"]]);
       }
       echo "</td>";
 
@@ -1939,7 +1939,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       echo " value='1'>";
       if (Session::getCurrentInterface() != 'central') {
-         echo "<input type='hidden' name='send_notification' value=\"1\">";
+         echo Html::hidden('send_notification', ['value' => 1]);
       }
       echo "</td>";
       echo "</tr>";
@@ -2030,7 +2030,8 @@ class PluginResourcesResource extends CommonDBTM {
             $checked = "checked = true";
          }
          echo "<input type='checkbox' name='read_chart' $checked value='1'>";
-         echo "<input type='hidden' value='" . (($this->fields['read_chart'] > 0) ? 0 : 1) . "' name='is_checked$ID'>";
+         $name= 'is_checked'.$ID;
+         echo Html::hidden($name, ['value' => (($this->fields['read_chart'] > 0) ? 0 : 1)]);
 
          echo "</td>";
          if ($tohide['charter'] == "hidden") {
@@ -2119,8 +2120,8 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<tr class='tab_bg_2 center'>";
          echo "<td colspan='4'>";
          echo Html::submit(__s('Send a notification'), ['name' => 'report', 'class' => 'btn btn-primary']);
-         echo "<input type='hidden' name='id' value='" . $options['id'] . "'>";
-         echo "<input type='hidden' name='reports_id' value='" . $reportconfig->fields["id"] . "'>";
+         echo Html::hidden('id', ['value' => $options['id']]);
+         echo Html::hidden('reports_id', ['value' => $reportconfig->fields["id"]]);
          echo "</td></tr></table>";
          Html::closeForm();
          echo "</div>";
@@ -2168,7 +2169,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"form-row\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<div class='next'>";
-      echo "<input type='hidden' name='withtemplate' value='2' >";
+      echo Html::hidden('withtemplate', ['value' => 2]);
       echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'first_step', 'class' => 'btn btn-success']);
       echo "</div>";
       echo "</div></div>";
@@ -2260,15 +2261,15 @@ class PluginResourcesResource extends CommonDBTM {
          if ($empty == 1) {
             $input['plugin_resources_contracttypes_id'] = 0;
             $input['entities_id']                       = $_SESSION['glpiactive_entity'];
-            echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+            echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
          } else {
             $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
             if (isset($options['withtemplate']) && $options['withtemplate'] == 2) {
                $input['entities_id'] = $_SESSION['glpiactive_entity'];
-               echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+               echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
             } else {
                $input['entities_id'] = $this->fields["entities_id"];
-               echo "<input type='hidden' name='entities_id' value='" . $this->fields["entities_id"] . "'>";
+               echo Html::hidden('entities_id', ['value' => $this->fields["entities_id"]]);
             }
          }
       }
@@ -2468,7 +2469,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo Dropdown::getDropdownName('glpi_plugin_resources_contractnatures',
                                            $options["plugin_resources_contractnatures_id"]);
          } else {
-            echo "<input type='hidden' name='plugin_resources_contractnatures_id' value='0'>";
+            echo Html::hidden('plugin_resources_contractnatures_id', ['value' => 0]);
             echo __('None');
          }
          echo "</span>";
@@ -2509,7 +2510,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo Dropdown::getDropdownName('glpi_plugin_resources_resourcespecialities',
                                            $options["plugin_resources_resourcespecialities_id"]);
          } else {
-            echo "<input type='hidden' name='plugin_resources_resourcespecialities_id' value='0'>";
+            echo Html::hidden('plugin_resources_resourcespecialities_id', ['value' => 0]);
             echo __('None');
          }
          echo "</div>";
@@ -2520,10 +2521,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       } else {
 
-         echo "<input type='hidden' name='plugin_resources_resourcesituations_id' value='0'>";
-         echo "<input type='hidden' name='plugin_resources_contractnatures_id' value='0'>";
-         echo "<input type='hidden' name='plugin_resources_ranks_id' value='0'>";
-         echo "<input type='hidden' name='plugin_resources_resourcespecialities_id' value='0'>";
+         echo Html::hidden('plugin_resources_resourcesituations_id', ['value' => 0]);
+         echo Html::hidden('plugin_resources_contractnatures_id', ['value' => 0]);
+         echo Html::hidden('plugin_resources_ranks_id', ['value' => 0]);
+         echo Html::hidden('plugin_resources_resourcespecialities_id', ['value' => 0]);
+
       }
 
       echo "<div class=\"form-row plugin_resources_wizard_margin \">";
@@ -2864,7 +2866,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       echo " value='1'>";
       if (Session::getCurrentInterface() != 'central') {
-         echo "<input type='hidden' name='send_notification' value=\"1\">";
+         echo Html::hidden('send_notification', ['value' => 1]);
       }
       echo "</div>";
       echo "</div>";
@@ -2884,13 +2886,13 @@ class PluginResourcesResource extends CommonDBTM {
       if ($empty == 1) {
          $contract = $input['plugin_resources_contracttypes_id'];
       }
-      echo "<input type='hidden' name='plugin_resources_contracttypes_id' value=\"" . $contract . "\">";
-      echo "<input type='hidden' name='plugin_resources_resourcestates_id' value=\"" . $this->fields["plugin_resources_resourcestates_id"] . "\">";
-      echo "<input type='hidden' name='withtemplate' value=\"" . $options['withtemplate'] . "\" >";
-      echo "<input type='hidden' name='date_declaration' value=\"" . $_SESSION["glpi_currenttime"] . "\">";
-      echo "<input type='hidden' name='users_id_recipient' value=\"" . Session::getLoginUserID() . "\">";
+      echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $contract]);
+      echo Html::hidden('plugin_resources_resourcestates_id', ['value' => $this->fields["plugin_resources_resourcestates_id"]]);
+      echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
+      echo Html::hidden('date_declaration', ['value' => $_SESSION["glpi_currenttime"]]);
+      echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
       echo Html::hidden('id', ['value' => $ID]);
-      echo "<input type='hidden' name='plugin_resources_leavingreasons_id' value='0'>";
+      echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => 0]);
 
       if ($this->canCreate() && (empty($ID) || $options['withtemplate'] == 2)) {
          echo "<div class=\"form-row\">";
@@ -4032,11 +4034,11 @@ class PluginResourcesResource extends CommonDBTM {
             Dropdown::show('Entity');
             break;
          case "plugin_resources_add_item":
-            echo "<input type='hidden' name='itemtype' value='$itemtype'>";
+            echo Html::hidden('itemtype', ['value' => $itemtype]);
             self::dropdown(['display' => true]);
             break;
          case "plugin_resources_generate_resources":
-            echo "<input type='hidden' name='itemtype' value='$itemtype'>";
+            echo Html::hidden('itemtype', ['value' => $itemtype]);
             self::fastResourceAddForm();
             break;
          case "AddHabilitation":

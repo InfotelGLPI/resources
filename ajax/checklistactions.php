@@ -50,7 +50,7 @@ if (isset($_POST["action"])) {
          echo "</td>";
          break;
       case "open_checklist":
-         echo "<input type='hidden' name='checklist_type' value='".$_POST['checklist_type']."'>";
+         echo Html::hidden('checklist_type', ['value' => $_POST['checklist_type']]);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $_POST['plugin_resources_resources_id']]);
          echo "&nbsp;";
          echo Html::submit(_sx('button', 'Post'), ['name' => 'open_checklist', 'class' => 'btn btn-primary']);
