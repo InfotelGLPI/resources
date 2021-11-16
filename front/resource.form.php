@@ -45,6 +45,11 @@ $cat             = new PluginResourcesTicketCategory();
 $task            = new PluginResourcesTask();
 /////////////////////////////////resource from helpdesk///////////////////////////////
 
+if (isset($_POST["secondary_services"])) {
+   $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
+} else{
+   $_POST["secondary_services"] = "";
+}
 if (isset($_POST["resend"])) {
    $resource->reSendResourceCreation($_POST);
    $resource->redirectToList();
