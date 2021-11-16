@@ -266,6 +266,27 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Use service and departement from AD', 'resources');
+         echo "</td>";
+         echo "<td>";
+        Dropdown::showYesNo('use_service_department_ad',$this->fields['use_service_department_ad']);
+         echo "</td>";
+         echo "</tr>";
+
+         if($this->useServiceDepartmentAD()){
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use secondaries services', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('use_secondary_service',$this->fields['use_secondary_service']);
+            echo "</td>";
+            echo "</tr>";
+         }
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo Html::hidden('id', ['value' => 1]);
@@ -333,6 +354,20 @@ class PluginResourcesConfig extends CommonDBTM {
       }
 
       return $input;
+   }
+
+   /**
+    * @return mixed
+    */
+   function useServiceDepartmentAD() {
+      return $this->fields['use_service_department_ad'];
+   }
+
+   /**
+    * @return mixed
+    */
+   function useSecondaryService() {
+      return $this->fields['use_secondary_service'];
    }
 
 

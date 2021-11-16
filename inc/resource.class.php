@@ -741,6 +741,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
+      $resourceItem = new PluginResourcesResource_Item();
+      $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
+      if (count($resourceUsers)>0) {
+         $this->addStandardTab(PluginResourcesUser::class, $ong, $options);
+      }
       $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
       $this->addStandardTab(PluginResourcesResourceHabilitation::class, $ong, $options);
       $this->addStandardTab(PluginResourcesEmployment::class, $ong, $options);
@@ -1404,6 +1409,21 @@ class PluginResourcesResource extends CommonDBTM {
 
       }
 
+
+      echo "<tr " . $tohide['gender'] . " class='tab_bg_1'>";
+      echo "<td";
+      if (in_array("gender", $required)) {
+         echo $alert;
+      }
+      echo ">";
+      echo __('Gender', 'resources') . "</td>";
+      echo "<td>";
+      $genders = $this->getGenders();
+      $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
+      Dropdown::showFromArray('gender',$genders,$option);
+      echo "</td>";
+      echo "</tr>";
+
       echo "<tr  class='tab_bg_1'>";
 
       echo "<td " . $tohide['name'] . "";
@@ -1644,10 +1664,15 @@ class PluginResourcesResource extends CommonDBTM {
       echo PluginResourcesDepartment::getTypeName(1) . "</td>";
       echo "<td " . $tohide['plugin_resources_departments_id'] . ">";
       $rand = mt_rand();
-      Dropdown::show(PluginResourcesDepartment::class,
-                     ['value'  => $this->fields["plugin_resources_departments_id"],
-                      'entity' => $this->fields["entities_id"],
-                      'rand'   => $rand]);
+
+      if ($config->useServiceDepartmentAD()) {
+         UserTitle::dropdown(['name' => "plugin_resources_departments_id", 'value' => $this->fields["plugin_resources_departments_id"], 'rand' => $rand]);
+      } else{
+         Dropdown::show(PluginResourcesDepartment::class,
+                        ['value'  => $this->fields["plugin_resources_departments_id"],
+                         'entity' => $this->fields["entities_id"],
+                         'rand'   => $rand]);
+      }
       echo "</td>";
       if ($tohide['plugin_resources_departments_id'] == "hidden") {
          echo "<td colspan='2'></td>";
@@ -1665,17 +1690,21 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<td " . $tohide['plugin_resources_services_id'] . " >";
       echo "<div id='show_services'>";
-      //      Dropdown::show('PluginResourcesService',
-      //                     ['value'  => $this->fields["plugin_resources_services_id"],
-      //                      'entity' => $this->fields["entities_id"]]);
-      PluginResourcesService::dropdownFromDepart($this->fields["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
-                                                                                                    'value'  => $this->fields["plugin_resources_services_id"],
-                                                                                                    'entity' => $_SESSION['glpiactiveentities'],
-                                                                                                    'rand'   => $rand]);
-      $params = ['plugin_resources_services_id' => '__VALUE__',
-                 'rand'                         => $rand,
-      ];
-      Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_services_id$rand", "show_roles", "../ajax/dropdownRole.php", $params);
+      if ($config->useServiceDepartmentAD()) {
+         UserCategory::dropdown(['name' => "plugin_resources_services_id", 'value' => $this->fields["plugin_resources_services_id"], 'rand' => $rand]);
+      } else {
+//         Dropdown::show('PluginResourcesService',
+//                        ['value'  => $this->fields["plugin_resources_services_id"],
+//                         'entity' => $this->fields["entities_id"]]);
+         PluginResourcesService::dropdownFromDepart($this->fields["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
+                                                                                                       'value'  => $this->fields["plugin_resources_services_id"],
+                                                                                                       'entity' => $_SESSION['glpiactiveentities'],
+                                                                                                       'rand'   => $rand]);
+         $params = ['plugin_resources_services_id' => '__VALUE__',
+                    'rand'                         => $rand,
+         ];
+         Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_services_id$rand", "show_roles", "../ajax/dropdownRole.php", $params);
+      }
       echo "</div>";
       echo "</td>";
       $params = ['plugin_resources_departments_id' => '__VALUE__',
@@ -1700,6 +1729,29 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       echo "</td>";
 
+
+      if($config->useSecondaryService() && $config->useServiceDepartmentAD()){
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Secondaries services', 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         $services = [];
+         $userCat = new UserCategory();
+         $usersCat = $userCat->find();
+         foreach ($usersCat as $res){
+            $services[$res['id']] = $res['name'];
+         }
+
+         Dropdown::showFromArray("secondary_services",
+                                 $services,
+                                 ['values'   => !empty($this->fields['secondary_services']) ? json_decode($this->fields['secondary_services'], true) : [],
+                                  'multiple' => true]);
+         echo "</td>";
+         echo "</tr>";
+
+      }
 
       echo "</tr>";
 
@@ -2685,11 +2737,15 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
       $rand = mt_rand();
       echo "<div " . $tohide['plugin_resources_departments_id'] . " class=\"bt-feature col-md-3\">";
-      Dropdown::show(PluginResourcesDepartment::class,
-                     ['name'   => "plugin_resources_departments_id",
-                      'value'  => $options["plugin_resources_departments_id"],
-                      'entity' => $_SESSION['glpiactiveentities'],
-                      'rand'   => $rand]);
+      if ($config->useServiceDepartmentAD()) {
+         UserTitle::dropdown(['name' => "plugin_resources_departments_id", 'value' => $this->fields["plugin_resources_departments_id"], 'rand' => $rand]);
+      } else {
+         Dropdown::show(PluginResourcesDepartment::class,
+                        ['name'   => "plugin_resources_departments_id",
+                         'value'  => $options["plugin_resources_departments_id"],
+                         'entity' => $_SESSION['glpiactiveentities'],
+                         'rand'   => $rand]);
+      }
       echo "</div>";
 
       echo "<div " . $tohide['plugin_resources_services_id'] . " class=\"bt-feature col-md-3\"";
@@ -2700,18 +2756,22 @@ class PluginResourcesResource extends CommonDBTM {
       echo PluginResourcesService::getTypeName(1);
       echo "</div>";
       echo "<div " . $tohide['plugin_resources_services_id'] . " class=\"bt-feature col-md-3\" id='show_services'>";
-      //      Dropdown::show(PluginResourcesService::class,
-      //                     ['name'   => "plugin_resources_services_id",
-      //                      'value'  => $options["plugin_resources_services_id"],
-      //                      'entity' => $_SESSION['glpiactiveentities']]);
-      PluginResourcesService::dropdownFromDepart($options["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
-                                                                                               'value'  => $options["plugin_resources_services_id"],
-                                                                                               'entity' => $_SESSION['glpiactiveentities'],
-                                                                                               'rand'   => $rand]);
-      $params = ['plugin_resources_services_id' => '__VALUE__',
-                 'rand'                         => $rand,
-      ];
-      Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_services_id$rand", "show_roles", "../ajax/dropdownRole.php", $params);
+      if ($config->useServiceDepartmentAD()) {
+         UserCategory::dropdown(['name' => "plugin_resources_services_id", 'value' => $this->fields["plugin_resources_services_id"], 'rand' => $rand]);
+      } else {
+         //      Dropdown::show(PluginResourcesService::class,
+         //                     ['name'   => "plugin_resources_services_id",
+         //                      'value'  => $options["plugin_resources_services_id"],
+         //                      'entity' => $_SESSION['glpiactiveentities']]);
+         PluginResourcesService::dropdownFromDepart($options["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
+                                                                                                  'value'  => $options["plugin_resources_services_id"],
+                                                                                                  'entity' => $_SESSION['glpiactiveentities'],
+                                                                                                  'rand'   => $rand]);
+         $params = ['plugin_resources_services_id' => '__VALUE__',
+                    'rand'                         => $rand,
+         ];
+         Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_services_id$rand", "show_roles", "../ajax/dropdownRole.php", $params);
+      }
       echo "</div>";
       $params = ['plugin_resources_departments_id' => '__VALUE__',
                  'rand'                            => $rand,
@@ -2732,6 +2792,27 @@ class PluginResourcesResource extends CommonDBTM {
                                                                                           'rand'   => $rand]);
 
       echo "</div>";
+
+
+      if($config->useSecondaryService() && $config->useServiceDepartmentAD()){
+         echo "<div class=\"bt-feature col-md-3\">";
+         echo __('Secondaries services', 'resources');
+
+         $services = [];
+         $userCat  = new UserCategory();
+         $usersCat = $userCat->find();
+         foreach ($usersCat as $cat) {
+            $services[$cat['id']] = $cat['name'];
+         }
+         echo "</div>";
+         echo "<div class=\"bt-feature col-md-3\" id='show_secondary_services'>";
+         Dropdown::showFromArray("secondary_services",
+                                 $services,
+                                 ['values'   => !empty($this->fields['secondary_services']) ? json_decode($this->fields['secondary_services'], true) : [],
+                                  'multiple' => true]);
+         echo "</div>";
+
+      }
 
       echo "<div " . $tohide['plugin_resources_functions_id'] . " class=\"bt-feature col-md-3\"";
       if (in_array("plugin_resources_functions_id", $required)) {
@@ -5297,4 +5378,9 @@ class PluginResourcesResource extends CommonDBTM {
       return false;
    }
 
+   function getGenders(){
+      return [Dropdown::EMPTY_VALUE,
+              __('M.','resources'),
+              __('Mme','resources')];
+   }
 }

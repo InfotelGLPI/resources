@@ -487,4 +487,64 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       }
       return true;
    }
+
+   /**
+    * @param \PluginPdfSimplePDF $pdf
+    * @param \CommonGLPI         $item
+    * @param                     $tab
+    *
+    * @return bool
+    */
+   static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab) {
+
+      if ($item->getType() == 'PluginResourcesResource') {
+         self::pdfForResource($pdf, $item);
+
+      } else {
+         return false;
+      }
+      return true;
+   }
+
+   /**
+    * Show for PDF an resources : employee informations
+    *
+    * @param $pdf object for the output
+    * @param $appli PluginResourcesResource Class
+    */
+   static function pdfForResource(PluginPdfSimplePDF $pdf, PluginResourcesResource $appli) {
+      global $DB;
+
+      $ID = $appli->fields['id'];
+
+      if (!$appli->can($ID, READ)) {
+         return false;
+      }
+
+      if (!Session::haveRight("plugin_resources", READ)) {
+         return false;
+      }
+
+      $query  = "SELECT * 
+               FROM `glpi_plugin_resources_resourcehabilitations` 
+               WHERE `plugin_resources_resources_id` = '$ID'";
+      $result = $DB->query($query);
+      $number = $DB->numrows($result);
+      $pdf->setColumnsSize(100);
+
+      $pdf->displayTitle('<b>' . self::getTypeName(2) . '</b>');
+
+      if (!$number) {
+         $pdf->displayLine(__('No item found'));
+      } else {
+         for ($i = 0; $i < $number; $i++) {
+
+            $habilitaion_id = $DB->result($result, $i, "plugin_resources_habilitations_id");
+            $pdf->displayLine(Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $habilitaion_id)));
+         }
+      }
+
+      $pdf->displaySpace();
+   }
+
 }
