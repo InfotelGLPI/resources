@@ -174,7 +174,7 @@ class PluginResourcesUser extends User {
       if($plugin->isActivated('fields')){
          $fieldContainer = new PluginFieldsContainer();
          if($fieldContainer->getFromDBByCrit(['itemtypes' => ['LIKE','%User%']])){
-            $nameTable = "PluginFields".$fieldContainer->getField('label').$fieldContainer->getField('name');
+            $nameTable = "PluginFieldsUser".$fieldContainer->getField('name');
             $itemUser = new $nameTable();
             for ($i = 0; $i < $number; $i++) {
                $user_id = $DB->result($result, $i, "items_id");
