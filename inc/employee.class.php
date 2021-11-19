@@ -641,8 +641,8 @@ class PluginResourcesEmployee extends CommonDBTM {
             $client   = $DB->result($result, $i, "plugin_resources_clients_id");
 
             $pdf->displayLine(
-               Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_employers", $employer)),
-               Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_clients", $client))
+               Dropdown::getDropdownName("glpi_plugin_resources_employers", $employer),
+               Dropdown::getDropdownName("glpi_plugin_resources_clients", $client)
             );
          }
       }

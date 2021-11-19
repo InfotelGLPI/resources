@@ -525,9 +525,9 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "</div>\n";
       echo "<div id='viewaccept$items_id$rand' style='display:none;' class='center'>";
       echo "<p><input type='submit' name='updateneedcomment[" . $items_id . "]' value=\"" .
-           _sx('button', 'Update') . "\" class='submit'>";
+           _sx('button', 'Update') . "\" class='btn btn-primary'>";
       echo "&nbsp;<input type='button' onclick=\"hideForm$items_id();\" value=\"" .
-           _sx('button', 'Cancel') . "\" class='submit'></p>";
+           _sx('button', 'Cancel') . "\" class='btn btn-primary'></p>";
       echo "</div>";
       echo "<script type='text/javascript' >\n";
       echo "function hideForm$items_id() {\n";
@@ -636,12 +636,12 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "</td></tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='4'>";
-         echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem']);
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem', 'class' => 'btn btn-primary']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
          if (Session::getCurrentInterface() != 'central') {
             if ($exist != 1) {
-               echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish']);
+               echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish', 'class' => 'btn btn-primary']);
             } else {
                echo Html::submit(__('Resend the declaration', 'resources'), ['name' => 'resend', 'class' => 'btn btn-primary']);
             }

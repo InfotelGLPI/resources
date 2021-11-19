@@ -87,7 +87,7 @@ class PluginResourcesActionprofile extends CommonDBTM {
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'addAction']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'addAction', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
 
          echo "</table></div>";

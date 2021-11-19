@@ -39,6 +39,8 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `plugin_resources_teams_id` int(11) NOT NULL default '0',
    `plugin_resources_services_id` int(11) NOT NULL default '0',
    `matricule_second` varchar(255) NOT NULL default '',
+   `secondary_services` varchar(255) NOT NULL default '',
+   `gender` varchar(3) NOT NULL default '',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -743,10 +745,12 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
    `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
    `allow_without_contract`  int(11) NOT NULL default '0',
+   `use_service_department_ad` tinyint(1) NOT NULL default '0',
+   `use_secondary_service` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0);
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0,0,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (

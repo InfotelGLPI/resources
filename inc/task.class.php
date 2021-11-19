@@ -1199,20 +1199,20 @@ class PluginResourcesTask extends CommonDBTM {
 
             $users_id = $DB->result($result, $j, "users_id");
 
-            $managers  = Html::clean($dbu->getUserName($users_id));
+            $managers  = getUserName($users_id);
             $name      = $DB->result($result, $j, "name");
             $task_type = $DB->result($result, $j, "plugin_resources_tasktypes_id");
             $comment   = $DB->result($result, $j, "comment");
             $groups_id = $DB->result($result, $j, "groups_id");
 
             $pdf->displayLine(
-               Html::clean($name),
-               Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type)),
+               $name,
+               Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type),
                $comment,
                $actiontime,
-               Html::clean($planification),
+               $planification,
                $managers,
-               Html::clean(Dropdown::getDropdownName("glpi_groups", $groups_id))
+               Dropdown::getDropdownName("glpi_groups", $groups_id)
             );
             $j++;
          }

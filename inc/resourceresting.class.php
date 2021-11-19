@@ -659,24 +659,24 @@ class PluginResourcesResourceResting extends CommonDBTM {
          if ($i == 0) {
             echo Html::hidden('add_search_count', ['value' => 1, 'id' => 'add_search_count']);
             echo "<a href='#' onClick = \"document.getElementById('add_search_count').disabled=false;document.forms['searchform$itemtype'].submit();\">";
-            echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/plus.png\" alt='+' title='".
-            __('Add a search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+            echo "<i class='fas fa-plus-square' title=\"".
+                 __('Add a search criterion')."\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             if ($_SESSION["glpisearchcount"][$itemtype] > 1) {
                echo Html::hidden('delete_search_count', ['value' => 1, 'id' => 'delete_search_count']);
                echo "<a href='#' onClick = \"document.getElementById('delete_search_count').disabled=false;document.forms['searchform$itemtype'].submit();\">";
-               echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/moins.png\" alt='-' title='".
-               __('Delete a search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+               echo "<i class='fas fa-minus-square' title=\"".
+                    __('Delete a search criterion')."\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
             if (is_array($linked) && count($linked) > 0) {
                echo Html::hidden('add_search_count2', ['value' => 1, 'id' => 'add_search_count2']);
                echo "<a href='#' onClick = \"document.getElementById('add_search_count2').disabled=false;document.forms['searchform$itemtype'].submit();\">";
-               echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/meta_plus.png\" alt='+' title='".
-               __('Add a global search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+               echo "<i class='far fa-plus-square' title=\"".
+                    __('Add a global search criterion')."\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                if ($_SESSION["glpisearchcount2"][$itemtype] > 0) {
                   echo Html::hidden('delete_search_count2', ['value' => 1, 'id' => 'delete_search_count2']);
                   echo "<a href='#' onClick = \"document.getElementById('delete_search_count2').disabled=false;document.forms['searchform$itemtype'].submit();\">";
-                  echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/meta_moins.png\" alt='-' title='".
-                  __('Delete a global search criterion')."'></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                  echo "<i class='far fa-minus-square' title=\"".
+                       __('Delete a global search criterion')."\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                }
             }
             $dbu       = new DbUtils();
@@ -859,9 +859,10 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo Html::submit(_sx('button', 'Search'), ['name' => 'search', 'class' => 'btn btn-primary']);
       echo "</td><td>";
       //Bookmark::showSaveButton(Bookmark::SEARCH,$itemtype);
-      echo "<a href='$target?reset=reset' >";
-      echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
-      $CFG_GLPI["root_doc"]."/templates/infotel/pics/reset.png' class='calendrier'></a>";
+      echo "<a href='$target?reset=reset'>";
+      echo "&nbsp;&nbsp;";
+      echo "<i class='fas fa-times-circle' title=\"".__s('Blank')."\"></i>";
+      echo "</a>";
 
       echo "</td></tr></table>\n";
 

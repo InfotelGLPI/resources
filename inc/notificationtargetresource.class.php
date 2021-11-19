@@ -354,7 +354,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.name##']   = $task['name'];
             $tmp['##task.type##']   = Dropdown::getDropdownName('glpi_plugin_resources_tasktypes',
                                                                 $task['plugin_resources_tasktypes_id']);
-            $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
+            $tmp['##task.users##']  = $dbu->getUserName($task['users_id']);
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = ["plugin_resources_tasks_id" => $task['id']];
@@ -374,7 +374,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.finished##'] = Dropdown::getYesNo($task['is_finished']);
             $tmp['##task.realtime##'] = Ticket::getActionTime($task["actiontime"]);
             $comment                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']));
-            $tmp['##task.comment##']  = Html::clean($comment);
+            $tmp['##task.comment##']  = Glpi\Toolbox\RichText::getTextFromHtml($comment);
             $tmp['##task.resource##'] = Dropdown::getDropdownName('glpi_plugin_resources_resources',
                                                                   $task['plugin_resources_resources_id']);
 
@@ -416,9 +416,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.firstname##']       = $resource['firstname'];
             $tmp['##resource.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
                                                                              $resource['plugin_resources_contracttypes_id']);
-            $tmp['##resource.users##']           = Html::clean($dbu->getUserName($resource['users_id']));
-            $tmp['##resource.userssale##']       = Html::clean($dbu->getUserName($resource['users_id_sales']));
-            $tmp['##resource.usersrecipient##']  = Html::clean($dbu->getUserName($resource['users_id_recipient']));
+            $tmp['##resource.users##']           = getUserName($resource['users_id']);
+            $tmp['##resource.userssale##']       = getUserName($resource['users_id_sales']);
+            $tmp['##resource.usersrecipient##']  = getUserName($resource['users_id_recipient']);
             $tmp['##resource.datedeclaration##'] = Html::convDateTime($resource['date_declaration']);
             $tmp['##resource.datebegin##']       = Html::convDateTime($resource['date_begin']);
             $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
@@ -438,8 +438,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.location##']               = Dropdown::getDropdownName('glpi_locations',
                                                                                     $resource['locations_id']);
             $comment                                    = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource['comment']));
-            $tmp['##resource.comment##']                = Html::clean($comment);
-            $tmp['##resource.usersleaving##']           = Html::clean($dbu->getUserName($resource['users_id_recipient_leaving']));
+            $tmp['##resource.comment##']                = Glpi\Toolbox\RichText::getTextFromHtml($comment);
+            $tmp['##resource.usersleaving##']           = getUserName($resource['users_id_recipient_leaving']);
             $tmp['##resource.leaving##']                = Dropdown::getYesNo($resource['is_leaving']);
             $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
             $tmp['##resource.leavingreason##']          = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
@@ -496,9 +496,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.firstname##']       = $checklist['resource_firstname'];
             $tmp['##checklist.type##']            = Dropdown::getDropdownName('glpi_plugin_resources_contracttypes',
                                                                               $checklist['plugin_resources_contracttypes_id']);
-            $tmp['##checklist.users##']           = Html::clean($dbu->getUserName($checklist['users_id']));
-            $tmp['##checklist.userssale##']       = Html::clean($dbu->getUserName($checklist['users_id_sales']));
-            $tmp['##checklist.usersrecipient##']  = Html::clean($dbu->getUserName($checklist['users_id_recipient']));
+            $tmp['##checklist.users##']           = getUserName($checklist['users_id']);
+            $tmp['##checklist.userssale##']       = getUserName($checklist['users_id_sales']);
+            $tmp['##checklist.usersrecipient##']  = getUserName($checklist['users_id_recipient']);
             $tmp['##checklist.datedeclaration##'] = Html::convDateTime($checklist['date_declaration']);
             $tmp['##checklist.datebegin##']       = Html::convDateTime($checklist['date_begin']);
             $tmp['##checklist.dateend##']         = Html::convDateTime($checklist['date_end']);
@@ -517,8 +517,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.location##']               = Dropdown::getDropdownName('glpi_locations',
                                                                                      $checklist['locations_id']);
             $comment                                     = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $checklist['comment']));
-            $tmp['##checklist.comment##']                = Html::clean($comment);
-            $tmp['##checklist.usersleaving##']           = Html::clean($dbu->getUserName($checklist['users_id_recipient_leaving']));
+            $tmp['##checklist.comment##']                = Glpi\Toolbox\RichText::getTextFromHtml($comment);
+            $tmp['##checklist.usersleaving##']           = getUserName($checklist['users_id_recipient_leaving']);
             $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime($checklist['date_declaration_leaving']);
             $tmp['##checklist.leaving##']                = Dropdown::getYesNo($checklist['is_leaving']);
             //            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
@@ -602,13 +602,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                              $this->obj->getField('plugin_resources_resourcestates_id'));
 
          $this->data['##lang.resource.users##'] = __('Resource manager', 'resources');
-         $this->data['##resource.users##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id")));
+         $this->data['##resource.users##']      = getUserName($this->obj->getField("users_id"));
 
          $this->data['##lang.resource.userssale##'] = __('Sales manager', 'resources');
-         $this->data['##resource.userssale##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_sales")));
+         $this->data['##resource.userssale##']      = getUserName($this->obj->getField("users_id_sales"));
 
          $this->data['##lang.resource.usersrecipient##'] = __('Requester');
-         $this->data['##resource.usersrecipient##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient")));
+         $this->data['##resource.usersrecipient##']      = getUserName($this->obj->getField("users_id_recipient"));
 
          $this->data['##lang.resource.datedeclaration##'] = __('Request date');
          $this->data['##resource.datedeclaration##']      = Html::convDate($this->obj->getField('date_declaration'));
@@ -634,14 +634,14 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                     $this->obj->getField('plugin_resources_leavingreasons_id'));
 
          $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
-         $this->data['##resource.usersleaving##']      = Html::clean($dbu->getUserName($this->obj->getField('users_id_recipient_leaving')));
+         $this->data['##resource.usersleaving##']      = getUserName($this->obj->getField('users_id_recipient_leaving'));
 
          $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
          $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
 
          $this->data['##lang.resource.comment##'] = __('Description');
          $comment                                 = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
-         $this->data['##resource.comment##']      = Html::clean($comment);
+         $this->data['##resource.comment##']      = Glpi\Toolbox\RichText::getTextFromHtml($comment);
 
          $this->data['##lang.resource.url##'] = "URL";
          $this->data['##resource.url##']      = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
@@ -727,11 +727,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.status##'] = Dropdown::getDropdownName('glpi_plugin_resources_resourcestates',
                                                                     $resource['plugin_resources_resourcestates_id']);
 
-            $tmp['##resource.users##'] = Html::clean($dbu->getUserName($resource["users_id"]));
+            $tmp['##resource.users##'] = getUserName($resource["users_id"]);
 
-            $tmp['##resource.userssale##'] = Html::clean($dbu->getUserName($resource["users_id_sales"]));
+            $tmp['##resource.userssale##'] = getUserName($resource["users_id_sales"]);
 
-            $tmp['##resource.usersrecipient##'] = Html::clean($dbu->getUserName($resource["users_id_recipient"]));
+            $tmp['##resource.usersrecipient##'] = getUserName($resource["users_id_recipient"]);
 
             $tmp['##resource.datedeclaration##'] = Html::convDate($resource['date_declaration']);
 
@@ -749,12 +749,12 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
                                                                            $resource['plugin_resources_leavingreasons_id']);
 
-            $tmp['##resource.usersleaving##'] = Html::clean($dbu->getUserName($resource['users_id_recipient_leaving']));
+            $tmp['##resource.usersleaving##'] = getUserName($resource['users_id_recipient_leaving']);
 
             $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
 
             $comment                     = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource["comment"]));
-            $tmp['##resource.comment##'] = Html::clean($comment);
+            $tmp['##resource.comment##'] = Glpi\Toolbox\RichText::getTextFromHtml($comment);
 
             $tmp['##resource.url##'] = urldecode($CFG_GLPI["url_base"] . "/index.php?redirect=PluginResourcesResource_" .
                                                  $resource["id"]);
@@ -796,13 +796,13 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $this->data['##resource.quota##']      = $this->obj->getField('quota');
 
          $this->data['##lang.resource.users##'] = __('Resource manager', 'resources');
-         $this->data['##resource.users##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id")));
+         $this->data['##resource.users##']      = getUserName($this->obj->getField("users_id"));
 
          $this->data['##lang.resource.userssale##'] = __('Sales manager', 'resources');
-         $this->data['##resource.userssale##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_sales")));
+         $this->data['##resource.userssale##']      = getUserName($this->obj->getField("users_id_sales"));
 
          $this->data['##lang.resource.usersrecipient##'] = __('Requester');
-         $this->data['##resource.usersrecipient##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient")));
+         $this->data['##resource.usersrecipient##']      = getUserName($this->obj->getField("users_id_recipient"));
 
          $this->data['##lang.resource.datedeclaration##'] = __('Request date');
          $this->data['##resource.datedeclaration##']      = Html::convDate($this->obj->getField('date_declaration'));
@@ -835,10 +835,10 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
          $this->data['##lang.resource.comment##'] = __('Description');
          $comment                                 = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
-         $this->data['##resource.comment##']      = Html::clean($comment);
+         $this->data['##resource.comment##']      = Glpi\Toolbox\RichText::getTextFromHtml($comment);
 
          $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
-         $this->data['##resource.usersleaving##']      = Html::clean($dbu->getUserName($this->obj->getField("users_id_recipient_leaving")));
+         $this->data['##resource.usersleaving##']      = getUserName($this->obj->getField("users_id_recipient_leaving"));
 
          $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
          $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
@@ -907,11 +907,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
             $information                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesReportConfig->fields['information']));
-            $this->data['##resource.informations##']      = Html::clean(nl2br($information));
+            $this->data['##resource.informations##']      = Glpi\Toolbox\RichText::getTextFromHtml($information);
 
             $this->data['##lang.resource.commentaires##'] = __('Comments');
             $commentaire                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesReportConfig->fields['comment']));
-            $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
+            $this->data['##resource.commentaires##']      = Glpi\Toolbox\RichText::getTextFromHtml($commentaire);
          }
 
          if ($event == 'transfer') {
@@ -947,11 +947,11 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
             $information                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesReportConfig->fields['information']));
-            $this->data['##resource.informations##']      = Html::clean(nl2br($information));
+            $this->data['##resource.informations##']      = Glpi\Toolbox\RichText::getTextFromHtml($information);
 
             $this->data['##lang.resource.commentaires##'] = __('Comments');
             $commentaire                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesReportConfig->fields['comment']));
-            $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
+            $this->data['##resource.commentaires##']      = Glpi\Toolbox\RichText::getTextFromHtml($commentaire);
 
             $this->data['##lang.resource.targetentity##'] = __('Target entity', 'resources');
             $this->data['##lang.resource.sourceentity##'] = __('Source entity', 'resources');
@@ -996,10 +996,10 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $this->data['##lang.resource.commentaires##'] = __('Comments');
             $commentaire                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesResourceResting->fields['comment']));
-            $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
+            $this->data['##resource.commentaires##']      = Glpi\Toolbox\RichText::getTextFromHtml($commentaire);
 
             $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
-            $this->data['##resource.openby##']      = Html::clean($dbu->getUserName(Session::getLoginUserID()));
+            $this->data['##resource.openby##']      = getUserName(Session::getLoginUserID());
 
             if (isset($options['oldvalues']) && !empty($options['oldvalues'])) {
                $this->target_object->oldvalues = $options['oldvalues'];
@@ -1030,10 +1030,10 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
             $this->data['##lang.resource.commentaires##'] = __('Comments');
             $commentaire                                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $PluginResourcesResourceHoliday->fields['comment']));
-            $this->data['##resource.commentaires##']      = Html::clean(nl2br($commentaire));
+            $this->data['##resource.commentaires##']      = Glpi\Toolbox\RichText::getTextFromHtml($commentaire);
 
             $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
-            $this->data['##resource.openby##']      = Html::clean($dbu->getUserName(Session::getLoginUserID()));
+            $this->data['##resource.openby##']      = getUserName(Session::getLoginUserID());
 
             if (isset($options['oldvalues']) && !empty($options['oldvalues'])) {
                $this->target_object->oldvalues = $options['oldvalues'];
@@ -1080,7 +1080,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id'])) {
                   $tmp['##update.users##'] = "---";
                } else {
-                  $tmp['##update.users##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id']));
+                  $tmp['##update.users##'] = getUserName($this->target_object->oldvalues['users_id']);
                }
             }
 
@@ -1088,7 +1088,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_sales'])) {
                   $tmp['##update.userssale##'] = "---";
                } else {
-                  $tmp['##update.userssale##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_sales']));
+                  $tmp['##update.userssale##'] = getUserName($this->target_object->oldvalues['users_id_sales']);
                }
             }
 
@@ -1096,7 +1096,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_recipient'])) {
                   $tmp['##update.usersrecipient##'] = "---";
                } else {
-                  $tmp['##update.usersrecipient##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_recipient']));
+                  $tmp['##update.usersrecipient##'] = getUserName($this->target_object->oldvalues['users_id_recipient']);
                }
             }
 
@@ -1200,7 +1200,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                   $tmp['##update.comment##'] = "---";
                } else {
                   $comment                   = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->target_object->oldvalues['comment']));
-                  $tmp['##update.comment##'] = Html::clean($comment);
+                  $tmp['##update.comment##'] = Glpi\Toolbox\RichText::getTextFromHtml($comment);
                }
             }
 
@@ -1208,7 +1208,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                if (empty($this->target_object->oldvalues['users_id_recipient_leaving'])) {
                   $tmp['##update.usersleaving##'] = "---";
                } else {
-                  $tmp['##update.usersleaving##'] = Html::clean($dbu->getUserName($this->target_object->oldvalues['users_id_recipient_leaving']));
+                  $tmp['##update.usersleaving##'] = getUserName($this->target_object->oldvalues['users_id_recipient_leaving']);
                }
             }
 
@@ -1296,7 +1296,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.name##']   = $task['name'];
             $tmp['##task.type##']   = Dropdown::getDropdownName('glpi_plugin_resources_tasktypes',
                                                                 $task['plugin_resources_tasktypes_id']);
-            $tmp['##task.users##']  = Html::clean($dbu->getUserName($task['users_id']));
+            $tmp['##task.users##']  = getUserName($task['users_id']);
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = ["plugin_resources_tasks_id" => $task['id']];
@@ -1315,7 +1315,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.finished##'] = Dropdown::getYesNo($task['is_finished']);
             $tmp['##task.realtime##'] = Ticket::getActionTime($task["actiontime"]);
             $comment                  = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']));
-            $tmp['##task.comment##']  = Html::clean($comment);
+            $tmp['##task.comment##']  = Glpi\Toolbox\RichText::getTextFromHtml($comment);
 
             $this->data['tasks'][] = $tmp;
          }

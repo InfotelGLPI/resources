@@ -845,7 +845,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                Html::showSimpleForm($target, 'move', __('Bring up'), ['action'                        => 'up',
                                                                       'id'                            => $ID,
                                                                       'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                                                                      'checklist_type'                => $checklist_type], $CFG_GLPI["root_doc"] . "/pics/deplier_up.png");
+                                                                      'checklist_type'                => $checklist_type], 'fa-angle-double-up fa-1x');
                echo "</td>";
             } else {
                echo "<td>&nbsp;</td>";
@@ -856,7 +856,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                Html::showSimpleForm($target, 'move', __('Bring down'), ['action'                        => 'down',
                                                                         'id'                            => $ID,
                                                                         'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                                                                        'checklist_type'                => $checklist_type], $CFG_GLPI["root_doc"] . "/pics/deplier_down.png");
+                                                                        'checklist_type'                => $checklist_type], 'fa-angle-double-down fa-1x');
                echo "</td>";
             } else {
                echo "<td>&nbsp;</td>";

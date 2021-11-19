@@ -1015,13 +1015,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
                            $items_id_display = " (" . $data["id"] . ")";
                         }
                         if ($type == 'User') {
-                           $name = Html::clean($dbu->getUserName($data["id"])) . $items_id_display;
+                           $name = getUserName($data["id"]) . $items_id_display;
                         } else {
                            $name = $data["name"] . $items_id_display;
                         }
 
                         if ($type != 'User') {
-                           $entity = Html::clean(Dropdown::getDropdownName("glpi_entities", $data['entity']));
+                           $entity = Dropdown::getDropdownName("glpi_entities", $data['entity']);
                         } else {
                            $entity = "-";
                         }
@@ -1116,10 +1116,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $pdf->setColumnsSize(14, 14, 14, 14, 14, 14, 16);
                $pdf->displayLine(
                   $data["name"],
-                  Html::clean(Dropdown::getDropdownName("glpi_entities", $data['entities_id'])),
-                  Html::clean(Dropdown::getDropdownName("glpi_locations", $data["locations_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"])),
+                  Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                  Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"]),
                   Html::convDate($data["date_begin"]),
                   Html::convDate($data["date_end"])
                );
@@ -1127,9 +1127,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $pdf->setColumnsSize(17, 17, 17, 17, 17, 17);
                $pdf->displayLine(
                   $data["name"],
-                  Html::clean(Dropdown::getDropdownName("glpi_locations", $data["locations_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"])),
+                  Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"]),
                   Html::convDate($data["date_begin"]),
                   Html::convDate($data["date_end"])
                );

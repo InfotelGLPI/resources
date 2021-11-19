@@ -1410,14 +1410,14 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
 
-      echo "<tr " . $tohide['gender'] . " class='tab_bg_1'>";
-      echo "<td";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td " . $tohide['gender'] . "";
       if (in_array("gender", $required)) {
          echo $alert;
       }
       echo ">";
       echo __('Gender', 'resources') . "</td>";
-      echo "<td>";
+      echo "<td " . $tohide['gender'] . ">";
       $genders = $this->getGenders();
       $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
       Dropdown::showFromArray('gender',$genders,$option);
