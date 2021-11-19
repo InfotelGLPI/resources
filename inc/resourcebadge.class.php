@@ -138,8 +138,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                                                            'used'   => $used_data,
                                                            'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
-            echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
-            value=\"" . _sx('button', 'Add') . "\" >";
+            echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_metademand', 'class' => 'btn btn-primary']);
             echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
 
             echo "</td></tr>";

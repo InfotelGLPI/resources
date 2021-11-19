@@ -3,8 +3,8 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `firstname` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `firstname` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_contracttypes_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
    `users_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
    `users_id_sales` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
@@ -24,12 +24,12 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `plugin_resources_leavingreasons_id` int(11) NOT NULL default '0',
    `date_declaration_leaving` timestamp NULL DEFAULT NULL,
    `users_id_recipient_leaving` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
-   `picture` varchar(100) collate utf8_unicode_ci default NULL,
+   `picture` varchar(100) collate utf8mb4_unicode_ci default NULL,
    `is_helpdesk_visible` int(11) NOT NULL default '1',
    `date_mod` timestamp NULL DEFAULT NULL,
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `is_template` tinyint(1) NOT NULL default '0',
-   `template_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `template_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `is_deleted` tinyint(1) NOT NULL default '0',
    `sensitize_security` tinyint(1) NOT NULL default '0',
    `read_chart` tinyint(1) NOT NULL default '0',
@@ -39,8 +39,6 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    `plugin_resources_teams_id` int(11) NOT NULL default '0',
    `plugin_resources_services_id` int(11) NOT NULL default '0',
    `matricule_second` varchar(255) NOT NULL default '',
-   `secondary_services` varchar(255) NOT NULL default '',
-   `gender` varchar(3) NOT NULL default '',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -63,31 +61,31 @@ CREATE TABLE `glpi_plugin_resources_resources` (
    KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
    KEY `plugin_resources_resourcespecialities_id` (`plugin_resources_resourcespecialities_id`),
    KEY `plugin_resources_leavingreasons_id` (`plugin_resources_leavingreasons_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcestates`;
 CREATE TABLE `glpi_plugin_resources_resourcestates` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_choices`;
 CREATE TABLE `glpi_plugin_resources_choices` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `plugin_resources_choiceitems_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_choiceitems (id)',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
    KEY `plugin_resources_choiceitems_id` (`plugin_resources_choiceitems_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_choiceitems`;
 CREATE TABLE `glpi_plugin_resources_choiceitems` (
@@ -95,33 +93,33 @@ CREATE TABLE `glpi_plugin_resources_choiceitems` (
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
    `plugin_resources_choiceitems_id` int(11) NOT NULL DEFAULT '0',
-   `completename` text COLLATE utf8_unicode_ci,
+   `completename` text COLLATE utf8mb4_unicode_ci,
    `level` int(11) NOT NULL DEFAULT '0',
-   `ancestors_cache` longtext COLLATE utf8_unicode_ci,
-   `sons_cache` longtext COLLATE utf8_unicode_ci,
+   `ancestors_cache` longtext COLLATE utf8mb4_unicode_ci,
+   `sons_cache` longtext COLLATE utf8mb4_unicode_ci,
    `is_helpdesk_visible` int(11) NOT NULL default '1',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`entities_id`,`plugin_resources_choiceitems_id`,`name`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_resources_choiceitems_id` (`plugin_resources_choiceitems_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resources_items`;
 CREATE TABLE `glpi_plugin_resources_resources_items` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
-   `itemtype` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'see .class.php file',
-   `comment` text collate utf8_unicode_ci,
+   `itemtype` varchar(100) collate utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_resources_resources_id`,`itemtype`,`items_id`),
    KEY `FK_device` (`items_id`,`itemtype`),
    KEY `item` (`itemtype`,`items_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employees`;
 CREATE TABLE `glpi_plugin_resources_employees` (
@@ -133,23 +131,23 @@ CREATE TABLE `glpi_plugin_resources_employees` (
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
    KEY `plugin_resources_employers_id` (`plugin_resources_employers_id`),
    KEY `plugin_resources_clients_id` (`plugin_resources_clients_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employers`;
 CREATE TABLE `glpi_plugin_resources_employers` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `short_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
    `plugin_resources_employers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
-   `completename` text collate utf8_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
+   `completename` text collate utf8mb4_unicode_ci default NULL,
    `level` int(11) NOT NULL DEFAULT '0',
-   `ancestors_cache` longtext collate utf8_unicode_ci default NULL,
-   `sons_cache` longtext collate utf8_unicode_ci default NULL,
+   `ancestors_cache` longtext collate utf8mb4_unicode_ci default NULL,
+   `sons_cache` longtext collate utf8mb4_unicode_ci default NULL,
    `second_list` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -157,16 +155,16 @@ CREATE TABLE `glpi_plugin_resources_employers` (
    KEY `locations_id` (`locations_id`),
    KEY `plugin_resources_employers_id` (`plugin_resources_employers_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_clients`;
 CREATE TABLE `glpi_plugin_resources_clients` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `security_compliance` tinyint(1) NOT NULL DEFAULT '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `security_and` tinyint(1) NOT NULL default '0',
    `security_fifour` tinyint(1) NOT NULL default '0',
    `security_gisf` tinyint(1) NOT NULL default '0',
@@ -175,27 +173,27 @@ CREATE TABLE `glpi_plugin_resources_clients` (
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contracttypes`;
 CREATE TABLE `glpi_plugin_resources_contracttypes` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `use_employee_wizard` tinyint(1) NOT NULL DEFAULT '1',
    `use_need_wizard` tinyint(1) NOT NULL DEFAULT '1',
    `use_picture_wizard` tinyint(1) NOT NULL DEFAULT '1',
    `use_habilitation_wizard` tinyint(1) NOT NULL DEFAULT '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `use_second_matricule` tinyint(1) NOT NULL DEFAULT '0',
    `use_second_list_employer` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_departments`;
 CREATE TABLE `glpi_plugin_resources_departments` (
@@ -203,18 +201,18 @@ CREATE TABLE `glpi_plugin_resources_departments` (
    `entities_id` int(11) NOT NULL default '0',
    `plugin_resources_employers_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasks`;
 CREATE TABLE `glpi_plugin_resources_tasks` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
@@ -223,7 +221,7 @@ CREATE TABLE `glpi_plugin_resources_tasks` (
    `groups_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_groups (id)',
    `actiontime` int(11) NOT NULL DEFAULT '0',
    `is_finished` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `is_deleted` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -235,7 +233,7 @@ CREATE TABLE `glpi_plugin_resources_tasks` (
    KEY `is_finished` (`is_finished`),
    KEY `is_deleted` (`is_deleted`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_taskplannings`;
 CREATE TABLE `glpi_plugin_resources_taskplannings` (
@@ -247,37 +245,37 @@ CREATE TABLE `glpi_plugin_resources_taskplannings` (
    KEY `begin` (`begin`),
    KEY `end` (`end`),
    KEY `plugin_resources_tasks_id` (`plugin_resources_tasks_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasktypes`;
 CREATE TABLE `glpi_plugin_resources_tasktypes` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasks_items`;
 CREATE TABLE `glpi_plugin_resources_tasks_items` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_resources_tasks_id` int(11) NOT NULL default '0',
    `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
-   `itemtype` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'see .class.php file',
+   `itemtype` varchar(100) collate utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_resources_tasks_id`,`itemtype`,`items_id`),
    KEY `FK_device` (`items_id`,`itemtype`),
    KEY `item` (`itemtype`,`items_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_checklists`;
 CREATE TABLE `glpi_plugin_resources_checklists` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `entities_id` int(11) NOT NULL default '0',
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `plugin_resources_tasks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
@@ -285,57 +283,57 @@ CREATE TABLE `glpi_plugin_resources_checklists` (
    `checklist_type` int(11) NOT NULL default '0',
    `tag` tinyint(1) NOT NULL default '0',
    `is_checked` tinyint(1) NOT NULL default '0',
-   `address` varchar(255) collate utf8_unicode_ci default NULL,
+   `address` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `rank` smallint(6) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
    KEY `plugin_resources_tasks_id` (`plugin_resources_tasks_id`),
    KEY `plugin_resources_contracttypes_id` (`plugin_resources_contracttypes_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_checklistconfigs`;
 CREATE TABLE `glpi_plugin_resources_checklistconfigs` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `entities_id` int(11) NOT NULL default '0',
    `tag` tinyint(1) NOT NULL default '0',
-   `address` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
-   `itemtype` varchar(255) collate utf8_unicode_ci  default '',
+   `address` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
+   `itemtype` varchar(255) collate utf8mb4_unicode_ci  default '',
    `items` int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_ticketcategories`;
 CREATE TABLE `glpi_plugin_resources_ticketcategories` (
    `id` int(11) NOT NULL auto_increment,
    `ticketcategories_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_ticketcategories (id)',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_profiles`;
 CREATE TABLE `glpi_plugin_resources_profiles` (
    `id` int(11) NOT NULL auto_increment,
    `profiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
-   `resources` char(1) collate utf8_unicode_ci default NULL,
-   `task` char(1) collate utf8_unicode_ci default NULL,
-   `checklist` char(1) collate utf8_unicode_ci default NULL,
-   `all` char(1) collate utf8_unicode_ci default NULL,
-   `employee` char(1) collate utf8_unicode_ci default NULL,
-   `resting` char(1) collate utf8_unicode_ci default NULL,
-   `holiday` char(1) collate utf8_unicode_ci default NULL,
-   `open_ticket` char(1) collate utf8_unicode_ci default NULL,
-   `employment` char(1) collate utf8_unicode_ci default NULL,
-   `budget` char(1) collate utf8_unicode_ci default NULL,
-   `dropdown_public` char(1) collate utf8_unicode_ci default NULL,
+   `resources` char(1) collate utf8mb4_unicode_ci default NULL,
+   `task` char(1) collate utf8mb4_unicode_ci default NULL,
+   `checklist` char(1) collate utf8mb4_unicode_ci default NULL,
+   `all` char(1) collate utf8mb4_unicode_ci default NULL,
+   `employee` char(1) collate utf8mb4_unicode_ci default NULL,
+   `resting` char(1) collate utf8mb4_unicode_ci default NULL,
+   `holiday` char(1) collate utf8mb4_unicode_ci default NULL,
+   `open_ticket` char(1) collate utf8mb4_unicode_ci default NULL,
+   `employment` char(1) collate utf8mb4_unicode_ci default NULL,
+   `budget` char(1) collate utf8mb4_unicode_ci default NULL,
+   `dropdown_public` char(1) collate utf8mb4_unicode_ci default NULL,
    PRIMARY KEY  (`id`),
    KEY `profiles_id` (`profiles_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_reportconfigs`;
 CREATE TABLE `glpi_plugin_resources_reportconfigs` (
@@ -344,11 +342,11 @@ CREATE TABLE `glpi_plugin_resources_reportconfigs` (
         `send_report_notif` tinyint(1) NOT NULL default '1',
         `send_other_notif` tinyint(1) NOT NULL default '0',
         `send_transfer_notif` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
-   `information` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
+   `information` text collate utf8mb4_unicode_ci,
   PRIMARY KEY  (`id`),
   KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcerestings`;
 CREATE TABLE `glpi_plugin_resources_resourcerestings` (
@@ -358,11 +356,11 @@ CREATE TABLE `glpi_plugin_resources_resourcerestings` (
    `date_end` timestamp NULL DEFAULT NULL,
    `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
    `at_home` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
    KEY `locations_id` (`locations_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceholidays`;
 CREATE TABLE `glpi_plugin_resources_resourceholidays` (
@@ -370,53 +368,53 @@ CREATE TABLE `glpi_plugin_resources_resourceholidays` (
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `date_begin` timestamp NULL DEFAULT NULL,
    `date_end` timestamp NULL DEFAULT NULL,
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcesituations`;
 CREATE TABLE `glpi_plugin_resources_resourcesituations` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `short_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `is_contract_linked` tinyint(1) NOT NULL DEFAULT '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`),
    KEY `is_contract_linked` (`is_contract_linked`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contractnatures`;
 CREATE TABLE `glpi_plugin_resources_contractnatures` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_ranks`;
 CREATE TABLE `glpi_plugin_resources_ranks` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `short_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
    `is_active` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
@@ -425,48 +423,48 @@ CREATE TABLE `glpi_plugin_resources_ranks` (
    KEY `is_recursive` (`is_recursive`),
    KEY `plugin_resources_professions_id` (`plugin_resources_professions_id`),
    KEY `is_active` (`is_active`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcespecialities`;
 CREATE TABLE `glpi_plugin_resources_resourcespecialities` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`),
    KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_leavingreasons`;
 CREATE TABLE `glpi_plugin_resources_leavingreasons` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professions`;
 CREATE TABLE `glpi_plugin_resources_professions` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `short_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_professionlines_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professionlines (id)',
    `plugin_resources_professioncategories_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professioncategories (id)',
    `is_active` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
@@ -476,40 +474,40 @@ CREATE TABLE `glpi_plugin_resources_professions` (
    KEY `plugin_resources_professionlines_id` (`plugin_resources_professionlines_id`),
    KEY `plugin_resources_professioncategories_id` (`plugin_resources_professioncategories_id`),
    KEY `is_active` (`is_active`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professionlines`;
 CREATE TABLE `glpi_plugin_resources_professionlines` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professioncategories`;
 CREATE TABLE `glpi_plugin_resources_professioncategories` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employments`;
 CREATE TABLE `glpi_plugin_resources_employments` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
    `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
@@ -521,7 +519,7 @@ CREATE TABLE `glpi_plugin_resources_employments` (
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
    `date_mod` timestamp NULL DEFAULT NULL,
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
@@ -532,31 +530,31 @@ CREATE TABLE `glpi_plugin_resources_employments` (
    KEY `entities_id` (`entities_id`),
    KEY `date_mod` (`date_mod`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employmentstates`;
 CREATE TABLE `glpi_plugin_resources_employmentstates` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `short_name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `is_active` tinyint(1) NOT NULL default '0',
    `is_leaving_state` tinyint(1) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`),
    KEY `is_active` (`is_active`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgets`;
 CREATE TABLE `glpi_plugin_resources_budgets` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
    `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
    `plugin_resources_budgettypes_id` int(11) NOT NULL default '0'COMMENT 'RELATION to glpi_plugin_resources_budgettypes (id)',
@@ -574,55 +572,55 @@ CREATE TABLE `glpi_plugin_resources_budgets` (
    KEY `date_mod` (`date_mod`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_costs`;
 CREATE TABLE `glpi_plugin_resources_costs` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
    `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
    `cost` decimal(10,2) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `plugin_resources_professions_id` (`plugin_resources_professions_id`),
    KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgettypes`;
 CREATE TABLE `glpi_plugin_resources_budgettypes` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 --
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgetvolumes`;
 CREATE TABLE `glpi_plugin_resources_budgetvolumes` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 
 
@@ -631,12 +629,12 @@ CREATE TABLE `glpi_plugin_resources_resources_changes` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `actions_id` tinyint(1) NOT NULL DEFAULT '0',
-   `itilcategories_id` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `itilcategories_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `itilcategories_id` (`itilcategories_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_notifications`;
@@ -649,7 +647,7 @@ CREATE TABLE `glpi_plugin_resources_notifications` (
   PRIMARY KEY  (`id`),
   KEY `users_id` (`users_id`),
   KEY `date_mod` (`date_mod`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_transferentities`;
 CREATE TABLE `glpi_plugin_resources_transferentities` (
@@ -659,7 +657,7 @@ CREATE TABLE `glpi_plugin_resources_transferentities` (
   PRIMARY KEY  (`id`),
   KEY `entities_id` (`entities_id`),
   KEY `groups_id` (`groups_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcebadges`;
 CREATE TABLE `glpi_plugin_resources_resourcebadges` (
@@ -669,7 +667,7 @@ CREATE TABLE `glpi_plugin_resources_resourcebadges` (
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_confighabilitations`;
 CREATE TABLE `glpi_plugin_resources_confighabilitations` (
@@ -680,43 +678,43 @@ CREATE TABLE `glpi_plugin_resources_confighabilitations` (
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_habilitationlevels`;
 CREATE TABLE `glpi_plugin_resources_habilitationlevels` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `entities_id` int(11) NOT NULL DEFAULT '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-   `comment` text COLLATE utf8_unicode_ci,
+   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `comment` text COLLATE utf8mb4_unicode_ci,
    `number` tinyint(1) NOT NULL DEFAULT '0',
    `is_mandatory_creating_resource` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_habilitations`;
 CREATE TABLE `glpi_plugin_resources_habilitations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entities_id` int(11) NOT NULL DEFAULT '0',
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `plugin_resources_habilitations_id` int(11) NOT NULL default '0',
   `plugin_resources_habilitationlevels_id` int(11) NOT NULL default '0',
-  `completename` text COLLATE utf8_unicode_ci,
-  `comment` text COLLATE utf8_unicode_ci,
+  `completename` text COLLATE utf8mb4_unicode_ci,
+  `comment` text COLLATE utf8mb4_unicode_ci,
   `level` int(11) NOT NULL DEFAULT '0',
-  `ancestors_cache` longtext COLLATE utf8_unicode_ci,
-  `sons_cache` longtext COLLATE utf8_unicode_ci,
+  `ancestors_cache` longtext COLLATE utf8mb4_unicode_ci,
+  `sons_cache` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`),
   KEY `plugin_resources_habilitationlevels_id` (`plugin_resources_habilitationlevels_id`),
   KEY `entities_id` (`entities_id`),
   KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
 CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
@@ -726,7 +724,7 @@ CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
   PRIMARY KEY  (`id`),
   KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
   KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_configs`;
 CREATE TABLE `glpi_plugin_resources_configs` (
@@ -745,35 +743,33 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
    `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
    `allow_without_contract`  int(11) NOT NULL default '0',
-   `use_service_department_ad` tinyint(1) NOT NULL default '0',
-   `use_secondary_service` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0,0,0);
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-   `comment` text COLLATE utf8_unicode_ci,
+   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `comment` text COLLATE utf8mb4_unicode_ci,
    `is_active` tinyint(1) NOT NULL default '0',
    `is_deleted` tinyint(1) NOT NULL default '0',
    `date_creation` timestamp NULL DEFAULT NULL,
    `date_mod` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importcolumns`;
 CREATE TABLE `glpi_plugin_resources_importcolumns` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
    `resource_column` int(11) NOT NULL,
    `is_identifier` tinyint(1) NOT NULL default '0',
    `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importresources`;
 CREATE TABLE `glpi_plugin_resources_importresources` (
@@ -781,92 +777,92 @@ CREATE TABLE `glpi_plugin_resources_importresources` (
    `date_creation` timestamp NULL DEFAULT NULL,
    `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importresourcedatas`;
 CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
   `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` varchar(255) COLLATE utf8mb4_unicode_ci NULL,
   `plugin_resources_importresources_id` int(11) NOT NULL DEFAULT '0',
   `plugin_resources_importcolumns_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimports`;
 CREATE TABLE `glpi_plugin_resources_resourceimports` (
    `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-   `value` varchar(255) COLLATE utf8_unicode_ci NULL,
+   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `value` varchar(255) COLLATE utf8mb4_unicode_ci NULL,
    `plugin_resources_resources_id` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_linkads`;
 CREATE TABLE `glpi_plugin_resources_linkads` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_resources_resources_id` int(11) NOT NULL default '0',
    `auth_id` int(11) NOT NULL default '0',
-   `login` varchar(255) collate utf8_unicode_ci default NULL,
-   `mail` varchar(255) collate utf8_unicode_ci default NULL,
-   `phone` varchar(255) collate utf8_unicode_ci default NULL,
-   `role` varchar(255) collate utf8_unicode_ci default NULL,
-   `service` varchar(255) collate utf8_unicode_ci default NULL,
-   `location` varchar(255) collate utf8_unicode_ci default NULL,
-   `cellphone` varchar(255) collate utf8_unicode_ci default NULL,
+   `login` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `mail` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `phone` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `role` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `service` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `location` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `cellphone` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `action_done` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`login`),
    UNIQUE KEY `unicity2` (`plugin_resources_resources_id`),
    KEY `login` (`login`)
 
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_linkmetademands`;
 CREATE TABLE `glpi_plugin_resources_linkmetademands` (
    `id` int(11) NOT NULL auto_increment,
    `plugin_metademands_fields_id` int(11) NOT NULL default '0',
    `plugin_metademands_metademands_id` int(11) NOT NULL default '0',
-   `check_value` TEXT collate utf8_unicode_ci default NULL,
-   `checklist_in` TEXT collate utf8_unicode_ci default NULL,
-   `checklist_out` TEXT collate utf8_unicode_ci default NULL,
-   `haibilitation` TEXT collate utf8_unicode_ci default NULL,
+   `check_value` TEXT collate utf8mb4_unicode_ci default NULL,
+   `checklist_in` TEXT collate utf8mb4_unicode_ci default NULL,
+   `checklist_out` TEXT collate utf8mb4_unicode_ci default NULL,
+   `haibilitation` TEXT collate utf8mb4_unicode_ci default NULL,
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_metademands_fields_id`),
    KEY `plugin_metademands_fields_id` (`plugin_metademands_fields_id`)
 
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_adconfigs`;
 CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `id` int(11) NOT NULL auto_increment,
    `auth_id` int(11) NOT NULL default '0',
-   `login` varchar(255) collate utf8_unicode_ci default '',
-   `password` varchar(255) collate utf8_unicode_ci default '',
+   `login` varchar(255) collate utf8mb4_unicode_ci default '',
+   `password` varchar(255) collate utf8mb4_unicode_ci default '',
    `creation_categories_id` TEXT NOT NULL,
    `modification_categories_id` TEXT NOT NULL,
    `deletion_categories_id` TEXT NOT NULL,
-   `logAD` varchar(255) collate utf8_unicode_ci default '',
-   `nameAD` varchar(255) collate utf8_unicode_ci default '',
-   `phoneAD` varchar(255) collate utf8_unicode_ci default NULL,
-   `companyAD` varchar(255) collate utf8_unicode_ci default '',
-   `departmentAD` varchar(255) collate utf8_unicode_ci default '',
-   `firstnameAD` varchar(255) collate utf8_unicode_ci default '',
-   `mailAD` varchar(255) collate utf8_unicode_ci default '',
-   `contractEndAD` varchar(255) collate utf8_unicode_ci default '',
-   `contractTypeAD` varchar(255) collate utf8_unicode_ci default '',
-   `ouDesactivateUserAD` varchar(255) collate utf8_unicode_ci default '',
-   `ouUser` varchar(255) collate utf8_unicode_ci default '',
-   `cellPhoneAD` varchar(255) collate utf8_unicode_ci default '',
-   `roleAD` varchar(255) collate utf8_unicode_ci default '',
-   `serviceAD` varchar(255) collate utf8_unicode_ci default '',
-   `locationAD` varchar(255) collate utf8_unicode_ci default '',
+   `logAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `nameAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `phoneAD` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `companyAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `departmentAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `firstnameAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `mailAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `contractEndAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `contractTypeAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `ouDesactivateUserAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `ouUser` varchar(255) collate utf8mb4_unicode_ci default '',
+   `cellPhoneAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `roleAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `serviceAD` varchar(255) collate utf8mb4_unicode_ci default '',
+   `locationAD` varchar(255) collate utf8mb4_unicode_ci default '',
    `first_form`  int(11) NOT NULL default '0',
    `second_form`  int(11) NOT NULL default '0',
    `mail_prefix` int(11) NOT NULL default '0',
    `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0,'','',0,'');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
@@ -874,55 +870,55 @@ CREATE TABLE `glpi_plugin_resources_roles` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_functions`;
 CREATE TABLE `glpi_plugin_resources_functions` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_teams`;
 CREATE TABLE `glpi_plugin_resources_teams` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `code` varchar(255) collate utf8_unicode_ci default NULL,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `users_id` int(11) NOT NULL default '0',
    `users_id_substitute` int(11) NOT NULL default '0',
-   `comment` text collate utf8_unicode_ci,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_services`;
 CREATE TABLE `glpi_plugin_resources_services` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
    `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+   `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
    KEY `is_recursive` (`is_recursive`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles_services`;
 CREATE TABLE `glpi_plugin_resources_roles_services` (
@@ -930,7 +926,7 @@ CREATE TABLE `glpi_plugin_resources_roles_services` (
    `plugin_resources_roles_id` int(11) NOT NULL default '0',
    `plugin_resources_services_id` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_departments_services`;
 CREATE TABLE `glpi_plugin_resources_departments_services` (
@@ -938,7 +934,7 @@ CREATE TABLE `glpi_plugin_resources_departments_services` (
    `plugin_resources_departments_id` int(11) NOT NULL default '0',
    `plugin_resources_services_id` tinyint(1) NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contracttypeprofiles`;
 CREATE TABLE `glpi_plugin_resources_contracttypeprofiles` (
@@ -946,7 +942,7 @@ CREATE TABLE `glpi_plugin_resources_contracttypeprofiles` (
   `plugin_resources_contracttypes_id` varchar(255) NOT NULL default '0',
   `profiles_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_actionprofiles`;
 CREATE TABLE `glpi_plugin_resources_actionprofiles` (
@@ -954,7 +950,7 @@ CREATE TABLE `glpi_plugin_resources_actionprofiles` (
   `actions_id` varchar(255) NOT NULL default '0',
   `profiles_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','3','2','0');

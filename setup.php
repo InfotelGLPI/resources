@@ -207,6 +207,7 @@ function plugin_version_resources() {
       'requirements' => [
          'glpi' => [
             'min' => '10.0',
+            'max' => '11.0',
             'dev' => false
          ]
       ]
@@ -221,27 +222,12 @@ function plugin_version_resources() {
  * @return bool
  */
 function plugin_resources_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '10.0', 'lt')
-       || version_compare(GLPI_VERSION, '11.0', 'ge')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '10.0');
-      }
-      return false;
-   }
 
    if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
       echo "Run composer install --no-dev in the plugin directory<br>";
       return false;
    }
 
-   return true;
-}
-
-// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
-/**
- * @return bool
- */
-function plugin_resources_check_config() {
    return true;
 }
 
