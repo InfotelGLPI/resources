@@ -68,7 +68,7 @@ class PluginResourcesUser extends User {
             if (count($resourceUsers)>0) {
                //Get last user linked to resource
                foreach ($resourceUsers as $resourceUser){
-                  $user->showForm($resourceUser['items_id']);
+                  $user->showForm($resourceUser['items_id'],['resourcesID'=>$item->getID()]);
                   break;
                }
             }
@@ -87,7 +87,9 @@ class PluginResourcesUser extends User {
       $user = new User();
 
       $user->initForm($ID, $options);
-      $user->showFormHeader($options);
+      $this->fields['id']=0;
+      $this->showFormHeader($options);
+      echo html::input('idResource',['type'=>'hidden', 'value'=>$options['resourcesID']]);
       echo "<td>" . __('Authentication') . "</td><td>";
       echo Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"]);
       if (!empty($user->fields["date_sync"])) {
