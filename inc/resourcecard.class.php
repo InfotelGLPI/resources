@@ -357,8 +357,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
       }
 
       if ($inv == false) {
-         echo "<div class='center'><br><br>" .
-              "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+         echo "<div class='alert alert-important alert-warning d-flex'>";
          echo "<b>" . __('No item found') . "</b></div>";
 
       }

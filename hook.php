@@ -280,7 +280,7 @@ function plugin_resources_install() {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.2.sql");
    }
    //Version 2.7.3
-   if (!$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_functions_id")) {
+   if (!$DB->fieldExists("glpi_plugin_resources_resources", "gender")) {
       $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.3.sql");
    }
 

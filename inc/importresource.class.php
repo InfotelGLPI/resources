@@ -1450,6 +1450,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       echo "<tr>";
       echo "<td>";
+      echo "<input class='form-control' type='file' name='picture'>";
       Html::file();
       echo "</td>";
       echo "<td>";

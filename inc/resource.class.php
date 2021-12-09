@@ -1458,7 +1458,8 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "<br>" . __('Photo', 'resources') . "<br>";
-      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+//      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      echo "<input class='form-control' type='file' name='picture'>";
       echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
@@ -3067,7 +3068,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
 
       echo __('Photo format : JPG', 'resources') . "<br>";
-      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+//      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      echo "<input class='form-control' type='file' name='picture'>";
       echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
 

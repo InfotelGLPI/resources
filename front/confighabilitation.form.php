@@ -38,7 +38,6 @@ if (Session::getCurrentInterface() == 'central') {
    //from helpdesk
    if ($plugin->isActivated('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-      echo "<br>";
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -71,8 +70,7 @@ if (isset($_POST['add_metademand'])) {
       }
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
-      echo "<div align='center'><br><br>";
-      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+      echo "<div class='alert alert-important alert-warning d-flex'>";
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 } else if (isset($_GET['new'])) {
@@ -90,8 +88,7 @@ if (isset($_POST['add_metademand'])) {
 
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
-      echo "<div align='center'><br><br>";
-      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+      echo "<div class='alert alert-important alert-warning d-flex'>";
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 
@@ -110,8 +107,7 @@ if (isset($_POST['add_metademand'])) {
 
    } else {
       Html::header(__('Setup'), '', "config", "plugins");
-      echo "<div align='center'><br><br>";
-      echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+      echo "<div class='alert alert-important alert-warning d-flex'>";
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 
