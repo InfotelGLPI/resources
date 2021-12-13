@@ -57,7 +57,7 @@ if (isset($_POST['add_metademand'])) {
       $habilitation->add($_POST);
    }
 
-   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/resources/front/confighabilitation.form.php?config");
+   Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/confighabilitation.form.php?config");
 } else if (isset($_GET['menu'])) {
    if ($habilitation->canView() || Session::haveRight("config", UPDATE)) {
       $habilitation->showMenu();
@@ -79,7 +79,7 @@ if (isset($_POST['add_metademand'])) {
                                  'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
       $data = array_shift($data);
       if (!empty($data["plugin_metademands_metademands_id"])) {
-         Html::redirect($CFG_GLPI["root_doc"] . "/plugins/metademands/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
+         Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
       } else {
          echo "<div align='center'><br><br>";
          echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
@@ -99,7 +99,7 @@ if (isset($_POST['add_metademand'])) {
       $data = array_shift($data);
 
       if (!empty($data["plugin_metademands_metademands_id"])) {
-         Html::redirect($CFG_GLPI["root_doc"] . "/plugins/metademands/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
+         Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
       } else {
          echo "<div align='center'><br><br>";
          echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";

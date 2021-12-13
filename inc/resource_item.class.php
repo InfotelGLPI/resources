@@ -498,10 +498,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
          $randDropdown = Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
                                                 'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
                                                 'itemtypes'       => $types]);
-         //User::dropdown(array('name'        => 'items_id',
-         //                        'entity'      => $resource->fields["entities_id"],
-         //                        'right' => 'all',
-         //                        'ldap_import' => true));
+
          echo "<span id='warning' hidden><i class='fas fa-exclamation-triangle fa-2x' style='color:orange'></i>&nbsp";
          echo  __('This computer is already associated to a resource','resources') . "</span>";
          echo "<td colspan='2' class='tab_bg_2'>";
@@ -510,14 +507,14 @@ class PluginResourcesResource_Item extends CommonDBTM {
          echo "</table>";
          Html::closeForm();
          echo "</div>";
-
+$root_doc = PLUGIN_RESOURCES_WEBDIR;
          $js = "$(function(){
              $('#show_items_id$randDropdown').change(function() {
              let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
                if (item_type == 'Computer') {     
                   let computer_id = $('#show_items_id$randDropdown :selected').val();
                   $.ajax({
-                             url   : CFG_GLPI.root_doc + '/plugins/resources/ajax/checkComputerResource.php',
+                             url   : '$root_doc/ajax/checkComputerResource.php',
                              type  : 'POST',
                              data  : {'computer_id': computer_id},
                              success:function(data) {

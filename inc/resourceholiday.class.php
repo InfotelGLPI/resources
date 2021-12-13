@@ -262,8 +262,8 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -278,12 +278,12 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       if ($canholiday) {
          echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.form.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidayresource.png' alt='" . __('Declare a forced holiday', 'resources') . "'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/holidayresource.png' alt='" . __('Declare a forced holiday', 'resources') . "'>";
          echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
          echo "</td>";
          echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceholiday.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/holidaylist.png' alt='" . __('List of forced holidays', 'resources') . "'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/holidaylist.png' alt='" . __('List of forced holidays', 'resources') . "'>";
          echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
          echo "</td>";
       }
@@ -302,8 +302,8 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -314,12 +314,12 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
 
-      echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourceholiday.form.php\">";
+      echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resourceholiday.form.php\">";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/holidayresource.png' alt='holidayresource'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/holidayresource.png' alt='holidayresource'/>&nbsp;";
       $title = __('Declare a forced holiday', 'resources');
       if ($ID > 0) {
          $title = __('Detail of the forced holiday', 'resources');
@@ -445,7 +445,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
 
       $options = Search::getCleanedOptions("PluginResourcesResourceHoliday");
       //$target = Toolbox::getItemTypeSearchURL($itemtype);
-      $target = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourceholiday.php";
+      $target = PLUGIN_RESOURCES_WEBDIR. "/front/resourceholiday.php";
       // Instanciate an object to access method
       $item = null;
       if (class_exists($itemtype)) {
@@ -744,7 +744,7 @@ class PluginResourcesResourceHoliday extends CommonDBTM {
       }
 
       //$target = Toolbox::getItemTypeSearchURL($itemtype);
-      $target = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourceholiday.php";
+      $target = PLUGIN_RESOURCES_WEBDIR. "/front/resourceholiday.php";
 
       $limitsearchopt = Search::getCleanedOptions("PluginResourcesResourceHoliday");
 

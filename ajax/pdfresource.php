@@ -74,7 +74,7 @@ if ($plugin->isActivated("useditemsexport")) {
 
             $rand = mt_rand();
 
-            $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/export.pdf.php";
+            $url = PLUGIN_RESOURCES_WEBDIR. "/front/export.pdf.php";
             echo __('Please ensure that the return form is signed by the employee', 'resources') . "<br><br>";
             echo "<span class='red'>" .
                  __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources') .

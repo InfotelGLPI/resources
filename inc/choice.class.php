@@ -295,8 +295,8 @@ class PluginResourcesChoice extends CommonDBTM {
 
       if ($spotted && $plugin_resources_resources_id) {
 
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -312,7 +312,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "<div class=\"form-row plugin_resources_wizard_margin\">";
          echo "<div class=\"bt-feature col-md-12 \"'>";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter the computing needs of the resource', 'resources');
          echo "</h4></div></div>";
 
@@ -383,7 +383,7 @@ class PluginResourcesChoice extends CommonDBTM {
                echo "</div>";
                if ($this->canCreate()) {
                   echo "<div class=\"bt-feature col-md-2 \">";
-                  Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/wizard.form.php',
+                  Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR. '/front/wizard.form.php',
                                        'deletechoice',
                                        _x('button', 'Delete permanently'),
                                        ['id' => $choice["id"], 'plugin_resources_resources_id' => $plugin_resources_resources_id]);
@@ -484,7 +484,7 @@ class PluginResourcesChoice extends CommonDBTM {
       $params = ['id'   => $items_id,
                  'rand' => $rand];
       Ajax::UpdateItemJsCode("addneedcomment" . "$items_id$rand",
-                             $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/addneedcomment.php", $params, false);
+                             PLUGIN_RESOURCES_WEBDIR. "/ajax/addneedcomment.php", $params, false);
       echo "};";
       echo "</script>\n";
       echo "<p align='center'><a href='javascript:viewAddNeedComment" . "$items_id();'>";
@@ -514,7 +514,7 @@ class PluginResourcesChoice extends CommonDBTM {
 
       $params = ['name' => 'commentneed' . $items_id,
                  'data' => rawurlencode($item["comment"])];
-      Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/inputtext.php",
+      Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", PLUGIN_RESOURCES_WEBDIR. "/ajax/inputtext.php",
                              $params, false);
       echo "}";
       echo "</script>\n";
@@ -558,9 +558,9 @@ class PluginResourcesChoice extends CommonDBTM {
                  && $withtemplate < 2
                  && $resource->fields["is_leaving"] != 1;
       if ($exist == 0) {
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource_item.list.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource_item.list.php\">";
       } else if ($exist == 1) {
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
       }
 
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -606,7 +606,7 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "</td>";
             if ($canedit) {
                echo "<td class='center' class='tab_bg_2'>";
-               Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/resource_item.list.php',
+               Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR. '/front/resource_item.list.php',
                                     'deletehelpdeskitem',
                                     _x('button', 'Delete permanently'),
                                     ['id' => $choice["id"]]);

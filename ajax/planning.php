@@ -84,7 +84,7 @@ $params = ['duration'     => '__VALUE__',
 
 if ($default_delay == 0) {
    $params['duration'] = 0;
-   Ajax::updateItem("date_end$rand", $CFG_GLPI["root_doc"]."/plugins/resources/ajax/planningend.php", $params);
+   Ajax::updateItem("date_end$rand", PLUGIN_RESOURCES_WEBDIR."/ajax/planningend.php", $params);
 }
 
 echo "</td></tr>\n";

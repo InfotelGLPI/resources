@@ -232,7 +232,7 @@ class PluginResourcesCost extends CommonDropdown {
       $params = ['name' => 'plugin_resources_professions_id',
                     'value' => $this->fields['plugin_resources_professions_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR."/ajax/dropdownRank.php",
                     'span' => 'span_rank',
                      'sort' => false
                   ];

@@ -296,7 +296,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       $params = ['name'   => 'plugin_resources_professions_id',
                  'value'  => $this->fields['plugin_resources_professions_id'],
                  'entity' => $this->fields["entities_id"],
-                 'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownRank.php",
+                 'action' => PLUGIN_RESOURCES_WEBDIR. "/ajax/dropdownRank.php",
                  'span'   => 'span_rank',
                  'sort'   => true
       ];
@@ -386,14 +386,14 @@ class PluginResourcesEmployment extends CommonDBTM {
       if (Session::haveRight('employment', UPDATE) && $canedit) {
 
          echo "<div align='center'>";
-         echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/employment.form.php?plugin_resources_resources_id=" .
+         echo "<a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/employment.form.php?plugin_resources_resources_id=" .
               $ID . "' >" . __('Declare a new employment', 'resources') . "</a></div>";
          echo "</div>";
       }
 
       echo "<div align='center'>";
       echo "<form method='post' name='addemployment' id='addemployment' action='" .
-           $CFG_GLPI["root_doc"] . "/plugins/resources/front/employment.form.php'>";
+           PLUGIN_RESOURCES_WEBDIR. "/front/employment.form.php'>";
 
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr>";
@@ -589,7 +589,7 @@ class PluginResourcesEmployment extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page = '/plugins/resources/front/employment.php';
+      $plugin_page = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.php';
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -598,7 +598,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = '/plugins/resources/front/employment.form.php';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.form.php';
       }
 
       return $menu;

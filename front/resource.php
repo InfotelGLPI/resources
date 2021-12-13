@@ -57,7 +57,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       echo "</a>";
       echo "</div><br>";
       echo Ajax::createIframeModalWindow('seetypemodal',
-                                         $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/resourcetree.php",
+                                         PLUGIN_RESOURCES_WEBDIR. "/ajax/resourcetree.php",
                                          ['title'   => __('View by contract type', 'resources'),
                                           'display'       => false,
                                           'width'         => 600,

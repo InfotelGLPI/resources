@@ -54,7 +54,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getMenuLink() {
       global $CFG_GLPI;
 
-      return $CFG_GLPI['root_doc'] . "/plugins/resources/front/menu.php";
+      return PLUGIN_RESOURCES_WEBDIR. "/front/menu.php";
    }
 
    /**
@@ -62,7 +62,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
     */
    static function getMenuLogo() {
 
-      return "fas fa-users";
+      return PluginResourcesResource::getIcon();
 
    }
 

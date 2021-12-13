@@ -58,10 +58,10 @@ class PluginResourcesDashboard extends CommonGLPI
       $widgets = [
          __('Tables', "mydashboard") => [
             $this->getType() . "1" => ["title" => __('New resource - checklist needs to verificated', 'resources'),
-               "icon" => "fas fa-table",
+               "icon" => "ti ti-table",
                "comment" => ""],
             $this->getType() . "2" => ["title" => __('Leaving resource - checklist needs to verificated', 'resources'),
-               "icon" => "fas fa-table",
+               "icon" => "ti ti-table",
                "comment" => ""],
          ],
       ];

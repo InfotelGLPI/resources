@@ -130,7 +130,7 @@ class PluginResourcesImportResource extends CommonDBTM {
     */
    static function getIndexUrl() {
       global $CFG_GLPI;
-      return $CFG_GLPI['root_doc'] . '/plugins/resources/front/importresource.php';
+      return PLUGIN_RESOURCES_WEBDIR. '/front/importresource.php';
    }
 
    /**
@@ -798,7 +798,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          echo '</td>';
          echo '</tr>';
 
-         $url = $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/verifyCSVStatistics.php';
+         $url = PLUGIN_RESOURCES_WEBDIR. '/ajax/verifyCSVStatistics.php';
 
          $js = "$('#calculate').click(function () {
                     
@@ -1586,7 +1586,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       if (!count($imports)) {
          $title = __("No imports configured", "resources");
          $linkText = __("Configure a new import", "resources");
-         $link = $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
+         $link = PLUGIN_RESOURCES_WEBDIR. "/front/import.php";
 
          self::showErrorHeader($title, $linkText, $link);
       } else {
@@ -1931,7 +1931,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       foreach ($importColumns as $importColumn) {
          echo "<th>";
          echo "<img style='vertical-align: middle;' src='" .
-            $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'" .
+            PLUGIN_RESOURCES_WEBDIR. "/pics/csv_file.png'" .
             " title='" . __("Data from file", "resources") . "'" .
             " width='30' height='30'>";
 

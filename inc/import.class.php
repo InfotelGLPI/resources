@@ -43,12 +43,12 @@ class PluginResourcesImport extends CommonDBTM {
 
    static function getFormUrl($full = true){
       global $CFG_GLPI;
-      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.form.php";
+      return PLUGIN_RESOURCES_WEBDIR. "/front/import.form.php";
    }
 
    static function getIndexUrl(){
       global $CFG_GLPI;
-      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
+      return PLUGIN_RESOURCES_WEBDIR. "/front/import.php";
    }
 
    /**

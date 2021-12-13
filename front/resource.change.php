@@ -47,7 +47,7 @@ $resource_change = new PluginResourcesResource_Change();
 if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["plugin_resources_resources_id"] != 0) {
 
    if ($_POST["change_action"] == PluginResourcesResource_Change::CHANGE_TRANSFER && isset($_POST['plugin_resources_resources_id'])) {
-      Html::redirect($CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']);
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']);
    } else {
       $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
       Html::back();

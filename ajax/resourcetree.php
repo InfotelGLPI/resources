@@ -35,7 +35,7 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (!isset($_GET['target'])) {
-   $_GET['target']=$CFG_GLPI['root_doc']."/plugins/resources/front/resource.php";
+   $_GET['target']=PLUGIN_RESOURCES_WEBDIR. "/front/resource.php";
 }
 
 PluginResourcesResource::showSelector($_GET['target']);

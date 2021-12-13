@@ -254,7 +254,7 @@ class PluginResourcesBudget extends CommonDBTM {
       $params = ['name'    => 'plugin_resources_professions_id',
                       'value'   => $this->fields['plugin_resources_professions_id'],
                       'entityt' => $this->fields["entities_id"],
-                      'action'  => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
+                      'action'  => PLUGIN_RESOURCES_WEBDIR."/ajax/dropdownRank.php",
                       'span'    => 'span_rank',
                       'sort'    => true];
       PluginResourcesResource::showGenericDropdown('PluginResourcesProfession', $params);
@@ -311,7 +311,7 @@ class PluginResourcesBudget extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page                                   = '/plugins/resources/front/budget.php';
+      $plugin_page                                   = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.php';
       $itemtype                                      = strtolower(self::getType());
 
       //Menu entry in admin
@@ -320,7 +320,7 @@ class PluginResourcesBudget extends CommonDBTM {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = '/plugins/resources/front/budget.form.php';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.form.php';
       }
 
       return $menu;

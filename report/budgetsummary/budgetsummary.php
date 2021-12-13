@@ -265,7 +265,7 @@ if ($report->criteriasValidated()) {
          //link to recap.php displaying only employments with same rank and profession
          $ratio ="";
          if (!empty($data1['sum'])) {
-            $ratio = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?employment_professions_id=".
+            $ratio = "<a href='".PLUGIN_RESOURCES_WEBDIR. "/front/recap.php?employment_professions_id=".
                $data['profession'];
             $ratio.="&amp;date=".$date;
             if ($data['rank']!=0) {
@@ -316,7 +316,7 @@ if ($report->criteriasValidated()) {
          //link to recap.php displaying only resource with same rank and profession
          $quota ="";
          if (!empty($data2['sum'])) {
-            $quota = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?resource_professions_id=".
+            $quota = "<a href='".PLUGIN_RESOURCES_WEBDIR. "/front/recap.php?resource_professions_id=".
                $data['profession'];
             $quota.="&amp;date=".$date;
             if ($data['rank']!=0) {

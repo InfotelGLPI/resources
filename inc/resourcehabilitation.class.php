@@ -296,8 +296,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          $condition  = $dbu->getEntitiesRestrictCriteria($habilitation_level->getTable(), 'entities_id',$resource->getEntityID(), $habilitation_level->maybeRecursive());
          $levels    = $habilitation_level->find($condition, "name");
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -314,8 +314,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          echo "<div class=\"form-row plugin_resources_wizard_margin\">";
          echo "<div class=\"bt-feature col-md-12\">";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] .
-              "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR .
+              "/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter habilitations about the resource', 'resources');
          echo "</h4></div></div>";
 

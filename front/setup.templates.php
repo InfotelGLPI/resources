@@ -35,7 +35,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
 
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 
-   $resource->listOfTemplates($CFG_GLPI["root_doc"]."/plugins/resources/front/resource.form.php", $_GET["add"]);
+   $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR."/front/resource.form.php", $_GET["add"]);
 
    Html::footer();
 }

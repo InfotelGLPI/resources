@@ -45,7 +45,7 @@ $resource = new PluginResourcesResource();
 if (isset($_POST["transferresources"])) {
    if ($resource->checkTransferMandatoryFields($_POST)) {
       $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resource.change.php");
 
    } else {
       Html::back();

@@ -115,12 +115,12 @@ class PluginResourcesReportConfig extends CommonDBTM {
          if ($item->can($ID, UPDATE) && !self::checkIfReportsExist($ID)) {
             $self = new self();
             $self->showForm("", ['plugin_resources_resources_id' => $ID,
-                                      'target'                        => $CFG_GLPI['root_doc'] . "/plugins/resources/front/reportconfig.form.php"]);
+                                      'target'                        => PLUGIN_RESOURCES_WEBDIR. "/front/reportconfig.form.php"]);
          }
 
          if ($item->can($ID, UPDATE) && self::checkIfReportsExist($ID) && !$withtemplate) {
             PluginResourcesResource::showReportForm(['id'     => $ID,
-                                                          'target' => $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.form.php"]);
+                                                          'target' => PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php"]);
          }
       }
       return true;

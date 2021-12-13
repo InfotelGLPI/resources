@@ -715,12 +715,12 @@ class PluginResourcesResource extends CommonDBTM {
          'field' => 'matricule_second',
          'name'  => __('Second matricule', 'resources'),
       ];
-//      $tab[] = [
-//         'id'    => '45',
-//         'table' => $this->getTable(),
-//         'field' => 'society',
-//         'name'  => __('Society', 'resources'),
-//      ];
+      //      $tab[] = [
+      //         'id'    => '45',
+      //         'table' => $this->getTable(),
+      //         'field' => 'society',
+      //         'name'  => __('Society', 'resources'),
+      //      ];
 
       return $tab;
    }
@@ -741,9 +741,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
-      $resourceItem = new PluginResourcesResource_Item();
+      $resourceItem  = new PluginResourcesResource_Item();
       $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
-      if (count($resourceUsers)>0) {
+      if (count($resourceUsers) > 0) {
          $this->addStandardTab(PluginResourcesUser::class, $ong, $options);
       }
       $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
@@ -1419,8 +1419,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Gender', 'resources') . "</td>";
       echo "<td " . $tohide['gender'] . ">";
       $genders = $this->getGenders();
-      $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
-      Dropdown::showFromArray('gender',$genders,$option);
+      $option  = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
+      Dropdown::showFromArray('gender', $genders, $option);
       echo "</td>";
       echo "</tr>";
 
@@ -1445,9 +1445,9 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
          $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
-            echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
-             <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                 "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+            echo "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+             <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR .
+                 "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
             </object> ";
             echo Html::hidden('picture', ['value' => $this->fields["picture"]]);
          } else {
@@ -1458,12 +1458,12 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       echo "<br>" . __('Photo', 'resources') . "<br>";
-//      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
       echo "<input class='form-control' type='file' name='picture'>";
       echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
       if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
-         Html::showSimpleForm($CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php",
+         Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
                               'delete_picture',
                               _x('button', 'Delete permanently'),
                               ['id'      => $ID,
@@ -1565,7 +1565,7 @@ class PluginResourcesResource extends CommonDBTM {
          $params = ['name'   => 'plugin_resources_resourcesituations_id',
                     'value'  => $this->fields['plugin_resources_resourcesituations_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownContractnature.php",
                     'span'   => 'span_contractnature'
          ];
          self::showGenericDropdown(PluginResourcesResourceSituation::class, $params);
@@ -1609,7 +1609,7 @@ class PluginResourcesResource extends CommonDBTM {
          $params = ['name'   => 'plugin_resources_ranks_id',
                     'value'  => $this->fields['plugin_resources_ranks_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownSpeciality.php",
                     'span'   => 'span_speciality'
          ];
          self::showGenericDropdown(PluginResourcesRank::class, $params);
@@ -1668,7 +1668,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($config->useServiceDepartmentAD()) {
          UserTitle::dropdown(['name' => "plugin_resources_departments_id", 'value' => $this->fields["plugin_resources_departments_id"], 'rand' => $rand]);
-      } else{
+      } else {
          Dropdown::show(PluginResourcesDepartment::class,
                         ['value'  => $this->fields["plugin_resources_departments_id"],
                          'entity' => $this->fields["entities_id"],
@@ -1694,9 +1694,9 @@ class PluginResourcesResource extends CommonDBTM {
       if ($config->useServiceDepartmentAD()) {
          UserCategory::dropdown(['name' => "plugin_resources_services_id", 'value' => $this->fields["plugin_resources_services_id"], 'rand' => $rand]);
       } else {
-//         Dropdown::show('PluginResourcesService',
-//                        ['value'  => $this->fields["plugin_resources_services_id"],
-//                         'entity' => $this->fields["entities_id"]]);
+         //         Dropdown::show('PluginResourcesService',
+         //                        ['value'  => $this->fields["plugin_resources_services_id"],
+         //                         'entity' => $this->fields["entities_id"]]);
          PluginResourcesService::dropdownFromDepart($this->fields["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
                                                                                                        'value'  => $this->fields["plugin_resources_services_id"],
                                                                                                        'entity' => $_SESSION['glpiactiveentities'],
@@ -1731,7 +1731,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</td>";
 
 
-      if($config->useSecondaryService() && $config->useServiceDepartmentAD()){
+      if ($config->useSecondaryService() && $config->useServiceDepartmentAD()) {
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
          echo __('Secondaries services', 'resources');
@@ -1739,9 +1739,9 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<td>";
 
          $services = [];
-         $userCat = new UserCategory();
+         $userCat  = new UserCategory();
          $usersCat = $userCat->find();
-         foreach ($usersCat as $res){
+         foreach ($usersCat as $res) {
             $services[$res['id']] = $res['name'];
          }
 
@@ -1941,7 +1941,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<tr " . $tohide['comment'] . " class='tab_bg_1'><td colspan='4'>";
       echo Html::textarea([
                              'name'    => 'comment',
-                             'value' => $this->fields["comment"],
+                             'value'   => $this->fields["comment"],
                              'cols'    => '130',
                              'rows'    => '4',
                              'display' => false,
@@ -2083,7 +2083,7 @@ class PluginResourcesResource extends CommonDBTM {
             $checked = "checked = true";
          }
          echo "<input type='checkbox' name='read_chart' $checked value='1'>";
-         $name= 'is_checked'.$ID;
+         $name = 'is_checked' . $ID;
          echo Html::hidden($name, ['value' => (($this->fields['read_chart'] > 0) ? 0 : 1)]);
 
          echo "</td>";
@@ -2187,8 +2187,8 @@ class PluginResourcesResource extends CommonDBTM {
    function wizardFirstForm() {
       global $CFG_GLPI;
 
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -2199,12 +2199,12 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
 
-      echo "<form action='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/wizard.form.php' method='post'>";
+      echo "<form action='" . PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php' method='post'>";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin \">";
       echo "<div class=\"bt-feature col-md-12 \" >";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
       echo __('Welcome to the wizard resource', 'resources');
       echo "</h4></div></div>";
 
@@ -2284,8 +2284,8 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_employers_id"]            = 0;
 
       }
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -2301,7 +2301,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"form-row plugin_resources_wizard_margin \">";
       echo "<div class=\"bt-feature col-md-12 \" >";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
       echo __('Enter general information about the resource', 'resources');
       echo "</h4></div></div>";
 
@@ -2391,8 +2391,8 @@ class PluginResourcesResource extends CommonDBTM {
       echo __('Surname');
       echo "</div>";
       echo "<div " . $tohide['name'] . " class=\"bt-feature col-md-3\">";
-      $option = ['value' => $options["name"],
-                 'size'  => 30,
+      $option = ['value'    => $options["name"],
+                 'size'     => 30,
                  'onchange' => "javascript:this.value=this.value.toUpperCase();"];
       echo Html::input('name', $option);
       echo "<br><span class='plugin_resources_wizard_comment' style='color:red;'>";
@@ -2410,8 +2410,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div " . $tohide['firstname'] . " class=\"bt-feature col-md-3\">";
 
-      $option = ['value'  => $options["firstname"],
-                 'size'  => 30,
+      $option = ['value'    => $options["firstname"],
+                 'size'     => 30,
                  'onChange' => "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'"];
       echo Html::input('firstname', $option);
       echo "</div>";
@@ -2503,7 +2503,7 @@ class PluginResourcesResource extends CommonDBTM {
          $params = ['name'   => 'plugin_resources_resourcesituations_id',
                     'value'  => $options['plugin_resources_resourcesituations_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownContractnature.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownContractnature.php",
                     'span'   => 'span_contractnature'
          ];
          self::showGenericDropdown(PluginResourcesResourceSituation::class, $params);
@@ -2543,7 +2543,7 @@ class PluginResourcesResource extends CommonDBTM {
          $params = ['name'   => 'plugin_resources_ranks_id',
                     'value'  => $options['plugin_resources_ranks_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownSpeciality.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownSpeciality.php",
                     'span'   => 'span_speciality'
          ];
          self::showGenericDropdown(PluginResourcesRank::class, $params);
@@ -2795,7 +2795,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
 
-      if($config->useSecondaryService() && $config->useServiceDepartmentAD()){
+      if ($config->useSecondaryService() && $config->useServiceDepartmentAD()) {
          echo "<div class=\"bt-feature col-md-3\">";
          echo __('Secondaries services', 'resources');
 
@@ -2930,7 +2930,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12\">";
       echo Html::textarea([
                              'name'    => 'comment',
-                             'value' => $options["comment"],
+                             'value'   => $options["comment"],
                              'cols'    => '95',
                              'rows'    => '6',
                              'display' => false,
@@ -3021,8 +3021,8 @@ class PluginResourcesResource extends CommonDBTM {
       if ($ID > 0) {
          $this->check($ID, READ);
       }
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3038,7 +3038,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"form-row plugin_resources_wizard_margin \">";
       echo "<div class=\"bt-feature col-md-12 \" >";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
       echo __('Add the photo of the resource', 'resources');
       echo "</h4></div></div>";
 
@@ -3052,15 +3052,15 @@ class PluginResourcesResource extends CommonDBTM {
       if (isset($this->fields["picture"])) {
          $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
          if (file_exists($path)) {
-            echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
-             <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                 "/plugins/resources/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+            echo "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
+             <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR .
+                 "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
             </object> ";
          } else {
-            echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/nobody.png'>";
+            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'>";
          }
       } else {
-         echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/nobody.png'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'>";
       }
       echo "</div></div>";
 
@@ -3068,7 +3068,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<div class=\"bt-feature col-md-12 \">";
 
       echo __('Photo format : JPG', 'resources') . "<br>";
-//      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
+      //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
       echo "<input class='form-control' type='file' name='picture'>";
       echo "&nbsp;";
       echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
@@ -3134,8 +3134,8 @@ class PluginResourcesResource extends CommonDBTM {
          }
       }
 
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3282,22 +3282,22 @@ class PluginResourcesResource extends CommonDBTM {
 
             if ($link == 2) {
                $user["name"]    = $username;
-               $user["link"]    = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $ID;
+               $user["link"]    = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $ID;
                $user["comment"] = "";
 
                if (isset($data["picture"]) && !empty($data["picture"])) {
                   $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
                   if (file_exists($path)) {
-                     $user["comment"] .= "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
-                      <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                                         "/plugins/resources/front/picture.send.php?file=" . $data["picture"] . "'>
+                     $user["comment"] .= "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $data["picture"] . "'>
+                      <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR .
+                                         "/front/picture.send.php?file=" . $data["picture"] . "'>
                      </object><br> ";
 
                   } else {
-                     $user["comment"] .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/nobody.png'><br>";
+                     $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
                   }
                } else {
-                  $user["comment"] .= "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/nobody.png'><br>";
+                  $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
                }
 
                $user["comment"] .= __('Name') . "&nbsp;: " . $username . "<br>";
@@ -3365,7 +3365,7 @@ class PluginResourcesResource extends CommonDBTM {
       $item   = new self();
       $output = "<span class='no-wrap'>";
       $output .= Html::jsAjaxDropdown($params['name'], $field_id,
-                                      $CFG_GLPI['root_doc'] . "/plugins/resources/ajax/dropdownResources.php",
+                                      PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownResources.php",
                                       $params);
       if (class_exists('PluginPositionsPosition')) {
          $output .= PluginPositionsPosition::showGeolocLink(PluginResourcesResource::class, $params['value']);
@@ -3379,7 +3379,7 @@ class PluginResourcesResource extends CommonDBTM {
          $link_id    = Html::cleanId("comment_link_" . $params['name'] . $params['rand']);
 
          if (empty($user["link"])) {
-            $user["link"] = $CFG_GLPI['root_doc'] . "/plugins/resources/front/resource.php";
+            $user["link"] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
          }
 
          $output .= "&nbsp;" . Html::showToolTip($user["comment"],
@@ -3396,7 +3396,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
 
          $output .= Ajax::updateItemOnSelectEvent($field_id, $comment_id,
-                                                  $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/comments.php",
+                                                  PLUGIN_RESOURCES_WEBDIR . "/ajax/comments.php",
                                                   $paramscomment, false);
 
       }
@@ -3769,8 +3769,8 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3781,12 +3781,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class='bt-container resources_wizard_resp'>";
          echo "<div class='bt-block bt-features' >";
 
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.remove.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php\">";
 
          echo "<div class=\"form-row plugin_resources_wizard_margin \">";
          echo "<div class=\"bt-feature col-md-12 \" >";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/removeresource.png' alt='removeresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png' alt='removeresource'/>&nbsp;";
          echo __('Declare a departure', 'resources');
          echo "</h4></div></div>";
 
@@ -3870,8 +3870,8 @@ class PluginResourcesResource extends CommonDBTM {
       $dbu = new DbUtils();
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3882,12 +3882,12 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class='bt-container resources_wizard_resp'> ";
          echo "<div class='bt-block bt-features' > ";
 
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.change.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php\">";
 
          echo "<div class=\"form-row plugin_resources_wizard_margin \">";
          echo "<div class=\"bt-feature col-md-12 \" >";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/recap.png' alt='changeresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='changeresource'/>&nbsp;";
          echo __('Declare a change', 'resources');
          echo "</h4></div></div>";
 
@@ -3910,14 +3910,14 @@ class PluginResourcesResource extends CommonDBTM {
          echo __('Actions to be taken', 'resources');
          echo "</div>";
          echo "<div class=\"bt-feature col-md-4 \">";
-         $actions = PluginResourcesResource_Change::getAllActions();
+         $actions       = PluginResourcesResource_Change::getAllActions();
          $actionProfile = new PluginResourcesActionprofile();
          if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
             $available_action = json_decode($actionProfile->fields['actions_id']);
          }
-         if(isset($available_action) && !empty($available_action)) {
+         if (isset($available_action) && !empty($available_action)) {
             foreach ($actions as $id => $action) {
-               if(!in_array($id,$available_action)) {
+               if (!in_array($id, $available_action)) {
                   unset($actions[$id]);
                }
             }
@@ -3967,8 +3967,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($dbu->countElementsInTable($this->getTable()) > 0) {
          echo "<div align='center'>";
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -3979,7 +3979,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo "<div class='bt-container resources_wizard_resp'>";
          echo "<div class='bt-block bt-features' >";
 
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.transfer.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php\">";
 
          if (isset($plugin_resources_resources_id)) {
             $resource = new PluginResourcesResource();
@@ -3988,7 +3988,7 @@ class PluginResourcesResource extends CommonDBTM {
                echo "<div class=\"form-row plugin_resources_wizard_margin \">";
                echo "<div class=\"bt-feature col-md-12 \" >";
                echo "<h4 class=\"bt-title-divider\">";
-               echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/transferresource.png' alt='transferresource'/>&nbsp;";
+               echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png' alt='transferresource'/>&nbsp;";
                echo __('Declare a transfer', 'resources');
                echo "</h4></div></div>";
 
@@ -4800,9 +4800,9 @@ class PluginResourcesResource extends CommonDBTM {
            __s('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a>";
 
       echo "<div class='left' style='width:100%'>";
-
-      $js = "   $(function() {
-                  $.getScript('{$CFG_GLPI["root_doc"]}/plugins/resources/lib/jstree/jstree.min.js', function(data, textStatus, jqxhr) {
+      $root_doc = PLUGIN_RESOURCES_WEBDIR;
+      $js       = "   $(function() {
+                  $.getScript('$root_doc/lib/jstree/jstree.min.js', function(data, textStatus, jqxhr) {
                      $('#tree_resourcetypes$rand').jstree({
                         // the `plugins` array allows you to configure the active plugins on this instance
                         'plugins' : ['search', 'qload'],
@@ -4811,7 +4811,7 @@ class PluginResourcesResource extends CommonDBTM {
                            'show_only_matches': true,
                            'ajax': {
                               'type': 'POST',
-                              'url': '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php'
+                              'url': '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php'
                            }
                         },
                         'qload': {
@@ -4827,8 +4827,8 @@ class PluginResourcesResource extends CommonDBTM {
                            'data': {
                               'url': function(node) {
                                  return node.id === '#' ?
-                                    '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php?node=-1' :
-                                    '" . $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/resourcetreetypes.php?node='+node.id;
+                                    '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php?node=-1' :
+                                    '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php?node='+node.id;
                               }
                            }
                         }
@@ -4984,7 +4984,7 @@ class PluginResourcesResource extends CommonDBTM {
             $params['name'] = self::getResourceName($params['id']);
 
             if (isset($item->fields["picture"])) {
-               $params['pic'] = $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $item->fields["picture"];
+               $params['pic'] = PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $item->fields["picture"];
             }
          }
       }
@@ -5033,11 +5033,11 @@ class PluginResourcesResource extends CommonDBTM {
       if (!empty($picture)) {
          $tmp = explode(".", $picture);
          if (count($tmp) == 2) {
-            return $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $tmp[0] . '.' . $tmp[1];
+            return PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $tmp[0] . '.' . $tmp[1];
          }
-         return $CFG_GLPI["root_doc"] . "/plugins/resources/pics/nobody.png";
+         return PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png";
       }
-      return $CFG_GLPI["root_doc"] . "/plugins/resources/pics/nobody.png";
+      return PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png";
 
    }
 
@@ -5380,9 +5380,9 @@ class PluginResourcesResource extends CommonDBTM {
       return false;
    }
 
-   function getGenders(){
+   function getGenders() {
       return [Dropdown::EMPTY_VALUE,
-              __('M.','resources'),
-              __('Mme','resources')];
+              __('M.', 'resources'),
+              __('Mme', 'resources')];
    }
 }

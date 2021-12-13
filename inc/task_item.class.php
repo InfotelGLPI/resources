@@ -244,7 +244,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         echo "<td class='center' ".(isset($data['is_deleted']) && $data['is_deleted'] == '1' ? "class='tab_bg_2_2'" : "").">".$name."</td>";
                         if ($canedit && $this->canCreate() && $withtemplate < 2) {
                            echo "<td class='center' class='tab_bg_2'>";
-                           Html::showSimpleForm($CFG_GLPI['root_doc'].'/plugins/resources/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), ['id' => $data["items_id"]]);
+                           Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR.'/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), ['id' => $data["items_id"]]);
                            echo "</td>";
                         }
                         echo "</tr>";

@@ -188,7 +188,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                'end'    => $this->fields["end"],
                'entity' => $PluginResourcesResource->fields["entities_id"]
             ];
-            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/planning.php", $params);
+            Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR. "/ajax/planning.php", $params);
             echo "}";
             echo "</script>\n";
             echo "<div id='plan' onClick='showPlan" . $taskid . "()'>\n";
@@ -212,7 +212,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             echo "$('#plan').css({'display':'none'});";
             $params = ['form'   => 'followups',
                        'entity' => $_SESSION["glpiactive_entity"]];
-            Ajax::updateItemJsCode('viewplan', $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/planning.php", $params);
+            Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR. "/ajax/planning.php", $params);
             echo "};";
             echo "</script>";
 
@@ -272,7 +272,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
 
       $out .= PluginResourcesResource::getTypeName() . " - " . PluginResourcesTask::getTypeName() . ' : ' . Html::convDateTime($val["begin"]) . ' -> ' .
               Html::convDateTime($val["end"]) . ' : ';
-      $out .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" .
+      $out .= "<a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?id=" .
               $val["plugin_resources_tasks_id"] . "'>";
       $out .= Html::resume_text($val["name"], 80) . '</a>';
 
@@ -372,7 +372,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
             $output[$key]["resource"]                      = $data["resource"];
             $output[$key]["content"]                       = Html::resume_text($data["comment"], $CFG_GLPI["cut"]);
             $output[$key]["itemtype"]                      = 'PluginResourcesTaskPlanning';
-            $output[$key]["url"]                           = $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $data['id'];;
+            $output[$key]["url"]                           = PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?id=" . $data['id'];;
          }
       }
       return $output;
@@ -391,7 +391,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $val["id"] . "'";
+      $html .= "<a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?id=" . $val["id"] . "'";
 
       $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
                onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
@@ -422,7 +422,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
       $html .= "</a><br>";
 
       $html .= PluginResourcesResource::getTypeName(1) .
-               " : <a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" .
+               " : <a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php?id=" .
                $val["plugin_resources_resources_id"] . "'";
       $html .= ">" . $val["resource"] . "</a>";
 

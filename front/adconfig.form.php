@@ -44,7 +44,6 @@ if ($plugin->isActivated("resources")) {
 
 } else {
    Html::header(__('Setup'), '', "config", "plugins");
-   echo "<div align='center'>";
    echo "<div class='alert alert-important alert-warning d-flex'>";
    echo "<b>".__('Please activate the plugin', 'resources')."</b></div>";
 }

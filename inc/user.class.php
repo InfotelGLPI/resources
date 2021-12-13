@@ -107,7 +107,7 @@ class PluginResourcesUser extends User {
       $phonerand = mt_rand();
       echo "<tr class='tab_bg_1'>";
       echo "<td><label for='textfield_phone$phonerand'>" .  Phone::getTypeName(1) . "</label></td><td>";
-      Html::autocompletionTextField($user, "phone", ['rand' => $phonerand]);
+      echo Html::input('phone', ['value' => $user->fields['phone'], 'size' => 40, 'rand' => $phonerand]);
       echo "</td>";
 
       echo "<td>" . _n('Email', 'Emails', Session::getPluralNumber());

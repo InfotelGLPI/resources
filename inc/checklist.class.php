@@ -658,7 +658,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                     'plugin_resources_resources_id'     => $plugin_resources_resources_id,
                     'checklist_type'                    => $checklist_type,
                     'id'                                => -1];
-         Ajax::updateItemJsCode("viewchecklisttask" . "$rand", $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/viewchecklisttask.php", $params, false);
+         Ajax::updateItemJsCode("viewchecklisttask" . "$rand", PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php", $params, false);
          echo "};";
          echo "</script>\n";
          echo "<a class='btn btn-primary' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
@@ -1112,7 +1112,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                echo "<tr class='tab_bg_1'>";
 
                echo "<td class='center'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $data["plugin_resources_resources_id"] . "'>";
+               echo "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $data["plugin_resources_resources_id"] . "'>";
                echo $data["resource_name"] . " " . $data["resource_firstname"];
                if ($_SESSION["glpiis_ids_visible"]) {
                   echo " (" . $data["plugin_resources_resources_id"] . ")";
@@ -1431,7 +1431,7 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page = '/plugins/resources/front/checklistconfig.php';
+      $plugin_page = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/checklistconfig.php';
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -1441,12 +1441,12 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       // Add
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = '/plugins/resources/front/checklistconfig.form.php?new=1';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/checklistconfig.form.php?new=1';
       }
 
       // Config
       if (Session::haveRight("config", UPDATE)) {
-         $menu['options'][$itemtype]['links']['config'] = '/plugins/resources/front/config.form.php';
+         $menu['options'][$itemtype]['links']['config'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/config.form.php';
       }
 
       return $menu;

@@ -216,7 +216,7 @@ else if (isset($_POST["delete"])) {
    }
 
    if (!empty($_POST["withtemplate"])) {
-      Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/setup.templates.php?add=0");
    } else {
       $resource->redirectToList();
    }
@@ -232,7 +232,7 @@ else if (isset($_POST["purge"])) {
    $resource->check($_POST['id'], UPDATE);
    $resource->delete($_POST, 1);
    if (!empty($_POST["withtemplate"])) {
-      Html::redirect($CFG_GLPI["root_doc"] . "/plugins/resources/front/setup.templates.php?add=0");
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/setup.templates.php?add=0");
    } else {
       $resource->redirectToList();
    }

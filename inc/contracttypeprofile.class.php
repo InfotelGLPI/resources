@@ -48,7 +48,7 @@ class PluginResourcesContracttypeprofile extends CommonDBTM {
       global $CFG_GLPI;
       if ($canedit) {
 
-         echo "<form method='post' action='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/contracttypeprofile.form.php" . "'>";
+         echo "<form method='post' action='" . PLUGIN_RESOURCES_WEBDIR. "/front/contracttypeprofile.form.php" . "'>";
          echo Html::hidden('profiles_id', ['value' => $profiles_id]);
 
          echo "<table class='tab_cadre_fixe'>";

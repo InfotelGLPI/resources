@@ -45,7 +45,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
    switch ($_REQUEST["table"]) {
       case "glpi_plugin_resources_resources" :
          if ($_REQUEST['value']==0) {
-            $tmpname['link']    = $CFG_GLPI['root_doc']."/plugins/resources/front/resource.php";
+            $tmpname['link']    = PLUGIN_RESOURCES_WEBDIR. "/front/resource.php";
             $tmpname['comment'] = "";
          } else {
             $tmpname = PluginResourcesResource::getResourceName($_REQUEST["value"], 2);

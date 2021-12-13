@@ -514,7 +514,7 @@ class PluginResourcesTask extends CommonDBTM {
 
          echo "<div align='center'>";
          echo "<a href='" .
-              $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?plugin_resources_resources_id=" . $ID
+              PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?plugin_resources_resources_id=" . $ID
               . "&entities_id=" . $entities_id . "' >" . __('Add a new task') . "</a></div>";
          echo "</div>";
       }
@@ -784,7 +784,7 @@ class PluginResourcesTask extends CommonDBTM {
 
             echo "<div align='center'><table class='tab_cadre' width='100%'>";
             echo "<tr><th colspan='" . (7 + $colsup) . "'>" . PluginResourcesResource::getTypeName(2) .
-                 ": " . __('Tasks in progress', 'resources') . " <a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __('All') . "</a></th></tr>";
+                 ": " . __('Tasks in progress', 'resources') . " <a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __('All') . "</a></th></tr>";
             echo "<tr><th>" . __('Name') . "</th>";
             if (Session::isMultiEntitiesMode()) {
                echo "<th>" . __('Entity') . "</th>";
@@ -799,7 +799,7 @@ class PluginResourcesTask extends CommonDBTM {
             while ($data = $DB->fetchArray($result)) {
 
                echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
-               echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
+               echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
                if ($_SESSION["glpiis_ids_visible"]) {
                   echo " (" . $data["plugin_resources_tasks_id"] . ")";
                }
@@ -824,7 +824,7 @@ class PluginResourcesTask extends CommonDBTM {
                }
                echo "</td>";
 
-               echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $data["id"] . "'>" . $data["name"] . " " . $data["firstname"];
+               echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php?id=" . $data["id"] . "'>" . $data["name"] . " " . $data["firstname"];
                if ($_SESSION["glpiis_ids_visible"]) {
                   echo " (" . $data["id"] . ")";
                }

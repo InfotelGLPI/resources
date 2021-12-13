@@ -71,7 +71,7 @@ if (isset($_GET['node'])) {
          $nodes[] = [
             'id'     => $ID,
             'text'   => $value,
-            'a_attr' => ["onclick" => 'window.open("'.$CFG_GLPI["root_doc"] . '/plugins/resources/front/' . $target .
+            'a_attr' => ["onclick" => 'window.open("'.PLUGIN_RESOURCES_WEBDIR . '/front/' . $target .
                                       '?criteria[0][field]=37&criteria[0][searchtype]=contains&criteria[0][value]=^' .
                                       rawurlencode($value) . '&itemtype=PluginResourcesResource&start=0")']
          ];

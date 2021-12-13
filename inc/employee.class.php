@@ -245,7 +245,7 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<div align='center'>";
          if ($withtemplate < 2) {
-            echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
          }
          if (!empty($plugin_resources_resources_id)) {
             $resource->getFromDB($plugin_resources_resources_id);
@@ -270,7 +270,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          $params = ['name'   => 'plugin_resources_employers_id',
                          'value'  => $this->fields['plugin_resources_employers_id'],
                          'entity' => $entity,
-                         'action' => $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/dropdownLocation.php",
+                         'action' => PLUGIN_RESOURCES_WEBDIR. "/ajax/dropdownLocation.php",
                          'span'   => 'span_location'
          ];
          PluginResourcesResource::showGenericDropdown('PluginResourcesEmployer', $params);
@@ -402,8 +402,8 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       if ($employee_spotted && $plugin_resources_resources_id) {
 
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -419,7 +419,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<div class=\"form-row plugin_resources_wizard_margin\">";
          echo "<div class=\"bt-feature col-md-12 \">";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter employer information about the resource', 'resources');
          echo "</h4></div></div>";
 
@@ -517,9 +517,9 @@ class PluginResourcesEmployee extends CommonDBTM {
 
          echo "<div align='center'><br>";
          if ($exist == 0 || empty($ID)) {
-            echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/employee.form.php\">";
+            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/employee.form.php\">";
          } else {
-            echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
          }
 
          $entity = $resource->fields["entities_id"];

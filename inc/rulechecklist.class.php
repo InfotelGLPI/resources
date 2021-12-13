@@ -184,11 +184,7 @@ class PluginResourcesRuleChecklist extends Rule {
       }
 
       if (!$display) {
-         $rc = new $this->rulecriteriaclass();
-         Html::input('pattern', ['value' => $value, 'size' => 70]);
-//         Html::autocompletionTextField($rc, "pattern", ['name'  => $name,
-//                                                       'value' => $value,
-//                                                       'size'  => 70]);
+         Html::input($name, ['value' => $value, 'size' => 70]);
       }
    }
 

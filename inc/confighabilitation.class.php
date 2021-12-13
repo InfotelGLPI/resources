@@ -228,8 +228,8 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -247,7 +247,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             //new habilitation
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./confighabilitation.form.php?new\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationnew.png' 
+            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/habilitationnew.png' 
                   alt='" . __('Declare a super habilitation', 'resources') . "'>";
             echo "<br>" . __('Declare a super habilitation', 'resources') . "</a>";
             echo "</td>";
@@ -255,7 +255,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             //delete habilitation
             echo "<td class='tab_td_menu center' colspan='$colspan'>";
             echo "<a href=\"./confighabilitation.form.php?delete\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationdelete.png' 
+            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/habilitationdelete.png' 
                   alt='" . __('Remove a super habilitation', 'resources') . "'>";
             echo "<br>" . __('Remove a super habilitation', 'resources') . "</a>";
             echo "</td>";

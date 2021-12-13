@@ -185,13 +185,13 @@ class PluginResourcesChecklistconfig extends CommonDBTM {
 
       echo "</td>";
       Ajax::updateItem("linkitems",
-                       $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/linkItems.php",
+                       PLUGIN_RESOURCES_WEBDIR. "/ajax/linkItems.php",
                        ['type'         => $this->fields["itemtype"],
                         'current_type' => $this->fields["itemtype"],
                         'values'       => $items],
                        true);
       Ajax::updateItemOnSelectEvent("dropdown_itemtype" . $addrand, "linkitems",
-                                    $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/linkItems.php",
+                                    PLUGIN_RESOURCES_WEBDIR. "/ajax/linkItems.php",
                                     ['type'         => '__VALUE__',
                                      'current_type' => $this->fields["itemtype"],
                                      'values'       => $items],

@@ -264,8 +264,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -281,21 +281,21 @@ class PluginResourcesResourceResting extends CommonDBTM {
          //Add resting resource
          echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.form.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/newresting.png' alt='" . __('Declare a non contract period', 'resources') . "'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresting.png' alt='" . __('Declare a non contract period', 'resources') . "'>";
          echo "<br>" . __('Declare a non contract period', 'resources') . "</a>";
          echo "</td>";
 
          //delete resting resource
          echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.form.php?end\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/closeresting.png' alt='" . __('Declaring the end of non contract periods', 'resources') . "'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/closeresting.png' alt='" . __('Declaring the end of non contract periods', 'resources') . "'>";
          echo "<br>" . __('Declaring the end of non contract periods', 'resources') . "</a>";
          echo "</td>";
 
          //List resting resource
          echo "<td class='tab_td_menu center'>";
          echo "<a href=\"./resourceresting.php\">";
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/restinglist.png' alt='" . __('List of non contract periods', 'resources') . "'>";
+         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/restinglist.png' alt='" . __('List of non contract periods', 'resources') . "'>";
          echo "<br>" . __('List of non contract periods', 'resources') . "</a>";
          echo "</td>";
       }
@@ -316,9 +316,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       $this->initForm($ID, $options);
 
-      echo Html::css("/plugins/resources/css/bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-//      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -329,12 +328,12 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
 
-      echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.form.php\">";
+      echo "<form method='post' action=\"".PLUGIN_RESOURCES_WEBDIR."/front/resourceresting.form.php\">";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresting.png' alt='newresting'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresting.png' alt='newresting'/>&nbsp;";
       $title = __('Declare a non contract period', 'resources');
       if ($ID > 0) {
          $title = __('Detail of non contract period', 'resources');
@@ -453,8 +452,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -465,12 +464,12 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";
 
-      echo "<form method='post' action=\"".$CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.form.php\">";
+      echo "<form method='post' action=\"".PLUGIN_RESOURCES_WEBDIR."/front/resourceresting.form.php\">";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
       echo "<div class=\"bt-feature col-md-12 \">";
       echo "<h4 class=\"bt-title-divider\">";
-      echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresting.png' alt='newresting'/>&nbsp;";
+      echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresting.png' alt='newresting'/>&nbsp;";
       echo __('Declaring the end of non contract periods', 'resources');
       echo "</h4></div></div>";
 
@@ -494,7 +493,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       ];
       Ajax::updateItemJsCode(
          'plugin_resources_resting',
-         $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php',
+         PLUGIN_RESOURCES_WEBDIR. '/ajax/resourceresting.php',
          $params,
          'dropdown_plugin_resources_resources_id'.$rand);
       echo "}";
@@ -567,9 +566,9 @@ class PluginResourcesResourceResting extends CommonDBTM {
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_end_date_resting(){";
       $params = ['action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__'];
-      Ajax::updateItemJsCode('plugin_resources_endate_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
+      Ajax::updateItemJsCode('plugin_resources_endate_resting', PLUGIN_RESOURCES_WEBDIR. '/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
       $params = ['action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__'];
-      Ajax::updateItemJsCode('plugin_resources_button_resting', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
+      Ajax::updateItemJsCode('plugin_resources_button_resting', PLUGIN_RESOURCES_WEBDIR. '/ajax/resourceresting.php', $params, 'dropdown_plugin_resources_resting_id'.$rand);
       echo "}";
 
       echo "</script>";
@@ -636,7 +635,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       $options = Search::getCleanedOptions("PluginResourcesResourceResting");
       //$target = Toolbox::getItemTypeSearchURL($itemtype);
-      $target = $CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.php";
+      $target = PLUGIN_RESOURCES_WEBDIR."/front/resourceresting.php";
       // Instanciate an object to access method
       $item = null;
       if (class_exists($itemtype)) {
@@ -933,7 +932,7 @@ class PluginResourcesResourceResting extends CommonDBTM {
       }
 
       //$target = Toolbox::getItemTypeSearchURL($itemtype);
-      $target = $CFG_GLPI["root_doc"]."/plugins/resources/front/resourceresting.php";
+      $target = PLUGIN_RESOURCES_WEBDIR."/front/resourceresting.php";
 
       $limitsearchopt = Search::getCleanedOptions("PluginResourcesResourceResting");
 

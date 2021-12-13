@@ -88,8 +88,8 @@ class PluginResourcesResourceCard extends CommonDBTM {
          ///navigation
          echo "<nav>";
          echo "<ul class='plugin_resources_clearfix'>";
-         echo "<li class='active'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#about'>" . __('About', 'resources') . "</a></li>";
-         echo "<li><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.card.form.php#inventory'>" . __('Inventory', 'resources') . "</a></li>";
+         echo "<li class='active'><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.card.form.php#about'>" . __('About', 'resources') . "</a></li>";
+         echo "<li><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.card.form.php#inventory'>" . __('Inventory', 'resources') . "</a></li>";
          echo "</ul>";
          echo "</nav>";
       } else {
@@ -321,11 +321,11 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
             echo "<tr class='tab_bg_1'>";
             echo "<td class='center'  width='100'>";
-            $url = GLPI_ROOT."/plugins/resources/pics/gallery/" . $type . ".jpg";
+            $url = PLUGIN_RESOURCES_DIR."/pics/gallery/" . $type . ".jpg";
             if (file_exists($url)) {
-               echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
+               echo "<img src='".PLUGIN_RESOURCES_WEBDIR."/pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
             } else {
-               echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/resources/pics/gallery/nothing.png' width = '50%' alt='' />";
+               echo "<img src='".PLUGIN_RESOURCES_WEBDIR."/pics/gallery/nothing.png' width = '50%' alt='' />";
             }
             echo "</td>";
 
