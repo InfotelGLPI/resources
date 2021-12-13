@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-10 16:03+0000\n"
+"POT-Creation-Date: 2021-12-13 07:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1508 inc/resource_item.class.php:902
+#: hook.php:1508 inc/resource_item.class.php:899
 msgid "Not defined"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: setup.php:202 inc/metademand.class.php:69
+#: setup.php:205 inc/metademand.class.php:69
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Download the restitution form"
 msgstr ""
 
-#: front/adconfig.form.php:49 front/config.form.php:90
+#: front/adconfig.form.php:48 front/config.form.php:90
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -338,8 +338,8 @@ msgstr[1] ""
 #: inc/resource.class.php:84 inc/resource.class.php:384
 #: inc/resource.class.php:2043 inc/resource.class.php:2869
 #: inc/resource.class.php:3822 inc/resource_change.class.php:432
-#: inc/resource_item.class.php:844 inc/resource_item.class.php:1099
-#: inc/resource_item.class.php:1109 inc/resourcepdf.class.php:85
+#: inc/resource_item.class.php:841 inc/resource_item.class.php:1096
+#: inc/resource_item.class.php:1106 inc/resourcepdf.class.php:85
 #: inc/rulecontracttype.class.php:255 inc/rulecontracttypehidden.class.php:255
 #: report/checkgroup/checkgroup.php:250
 #: report/checkhabilitation/checkhabilitation.php:214
@@ -544,8 +544,8 @@ msgstr ""
 #: inc/notificationtargetresource.class.php:1372 inc/recap.class.php:203
 #: inc/resource.class.php:83 inc/resource.class.php:377
 #: inc/resource.class.php:1882 inc/resource.class.php:2858
-#: inc/resource_item.class.php:843 inc/resource_item.class.php:1098
-#: inc/resource_item.class.php:1108 inc/resourcecard.class.php:151
+#: inc/resource_item.class.php:840 inc/resource_item.class.php:1095
+#: inc/resource_item.class.php:1105 inc/resourcecard.class.php:151
 #: inc/resourcecard.class.php:217 inc/resourcepdf.class.php:84
 #: inc/rulecontracttype.class.php:251 inc/rulecontracttypehidden.class.php:251
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
@@ -597,8 +597,8 @@ msgstr ""
 #: inc/resource.class.php:3029 inc/resource.class.php:3142
 #: inc/resource.class.php:3777 inc/resource.class.php:3878
 #: inc/resource.class.php:3975 inc/resourcehabilitation.class.php:304
-#: inc/resourceholiday.class.php:310 inc/resourceresting.class.php:325
-#: inc/resourceresting.class.php:461
+#: inc/resourceholiday.class.php:310 inc/resourceresting.class.php:324
+#: inc/resourceresting.class.php:460
 msgid "Resources management"
 msgstr ""
 
@@ -1341,8 +1341,8 @@ msgid "Purge imported resources"
 msgstr ""
 
 #: inc/menu.class.php:343 inc/resourceresting.class.php:298
-#: inc/resourceresting.class.php:299 inc/resourceresting.class.php:417
-#: inc/resourceresting.class.php:516 inc/resourceresting.class.php:1346
+#: inc/resourceresting.class.php:299 inc/resourceresting.class.php:416
+#: inc/resourceresting.class.php:515 inc/resourceresting.class.php:1345
 msgid "List of non contract periods"
 msgstr ""
 
@@ -1607,17 +1607,17 @@ msgstr ""
 
 #: inc/notificationtargetresource.class.php:975
 #: inc/notificationtargetresource.class.php:1350
-#: inc/resourceresting.class.php:340
+#: inc/resourceresting.class.php:339
 msgid "Detail of non contract period"
 msgstr ""
 
 #: inc/notificationtargetresource.class.php:982
-#: inc/resourceresting.class.php:379
+#: inc/resourceresting.class.php:378
 msgid "Agency concerned"
 msgstr ""
 
 #: inc/notificationtargetresource.class.php:986
-#: inc/resourceresting.class.php:238 inc/resourceresting.class.php:388
+#: inc/resourceresting.class.php:238 inc/resourceresting.class.php:387
 msgid "At home"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr ""
 msgid "Current entity"
 msgstr ""
 
-#: inc/resource.class.php:4059 inc/resource_item.class.php:808
+#: inc/resource.class.php:4059 inc/resource_item.class.php:805
 msgid "Associate a resource"
 msgstr ""
 
@@ -2160,11 +2160,11 @@ msgstr ""
 msgid "Modification of the associated user's location"
 msgstr ""
 
-#: inc/resource_item.class.php:506
+#: inc/resource_item.class.php:503
 msgid "This computer is already associated to a resource"
 msgstr ""
 
-#: inc/resource_item.class.php:1066
+#: inc/resource_item.class.php:1063
 msgid "Associated Human Resource"
 msgstr ""
 
@@ -2242,16 +2242,16 @@ msgid "Non contract period declaration of a resource performed"
 msgstr ""
 
 #: inc/resourceresting.class.php:284 inc/resourceresting.class.php:285
-#: inc/resourceresting.class.php:338 inc/resourceresting.class.php:414
+#: inc/resourceresting.class.php:337 inc/resourceresting.class.php:413
 msgid "Declare a non contract period"
 msgstr ""
 
 #: inc/resourceresting.class.php:291 inc/resourceresting.class.php:292
-#: inc/resourceresting.class.php:474
+#: inc/resourceresting.class.php:473
 msgid "Declaring the end of non contract periods"
 msgstr ""
 
-#: inc/resourceresting.class.php:559
+#: inc/resourceresting.class.php:558
 msgid "Choosing the intercontrat"
 msgstr ""
 
@@ -2287,7 +2287,7 @@ msgstr[1] ""
 msgid "Checklist type"
 msgstr ""
 
-#: inc/rulechecklist.class.php:228
+#: inc/rulechecklist.class.php:224
 msgid "Checklist action"
 msgstr ""
 
