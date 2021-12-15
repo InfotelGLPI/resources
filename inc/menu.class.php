@@ -396,13 +396,8 @@ class PluginResourcesMenu extends CommonDBTM {
       $menu = PluginResourcesChecklist::getMenuOptions($menu);
       $menu = PluginResourcesEmployment::getMenuOptions($menu);
 
-      $menu['icon'] = self::getIcon();
+      $menu['icon'] = PluginResourcesResource::getIcon();
 
       return $menu;
    }
-
-   static function getIcon() {
-      return "fas fa-user-friends";
-   }
-
 }

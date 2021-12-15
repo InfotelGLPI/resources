@@ -68,6 +68,10 @@ class PluginResourcesResource extends CommonDBTM {
       return _n('Human resource', 'Human resources', $nb, 'resources');
    }
 
+   static function getIcon() {
+      return "fas fa-user-friends";
+   }
+   
    /**
     * @return array
     */
@@ -2191,7 +2195,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
-      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo "<i class='".self::getIcon()."'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -2288,7 +2292,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo "<i class='".self::getIcon()."'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3025,7 +3029,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo "<i class='".self::getIcon()."'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3138,7 +3142,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='fas fa-user-friends'></i>&nbsp;";
+      echo "<i class='".self::getIcon()."'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3773,7 +3777,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo "<i class='".self::getIcon()."'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
@@ -3874,7 +3878,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo "<i class='".self::getIcon()."'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
@@ -3971,7 +3975,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='fas fa-user-friends'></i>&nbsp;";
+         echo "<i class='".self::getIcon()."'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
