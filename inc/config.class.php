@@ -82,7 +82,7 @@ class PluginResourcesConfig extends CommonDBTM {
    /**
     * @return bool
     */
-   function showForm() {
+   function showConfigForm() {
 
       if (!$this->canView()) {
          return false;
@@ -289,8 +289,8 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
-         echo "<input type='hidden' name='id' value='1' >";
-         echo "<input type='submit' name='update_setup' class='submit' value='"._sx('button', 'Update')."' >";
+         echo Html::hidden('id', ['value' => 1]);
+         echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
          echo "</td>";
          echo "</tr>";
          echo "</table></div>";

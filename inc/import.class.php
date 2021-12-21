@@ -43,12 +43,12 @@ class PluginResourcesImport extends CommonDBTM {
 
    static function getFormUrl($full = true){
       global $CFG_GLPI;
-      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.form.php";
+      return PLUGIN_RESOURCES_WEBDIR. "/front/import.form.php";
    }
 
    static function getIndexUrl(){
       global $CFG_GLPI;
-      return $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
+      return PLUGIN_RESOURCES_WEBDIR. "/front/import.php";
    }
 
    /**
@@ -143,11 +143,17 @@ class PluginResourcesImport extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
       echo "<td>" . __('Comments') . "</td>";
       echo "<td>";
-      echo "<textarea cols='60' rows='6' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '60',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";

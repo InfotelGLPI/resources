@@ -244,7 +244,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         echo "<td class='center' ".(isset($data['is_deleted']) && $data['is_deleted'] == '1' ? "class='tab_bg_2_2'" : "").">".$name."</td>";
                         if ($canedit && $this->canCreate() && $withtemplate < 2) {
                            echo "<td class='center' class='tab_bg_2'>";
-                           Html::showSimpleForm($CFG_GLPI['root_doc'].'/plugins/resources/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), ['id' => $data["items_id"]]);
+                           Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR.'/front/task.form.php', 'deletetaskitem', _x('button', 'Delete permanently'), ['id' => $data["items_id"]]);
                            echo "</td>";
                         }
                         echo "</tr>";
@@ -255,12 +255,12 @@ class PluginResourcesTask_Item extends CommonDBTM {
          }
          if ($canedit && $this->canCreate() && $withtemplate < 2) {
             echo "<tr class='tab_bg_1'><td colspan='2' class='right'>";
-            echo "<input type='hidden' name='plugin_resources_tasks_id' value='$instID'>";
+            echo Html::hidden('plugin_resources_tasks_id', ['value' => $instID]);
             $PluginResourcesResource_Item = new PluginResourcesResource_Item();
             $PluginResourcesResource_Item->dropdownItems($plugin_resources_resources_id, $used);
             echo "</td>";
             echo "<td class='center' colspan='2' class='tab_bg_2'>";
-            echo "<input type='submit' name='addtaskitem' value=\""._sx('button', 'Add')."\" class='submit'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addtaskitem', 'class' => 'btn btn-primary']);
             echo "</td></tr>";
             echo "</table></div>";
          } else {

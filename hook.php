@@ -33,9 +33,10 @@
 function plugin_resources_install() {
    global $DB;
 
-   foreach (glob(GLPI_ROOT . '/plugins/resources/inc/*.php') as $file) {
+   foreach (glob(PLUGIN_RESOURCES_DIR . '/inc/*.php') as $file) {
       if (!preg_match('/resourceinjection/', $file)
           && !preg_match('/clientinjection/', $file)
+          && !preg_match('/habilitationinjection/', $file)
           && !preg_match('/resourcepdf/', $file)
           && !preg_match('/datecriteria/', $file)) {
          include_once($file);
@@ -51,7 +52,7 @@ function plugin_resources_install() {
    if (!$DB->tableExists("glpi_plugin_resources_resources")
        && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/empty-2.7.3.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/empty-3.0.0.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -69,67 +70,67 @@ function plugin_resources_install() {
       $DB->query($query) or die($DB->error());
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func([PluginResourcesNotificationTargetResource::class, 'install']);
 
    } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->tableExists("glpi_plugin_resources_employee")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.4.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.5.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.4.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.5.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.5.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if ($DB->tableExists("glpi_plugin_resources_profiles") && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.5.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.5.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.5.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.5.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.5.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if (!$DB->tableExists("glpi_plugin_resources_contracttypes")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.0.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if ($DB->tableExists("glpi_plugin_resources_contracttypes") && !$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_resourcestates_id")) {
       $update   = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.1.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if (!$DB->tableExists("glpi_plugin_resources_reportconfigs")) {
       $update   = true;
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.6.2.sql");
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
    } else if (!$DB->tableExists("glpi_plugin_resources_checklistconfigs")) {
       $update80 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
    }
 
    if ($update78) {
@@ -175,26 +176,26 @@ function plugin_resources_install() {
          ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func([PluginResourcesNotificationTargetResource::class, 'update78']);
    }
 
    if ($update80) {
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func([PluginResourcesNotificationTargetResource::class, 'update80']);
    }
 
    //Version 1.7.1
    if (!$DB->tableExists("glpi_plugin_resources_choiceitems")) {
       $update171 = true;
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.7.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.1.sql");
 
    }
 
    //Version 1.9.0
    if (!$DB->tableExists("glpi_plugin_resources_employments")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.9.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.9.0.sql");
 
       $query  = "SELECT * FROM `glpi_plugin_resources_employers`";
       $result = $DB->query($query);
@@ -210,77 +211,77 @@ function plugin_resources_install() {
 
    //Version 1.9.1
    if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists("glpi_plugin_resources_ranks", "begin_date")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-1.9.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.9.1.sql");
    }
 
    //Version 2.0.3
    if (!$DB->fieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.0.3.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.0.3.sql");
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func(["PluginResourcesNotificationTargetResource", 'update203']);
    }
 
    //Version 2.0.4
    if (!$DB->tableExists("glpi_plugin_resources_transferentities")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.0.4.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.0.4.sql");
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func(["PluginResourcesNotificationTargetResource", 'update204']);
    }
 
    //Version 2.3.1
    if (!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists("glpi_plugin_resources_resourcebadges")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.3.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.3.1.sql");
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/resources/inc/notificationtargetresource.class.php");
+      include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func(["PluginResourcesNotificationTargetResource", 'update231']);
    }
 
    //Version 2.3.2
    if (!$DB->tableExists("glpi_plugin_resources_configs")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.3.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.3.2.sql");
 
-      include(GLPI_ROOT . "/plugins/resources/install/update_231_232.php");
+      include(PLUGIN_RESOURCES_DIR. "/install/update_231_232.php");
       update231_232();
    }
 
    //Version 2.3.3
    if (!$DB->fieldExists("glpi_plugin_resources_configs", "security_compliance")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.3.3.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.3.3.sql");
    }
 
    //Version 2.4.4
    if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.4.4.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.4.4.sql");
    }
 
    //Version 2.6.1
    if (!$DB->tableExists("glpi_plugin_resources_imports")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.6.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.6.1.sql");
    }
    if (!$DB->fieldExists("glpi_plugin_resources_configs", "resource_manager")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.6.3.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.6.3.sql");
    }
 
    //Version 2.6.4
    if ($DB->fieldExists("glpi_plugin_resources_checklistconfigs", "is_deleted")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.6.4.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.6.4.sql");
    }
    //Version 2.7.1
    if (!$DB->tableExists("glpi_plugin_resources_adconfigs")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.1.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.7.1.sql");
    }
    //Version 2.7.2
    if (!$DB->fieldExists("glpi_plugin_resources_configs", "mandatory_checklist")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.2.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.7.2.sql");
    }
    //Version 2.7.3
-   if (!$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_functions_id")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/resources/install/sql/update-2.7.3.sql");
+   if (!$DB->fieldExists("glpi_plugin_resources_resources", "gender")) {
+      $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.7.3.sql");
    }
 
    if (!$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
@@ -731,7 +732,7 @@ function plugin_resources_uninstall() {
    $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
    Toolbox::deleteDir($rep_files_resources);
 
-   include_once(GLPI_ROOT . "/plugins/resources/inc/profile.class.php");
+   include_once(PLUGIN_RESOURCES_DIR. "/inc/profile.class.php");
 
    PluginResourcesProfile::removeRightsFromSession();
 
@@ -1488,7 +1489,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
                      $result_tasks = $DB->query($query_tasks);
                      $nb_tasks     = $DB->result($result_tasks, 0, "nb_tasks");
                      $is_finished  = $DB->result($result_tasks, 0, "is_finished");
-                     $out          .= "&nbsp;(<a href=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.php?plugin_resources_resources_id=" . $data["id"] . "\">";
+                     $out          .= "&nbsp;(<a href=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/task.php?plugin_resources_resources_id=" . $data["id"] . "\">";
                      if (($nb_tasks - $is_finished) > 0) {
                         $out .= "<span class='plugin_resources_date_over_color'>";
                         $out .= $nb_tasks - $is_finished . "</span></a>)";

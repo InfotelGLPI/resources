@@ -127,7 +127,7 @@ class PluginResourcesRole extends CommonDropdown {
          }
 
       } else {
-         echo "<select name='plugin_resources_ranks_id'
+         echo "<select class='form-select' name='plugin_resources_ranks_id'
                         id='dropdown_plugin_resources_ranks_id$rand'>";
          echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
       }
@@ -158,7 +158,7 @@ class PluginResourcesRole extends CommonDropdown {
     * @since 0.85
     * @see CommonDropdown::displaySpecificTypeField()
     **/
-   function displaySpecificTypeField($ID, $field = []) {
+   function displaySpecificTypeField($ID, $field = [], array $options = []) {
 
       switch ($field['type']) {
          case 'multiple_roles_services' :

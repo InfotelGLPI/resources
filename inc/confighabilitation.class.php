@@ -95,7 +95,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
    /**
     * Display of the link to configure the super habilitation interface
     */
-   function showFormConfig() {
+   function showConfigForm() {
       echo "<br>";
       echo "<form name='form' method='post' action='".self::getFormURL()."'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -157,9 +157,9 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
                                                                 'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
 
-            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
-            value=\"" . _sx('button', 'Add') . "\" >";
-            echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_metademand', 'class' => 'btn btn-primary']);
+            echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
 
             echo "</td></tr>";
             echo "</table></div>";
@@ -228,10 +228,8 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -249,7 +247,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             //new habilitation
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./confighabilitation.form.php?new\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationnew.png' 
+            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/habilitationnew.png' 
                   alt='" . __('Declare a super habilitation', 'resources') . "'>";
             echo "<br>" . __('Declare a super habilitation', 'resources') . "</a>";
             echo "</td>";
@@ -257,7 +255,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
             //delete habilitation
             echo "<td class='tab_td_menu center' colspan='$colspan'>";
             echo "<a href=\"./confighabilitation.form.php?delete\">";
-            echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/habilitationdelete.png' 
+            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/habilitationdelete.png' 
                   alt='" . __('Remove a super habilitation', 'resources') . "'>";
             echo "<br>" . __('Remove a super habilitation', 'resources') . "</a>";
             echo "</td>";

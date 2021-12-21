@@ -40,7 +40,6 @@ if ($plugin->isActivated("badges")) {
       //from helpdesk
       if ($plugin->isActivated('servicecatalog')) {
          PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-         echo "<br>";
       } else {
          Html::helpHeader(PluginResourcesResource::getTypeName(2));
       }
@@ -56,7 +55,7 @@ if ($plugin->isActivated("badges")) {
       $badge->check(-1, UPDATE, $_POST);
       $badge->add($_POST);
 
-      Html::redirect($CFG_GLPI['root_doc'] . "/plugins/resources/front/resourcebadge.form.php?config");
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resourcebadge.form.php?config");
    } else if (isset($_GET['menu'])) {
       if ($badge->canView() || Session::haveRight("config", UPDATE)) {
          $badge->showMenu();
@@ -69,8 +68,7 @@ if ($plugin->isActivated("badges")) {
          }
       } else {
          Html::header(__('Setup'), '', "config", "plugins");
-         echo "<div align='center'><br><br>";
-         echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+         echo "<div class='alert alert-important alert-warning d-flex'>";
          echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
       }
    } else if (isset($_GET['new'])) {
@@ -79,7 +77,7 @@ if ($plugin->isActivated("badges")) {
          $data = array_shift($data);
 
          if (!empty($data["plugin_metademands_metademands_id"])) {
-            Html::redirect($CFG_GLPI["root_doc"] . "/plugins/metademands/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
+            Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
          } else {
             echo "<div align='center'><br><br>";
             echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
@@ -88,8 +86,7 @@ if ($plugin->isActivated("badges")) {
 
       } else {
          Html::header(__('Setup'), '', "config", "plugins");
-         echo "<div align='center'><br><br>";
-         echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+         echo "<div class='alert alert-important alert-warning d-flex'>";
          echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
       }
 
@@ -98,7 +95,7 @@ if ($plugin->isActivated("badges")) {
       Html::back();
    } else {
       if ($badge->canView() || Session::haveRight("config", UPDATE)) {
-         $badge->showForm();
+         $badge->showWizardForm();
       }
    }
 
@@ -116,7 +113,6 @@ if ($plugin->isActivated("badges")) {
 
 } else {
    Html::header(__('Setup'), '', "config", "plugins");
-   echo "<div align='center'><br><br>";
-   echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+   echo "<div class='alert alert-important alert-warning d-flex'>";
    echo "<b>" . __('Please activate the plugin badge', 'resources') . "</b></div>";
 }

@@ -246,14 +246,15 @@ if ($report->criteriasValidated()) {
       foreach ($_POST as $key => $val) {
          if (is_array($val)) {
             foreach ($val as $k => $v) {
-               echo "<input type='hidden' name='".$key."[$k]' value='$v' >";
+               $name = $key."[$k]";
+               echo Html::hidden($name, ['value' => $v]);
                if (!empty ($param)) {
                   $param .= "&";
                }
                $param .= $key."[".$k."]=".urlencode($v);
             }
          } else {
-            echo "<input type='hidden' name='$key' value='$val' >";
+            echo Html::hidden($key, ['value' => $val]);
             if (!empty ($param)) {
                $param .= "&";
             }

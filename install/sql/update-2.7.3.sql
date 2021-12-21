@@ -1,5 +1,3 @@
-
-
 ALTER TABLE `glpi_plugin_resources_resources` ADD `plugin_resources_functions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_functions (id)';
 ALTER TABLE `glpi_plugin_resources_resources` ADD `plugin_resources_teams_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_teams (id)';
 ALTER TABLE `glpi_plugin_resources_resources` ADD `plugin_resources_services_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_services (id)';

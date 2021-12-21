@@ -154,14 +154,15 @@ if ($report->criteriasValidated()) {
       foreach ($_POST as $key => $val) {
          if (is_array($val)) {
             foreach ($val as $k => $v) {
-               echo "<input type='hidden' name='".$key."[$k]' value='$v' >";
+               $name = $key."[$k]";
+               echo Html::hidden($name, ['value' => $v]);
                if (!empty ($param)) {
                   $param .= "&";
                }
                $param .= $key."[".$k."]=".urlencode($v);
             }
          } else {
-            echo "<input type='hidden' name='$key' value='$val' >";
+            echo Html::hidden($key, ['value' => $val]);
             if (!empty ($param)) {
                $param .= "&";
             }
@@ -264,7 +265,7 @@ if ($report->criteriasValidated()) {
          //link to recap.php displaying only employments with same rank and profession
          $ratio ="";
          if (!empty($data1['sum'])) {
-            $ratio = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?employment_professions_id=".
+            $ratio = "<a href='".PLUGIN_RESOURCES_WEBDIR. "/front/recap.php?employment_professions_id=".
                $data['profession'];
             $ratio.="&amp;date=".$date;
             if ($data['rank']!=0) {
@@ -315,7 +316,7 @@ if ($report->criteriasValidated()) {
          //link to recap.php displaying only resource with same rank and profession
          $quota ="";
          if (!empty($data2['sum'])) {
-            $quota = "<a href='".$CFG_GLPI['root_doc']."/plugins/resources/front/recap.php?resource_professions_id=".
+            $quota = "<a href='".PLUGIN_RESOURCES_WEBDIR. "/front/recap.php?resource_professions_id=".
                $data['profession'];
             $quota.="&amp;date=".$date;
             if ($data['rank']!=0) {

@@ -382,7 +382,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $dbu       = new DbUtils();
       $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
-      echo "<select name='item_item'>";
+      echo "<select class='form-select' name='item_item'>";
       echo "<option value='0' selected>" . Dropdown::EMPTY_VALUE . "</option>";
 
       if (!empty($resources)) {
@@ -498,26 +498,23 @@ class PluginResourcesResource_Item extends CommonDBTM {
          $randDropdown = Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
                                                 'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
                                                 'itemtypes'       => $types]);
-         //User::dropdown(array('name'        => 'items_id',
-         //                        'entity'      => $resource->fields["entities_id"],
-         //                        'right' => 'all',
-         //                        'ldap_import' => true));
+
          echo "<span id='warning' hidden><i class='fas fa-exclamation-triangle fa-2x' style='color:orange'></i>&nbsp";
          echo  __('This computer is already associated to a resource','resources') . "</span>";
          echo "<td colspan='2' class='tab_bg_2'>";
-         echo "<input type='submit' name='additem' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'additem', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
          echo "</div>";
-
+$root_doc = PLUGIN_RESOURCES_WEBDIR;
          $js = "$(function(){
              $('#show_items_id$randDropdown').change(function() {
              let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
                if (item_type == 'Computer') {     
                   let computer_id = $('#show_items_id$randDropdown :selected').val();
                   $.ajax({
-                             url   : CFG_GLPI.root_doc + '/plugins/resources/ajax/checkComputerResource.php',
+                             url   : '$root_doc/ajax/checkComputerResource.php',
                              type  : 'POST',
                              data  : {'computer_id': computer_id},
                              success:function(data) {
@@ -793,10 +790,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'>";
             echo "<td colspan='4' class='center'>";
-            echo "<input type='hidden' name='itemtype' value='" . $item->getType() . "'>";
-            echo "<input type='hidden' name='items_id' value='$ID'>";
+            echo Html::hidden('itemtype', ['value' => $item->getType()]);
+            echo Html::hidden('itemtype', ['value' => $ID]);
             if ($item->getType() == 'Ticket') {
-               echo "<input type='hidden' name='tickets_id' value='$ID'>";
+               echo Html::hidden('tickets_id', ['value' => $ID]);
             }
 
             PluginResourcesResource::dropdown(['name'   => 'plugin_resources_resources_id',
@@ -805,8 +802,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                                                     'used'   => $used]);
 
             echo "</td><td class='center' width='20%'>";
-            echo "<input type='submit' name='additem' value=\"" .
-                 __s('Associate a resource', 'resources') . "\" class='submit'>";
+            echo Html::submit(__s('Associate a resource', 'resources'), ['name' => 'additem', 'class' => 'btn btn-primary']);
             echo "</td>";
             echo "</tr>";
             echo "</table>";
@@ -1016,13 +1012,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
                            $items_id_display = " (" . $data["id"] . ")";
                         }
                         if ($type == 'User') {
-                           $name = Html::clean($dbu->getUserName($data["id"])) . $items_id_display;
+                           $name = getUserName($data["id"]) . $items_id_display;
                         } else {
                            $name = $data["name"] . $items_id_display;
                         }
 
                         if ($type != 'User') {
-                           $entity = Html::clean(Dropdown::getDropdownName("glpi_entities", $data['entity']));
+                           $entity = Dropdown::getDropdownName("glpi_entities", $data['entity']);
                         } else {
                            $entity = "-";
                         }
@@ -1117,10 +1113,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $pdf->setColumnsSize(14, 14, 14, 14, 14, 14, 16);
                $pdf->displayLine(
                   $data["name"],
-                  Html::clean(Dropdown::getDropdownName("glpi_entities", $data['entities_id'])),
-                  Html::clean(Dropdown::getDropdownName("glpi_locations", $data["locations_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"])),
+                  Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                  Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"]),
                   Html::convDate($data["date_begin"]),
                   Html::convDate($data["date_end"])
                );
@@ -1128,9 +1124,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $pdf->setColumnsSize(17, 17, 17, 17, 17, 17);
                $pdf->displayLine(
                   $data["name"],
-                  Html::clean(Dropdown::getDropdownName("glpi_locations", $data["locations_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"])),
-                  Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"])),
+                  Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $data["plugin_resources_contracttypes_id"]),
+                  Dropdown::getDropdownName("glpi_plugin_resources_departments", $data["plugin_resources_departments_id"]),
                   Html::convDate($data["date_begin"]),
                   Html::convDate($data["date_end"])
                );

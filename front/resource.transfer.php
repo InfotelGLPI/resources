@@ -35,7 +35,6 @@ if (Session::getCurrentInterface() == 'central') {
 } else {
    if ($plugin->isActivated('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-      echo "<br>";
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -46,7 +45,7 @@ $resource = new PluginResourcesResource();
 if (isset($_POST["transferresources"])) {
    if ($resource->checkTransferMandatoryFields($_POST)) {
       $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect($CFG_GLPI['root_doc']."/plugins/resources/front/resource.change.php");
+      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resource.change.php");
 
    } else {
       Html::back();

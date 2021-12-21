@@ -108,18 +108,18 @@ class PluginResourcesLinkAd extends CommonDBTM {
       if (!$withtemplate) {
          if ($item->getID() && $this->canView()) {
 
-            if($item->getType() == Ticket::getType()){
+            if ($item->getType() == Ticket::getType()) {
                $items = new Item_Ticket();
-               if($items->getFromDBByCrit(["tickets_id"=>$item->getID(),"itemtype"=>PluginResourcesResource::getType()])){
+               if ($items->getFromDBByCrit(["tickets_id" => $item->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   $adConfig = new PluginResourcesAdconfig();
                   $adConfig->getFromDB(1);
                   $adConfig->fields = $adConfig->prepareFields($adConfig->fields);
                   if ((is_array($adConfig->fields["creation_categories_id"])
-                      && in_array($item->getField('itilcategories_id') , $adConfig->getField("creation_categories_id")))
+                       && in_array($item->getField('itilcategories_id'), $adConfig->getField("creation_categories_id")))
                       || (is_array($adConfig->fields["modification_categories_id"])
-                          && in_array($item->getField('itilcategories_id') , $adConfig->getField("modification_categories_id")))
+                          && in_array($item->getField('itilcategories_id'), $adConfig->getField("modification_categories_id")))
                       || (is_array($adConfig->fields["deletion_categories_id"])
-                          && in_array($item->getField('itilcategories_id') , $adConfig->getField("deletion_categories_id")))){
+                          && in_array($item->getField('itilcategories_id'), $adConfig->getField("deletion_categories_id")))) {
                      if ($_SESSION['glpishow_count_on_tabs']) {
                         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
                      }
@@ -149,10 +149,10 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       $ID = $item->getField('id');
 
-      if($item->getType() == Ticket::getType()){
+      if ($item->getType() == Ticket::getType()) {
          $items = new Item_Ticket();
-         if($items->getFromDBByCrit(["tickets_id"=>$ID,"itemtype"=>PluginResourcesResource::getType()])){
-            self::showFromResources($items->getField("items_id"),$item);
+         if ($items->getFromDBByCrit(["tickets_id" => $ID, "itemtype" => PluginResourcesResource::getType()])) {
+            self::showFromResources($items->getField("items_id"), $item);
          }
 
 
@@ -183,7 +183,6 @@ class PluginResourcesLinkAd extends CommonDBTM {
    }
 
 
-
    /**
     * Prepare input datas for adding the item
     *
@@ -212,13 +211,12 @@ class PluginResourcesLinkAd extends CommonDBTM {
       echo "</th></tr>";
       echo "<tr class='tab_bg_2 center'>";
       echo "<td colspan='2'>";
-      echo "<input type='submit' name='add_checklist_resources' value='" . _sx('button', 'Post') . "' class='submit' />";
-      echo "<input type='hidden' name='id' value='" . $ID . "'>";
+      echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
+      echo Html::hidden('id', ['value' => $ID]);
       echo "</td></tr></table>";
       Html::closeForm();
       echo "</div>";
    }
-
 
 
    /**
@@ -264,18 +262,18 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
       if ($ID > 0) {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='" . $this->fields["plugin_resources_contracttypes_id"] . "'>";
-         echo "<input type='hidden' name='checklist_type' value='" . $this->fields["checklist_type"] . "'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $this->fields["plugin_resources_contracttypes_id"]]);
+         echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
       } else {
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id'>";
-         echo "<input type='hidden' name='checklist_type' value='$checklist_type'>";
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('checklist_type', ['value' => $checklist_type]);
       }
 
       echo "<tr class='tab_bg_1'>";
 
       echo "<td >" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['size' => "40"]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>";
@@ -290,7 +288,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       echo "<td >" . __('Link', 'resources') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "address", ['size' => "75"]);
+      echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
       echo "</td>";
 
       echo "<td></td>";
@@ -302,7 +300,13 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       echo "<td class='left' colspan = '4'>";
       echo __('Description') . "<br>";
-      echo "<textarea cols='150' rows='6' name='comment'>" . $this->fields["comment"] . "</textarea>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '150',
+                             'rows'    => '6',
+                             'display' => false,
+                          ]);
       echo "</td>";
 
       echo "</tr>";
@@ -320,7 +324,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
     *
     * @return bool
     */
-   static function showFromResources($plugin_resources_resources_id,$ticket) {
+   static function showFromResources($plugin_resources_resources_id, $ticket) {
       global $CFG_GLPI;
 
       if (!self::canView()) {
@@ -330,33 +334,33 @@ class PluginResourcesLinkAd extends CommonDBTM {
       $target          = "./resource.form.php";
       $targetchecklist = "./checklist.form.php";
       $targettask      = "./task.form.php";
-      $config = new PluginResourcesConfig();
-      $configAD = new PluginResourcesAdconfig();
+      $config          = new PluginResourcesConfig();
+      $configAD        = new PluginResourcesAdconfig();
       $config->getFromDB(1);
       $configAD->getFromDB(1);
       $configAD->fields = $configAD->prepareFields($configAD->fields);
-      $resource        = new PluginResourcesResource();
+      $resource         = new PluginResourcesResource();
       $resource->getFromDB($plugin_resources_resources_id);
       $canedit                           = $resource->can($plugin_resources_resources_id, UPDATE);
       $entities_id                       = $resource->fields["entities_id"];
       $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
       $rand                              = mt_rand();
-      $enddate = $resource->getField("date_end");
-      $linkAD = new self();
+      $enddate                           = $resource->getField("date_end");
+      $linkAD                            = new self();
       $linkAD->getEmpty();
-      $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
-      if(!$islink){
-         $ret = self::processLogin($resource);
+      $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
+      if (!$islink) {
+         $ret                     = self::processLogin($resource);
          $linkAD->fields["login"] = $ret[0];
-         $logAvailable = $ret[1];
+         $logAvailable            = $ret[1];
 
-         $mail = self::processMail($resource,$linkAD->fields["login"]);
-         $linkAD->fields["mail"] = $mail;
-         $role = Dropdown::getDropdownName(PluginResourcesRole::getTable(),$resource->fields['plugin_resources_roles_id']);
-         $linkAD->fields["role"] = $role;
-         $service = Dropdown::getDropdownName(PluginResourcesService::getTable(),$resource->fields['plugin_resources_services_id']);
-         $linkAD->fields["service"] = $service;
-         $location = Dropdown::getDropdownName(Location::getTable(),$resource->fields['locations_id']);
+         $mail                       = self::processMail($resource, $linkAD->fields["login"]);
+         $linkAD->fields["mail"]     = $mail;
+         $role                       = Dropdown::getDropdownName(PluginResourcesRole::getTable(), $resource->fields['plugin_resources_roles_id']);
+         $linkAD->fields["role"]     = $role;
+         $service                    = Dropdown::getDropdownName(PluginResourcesService::getTable(), $resource->fields['plugin_resources_services_id']);
+         $linkAD->fields["service"]  = $service;
+         $location                   = Dropdown::getDropdownName(Location::getTable(), $resource->fields['locations_id']);
          $linkAD->fields["location"] = $location;
       }
       $ID = $linkAD->getID();
@@ -364,76 +368,80 @@ class PluginResourcesLinkAd extends CommonDBTM {
       echo "<table class='tab_cadre_fixe'>";
 
 
-
-      $dbu        = new DbUtils();
+      $dbu = new DbUtils();
 
       if (($islink) || !$islink) {
-         echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='id' value='$ID' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='ticket_id' value='".$ticket->getID()."' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='plugin_resources_contracttypes_id' value='$plugin_resources_contracttypes_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='entities_id' value='$entities_id' data-glpicore-ma-tags='common'>";
-         echo "<input type='hidden' name='enddate' value='$enddate' data-glpicore-ma-tags='common'>";
-
+         echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+         echo Html::hidden('ticket_id', ['value' => $ticket->getID()]);
+         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+         echo Html::hidden('entities_id', ['value' => $entities_id]);
+         echo Html::hidden('enddate', ['value' => $enddate]);
+         echo Html::hidden('id', ['value' => $ID]);
          // Actions on finished checklist
          if (self::canCreate() && $canedit) {
-            echo "<tr><th colspan='4'>".__('Resources data','resources')."</th></tr>";
+            echo "<tr><th colspan='4'>" . __('Resources data', 'resources') . "</th></tr>";
             echo "<tr>";
             echo "<td colspan = ''>" . __('Login') . "</td>";
             echo "<td>";
-            $option = ["option"=>"disabled"];
-            if(!$islink){
-               $option = [];
+            $option = ['value' => $linkAD->fields["login"], "option" => "disabled"];
+            if (!$islink) {
+               $option = ['value' => $linkAD->fields["login"]];
             }
-
-            Html::autocompletionTextField($linkAD, "login",$option);
+            echo Html::input('name', $option);
             echo "</td>";
-            echo "<td colspan = ''>" . __('Department','resources') . "</td>";
+            echo "<td colspan = ''>" . __('Department', 'resources') . "</td>";
 
             echo "<td>";
-            echo "<input type='hidden' name='department' value='".Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"))."' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('department', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"))]);
             echo Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"));
             echo "</td>";
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>" . __('Name') . "</td>";
             echo "<td>";
-            $option = ['rand'=> $rand,'option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\" "];
-            $rand1 = Html::autocompletionTextField($resource, "name", $option);
+            $option = ['rand'   => $rand,
+                       'value'  => $resource->getField("name"),
+                       'onChange' => "\"javascript:this.value=this.value.toUpperCase();\" "];
+            $rand1  = Html::input('name', $option);
             echo "</td>";
-            echo "<td>" . __('Firstname','resources') . "</td>";
+            echo "<td>" . __('Firstname', 'resources') . "</td>";
             echo "<td>";
-            $option = ['rand'=> $rand,'option' => "onChange='First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
-            $rand2 = Html::autocompletionTextField($resource, "firstname", $option);
+            $option = ['rand'   => $rand,
+                       'value'  => $resource->getField("firstname"),
+                       'onchange' => "First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;'"];
+            $rand2  = Html::input('firstname', $option);
             echo "</td>";
 
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td>" . __('Phone','resources') . "</td>";
+            echo "<td>" . __('Phone', 'resources') . "</td>";
 
-            echo "<td><input type='text' name='phone'value='".$linkAD->fields["phone"]."'></td>";
+            echo "<td>";
+            echo Html::input('phone', ['value' => $linkAD->fields["phone"]]);
+            echo "</td>";
 
             echo "<td>" . __('Mail') . "</td>";
 
-            echo "<td><input type='email' name='mail'value='".$linkAD->fields["mail"]."'>";
-
+            echo "<td>";
+            echo Html::input('mail', ['type'=> 'email', 'value' => $linkAD->fields["mail"]]);
+            echo "</td>";
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td>" . __('Company','resources') . "</td>";
+            echo "<td>" . __('Company', 'resources') . "</td>";
             echo "<td>";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-            echo "<input type='hidden' name='company' value='".Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"))."' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('company', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"))]);
 
             echo Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"));
             echo "</td>";
             echo "<td>" . _n('Contract type', 'Contract types', 1) . "</td>";
             echo "<td>";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-            echo "<input type='hidden' name='contract' value='".Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id"))."' data-glpicore-ma-tags='common'>";
+            echo Html::hidden('contract', ['value' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id"))]);
 
             echo Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id"));
             echo "</td>";
@@ -441,45 +449,57 @@ class PluginResourcesLinkAd extends CommonDBTM {
             echo "</tr>";
 
             echo "<tr class='tab_bg_1'>";
-            echo "<td>" . __('Cell phone','resources') . "</td>";
+            echo "<td>" . __('Cell phone', 'resources') . "</td>";
 
-            echo "<td><input type='text' name='cellphone'value='".$linkAD->fields["cellphone"]."'></td>";
+            echo "<td>";
+            echo Html::input('cellphone', ['value' => $linkAD->fields["cellphone"]]);
+            echo "</td>";
 
-            echo "<td>" . __('Role','resources') . "</td>";
+            echo "<td>" . __('Role', 'resources') . "</td>";
 
-            echo "<td><input type='text' name='role'value='".$linkAD->fields["role"]."'></td>";
-
+            echo "<td>";
+            echo Html::input('role', ['value' => $linkAD->fields["role"]]);
+            echo "</td>";
 
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>" . PluginResourcesService::getTypeName(1) . "</td>";
 
-            echo "<td><input type='text' name='service'value='".$linkAD->fields["service"]."'></td>";
+            echo "<td>";
+            echo Html::input('service', ['value' => $linkAD->fields["service"]]);
+            echo "</td>";
 
-             echo "<td>" . Location::getTypeName(1) . "</td>";
+            echo "<td>" . Location::getTypeName(1) . "</td>";
 
-             echo "<td><input type='text' name='service'value='".$linkAD->fields["location"]."'></td>";
-
+            echo "<td>";
+            echo Html::input('location', ['value' => $linkAD->fields["location"]]);
+            echo "</td>";
 
             echo "</tr>";
 
 
-            if(!$islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["creation_categories_id"]) && $logAvailable){
+            if (!$islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"], $configAD->fields["creation_categories_id"]) && $logAvailable) {
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Create user in AD','resources') . "' name='createAD'></td>";
+               echo "<td colspan='4' class='center'>";
+               echo Html::submit(_sx('button', 'Create user in AD', 'resources'), ['name' => 'createAD', 'class' => 'btn btn-primary']);
+               echo "</td>";
             }
-            if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["modification_categories_id"]) ){
+            if ($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"], $configAD->fields["modification_categories_id"])) {
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Modify user in AD','resources') . "' name='updateAD'></td>";
+               echo "<td colspan='4' class='center'>";
+               echo Html::submit(_sx('button', 'Modify user in AD', 'resources'), ['name' => 'updateAD', 'class' => 'btn btn-primary']);
+               echo "</td>";
             }
 
-            if($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"] , $configAD->fields["deletion_categories_id"]) ){
+            if ($islink && !$linkAD->fields["action_done"] && in_array($ticket->fields["itilcategories_id"], $configAD->fields["deletion_categories_id"])) {
                echo "<tr class='tab_bg_2'>";
-               echo "<td colspan='4' class='center'><input type='submit' class='submit' value='" . _sx('button', 'Disable user in AD','resources') . "' name='disableAD'></td>";
+               echo "<td colspan='4' class='center'>";
+               echo Html::submit(_sx('button', 'Disable user in AD', 'resources'), ['name' => 'disableAD', 'class' => 'btn btn-primary']);
+               echo "</td>";
             }
             echo "</tr>";
          }
-      }else{
+      } else {
 
       }
 
@@ -489,150 +509,142 @@ class PluginResourcesLinkAd extends CommonDBTM {
    }
 
 
-
-
-
-
-
-
-
-
-
-
-   static function processLogin(PluginResourcesResource $resource){
+   static function processLogin(PluginResourcesResource $resource) {
       $config = new PluginResourcesAdconfig();
       $config->getFromDB(1);
-      $login = self::getLoginFromRule($resource->fields["firstname"],$resource->fields["name"],$config->fields["first_form"]);
-      $ldap =new PluginResourcesLDAP();
+      $login = self::getLoginFromRule($resource->fields["firstname"], $resource->fields["name"], $config->fields["first_form"]);
+      $ldap  = new PluginResourcesLDAP();
       $exist = $ldap->existingUser($login);
-      if($exist){
-         $login = self::getLoginFromRule($resource->fields["firstname"],$resource->fields["name"],$config->fields["second_form"]);
+      if ($exist) {
+         $login = self::getLoginFromRule($resource->fields["firstname"], $resource->fields["name"], $config->fields["second_form"]);
          $exist = $ldap->existingUser($login);
-         if($exist){
-            return [__("existing login","resources"),false];
-         }else{
-            return [$login,true];
+         if ($exist) {
+            return [__("existing login", "resources"), false];
+         } else {
+            return [$login, true];
          }
-      }else {
-         return [$login,true];
+      } else {
+         return [$login, true];
       }
 
    }
-   static function processMail(PluginResourcesResource $resource,$login){
+
+   static function processMail(PluginResourcesResource $resource, $login) {
       $config = new PluginResourcesAdconfig();
       $config->getFromDB(1);
       $mail = "";
-      if($config->fields["mail_prefix"] == 2){
+      if ($config->fields["mail_prefix"] == 2) {
          $mail = $login;
-      }else  if($config->fields["mail_prefix"] == 1){
-         $nametab = explode(" ",strtolower($resource->fields["name"]));
-         $name ="";
+      } else if ($config->fields["mail_prefix"] == 1) {
+         $nametab = explode(" ", strtolower($resource->fields["name"]));
+         $name    = "";
 
-         foreach($nametab as $namepart){
-            $name .=$namepart;
+         foreach ($nametab as $namepart) {
+            $name .= $namepart;
          }
 
-         $firstnametab = explode(" ",strtolower($resource->fields["firstname"]));
-         $firstname ="";
+         $firstnametab = explode(" ", strtolower($resource->fields["firstname"]));
+         $firstname    = "";
 
-         foreach($firstnametab as $namepart){
-            $firstname .=$namepart;
+         foreach ($firstnametab as $namepart) {
+            $firstname .= $namepart;
          }
 
-         $prefix =$firstname.".".$name;
-         $mail = $prefix;
+         $prefix = $firstname . "." . $name;
+         $mail   = $prefix;
       }
-      $mail.="@".$config->fields["mail_suffix"];
+      $mail .= "@" . $config->fields["mail_suffix"];
       return $mail;
 
    }
 
-   static function getLoginFromRule($firstname,$name,$conf){
-      switch ($conf){
+   static function getLoginFromRule($firstname, $name, $conf) {
+      switch ($conf) {
          case 1:
-//            $name = strtolower($name);
-            $nametab = explode(" ",strtolower($name));
-            $name ="";
+            //            $name = strtolower($name);
+            $nametab = explode(" ", strtolower($name));
+            $name    = "";
 
-            foreach($nametab as $namepart){
-               $name .=$namepart;
+            foreach ($nametab as $namepart) {
+               $name .= $namepart;
             }
-            $firstnametab = explode(" ",strtolower($firstname));
-            $firstname ="";
+            $firstnametab = explode(" ", strtolower($firstname));
+            $firstname    = "";
 
-            foreach($firstnametab as $namepart){
+            foreach ($firstnametab as $namepart) {
                $firstname .= substr($namepart, 0, 1);
             }
 
-            $login = $firstname.$name;
+            $login = $firstname . $name;
             break;
          case 2:
-//            $name = strtolower($name);
-            $nametab = explode(" ",strtolower($name));
-            $name ="";
+            //            $name = strtolower($name);
+            $nametab = explode(" ", strtolower($name));
+            $name    = "";
 
-            foreach($nametab as $namepart){
-               $name .=$namepart;
+            foreach ($nametab as $namepart) {
+               $name .= $namepart;
             }
-            $firstnametab = explode(" ",strtolower($firstname));
-            $firstname ="";
+            $firstnametab = explode(" ", strtolower($firstname));
+            $firstname    = "";
 
-            foreach($firstnametab as $namepart){
-               $firstname .=$namepart;
+            foreach ($firstnametab as $namepart) {
+               $firstname .= $namepart;
             }
-            $login = $firstname.$name;
+            $login = $firstname . $name;
             break;
          case 3:
-            $name = substr($name, 0, 2);
+            $name      = substr($name, 0, 2);
             $firstname = substr($firstname, 0, 2);
-            $login = $firstname.$name;
+            $login     = $firstname . $name;
             break;
          default:
             $login = "";
       }
       return $login;
    }
-   static function getMapping($val){
-      $mapping["logAD"] = "login";
-      $mapping["nameAD"] = "name";
+
+   static function getMapping($val) {
+      $mapping["logAD"]   = "login";
+      $mapping["nameAD"]  = "name";
       $mapping["phoneAD"] = "phone";
 
       $mapping["firstnameAD"] = "firstname";
-      $mapping["mailAD"] = "mail";
+      $mapping["mailAD"]      = "mail";
 
-      $mapping["cellPhoneAD"] = "cellphone";
-      $mapping["roleAD"] = "role";
-      $mapping["serviceAD"] = "service";
-      $mapping["locationAD"] = "location";
-      $mapping["companyAD"] = "company";
-      $mapping["departmentAD"] = "department";
+      $mapping["cellPhoneAD"]    = "cellphone";
+      $mapping["roleAD"]         = "role";
+      $mapping["serviceAD"]      = "service";
+      $mapping["locationAD"]     = "location";
+      $mapping["companyAD"]      = "company";
+      $mapping["departmentAD"]   = "department";
       $mapping["contractTypeAD"] = "contract";
-      $mapping["contractEndAD"] = "enddate";
+      $mapping["contractEndAD"]  = "enddate";
 
-      if(isset($mapping[$val])){
+      if (isset($mapping[$val])) {
          return $mapping[$val];
       }
       return null;
    }
 
-   static function getNameMapping($val){
-      $mapping["login"] = __('Login');
-      $mapping["firstname"] = __('Firstname','resources');
-      $mapping["phone"] = Phone::getTypeName(1);
+   static function getNameMapping($val) {
+      $mapping["login"]     = __('Login');
+      $mapping["firstname"] = __('Firstname', 'resources');
+      $mapping["phone"]     = Phone::getTypeName(1);
 
       $mapping["name"] = __('Name');
       $mapping["mail"] = __('Mail');
 
-      $mapping["cellphone"] = __('Mobile phone');
-      $mapping["role"] = __('Role','resources');
-      $mapping["role"] = PluginResourcesService::getTypeName(1);
-      $mapping["contract"] = __("Contract type");
-      $mapping["company"] = __('Company','resources') ;
-      $mapping["department"] = __('Department','resources');
+      $mapping["cellphone"]  = __('Mobile phone');
+      $mapping["role"]       = __('Role', 'resources');
+      $mapping["role"]       = PluginResourcesService::getTypeName(1);
+      $mapping["contract"]   = __("Contract type");
+      $mapping["company"]    = __('Company', 'resources');
+      $mapping["department"] = __('Department', 'resources');
 
       $mapping["enddate"] = __('Departure date', 'resources');
 
-      if(isset($mapping[$val])){
+      if (isset($mapping[$val])) {
          return $mapping[$val];
       }
       return null;
@@ -656,6 +668,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
       }
    }
+
    /**
     * Displaying questions in GLPI's ticket satisfaction
     *
@@ -668,7 +681,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
       if (isset($params['item'])) {
          $item = $params['item'];
          if ($item->getType() == 'ITILSolution') {
-            if (self::cancelButtonSolution($params)){
+            if (self::cancelButtonSolution($params)) {
                $params['options']['canedit'] = false;
                return $params;
             }
@@ -694,11 +707,11 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $adconfig = new PluginResourcesAdconfig();
             $adconfig->getFromDB(1);
             $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
-            $linkad = new PluginResourcesLinkAd();
-            $items  = new Item_Ticket();
-            $conf   = new PluginResourcesConfig();
+            $linkad           = new PluginResourcesLinkAd();
+            $items            = new Item_Ticket();
+            $conf             = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
+            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -715,7 +728,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
                      }
                   }
                }
-            }  else if ( is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
+            } else if (is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -748,7 +761,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
       }
    }
 
-   static function cancelButtonSolution($params){
+   static function cancelButtonSolution($params) {
       if (isset($params['options'])) {
          $options = $params['options'];
          $ticket  = new Ticket();
@@ -756,11 +769,11 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $adconfig = new PluginResourcesAdconfig();
             $adconfig->getFromDB(1);
             $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
-            $linkad = new PluginResourcesLinkAd();
-            $items  = new Item_Ticket();
-            $conf   = new PluginResourcesConfig();
+            $linkad           = new PluginResourcesLinkAd();
+            $items            = new Item_Ticket();
+            $conf             = new PluginResourcesConfig();
             $conf->getFromDB(1);
-            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["creation_categories_id"])) {
+            if (is_array($adconfig->fields["creation_categories_id"]) && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["creation_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
@@ -777,15 +790,15 @@ class PluginResourcesLinkAd extends CommonDBTM {
                      }
                   }
                }
-//            } else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["modification_categories_id"])) {
-//               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
-//                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-//                     return true;
-//
-//                  }
-//
-//               }
-            } else if (is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["deletion_categories_id"])) {
+               //            } else if (in_array($ticket->fields["itilcategories_id"] , $adconfig->fields["modification_categories_id"])) {
+               //               if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+               //                  if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
+               //                     return true;
+               //
+               //                  }
+               //
+               //               }
+            } else if (is_array($adconfig->fields["deletion_categories_id"]) && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["deletion_categories_id"])) {
                if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
                   if ($conf->fields["mandatory_adcreation"] == 1) {
                      if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {

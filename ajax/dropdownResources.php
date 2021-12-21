@@ -174,7 +174,7 @@ usort($users, 'dpuser_cmp');
 //   }
 //   Ajax::updateItemOnSelectEvent("dropdown_".$_GET["name"].$_GET["rand"],
 //                                 "comment_".$_GET["name"].$_GET["rand"],
-//                                 $CFG_GLPI["root_doc"]."/plugins/resources/ajax/comments.php", $paramscomment);
+//                                PLUGIN_RESOURCES_WEBDIR."/ajax/comments.php", $paramscomment);
 //}
 //
 //Ajax::commonDropdownUpdateItem($_GET);

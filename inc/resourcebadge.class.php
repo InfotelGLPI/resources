@@ -78,7 +78,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Display of the link to configure the badge interface
     */
-   function showFormConfig() {
+   function showConfigForm() {
       echo "<br>";
       echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -138,9 +138,9 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                                                            'used'   => $used_data,
                                                            'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
-            echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'><input type=\"submit\" name=\"add_metademand\" class=\"submit\"
-            value=\"" . _sx('button', 'Add') . "\" >";
-            echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+            echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_metademand', 'class' => 'btn btn-primary']);
+            echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
 
             echo "</td></tr>";
             echo "</table></div>";
@@ -206,10 +206,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       $plugin = new Plugin();
 
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -250,13 +248,11 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    /**
     * Show form from helpdesk to badge restitution of a resource
     */
-   function showForm() {
+   function showWizardForm() {
       global $CFG_GLPI;
-      
-      echo Html::css("/plugins/resources/css/bootstrap4.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-      echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-      echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -264,7 +260,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "</div></h3>";
 
       echo "<div align='center'>";
-      echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resourcebadge.form.php\">";
+      echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resourcebadge.form.php\">";
 
       echo "<table class='' style='margin-top:1px;'>";
       echo "<tr>";
@@ -294,10 +290,10 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_badge(){";
       $params = ['action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__'];
-      Ajax::updateItemJsCode('plugin_resources_badge', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
+      Ajax::updateItemJsCode('plugin_resources_badge', PLUGIN_RESOURCES_WEBDIR. '/ajax/resourcebadge.php',
                              $params, 'dropdown_plugin_resources_resources_id' . $rand);
       $params = ['action' => 'cleanButtonRestitution'];
-      Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php',
+      Ajax::updateItemJsCode('plugin_resources_button_restitution', PLUGIN_RESOURCES_WEBDIR. '/ajax/resourcebadge.php',
                              $params, 'dropdown_plugin_resources_resources_id' . $rand);
       echo "}";
 
@@ -314,7 +310,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
       echo "<div class='preview'>";
-      echo "<a href=\"" . $CFG_GLPI['root_doc'] . "/plugins/badges/front/badge.php\">";
+      echo "<a href=\"" . PLUGIN_BADGES_WEBDIR . "/front/badge.php\">";
       echo __('List of badges', 'resources');
       echo "</a>";
       echo "</div>";
@@ -358,7 +354,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_badge_restitution(){";
       $params = ['action' => 'loadBadgeRestitution'];
-      Ajax::updateItemJsCode('plugin_resources_button_restitution', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcebadge.php', $params, 'dropdown_badges_id' . $rand);
+      Ajax::updateItemJsCode('plugin_resources_button_restitution', PLUGIN_RESOURCES_WEBDIR. '/ajax/resourcebadge.php', $params, 'dropdown_badges_id' . $rand);
       echo "}";
 
       echo "</script>";
@@ -369,8 +365,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
     */
    function loadBadgeRestitution() {
 
-      echo "<button type='submit' name='plugin_resources_badge_restitution' value='" ._sx('button', 'Save'). "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Save') . "</button>";
+      echo Html::submit(_sx('button', 'Save'), ['name' => 'plugin_resources_badge_restitution', 'class' => 'btn btn-primary']);
 
    }
 

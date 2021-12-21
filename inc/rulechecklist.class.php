@@ -179,15 +179,12 @@ class PluginResourcesRuleChecklist extends Rule {
       }
 
       if ($condition == Rule::PATTERN_EXISTS || $condition == Rule::PATTERN_DOES_NOT_EXISTS) {
-         echo "<input type='hidden' name='$name' value='1'>";
+         echo Html::hidden($name, ['value' => 1]);
          $display=true;
       }
 
       if (!$display) {
-         $rc = new $this->rulecriteriaclass();
-         Html::autocompletionTextField($rc, "pattern", ['name'  => $name,
-                                                       'value' => $value,
-                                                       'size'  => 70]);
+         Html::input($name, ['value' => $value, 'size' => 70]);
       }
    }
 

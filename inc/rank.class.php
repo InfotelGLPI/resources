@@ -199,7 +199,7 @@ class PluginResourcesRank extends CommonDropdown {
          }
 
       } else {
-         echo "<select name='plugin_resources_ranks_id'
+         echo "<select class='form-select' name='plugin_resources_ranks_id'
                         id='dropdown_plugin_resources_ranks_id$rand'>";
          echo "<option value='0'>".Dropdown::EMPTY_VALUE."</option></select>";
       }

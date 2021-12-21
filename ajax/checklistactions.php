@@ -40,20 +40,26 @@ if (!defined('GLPI_ROOT')) {
 if (isset($_POST["action"])) {
    switch ($_POST["action"]) {
       case "update_checklist":
-          echo "&nbsp;<input type='submit' name='update_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
+          echo "&nbsp;";
+          echo Html::submit(_sx('button', 'Post'), ['name' => 'update_checklist', 'class' => 'btn btn-primary']);
+          echo "</td>";
          break;
       case "delete_checklist":
-         echo "&nbsp;<input type='submit' name='delete_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'delete_checklist', 'class' => 'btn btn-primary']);
+         echo "</td>";
          break;
       case "open_checklist":
-         echo "<input type='hidden' name='checklist_type' value='".$_POST['checklist_type']."'>";
+         echo Html::hidden('checklist_type', ['value' => $_POST['checklist_type']]);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $_POST['plugin_resources_resources_id']]);
-         echo "&nbsp;<input type='submit' name='open_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'open_checklist', 'class' => 'btn btn-primary']);
+         echo "</td>";
          break;
       case "close_checklist":
-         echo "<input type='hidden' name='checklist_type' value='".$_POST['checklist_type']."'>";
+         echo Html::hidden('checklist_type', ['value' => $_POST['checklist_type']]);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $_POST['plugin_resources_resources_id']]);
-         echo "<input type='hidden' name='entities_id' value='".$_POST['entities_id']."'>";
+         echo Html::hidden('entities_id', ['value' => $_POST['entities_id']]);
          echo "&nbsp;";
          echo __('Templates');
          echo "&nbsp;";
@@ -63,15 +69,21 @@ if (isset($_POST["action"])) {
          echo __('Total duration');
          echo "&nbsp;";
          Dropdown::showTimeStamp('actiontime', ['addfirstminutes' => true]);
-               echo "&nbsp;<input type='submit' name='close_checklist' class='submit' value='"._sx('button', 'Post')."'></td>";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'close_checklist', 'class' => 'btn btn-primary']);
+         echo "</td>";
          break;
       case "add_task":
          echo "&nbsp;".__('Assigned to')."&nbsp;";
          User::dropdown(['name' => "users_id",'right' => 'interface']);
-         echo "&nbsp;<input type='submit' name='add_task' class='submit' value='"._sx('button', 'Post')."'></td>";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'add_task', 'class' => 'btn btn-primary']);
+         echo "</td>";
          break;
       case "add_ticket":
-         echo "&nbsp;<input type='submit' name='add_ticket' class='submit' value='"._sx('button', 'Post')."'></td>";
+         echo "&nbsp;";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'add_ticket', 'class' => 'btn btn-primary']);
+         echo "</td>";
          break;
    }
 }

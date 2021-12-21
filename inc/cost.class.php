@@ -211,14 +211,20 @@ class PluginResourcesCost extends CommonDropdown {
 
       echo "<tr class='tab_bg_1'><td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td rowspan='".($nb+1)."'>";
       echo __('Comments')."</td>";
-      echo "<td rowspan='".($nb+1)."'>
-            <textarea cols='45' rows='".($nb+2)."' name='comment' >".$this->fields["comment"];
-      echo "</textarea></td></tr>\n";
+      echo "<td rowspan='".($nb+1)."'>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '45',
+                             'rows'    => ($nb+2),
+                             'display' => false,
+                          ]);
+      echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Profession', 'resources')."</td>";
@@ -226,7 +232,7 @@ class PluginResourcesCost extends CommonDropdown {
       $params = ['name' => 'plugin_resources_professions_id',
                     'value' => $this->fields['plugin_resources_professions_id'],
                     'entity' => $this->fields["entities_id"],
-                    'action' => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
+                    'action' => PLUGIN_RESOURCES_WEBDIR."/ajax/dropdownRank.php",
                     'span' => 'span_rank',
                      'sort' => false
                   ];
@@ -260,8 +266,8 @@ class PluginResourcesCost extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Budget cost', 'resources')."</td>";
       echo "<td>";
-      echo "<input type='text' name='cost' value='".Html::formatNumber($this->fields["cost"], true).
-         "' size='14'></td></tr>";
+      echo Html::input('cost', ['value' => Html::formatNumber($this->fields["cost"], true), 'size' => 14]);
+      echo "</td></tr>";
 
       if (isset($this->fields['is_protected']) && $this->fields['is_protected']) {
          $options['candel'] = false;

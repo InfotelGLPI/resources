@@ -116,7 +116,7 @@ class PluginResourcesService extends CommonDropdown {
     * @since 0.85
     * @see CommonDropdown::displaySpecificTypeField()
     **/
-   function displaySpecificTypeField($ID, $field = []) {
+   function displaySpecificTypeField($ID, $field = [], array $options = []) {
 
       switch ($field['type']) {
          case 'multiple_departments_services' :

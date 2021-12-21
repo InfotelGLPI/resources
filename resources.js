@@ -96,7 +96,7 @@ function plugin_resources_change_action(root_doc, id){
     var resource_id = $("select[name='plugin_resources_resources_id']");
 
     $.ajax({
-         url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+         url: root_doc+'/ajax/resourcechange.php',
          type: 'POST',
          data: '&id=' + id + '&plugin_resources_resources_id='+ resource_id.val(),
          dataType: 'html',
@@ -118,7 +118,7 @@ function plugin_resources_change_resource(root_doc, id){
     var action_id = $("select[name='change_action']");
 
     $.ajax({
-         url: root_doc+'/plugins/resources/ajax/resourcechange.php',
+         url: root_doc+'/ajax/resourcechange.php',
          type: 'POST',
          data: '&id=' + action_id.val() + '&plugin_resources_resources_id='+ id,
          dataType: 'html',
@@ -137,7 +137,7 @@ function plugin_resources_change_resource(root_doc, id){
  */
 function plugin_resources_pdf_resource(root_doc, id) {
     $.ajax({
-         url: root_doc + '/plugins/resources/ajax/pdfresource.php',
+         url: root_doc + '/ajax/pdfresource.php',
          type: 'POST',
          data: '&plugin_resources_resources_id=' + id,
          dataType: 'html',
@@ -155,7 +155,7 @@ function plugin_resources_pdf_resource(root_doc, id) {
  */
 function plugin_resources_security_compliance(root_doc, id) {
     $.ajax({
-         url: root_doc + '/plugins/resources/ajax/employee.php',
+         url: root_doc + '/ajax/employee.php',
          type: 'POST',
          data: '&plugin_resources_clients_id=' + id,
          dataType: 'html',

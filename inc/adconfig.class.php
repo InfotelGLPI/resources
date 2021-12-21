@@ -82,7 +82,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
    /**
     * @return bool
     */
-   function showForm() {
+   function showConfigForm() {
 
       if (!$this->canView()) {
          return false;
@@ -97,7 +97,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          $ID = 1;
          $this->getFromDB($ID);
          echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
-         echo "<input type='hidden' name='id' value='$ID' data-glpicore-ma-tags='common'>";
+         echo Html::hidden('id', ['value' => $ID]);
          echo "<div align='center'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='4'>".self::getTypeName()."</th></tr>";
 
@@ -105,8 +105,8 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "<td>";
          echo __('RootDN (for non anonymous binds)');
          echo "</td>";
-         echo "<td ><input type='text' name='login'  value=\"".
-              $this->fields["login"]."\">";
+         echo "<td>";
+         echo Html::input('login', ['value' => $this->fields['login'], 'size' => 40]);
          echo "</td>";
          echo "<td>";
          echo __('Password');
@@ -241,18 +241,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __('Login');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "logAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['logAD'],
+                    'entity' => -1];
+         echo Html::input('logAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo _n('Department', 'Departments', 1, 'resources');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "departmentAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['departmentAD'],
+                    'entity' => -1];
+         echo Html::input('departmentAD', $option);
          echo "</td>";
          echo "</tr>";
 
@@ -261,18 +261,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __("Name");
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "nameAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['nameAD'],
+                    'entity' => -1];
+         echo Html::input('nameAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo __("First name");
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "firstnameAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['firstnameAD'],
+                    'entity' => -1];
+         echo Html::input('firstnameAD', $option);
          echo "</td>";
          echo "</tr>";
 
@@ -281,18 +281,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __("Phone");
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "phoneAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['phoneAD'],
+                    'entity' => -1];
+         echo Html::input('phoneAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo __("Email");
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "mailAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['mailAD'],
+                    'entity' => -1];
+         echo Html::input('mailAD', $option);
          echo "</td>";
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
@@ -300,18 +300,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo PluginResourcesEmployer::getTypeName(1);
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "companyAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['companyAD'],
+                    'entity' => -1];
+         echo Html::input('companyAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo __("Departure date",'resources');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "contractEndAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['contractEndAD'],
+                    'entity' => -1];
+         echo Html::input('contractEndAD', $option);
          echo "</td>";
          echo "</tr>";
 
@@ -320,18 +320,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __('Mobile phone');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "cellPhoneAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['cellPhoneAD'],
+                    'entity' => -1];
+         echo Html::input('cellPhoneAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo __("Role",'resources');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "roleAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['roleAD'],
+                    'entity' => -1];
+         echo Html::input('roleAD', $option);
          echo "</td>";
          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
@@ -339,18 +339,18 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo _n('Contract type', 'Contract types', 1);
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "contractTypeAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['contractTypeAD'],
+                    'entity' => -1];
+         echo Html::input('contractTypeAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo PluginResourcesService::getTypeName(1);
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "serviceAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['serviceAD'],
+                    'entity' => -1];
+         echo Html::input('serviceAD', $option);
          echo "</td>";
 
          echo "</tr>";
@@ -360,9 +360,9 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo Location::getTypeName();
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "locationAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['locationAD'],
+                    'entity' => -1];
+         echo Html::input('locationAD', $option);
          echo "</td>";
 
          echo "<td>";
@@ -376,25 +376,25 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo __("Destination OU on user deactivation",'resources');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "ouDesactivateUserAD",['entity' => -1]);
-
+         $option = ['value' => $this->fields['ouDesactivateUserAD'],
+                    'entity' => -1];
+         echo Html::input('ouDesactivateUserAD', $option);
          echo "</td>";
 
          echo "<td>";
          echo __("Destination OU during user creation",'resources');
          echo "</td>";
          echo "<td>";
-
-         Html::autocompletionTextField($this, "ouUser",['entity' => -1]);
-
+         $option = ['value' => $this->fields['ouUser'],
+                    'entity' => -1];
+         echo Html::input('ouUser', $option);
          echo "</td>";
          echo "</tr>";
 
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
-         echo "<input type='hidden' name='id' value='1' >";
-         echo "<input type='submit' name='update_setup' class='submit' value='"._sx('button', 'Update')."' >";
+         echo Html::hidden('id', ['value' => 1]);
+         echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
          echo "</td>";
          echo "</tr>";
          echo "</table></div>";
@@ -514,12 +514,4 @@ class PluginResourcesAdconfig extends CommonDBTM {
          return $fields;
 
    }
-
-
-
-
-
-
-
-
 }

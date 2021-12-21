@@ -37,7 +37,6 @@ if (Session::getCurrentInterface() == 'central') {
    //from helpdesk
    if ($plugin->isActivated('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-      echo "<br>";
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }

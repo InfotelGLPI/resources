@@ -238,7 +238,7 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['value' => $this->fields["name"]]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>".__('Budget type', 'resources')."</td>";
@@ -254,7 +254,7 @@ class PluginResourcesBudget extends CommonDBTM {
       $params = ['name'    => 'plugin_resources_professions_id',
                       'value'   => $this->fields['plugin_resources_professions_id'],
                       'entityt' => $this->fields["entities_id"],
-                      'action'  => $CFG_GLPI["root_doc"]."/plugins/resources/ajax/dropdownRank.php",
+                      'action'  => PLUGIN_RESOURCES_WEBDIR."/ajax/dropdownRank.php",
                       'span'    => 'span_rank',
                       'sort'    => true];
       PluginResourcesResource::showGenericDropdown('PluginResourcesProfession', $params);
@@ -272,8 +272,8 @@ class PluginResourcesBudget extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Budget volume', 'resources')."</td>";
       echo "<td>";
-      $options = ['value' => 0];
-      Html::autocompletionTextField($this, 'volume', $options);
+      $option = ['value' => 0];
+      echo Html::input('volume', $option);
       echo "</td><td>".__('Type of budget volume', 'resources')."</td><td>";
       Dropdown::show('PluginResourcesBudgetVolume', ['value'  => $this->fields["plugin_resources_budgetvolumes_id"],
           'entity' => $this->fields["entities_id"]]);
@@ -311,7 +311,7 @@ class PluginResourcesBudget extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page                                   = '/plugins/resources/front/budget.php';
+      $plugin_page                                   = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.php';
       $itemtype                                      = strtolower(self::getType());
 
       //Menu entry in admin
@@ -320,7 +320,7 @@ class PluginResourcesBudget extends CommonDBTM {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = '/plugins/resources/front/budget.form.php';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.form.php';
       }
 
       return $menu;

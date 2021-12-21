@@ -196,7 +196,7 @@ if ($item instanceof CommonTreeDropdown) {
              $LIMIT";
 
    if ($result = $DB->query($query)) {
-      echo "<select id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
+      echo "<select class='form-select' id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
              size='1'";
 
       if (isset($_GET["on_change"]) && !empty($_GET["on_change"])) {
@@ -432,7 +432,7 @@ if ($item instanceof CommonTreeDropdown) {
    }
 
    if ($result = $DB->query($query)) {
-      echo "<select id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
+      echo "<select class='form-select' id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
              size='1'";
 
       if (isset($_GET["on_change"]) && !empty($_GET["on_change"])) {

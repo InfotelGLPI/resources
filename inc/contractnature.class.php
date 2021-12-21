@@ -116,12 +116,12 @@ class PluginResourcesContractNature extends CommonDropdown {
                Dropdown::show('PluginResourcesContractnature', ['entity' => $entity]);
             }
          } else {
-            echo "<select name='plugin_resources_contractnatures_id'
+            echo "<select class='form-select' name='plugin_resources_contractnatures_id'
                         id='dropdown_plugin_resources_contractnatures_id$rand'>";
             echo "<option value='0'>".Dropdown::EMPTY_VALUE."</option></select>";
          }
       } else {
-         echo "<select name='plugin_resources_contractnatures_id'
+         echo "<select class='form-select' name='plugin_resources_contractnatures_id'
                         id='dropdown_plugin_resources_contractnatures_id$rand'>";
          echo "<option value='0'>".Dropdown::EMPTY_VALUE."</option></select>";
       }

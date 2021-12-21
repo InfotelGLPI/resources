@@ -48,8 +48,8 @@ class PluginResourcesContracttypeprofile extends CommonDBTM {
       global $CFG_GLPI;
       if ($canedit) {
 
-         echo "<form method='post' action='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/contracttypeprofile.form.php" . "'>";
-         echo "<input type='hidden' name='profiles_id' value='".$profiles_id."' >";
+         echo "<form method='post' action='" . PLUGIN_RESOURCES_WEBDIR. "/front/contracttypeprofile.form.php" . "'>";
+         echo Html::hidden('profiles_id', ['value' => $profiles_id]);
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_1'><th colspan='4'>";
@@ -99,7 +99,7 @@ class PluginResourcesContracttypeprofile extends CommonDBTM {
          echo "</td></tr>";
 
          echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'addContracttype']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'addContracttype', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
 
          echo "</table></div>";

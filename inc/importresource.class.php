@@ -130,7 +130,7 @@ class PluginResourcesImportResource extends CommonDBTM {
     */
    static function getIndexUrl() {
       global $CFG_GLPI;
-      return $CFG_GLPI['root_doc'] . '/plugins/resources/front/importresource.php';
+      return PLUGIN_RESOURCES_WEBDIR. '/front/importresource.php';
    }
 
    /**
@@ -792,14 +792,13 @@ class PluginResourcesImportResource extends CommonDBTM {
 //            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
          echo "<div align='center'>";
          echo Html::hidden('filename',['value' => $params[self::SELECTED_FILE_DROPDOWN_NAME]]);
-         echo "<input type='submit' name='verify-file' class='submit' value='" . __('Validate and pre-import file', 'resources') . "' >";
-
+         echo Html::submit(__('Validate and pre-import file', 'resources'), ['name' => 'verify-file', 'class' => 'btn btn-primary']);
          echo "</div>";
          Html::closeForm();
          echo '</td>';
          echo '</tr>';
 
-         $url = $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/verifyCSVStatistics.php';
+         $url = PLUGIN_RESOURCES_WEBDIR. '/ajax/verifyCSVStatistics.php';
 
          $js = "$('#calculate').click(function () {
                     
@@ -1031,7 +1030,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          $hValue = sprintf($inputs, $data['id']);
 
-         $textInput = "<input name='$hValue' type='hidden' value='%s'>";
+         $textInput = Html::hidden($hValue, ['value' => '%s']);
 
          echo "<span>";
 
@@ -1451,10 +1450,11 @@ class PluginResourcesImportResource extends CommonDBTM {
 
       echo "<tr>";
       echo "<td>";
+      echo "<input class='form-control' type='file' name='picture'>";
       Html::file();
       echo "</td>";
       echo "<td>";
-      echo "<input type='submit' name='import-file' class='submit' value='" . __('Import file', 'resources') . "' >";
+      echo Html::submit(__('Import file', 'resources'), ['name' => 'import-file', 'class' => 'btn btn-primary']);
       echo "</td>";
       echo "</tr>";
 
@@ -1509,10 +1509,10 @@ class PluginResourcesImportResource extends CommonDBTM {
       self::dropdownFileInFolder($dropdownParams);
       echo "</td>";
       echo "<td>";
-      echo "<input type='submit' name='verify' class='submit' value='" . __('Verify file', 'resources') . "' >";
+      echo Html::submit(__('Verify file', 'resources'), ['name' => 'verify', 'class' => 'btn btn-primary']);
       echo "</td>";
       echo "<td>";
-      echo "<input type='submit' name='delete_file' class='submit' value='" . __('Delete file', 'resources') . "' >";
+      echo Html::submit(__('Delete file', 'resources'), ['name' => 'delete_file', 'class' => 'btn btn-primary']);
       echo "</td>";
       // TODO Move the verified file to parent folder to import it auto
 //      echo "<td>";
@@ -1586,7 +1586,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       if (!count($imports)) {
          $title = __("No imports configured", "resources");
          $linkText = __("Configure a new import", "resources");
-         $link = $CFG_GLPI["root_doc"] . "/plugins/resources/front/import.php";
+         $link = PLUGIN_RESOURCES_WEBDIR. "/front/import.php";
 
          self::showErrorHeader($title, $linkText, $link);
       } else {
@@ -1602,7 +1602,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          self::dropdownImports($params);
          echo "</td>";
          echo "<td>";
-         echo "<input type='submit' name='select' class='submit' value='" . __('Choose', 'resources') . "' >";
+         echo Html::submit(__('Choose', 'resources'), ['name' => 'select', 'class' => 'btn btn-primary']);
          echo "</td>";
          echo "</tr>";
 
@@ -1931,7 +1931,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       foreach ($importColumns as $importColumn) {
          echo "<th>";
          echo "<img style='vertical-align: middle;' src='" .
-            $CFG_GLPI["root_doc"] . "/plugins/resources/pics/csv_file.png'" .
+            PLUGIN_RESOURCES_WEBDIR. "/pics/csv_file.png'" .
             " title='" . __("Data from file", "resources") . "'" .
             " width='30' height='30'>";
 
@@ -2971,8 +2971,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             echo ">";
 
             $resourceInput = "resource[" . $importResource['id'] . "]";
-            echo "<input type='hidden' name='$resourceInput' value='" . $resourceID . "'>";
-
+            echo Html::hidden($resourceInput, ['value' => $resourceID]);
             $this->showOne($importResource['id'], $params['type'], $resourceID, $borderColor);
 
             echo "</tr>";
@@ -3021,8 +3020,9 @@ class PluginResourcesImportResource extends CommonDBTM {
    private function showImportListButtons() {
       echo "<tr>";
       echo "<td class='center' colspan='100'>";
-      echo "<input type='submit' name='save' class='submit' value='" . _sx('button', 'Save') . "' >";
-      echo "&nbsp;&nbsp;<input type='submit' name='delete' class='submit' value='" . _sx('button', 'Remove an item') . "' >";
+      echo Html::submit(_sx('button', 'Save'), ['name' => 'save', 'class' => 'btn btn-primary']);
+      echo "&nbsp;&nbsp;";
+      echo Html::submit(_sx('button', 'Remove an item'), ['name' => 'delete', 'class' => 'btn btn-primary']);
       echo "</td>";
       echo "</tr>";
    }

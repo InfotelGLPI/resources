@@ -27,10 +27,13 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '2.7.4');
+define('PLUGIN_RESOURCES_VERSION', '3.0.0-rc1');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
-   define("PLUGIN_RESOURCES_DIR", GLPI_ROOT . "/plugins/resources");
+   define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
+   define("PLUGIN_RESOURCES_NOTFULL_DIR", Plugin::getPhpDir("resources",false));
+   define("PLUGIN_RESOURCES_WEBDIR", Plugin::getWebDir("resources"));
+   define("PLUGIN_RESOURCES_NOTFULL_WEBDIR", Plugin::getWebDir("resources",false));
 }
 
 // Init the hooks of the plugins -Needed
@@ -60,18 +63,18 @@ function plugin_init_resources() {
          'helpdesk_visible_types'       => true,
          'notificationtemplates_types'  => true,
          'unicity_types'                => true,
-         'massiveaction_nodelete_types' => $noupdate,
-         'massiveaction_noupdate_types' => $noupdate
+//         'massiveaction_nodelete_types' => $noupdate,
+//         'massiveaction_noupdate_types' => $noupdate
       ]);
 
       Plugin::registerClass(PluginResourcesDirectory::class, [
-         'massiveaction_nodelete_types' => true,
-         'massiveaction_noupdate_types' => true
+//         'massiveaction_nodelete_types' => true,
+//         'massiveaction_noupdate_types' => true
       ]);
 
       Plugin::registerClass(PluginResourcesRecap::class, [
-         'massiveaction_nodelete_types' => true,
-         'massiveaction_noupdate_types' => true
+//         'massiveaction_nodelete_types' => true,
+//         'massiveaction_noupdate_types' => true
       ]);
 
       Plugin::registerClass(PluginResourcesTaskPlanning::class, [
@@ -96,7 +99,8 @@ function plugin_init_resources() {
                             ['addtabon' => 'Profile']);
 
       Plugin::registerClass(PluginResourcesEmployment::class, [
-         'massiveaction_nodelete_types' => true]);
+//         'massiveaction_nodelete_types' => true
+      ]);
 
       if (Session::haveRight("plugin_servicecatalog", READ)
           || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
@@ -104,9 +108,8 @@ function plugin_init_resources() {
       }
 
       if ((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE))
-          && !Session::haveRight("plugin_servicecatalog", READ)) {
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = '/front/menu.php';
+           || Session::haveright("plugin_resources_employee", UPDATE))) {
+         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_NOTFULL_DIR.'/front/menu.php';
       }
 
       if (Session::haveright("plugin_resources_checklist", READ)
@@ -205,7 +208,8 @@ function plugin_version_resources() {
       'homepage'     => 'https://github.com/InfotelGLPI/resources',
       'requirements' => [
          'glpi' => [
-            'min' => '9.5',
+            'min' => '10.0',
+            'max' => '11.0',
             'dev' => false
          ]
       ]
@@ -220,27 +224,12 @@ function plugin_version_resources() {
  * @return bool
  */
 function plugin_resources_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
-       || version_compare(GLPI_VERSION, '9.6', 'ge')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.5');
-      }
-      return false;
-   }
 
    if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
       echo "Run composer install --no-dev in the plugin directory<br>";
       return false;
    }
 
-   return true;
-}
-
-// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
-/**
- * @return bool
- */
-function plugin_resources_check_config() {
    return true;
 }
 

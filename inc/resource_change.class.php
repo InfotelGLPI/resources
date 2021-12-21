@@ -39,22 +39,22 @@ class PluginResourcesResource_Change extends CommonDBTM {
    static $rightname = 'plugin_resources';
 
    //List of possible actions
-   CONST CHANGE_RESOURCEMANAGER = 1;
-   CONST CHANGE_ACCESSPROFIL    = 2;
-   CONST CHANGE_CONTRACTYPE     = 3;
-   CONST CHANGE_AGENCY          = 4;
-   CONST CHANGE_TRANSFER        = 5;
-   CONST BADGE_RESTITUTION      = 6;
-   CONST CHANGE_RESOURCESALE    = 7;
-   CONST CHANGE_RESOURCEINFORMATIONS    = 8;
-   CONST CHANGE_RESOURCECOMPANY   = 9;
-   CONST CHANGE_RESOURCEDEPARTMENT    = 10;
-   CONST CHANGE_RESOURCEMATERIAL    = 11;
-   CONST CHANGE_RESOURCEITEMAPPLICATION    = 12;
-   CONST CHANGE_RESOURCESERVICE   = 13;
-   CONST CHANGE_RESOURCEROLE   = 14;
-   CONST CHANGE_RESOURCEFUNCTION   = 15;
-   CONST CHANGE_RESOURCETEAM   = 16;
+   const CHANGE_RESOURCEMANAGER         = 1;
+   const CHANGE_ACCESSPROFIL            = 2;
+   const CHANGE_CONTRACTYPE             = 3;
+   const CHANGE_AGENCY                  = 4;
+   const CHANGE_TRANSFER                = 5;
+   const BADGE_RESTITUTION              = 6;
+   const CHANGE_RESOURCESALE            = 7;
+   const CHANGE_RESOURCEINFORMATIONS    = 8;
+   const CHANGE_RESOURCECOMPANY         = 9;
+   const CHANGE_RESOURCEDEPARTMENT      = 10;
+   const CHANGE_RESOURCEMATERIAL        = 11;
+   const CHANGE_RESOURCEITEMAPPLICATION = 12;
+   const CHANGE_RESOURCESERVICE         = 13;
+   const CHANGE_RESOURCEROLE            = 14;
+   const CHANGE_RESOURCEFUNCTION        = 15;
+   const CHANGE_RESOURCETEAM            = 16;
 
 
    /**
@@ -62,36 +62,36 @@ class PluginResourcesResource_Change extends CommonDBTM {
     */
    static function getAllActions($menu = false) {
 
-      $actions                               = [];
-      $actions[0]                            = self::getNameActions(0);
-      $actions[self::CHANGE_RESOURCEMANAGER] = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
-      $actions[self::CHANGE_RESOURCESALE]    = self::getNameActions(self::CHANGE_RESOURCESALE);
-      $actions[self::CHANGE_ACCESSPROFIL]    = self::getNameActions(self::CHANGE_ACCESSPROFIL);
-      $actions[self::CHANGE_CONTRACTYPE]     = self::getNameActions(self::CHANGE_CONTRACTYPE);
-      $actions[self::CHANGE_AGENCY]          = self::getNameActions(self::CHANGE_AGENCY);
-      $actions[self::CHANGE_RESOURCEINFORMATIONS]          = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
-      $actions[self::CHANGE_RESOURCECOMPANY]          = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
-      $actions[self::CHANGE_RESOURCEDEPARTMENT]          = self::getNameActions(self::CHANGE_RESOURCEDEPARTMENT);
-      $actions[self::CHANGE_RESOURCEMATERIAL]          = self::getNameActions(self::CHANGE_RESOURCEMATERIAL);
-      $actions[self::CHANGE_RESOURCEITEMAPPLICATION]          = self::getNameActions(self::CHANGE_RESOURCEITEMAPPLICATION);
-      $actions[self::CHANGE_RESOURCESERVICE]          = self::getNameActions(self::CHANGE_RESOURCESERVICE);
-      $actions[self::CHANGE_RESOURCEROLE]          = self::getNameActions(self::CHANGE_RESOURCEROLE);
-      $actions[self::CHANGE_RESOURCEFUNCTION]          = self::getNameActions(self::CHANGE_RESOURCEFUNCTION);
-      $actions[self::CHANGE_RESOURCETEAM]          = self::getNameActions(self::CHANGE_RESOURCETEAM);
-      $transfer = new PluginResourcesTransferEntity();
-      $dataEntity = $transfer->find();
+      $actions                                       = [];
+      $actions[0]                                    = self::getNameActions(0);
+      $actions[self::CHANGE_RESOURCEMANAGER]         = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
+      $actions[self::CHANGE_RESOURCESALE]            = self::getNameActions(self::CHANGE_RESOURCESALE);
+      $actions[self::CHANGE_ACCESSPROFIL]            = self::getNameActions(self::CHANGE_ACCESSPROFIL);
+      $actions[self::CHANGE_CONTRACTYPE]             = self::getNameActions(self::CHANGE_CONTRACTYPE);
+      $actions[self::CHANGE_AGENCY]                  = self::getNameActions(self::CHANGE_AGENCY);
+      $actions[self::CHANGE_RESOURCEINFORMATIONS]    = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
+      $actions[self::CHANGE_RESOURCECOMPANY]         = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
+      $actions[self::CHANGE_RESOURCEDEPARTMENT]      = self::getNameActions(self::CHANGE_RESOURCEDEPARTMENT);
+      $actions[self::CHANGE_RESOURCEMATERIAL]        = self::getNameActions(self::CHANGE_RESOURCEMATERIAL);
+      $actions[self::CHANGE_RESOURCEITEMAPPLICATION] = self::getNameActions(self::CHANGE_RESOURCEITEMAPPLICATION);
+      $actions[self::CHANGE_RESOURCESERVICE]         = self::getNameActions(self::CHANGE_RESOURCESERVICE);
+      $actions[self::CHANGE_RESOURCEROLE]            = self::getNameActions(self::CHANGE_RESOURCEROLE);
+      $actions[self::CHANGE_RESOURCEFUNCTION]        = self::getNameActions(self::CHANGE_RESOURCEFUNCTION);
+      $actions[self::CHANGE_RESOURCETEAM]            = self::getNameActions(self::CHANGE_RESOURCETEAM);
+      $transfer                                      = new PluginResourcesTransferEntity();
+      $dataEntity                                    = $transfer->find();
       if (is_array($dataEntity) && count($dataEntity) > 0) {
-         $actions[self::CHANGE_TRANSFER]        = self::getNameActions(self::CHANGE_TRANSFER);
+         $actions[self::CHANGE_TRANSFER] = self::getNameActions(self::CHANGE_TRANSFER);
       }
-      if($menu == false){
-         foreach ($actions as $key => $val){
-            if( $key == 0){
+      if ($menu == false) {
+         foreach ($actions as $key => $val) {
+            if ($key == 0) {
                continue;
             }
             $self = new self();
             $conf = [];
-            $conf = $self->find(['actions_id'=>$key]);
-            if(count($conf) == 0){
+            $conf = $self->find(['actions_id' => $key]);
+            if (count($conf) == 0) {
                unset($actions[$key]);
             }
          }
@@ -124,23 +124,23 @@ class PluginResourcesResource_Change extends CommonDBTM {
          case self::BADGE_RESTITUTION :
             return __('Badge restitution', 'resources');
          case self::CHANGE_RESOURCEINFORMATIONS :
-            return __(' Change information','resources');
+            return __(' Change information', 'resources');
          case self::CHANGE_RESOURCECOMPANY :
-            return __('Change company','resources');
+            return __('Change company', 'resources');
          case self::CHANGE_RESOURCEDEPARTMENT :
-            return __('Change department ','resources');
+            return __('Change department ', 'resources');
          case self::CHANGE_RESOURCEMATERIAL :
-            return __('Change material','resources');
+            return __('Change material', 'resources');
          case self::CHANGE_RESOURCEITEMAPPLICATION :
-            return __('Add application','resources');
+            return __('Add application', 'resources');
          case self::CHANGE_RESOURCESERVICE :
-            return __('Change service','resources');
+            return __('Change service', 'resources');
          case self::CHANGE_RESOURCEROLE :
-            return __('Change role','resources');
+            return __('Change role', 'resources');
          case self::CHANGE_RESOURCEFUNCTION :
-            return __('Change function','resources');
+            return __('Change function', 'resources');
          case self::CHANGE_RESOURCETEAM :
-            return __('Change team','resources');
+            return __('Change team', 'resources');
          default :
             return Dropdown::EMPTY_VALUE;
       }
@@ -184,7 +184,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id",
                                     'entity'    => $resource->fields["entities_id"],
-//                                    'entity_sons' => true,
+                                    //                                    'entity_sons' => true,
                                     'right'     => 'all',
                                     'used'      => [$resource->getField('users_id')],
                                     'on_change' => 'plugin_resources_load_button_changeresources_manager()']);
@@ -192,10 +192,10 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_manager(){";
             $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCEMANAGER,
-                       'users_id' => '__VALUE__'];
+                       'action'                      => self::CHANGE_RESOURCEMANAGER,
+                       'users_id'                    => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_users_id' . $rand);
             echo "}";
@@ -223,7 +223,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = User::dropdown(['name'      => "users_id_sales",
                                     'entity'    => $resource->fields["entities_id"],
-//                                    'entity_sons' => true,
+                                    //                                    'entity_sons' => true,
                                     'right'     => 'all',
                                     'used'      => [$resource->getField('users_id_sales')],
                                     'on_change' => 'plugin_resources_load_button_changeresources_sale()']);
@@ -231,10 +231,10 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_sale(){";
             $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCESALE,
-                       'users_id_sales' => '__VALUE__'];
+                       'action'                      => self::CHANGE_RESOURCESALE,
+                       'users_id_sales'              => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_users_id_sales' . $rand);
             echo "}";
@@ -259,7 +259,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                       ON `glpi_plugin_resources_habilitationlevels`.`id` = `glpi_plugin_resources_habilitations`.`plugin_resources_habilitationlevels_id`
                       WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
                       AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
-            $used = [];
+            $used  = [];
             foreach ($DB->request($query) as $data) {
                echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $data['id']) . "<br>";
                $used[] = $data['id'];
@@ -274,8 +274,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             //level
             $habilitationlevel = new PluginResourcesHabilitationLevel();
-            $levels = $habilitationlevel->find(['is_mandatory_creating_resource' => 1]);
-            $condition = [];
+            $levels            = $habilitationlevel->find(['is_mandatory_creating_resource' => 1]);
+            $condition         = [];
             foreach ($levels as $level) {
                $condition["plugin_resources_habilitationlevels_id"] = $level['id'];
             }
@@ -294,7 +294,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                        'action'                            => self::CHANGE_ACCESSPROFIL,
                        'plugin_resources_habilitations_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_plugin_resources_habilitations_id' . $rand);
             echo "}";
@@ -333,7 +333,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                        'action'                            => self::CHANGE_CONTRACTYPE,
                        'plugin_resources_contracttypes_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_plugin_resources_contracttypes_id' . $rand);
             echo "}";
@@ -368,7 +368,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "function plugin_resources_load_button_changeresources_agency(){";
             $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_AGENCY, 'locations_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_locations_id' . $rand);
             echo "}";
@@ -383,7 +383,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "function plugin_resources_load_button_changeresources_transfer(){";
             $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_TRANSFER];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    "");
             echo "}";
@@ -392,25 +392,26 @@ class PluginResourcesResource_Change extends CommonDBTM {
             break;
 
          case self::CHANGE_RESOURCEINFORMATIONS :
-//            echo "<div class=\"form-row\">";
-//            echo "<div class=\"bt-feature col-md-4 \">";
-//            echo __("Current name of the resource", "resources");
-//            echo "</div>";
-//            echo "<div class=\"bt-feature col-md-4 \">";
-//            echo "&nbsp;" . $resource->getField('name');
-//
-//            echo "</div>";
-//            echo "</div>";
+            //            echo "<div class=\"form-row\">";
+            //            echo "<div class=\"bt-feature col-md-4 \">";
+            //            echo __("Current name of the resource", "resources");
+            //            echo "</div>";
+            //            echo "<div class=\"bt-feature col-md-4 \">";
+            //            echo "&nbsp;" . $resource->getField('name');
+            //
+            //            echo "</div>";
+            //            echo "</div>";
 
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Name', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $rand = mt_rand();
-            $option = ['rand'=> $rand,
-                       'option' => "onChange=\"javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information();\" "];
-            $rand1 = Html::autocompletionTextField($resource, "name", $option);
+            $rand   = mt_rand();
+            $option = ['rand'     => $rand,
+                       'value'    => $resource->fields["name"],
+                       'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
+            $rand1  = Html::input('name', $option);
             echo "</div>";
             echo "</div>";
 
@@ -419,9 +420,10 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __('Firstname', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $option = ['rand'=> $rand,
-                       'option' => "onChange='First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
-            $rand2 = Html::autocompletionTextField($resource, "firstname", $option);
+            $option = ['rand'     => $rand,
+                       'value'    => $resource->fields["firstname"],
+                       'onChange' => "'First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
+            $rand2  = Html::input('firstname', $option);
             echo "</div>";
             echo "</div>";
 
@@ -430,9 +432,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __('Departure date', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $option = ['option' => "onChange=\"javascript:this.value=this.value.toUpperCase();\""];
-            $rand3 = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
-//            $rand = Html::autocompletionTextField($resource, "firstname", $option);
+            $option = ['onChange' => "javascript:this.value=this.value.toUpperCase();"];
+            $rand3  = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
+            //            $rand = Html::autocompletionTextField($resource, "firstname", $option);
             echo "</div>";
 
             echo "</div>";
@@ -442,9 +444,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
                   plugin_resources_load_button_changeresources_information();
             });";
             echo "function plugin_resources_load_button_changeresources_information(){";
-
-            echo "$('#plugin_resources_buttonchangeresources').load('/glpi/plugins/resources/ajax/resourcechange.php'
-               ,{load_button_changeresources:true,action:8,name:$('#textfield_name".$rand."').val(),firstname:$('#textfield_firstname".$rand."').val(),date_end:$('input[name=\"date_end\"]').val()}
+            $root_doc = PLUGIN_RESOURCES_NOTFULL_WEBDIR;
+            echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
+               ,{load_button_changeresources:true,action:8,name:$('#textfield_name" . $rand . "').val(),firstname:$('#textfield_firstname" . $rand . "').val(),date_end:$('input[name=\"date_end\"]').val()}
                )";
 
             echo "}";
@@ -461,7 +463,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField("plugin_resources_employers_id"));
             echo "</div>";
             echo "</div>";
@@ -475,15 +477,15 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                                        'right'     => 'all',
                                                        'used'      => [$employee->getField('plugin_resources_employers_id')],
                                                        'on_change' => 'plugin_resources_load_button_changeresources_company();'
-                                       ]);
+                                                      ]);
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_company(){";
-            $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCECOMPANY,
+            $params = ['load_button_changeresources'   => true,
+                       'action'                        => self::CHANGE_RESOURCECOMPANY,
                        'plugin_resources_employers_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_employer_id' . $rand);
             echo "}";
@@ -500,7 +502,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id"));
             echo "</div>";
             echo "</div>";
@@ -512,20 +514,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesDepartment::dropdown(['name'      => "department_id",
                                                          'entity'    => $resource->fields["entities_id"],
-// TODO relink departement with resource employer and department with no employer
-//                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                                                       'right'     => 'all',
-                                                       'used'      => [$resource->getField('plugin_resources_departments_id')],
-                                                       'on_change' => 'plugin_resources_load_button_changeresources_department();'
-                                                      ]);
+                                                         // TODO relink departement with resource employer and department with no employer
+                                                         //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
+                                                         'right'     => 'all',
+                                                         'used'      => [$resource->getField('plugin_resources_departments_id')],
+                                                         'on_change' => 'plugin_resources_load_button_changeresources_department();'
+                                                        ]);
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_department(){";
-            $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCEDEPARTMENT,
+            $params = ['load_button_changeresources'     => true,
+                       'action'                          => self::CHANGE_RESOURCEDEPARTMENT,
                        'plugin_resources_departments_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_department_id' . $rand);
             echo "}";
@@ -542,7 +544,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_services', $resource->getField("plugin_resources_services_id"));
             echo "</div>";
             echo "</div>";
@@ -553,22 +555,22 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesService::dropdownFromDepart($resource->fields["plugin_resources_departments_id"],
-                                                          ['name'   => "service_id",
-                                                           'value'  => $resource->fields["plugin_resources_services_id"],
-                                                           'entity' => $resource->fields["entities_id"],
-                                                           'right'     => 'all',
-                                                           'used'      => [$resource->getField('plugin_resources_services_id')],
-                                                           'on_change' => 'plugin_resources_load_button_changeresources_service();'
-                                                          ]);
+                                                               ['name'      => "service_id",
+                                                                'value'     => $resource->fields["plugin_resources_services_id"],
+                                                                'entity'    => $resource->fields["entities_id"],
+                                                                'right'     => 'all',
+                                                                'used'      => [$resource->getField('plugin_resources_services_id')],
+                                                                'on_change' => 'plugin_resources_load_button_changeresources_service();'
+                                                               ]);
 
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_service(){";
-            $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCESERVICE,
+            $params = ['load_button_changeresources'  => true,
+                       'action'                       => self::CHANGE_RESOURCESERVICE,
                        'plugin_resources_services_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_service_id' . $rand);
             echo "}";
@@ -585,7 +587,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_roles', $resource->getField("plugin_resources_roles_id"));
             echo "</div>";
             echo "</div>";
@@ -595,23 +597,23 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __('New resource role', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $rand =  PluginResourcesRole::dropdownFromService($resource->fields["plugin_resources_services_id"],
-                                                          ['name'   => "role_id",
-                                                           'value'  => $resource->fields["plugin_resources_roles_id"],
-                                                           'entity' => $resource->fields["entities_id"],
-                                                           'right'     => 'all',
-                                                           'used'      => [$resource->getField('plugin_resources_roles_id')],
-                                                           'on_change' => 'plugin_resources_load_button_changeresources_role();'
-                                                          ]);
+            $rand = PluginResourcesRole::dropdownFromService($resource->fields["plugin_resources_services_id"],
+                                                             ['name'      => "role_id",
+                                                              'value'     => $resource->fields["plugin_resources_roles_id"],
+                                                              'entity'    => $resource->fields["entities_id"],
+                                                              'right'     => 'all',
+                                                              'used'      => [$resource->getField('plugin_resources_roles_id')],
+                                                              'on_change' => 'plugin_resources_load_button_changeresources_role();'
+                                                             ]);
 
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_role(){";
             $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCEROLE,
-                       'plugin_resources_roles_id' => '__VALUE__'];
+                       'action'                      => self::CHANGE_RESOURCEROLE,
+                       'plugin_resources_roles_id'   => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_role_id' . $rand);
             echo "}";
@@ -628,7 +630,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_functions_id"=>$resource->getID()]);
+            $employee->getFromDBByCrit(["plugin_resources_functions_id" => $resource->getID()]);
             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_functions', $resource->getField("plugin_functions_functions_id"));
             echo "</div>";
             echo "</div>";
@@ -639,21 +641,21 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesFunction::dropdown(['name'      => "function_id",
-                                                         'entity'    => $resource->fields["entities_id"],
-                                                         // TODO relink departement with resource employer and department with no employer
-                                                         //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                                                         'right'     => 'all',
-                                                         'used'      => [$resource->getField('plugin_resources_functions_id')],
-                                                         'on_change' => 'plugin_resources_load_button_changeresources_function();'
-                                                        ]);
+                                                       'entity'    => $resource->fields["entities_id"],
+                                                       // TODO relink departement with resource employer and department with no employer
+                                                       //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
+                                                       'right'     => 'all',
+                                                       'used'      => [$resource->getField('plugin_resources_functions_id')],
+                                                       'on_change' => 'plugin_resources_load_button_changeresources_function();'
+                                                      ]);
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_function(){";
-            $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCEFUNCTION,
+            $params = ['load_button_changeresources'   => true,
+                       'action'                        => self::CHANGE_RESOURCEFUNCTION,
                        'plugin_resources_functions_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_function_id' . $rand);
             echo "}";
@@ -679,21 +681,21 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
             $rand = PluginResourcesTeam::dropdown(['name'      => "team_id",
-                                                         'entity'    => $resource->fields["entities_id"],
-                                                         // TODO relink departement with resource employer and department with no employer
-                                                         //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                                                         'right'     => 'all',
-                                                         'used'      => [$resource->getField('plugin_resources_teams_id')],
-                                                         'on_change' => 'plugin_resources_load_button_changeresources_team();'
-                                                        ]);
+                                                   'entity'    => $resource->fields["entities_id"],
+                                                   // TODO relink departement with resource employer and department with no employer
+                                                   //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
+                                                   'right'     => 'all',
+                                                   'used'      => [$resource->getField('plugin_resources_teams_id')],
+                                                   'on_change' => 'plugin_resources_load_button_changeresources_team();'
+                                                  ]);
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_team(){";
             $params = ['load_button_changeresources' => true,
-                       'action' => self::CHANGE_RESOURCETEAM,
-                       'plugin_resources_teams_id' => '__VALUE__'];
+                       'action'                      => self::CHANGE_RESOURCETEAM,
+                       'plugin_resources_teams_id'   => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
-                                   $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                   PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                    $params,
                                    'dropdown_team_id' . $rand);
             echo "}";
@@ -709,17 +711,17 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __("Change material", "resources");
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            Html::textarea(['name'      => "content"]);
-//            echo "<script type='text/javascript'>";
+            Html::textarea(['name' => "content"]);
+            //            echo "<script type='text/javascript'>";
 
             $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL];
-//            Ajax::updateItemJsCode();
+            //            Ajax::updateItemJsCode();
             echo Ajax::updateItemOnInputTextEvent('content',
                                                   'plugin_resources_buttonchangeresources',
-                                                  $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                                                  PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                                                   $params);
 
-//            echo "</script>";
+            //            echo "</script>";
             echo "</div>";
             echo "</div>";
 
@@ -731,25 +733,25 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __('New Application to add to the resource', 'resources');
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $appliance = new Appliance();
+            $appliance     = new Appliance();
             $resource_item = new PluginResourcesResource_Item();
 
             $resource_items = $resource_item->find(['plugin_resources_resources_id' => $resource->fields['id'], 'itemtype' => Appliance::getType()]);
-            $appliances = [];
-            foreach ($resource_items as $it){
-               array_push($appliances,$it["items_id"]);
+            $appliances     = [];
+            foreach ($resource_items as $it) {
+               array_push($appliances, $it["items_id"]);
             }
             $rand = Appliance::dropdown(['name'      => "appliances_id",
-                                                         'entity'    => $resource->fields["entities_id"],
-                                                         'right'     => 'all',
-                                                         'used'      => $appliances,
-                                                         'on_change' => 'plugin_resources_load_button_changeresources_application();'
-                                                        ]);
+                                         'entity'    => $resource->fields["entities_id"],
+                                         'right'     => 'all',
+                                         'used'      => $appliances,
+                                         'on_change' => 'plugin_resources_load_button_changeresources_application();'
+                                        ]);
 
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_application(){";
             $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEITEMAPPLICATION, 'appliances_id' => '__VALUE__'];
-            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php', $params, 'dropdown_appliances_id' . $rand);
+            Ajax::updateItemJsCode('plugin_resources_buttonchangeresources', PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php', $params, 'dropdown_appliances_id' . $rand);
             echo "}";
             echo "</script>";
             echo "</div>";
@@ -865,8 +867,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
       if ($display) {
          echo "<div class='next'>";
-         echo "<button type='submit' name='changeresources' value='" . __s('Starting change', 'resources'). "' class='btn btn-success btn-sm' />
-      " . __s('Starting change', 'resources') . "</button>";
+         echo Html::submit(__s('Starting change', 'resources'), ['name' => 'changeresources', 'class' => 'btn btn-success']);
          echo "</div>";
 
       }
@@ -943,7 +944,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
 
             $data['content'] .= __("Current access profile of the resource", 'resources') . "&nbsp;:&nbsp;";
-            $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
+            $query           = "SELECT `glpi_plugin_resources_habilitations`.`id` 
                       FROM `glpi_plugin_resources_resourcehabilitations` 
                       LEFT JOIN `glpi_plugin_resources_habilitations` 
                        ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
@@ -953,7 +954,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                       AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
             foreach ($DB->request($query) as $habilitation) {
                $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
-                                                             $habilitation['id'])."\n";
+                                                             $habilitation['id']) . "\n";
             }
 
             $data['content'] .= __("New access profile of the resource", 'resources') . "&nbsp;:&nbsp;" .
@@ -997,9 +998,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $data['content'] = __("Change information for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
             $data['content'] .= __("Current name of the resource", 'resources') . "&nbsp;:&nbsp;" .
-                                 $resource->getField('name') . "\n";
+                                $resource->getField('name') . "\n";
             $data['content'] .= __("New resource name", 'resources') . "&nbsp;:&nbsp;" .
-                               $options['name'] . "\n";
+                                $options['name'] . "\n";
             $data['content'] .= __("Current firstname of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 $resource->getField('firstname') . "\n";
             $data['content'] .= __("New resource firstname", 'resources') . "&nbsp;:&nbsp;" .
@@ -1009,9 +1010,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $data['content'] .= __("New resource departure date", 'resources') . "&nbsp;:&nbsp;" .
                                 $options['date_end'] . "\n";
 
-            $input['name'] = $options['name'];
+            $input['name']      = $options['name'];
             $input['firstname'] = $options['firstname'];
-            $input['date_end'] = $options['date_end'];
+            $input['date_end']  = $options['date_end'];
             break;
          case self::CHANGE_RESOURCECOMPANY :
 
@@ -1019,15 +1020,15 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
             $data['content'] = __("Change of company for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id]);
+            $employee        = new PluginResourcesEmployee();
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
             $data['content'] .= __("Current company of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_employers', $employee->getField('plugin_resources_employers_id')) . "\n";
             $data['content'] .= __("New resource company", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_employers', $options['employer_id']) . "\n";
 
             $input['plugin_resources_employers_id'] = $options['employer_id'];
-            $input['id']                = $employee->getID();
+            $input['id']                            = $employee->getID();
 
             $employee->update($input);
 
@@ -1038,8 +1039,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
             $data['content'] = __("Change of department for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id]);
+            $employee        = new PluginResourcesEmployee();
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
             $data['content'] .= __("Current department of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField('plugin_resources_departments_id')) . "\n";
             $data['content'] .= __("New resource department", 'resources') . "&nbsp;:&nbsp;" .
@@ -1054,8 +1055,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
             $data['content'] = __("Change of service for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id]);
+            $employee        = new PluginResourcesEmployee();
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
             $data['content'] .= __("Current service of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_services', $resource->getField('plugin_resources_services_id')) . "\n";
             $data['content'] .= __("New resource service", 'resources') . "&nbsp;:&nbsp;" .
@@ -1070,8 +1071,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
             $data['content'] = __("Change of role for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id]);
+            $employee        = new PluginResourcesEmployee();
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
             $data['content'] .= __("Current role of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_roles', $resource->getField('plugin_resources_roles_id')) . "\n";
             $data['content'] .= __("New resource role", 'resources') . "&nbsp;:&nbsp;" .
@@ -1086,8 +1087,8 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
             $data['content'] = __("Change of function for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-            $employee = new PluginResourcesEmployee();
-            $employee->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id]);
+            $employee        = new PluginResourcesEmployee();
+            $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
             $data['content'] .= __("Current function of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_plugin_resources_functions', $resource->getField('plugin_resources_functions_id')) . "\n";
             $data['content'] .= __("New resource function", 'resources') . "&nbsp;:&nbsp;" .
@@ -1120,13 +1121,13 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             break;
          case self::CHANGE_RESOURCEITEMAPPLICATION :
-            $data['name']    = __("Add application for", 'resources') . " " .
-                               PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-            $data['content'] =  sprintf(__("The added appliance is %s ",'resources'), Dropdown::getDropdownName('glpi_appliances', $options['appliances_id']));
-            $resource_item = new PluginResourcesResource_Item();
-            $inputInfo = [];
-            $inputInfo['itemtype'] = Appliance::getType();
-            $inputInfo['items_id'] = $options['appliances_id'];
+            $data['name']                               = __("Add application for", 'resources') . " " .
+                                                          PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+            $data['content']                            = sprintf(__("The added appliance is %s ", 'resources'), Dropdown::getDropdownName('glpi_appliances', $options['appliances_id']));
+            $resource_item                              = new PluginResourcesResource_Item();
+            $inputInfo                                  = [];
+            $inputInfo['itemtype']                      = Appliance::getType();
+            $inputInfo['items_id']                      = $options['appliances_id'];
             $inputInfo['plugin_resources_resources_id'] = $plugin_resources_resources_id;
             $resource_item->add($inputInfo);
             break;
@@ -1140,10 +1141,10 @@ class PluginResourcesResource_Change extends CommonDBTM {
       self::createTicket($data);
 
       $linkad = new PluginResourcesLinkAd();
-      if($linkad->getFromDBByCrit(["plugin_resources_resources_id"=>$plugin_resources_resources_id])){
-         $input2 = [];
+      if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id])) {
+         $input2                = [];
          $input2['action_done'] = 0;
-         $input2['id'] = $linkad->getID();
+         $input2['id']          = $linkad->getID();
          $linkad->update($input2);
       }
    }
@@ -1151,7 +1152,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
    /**
     * Setup form
     */
-   function showForm() {
+   function showConfigForm() {
 
       echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -1196,16 +1197,16 @@ class PluginResourcesResource_Change extends CommonDBTM {
       // Dropdown list according to the entity
       echo "<script type='text/javascript'>";
       echo "function plugin_resources_load_entity(){";
-      $params = ['action' => 'loadEntity',
+      $params = ['action'     => 'loadEntity',
                  'actions_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_entity_itil_categories',
-                             $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                              $params,
                              'dropdown_actions_id' . $rand);
-      $params = ['action' => 'clean',
+      $params = ['action'     => 'clean',
                  'actions_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_button_add',
-                             $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                              $params,
                              'dropdown_actions_id' . $rand);
       echo "}";
@@ -1310,7 +1311,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       echo "function plugin_resources_load_category(){";
       $params = ['action' => 'loadCategory', 'entities_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resource_itil_categories',
-                             $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                              $params,
                              'dropdown_entities_id' . $mrand);
       echo "};";
@@ -1340,7 +1341,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       echo "function plugin_resources_load_buttonadd(){";
       $params = ['action' => 'loadButtonAdd', 'itilcategories_id' => '__VALUE__'];
       Ajax::updateItemJsCode('plugin_resources_button_add',
-                             $CFG_GLPI['root_doc'] . '/plugins/resources/ajax/resourcechange.php',
+                             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                              $params,
                              'dropdown_itilcategories_id' . $rand);
       echo "};";
@@ -1352,7 +1353,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
     */
    static function displayButtonAdd($itilcategories_id) {
       if ($itilcategories_id != 0) {
-         echo "<input type='submit' name='add_entity_category' class='submit' value='" . _sx('button', 'Add') . "' >";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add_entity_category', 'class' => 'btn btn-primary']);
       }
    }
 

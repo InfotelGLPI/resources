@@ -295,10 +295,8 @@ class PluginResourcesChoice extends CommonDBTM {
 
       if ($spotted && $plugin_resources_resources_id) {
 
-         echo Html::css("/plugins/resources/css/bootstrap4.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_main.css");
-         echo Html::css("/plugins/resources/css/style_bootstrap_ticket.css");
-         echo Html::script("/plugins/resources/lib/bootstrap/4.5.3/js/bootstrap.bundle.min.js");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -314,7 +312,7 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "<div class=\"form-row plugin_resources_wizard_margin\">";
          echo "<div class=\"bt-feature col-md-12 \"'>";
          echo "<h4 class=\"bt-title-divider\">";
-         echo "<img class='resources_wizard_resp_img' src='" . $CFG_GLPI['root_doc'] . "/plugins/resources/pics/newresource.png' alt='newresource'/>&nbsp;";
+         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/newresource.png' alt='newresource'/>&nbsp;";
          echo __('Enter the computing needs of the resource', 'resources');
          echo "</h4></div></div>";
 
@@ -335,13 +333,15 @@ class PluginResourcesChoice extends CommonDBTM {
                }
             }
 
-            echo "&nbsp;<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+            echo "&nbsp;";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             Dropdown::show('PluginResourcesChoiceItem',
                            ['name'      => 'plugin_resources_choiceitems_id',
                             'entity'    => $_SESSION['glpiactive_entity'],
                             'condition' => ['is_helpdesk_visible' => 1],
                             'used'      => $used]);
-            echo "&nbsp;<input type='submit' name='addchoice' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+            echo "&nbsp;";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addchoice', 'class' => 'btn btn-primary']);
             echo "<br><br>";
          }
          echo "</div>";
@@ -383,7 +383,7 @@ class PluginResourcesChoice extends CommonDBTM {
                echo "</div>";
                if ($this->canCreate()) {
                   echo "<div class=\"bt-feature col-md-2 \">";
-                  Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/wizard.form.php',
+                  Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR. '/front/wizard.form.php',
                                        'deletechoice',
                                        _x('button', 'Delete permanently'),
                                        ['id' => $choice["id"], 'plugin_resources_resources_id' => $plugin_resources_resources_id]);
@@ -429,11 +429,19 @@ class PluginResourcesChoice extends CommonDBTM {
             }
             $comment = (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) ? $_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'] : $comment;
 
-            echo "<textarea cols='80' rows='6' name='comment'>" . Html::clean($comment) . "</textarea><br>";
+            echo "<br>";
+            echo Html::textarea([
+                                   'name'    => 'comment',
+                                   'value' => $comment,
+                                   'cols'    => '80',
+                                   'rows'    => '6',
+                                   'display' => false,
+                                ]);
+            echo "<br>";
             if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
-               echo "<input type='submit' name='updatecomment' value=\"" . _sx('button', 'Update') . "\" class='submit'>";
+               echo Html::submit(_sx('button', 'Update'), ['name' => 'updatecomment', 'class' => 'btn btn-primary']);
             } else {
-               echo "<input type='submit' name='addcomment' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+               echo Html::submit(_sx('button', 'Add'), ['name' => 'addcomment', 'class' => 'btn btn-primary']);
             }
             //            }
             //            echo "</div>";
@@ -445,13 +453,11 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo "<button type='submit' name='undo_four_step' value='" . _sx('button', '< Previous', 'resources') . "' class='btn btn-primary btn-sm' />
-      " . _sx('button', '< Previous', 'resources') . "</button>";
+            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_four_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "<button type='submit' name='four_step' value='" . _sx('button', 'Next >', 'resources') . "' class='btn btn-success btn-sm' />
-      " . _sx('button', 'Next >', 'resources') . "</button>";
+            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'four_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div></div>";
          }
@@ -478,7 +484,7 @@ class PluginResourcesChoice extends CommonDBTM {
       $params = ['id'   => $items_id,
                  'rand' => $rand];
       Ajax::UpdateItemJsCode("addneedcomment" . "$items_id$rand",
-                             $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/addneedcomment.php", $params, false);
+                             PLUGIN_RESOURCES_WEBDIR. "/ajax/addneedcomment.php", $params, false);
       echo "};";
       echo "</script>\n";
       echo "<p align='center'><a href='javascript:viewAddNeedComment" . "$items_id();'>";
@@ -508,7 +514,7 @@ class PluginResourcesChoice extends CommonDBTM {
 
       $params = ['name' => 'commentneed' . $items_id,
                  'data' => rawurlencode($item["comment"])];
-      Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/inputtext.php",
+      Ajax::UpdateItemJsCode("viewcommentneed$items_id$rand", PLUGIN_RESOURCES_WEBDIR. "/ajax/inputtext.php",
                              $params, false);
       echo "}";
       echo "</script>\n";
@@ -519,9 +525,9 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "</div>\n";
       echo "<div id='viewaccept$items_id$rand' style='display:none;' class='center'>";
       echo "<p><input type='submit' name='updateneedcomment[" . $items_id . "]' value=\"" .
-           _sx('button', 'Update') . "\" class='submit'>";
+           _sx('button', 'Update') . "\" class='btn btn-primary'>";
       echo "&nbsp;<input type='button' onclick=\"hideForm$items_id();\" value=\"" .
-           _sx('button', 'Cancel') . "\" class='submit'></p>";
+           _sx('button', 'Cancel') . "\" class='btn btn-primary'></p>";
       echo "</div>";
       echo "<script type='text/javascript' >\n";
       echo "function hideForm$items_id() {\n";
@@ -552,9 +558,9 @@ class PluginResourcesChoice extends CommonDBTM {
                  && $withtemplate < 2
                  && $resource->fields["is_leaving"] != 1;
       if ($exist == 0) {
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource_item.list.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource_item.list.php\">";
       } else if ($exist == 1) {
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php\">";
+         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
       }
 
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -600,7 +606,7 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "</td>";
             if ($canedit) {
                echo "<td class='center' class='tab_bg_2'>";
-               Html::showSimpleForm($CFG_GLPI['root_doc'] . '/plugins/resources/front/resource_item.list.php',
+               Html::showSimpleForm(PLUGIN_RESOURCES_WEBDIR. '/front/resource_item.list.php',
                                     'deletehelpdeskitem',
                                     _x('button', 'Delete permanently'),
                                     ['id' => $choice["id"]]);
@@ -630,14 +636,14 @@ class PluginResourcesChoice extends CommonDBTM {
          echo "</td></tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td class='center' colspan='4'>";
-         echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem']);
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem', 'class' => 'btn btn-primary']);
          echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
          echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
          if (Session::getCurrentInterface() != 'central') {
             if ($exist != 1) {
-               echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish']);
+               echo Html::submit(__('Terminate the declaration', 'resources'), ['name' => 'finish', 'class' => 'btn btn-primary']);
             } else {
-               echo "<input type='submit' name='resend' value=\"" . __('Resend the declaration', 'resources') . "\" class='submit'>";
+               echo Html::submit(__('Resend the declaration', 'resources'), ['name' => 'resend', 'class' => 'btn btn-primary']);
             }
          }
          echo "</td>";

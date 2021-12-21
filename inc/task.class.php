@@ -514,7 +514,7 @@ class PluginResourcesTask extends CommonDBTM {
 
          echo "<div align='center'>";
          echo "<a href='" .
-              $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?plugin_resources_resources_id=" . $ID
+              PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?plugin_resources_resources_id=" . $ID
               . "&entities_id=" . $entities_id . "' >" . __('Add a new task') . "</a></div>";
          echo "</div>";
       }
@@ -554,7 +554,7 @@ class PluginResourcesTask extends CommonDBTM {
 
       $this->showFormHeader($options);
 
-      echo "<input type='hidden' name='plugin_resources_resources_id' value='$plugin_resources_resources_id'>";
+      echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . PluginResourcesResource::getTypeName(2) . "&nbsp;</td><td>";
@@ -574,7 +574,7 @@ class PluginResourcesTask extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['size' => "50"]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 50]);
       echo "</td>";
       echo "<td>" . PluginResourcesTaskType::getTypeName(1) . "</td><td>";
       Dropdown::show('PluginResourcesTaskType',
@@ -623,8 +623,14 @@ class PluginResourcesTask extends CommonDBTM {
       echo "<td colspan='4'>" . __('Comments') . "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'><td colspan='4'>";
-      echo "<textarea cols='130' rows='4' name='comment' >" . $this->fields["comment"] . "</textarea>";
-      echo "<input type='hidden' name='withtemplate' value=\"" . $options['withtemplate'] . "\" >";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '130',
+                             'rows'    => '4',
+                             'display' => false,
+                          ]);
+      echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
       echo "</td></tr>";
 
       $this->showFormButtons($options);
@@ -778,7 +784,7 @@ class PluginResourcesTask extends CommonDBTM {
 
             echo "<div align='center'><table class='tab_cadre' width='100%'>";
             echo "<tr><th colspan='" . (7 + $colsup) . "'>" . PluginResourcesResource::getTypeName(2) .
-                 ": " . __('Tasks in progress', 'resources') . " <a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __('All') . "</a></th></tr>";
+                 ": " . __('Tasks in progress', 'resources') . " <a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __('All') . "</a></th></tr>";
             echo "<tr><th>" . __('Name') . "</th>";
             if (Session::isMultiEntitiesMode()) {
                echo "<th>" . __('Entity') . "</th>";
@@ -793,7 +799,7 @@ class PluginResourcesTask extends CommonDBTM {
             while ($data = $DB->fetchArray($result)) {
 
                echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
-               echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
+               echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
                if ($_SESSION["glpiis_ids_visible"]) {
                   echo " (" . $data["plugin_resources_tasks_id"] . ")";
                }
@@ -818,7 +824,7 @@ class PluginResourcesTask extends CommonDBTM {
                }
                echo "</td>";
 
-               echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.form.php?id=" . $data["id"] . "'>" . $data["name"] . " " . $data["firstname"];
+               echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php?id=" . $data["id"] . "'>" . $data["name"] . " " . $data["firstname"];
                if ($_SESSION["glpiis_ids_visible"]) {
                   echo " (" . $data["id"] . ")";
                }
@@ -1193,20 +1199,20 @@ class PluginResourcesTask extends CommonDBTM {
 
             $users_id = $DB->result($result, $j, "users_id");
 
-            $managers  = Html::clean($dbu->getUserName($users_id));
+            $managers  = getUserName($users_id);
             $name      = $DB->result($result, $j, "name");
             $task_type = $DB->result($result, $j, "plugin_resources_tasktypes_id");
             $comment   = $DB->result($result, $j, "comment");
             $groups_id = $DB->result($result, $j, "groups_id");
 
             $pdf->displayLine(
-               Html::clean($name),
-               Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type)),
+               $name,
+               Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type),
                $comment,
                $actiontime,
-               Html::clean($planification),
+               $planification,
                $managers,
-               Html::clean(Dropdown::getDropdownName("glpi_groups", $groups_id))
+               Dropdown::getDropdownName("glpi_groups", $groups_id)
             );
             $j++;
          }
