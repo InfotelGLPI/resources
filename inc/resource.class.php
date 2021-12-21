@@ -745,9 +745,9 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
-      $resourceItem  = new PluginResourcesResource_Item();
+      $resourceItem = new PluginResourcesResource_Item();
       $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
-      if (count($resourceUsers) > 0) {
+      if (count($resourceUsers)>0) {
          $this->addStandardTab(PluginResourcesUser::class, $ong, $options);
       }
       $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
@@ -1416,6 +1416,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td " . $tohide['gender'] . "";
+
       if (in_array("gender", $required)) {
          echo $alert;
       }
@@ -1425,6 +1426,7 @@ class PluginResourcesResource extends CommonDBTM {
       $genders = $this->getGenders();
       $option  = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
       Dropdown::showFromArray('gender', $genders, $option);
+
       echo "</td>";
       echo "</tr>";
 
@@ -1698,9 +1700,6 @@ class PluginResourcesResource extends CommonDBTM {
       if ($config->useServiceDepartmentAD()) {
          UserCategory::dropdown(['name' => "plugin_resources_services_id", 'value' => $this->fields["plugin_resources_services_id"], 'rand' => $rand]);
       } else {
-         //         Dropdown::show('PluginResourcesService',
-         //                        ['value'  => $this->fields["plugin_resources_services_id"],
-         //                         'entity' => $this->fields["entities_id"]]);
          PluginResourcesService::dropdownFromDepart($this->fields["plugin_resources_departments_id"], ['name'   => "plugin_resources_services_id",
                                                                                                        'value'  => $this->fields["plugin_resources_services_id"],
                                                                                                        'entity' => $_SESSION['glpiactiveentities'],
@@ -1733,6 +1732,7 @@ class PluginResourcesResource extends CommonDBTM {
                                                                                                'rand'   => $rand]);
       echo "</div>";
       echo "</td>";
+
 
 
       if ($config->useSecondaryService() && $config->useServiceDepartmentAD()) {
@@ -2383,7 +2383,25 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+
+
       echo "<div class=\"bt-feature col-md-12\" >";
+
+      echo "<div  class=\"form-row\">";
+      echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\"";
+      if (in_array("gender", $required)) {
+         echo " style='color:red;'";
+      }
+      echo ">";
+      echo __('Gender', 'resources');
+      echo "</div>";
+
+      echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\">";
+      $genders = $this->getGenders();
+      $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
+      Dropdown::showFromArray('gender',$genders,$option);
+      echo "</div>";
+      echo "</div>";
 
       echo "<div  class=\"form-row\">";
 

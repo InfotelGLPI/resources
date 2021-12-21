@@ -136,8 +136,7 @@ function plugin_init_resources() {
       }
 
       if ((Session::haveRight("plugin_resources", READ)
-           || Session::haveright("plugin_resources_employee", UPDATE))
-          && !Session::haveRight("plugin_servicecatalog", READ)) {
+           || Session::haveright("plugin_resources_employee", UPDATE))) {
          $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
       }
       Plugin::registerClass(PluginResourcesLinkAd::class, ['addtabon' => 'Ticket']);
