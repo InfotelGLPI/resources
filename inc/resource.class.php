@@ -2371,7 +2371,25 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+
+
       echo "<div class=\"bt-feature col-md-12\" >";
+
+      echo "<div  class=\"form-row\">";
+      echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\"";
+      if (in_array("gender", $required)) {
+         echo " style='color:red;'";
+      }
+      echo ">";
+      echo __('Gender', 'resources');
+      echo "</div>";
+
+      echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\">";
+      $genders = $this->getGenders();
+      $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
+      Dropdown::showFromArray('gender',$genders,$option);
+      echo "</div>";
+      echo "</div>";
 
       echo "<div  class=\"form-row\">";
 
