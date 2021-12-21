@@ -1416,7 +1416,6 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td " . $tohide['gender'] . "";
-
       if (in_array("gender", $required)) {
          echo $alert;
       }
@@ -1426,7 +1425,6 @@ class PluginResourcesResource extends CommonDBTM {
       $genders = $this->getGenders();
       $option  = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
       Dropdown::showFromArray('gender', $genders, $option);
-
       echo "</td>";
       echo "</tr>";
 
@@ -1732,7 +1730,6 @@ class PluginResourcesResource extends CommonDBTM {
                                                                                                'rand'   => $rand]);
       echo "</div>";
       echo "</td>";
-
 
 
       if ($config->useSecondaryService() && $config->useServiceDepartmentAD()) {
@@ -2383,8 +2380,6 @@ class PluginResourcesResource extends CommonDBTM {
       echo "</div>";
 
       echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-
-
       echo "<div class=\"bt-feature col-md-12\" >";
 
       echo "<div  class=\"form-row\">";
