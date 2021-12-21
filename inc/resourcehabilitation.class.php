@@ -538,9 +538,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          $pdf->displayLine(__('No item found'));
       } else {
          for ($i = 0; $i < $number; $i++) {
-
-            $habilitation_id = $DB->result($result, $i, "plugin_resources_habilitations_id");
-            $pdf->displayLine(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $habilitation_id));
+            $habilitaion_id = $DB->result($result, $i, "plugin_resources_habilitations_id");
+            $pdf->displayLine(Html::clean(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $habilitaion_id)));
          }
       }
 
