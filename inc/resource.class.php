@@ -745,8 +745,8 @@ class PluginResourcesResource extends CommonDBTM {
 
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
-      $resourceItem = new PluginResourcesResource_Item();
-      $resourceUsers  = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
+      $resourceItem  = new PluginResourcesResource_Item();
+      $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
       if (count($resourceUsers) > 0) {
          $this->addStandardTab(PluginResourcesUser::class, $ong, $options);
       }
