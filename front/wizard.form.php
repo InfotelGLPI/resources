@@ -36,7 +36,11 @@ $resourcehabilitation = new PluginResourcesResourceHabilitation();
 
 $resource->checkGlobal(READ);
 $plugin = new Plugin();
-
+if (isset($_POST["secondary_services"])) {
+   $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
+} else{
+   $_POST["secondary_services"] = "";
+}
 if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
