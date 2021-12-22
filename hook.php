@@ -49,6 +49,7 @@ function plugin_resources_install() {
    $update171 = false;
    $dbu       = new DbUtils();
    $install   = false;
+
    if (!$DB->tableExists("glpi_plugin_resources_resources")
        && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
@@ -73,7 +74,8 @@ function plugin_resources_install() {
       include_once(PLUGIN_RESOURCES_DIR. "/inc/notificationtargetresource.class.php");
       call_user_func([PluginResourcesNotificationTargetResource::class, 'install']);
 
-   } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->tableExists("glpi_plugin_resources_employee")) {
+   } else if ($DB->tableExists("glpi_plugin_resources")
+              && !$DB->tableExists("glpi_plugin_resources_employee")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
@@ -85,7 +87,9 @@ function plugin_resources_install() {
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources_profiles") && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
+   } else if ($DB->tableExists("glpi_plugin_resources")
+              &&$DB->tableExists("glpi_plugin_resources_profiles")
+              && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
@@ -96,7 +100,8 @@ function plugin_resources_install() {
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources") && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
+   } else if ($DB->tableExists("glpi_plugin_resources")
+              && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
       $update   = true;
       $update78 = true;
       $update80 = true;
@@ -115,7 +120,8 @@ function plugin_resources_install() {
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.2.sql");
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources_contracttypes") && !$DB->fieldExists("glpi_plugin_resources_resources", "plugin_resources_resourcestates_id")) {
+   } else if ($DB->tableExists("glpi_plugin_resources_contracttypes")
+              && !$DB->fieldExists("glpi_plugin_resources_resources", "picture")) {
       $update   = true;
       $update80 = true;
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-1.6.1.sql");

@@ -247,7 +247,7 @@ CREATE TABLE `glpi_plugin_resources_taskplannings` (
    KEY `begin` (`begin`),
    KEY `end` (`end`),
    KEY `plugin_resources_tasks_id` (`plugin_resources_tasks_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasktypes`;
 CREATE TABLE `glpi_plugin_resources_tasktypes` (
@@ -791,7 +791,7 @@ CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
   `plugin_resources_importresources_id` int(11) NOT NULL DEFAULT '0',
   `plugin_resources_importcolumns_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimports`;
 CREATE TABLE `glpi_plugin_resources_resourceimports` (
@@ -867,7 +867,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','', 0, 0, 0,'','','','','','','','','','','','','',0,0,'','',0,'');
+INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','','','','','','','','','','','','','','','','','','','',0,0,0,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
 CREATE TABLE `glpi_plugin_resources_roles` (
@@ -946,7 +946,7 @@ CREATE TABLE `glpi_plugin_resources_contracttypeprofiles` (
   `plugin_resources_contracttypes_id` varchar(255) NOT NULL default '0',
   `profiles_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_actionprofiles`;
 CREATE TABLE `glpi_plugin_resources_actionprofiles` (
@@ -954,7 +954,7 @@ CREATE TABLE `glpi_plugin_resources_actionprofiles` (
   `actions_id` varchar(255) NOT NULL default '0',
   `profiles_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','2','1','0');
 INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginResourcesResource','3','2','0');

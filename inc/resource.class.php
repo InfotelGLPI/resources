@@ -35,6 +35,7 @@ if (!defined('GLPI_ROOT')) {
  * Class PluginResourcesResource
  */
 class PluginResourcesResource extends CommonDBTM {
+   use Glpi\Features\Clonable;
 
    static $rightname = 'plugin_resources';
 
@@ -71,7 +72,7 @@ class PluginResourcesResource extends CommonDBTM {
    static function getIcon() {
       return "fas fa-user-friends";
    }
-   
+
    /**
     * @return array
     */
@@ -843,6 +844,14 @@ class PluginResourcesResource extends CommonDBTM {
       return $need;
    }
 
+
+   public function getForbiddenStandardMassiveAction() {
+
+      $forbidden   = parent::getForbiddenStandardMassiveAction();
+      $forbidden[] = 'clone';
+      return $forbidden;
+   }
+
    /**
     * Prepare input datas for adding the item
     *
@@ -908,15 +917,15 @@ class PluginResourcesResource extends CommonDBTM {
       $template_resources = new Self();
       if (isset($this->input['plugin_resources_resources_id'])) {
          if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'], 'is_template' => 1])) {
-            $input["_oldID"] = $this->input['plugin_resources_resources_id'];
+            $input["resources_oldID"] = $this->input['plugin_resources_resources_id'];
          }
       }
-
 
       unset($input['id']);
 
       return $input;
    }
+
 
    /**
     * Actions done after the ADD of the item in the database
@@ -927,23 +936,23 @@ class PluginResourcesResource extends CommonDBTM {
       global $CFG_GLPI;
 
       // Manage add from template
-      if (isset($this->input["_oldID"])) {
+      if (isset($this->input["resources_oldID"])) {
 
          // ADD choices
-         PluginResourcesChoice::cloneItem($this->input["_oldID"], $this->fields['id']);
+         PluginResourcesChoice::cloneItem($this->input["resources_oldID"], $this->fields['id']);
 
          // ADD habilitations
-         PluginResourcesResourceHabilitation::cloneItem($this->input["_oldID"], $this->fields['id']);
+         PluginResourcesResourceHabilitation::cloneItem($this->input["resources_oldID"], $this->fields['id']);
 
          // ADD items
-         PluginResourcesResource_Item::cloneItem($this->input["_oldID"], $this->fields['id']);
+         PluginResourcesResource_Item::cloneItem($this->input["resources_oldID"], $this->fields['id']);
 
          // ADD reports
-         PluginResourcesReportConfig::cloneItem($this->input["_oldID"], $this->fields['id']);
+         PluginResourcesReportConfig::cloneItem($this->input["resources_oldID"], $this->fields['id']);
 
          //manage template from helpdesk (no employee to add : resource.form.php)
          if (!isset($this->input["add_from_helpdesk"])) {
-            PluginResourcesEmployee::cloneItem($this->input["_oldID"], $this->fields['id']);
+            PluginResourcesEmployee::cloneItem($this->input["resources_oldID"], $this->fields['id']);
          }
          // ADD Documents
          $document_items             = Document_Item::getItemsAssociatedTo($this->getType(), $this->fields['id']);
@@ -953,7 +962,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
 
          // ADD tasks
-         PluginResourcesTask::cloneItem($this->input["_oldID"], $this->fields['id']);
+         PluginResourcesTask::cloneItem($this->input["resources_oldID"], $this->fields['id']);
       }
 
       //Launch notification
@@ -2195,7 +2204,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
-      echo "<i class='".self::getIcon()."'></i>&nbsp;";
+      echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -2292,7 +2301,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='".self::getIcon()."'></i>&nbsp;";
+      echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3029,7 +3038,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='".self::getIcon()."'></i>&nbsp;";
+      echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3142,7 +3151,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
-      echo "<i class='".self::getIcon()."'></i>&nbsp;";
+      echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
 
@@ -3777,7 +3786,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='".self::getIcon()."'></i>&nbsp;";
+         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
@@ -3878,7 +3887,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='".self::getIcon()."'></i>&nbsp;";
+         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
@@ -3975,7 +3984,7 @@ class PluginResourcesResource extends CommonDBTM {
          echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
-         echo "<i class='".self::getIcon()."'></i>&nbsp;";
+         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
          echo __('Resources management', 'resources');
          echo "</div></h3>";
 
@@ -5388,5 +5397,18 @@ class PluginResourcesResource extends CommonDBTM {
       return [Dropdown::EMPTY_VALUE,
               __('M.', 'resources'),
               __('Mme', 'resources')];
+   }
+
+   public function getCloneRelations(): array {
+      return [
+//         PluginResourcesTask::class,
+//         PluginResourcesEmployee::class,
+//         PluginResourcesReportConfig::class,
+//         PluginResourcesResource_Item::class,
+//         PluginResourcesResourceHabilitation::class,
+//         PluginResourcesChoice::class,
+         Document_Item::class,
+         Notepad::class
+      ];
    }
 }

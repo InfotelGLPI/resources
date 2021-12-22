@@ -916,7 +916,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
 
       if ($item->getType() == "User") {
          $PluginResourcesEmployee = new PluginResourcesEmployee();
-         $PluginResourcesEmployee->showForm($resourceID, $ID, 0);
+         $PluginResourcesEmployee->showEmployeeForm($resourceID, $ID, 0);
       }
    }
 

@@ -126,8 +126,10 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $resource->wizardSecondForm($_POST["id"], $values);
 
    } else {
+      $newID = 0;
       if ($resource->canCreate() && isset($_POST["second_step"])) {
-         $newID = $resource->add($_POST);
+         $resource->add($_POST);
+         $newID = 1;
          if(isset($_POST['plugin_resources_employers_id'])){
             $employee = new PluginResourcesEmployee();
             $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
@@ -152,6 +154,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          }
 
       }
+
       //if employee right : next step
       if ($newID) {
          $wizard_employee     = PluginResourcesContractType::checkWizardSetup($newID, "use_employee_wizard");
