@@ -198,26 +198,30 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    static function checkifChecklistFinished($input) {
 
-      $restrict   = ["plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
-                     "checklist_type"                => $input['checklist_type']];
-      $dbu        = new DbUtils();
-      $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
+      if (isset($input['plugin_resources_resources_id'])
+          && isset($input['checklist_type'])) {
+         $restrict   = ["plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
+                        "checklist_type"                => $input['checklist_type']];
+         $dbu        = new DbUtils();
+         $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
-      $nok = 0;
-      if (!empty($checklists)) {
-         foreach ($checklists as $checklist) {
-            if ($checklist["is_checked"] < 1) {
-               $nok += 1;
+         $nok = 0;
+         if (!empty($checklists)) {
+            foreach ($checklists as $checklist) {
+               if ($checklist["is_checked"] < 1) {
+                  $nok += 1;
+               }
             }
-         }
-         if ($nok > 0) {
-            return false;
+            if ($nok > 0) {
+               return false;
+            } else {
+               return true;
+            }
          } else {
-            return true;
+            return false;
          }
-      } else {
-         return false;
       }
+      return false;
    }
 
    /**

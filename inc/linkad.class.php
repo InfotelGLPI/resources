@@ -110,7 +110,8 @@ class PluginResourcesLinkAd extends CommonDBTM {
 
             if ($item->getType() == Ticket::getType()) {
                $items = new Item_Ticket();
-               if ($items->getFromDBByCrit(["tickets_id" => $item->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+               if ($items->getFromDBByCrit(["tickets_id" => $item->getID(),
+                                            "itemtype" => PluginResourcesResource::getType()])) {
                   $adConfig = new PluginResourcesAdconfig();
                   $adConfig->getFromDB(1);
                   $adConfig->fields = $adConfig->prepareFields($adConfig->fields);

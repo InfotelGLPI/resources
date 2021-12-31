@@ -35,7 +35,6 @@ if (!defined('GLPI_ROOT')) {
  * Class PluginResourcesResource
  */
 class PluginResourcesResource extends CommonDBTM {
-   use Glpi\Features\Clonable;
 
    static $rightname = 'plugin_resources';
 
@@ -845,13 +844,6 @@ class PluginResourcesResource extends CommonDBTM {
    }
 
 
-   public function getForbiddenStandardMassiveAction() {
-
-      $forbidden   = parent::getForbiddenStandardMassiveAction();
-      $forbidden[] = 'clone';
-      return $forbidden;
-   }
-
    /**
     * Prepare input datas for adding the item
     *
@@ -916,12 +908,11 @@ class PluginResourcesResource extends CommonDBTM {
 
       $template_resources = new Self();
       if (isset($this->input['plugin_resources_resources_id'])) {
-         if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'], 'is_template' => 1])) {
+         if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'],
+                                                   'is_template' => 1])) {
             $input["resources_oldID"] = $this->input['plugin_resources_resources_id'];
          }
       }
-
-      unset($input['id']);
 
       return $input;
    }
@@ -935,7 +926,7 @@ class PluginResourcesResource extends CommonDBTM {
    function post_addItem() {
       global $CFG_GLPI;
 
-      // Manage add from template
+//       Manage add from template
       if (isset($this->input["resources_oldID"])) {
 
          // ADD choices
@@ -965,6 +956,12 @@ class PluginResourcesResource extends CommonDBTM {
          PluginResourcesTask::cloneItem($this->input["resources_oldID"], $this->fields['id']);
       }
 
+      //ADD Checklists from rules
+      $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
+      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
+      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
+      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
+
       //Launch notification
 
       if (isset($this->input['withtemplate'])
@@ -976,12 +973,6 @@ class PluginResourcesResource extends CommonDBTM {
             NotificationEvent::raiseEvent("new", $this);
          }
       }
-
-      //ADD Checklists from rules
-      $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
-      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
-      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT);
-      $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
    }
 
    /**
@@ -1381,7 +1372,6 @@ class PluginResourcesResource extends CommonDBTM {
     * @return bool
     */
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
 
       $this->initForm($ID, $options);
       $options['formoptions'] = " enctype='multipart/form-data'";
@@ -2999,7 +2989,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
       echo Html::hidden('date_declaration', ['value' => $_SESSION["glpi_currenttime"]]);
       echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
-      echo Html::hidden('id', ['value' => $ID]);
+
       echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => 0]);
 
       if ($this->canCreate() && (empty($ID) || $options['withtemplate'] == 2)) {
@@ -3010,7 +3000,6 @@ class PluginResourcesResource extends CommonDBTM {
          echo "</div>";
          echo "<div class='next'>";
          echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'second_step', 'class' => 'btn btn-success']);
-         echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
          echo "</div>";
          echo "</div>";
          echo "</div>";
@@ -5412,16 +5401,16 @@ class PluginResourcesResource extends CommonDBTM {
               __('Mme', 'resources')];
    }
 
-   public function getCloneRelations(): array {
-      return [
-//         PluginResourcesTask::class,
-//         PluginResourcesEmployee::class,
-//         PluginResourcesReportConfig::class,
-//         PluginResourcesResource_Item::class,
-//         PluginResourcesResourceHabilitation::class,
-//         PluginResourcesChoice::class,
-         Document_Item::class,
-         Notepad::class
-      ];
-   }
+//   public function getCloneRelations(): array {
+//      return [
+////         PluginResourcesTask::class,
+////         PluginResourcesEmployee::class,
+////         PluginResourcesReportConfig::class,
+////         PluginResourcesResource_Item::class,
+////         PluginResourcesResourceHabilitation::class,
+////         PluginResourcesChoice::class,
+//         Document_Item::class,
+//         Notepad::class
+//      ];
+//   }
 }

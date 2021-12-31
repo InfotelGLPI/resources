@@ -290,6 +290,9 @@ function plugin_resources_install() {
       $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-2.7.3.sql");
    }
 
+   //Version 3.0.0
+   $DB->runFile(PLUGIN_RESOURCES_DIR. "/install/sql/update-3.0.0.sql");
+
    if (!$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
       $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
       $DB->query($query) or die($DB->error());

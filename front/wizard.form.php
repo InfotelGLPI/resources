@@ -38,7 +38,7 @@ $resource->checkGlobal(READ);
 $plugin = new Plugin();
 if (isset($_POST["secondary_services"])) {
    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
-} else{
+} else {
    $_POST["secondary_services"] = "";
 }
 if (Session::getCurrentInterface() == 'central') {
@@ -100,7 +100,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $resource->wizardFirstForm();
 
 } else if (isset($_POST["second_step"]) || isset($_POST["second_step_update"])) {
-   $required = $resource->checkRequiredFields($_POST);
+   $required    = $resource->checkRequiredFields($_POST);
+
    if (count($required) > 0) {
       // Set default value...
       foreach ($_POST as $key => $val) {
@@ -127,55 +128,56 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
       Html::displayMessageAfterRedirect();
 
-      $resource->wizardSecondForm($_POST["id"], $values);
+      $resource->wizardSecondForm(0, $values);
 
    } else {
-      $newID = 0;
+      $newresource = 0;
       if ($resource->canCreate() && isset($_POST["second_step"])) {
-         $resource->add($_POST);
-         $newID = 1;
-         if(isset($_POST['plugin_resources_employers_id'])){
+
+         unset($_POST['id']);
+         $newresource = $resource->add($_POST);
+         if (isset($_POST['plugin_resources_employers_id']) && $newresource > 0) {
             $employee = new PluginResourcesEmployee();
             $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                            'plugin_resources_resources_id' => $newID,
-                            'plugin_resources_clients_id' => 0]);
+                            'plugin_resources_resources_id' => $newresource,
+                            'plugin_resources_clients_id'   => 0]);
          }
       } else if ($resource->canCreate() && isset($_POST["second_step_update"])) {
          $resource->update($_POST);
-         $newID = $_POST["id"];
-         if(isset($_POST['plugin_resources_employers_id'])) {
+         $newresource = $_POST["id"];
+         if (isset($_POST['plugin_resources_employers_id'])) {
             $employee = new PluginResourcesEmployee();
-            if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newID])) {
-               $employee->update(['id' => $employee->getID(),
+            if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newresource])) {
+               $employee->update(['id'                            => $employee->getID(),
                                   'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                                  'plugin_resources_resources_id' => $newID,
-                                  'plugin_resources_clients_id' => 0]);
+                                  'plugin_resources_resources_id' => $newresource,
+                                  'plugin_resources_clients_id'   => 0]);
             } else {
                $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                               'plugin_resources_resources_id' => $newID,
-                               'plugin_resources_clients_id' => 0]);
+                               'plugin_resources_resources_id' => $newresource,
+                               'plugin_resources_clients_id'   => 0]);
             }
          }
-
       }
 
       //if employee right : next step
-      if ($newID) {
-         $wizard_employee     = PluginResourcesContractType::checkWizardSetup($newID, "use_employee_wizard");
-         $wizard_need         = PluginResourcesContractType::checkWizardSetup($newID, "use_need_wizard");
-         $wizard_picture      = PluginResourcesContractType::checkWizardSetup($newID, "use_picture_wizard");
-         $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($newID, "use_habilitation_wizard");
+      if ($newresource > 0) {
+
+         $wizard_employee     = PluginResourcesContractType::checkWizardSetup($newresource, "use_employee_wizard");
+         $wizard_need         = PluginResourcesContractType::checkWizardSetup($newresource, "use_need_wizard");
+         $wizard_picture      = PluginResourcesContractType::checkWizardSetup($newresource, "use_picture_wizard");
+         $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($newresource, "use_habilitation_wizard");
 
          if ($employee->canCreate() && $wizard_employee) {
-            $employee->wizardThirdForm($newID);
+            $employee->wizardThirdForm($newresource);
          } else if ($wizard_need) {
-            $choice->wizardFourForm($newID);
+            $choice->wizardFourForm($newresource);
          } else if ($wizard_picture) {
             $values           = [];
             $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-            $resource->wizardFiveForm($newID, $values);
+            $resource->wizardFiveForm($newresource, $values);
          } else if ($wizard_habilitation) {
-            $resourcehabilitation->wizardSixForm($newID);
+            $resourcehabilitation->wizardSixForm($newresource);
          } else {
             $resource->fields['resources_step'] = 'second_step';
             Plugin::doHook('item_show', $resource);
@@ -423,7 +425,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          $newID                     = $doc->add($_POST);
       }
    }
-   $_POST['target']                        = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
+   $_POST['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
    $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
 
 } else if (isset($_POST["seven_step"])) {
