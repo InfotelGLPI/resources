@@ -898,7 +898,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
-         $actions['PluginResourcesChecklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'update_checklist'] = __('Modify state', 'resources');
+         $actions['PluginResourcesChecklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'do_checklist'] = __('Mark as finished', 'resources');
+      }
+
+      if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
+         $actions['PluginResourcesChecklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'undo_checklist'] = __('Mark as unfinished', 'resources');
       }
 
       if (Session::haveRight("plugin_resources_task", UPDATE)) {
@@ -948,13 +952,13 @@ class PluginResourcesChecklist extends CommonDBTM {
       $isfinished = self::checkifChecklistFinished($input);
 
       switch ($ma->getAction()) {
-         case "update_checklist" :
+         case "do_checklist" :
             if (!$isfinished) {
                foreach ($ids as $key => $val) {
                   if ($item->can($key, UPDATE, $input)) {
-                     $varchecked = "is_checked" . $key;
+
                      if ($item->update(["id"         => $key,
-                                        "is_checked" => $input[$varchecked]])) {
+                                        "is_checked" => 1])) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                      } else {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -968,7 +972,26 @@ class PluginResourcesChecklist extends CommonDBTM {
                Session::addMessageAfterRedirect(__('The checklist is finished', 'resources'), true, ERROR);
             }
             break;
+         case "undo_checklist" :
+            if (!$isfinished) {
+               foreach ($ids as $key => $val) {
+                  if ($item->can($key, UPDATE, $input)) {
 
+                     if ($item->update(["id"         => $key,
+                                        "is_checked" => 0])) {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+                     } else {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                     }
+                  } else {
+                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                  }
+               }
+            } else {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               Session::addMessageAfterRedirect(__('The checklist is finished', 'resources'), true, ERROR);
+            }
+            break;
          case "add_ticket" :
             if (!$isfinished) {
                unset($input["id"]);
