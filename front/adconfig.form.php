@@ -3,7 +3,7 @@
  *
  -------------------------------------------------------------------------
  resources plugin for GLPI
- Copyright (C) 2009-2016 by the resources Development Team.
+ Copyright (C) 2009-2022 by the resources Development Team.
 
  https://github.com/InfotelGLPI/resources
  -------------------------------------------------------------------------

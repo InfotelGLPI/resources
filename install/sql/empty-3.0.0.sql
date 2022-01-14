@@ -1,43 +1,43 @@
 DROP TABLE IF EXISTS `glpi_plugin_resources_resources`;
 CREATE TABLE `glpi_plugin_resources_resources` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `firstname` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_contracttypes_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
-   `users_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
-   `users_id_sales` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
-   `users_id_recipient` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
+   `plugin_resources_contracttypes_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
+   `users_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
+   `users_id_sales` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
+   `users_id_recipient` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
    `date_declaration` timestamp NULL DEFAULT NULL,
    `date_begin` timestamp NULL DEFAULT NULL,
    `date_end` timestamp NULL DEFAULT NULL,
    `quota` decimal(10,4) NOT NULL default '1.00',
-   `plugin_resources_departments_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_departments (id)',
-   `plugin_resources_resourcestates_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resourcestates (id)',
-   `plugin_resources_resourcesituations_id` int(11) NOT NULL default '0',
-   `plugin_resources_contractnatures_id` int(11) NOT NULL default '0',
-   `plugin_resources_ranks_id` int(11) NOT NULL default '0',
-   `plugin_resources_resourcespecialities_id` int(11) NOT NULL default '0',
-   `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
-   `is_leaving` int(11) NOT NULL default '0',
-   `plugin_resources_leavingreasons_id` int(11) NOT NULL default '0',
+   `plugin_resources_departments_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_departments (id)',
+   `plugin_resources_resourcestates_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resourcestates (id)',
+   `plugin_resources_resourcesituations_id` int unsigned NOT NULL default '0',
+   `plugin_resources_contractnatures_id` int unsigned NOT NULL default '0',
+   `plugin_resources_ranks_id` int unsigned NOT NULL default '0',
+   `plugin_resources_resourcespecialities_id` int unsigned NOT NULL default '0',
+   `locations_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
+   `is_leaving` int unsigned NOT NULL default '0',
+   `plugin_resources_leavingreasons_id` int unsigned NOT NULL default '0',
    `date_declaration_leaving` timestamp NULL DEFAULT NULL,
-   `users_id_recipient_leaving` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
+   `users_id_recipient_leaving` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
    `picture` varchar(100) collate utf8mb4_unicode_ci default NULL,
-   `is_helpdesk_visible` int(11) NOT NULL default '1',
+   `is_helpdesk_visible` int unsigned NOT NULL default '1',
    `date_mod` timestamp NULL DEFAULT NULL,
    `comment` text collate utf8mb4_unicode_ci,
-   `is_template` tinyint(1) NOT NULL default '0',
+   `is_template` tinyint NOT NULL default '0',
    `template_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `is_deleted` tinyint(1) NOT NULL default '0',
-   `sensitize_security` tinyint(1) NOT NULL default '0',
-   `read_chart` tinyint(1) NOT NULL default '0',
-   `plugin_resources_roles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_roles (id)',
+   `is_deleted` tinyint NOT NULL default '0',
+   `sensitize_security` tinyint NOT NULL default '0',
+   `read_chart` tinyint NOT NULL default '0',
+   `plugin_resources_roles_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_roles (id)',
    `matricule` varchar(255) NOT NULL default '' ,
-   `plugin_resources_functions_id` int(11) NOT NULL default '0',
-   `plugin_resources_teams_id` int(11) NOT NULL default '0',
-   `plugin_resources_services_id` int(11) NOT NULL default '0',
+   `plugin_resources_functions_id` int unsigned NOT NULL default '0',
+   `plugin_resources_teams_id` int unsigned NOT NULL default '0',
+   `plugin_resources_services_id` int unsigned NOT NULL default '0',
    `matricule_second` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `secondary_services` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `gender` varchar(3) collate utf8mb4_unicode_ci default NULL,
@@ -67,9 +67,9 @@ CREATE TABLE `glpi_plugin_resources_resources` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcestates`;
 CREATE TABLE `glpi_plugin_resources_resourcestates` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -80,9 +80,9 @@ CREATE TABLE `glpi_plugin_resources_resourcestates` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_choices`;
 CREATE TABLE `glpi_plugin_resources_choices` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `plugin_resources_choiceitems_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_choiceitems (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `plugin_resources_choiceitems_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_choiceitems (id)',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
@@ -91,15 +91,15 @@ CREATE TABLE `glpi_plugin_resources_choices` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_choiceitems`;
 CREATE TABLE `glpi_plugin_resources_choiceitems` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `plugin_resources_choiceitems_id` int(11) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
+   `plugin_resources_choiceitems_id` int unsigned NOT NULL DEFAULT '0',
    `completename` text COLLATE utf8mb4_unicode_ci,
-   `level` int(11) NOT NULL DEFAULT '0',
+   `level` int unsigned NOT NULL DEFAULT '0',
    `ancestors_cache` longtext COLLATE utf8mb4_unicode_ci,
    `sons_cache` longtext COLLATE utf8mb4_unicode_ci,
-   `is_helpdesk_visible` int(11) NOT NULL default '1',
+   `is_helpdesk_visible` int unsigned NOT NULL default '1',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -112,9 +112,9 @@ CREATE TABLE `glpi_plugin_resources_choiceitems` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resources_items`;
 CREATE TABLE `glpi_plugin_resources_resources_items` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `items_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
    `itemtype` varchar(100) collate utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -125,10 +125,10 @@ CREATE TABLE `glpi_plugin_resources_resources_items` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employees`;
 CREATE TABLE `glpi_plugin_resources_employees` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `plugin_resources_employers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
-   `plugin_resources_clients_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_clients (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `plugin_resources_employers_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
+   `plugin_resources_clients_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_clients (id)',
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
    KEY `plugin_resources_employers_id` (`plugin_resources_employers_id`),
@@ -137,20 +137,20 @@ CREATE TABLE `glpi_plugin_resources_employees` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employers`;
 CREATE TABLE `glpi_plugin_resources_employers` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
-   `plugin_resources_employers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
+   `locations_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
+   `plugin_resources_employers_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    `completename` text collate utf8mb4_unicode_ci default NULL,
-   `level` int(11) NOT NULL DEFAULT '0',
+   `level` int unsigned NOT NULL DEFAULT '0',
    `ancestors_cache` longtext collate utf8mb4_unicode_ci default NULL,
    `sons_cache` longtext collate utf8mb4_unicode_ci default NULL,
-   `second_list` tinyint(1) NOT NULL DEFAULT '0',
+   `second_list` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -161,16 +161,16 @@ CREATE TABLE `glpi_plugin_resources_employers` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_clients`;
 CREATE TABLE `glpi_plugin_resources_clients` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `security_compliance` tinyint(1) NOT NULL DEFAULT '0',
+   `security_compliance` tinyint NOT NULL DEFAULT '0',
    `comment` text collate utf8mb4_unicode_ci,
-   `security_and` tinyint(1) NOT NULL default '0',
-   `security_fifour` tinyint(1) NOT NULL default '0',
-   `security_gisf` tinyint(1) NOT NULL default '0',
-   `security_cfi` tinyint(1) NOT NULL default '0',
+   `security_and` tinyint NOT NULL default '0',
+   `security_fifour` tinyint NOT NULL default '0',
+   `security_gisf` tinyint NOT NULL default '0',
+   `security_cfi` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -179,18 +179,18 @@ CREATE TABLE `glpi_plugin_resources_clients` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contracttypes`;
 CREATE TABLE `glpi_plugin_resources_contracttypes` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `use_employee_wizard` tinyint(1) NOT NULL DEFAULT '1',
-   `use_need_wizard` tinyint(1) NOT NULL DEFAULT '1',
-   `use_picture_wizard` tinyint(1) NOT NULL DEFAULT '1',
-   `use_habilitation_wizard` tinyint(1) NOT NULL DEFAULT '0',
+   `use_employee_wizard` tinyint NOT NULL DEFAULT '1',
+   `use_need_wizard` tinyint NOT NULL DEFAULT '1',
+   `use_picture_wizard` tinyint NOT NULL DEFAULT '1',
+   `use_habilitation_wizard` tinyint NOT NULL DEFAULT '0',
    `comment` text collate utf8mb4_unicode_ci,
-   `use_second_matricule` tinyint(1) NOT NULL DEFAULT '0',
-   `use_second_list_employer` tinyint(1) NOT NULL DEFAULT '0',
+   `use_second_matricule` tinyint NOT NULL DEFAULT '0',
+   `use_second_list_employer` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -199,10 +199,10 @@ CREATE TABLE `glpi_plugin_resources_contracttypes` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_departments`;
 CREATE TABLE `glpi_plugin_resources_departments` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `plugin_resources_employers_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `plugin_resources_employers_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -213,18 +213,18 @@ CREATE TABLE `glpi_plugin_resources_departments` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasks`;
 CREATE TABLE `glpi_plugin_resources_tasks` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `plugin_resources_tasktypes_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasktypes (id)',
-   `users_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
-   `groups_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_groups (id)',
-   `actiontime` int(11) NOT NULL DEFAULT '0',
-   `is_finished` tinyint(1) NOT NULL default '0',
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `plugin_resources_tasktypes_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasktypes (id)',
+   `users_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_users (id)',
+   `groups_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_groups (id)',
+   `actiontime` int unsigned NOT NULL DEFAULT '0',
+   `is_finished` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
-   `is_deleted` tinyint(1) NOT NULL default '0',
+   `is_deleted` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -239,8 +239,8 @@ CREATE TABLE `glpi_plugin_resources_tasks` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_taskplannings`;
 CREATE TABLE `glpi_plugin_resources_taskplannings` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_tasks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_tasks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
    `begin` timestamp NULL DEFAULT NULL,
    `end` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
@@ -251,9 +251,9 @@ CREATE TABLE `glpi_plugin_resources_taskplannings` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasktypes`;
 CREATE TABLE `glpi_plugin_resources_tasktypes` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -264,9 +264,9 @@ CREATE TABLE `glpi_plugin_resources_tasktypes` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_tasks_items`;
 CREATE TABLE `glpi_plugin_resources_tasks_items` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_tasks_id` int(11) NOT NULL default '0',
-   `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_tasks_id` int unsigned NOT NULL default '0',
+   `items_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to various table, according to itemtype (id)',
    `itemtype` varchar(100) collate utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_resources_tasks_id`,`itemtype`,`items_id`),
@@ -276,15 +276,15 @@ CREATE TABLE `glpi_plugin_resources_tasks_items` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_checklists`;
 CREATE TABLE `glpi_plugin_resources_checklists` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `entities_id` int(11) NOT NULL default '0',
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `plugin_resources_tasks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
-   `plugin_resources_contracttypes_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
-   `checklist_type` int(11) NOT NULL default '0',
-   `tag` tinyint(1) NOT NULL default '0',
-   `is_checked` tinyint(1) NOT NULL default '0',
+   `entities_id` int unsigned NOT NULL default '0',
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `plugin_resources_tasks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
+   `plugin_resources_contracttypes_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
+   `checklist_type` int unsigned NOT NULL default '0',
+   `tag` tinyint NOT NULL default '0',
+   `is_checked` tinyint NOT NULL default '0',
    `address` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `rank` smallint(6) NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
@@ -298,14 +298,14 @@ CREATE TABLE `glpi_plugin_resources_checklists` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_checklistconfigs`;
 CREATE TABLE `glpi_plugin_resources_checklistconfigs` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `entities_id` int(11) NOT NULL default '0',
-   `tag` tinyint(1) NOT NULL default '0',
+   `entities_id` int unsigned NOT NULL default '0',
+   `tag` tinyint NOT NULL default '0',
    `address` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    `itemtype` varchar(255) collate utf8mb4_unicode_ci  default '',
-   `items` int(11) NOT NULL default '0',
+   `items` int unsigned NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`)
@@ -313,15 +313,15 @@ CREATE TABLE `glpi_plugin_resources_checklistconfigs` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_ticketcategories`;
 CREATE TABLE `glpi_plugin_resources_ticketcategories` (
-   `id` int(11) NOT NULL auto_increment,
-   `ticketcategories_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_ticketcategories (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `ticketcategories_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_ticketcategories (id)',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_profiles`;
 CREATE TABLE `glpi_plugin_resources_profiles` (
-   `id` int(11) NOT NULL auto_increment,
-   `profiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `profiles_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
    `resources` char(1) collate utf8mb4_unicode_ci default NULL,
    `task` char(1) collate utf8mb4_unicode_ci default NULL,
    `checklist` char(1) collate utf8mb4_unicode_ci default NULL,
@@ -339,11 +339,11 @@ CREATE TABLE `glpi_plugin_resources_profiles` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_reportconfigs`;
 CREATE TABLE `glpi_plugin_resources_reportconfigs` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-        `send_report_notif` tinyint(1) NOT NULL default '1',
-        `send_other_notif` tinyint(1) NOT NULL default '0',
-        `send_transfer_notif` tinyint(1) NOT NULL default '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+        `send_report_notif` tinyint NOT NULL default '1',
+        `send_other_notif` tinyint NOT NULL default '0',
+        `send_transfer_notif` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    `information` text collate utf8mb4_unicode_ci,
   PRIMARY KEY  (`id`),
@@ -352,12 +352,12 @@ CREATE TABLE `glpi_plugin_resources_reportconfigs` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcerestings`;
 CREATE TABLE `glpi_plugin_resources_resourcerestings` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `date_begin` timestamp NULL DEFAULT NULL,
    `date_end` timestamp NULL DEFAULT NULL,
-   `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
-   `at_home` tinyint(1) NOT NULL default '0',
+   `locations_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)',
+   `at_home` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
@@ -366,8 +366,8 @@ CREATE TABLE `glpi_plugin_resources_resourcerestings` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceholidays`;
 CREATE TABLE `glpi_plugin_resources_resourceholidays` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
    `date_begin` timestamp NULL DEFAULT NULL,
    `date_end` timestamp NULL DEFAULT NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -377,13 +377,13 @@ CREATE TABLE `glpi_plugin_resources_resourceholidays` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcesituations`;
 CREATE TABLE `glpi_plugin_resources_resourcesituations` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `is_contract_linked` tinyint(1) NOT NULL DEFAULT '0',
+   `is_contract_linked` tinyint NOT NULL DEFAULT '0',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -394,9 +394,9 @@ CREATE TABLE `glpi_plugin_resources_resourcesituations` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contractnatures`;
 CREATE TABLE `glpi_plugin_resources_contractnatures` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -408,14 +408,14 @@ CREATE TABLE `glpi_plugin_resources_contractnatures` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_ranks`;
 CREATE TABLE `glpi_plugin_resources_ranks` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
-   `is_active` tinyint(1) NOT NULL default '0',
+   `plugin_resources_professions_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+   `is_active` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
@@ -429,11 +429,11 @@ CREATE TABLE `glpi_plugin_resources_ranks` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcespecialities`;
 CREATE TABLE `glpi_plugin_resources_resourcespecialities` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
+   `plugin_resources_ranks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -444,9 +444,9 @@ CREATE TABLE `glpi_plugin_resources_resourcespecialities` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_leavingreasons`;
 CREATE TABLE `glpi_plugin_resources_leavingreasons` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -457,15 +457,15 @@ CREATE TABLE `glpi_plugin_resources_leavingreasons` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professions`;
 CREATE TABLE `glpi_plugin_resources_professions` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_professionlines_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professionlines (id)',
-   `plugin_resources_professioncategories_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professioncategories (id)',
-   `is_active` tinyint(1) NOT NULL default '0',
+   `plugin_resources_professionlines_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professionlines (id)',
+   `plugin_resources_professioncategories_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professioncategories (id)',
+   `is_active` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
@@ -480,9 +480,9 @@ CREATE TABLE `glpi_plugin_resources_professions` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professionlines`;
 CREATE TABLE `glpi_plugin_resources_professionlines` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -494,9 +494,9 @@ CREATE TABLE `glpi_plugin_resources_professionlines` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_professioncategories`;
 CREATE TABLE `glpi_plugin_resources_professioncategories` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -508,15 +508,15 @@ CREATE TABLE `glpi_plugin_resources_professioncategories` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employments`;
 CREATE TABLE `glpi_plugin_resources_employments` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
-   `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
-   `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources_ranks (id)',
-   `plugin_resources_employmentstates_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employmentstates (id)',
-   `plugin_resources_employers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+   `plugin_resources_professions_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+   `plugin_resources_ranks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources_ranks (id)',
+   `plugin_resources_employmentstates_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employmentstates (id)',
+   `plugin_resources_employers_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
    `ratio_employment_budget` decimal(10,2) NOT NULL default '0',
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
@@ -536,13 +536,13 @@ CREATE TABLE `glpi_plugin_resources_employments` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_employmentstates`;
 CREATE TABLE `glpi_plugin_resources_employmentstates` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `short_name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `is_active` tinyint(1) NOT NULL default '0',
-   `is_leaving_state` tinyint(1) NOT NULL default '0',
+   `is_active` tinyint NOT NULL default '0',
+   `is_leaving_state` tinyint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -553,17 +553,17 @@ CREATE TABLE `glpi_plugin_resources_employmentstates` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgets`;
 CREATE TABLE `glpi_plugin_resources_budgets` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
-   `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
-   `plugin_resources_budgettypes_id` int(11) NOT NULL default '0'COMMENT 'RELATION to glpi_plugin_resources_budgettypes (id)',
-   `plugin_resources_budgetvolumes_id` int(11) NOT NULL default '0'COMMENT 'RELATION to glpi_plugin_resources_budgetvolumes (id)',
+   `plugin_resources_professions_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+   `plugin_resources_ranks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
+   `plugin_resources_budgettypes_id` int unsigned NOT NULL default '0'COMMENT 'RELATION to glpi_plugin_resources_budgettypes (id)',
+   `plugin_resources_budgetvolumes_id` int unsigned NOT NULL default '0'COMMENT 'RELATION to glpi_plugin_resources_budgetvolumes (id)',
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
-   `volume` int(11) NOT NULL default '0',
+   `volume` int unsigned NOT NULL default '0',
    `date_mod` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -578,12 +578,12 @@ CREATE TABLE `glpi_plugin_resources_budgets` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_costs`;
 CREATE TABLE `glpi_plugin_resources_costs` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `plugin_resources_professions_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
-   `plugin_resources_ranks_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
+   `plugin_resources_professions_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+   `plugin_resources_ranks_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
    `begin_date` timestamp NULL DEFAULT NULL,
    `end_date` timestamp NULL DEFAULT NULL,
    `cost` decimal(10,2) NOT NULL default '0',
@@ -598,9 +598,9 @@ CREATE TABLE `glpi_plugin_resources_costs` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgettypes`;
 CREATE TABLE `glpi_plugin_resources_budgettypes` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -612,9 +612,9 @@ CREATE TABLE `glpi_plugin_resources_budgettypes` (
 --
 DROP TABLE IF EXISTS `glpi_plugin_resources_budgetvolumes`;
 CREATE TABLE `glpi_plugin_resources_budgetvolumes` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
@@ -628,9 +628,9 @@ CREATE TABLE `glpi_plugin_resources_budgetvolumes` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resources_changes`;
 CREATE TABLE `glpi_plugin_resources_resources_changes` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `actions_id` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `actions_id` tinyint NOT NULL DEFAULT '0',
    `itilcategories_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -641,10 +641,10 @@ CREATE TABLE `glpi_plugin_resources_resources_changes` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_notifications`;
 CREATE TABLE `glpi_plugin_resources_notifications` (
-  `id` int(11) NOT NULL auto_increment,
-  `plugin_resources_resources_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+  `id` int unsigned NOT NULL auto_increment,
+  `plugin_resources_resources_id` int unsigned NOT NULL default '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
   `date_mod` timestamp NULL DEFAULT NULL,
-  `users_id` int(11) NOT NULL default '0',
+  `users_id` int unsigned NOT NULL default '0',
   `type` varchar(50) default NULL,
   PRIMARY KEY  (`id`),
   KEY `users_id` (`users_id`),
@@ -653,9 +653,9 @@ CREATE TABLE `glpi_plugin_resources_notifications` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_transferentities`;
 CREATE TABLE `glpi_plugin_resources_transferentities` (
-  `id` int(11) NOT NULL auto_increment,
-  `entities_id` int(11) NOT NULL default '0',
-  `groups_id` int(11) NOT NULL default '0',
+  `id` int unsigned NOT NULL auto_increment,
+  `entities_id` int unsigned NOT NULL default '0',
+  `groups_id` int unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `entities_id` (`entities_id`),
   KEY `groups_id` (`groups_id`)
@@ -663,9 +663,9 @@ CREATE TABLE `glpi_plugin_resources_transferentities` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcebadges`;
 CREATE TABLE `glpi_plugin_resources_resourcebadges` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `plugin_metademands_metademands_id` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `plugin_metademands_metademands_id` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
@@ -673,10 +673,10 @@ CREATE TABLE `glpi_plugin_resources_resourcebadges` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_confighabilitations`;
 CREATE TABLE `glpi_plugin_resources_confighabilitations` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `action` tinyint(1) NOT NULL DEFAULT '0',
-   `plugin_metademands_metademands_id` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `action` tinyint NOT NULL DEFAULT '0',
+   `plugin_metademands_metademands_id` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
@@ -684,13 +684,13 @@ CREATE TABLE `glpi_plugin_resources_confighabilitations` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_habilitationlevels`;
 CREATE TABLE `glpi_plugin_resources_habilitationlevels` (
-   `id` int(11) NOT NULL AUTO_INCREMENT,
-   `entities_id` int(11) NOT NULL DEFAULT '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL AUTO_INCREMENT,
+   `entities_id` int unsigned NOT NULL DEFAULT '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
    `comment` text COLLATE utf8mb4_unicode_ci,
-   `number` tinyint(1) NOT NULL DEFAULT '0',
-   `is_mandatory_creating_resource` tinyint(1) NOT NULL DEFAULT '0',
+   `number` tinyint NOT NULL DEFAULT '0',
+   `is_mandatory_creating_resource` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`),
@@ -699,15 +699,15 @@ CREATE TABLE `glpi_plugin_resources_habilitationlevels` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_habilitations`;
 CREATE TABLE `glpi_plugin_resources_habilitations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `entities_id` int(11) NOT NULL DEFAULT '0',
-  `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `entities_id` int unsigned NOT NULL DEFAULT '0',
+  `is_recursive` tinyint NOT NULL DEFAULT '0',
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `plugin_resources_habilitations_id` int(11) NOT NULL default '0',
-  `plugin_resources_habilitationlevels_id` int(11) NOT NULL default '0',
+  `plugin_resources_habilitations_id` int unsigned NOT NULL default '0',
+  `plugin_resources_habilitationlevels_id` int unsigned NOT NULL default '0',
   `completename` text COLLATE utf8mb4_unicode_ci,
   `comment` text COLLATE utf8mb4_unicode_ci,
-  `level` int(11) NOT NULL DEFAULT '0',
+  `level` int unsigned NOT NULL DEFAULT '0',
   `ancestors_cache` longtext COLLATE utf8mb4_unicode_ci,
   `sons_cache` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY  (`id`),
@@ -720,9 +720,9 @@ CREATE TABLE `glpi_plugin_resources_habilitations` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
 CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
-  `id` int(11) NOT NULL auto_increment,
-  `plugin_resources_resources_id` int(11) NOT NULL default '0',
-  `plugin_resources_habilitations_id` tinyint(1) NOT NULL DEFAULT '0',
+  `id` int unsigned NOT NULL auto_increment,
+  `plugin_resources_resources_id` int unsigned NOT NULL default '0',
+  `plugin_resources_habilitations_id` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
   KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
@@ -730,23 +730,23 @@ CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_configs`;
 CREATE TABLE `glpi_plugin_resources_configs` (
-   `id` int(11) NOT NULL auto_increment,
-   `security_display` tinyint(1) NOT NULL default '0',
-   `security_compliance` tinyint(1) NOT NULL default '0',
-   `import_external_datas` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `security_display` tinyint NOT NULL default '0',
+   `security_compliance` tinyint NOT NULL default '0',
+   `import_external_datas` tinyint NOT NULL DEFAULT '0',
    `resource_manager` varchar(255) NOT NULL DEFAULT '',
    `sales_manager` varchar(255) NOT NULL DEFAULT '',
-   `create_ticket_departure` tinyint(1) NOT NULL default '0',
-   `categories_id` int(11) NOT NULL default '0',
-   `mandatory_checklist` tinyint(1) NOT NULL default '0',
-   `mandatory_adcreation` tinyint(1) NOT NULL default '0',
+   `create_ticket_departure` tinyint NOT NULL default '0',
+   `categories_id` int unsigned NOT NULL default '0',
+   `mandatory_checklist` tinyint NOT NULL default '0',
+   `mandatory_adcreation` tinyint NOT NULL default '0',
    `plugin_resources_resourcetemplates_id` INT(11) NULL DEFAULT '0',
    `plugin_resources_resourcestates_id_arrival` INT(11) NULL DEFAULT '0',
    `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
    `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
-   `allow_without_contract`  int(11) NOT NULL default '0',
-   `use_service_department_ad` tinyint(1) NOT NULL default '0',
-   `use_secondary_service` tinyint(1) NOT NULL default '0',
+   `allow_without_contract`  int unsigned NOT NULL default '0',
+   `use_service_department_ad` tinyint NOT NULL default '0',
+   `use_secondary_service` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
@@ -754,11 +754,11 @@ INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
    `comment` text COLLATE utf8mb4_unicode_ci,
-   `is_active` tinyint(1) NOT NULL default '0',
-   `is_deleted` tinyint(1) NOT NULL default '0',
+   `is_active` tinyint NOT NULL default '0',
+   `is_deleted` tinyint NOT NULL default '0',
    `date_creation` timestamp NULL DEFAULT NULL,
    `date_mod` timestamp NULL DEFAULT NULL,
    PRIMARY KEY  (`id`)
@@ -766,47 +766,47 @@ CREATE TABLE `glpi_plugin_resources_imports` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importcolumns`;
 CREATE TABLE `glpi_plugin_resources_importcolumns` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
    `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-   `resource_column` int(11) NOT NULL,
-   `is_identifier` tinyint(1) NOT NULL default '0',
-   `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
+   `resource_column` int unsigned NOT NULL,
+   `is_identifier` tinyint NOT NULL default '0',
+   `plugin_resources_imports_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importresources`;
 CREATE TABLE `glpi_plugin_resources_importresources` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `date_creation` timestamp NULL DEFAULT NULL,
-   `plugin_resources_imports_id` int(11) NOT NULL DEFAULT '0',
+   `plugin_resources_imports_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_importresourcedatas`;
 CREATE TABLE `glpi_plugin_resources_importresourcedatas`(
-  `id` int(11) NOT NULL auto_increment,
+  `id` int unsigned NOT NULL auto_increment,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8mb4_unicode_ci NULL,
-  `plugin_resources_importresources_id` int(11) NOT NULL DEFAULT '0',
-  `plugin_resources_importcolumns_id` int(11) NOT NULL DEFAULT '0',
+  `plugin_resources_importresources_id` int unsigned NOT NULL DEFAULT '0',
+  `plugin_resources_importcolumns_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_resourceimports`;
 CREATE TABLE `glpi_plugin_resources_resourceimports` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
    `value` varchar(255) COLLATE utf8mb4_unicode_ci NULL,
-   `plugin_resources_resources_id` int(11) NOT NULL DEFAULT '0',
+   `plugin_resources_resources_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_linkads`;
 CREATE TABLE `glpi_plugin_resources_linkads` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_resources_id` int(11) NOT NULL default '0',
-   `auth_id` int(11) NOT NULL default '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_resources_id` int unsigned NOT NULL default '0',
+   `auth_id` int unsigned NOT NULL default '0',
    `login` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `mail` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `phone` varchar(255) collate utf8mb4_unicode_ci default NULL,
@@ -814,7 +814,7 @@ CREATE TABLE `glpi_plugin_resources_linkads` (
    `service` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `location` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `cellphone` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `action_done` tinyint(1) NOT NULL default '0',
+   `action_done` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`login`),
    UNIQUE KEY `unicity2` (`plugin_resources_resources_id`),
@@ -824,9 +824,9 @@ CREATE TABLE `glpi_plugin_resources_linkads` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_linkmetademands`;
 CREATE TABLE `glpi_plugin_resources_linkmetademands` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_metademands_fields_id` int(11) NOT NULL default '0',
-   `plugin_metademands_metademands_id` int(11) NOT NULL default '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_metademands_fields_id` int unsigned NOT NULL default '0',
+   `plugin_metademands_metademands_id` int unsigned NOT NULL default '0',
    `check_value` TEXT collate utf8mb4_unicode_ci default NULL,
    `checklist_in` TEXT collate utf8mb4_unicode_ci default NULL,
    `checklist_out` TEXT collate utf8mb4_unicode_ci default NULL,
@@ -839,8 +839,8 @@ CREATE TABLE `glpi_plugin_resources_linkmetademands` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_adconfigs`;
 CREATE TABLE `glpi_plugin_resources_adconfigs` (
-   `id` int(11) NOT NULL auto_increment,
-   `auth_id` int(11) NOT NULL default '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `auth_id` int unsigned NOT NULL default '0',
    `login` varchar(255) collate utf8mb4_unicode_ci default '',
    `password` varchar(255) collate utf8mb4_unicode_ci default '',
    `creation_categories_id` TEXT NOT NULL,
@@ -861,9 +861,9 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `roleAD` varchar(255) collate utf8mb4_unicode_ci default '',
    `serviceAD` varchar(255) collate utf8mb4_unicode_ci default '',
    `locationAD` varchar(255) collate utf8mb4_unicode_ci default '',
-   `first_form`  int(11) NOT NULL default '0',
-   `second_form`  int(11) NOT NULL default '0',
-   `mail_prefix` int(11) NOT NULL default '0',
+   `first_form`  int unsigned NOT NULL default '0',
+   `second_form`  int unsigned NOT NULL default '0',
+   `mail_prefix` int unsigned NOT NULL default '0',
    `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -871,9 +871,9 @@ INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','','','','','','','
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
 CREATE TABLE `glpi_plugin_resources_roles` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -884,9 +884,9 @@ CREATE TABLE `glpi_plugin_resources_roles` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_functions`;
 CREATE TABLE `glpi_plugin_resources_functions` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -897,13 +897,13 @@ CREATE TABLE `glpi_plugin_resources_functions` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_teams`;
 CREATE TABLE `glpi_plugin_resources_teams` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `code` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `users_id` int(11) NOT NULL default '0',
-   `users_id_substitute` int(11) NOT NULL default '0',
+   `users_id` int unsigned NOT NULL default '0',
+   `users_id_substitute` int unsigned NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -913,9 +913,9 @@ CREATE TABLE `glpi_plugin_resources_teams` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_services`;
 CREATE TABLE `glpi_plugin_resources_services` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `entities_id` int unsigned NOT NULL default '0',
+   `is_recursive` tinyint NOT NULL DEFAULT '0',
    `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -926,33 +926,33 @@ CREATE TABLE `glpi_plugin_resources_services` (
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles_services`;
 CREATE TABLE `glpi_plugin_resources_roles_services` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_roles_id` int(11) NOT NULL default '0',
-   `plugin_resources_services_id` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_roles_id` int unsigned NOT NULL default '0',
+   `plugin_resources_services_id` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_departments_services`;
 CREATE TABLE `glpi_plugin_resources_departments_services` (
-   `id` int(11) NOT NULL auto_increment,
-   `plugin_resources_departments_id` int(11) NOT NULL default '0',
-   `plugin_resources_services_id` tinyint(1) NOT NULL DEFAULT '0',
+   `id` int unsigned NOT NULL auto_increment,
+   `plugin_resources_departments_id` int unsigned NOT NULL default '0',
+   `plugin_resources_services_id` tinyint NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_contracttypeprofiles`;
 CREATE TABLE `glpi_plugin_resources_contracttypeprofiles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `plugin_resources_contracttypes_id` varchar(255) NOT NULL default '0',
-  `profiles_id` int(11) NOT NULL DEFAULT '0',
+  `profiles_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_actionprofiles`;
 CREATE TABLE `glpi_plugin_resources_actionprofiles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `actions_id` varchar(255) NOT NULL default '0',
-  `profiles_id` int(11) NOT NULL DEFAULT '0',
+  `profiles_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
