@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-31 13:24+0000\n"
+"POT-Creation-Date: 2022-01-03 09:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,7 +326,7 @@ msgid_plural "Departments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/adconfig.class.php:309 inc/checklist.class.php:1104
+#: inc/adconfig.class.php:309 inc/checklist.class.php:1127
 #: inc/dashboard.class.php:151 inc/directory.class.php:215
 #: inc/linkad.class.php:646 inc/notificationtargetresource.class.php:400
 #: inc/notificationtargetresource.class.php:479
@@ -503,38 +503,42 @@ msgstr ""
 msgid "Reset the checklist"
 msgstr ""
 
-#: inc/checklist.class.php:775 inc/checklist.class.php:1403
+#: inc/checklist.class.php:775 inc/checklist.class.php:1426
 msgid "Linked task"
 msgstr ""
 
 #: inc/checklist.class.php:901
-msgid "Modify state"
+msgid "Mark as finished"
 msgstr ""
 
 #: inc/checklist.class.php:905
-msgid "Link a task"
+msgid "Mark as unfinished"
 msgstr ""
 
 #: inc/checklist.class.php:909
+msgid "Link a task"
+msgstr ""
+
+#: inc/checklist.class.php:913
 msgid "Add ticket"
 msgstr ""
 
-#: inc/checklist.class.php:968 inc/checklist.class.php:1011
-#: inc/checklist.class.php:1050
+#: inc/checklist.class.php:972 inc/checklist.class.php:992
+#: inc/checklist.class.php:1034 inc/checklist.class.php:1073
 msgid "The checklist is finished"
 msgstr ""
 
-#: inc/checklist.class.php:1097 inc/dashboard.class.php:63
+#: inc/checklist.class.php:1120 inc/dashboard.class.php:63
 #: inc/dashboard.class.php:158 inc/notificationtargetresource.class.php:466
 msgid "Leaving resource - checklist needs to verificated"
 msgstr ""
 
-#: inc/checklist.class.php:1099 inc/dashboard.class.php:60
+#: inc/checklist.class.php:1122 inc/dashboard.class.php:60
 #: inc/dashboard.class.php:119 inc/notificationtargetresource.class.php:462
 msgid "New resource - checklist needs to verificated"
 msgstr ""
 
-#: inc/checklist.class.php:1106 inc/dashboard.class.php:112
+#: inc/checklist.class.php:1129 inc/dashboard.class.php:112
 #: inc/directory.class.php:207 inc/notificationtargetresource.class.php:399
 #: inc/notificationtargetresource.class.php:478
 #: inc/notificationtargetresource.class.php:616
@@ -556,19 +560,19 @@ msgstr ""
 msgid "Arrival date"
 msgstr ""
 
-#: inc/checklist.class.php:1113 inc/notificationtargetresource.class.php:468
+#: inc/checklist.class.php:1136 inc/notificationtargetresource.class.php:468
 msgid "Checklist needs to verificated"
 msgstr ""
 
-#: inc/checklist.class.php:1203 inc/checklist.class.php:1315
+#: inc/checklist.class.php:1226 inc/checklist.class.php:1338
 msgid "Checklists Verification"
 msgstr ""
 
-#: inc/checklist.class.php:1403
+#: inc/checklist.class.php:1426
 msgid "Checked"
 msgstr ""
 
-#: inc/checklist.class.php:1425
+#: inc/checklist.class.php:1448
 msgid "No checklist found"
 msgstr ""
 
