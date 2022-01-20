@@ -644,6 +644,10 @@ function plugin_resources_uninstall() {
       "glpi_plugin_resources_services",
       "glpi_plugin_resources_roles_services",
       "glpi_plugin_resources_departments_services",
+      "glpi_plugin_resources_linkads",
+      "glpi_plugin_resources_linkmetademands",
+      "glpi_plugin_resources_contracttypeprofiles",
+      "glpi_plugin_resources_actionprofiles"
    ];
 
    foreach ($tables as $table) {
