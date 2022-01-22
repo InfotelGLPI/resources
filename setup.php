@@ -143,7 +143,7 @@ function plugin_init_resources() {
       // Resource menu
       if (Session::haveRight("plugin_resources", READ)
           || Session::haveright("plugin_resources_employee", UPDATE)) {
-         $PLUGIN_HOOKS['redirect_page']['resources'] = "front/resource.form.php";
+         $PLUGIN_HOOKS['redirect_page']['resources'] = PLUGIN_RESOURCES_NOTFULL_DIR."/front/resource.form.php";
       }
 
       //
