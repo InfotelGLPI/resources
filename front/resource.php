@@ -52,7 +52,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
       //Have not right to see all resources
       echo "<div align='center'>";
 
-      echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='btn btn-primary' title='" . __('View by contract type', 'resources') . "' >";
+      echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='submit btn btn-primary' title='" . __('View by contract type', 'resources') . "' >";
       echo __('View by contract type', 'resources');
       echo "</a>";
       echo "</div><br>";

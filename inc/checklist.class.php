@@ -665,7 +665,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          Ajax::updateItemJsCode("viewchecklisttask" . "$rand", PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php", $params, false);
          echo "};";
          echo "</script>\n";
-         echo "<a class='btn btn-primary' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
+         echo "<a class='submit btn btn-primary' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
          echo "</div>";
       }
 

@@ -525,9 +525,9 @@ class PluginResourcesChoice extends CommonDBTM {
       echo "</div>\n";
       echo "<div id='viewaccept$items_id$rand' style='display:none;' class='center'>";
       echo "<p><input type='submit' name='updateneedcomment[" . $items_id . "]' value=\"" .
-           _sx('button', 'Update') . "\" class='btn btn-primary'>";
+           _sx('button', 'Update') . "\" class='submit btn btn-primary'>";
       echo "&nbsp;<input type='button' onclick=\"hideForm$items_id();\" value=\"" .
-           _sx('button', 'Cancel') . "\" class='btn btn-primary'></p>";
+           _sx('button', 'Cancel') . "\" class='submit btn btn-primary'></p>";
       echo "</div>";
       echo "<script type='text/javascript' >\n";
       echo "function hideForm$items_id() {\n";

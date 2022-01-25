@@ -59,6 +59,9 @@ if ($plugin->isActivated("badges")) {
    } else if (isset($_GET['menu'])) {
       if ($badge->canView() || Session::haveRight("config", UPDATE)) {
          $badge->showMenu();
+      } else {
+         echo "<div class='alert alert-important alert-warning d-flex'>";
+         echo "<b>" . __('You need rights into badges plugin', 'resources') . "</b></div>";
       }
 
    } else if (isset($_GET['config'])) {
