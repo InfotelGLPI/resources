@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-22 15:51+0000\n"
+"POT-Creation-Date: 2022-01-25 08:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,13 +166,13 @@ msgid "Please activate the plugin"
 msgstr ""
 
 #: front/confighabilitation.form.php:74 front/confighabilitation.form.php:92
-#: front/confighabilitation.form.php:111 front/resourcebadge.form.php:72
-#: front/resourcebadge.form.php:90
+#: front/confighabilitation.form.php:111 front/resourcebadge.form.php:75
+#: front/resourcebadge.form.php:93
 msgid "Please activate the plugin metademand"
 msgstr ""
 
 #: front/confighabilitation.form.php:85 front/confighabilitation.form.php:105
-#: front/resourcebadge.form.php:83
+#: front/resourcebadge.form.php:86
 msgid "No advanced request found"
 msgstr ""
 
@@ -258,7 +258,11 @@ msgstr ""
 msgid "Without contract"
 msgstr ""
 
-#: front/resourcebadge.form.php:117
+#: front/resourcebadge.form.php:64
+msgid "You need rights into badges plugin"
+msgstr ""
+
+#: front/resourcebadge.form.php:120
 msgid "Please activate the plugin badge"
 msgstr ""
 
