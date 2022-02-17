@@ -110,6 +110,7 @@ function plugin_init_resources() {
       if ((Session::haveRight("plugin_resources", READ)
            || Session::haveright("plugin_resources_employee", UPDATE))) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_NOTFULL_DIR.'/front/menu.php';
+         $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['resources'] = PluginResourcesResource::getIcon();
       }
 
       if (Session::haveright("plugin_resources_checklist", READ)
