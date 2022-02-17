@@ -286,7 +286,7 @@ CREATE TABLE `glpi_plugin_resources_checklists` (
    `tag` tinyint NOT NULL default '0',
    `is_checked` tinyint NOT NULL default '0',
    `address` varchar(255) collate utf8mb4_unicode_ci default NULL,
-   `rank` smallint(6) NOT NULL default '0',
+   `rank` smallint NOT NULL default '0',
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
@@ -630,7 +630,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_resources_changes`;
 CREATE TABLE `glpi_plugin_resources_resources_changes` (
    `id` int unsigned NOT NULL auto_increment,
    `entities_id` int unsigned NOT NULL default '0',
-   `actions_id` tinyint NOT NULL DEFAULT '0',
+   `actions_id` int unsigned NOT NULL DEFAULT '0',
    `itilcategories_id` varchar(255) collate utf8mb4_unicode_ci default NULL,
    `comment` text collate utf8mb4_unicode_ci,
    PRIMARY KEY  (`id`),
@@ -665,7 +665,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_resourcebadges`;
 CREATE TABLE `glpi_plugin_resources_resourcebadges` (
    `id` int unsigned NOT NULL auto_increment,
    `entities_id` int unsigned NOT NULL default '0',
-   `plugin_metademands_metademands_id` tinyint NOT NULL DEFAULT '0',
+   `plugin_metademands_metademands_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
@@ -676,7 +676,7 @@ CREATE TABLE `glpi_plugin_resources_confighabilitations` (
    `id` int unsigned NOT NULL auto_increment,
    `entities_id` int unsigned NOT NULL default '0',
    `action` tinyint NOT NULL DEFAULT '0',
-   `plugin_metademands_metademands_id` tinyint NOT NULL DEFAULT '0',
+   `plugin_metademands_metademands_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`),
    KEY `entities_id` (`entities_id`),
    KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
@@ -722,7 +722,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_resourcehabilitations`;
 CREATE TABLE `glpi_plugin_resources_resourcehabilitations` (
   `id` int unsigned NOT NULL auto_increment,
   `plugin_resources_resources_id` int unsigned NOT NULL default '0',
-  `plugin_resources_habilitations_id` tinyint NOT NULL DEFAULT '0',
+  `plugin_resources_habilitations_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
   KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
@@ -740,10 +740,10 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `categories_id` int unsigned NOT NULL default '0',
    `mandatory_checklist` tinyint NOT NULL default '0',
    `mandatory_adcreation` tinyint NOT NULL default '0',
-   `plugin_resources_resourcetemplates_id` INT(11) NULL DEFAULT '0',
-   `plugin_resources_resourcestates_id_arrival` INT(11) NULL DEFAULT '0',
-   `plugin_resources_resourcestates_id_departure` INT(11) NULL DEFAULT '0',
-   `reaffect_checklist_change` TINYINT(1) NOT NULL DEFAULT '1',
+   `plugin_resources_resourcetemplates_id` int unsigned NULL DEFAULT '0',
+   `plugin_resources_resourcestates_id_arrival` int unsigned NULL DEFAULT '0',
+   `plugin_resources_resourcestates_id_departure` int unsigned NULL DEFAULT '0',
+   `reaffect_checklist_change` tinyint NOT NULL DEFAULT '1',
    `allow_without_contract`  int unsigned NOT NULL default '0',
    `use_service_department_ad` tinyint NOT NULL default '0',
    `use_secondary_service` tinyint NOT NULL default '0',
@@ -928,7 +928,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_roles_services`;
 CREATE TABLE `glpi_plugin_resources_roles_services` (
    `id` int unsigned NOT NULL auto_increment,
    `plugin_resources_roles_id` int unsigned NOT NULL default '0',
-   `plugin_resources_services_id` tinyint NOT NULL DEFAULT '0',
+   `plugin_resources_services_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
@@ -936,7 +936,7 @@ DROP TABLE IF EXISTS `glpi_plugin_resources_departments_services`;
 CREATE TABLE `glpi_plugin_resources_departments_services` (
    `id` int unsigned NOT NULL auto_increment,
    `plugin_resources_departments_id` int unsigned NOT NULL default '0',
-   `plugin_resources_services_id` tinyint NOT NULL DEFAULT '0',
+   `plugin_resources_services_id` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
