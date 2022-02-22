@@ -306,6 +306,7 @@ CREATE TABLE `glpi_plugin_resources_checklistconfigs` (
    `comment` text collate utf8_unicode_ci,
    `itemtype` varchar(255) collate utf8_unicode_ci  default '',
    `items` int(11) NOT NULL default '0',
+   `use_meta_for_changes` int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
    KEY `entities_id` (`entities_id`)

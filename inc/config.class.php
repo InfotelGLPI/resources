@@ -269,6 +269,20 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
+         echo __('Use metademand for resources changes', 'resources');
+         echo "</td>";
+         echo "<td>";
+
+         $meta = new PluginMetademandsMetademand();
+         $options['empty_value'] =true;
+         $data = $meta->listMetademands(false,$options);
+         echo Dropdown::showFromArray('use_meta_for_changes', $data, ['width' => 250, 'display' => false,'value' => $this->fields['use_meta_for_changes']]);
+
+         echo "</td>";
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
          echo __('Use service and departement from AD', 'resources');
          echo "</td>";
          echo "<td>";

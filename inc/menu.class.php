@@ -62,7 +62,14 @@ class PluginResourcesMenu extends CommonDBTM {
 
          //Add a change
          echo "<td class='tab_td_menu center' colspan='2'  width='200'>";
-         echo "<a href=\"./resource.change.php\">";
+         $config = new PluginResourcesConfig();
+         if (empty($config->fields["use_meta_for_changes"])) {
+            echo "<a href=\"./resource.change.php\">";
+         } else{
+            $metademand = new PluginMetademandsMetademand();
+            $url = $metademand->getURL($config->fields["use_meta_for_changes"]);
+            echo "<a href=\"".$url."\">";
+         }
          echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/recap.png' alt='" . __('Declare a change', 'resources') . "'>";
          echo "<br>" . __('Declare a change', 'resources') . "</a>";
          echo "</td>";
