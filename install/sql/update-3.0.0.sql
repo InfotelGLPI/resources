@@ -19,3 +19,4 @@ UPDATE `glpi_plugin_resources_resources` SET `plugin_resources_teams_id` = '0' W
 UPDATE `glpi_plugin_resources_resources` SET `users_id_sales` = '0' WHERE `users_id_sales` = '-1';
 
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_changes` int(11) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_leave` int(11) NOT NULL default '0';

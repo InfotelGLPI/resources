@@ -61,7 +61,7 @@ class PluginResourcesMenu extends CommonDBTM {
          //Add a change
          echo "<td class=' center' colspan='2'  width='200'>";
          $config = new PluginResourcesConfig();
-         if (empty($config->fields["use_meta_for_changes"])) {
+         if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
             echo "<a href=\"./resource.change.php\">";
          } else {
             $metademand = new PluginMetademandsMetademand();
@@ -74,7 +74,13 @@ class PluginResourcesMenu extends CommonDBTM {
 
          //Remove resources
          echo "<td class=' center' colspan='2'  width='200'>";
-         echo "<a href=\"./resource.remove.php\">";
+         if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
+            echo "<a href=\"./resource.remove.php\">";
+         } else {
+            $metademand = new PluginMetademandsMetademand();
+            $url        = $metademand->getURL($config->fields["use_meta_for_leave"]);
+            echo "<a href=\"" . $url . "\">";
+         }
          echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/removeresource.png' alt='" . __('Declare a departure', 'resources') . "'>";
          echo "<br>" . __('Declare a departure', 'resources') . "</a>";
          echo "</td>";

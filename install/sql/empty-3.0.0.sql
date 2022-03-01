@@ -748,6 +748,7 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `use_service_department_ad` tinyint NOT NULL default '0',
    `use_secondary_service` tinyint NOT NULL default '0',
    `use_meta_for_changes` int(11) NOT NULL default '0',
+   `use_meta_for_leave` int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
