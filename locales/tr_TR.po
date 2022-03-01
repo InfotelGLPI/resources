@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-22 13:21+0000\n"
+"POT-Creation-Date: 2022-03-01 14:47+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -459,7 +459,7 @@ msgstr[1] "Bütçe hacmi türleri"
 msgid "Code"
 msgstr "Kod"
 
-#: inc/checklist.class.php:54 inc/menu.class.php:376 inc/profile.class.php:254
+#: inc/checklist.class.php:54 inc/menu.class.php:382 inc/profile.class.php:254
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Kontrol listesi"
@@ -762,15 +762,19 @@ msgstr "Ayrılmış kişilerin kaynak durumu"
 msgid "Change checklists for resources during a contract change"
 msgstr "Sözleşme değişikliğinde kaynak kontrol listeleri değiştirilsin"
 
-#: inc/config.class.php:272
+#: inc/config.class.php:274
 msgid "Use metademand for resources changes"
 msgstr "Kaynak değişiklikleri için metademand kullanılsın"
 
-#: inc/config.class.php:286
+#: inc/config.class.php:288
+msgid "Use metademand for leaving resources"
+msgstr "Kaynakların bırakılması için metademand kullanılsın"
+
+#: inc/config.class.php:303
 msgid "Use service and departement from AD"
 msgstr "Hizmet ve bölümler aktif dizin üzerinden alınsın"
 
-#: inc/config.class.php:296
+#: inc/config.class.php:313
 msgid "Use secondaries services"
 msgstr "İkincil hizmetler kullanılsın"
 
@@ -864,7 +868,7 @@ msgid_plural "Links Department/Service"
 msgstr[0] "Bölüm/hizmet bağlantısı"
 msgstr[1] "Bölüm/hizmet bağlantıları"
 
-#: inc/directory.class.php:53 inc/menu.class.php:346
+#: inc/directory.class.php:53 inc/menu.class.php:352
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Klasör"
@@ -1051,7 +1055,7 @@ msgstr "Kaynak dosyaları içe aktarmaları"
 msgid "The file does not match any template"
 msgstr "Dosya herhangi bir kalıp ile eşleşmiyor"
 
-#: inc/importresource.class.php:664 inc/menu.class.php:284
+#: inc/importresource.class.php:664 inc/menu.class.php:290
 msgid "Update GLPI Resources"
 msgstr "GLPI kaynaklarını güncelle"
 
@@ -1288,16 +1292,16 @@ msgstr "Geliş bildirin"
 msgid "Declare a change"
 msgstr "Değişiklik bildirin"
 
-#: inc/menu.class.php:78 inc/menu.class.php:79 inc/resource.class.php:3805
+#: inc/menu.class.php:84 inc/menu.class.php:85 inc/resource.class.php:3805
 #: inc/resource.class.php:3863
 msgid "Declare a departure"
 msgstr "Ayrılış bildirin"
 
-#: inc/menu.class.php:90
+#: inc/menu.class.php:96
 msgid "Others declarations"
 msgstr "Diğer bildirimler"
 
-#: inc/menu.class.php:122 inc/menu.class.php:123
+#: inc/menu.class.php:128 inc/menu.class.php:129
 #: inc/notificationtargetresource.class.php:973
 #: inc/notificationtargetresource.class.php:1349 inc/profile.class.php:270
 #: inc/resourceresting.class.php:272
@@ -1306,14 +1310,14 @@ msgid_plural "Non contract periods management"
 msgstr[0] "Sözleşmesiz dönem yönetimi"
 msgstr[1] "Sözleşmesiz dönemler yönetimi"
 
-#: inc/menu.class.php:131 inc/menu.class.php:132
+#: inc/menu.class.php:137 inc/menu.class.php:138
 #: inc/notificationtargetresource.class.php:1014
 #: inc/notificationtargetresource.class.php:1359
 #: inc/resourceholiday.class.php:270
 msgid "Forced holiday management"
 msgstr "Zorunlu tatil yönetimi"
 
-#: inc/menu.class.php:149 inc/menu.class.php:150
+#: inc/menu.class.php:155 inc/menu.class.php:156
 #: inc/resourcebadge.class.php:52 inc/resourcebadge.class.php:214
 #: inc/resourcebadge.class.php:259
 msgid "Badge management"
@@ -1321,75 +1325,75 @@ msgid_plural "Badges management"
 msgstr[0] "Yaka kartı yönetimi"
 msgstr[1] "Yaka kartları yönetimi"
 
-#: inc/menu.class.php:164
+#: inc/menu.class.php:170
 msgid "Others actions"
 msgstr "Diğer işlemler"
 
-#: inc/menu.class.php:182 inc/menu.class.php:183 inc/menu.class.php:388
+#: inc/menu.class.php:188 inc/menu.class.php:189 inc/menu.class.php:394
 msgid "View my resources as a commercial"
 msgstr "Kaynaklarım ticari olarak görüntülensin"
 
-#: inc/menu.class.php:189 inc/menu.class.php:190
+#: inc/menu.class.php:195 inc/menu.class.php:196
 msgid "Search resources"
 msgstr "Kaynak arayın"
 
-#: inc/menu.class.php:214
+#: inc/menu.class.php:220
 msgid "Employments / budgets management"
 msgstr "İş / bütçe yönetimi"
 
-#: inc/menu.class.php:228 inc/menu.class.php:229
+#: inc/menu.class.php:234 inc/menu.class.php:235
 msgid "Declare an employment"
 msgstr "Bir iş bildirin"
 
-#: inc/menu.class.php:237 inc/menu.class.php:238 inc/menu.class.php:360
+#: inc/menu.class.php:243 inc/menu.class.php:244 inc/menu.class.php:366
 msgid "Employment management"
 msgstr "İş yönetimi"
 
-#: inc/menu.class.php:247 inc/menu.class.php:248 inc/menu.class.php:366
+#: inc/menu.class.php:253 inc/menu.class.php:254 inc/menu.class.php:372
 msgid "Budget management"
 msgstr "Bütçe yönetimi"
 
-#: inc/menu.class.php:258 inc/menu.class.php:259 inc/menu.class.php:361
+#: inc/menu.class.php:264 inc/menu.class.php:265 inc/menu.class.php:367
 msgid "List Employments / Resources"
 msgstr "İş / kaynak listesi"
 
-#: inc/menu.class.php:275
+#: inc/menu.class.php:281
 msgid "Import resources"
 msgstr "İçe aktarma kaynakları"
 
-#: inc/menu.class.php:290
+#: inc/menu.class.php:296
 msgid "Verify CSV file"
 msgstr "CSV dosyasını doğrula"
 
-#: inc/menu.class.php:296
+#: inc/menu.class.php:302
 msgid "Verify GLPI resources"
 msgstr "GLPI kaynaklarını doğrula"
 
-#: inc/menu.class.php:306
+#: inc/menu.class.php:312
 msgid "Configure Imports"
 msgstr "İçe aktarmaları yapılandır"
 
-#: inc/menu.class.php:312
+#: inc/menu.class.php:318
 msgid "Purge imported resources"
 msgstr "İçe aktarılmış kaynakları sil"
 
-#: inc/menu.class.php:350 inc/resourceresting.class.php:298
+#: inc/menu.class.php:356 inc/resourceresting.class.php:298
 #: inc/resourceresting.class.php:299 inc/resourceresting.class.php:416
 #: inc/resourceresting.class.php:515 inc/resourceresting.class.php:1345
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: inc/menu.class.php:355 inc/resourceholiday.class.php:286
+#: inc/menu.class.php:361 inc/resourceholiday.class.php:286
 #: inc/resourceholiday.class.php:287 inc/resourceholiday.class.php:382
 #: inc/resourceholiday.class.php:1165
 msgid "List of forced holidays"
 msgstr "Zorunlu tatil günleri"
 
-#: inc/menu.class.php:371 inc/taskplanning.class.php:53
+#: inc/menu.class.php:377 inc/taskplanning.class.php:53
 msgid "Tasks list"
 msgstr "Görev listesi"
 
-#: inc/menu.class.php:392
+#: inc/menu.class.php:398
 msgid "Import configuration"
 msgstr "İçe aktarma yapılandırması"
 
