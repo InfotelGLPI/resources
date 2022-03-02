@@ -295,6 +295,17 @@ class PluginResourcesConfig extends CommonDBTM {
 
             echo "</td>";
             echo "</tr>";
+
+
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Remove habilitation when update resource', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("remove_habilitation_on_update",$this->fields["remove_habilitation_on_update"]);
+            echo "</td>";
+            echo "</tr>";
          }
 
          echo "<tr class='tab_bg_1'>";

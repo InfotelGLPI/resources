@@ -90,6 +90,7 @@ ALTER TABLE `glpi_plugin_resources_configs` ADD `use_service_department_ad` tiny
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_secondary_service` tinyint(1) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_changes` int(11) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_leave` int(11) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `remove_habilitation_on_update` int(11) NOT NULL default '0';
 
 ALTER TABLE `glpi_plugin_resources_resources` ADD `secondary_services` varchar(255) NOT NULL default '';
 ALTER TABLE `glpi_plugin_resources_resources` ADD `gender` varchar(3) NOT NULL default '';
