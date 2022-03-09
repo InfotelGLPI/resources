@@ -296,8 +296,6 @@ class PluginResourcesConfig extends CommonDBTM {
             echo "</td>";
             echo "</tr>";
 
-
-
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
             echo __('Remove habilitation when update resource', 'resources');
