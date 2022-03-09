@@ -750,6 +750,7 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `use_meta_for_changes` int(11) NOT NULL default '0',
    `use_meta_for_leave` int(11) NOT NULL default '0',
    `remove_habilitation_on_update` int(11) NOT NULL default '0',
+   `display_habilitations_txt` int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

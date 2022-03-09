@@ -304,6 +304,15 @@ class PluginResourcesConfig extends CommonDBTM {
             Dropdown::showYesNo("remove_habilitation_on_update",$this->fields["remove_habilitation_on_update"]);
             echo "</td>";
             echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Display habilitation resource with dropdown', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("display_habilitations_txt",$this->fields["display_habilitations_txt"]);
+            echo "</td>";
+            echo "</tr>";
          }
 
          echo "<tr class='tab_bg_1'>";
