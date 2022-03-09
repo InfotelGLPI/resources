@@ -546,4 +546,22 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $pdf->displaySpace();
    }
 
+   static function getHabilitationTxt($id) {
+      $html                   = "";
+      $habilitationsResource  = new self();
+      $habilitation           = new PluginResourcesHabilitation();
+      $habilitationsResources = $habilitationsResource->find(['plugin_resources_resources_id' => $id]);
+      if (count($habilitationsResources) > 0) {
+         $html .= "<p><b>Habilitations actuelles : </b><br />";
+         foreach ($habilitationsResources as $habilitationResource) {
+            $habilitation->getFromDB($habilitationResource['plugin_resources_habilitations_id']);
+            $html .= $habilitation->getField('completename') . "<br />";
+
+         }
+      }
+
+      $html .= "</p>";
+
+      return $html;
+   }
 }

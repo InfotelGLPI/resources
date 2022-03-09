@@ -209,6 +209,16 @@ class PluginResourcesMetademand extends CommonGLPI {
                                  if($habilitation[$k] != 0){
                                     $c = $habilitation[$k];
                                     $idResource = $resource->getField('id');
+                                    $config = new PluginResourcesConfig();
+                                    if($config->fields["remove_habilitation_on_update"] == 1){
+                                       $habilitationToDel = $habilitationConfig->find(['plugin_resources_resources_id'     => $idResource,
+                                                                                       'plugin_resources_habilitations_id' => ['!=',$c]]);
+                                       if ($habilitationToDel) {
+                                          foreach ($habilitationToDel as $habilitation) {
+                                             $habilitationConfig->delete(["id" => $habilitation['id']]);
+                                          }
+                                       }
+                                    }
                                     if (!$habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
                                                                          'plugin_resources_habilitations_id' => $c])) {
                                        $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,

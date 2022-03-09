@@ -64,8 +64,7 @@ class PluginResourcesMenu extends CommonDBTM {
          if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
             echo "<a href=\"./resource.change.php\">";
          } else {
-            $metademand = new PluginMetademandsMetademand();
-            $url        = $metademand->getURL($config->fields["use_meta_for_changes"]);
+            $url = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
             echo "<a href=\"" . $url . "\">";
          }
          echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/recap.png' alt='" . __('Declare a change', 'resources') . "'>";
@@ -77,8 +76,7 @@ class PluginResourcesMenu extends CommonDBTM {
          if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
             echo "<a href=\"./resource.remove.php\">";
          } else {
-            $metademand = new PluginMetademandsMetademand();
-            $url        = $metademand->getURL($config->fields["use_meta_for_leave"]);
+            $url = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
             echo "<a href=\"" . $url . "\">";
          }
          echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/removeresource.png' alt='" . __('Declare a departure', 'resources') . "'>";

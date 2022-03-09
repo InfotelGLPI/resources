@@ -20,3 +20,5 @@ UPDATE `glpi_plugin_resources_resources` SET `users_id_sales` = '0' WHERE `users
 
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_changes` int(11) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_leave` int(11) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `remove_habilitation_on_update` int(11) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `display_habilitations_txt` int(11) NOT NULL default '0';
