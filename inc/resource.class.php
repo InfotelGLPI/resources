@@ -3360,6 +3360,7 @@ class PluginResourcesResource extends CommonDBTM {
       $params['addUnlinkedUsers'] = false;
       $params['rand']             = mt_rand();
       $params['display']          = false;
+      $params['showHabilitations'] = false;
       if (!empty($options)) {
          foreach ($options as $key => $val) {
             $params[$key] = $val;
@@ -3412,6 +3413,13 @@ class PluginResourcesResource extends CommonDBTM {
                                                   $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/comments.php",
                                                   $paramscomment, false);
 
+      }
+      $config = new PluginResourcesConfig();
+      if($params['showHabilitations'] && $config->getField('display_habilitations_txt')){
+         $output .= "<p id='habilitationsTxt'></p>";
+         $output .= Ajax::updateItemOnSelectEvent($field_id, 'habilitationsTxt',
+                                                  $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/showHabilitations.php",
+                                                  ['value' => '__VALUE__'], false);
       }
       $output .= Ajax::commonDropdownUpdateItem($params, false);
       $output .= "</span>";
