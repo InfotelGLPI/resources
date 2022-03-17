@@ -461,7 +461,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
          if (empty($input["password"])) {
             unset($input["password"]);
          } else {
-            $input["password"] = Toolbox::sodiumEncrypt(stripslashes($input["password"]));
+            $input["password"] = (new GLPIKey())->encrypt($input["password"]);
          }
       }
 
