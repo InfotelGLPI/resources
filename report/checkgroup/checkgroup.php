@@ -49,6 +49,8 @@ $tab     = [0 => __('No'),
             1 => __('Yes')];
 $filter3 = new PluginReportsArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
 
+$filter4 = new PluginReportsGroupCriteria($report, 'groups_id', __('Filter by Groups'));
+
 //Display criterias form is needed
 $report->displayCriteriasForm();
 
@@ -90,16 +92,23 @@ if ($report->criteriasValidated()) {
 
    $title = $report->getFullTitle();
    $dbu   = new DbUtils();
-
+   $group = $filter4->getParameterValue();
    $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
                         FROM `glpi_plugin_resources_resources` 
                         LEFT JOIN glpi_plugin_resources_resources_items ON glpi_plugin_resources_resources_items.plugin_resources_resources_id = glpi_plugin_resources_resources.id
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'
                         LEFT JOIN glpi_users ON glpi_plugin_resources_resources_items.items_id = glpi_users.id
-                        AND glpi_plugin_resources_resources_items.itemtype = 'User'
-                        WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
+                        AND glpi_plugin_resources_resources_items.itemtype = 'User'";
+   if($group != 0) {
+      $query_resource_user .=  " LEFT JOIN `glpi_groups_users` ON glpi_users.id = `glpi_groups_users`.`users_id`";
+   }
+
+   $query_resource_user .= " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
                         AND `glpi_plugin_resources_resources`.`is_template` = 0 
                         AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
+   if($group != 0) {
+      $query_resource_user .=  " AND glpi_groups_users.groups_id = $group ";
+   }
 
    $query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
    $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
