@@ -276,7 +276,7 @@ class PluginResourcesConfig extends CommonDBTM {
 
             $meta = new PluginMetademandsMetademand();
             $options['empty_value'] =true;
-            $data = $meta->listMetademands(false,$options);
+            $data = $meta->listMetademands(false,$options,true);
             echo Dropdown::showFromArray('use_meta_for_changes', $data, ['width' => 250, 'display' => false,'value' => $this->fields['use_meta_for_changes']]);
 
             echo "</td>";

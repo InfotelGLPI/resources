@@ -3419,7 +3419,8 @@ class PluginResourcesResource extends CommonDBTM {
          $output .= "<p id='habilitationsTxt'></p>";
          $output .= Ajax::updateItemOnSelectEvent($field_id, 'habilitationsTxt',
                                                   $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/showHabilitations.php",
-                                                  ['value' => '__VALUE__'], false);
+                                                  ['value' => '__VALUE__',
+                                                     'metademands_id'=> isset($_GET['metademands_id'])?$_GET['metademands_id']:0], false);
       }
       $output .= Ajax::commonDropdownUpdateItem($params, false);
       $output .= "</span>";

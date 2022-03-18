@@ -28,22 +28,46 @@
  */
 
 include('../../../inc/includes.php');
-$AJAX_INCLUDE = 1;
+header("Content-Type: application/json; charset=UTF-8");
 
-// Send UTF8 Headers
-header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
-if (isset($_REQUEST["value"])) {
+$KO = false;
 
-   if ($_REQUEST['value'] == 0) {
-      $tmpcontent = "";
-   } else {
-      $habilitation = new PluginResourcesResourceHabilitation();
-      $tmpcontent   = $habilitation->getHabilitationTxt($_REQUEST["value"]);
+$metademands = new PluginMetademandsMetademand();
+$wizard      = new PluginMetademandsWizard();
+$form      = new PluginMetademandsForm();
+$resForm = $form->find(['plugin_metademands_metademands_id' => $_POST['metademands_id'],'resources_id' => $_POST['value']]);
+if (count($resForm)) {
+   foreach ($resForm as $res){
+      $last = $res['id'];
    }
-   echo $tmpcontent;
+   $form->getFromDB($last);
+   unset($_SESSION['plugin_metademands']);
+   $metademands->getFromDB($_POST['metademands_id']);
+   PluginMetademandsForm_Value::loadFormValues($form->getField('id'));
+   $form_name = $form->getField('name');
 
+   // Resources id
+   if (isset($_POST['resources_id'])) {
+      $_SESSION['plugin_metademands']['fields']['resources_id'] = $_POST['value'];
+   }
+
+   //Category id if have category field
+   $_SESSION['plugin_metademands']['field_type']                                    = $metademands->fields['type'];
+   $_SESSION['plugin_metademands']['plugin_metademands_forms_id']                  = $form->getField('id');
+   $_SESSION['plugin_metademands']['plugin_metademands_forms_name']                = $form_name;
+
+
+   Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=".$_POST['value']."&metademands_id=". $_POST['metademands_id']."&step=2");
+
+} else {
+   $KO = true;
+}
+if ($KO === false) {
+   echo 0;
+} else {
+   echo $KO;
 }
