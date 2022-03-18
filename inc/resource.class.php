@@ -971,6 +971,10 @@ class PluginResourcesResource extends CommonDBTM {
       $PluginResourcesChecklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
    }
 
+
+   function post_getFromDB() {
+      $this->fields['states_id'] = 1;
+   }
    /**
     * @param        $str
     * @param string $charset
