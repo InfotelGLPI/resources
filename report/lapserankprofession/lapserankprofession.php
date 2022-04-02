@@ -55,7 +55,7 @@ $report->setColumns( [new PluginReportsColumnLink('rank_id', PluginResourcesRank
                                                    ['sorton' => 'prof_end_date']),]);
 
 // SQL statement
-$condition = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
+$condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
 $date=date("Y-m-d");
 
 //display only leaving resource with active employment

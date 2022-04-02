@@ -43,7 +43,7 @@ $columns = ['entity' => ['sorton' => 'entity'],
    'name' => ['sorton' => 'name'],
    'firstname' => ['sorton' => 'firstname'],
    'registration_number' => ['sorton' => 'registration_number'],
-   'rank' => ['sorton' => 'rank'],
+   'rank' => ['sorton' => 'rankName'],
    'date_begin' => ['sorton' => 'date_begin'],
    'date_end' => ['sorton' => 'date_end'],
    'begin_date' => ['sorton' => 'begin_date'],
@@ -89,7 +89,7 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
                     `glpi_plugin_resources_resources`.`firstname` AS firstname,
                     `glpi_users`.`registration_number` AS registration_number,
                     `glpi_plugin_resources_ranks`.`id` AS rankID,
-                    `glpi_plugin_resources_ranks`.`name` AS rank,
+                    `glpi_plugin_resources_ranks`.`name` AS rankName,
                     `glpi_plugin_resources_resources`.`date_begin`,
                     `glpi_plugin_resources_resources`.`date_end`,
                     `glpi_plugin_resources_ranks`.`begin_date`,
@@ -141,7 +141,7 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
                        NULL AS firstname,
                        NULL AS registration_number,
                         `glpi_plugin_resources_ranks`.`id` AS rankID,
-                        `glpi_plugin_resources_ranks`.`name` AS rank,
+                        `glpi_plugin_resources_ranks`.`name` AS rankName,
                     `glpi_plugin_resources_employments`.`begin_date` AS date_begin,
                     `glpi_plugin_resources_employments`.`end_date` AS date_end,
                     `glpi_plugin_resources_ranks`.`begin_date`,
@@ -248,7 +248,7 @@ if ($nbtot >0) {
    showTitle($output_type, $num, __('Surname'), 'name', true);
    showTitle($output_type, $num, __('First name'), 'firstname', true);
    showTitle($output_type, $num, __('Administrative number'), 'registration_number', true);
-   showTitle($output_type, $num, PluginResourcesRank::getTypeName(1), 'rank', true);
+   showTitle($output_type, $num, PluginResourcesRank::getTypeName(1), 'rankName', true);
    showTitle($output_type, $num, __('Arrival date', 'resources'), 'date_begin', true);
    showTitle($output_type, $num, __('Departure date', 'resources'), 'date_end', true);
    showTitle($output_type, $num, PluginResourcesRank::getTypeName(1)." - ".__('Begin date'), 'begin_date', true);
@@ -288,7 +288,7 @@ if ($nbtot >0) {
       echo Search::showItem($output_type, $data['registration_number'], $num, $key);
 
       $link1=Toolbox::getItemTypeFormURL("PluginResourcesRank");
-      $rankName = "<a href='".$link1."?id=".$data["rankID"]."' target='_blank'>".$data["rank"]."</a>";
+      $rankName = "<a href='".$link1."?id=".$data["rankID"]."' target='_blank'>".$data["rankName"]."</a>";
       echo Search::showItem($output_type, $rankName, $num, $key);
 
       echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);

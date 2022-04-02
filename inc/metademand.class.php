@@ -85,7 +85,8 @@ class PluginResourcesMetademand extends CommonGLPI {
    static function getParamsOptions($p) {
       $params = [];
       $linkmeta = new PluginResourcesLinkmetademand();
-      if(!$linkmeta->getFromDBByCrit(["plugin_metademands_fields_id"=>$p["plugin_metademands_fields_id"],"plugin_metademands_metademands_id"=>$p["plugin_metademands_metademands_id"]])){
+      if(!$linkmeta->getFromDBByCrit(["plugin_metademands_fields_id"=>$p["plugin_metademands_fields_id"],
+                                      "plugin_metademands_metademands_id"=>$p["plugin_metademands_metademands_id"]])){
          $linkmeta->getEmpty();
       }
       $params['checklist_in'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_in"]);

@@ -77,7 +77,7 @@ $title = $report->getFullTitle();
 
 //to verify if resources exist
 // SQL statement
-$condition = $dbu->getEntitiesRestrictRequest('WHERE', 'glpi_plugin_resources_resources');
+$condition = getEntitiesRestrictRequest('WHERE', 'glpi_plugin_resources_resources');
 $date=date("Y-m-d");
 $dataAll=[];
 
@@ -126,7 +126,7 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
 //                   AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
 //                   AND `glpi_plugin_resources_resources`.`is_template` = '0')";
 
-$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 
 $query.=$conditionAll." ".getOrderBy('entity', $columns);
 
@@ -167,7 +167,7 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
 //                           OR `glpi_plugin_resources_professions`.`begin_date` > '".$date."'))
 //                     AND `glpi_plugin_resources_professions`.`id` IS NOT NULL)";
 
-$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
+$conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
 
 $queryEmploy.=$conditionAll." ".getOrderBy('entity', $columns);
 
