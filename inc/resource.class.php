@@ -3922,7 +3922,7 @@ class PluginResourcesResource extends CommonDBTM {
          self::dropdown(['name'      => 'plugin_resources_resources_id',
                          'display'   => true,
                          'entity'    => $_SESSION['glpiactiveentities'],
-                         'on_change' => "plugin_resources_change_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+                         'on_change' => "plugin_resources_change_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);"]);
 
          echo "</div>";
          echo "</div>";
@@ -3948,7 +3948,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
          Dropdown::showFromArray('change_action',
                                  $actions,
-                                 ['on_change' => "plugin_resources_change_action(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+                                 ['on_change' => "plugin_resources_change_action(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);"]);
          echo "</div>";
          echo "</div>";
 
