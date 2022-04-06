@@ -137,9 +137,10 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          foreach ($_POST as $key => $val) {
             $values[$key] = $val;
          }
+         $values['requiredfields'] = 1;
          $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
          $resource->wizardSecondForm(0, $values);
-      } else {
+   } else {
       if ($resource->canCreate() && isset($_POST["second_step"])) {
          $newID = $resource->add($_POST);
          if(isset($_POST['plugin_resources_employers_id'])){
