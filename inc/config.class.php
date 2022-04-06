@@ -335,6 +335,15 @@ class PluginResourcesConfig extends CommonDBTM {
             echo "</tr>";
          }
 
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Hide/Show elements'). " : " . __('View my resources as a commercial', 'resources');
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('hide_view_commercial_resource',$this->fields['hide_view_commercial_resource']);
+         echo "</td>";
+         echo "</tr>";
+
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";
          echo "<input type='hidden' name='id' value='1' >";

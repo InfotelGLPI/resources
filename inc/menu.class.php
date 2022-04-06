@@ -184,11 +184,13 @@ class PluginResourcesMenu extends CommonDBTM {
 
          $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
-         echo "<td class='tab_td_menu center'>";
-         echo "<a href=\"$url\">";
-         echo "<i class='fas fa-user-tie fa-5x' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
-         echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
-         echo "</td>";
+         if (!$config->fields["hide_view_commercial_resource"]) {
+            echo "<td class='tab_td_menu center'>";
+            echo "<a href=\"$url\">";
+            echo "<i class='fas fa-user-tie fa-5x' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
+            echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
+            echo "</td>";
+         }
 
          //See resources
          echo "<td class='tab_td_menu center'>";

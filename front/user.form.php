@@ -55,7 +55,61 @@ if (isset($_POST["update"])) {
               //TRANS: %s is the user login
               sprintf(__('%s updates an item'), $_SESSION["glpiname"]));
    $resource        = new PluginResourcesResource();
-   $resource->getFromDB($_POST['idResources']);
+   $resource->getFromDB($_POST['idResource']);
+   $ticket = new Ticket();
+   $itemTicket = new Item_Ticket();
+   $content = "";
+   $ticketResources = $itemTicket->find(['itemtype' => 'PluginResourcesResource', 'items_id'=> $resource->getID()]);
+   foreach ($_POST as $key => $value){
+      if(strpos($key,'field') > 0){
+         $field = new PluginFieldsField();
+         if($field->getFromDBByCrit(['name' => $key])){
+            $content .= $field->getField('label') . " : ". $value.'<br />';
+         }
+      } else{
+         switch($key){
+            case 'phone':
+               $content .= __('Phone') . " : ".$value."<br />";
+               break;
+            case '_useremails' :
+               if(isset($value[1])){
+                  $content .= _n('Email', 'Emails', 1) . " : ".$value[1]."<br />";
+               }
+               break;
+
+            case 'plugin_ldapfields_ecrans_geremis_id':
+               $pluginLdapFieldGeremi = new PluginLdapfieldsEcran_geremi();
+               $pluginLdapFieldGeremi->getFromDB($value);
+               $content .= "Ecran geremi : ".$pluginLdapFieldGeremi->getField('name')."<br />";
+               break;
+
+         }
+      }
+   }
+
+   foreach ($ticketResources as $ticketResource){
+      $ticket->getFromDB($ticketResource['tickets_id']);
+      if($ticket->getField('status')<5){
+         if($plugin->isActivated("escalade")){
+            $first_history = PluginEscaladeHistory::getFirstLineForTicket($ticketResource['tickets_id']);
+            //add the first history group (if not already exist)
+            $group_ticket = new Group_Ticket;
+            $condition = [
+               'tickets_id' => $ticketResource['tickets_id'],
+               'groups_id'  => $first_history['groups_id'],
+               'type'       => CommonITILActor::ASSIGN
+            ];
+            if (!$group_ticket->find($condition)) {
+               $group_ticket->add($condition);
+            }
+         }
+         Toolbox::logInFile()
+         $solution = new ITILSolution();
+         $solution->add(['itemtype'=>'Ticket',
+                         'items_id' => $ticket->getField('id'),
+                         'content' => $content]);
+      }
+   }
    NotificationEvent::raiseEvent('other', $resource);
    Html::back();
 
