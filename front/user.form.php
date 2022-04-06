@@ -103,7 +103,6 @@ if (isset($_POST["update"])) {
                $group_ticket->add($condition);
             }
          }
-         Toolbox::logInFile()
          $solution = new ITILSolution();
          $solution->add(['itemtype'=>'Ticket',
                          'items_id' => $ticket->getField('id'),
