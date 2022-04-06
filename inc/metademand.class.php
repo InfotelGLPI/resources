@@ -178,9 +178,11 @@ class PluginResourcesMetademand extends CommonGLPI {
     * @return string
     */
    static function afterCreateTicket($p){
+      global $DB;
       $options = $p["options"];
       $values = $p["values"];
       $line = $p["line"];
+      $config = new PluginResourcesConfig();
       if(plugin::isPluginActive('resources')){
          if(isset($options["resources_id"])){
             $checklistConfig = new PluginResourcesChecklistconfig();
@@ -188,6 +190,7 @@ class PluginResourcesMetademand extends CommonGLPI {
             $resource = new PluginResourcesResource();
             $resource->getFromDB($options["resources_id"]);
             if(count($line["form"])){
+               $habilitationToDelKeep = [];
                foreach ($line["form"] as $id => $v){
                   if(isset($values["fields"]) && is_array($values["fields"]) && array_key_exists ($v["id"],$values["fields"])){
                      $Pfield = new PluginResourcesLinkmetademand();
@@ -210,20 +213,17 @@ class PluginResourcesMetademand extends CommonGLPI {
                                  if($habilitation[$k] != 0){
                                     $c = $habilitation[$k];
                                     $idResource = $resource->getField('id');
-                                    $config = new PluginResourcesConfig();
                                     if($config->fields["remove_habilitation_on_update"] == 1){
-                                       $habilitationToDel = $habilitationConfig->find(['plugin_resources_resources_id'     => $idResource,
-                                                                                       'plugin_resources_habilitations_id' => ['!=',$c]]);
-                                       if ($habilitationToDel) {
-                                          foreach ($habilitationToDel as $habilitation) {
-                                             $habilitationConfig->delete(["id" => $habilitation['id']]);
-                                          }
+                                       if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                                       'plugin_resources_habilitations_id' => $c])){
+                                          $habilitationToDelKeep[] = $habilitationConfig->getField('id');
                                        }
                                     }
                                     if (!$habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
                                                                          'plugin_resources_habilitations_id' => $c])) {
-                                       $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
+                                       $id = $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
                                                                  'plugin_resources_habilitations_id' =>$c]);
+                                       $habilitationToDelKeep[] = $id;
                                     }
                                  }
 
@@ -231,6 +231,12 @@ class PluginResourcesMetademand extends CommonGLPI {
                            }
                         }
                      }
+                  }
+               }
+               if($config->fields["remove_habilitation_on_update"] == 1){
+                  if ($habilitationToDelKeep) {
+                     $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=".$idResource ." AND id NOT IN(".implode(",",$habilitationToDelKeep).")";
+                     $DB->query($query);
                   }
                }
             }

@@ -277,7 +277,7 @@ class PluginResourcesConfig extends CommonDBTM {
 
             $meta                   = new PluginMetademandsMetademand();
             $options['empty_value'] = true;
-            $data                   = $meta->listMetademands(false, $options);
+            $data                   = $meta->listMetademands(false, $options, true);
             echo Dropdown::showFromArray('use_meta_for_changes', $data, ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]);
 
             echo "</td>";
@@ -335,6 +335,15 @@ class PluginResourcesConfig extends CommonDBTM {
             echo "</td>";
             echo "</tr>";
          }
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo __('Hide/Show elements'). " : " . __('View my resources as a commercial', 'resources');
+         echo "</td>";
+         echo "<td>";
+         Dropdown::showYesNo('hide_view_commercial_resource',$this->fields['hide_view_commercial_resource']);
+         echo "</td>";
+         echo "</tr>";
 
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";

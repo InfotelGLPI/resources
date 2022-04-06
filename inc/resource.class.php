@@ -975,6 +975,10 @@ class PluginResourcesResource extends CommonDBTM {
       }
    }
 
+
+   function post_getFromDB() {
+      $this->fields['states_id'] = 1;
+   }
    /**
     * @param        $str
     * @param string $charset
@@ -3421,7 +3425,8 @@ class PluginResourcesResource extends CommonDBTM {
          $output .= "<p id='habilitationsTxt'></p>";
          $output .= Ajax::updateItemOnSelectEvent($field_id, 'habilitationsTxt',
                                                   $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/showHabilitations.php",
-                                                  ['value' => '__VALUE__'], false);
+                                                  ['value' => '__VALUE__',
+                                                     'metademands_id'=> isset($_GET['metademands_id'])?$_GET['metademands_id']:0], false);
       }
       $output .= Ajax::commonDropdownUpdateItem($params, false);
       $output .= "</span>";
@@ -4084,6 +4089,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       if ($type == "User") {
          $action[$prefix . "plugin_resources_generate_resources"] = __('Generate resources', 'resources');
+         $action[$prefix . "plugin_resources_add_habilitation"] = __('Add habiliation', 'resources');
       }
       return $action;
    }
@@ -4148,6 +4154,7 @@ class PluginResourcesResource extends CommonDBTM {
             self::fastResourceAddForm();
             break;
          case "AddHabilitation":
+         case "plugin_resources_add_habilitation":
             Dropdown::show(PluginResourcesHabilitation::class,
                            ['entity' => $_SESSION['glpiactiveentities']]);
             break;
@@ -4288,6 +4295,42 @@ class PluginResourcesResource extends CommonDBTM {
                   $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
                }
             }
+            break;
+            case "plugin_resources_add_habilitation":
+               $habilitation = new PluginResourcesResourceHabilitation();
+               foreach ($ids as $key => $val) {
+                  if ($item->can($key, UPDATE)) {
+                     $resource_item = new PluginResourcesResource_Item();
+                     if ($resource_item->getFromDBByCrit(['items_id' => $key, 'itemtype' => User::getType()])) {
+
+
+                        $resource_id = $resource_item->getField('plugin_resources_resources_id');
+                        //check if habilitation already added
+                        if (!$habilitation->getFromDBByCrit(['plugin_resources_resources_id'     => $resource_id,
+                                                             'plugin_resources_habilitations_id' => $input['plugin_resources_habilitations_id']])) {
+                           if ($resource->getFromDB($resource_id)) {
+                              //TODO add verification entities
+                              $values = ['plugin_resources_resources_id'     => $resource_id,
+                                         'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"]];
+                              if ($habilitation->add($values)) {
+                                 $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+                              } else {
+                                 $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                              }
+                           } else {
+                              $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                           }
+                        } else {
+                           $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                        }
+                     } else {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                     }
+                  } else {
+                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                  }
+               }
             break;
 
          default :

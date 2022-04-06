@@ -180,12 +180,13 @@ class PluginResourcesMenu extends CommonDBTM {
          $opt['criteria'][0]['link']       = 'AND';
 
          $url = PLUGIN_RESOURCES_WEBDIR. "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
-
-         echo "<td class=' center'>";
-         echo "<a href=\"$url\">";
-         echo "<i class='fas fa-user-tie fa-4x' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
-         echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
-         echo "</td>";
+         if (!$config->fields["hide_view_commercial_resource"]) {
+            echo "<td class=' center'>";
+            echo "<a href=\"$url\">";
+            echo "<i class='fas fa-user-tie fa-4x' title='" . __('View my resources as a commercial', 'resources') . "'></i>";
+            echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
+            echo "</td>";
+         }
 
          //See resources
          echo "<td class=' center'>";

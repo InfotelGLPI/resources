@@ -18,7 +18,10 @@ UPDATE `glpi_plugin_resources_resources` SET `plugin_resources_contracttypes_id`
 UPDATE `glpi_plugin_resources_resources` SET `plugin_resources_teams_id` = '0' WHERE `plugin_resources_teams_id` = '-1';
 UPDATE `glpi_plugin_resources_resources` SET `users_id_sales` = '0' WHERE `users_id_sales` = '-1';
 
+ALTER TABLE `glpi_plugin_resources_configs` ADD `use_service_department_ad` tinyint(1) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `use_secondary_service` tinyint(1) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_changes` int(11) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_meta_for_leave` int(11) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `remove_habilitation_on_update` int(11) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `display_habilitations_txt` int(11) NOT NULL default '0';
+ALTER TABLE `glpi_plugin_resources_configs` ADD `hide_view_commercial_resource` tinyint(1) NOT NULL default '0';
