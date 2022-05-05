@@ -183,7 +183,7 @@ class PluginResourcesMenu extends CommonDBTM {
          $opt['criteria'][0]['link']       = 'AND';
 
          $url = $CFG_GLPI["root_doc"] . "/plugins/resources/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
-
+         $config = new PluginResourcesConfig();
          if (!$config->fields["hide_view_commercial_resource"]) {
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"$url\">";

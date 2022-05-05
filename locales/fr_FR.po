@@ -2539,3 +2539,6 @@ msgstr "Rapport listant les ressources sans utilisateurs"
 #: report/userwithnoresource/userwithnoresource.php:39
 msgid "User without resource"
 msgstr "Utilisateur sans ressource"
+
+msgid "The start date must be greater than the end date"
+msgstr "La date de début doit être inférieur à la date de fin"

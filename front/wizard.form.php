@@ -141,7 +141,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          }
          $values['requiredfields'] = 1;
          $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-         $resource->wizardSecondForm(0, $values);
+         $resource->wizardSecondForm($_POST["id"], $values);
    } else {
       if ($resource->canCreate() && isset($_POST["second_step"])) {
          $newID = $resource->add($_POST);

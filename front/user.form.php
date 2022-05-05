@@ -61,7 +61,7 @@ if (isset($_POST["update"])) {
    $content = "";
    $ticketResources = $itemTicket->find(['itemtype' => 'PluginResourcesResource', 'items_id'=> $resource->getID()]);
    foreach ($_POST as $key => $value){
-      if(strpos($key,'field') > 0){
+      if(strpos($key,'field') > 0 && !is_integer(strpos($key,'plugin_ldapfields'))){
          $field = new PluginFieldsField();
          if($field->getFromDBByCrit(['name' => $key])){
             $content .= $field->getField('label') . " : ". $value.'<br />';
@@ -72,17 +72,13 @@ if (isset($_POST["update"])) {
                $content .= __('Phone') . " : ".$value."<br />";
                break;
             case '_useremails' :
-               if(isset($value[1])){
-                  $content .= _n('Email', 'Emails', 1) . " : ".$value[1]."<br />";
+               if(is_array($value) && !empty($value)){
+                  $content .= _n('Email', 'Emails', 1) . " : ";
+                  foreach ($value as $email){
+                     $content .= $email."<br />";
+                  }
                }
                break;
-
-            case 'plugin_ldapfields_ecrans_geremis_id':
-               $pluginLdapFieldGeremi = new PluginLdapfieldsEcran_geremi();
-               $pluginLdapFieldGeremi->getFromDB($value);
-               $content .= "Ecran geremi : ".$pluginLdapFieldGeremi->getField('name')."<br />";
-               break;
-
          }
       }
    }
