@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 09:55+0000\n"
+"POT-Creation-Date: 2022-05-09 12:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2499,6 +2499,10 @@ msgstr ""
 
 #: report/resourcewithoutuser/resourcewithoutuser.php:39
 msgid "resourcewithoutuser_report_title"
+msgstr ""
+
+#: report/userwithmorethanoneresource/userwithmorethanoneresource.php:39
+msgid "userwithmorethanoneresource_report_title"
 msgstr ""
 
 #: report/userwithnoresource/userwithnoresource.php:39
