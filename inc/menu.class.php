@@ -180,6 +180,7 @@ class PluginResourcesMenu extends CommonDBTM {
          $opt['criteria'][0]['link']       = 'AND';
 
          $url = PLUGIN_RESOURCES_WEBDIR. "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
+         $config = new PluginResourcesConfig();
          if (!$config->fields["hide_view_commercial_resource"]) {
             echo "<td class=' center'>";
             echo "<a href=\"$url\">";

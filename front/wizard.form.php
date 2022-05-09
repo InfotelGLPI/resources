@@ -131,6 +131,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $resource->wizardSecondForm(0, $values);
    } else if (isset($_POST['date_begin'])
           && !empty($_POST['date_begin'])
+              && isset($_POST['date_end'])
+              && !empty($_POST['date_end'])
           && $_POST['date_end'] < $_POST['date_begin']) {
          $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>" .
                                                        __('The start date must be greater than the end date', 'resources') . "</span></h3>"];
@@ -140,7 +142,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          }
          $values['requiredfields'] = 1;
          $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-         $resource->wizardSecondForm(0, $values);
+         $resource->wizardSecondForm($_POST["id"], $values);
    } else {
       $newresource = 0;
       if ($resource->canCreate() && isset($_POST["second_step"])) {
