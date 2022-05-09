@@ -63,6 +63,9 @@ if (count($resForm)) {
 
    Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=".$_POST['value']."&metademands_id=". $_POST['metademands_id']."&step=2");
 
+}  else if(isset($_POST['value'])) {
+   unset($_SESSION['plugin_metademands']);
+   Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=".$_POST['value']."&metademands_id=". $_POST['metademands_id']."&step=2");
 } else {
    $KO = true;
 }
