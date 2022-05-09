@@ -354,7 +354,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##task.name##']   = $task['name'];
             $tmp['##task.type##']   = Dropdown::getDropdownName('glpi_plugin_resources_tasktypes',
                                                                 $task['plugin_resources_tasktypes_id']);
-            $tmp['##task.users##']  = $dbu->getUserName($task['users_id']);
+            $tmp['##task.users##']  = getUserName($task['users_id']);
             $tmp['##task.groups##'] = Dropdown::getDropdownName('glpi_groups',
                                                                 $task['groups_id']);
             $restrict               = ["plugin_resources_tasks_id" => $task['id']];
@@ -767,7 +767,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $events = $this->getAllEvents();
 
          $this->data['##lang.resource.title##']  = $events[$event];
-         $this->data['##resource.action_user##'] = $dbu->getUserName(Session::getLoginUserID());
+         $this->data['##resource.action_user##'] = getUserName(Session::getLoginUserID());
          $this->data['##lang.resource.entity##'] = __('Entity');
          $this->data['##resource.entity##']      =
             Dropdown::getDropdownName('glpi_entities',
