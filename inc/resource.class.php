@@ -2262,6 +2262,7 @@ class PluginResourcesResource extends CommonDBTM {
       }
       if (($options['withtemplate'] == 2 || $options["new"] != 1) && $options["requiredfields"] != 1) {
 
+         $options["gender"]                                   = $this->fields["gender"];
          $options["name"]                                     = $this->fields["name"];
          $options["firstname"]                                = $this->fields["firstname"];
          $options["locations_id"]                             = $this->fields["locations_id"];
@@ -2396,7 +2397,7 @@ class PluginResourcesResource extends CommonDBTM {
 
       echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\">";
       $genders = $this->getGenders();
-      $option = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
+      $option = ['value' => $options["gender"]];
       Dropdown::showFromArray('gender',$genders,$option);
       echo "</div>";
       echo "</div>";
