@@ -85,6 +85,7 @@ ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `serviceAD` varchar(255) NOT N
 ALTER TABLE `glpi_plugin_resources_adconfigs` ADD `locationAD` varchar(255) NOT NULL default '' ;
 
 ALTER TABLE `glpi_plugin_resources_linkmetademands` ADD `habilitation` TEXT collate utf8_unicode_ci default NULL;
+ALTER TABLE `glpi_plugin_resources_linkmetademands` ADD `is_leaving_resource` tinyint(1) NOT NULL default '0';
 
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_service_department_ad` tinyint(1) NOT NULL default '0';
 ALTER TABLE `glpi_plugin_resources_configs` ADD `use_secondary_service` tinyint(1) NOT NULL default '0';
