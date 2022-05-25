@@ -110,6 +110,13 @@ class PluginResourcesMetademand extends CommonGLPI {
          $params['habilitation'] = $params['habilitation'][$p["nbOpt"]];
       }
 
+      $params['is_leaving_resource'] = $linkmeta->fields["is_leaving_resource"];
+      if (!isset($params['is_leaving_resource'])) {
+         $params['is_leaving_resource'] = "";
+      } else {
+         $params['is_leaving_resource'] = $params['is_leaving_resource'];
+      }
+
       return $params;
    }
 
@@ -143,6 +150,14 @@ class PluginResourcesMetademand extends CommonGLPI {
          $res .= "<td>";
          $res .= PluginResourcesLinkmetademand::showHabilitationDropdown($p["plugin_metademands_metademands_id"], $p['habilitation'], $p["plugin_metademands_fields_id"], false);
          $res .= "</td></tr>";
+
+         $res .= "<tr><td>";
+         $res .= __('Leaving resource', 'resources');
+         $res .= '</br><span class="metademands_wizard_comments">' . __('If yes, the resource will be declared as leaving', 'resources') . '</span>';
+         $res .= '</td>';
+         $res .= "<td>";
+         $res .= Dropdown::showYesNo("is_leaving_resource",$p['is_leaving_resource'],-1,['display'=> false]);
+         $res .= "</td></tr>";
       }
       return $res;
    }
@@ -162,6 +177,9 @@ class PluginResourcesMetademand extends CommonGLPI {
       }
       if (isset($_POST["habilitation"])) {
          $input["habilitation"] = PluginMetademandsField::_serialize($_POST["habilitation"]);
+      }
+      if (isset($_POST["is_leaving_resource"])) {
+         $input["is_leaving_resource"] = $_POST["is_leaving_resource"];
       }
       if ($linkmeta->getFromDBByCrit(["plugin_metademands_fields_id" => $_POST["id"], "plugin_metademands_metademands_id" => $_POST["plugin_metademands_metademands_id"]])) {
          $input["id"] = $linkmeta->getID();
@@ -183,14 +201,17 @@ class PluginResourcesMetademand extends CommonGLPI {
       $values = $p["values"];
       $line = $p["line"];
       $config = new PluginResourcesConfig();
+      $config_data = PluginMetademandsConfig::getInstance();
       if(plugin::isPluginActive('resources')){
          if(isset($options["resources_id"])){
             $checklistConfig = new PluginResourcesChecklistconfig();
             $habilitationConfig = new PluginResourcesResourceHabilitation();
+            $habilitationResource = new PluginResourcesHabilitation();
             $resource = new PluginResourcesResource();
             $resource->getFromDB($options["resources_id"]);
             if(count($line["form"])){
                $habilitationToDelKeep = [];
+               $habilitationToDel = [];
                foreach ($line["form"] as $id => $v){
                   if(isset($values["fields"]) && is_array($values["fields"]) && array_key_exists ($v["id"],$values["fields"])){
                      $Pfield = new PluginResourcesLinkmetademand();
@@ -199,9 +220,13 @@ class PluginResourcesMetademand extends CommonGLPI {
                         $checklist_in =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_in"]);
                         $checklist_out =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_out"]);
                         $habilitation =  PluginMetademandsField::_unserialize($Pfield->fields["habilitation"]);
+                        $is_leaving_resource =  $Pfield->fields["is_leaving_resource"];
                         if(isset($checkvalues) && is_array($checkvalues)){
                            foreach ($checkvalues as $k => $checkvalue){
-                              if((!is_array($values["fields"][$v["id"]]) && $checkvalue == $values["fields"][$v["id"]]) ||(is_array($values["fields"][$v["id"]]) && in_array($checkvalue,$values["fields"][$v["id"]]))){
+                              if((!is_array($values["fields"][$v["id"]]) && $checkvalue == $values["fields"][$v["id"]]) ||
+                                 (is_array($values["fields"][$v["id"]]) && in_array($checkvalue,$values["fields"][$v["id"]])) ||
+                                 (isset($values["fields"][$v["id"]."#red"]) && in_array($checkvalue,$values["fields"][$v["id"]."#red"])) ||
+                                 (isset($values["fields"][$v["id"]."#green"]) && in_array($checkvalue,$values["fields"][$v["id"]."#green"]))){
                                  if($checklist_in[$k] != 0){
                                     $c = $checklist_in[$k];
                                     $checklistConfig->addResourceChecklist($resource, $c, PluginResourcesChecklist::RESOURCES_CHECKLIST_IN);
@@ -213,20 +238,57 @@ class PluginResourcesMetademand extends CommonGLPI {
                                  if($habilitation[$k] != 0){
                                     $c = $habilitation[$k];
                                     $idResource = $resource->getField('id');
-                                    if($config->fields["remove_habilitation_on_update"] == 1){
-                                       if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
-                                                                                       'plugin_resources_habilitations_id' => $c])){
-                                          $habilitationToDelKeep[] = $habilitationConfig->getField('id');
+                                    if ($config_data['show_form_changes'] &&
+                                        ((isset($values["fields"][$v["id"]."#red"]) && in_array($checkvalue,$values["fields"][$v["id"]."#red"])) ||
+                                         (isset($values["fields"][$v["id"]."#green"]) && in_array($checkvalue,$values["fields"][$v["id"]."#green"])))){
+                                       if(isset($values["fields"][$v["id"]."#green"])  && in_array($checkvalue,$values["fields"][$v["id"]."#green"])){
+                                          $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
+                                                                          'plugin_resources_habilitations_id' =>$c]);
+                                       } else if(isset($values["fields"][$v["id"]."#red"])  && in_array($checkvalue,$values["fields"][$v["id"]."#red"])){
+                                          $sons = $habilitationResource->find(["ancestors_cache" => ['LIKE' ,"%\"$c\"%"]]);
+                                          foreach ($sons as $son) {
+                                             if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                                      'plugin_resources_habilitations_id' => $son['id']])) {
+                                                $habilitationToDel[] = $habilitationConfig->getField('id');
+                                             }
+                                          }
+                                          if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                                   'plugin_resources_habilitations_id' => $c])) {
+                                                                                   'plugin_resources_habilitations_id' => $c])) {
+                                             $habilitationToDel[] = $habilitationConfig->getField('id');
+                                          }
+                                       }
+                                    } else if(!isset($values["fields"][$v["id"]."#red"]) && !isset($values["fields"][$v["id"]."#green"])){
+                                       if($config->fields["remove_habilitation_on_update"] == 1){
+                                          if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                                          'plugin_resources_habilitations_id' => $c])){
+                                             $habilitationToDelKeep[] = $habilitationConfig->getField('id');
+                                          }
+                                       }
+                                       if (!$habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
+                                                                            'plugin_resources_habilitations_id' => $c])) {
+                                          $id = $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
+                                                                    'plugin_resources_habilitations_id' =>$c]);
+                                          $habilitationToDelKeep[] = $id;
                                        }
                                     }
-                                    if (!$habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
-                                                                         'plugin_resources_habilitations_id' => $c])) {
-                                       $id = $habilitationConfig->add(['plugin_resources_resources_id' => $idResource,
-                                                                 'plugin_resources_habilitations_id' =>$c]);
-                                       $habilitationToDelKeep[] = $id;
-                                    }
                                  }
+                                 if($is_leaving_resource == 1){
+                                    $dateLeave = date('Y-m-d H:i:s');
+                                    foreach ($values["fields"] as $field){
+                                       if(DateTime::createFromFormat('Y-m-d H:i:s', $field)){
+                                          $dateLeave = $field;
+                                       }else if(DateTime::createFromFormat('Y-m-d', $field)){
+                                          $dateLeave = $field;
+                                       }
+                                    }
+                                    $idResource = $resource->getField('id');
+                                    $resource->update(['id' => $idResource,
+                                                       'is_leaving'=>1,
+                                                       'date_declaration_leaving' => date('Y-m-d H:i:s'),
+                                                       'date_end' => $dateLeave]);
 
+                                 }
                               }
                            }
                         }
@@ -234,8 +296,11 @@ class PluginResourcesMetademand extends CommonGLPI {
                   }
                }
                if($config->fields["remove_habilitation_on_update"] == 1){
-                  if ($habilitationToDelKeep) {
+                  if ($habilitationToDelKeep && !$config_data['show_form_changes']) {
                      $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=".$idResource ." AND id NOT IN(".implode(",",$habilitationToDelKeep).")";
+                     $DB->query($query);
+                  } else if($habilitationToDel && $config_data['show_form_changes']){
+                     $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=".$idResource ." AND id IN(".implode(",",$habilitationToDel).")";
                      $DB->query($query);
                   }
                }
