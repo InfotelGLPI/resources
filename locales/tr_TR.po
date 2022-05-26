@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 12:08+0000\n"
+"POT-Creation-Date: 2022-05-25 16:03+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -982,7 +982,7 @@ msgid_plural "Functions"
 msgstr[0] "İşlev"
 msgstr[1] "İşlevler"
 
-#: inc/habilitation.class.php:50 inc/metademand.class.php:140
+#: inc/habilitation.class.php:50 inc/metademand.class.php:147
 #: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
@@ -1410,11 +1410,11 @@ msgstr "Görev listesi"
 msgid "Import configuration"
 msgstr "İçe aktarma yapılandırması"
 
-#: inc/metademand.class.php:124
+#: inc/metademand.class.php:131
 msgid "Link a checklist in"
 msgstr "Kontrol listesi girişi ile bağlantı kur"
 
-#: inc/metademand.class.php:125
+#: inc/metademand.class.php:132
 msgid ""
 "If the value selected equals the value to check, the checklist in will be "
 "add"
@@ -1422,11 +1422,11 @@ msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
 
-#: inc/metademand.class.php:132
+#: inc/metademand.class.php:139
 msgid "Link a checklist out"
 msgstr "Kontrol listesi çıkışı ile bağlantı kur"
 
-#: inc/metademand.class.php:133
+#: inc/metademand.class.php:140
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
@@ -1434,12 +1434,20 @@ msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi çıkışı "
 "eklenir"
 
-#: inc/metademand.class.php:141
+#: inc/metademand.class.php:148
 msgid ""
 "If the value selected equals the value to check, the habilitation will be "
 "add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
+
+#: inc/metademand.class.php:155
+msgid "Leaving resource"
+msgstr "Ayrılan kaynak"
+
+#: inc/metademand.class.php:156
+msgid "If yes, the resource will be declared as leaving"
+msgstr "Bu seçenek etkinleştirildiğinde, kaynak ayrılıyor olarak bildirilir"
 
 #: inc/notification.class.php:51
 msgid "Notification history"
