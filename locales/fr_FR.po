@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Alban Lesellier <alban.lesellier@infotel.com>, 2021
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2022
+# Alban Lesellier <alban.lesellier@infotel.com>, 2022
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2022
 # 
 #, fuzzy
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 12:08+0000\n"
+"POT-Creation-Date: 2022-05-25 16:03+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2022\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: hook.php:59
 msgid "Long term contract"
@@ -74,12 +74,14 @@ msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "Employeur"
 msgstr[1] "Employeurs"
+msgstr[2] "Employeurs"
 
 #: hook.php:969 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Client affecté"
 msgstr[1] "Clients affectés"
+msgstr[2] "Clients affectés"
 
 #: hook.php:974 inc/directory.class.php:198
 #: inc/notificationtargetresource.class.php:92
@@ -149,6 +151,7 @@ msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Ressource humaine"
 msgstr[1] "Ressources humaines"
+msgstr[2] "Ressources humaines"
 
 #: ajax/employee.php:47 inc/employee.class.php:316 inc/employee.class.php:449
 msgid "Security compliance"
@@ -347,6 +350,7 @@ msgid "Department"
 msgid_plural "Departments"
 msgstr[0] "Département"
 msgstr[1] "Départements"
+msgstr[2] "Départements"
 
 #: inc/adconfig.class.php:309 inc/checklist.class.php:1127
 #: inc/dashboard.class.php:151 inc/directory.class.php:215
@@ -382,6 +386,7 @@ msgid "Role"
 msgid_plural "Roles"
 msgstr[0] "Poste"
 msgstr[1] "Postes"
+msgstr[2] "Postes"
 
 #: inc/adconfig.class.php:376
 msgid "Destination OU on user deactivation"
@@ -420,6 +425,7 @@ msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Grade"
 msgstr[1] "Grades"
+msgstr[2] "Grades"
 
 #: inc/budget.class.php:158 inc/budget.class.php:252 inc/cost.class.php:123
 #: inc/cost.class.php:156 inc/cost.class.php:230 inc/employment.class.php:175
@@ -430,6 +436,7 @@ msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] "Corps"
 msgstr[1] "Corps"
+msgstr[2] "Corps"
 
 #: inc/budget.class.php:167 inc/budget.class.php:244
 #: inc/budgettype.class.php:48
@@ -437,6 +444,7 @@ msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] "Type de budget"
 msgstr[1] "Types de budget"
+msgstr[2] "Types de budget"
 
 #: inc/budget.class.php:191 inc/budget.class.php:273
 msgid "Budget volume"
@@ -448,6 +456,7 @@ msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
 msgstr[0] "Type de volume budgétaire"
 msgstr[1] "Types de volume budgétaire"
+msgstr[2] "Types de volume budgétaire"
 
 #: inc/budgettype.class.php:82 inc/budgettype.class.php:137
 #: inc/budgetvolume.class.php:82 inc/budgetvolume.class.php:137
@@ -472,6 +481,7 @@ msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Checklist"
 msgstr[1] "Checklists"
+msgstr[2] "Checklists"
 
 #: inc/checklist.class.php:321 inc/checklist.class.php:700
 #: inc/resource_change.class.php:1423 inc/resourcebadge.class.php:452
@@ -603,6 +613,7 @@ msgid "Checklist setup"
 msgid_plural "Checklists setup"
 msgstr[0] "Configuration de la checklist"
 msgstr[1] "Configuration des checklists"
+msgstr[2] "Configuration des checklists"
 
 #: inc/checklistconfig.class.php:375
 msgid "Generate a rule"
@@ -613,6 +624,7 @@ msgid "Need"
 msgid_plural "Needs"
 msgstr[0] "Besoin"
 msgstr[1] "Besoins"
+msgstr[2] "Besoins"
 
 #: inc/choice.class.php:226
 msgid "Cannot add a choice that contains children"
@@ -682,6 +694,7 @@ msgid "Type of need"
 msgid_plural "Types of need"
 msgstr[0] "Type de besoin"
 msgstr[1] "Types de besoin"
+msgstr[2] "Types de besoin"
 
 #: inc/client.class.php:95 inc/client.class.php:163
 msgid "AND - Certificate of non-dissimulation"
@@ -813,6 +826,7 @@ msgid "Super habilitation management"
 msgid_plural "Super habilitations management"
 msgstr[0] "Gestion d'une super habilitation"
 msgstr[1] "Gestion des supers habilitations"
+msgstr[2] "Gestion des supers habilitations"
 
 #: inc/confighabilitation.class.php:89 inc/confighabilitation.class.php:251
 #: inc/confighabilitation.class.php:252
@@ -837,12 +851,14 @@ msgid "Contract nature"
 msgid_plural "Contract natures"
 msgstr[0] "Nature du contrat"
 msgstr[1] "Natures du contrat"
+msgstr[2] "Natures du contrat"
 
 #: inc/contracttype.class.php:50
 msgid "Type of contract"
 msgid_plural "Types of contract"
 msgstr[0] "Type de contrat"
 msgstr[1] "Types de contrat"
+msgstr[2] "Types de contrat"
 
 #: inc/contracttype.class.php:88
 msgid "Wizard resource creation"
@@ -887,6 +903,7 @@ msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Coût budgétaire"
 msgstr[1] "Coûts budgétaire"
+msgstr[2] "Coûts budgétaire"
 
 #: inc/dashboard.class.php:59
 msgid "Tables"
@@ -897,12 +914,14 @@ msgid "Link Department/Service"
 msgid_plural "Links Department/Service"
 msgstr[0] "Lien Département/Service"
 msgstr[1] "Liens Département/Service"
+msgstr[2] "Liens Département/Service"
 
 #: inc/directory.class.php:53 inc/menu.class.php:352
 msgid "Directory"
 msgid_plural "Directories"
 msgstr[0] "Annuaire"
 msgstr[1] "Annuaires"
+msgstr[2] "Annuaires"
 
 #: inc/directory.class.php:1061 inc/resource.class.php:4949
 msgid "Click here to send your email"
@@ -913,6 +932,7 @@ msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] "Employé"
 msgstr[1] "Employés"
+msgstr[2] "Employés"
 
 #: inc/employee.class.php:260
 msgid "The resource is also created if not existent"
@@ -943,6 +963,7 @@ msgid "Employment"
 msgid_plural "Employments"
 msgstr[0] "Emploi"
 msgstr[1] "Emplois"
+msgstr[2] "Emplois"
 
 #: inc/employment.class.php:159 inc/employment.class.php:218
 #: inc/employment.class.php:338 inc/menu.class.php:19
@@ -952,6 +973,7 @@ msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "Ressource humaine"
 msgstr[1] "Ressources humaines"
+msgstr[2] "Ressources humaines"
 
 #: inc/employment.class.php:197 inc/employment.class.php:316
 #: inc/employmentstate.class.php:48
@@ -960,6 +982,7 @@ msgid "Employment state"
 msgid_plural "Employment states"
 msgstr[0] "Etat de l'emploi"
 msgstr[1] "Etats de l'emploi"
+msgstr[2] "Etats de l'emploi"
 
 #: inc/employment.class.php:211 inc/employment.class.php:322
 #: inc/recap.class.php:227
@@ -996,13 +1019,15 @@ msgid "Function"
 msgid_plural "Functions"
 msgstr[0] "Fonction"
 msgstr[1] "Fonctions"
+msgstr[2] "Fonctions"
 
-#: inc/habilitation.class.php:50 inc/metademand.class.php:140
+#: inc/habilitation.class.php:50 inc/metademand.class.php:147
 #: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
 msgstr[0] "Habilitation"
 msgstr[1] "Habilitations"
+msgstr[2] "Habilitations"
 
 #: inc/habilitation.class.php:86 inc/habilitation.class.php:107
 #: inc/habilitationlevel.class.php:50
@@ -1010,6 +1035,7 @@ msgid "Habilitation level"
 msgid_plural "Habilitations level"
 msgstr[0] "Niveau d'habilitation"
 msgstr[1] "Niveaux d'habilitations"
+msgstr[2] "Niveaux d'habilitations"
 
 #: inc/habilitationlevel.class.php:84 inc/habilitationlevel.class.php:108
 msgid "Mandatory when creating the resource"
@@ -1024,12 +1050,14 @@ msgid "Import"
 msgid_plural "Imports"
 msgstr[0] "Import"
 msgstr[1] "Imports"
+msgstr[2] "Imports"
 
 #: inc/importcolumn.class.php:52
 msgid "Column"
 msgid_plural "Columns"
 msgstr[0] "Colonne"
 msgstr[1] "Colonnes"
+msgstr[2] "Colonnes"
 
 #: inc/importcolumn.class.php:57
 msgid "Integer"
@@ -1259,6 +1287,7 @@ msgid "Leaving reason"
 msgid_plural "Leaving reasons"
 msgstr[0] "Raison du départ"
 msgstr[1] "Raisons du départ"
+msgstr[2] "Raisons du départ"
 
 #: inc/linkad.class.php:54
 msgid "Update LDAP directory"
@@ -1341,6 +1370,7 @@ msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Gestion d'intercontrat"
 msgstr[1] "Gestion des intercontrats"
+msgstr[2] "Gestion des intercontrats"
 
 #: inc/menu.class.php:135 inc/menu.class.php:136
 #: inc/notificationtargetresource.class.php:1014
@@ -1356,6 +1386,7 @@ msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Gestion d'un badge"
 msgstr[1] "Gestion des badges"
+msgstr[2] "Gestion des badges"
 
 #: inc/menu.class.php:168
 msgid "Others actions"
@@ -1425,11 +1456,11 @@ msgstr "Liste des tâches"
 msgid "Import configuration"
 msgstr "Configuration des imports"
 
-#: inc/metademand.class.php:124
+#: inc/metademand.class.php:131
 msgid "Link a checklist in"
 msgstr "Lier à un checklist entrante"
 
-#: inc/metademand.class.php:125
+#: inc/metademand.class.php:132
 msgid ""
 "If the value selected equals the value to check, the checklist in will be "
 "add"
@@ -1437,11 +1468,11 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: inc/metademand.class.php:132
+#: inc/metademand.class.php:139
 msgid "Link a checklist out"
 msgstr "Lier à une checklist sortante"
 
-#: inc/metademand.class.php:133
+#: inc/metademand.class.php:140
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
@@ -1449,13 +1480,21 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: inc/metademand.class.php:141
+#: inc/metademand.class.php:148
 msgid ""
 "If the value selected equals the value to check, the habilitation will be "
 "add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, l'habilitation "
 "va être ajoutée"
+
+#: inc/metademand.class.php:155
+msgid "Leaving resource"
+msgstr "Ressource partante"
+
+#: inc/metademand.class.php:156
+msgid "If yes, the resource will be declared as leaving"
+msgstr "Si oui, la ressource sera déclarée partante"
 
 #: inc/notification.class.php:51
 msgid "Notification history"
@@ -1729,6 +1768,7 @@ msgid "Profession line"
 msgid_plural "Profession lines"
 msgstr[0] "Filière"
 msgstr[1] "Filières"
+msgstr[2] "Filières"
 
 #: inc/profession.class.php:99 inc/profession.class.php:213
 #: inc/professioncategory.class.php:48
@@ -1736,6 +1776,7 @@ msgid "Profession category"
 msgid_plural "Profession categories"
 msgstr[0] "Catégorie"
 msgstr[1] "Catégories"
+msgstr[2] "Catégories"
 
 #: inc/profile.class.php:179 inc/profile.class.php:309
 msgid "All resources access"
@@ -1758,12 +1799,14 @@ msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] "Congé"
 msgstr[1] "Congés"
+msgstr[2] "Congés"
 
 #: inc/profile.class.php:280
 msgid "Super habilitation"
 msgid_plural "Super habilitations"
 msgstr[0] "Super habilitation"
 msgstr[1] "Super habilitations"
+msgstr[2] "Super habilitations"
 
 #: inc/profile.class.php:290
 msgid "Dropdown management"
@@ -1774,6 +1817,7 @@ msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
 msgstr[0] "Liste Emploi / Ressource"
 msgstr[1] "Liste des Emplois / Ressources"
+msgstr[2] "Liste des Emplois / Ressources"
 
 #: inc/reportconfig.class.php:276 inc/reportconfig.class.php:372
 msgid "Send resource creation report notification"
@@ -1930,12 +1974,14 @@ msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Cette ressource a été ajoutée"
 msgstr[1] "Ces ressources ont été ajoutées"
+msgstr[2] "Ces ressources ont été ajoutées"
 
 #: inc/resource.class.php:4241 inc/resource.class.php:4261
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Cette ressource existe déjà"
 msgstr[1] "Ces ressources existent déjà"
+msgstr[2] "Ces ressources existent déjà"
 
 #: inc/resource.class.php:4579
 msgid "Declaration of resource transfer OK"
@@ -2315,6 +2361,7 @@ msgid "Non contract period"
 msgid_plural "Non contract periods"
 msgstr[0] "Liste des périodes d'intercontrat"
 msgstr[1] "Liste des périodes d'intercontrat"
+msgstr[2] "Liste des périodes d'intercontrat"
 
 #: inc/resourceresting.class.php:86 inc/resourceresting.class.php:122
 msgid "The begin date of the non contract period must be filled"
@@ -2343,6 +2390,7 @@ msgid "Public status"
 msgid_plural "Public statuses"
 msgstr[0] "Statut"
 msgstr[1] "Statuts"
+msgstr[2] "Statuts"
 
 #: inc/resourcesituation.class.php:97
 msgid "Is linked to a contract"
@@ -2353,18 +2401,21 @@ msgid "Speciality"
 msgid_plural "Specialities"
 msgstr[0] "Spécialité"
 msgstr[1] "Spécialités"
+msgstr[2] "Spécialités"
 
 #: inc/resourcestate.class.php:46
 msgid "Resource state"
 msgid_plural "Resource states"
 msgstr[0] "Statut de ressource"
 msgstr[1] "Statuts de ressource"
+msgstr[2] "Statuts de ressource"
 
 #: inc/role_service.class.php:59
 msgid "Link Role/Service"
 msgid_plural "Links Role/Service"
 msgstr[0] "Lien Rôle/Service"
 msgstr[1] "Liens Rôle/Service"
+msgstr[2] "Liens Rôle/Service"
 
 #: inc/rulechecklist.class.php:142
 msgid "Checklist type"
@@ -2399,6 +2450,7 @@ msgid "Service"
 msgid_plural "Services"
 msgstr[0] "Service"
 msgstr[1] "Services"
+msgstr[2] "Services"
 
 #: inc/servicecatalog.class.php:82 inc/servicecatalog.class.php:91
 msgid "Manage human resources"
@@ -2417,12 +2469,14 @@ msgid "Type of task"
 msgid_plural "Types of task"
 msgstr[0] "Type de tâche"
 msgstr[1] "Types de tâche"
+msgstr[2] "Types de tâche"
 
 #: inc/team.class.php:48
 msgid "Team"
 msgid_plural "Teams"
 msgstr[0] "Equipe"
 msgstr[1] "Equipes"
+msgstr[2] "Equipes"
 
 #: inc/team.class.php:74
 msgid "Manager of the team"
