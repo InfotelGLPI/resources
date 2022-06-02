@@ -364,7 +364,7 @@ class PluginResourcesMenu extends CommonDBTM {
       // Employment
       if (Session::haveright("plugin_resources_employment", READ)) {
          $menu['links']["<i class='fas fa-list-ul fa-1x' title='" . __('Employment management', 'resources') . "'></i>"]     = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.php';
-         $menu['links']["<i class='fas fa-city fa-1x' title='" . __('List Employments / Resources', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'//front/recap.php';
+         $menu['links']["<i class='fas fa-city fa-1x' title='" . __('List Employments / Resources', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/recap.php';
       }
 
       // Budget

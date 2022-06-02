@@ -41,7 +41,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
    //List of possible actions
    const CHANGE_RESOURCEMANAGER         = 1;
    const CHANGE_ACCESSPROFIL            = 2;
-   const CHANGE_CONTRACTYPE             = 3;
+   const CHANGE_CONTRACTTYPE             = 3;
    const CHANGE_AGENCY                  = 4;
    const CHANGE_TRANSFER                = 5;
    const BADGE_RESTITUTION              = 6;
@@ -67,7 +67,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $actions[self::CHANGE_RESOURCEMANAGER]         = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
       $actions[self::CHANGE_RESOURCESALE]            = self::getNameActions(self::CHANGE_RESOURCESALE);
       $actions[self::CHANGE_ACCESSPROFIL]            = self::getNameActions(self::CHANGE_ACCESSPROFIL);
-      $actions[self::CHANGE_CONTRACTYPE]             = self::getNameActions(self::CHANGE_CONTRACTYPE);
+      $actions[self::CHANGE_CONTRACTTYPE]             = self::getNameActions(self::CHANGE_CONTRACTTYPE);
       $actions[self::CHANGE_AGENCY]                  = self::getNameActions(self::CHANGE_AGENCY);
       $actions[self::CHANGE_RESOURCEINFORMATIONS]    = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
       $actions[self::CHANGE_RESOURCECOMPANY]         = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
@@ -115,7 +115,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             return __("Change the sales manager", 'resources');
          case self::CHANGE_ACCESSPROFIL :
             return __("Change the access profil", 'resources');
-         case self::CHANGE_CONTRACTYPE :
+         case self::CHANGE_CONTRACTTYPE :
             return __("Change contract type", 'resources');
          case self::CHANGE_AGENCY :
             return __("Change of agency", 'resources');
@@ -303,7 +303,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</div>";
 
             break;
-         case self::CHANGE_CONTRACTYPE :
+         case self::CHANGE_CONTRACTTYPE :
 
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
@@ -330,7 +330,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_contract(){";
             $params = ['load_button_changeresources'       => true,
-                       'action'                            => self::CHANGE_CONTRACTYPE,
+                       'action'                            => self::CHANGE_CONTRACTTYPE,
                        'plugin_resources_contracttypes_id' => '__VALUE__'];
             Ajax::updateItemJsCode('plugin_resources_buttonchangeresources',
                                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
@@ -794,7 +794,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                $display = true;
             }
             break;
-         case self::CHANGE_CONTRACTYPE :
+         case self::CHANGE_CONTRACTTYPE :
             if (isset($options['plugin_resources_contracttypes_id'])
                 && !empty($options['plugin_resources_contracttypes_id'])
                 && $options['plugin_resources_contracttypes_id'] != 0) {
@@ -963,7 +963,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
             $input['plugin_resources_habilitations_id'] = $options['plugin_resources_habilitations_id'];
             break;
-         case self::CHANGE_CONTRACTYPE :
+         case self::CHANGE_CONTRACTTYPE :
 
             $data['name']    = __("Change the type of contract for", 'resources') . " " .
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id);
@@ -1242,7 +1242,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
 
       $rand = mt_rand();
 
-      echo "<div class='center'>";
+      echo "<div class='left'>";
       if ($canedit) {
          Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
          $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
@@ -1275,13 +1275,12 @@ class PluginResourcesResource_Change extends CommonDBTM {
          echo "<td>" . Dropdown::getDropdownName('glpi_itilcategories', $action['itilcategories_id']) . "</td>";
          echo "</tr>";
       }
-
+      echo "</table>";
       if ($canedit) {
          $massiveactionparams['ontop'] = false;
          Html::showMassiveActions($massiveactionparams);
          Html::closeForm();
       }
-      echo "</table>";
       echo "</div>";
    }
 
