@@ -835,7 +835,8 @@ CREATE TABLE `glpi_plugin_resources_linkmetademands` (
    `check_value` TEXT collate utf8mb4_unicode_ci default NULL,
    `checklist_in` TEXT collate utf8mb4_unicode_ci default NULL,
    `checklist_out` TEXT collate utf8mb4_unicode_ci default NULL,
-   `haibilitation` TEXT collate utf8mb4_unicode_ci default NULL,
+   `habilitation` TEXT collate utf8mb4_unicode_ci default NULL,
+   `is_leaving_resource` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_metademands_fields_id`),
    KEY `plugin_metademands_fields_id` (`plugin_metademands_fields_id`)
