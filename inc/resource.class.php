@@ -746,8 +746,9 @@ class PluginResourcesResource extends CommonDBTM {
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
       $resourceItem  = new PluginResourcesResource_Item();
-      $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(), 'itemtype' => 'User']);
-      if (count($resourceUsers) > 0) {
+      $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(),
+                                            'itemtype' => 'User']);
+      if (count($resourceUsers) > 0 && Session::getCurrentInterface() == 'central') {
          $this->addStandardTab(PluginResourcesUser::class, $ong, $options);
       }
       $this->addStandardTab(PluginResourcesChoice::class, $ong, $options);
@@ -3425,7 +3426,7 @@ class PluginResourcesResource extends CommonDBTM {
       if($params['showHabilitations'] && $config->getField('display_habilitations_txt')){
          $output .= "<p id='habilitationsTxt'></p>";
          $output .= Ajax::updateItemOnSelectEvent($field_id, 'habilitationsTxt',
-                                                  $CFG_GLPI["root_doc"] . "/plugins/resources/ajax/showHabilitations.php",
+                                                  PLUGIN_RESOURCES_WEBDIR . "/ajax/showHabilitations.php",
                                                   ['value' => '__VALUE__',
                                                      'metademands_id'=> isset($_GET['metademands_id'])?$_GET['metademands_id']:0], false);
       }
@@ -3841,7 +3842,7 @@ class PluginResourcesResource extends CommonDBTM {
                          'display'   => true,
                          'entity'    => $_SESSION['glpiactiveentities'],
                          'condition' => $cond,
-                         'on_change' => "plugin_resources_pdf_resource(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
+                         'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);"]);
 
          echo "</div>";
          echo "</div>";
@@ -4860,7 +4861,7 @@ class PluginResourcesResource extends CommonDBTM {
       Plugin::loadLang('resources');
       echo Html::css("/public/lib/base.css");
       echo Html::script("public/lib/base.js");
-      echo Html::css("plugins/resources/lib/jstree/themes/default/style.min.css");
+      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/lib/jstree/themes/default/style.min.css");
 
       echo "<div class='alert alert-important alert-info d-flex'>" . __('Select the contract type', 'resources') . "</div><br>";
       echo "<a href='" . $target . "?reset=reset' target='_blank' title=\"" .
