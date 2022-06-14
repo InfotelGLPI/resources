@@ -837,11 +837,15 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          $comment                                 = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
          $this->data['##resource.comment##']      = Glpi\RichText\RichText::getTextFromHtml($comment);
 
-         $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
-         $this->data['##resource.usersleaving##']      = getUserName($this->obj->getField("users_id_recipient_leaving"));
+         if ($this->obj->getField('users_id_recipient_leaving')) {
+            $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
+            $this->data['##resource.usersleaving##']      = getUserName($this->obj->getField("users_id_recipient_leaving"));
+         }
+         if ($this->obj->getField('date_declaration_leaving')) {
+            $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
+            $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
+         }
 
-         $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
-         $this->data['##resource.datedeclarationleaving##']      = Html::convDateTime($this->obj->getField('date_declaration_leaving'));
 
          $this->data['##lang.resource.leaving##'] = __('Declared as leaving', 'resources');
          $this->data['##resource.leaving##']      = Dropdown::getYesNo($this->obj->getField('is_leaving'));

@@ -103,7 +103,8 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
       } else {
          $ticket->fields["content"] .= "<br>".PluginResourcesContractType::getTypeName(0)." : ". __("Without contract",'resources');
       }
-
+      $ticket->fields['users_id_recipient']  = Session::getLoginUserID();
+      $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
       $ticket->fields["type"] = Ticket::DEMAND_TYPE;
       $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
       $ticket->fields['items_id'] = ['PluginResourcesResource' => [$input['id']]];

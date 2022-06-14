@@ -927,6 +927,11 @@ class PluginResourcesResource extends CommonDBTM {
    function post_addItem() {
       global $CFG_GLPI;
 
+//      if ($this->fields['id'] == 0) {
+//         $this->getFromDBByCrit(
+//            [ 'name'      => $this->fields['name'],
+//               'firstname' => $this->fields['firstname']]);
+//      }
 //       Manage add from template
       if (isset($this->input["resources_oldID"])) {
 
@@ -2325,6 +2330,7 @@ class PluginResourcesResource extends CommonDBTM {
             $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
             if (isset($options['withtemplate']) && $options['withtemplate'] == 2) {
                $input['entities_id'] = $_SESSION['glpiactive_entity'];
+               echo Html::hidden('id_template', ['value' => $ID]);
                echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
             } else {
                $input['entities_id'] = $this->fields["entities_id"];
@@ -5450,8 +5456,8 @@ class PluginResourcesResource extends CommonDBTM {
 
    function getGenders() {
       return [Dropdown::EMPTY_VALUE,
-              __('M.', 'resources'),
-              __('Mme', 'resources')];
+              __('Male', 'resources'),
+              __('Female', 'resources')];
    }
 
 //   public function getCloneRelations(): array {

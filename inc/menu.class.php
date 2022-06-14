@@ -61,11 +61,11 @@ class PluginResourcesMenu extends CommonDBTM {
          //Add a change
          echo "<td class=' center' colspan='2'  width='200'>";
          $config = new PluginResourcesConfig();
-         if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
-            echo "<a href=\"./resource.change.php\">";
-         } else {
-            $url = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
+         if (!empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
+            $url = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
             echo "<a href=\"" . $url . "\">";
+         } else {
+            echo "<a href=\"./resource.change.php\">";
          }
          echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/recap.png' alt='" . __('Declare a change', 'resources') . "'>";
          echo "<br>" . __('Declare a change', 'resources') . "</a>";
@@ -73,11 +73,11 @@ class PluginResourcesMenu extends CommonDBTM {
 
          //Remove resources
          echo "<td class=' center' colspan='2'  width='200'>";
-         if (empty($config->fields["use_meta_for_changes"]) && $plugin->isActivated('metademands')) {
-            echo "<a href=\"./resource.remove.php\">";
-         } else {
-            $url = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
+         if (!empty($config->fields["use_meta_for_leave"]) && $plugin->isActivated('metademands')) {
+            $url = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
             echo "<a href=\"" . $url . "\">";
+         } else {
+            echo "<a href=\"./resource.remove.php\">";
          }
          echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/removeresource.png' alt='" . __('Declare a departure', 'resources') . "'>";
          echo "<br>" . __('Declare a departure', 'resources') . "</a>";

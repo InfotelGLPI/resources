@@ -36,6 +36,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesResourceState extends CommonDropdown {
 
+   var    $can_be_translated = true;
    /**
     * @since 0.85
     *

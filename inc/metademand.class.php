@@ -220,7 +220,7 @@ class PluginResourcesMetademand extends CommonGLPI {
                         $checklist_in =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_in"]);
                         $checklist_out =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_out"]);
                         $habilitation =  PluginMetademandsField::_unserialize($Pfield->fields["habilitation"]);
-                        $is_leaving_resource =  $Pfield->fields["is_leaving_resource"];
+                        $is_leaving_resource =  $Pfield->fields["is_leaving_resource"]??0;
                         if(isset($checkvalues) && is_array($checkvalues)){
                            foreach ($checkvalues as $k => $checkvalue){
                               if((!is_array($values["fields"][$v["id"]]) && $checkvalue == $values["fields"][$v["id"]]) ||
