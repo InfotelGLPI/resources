@@ -74,478 +74,481 @@ function plugin_resources_install() {
       include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
       call_user_func([PluginResourcesNotificationTargetResource::class, 'install']);
 
-   } else if ($DB->tableExists("glpi_plugin_resources")
-              && !$DB->tableExists("glpi_plugin_resources_employee")) {
-      $update   = true;
-      $update78 = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.4.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+   } else {
+      if ($DB->tableExists("glpi_plugin_resources")
+          && !$DB->tableExists("glpi_plugin_resources_employee")) {
+         $update   = true;
+         $update78 = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.4.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources")
-              && $DB->tableExists("glpi_plugin_resources_profiles")
-              && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
-      $update   = true;
-      $update78 = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      } else if ($DB->tableExists("glpi_plugin_resources")
+                 && $DB->tableExists("glpi_plugin_resources_profiles")
+                 && $DB->fieldExists("glpi_plugin_resources_profiles", "interface")) {
+         $update   = true;
+         $update78 = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources")
-              && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
-      $update   = true;
-      $update78 = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      } else if ($DB->tableExists("glpi_plugin_resources")
+                 && !$DB->fieldExists("glpi_plugin_resources", "helpdesk_visible")) {
+         $update   = true;
+         $update78 = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.5.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if (!$DB->tableExists("glpi_plugin_resources_contracttypes")) {
-      $update   = true;
-      $update78 = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      } else if (!$DB->tableExists("glpi_plugin_resources_contracttypes")) {
+         $update   = true;
+         $update78 = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.0.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if ($DB->tableExists("glpi_plugin_resources_contracttypes")
-              && !$DB->fieldExists("glpi_plugin_resources_resources", "picture")) {
-      $update   = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      } else if ($DB->tableExists("glpi_plugin_resources_contracttypes")
+                 && !$DB->fieldExists("glpi_plugin_resources_resources", "picture")) {
+         $update   = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.1.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if (!$DB->tableExists("glpi_plugin_resources_reportconfigs")) {
-      $update   = true;
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      } else if (!$DB->tableExists("glpi_plugin_resources_reportconfigs")) {
+         $update   = true;
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.6.2.sql");
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
 
-   } else if (!$DB->tableExists("glpi_plugin_resources_checklistconfigs")) {
-      $update80 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
-   }
+      } else if (!$DB->tableExists("glpi_plugin_resources_checklistconfigs")) {
+         $update80 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
+      }
 
-   if ($update78) {
+      if ($update78) {
 
-      $profiles = $dbu->getAllDataFromTable("glpi_plugin_resources_profiles");
+         $profiles = $dbu->getAllDataFromTable("glpi_plugin_resources_profiles");
 
-      if (!empty($profiles)) {
-         foreach ($profiles as $profile) {
-            $query = "UPDATE `glpi_plugin_resources_profiles`
+         if (!empty($profiles)) {
+            foreach ($profiles as $profile) {
+               $query = "UPDATE `glpi_plugin_resources_profiles`
                   SET `profiles_id` = '" . $profile["id"] . "'
                   WHERE `id` = '" . $profile["id"] . "';";
+               $DB->query($query);
+            }
+         }
+
+         $query = "ALTER TABLE `glpi_plugin_resources_profiles`
+               DROP `name` ;";
+         $DB->query($query);
+
+         $tables = [
+            "glpi_displaypreferences",
+            "glpi_documents_items",
+            "glpi_savedsearches",
+            "glpi_logs",
+            "glpi_items_tickets"
+         ];
+
+         foreach ($tables as $table) {
+            $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
             $DB->query($query);
          }
+
+         Plugin::migrateItemType(
+            [4300 => PluginResourcesResource::class,
+             4301 => PluginResourcesTask::class,
+             4303 => PluginResourcesDirectory::class],
+            ["glpi_savedsearches", "glpi_savedsearches_users", "glpi_displaypreferences",
+             "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"],
+            ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
+
+         Plugin::migrateItemType(
+            [1600 => PluginBadgesBadge::class],
+            ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
+
+         // Add record notification
+         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+         call_user_func([PluginResourcesNotificationTargetResource::class, 'update78']);
       }
 
-      $query = "ALTER TABLE `glpi_plugin_resources_profiles`
-               DROP `name` ;";
-      $DB->query($query);
-
-      $tables = [
-         "glpi_displaypreferences",
-         "glpi_documents_items",
-         "glpi_savedsearches",
-         "glpi_logs",
-         "glpi_items_tickets"
-      ];
-
-      foreach ($tables as $table) {
-         $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
-         $DB->query($query);
+      if ($update80) {
+         // Add record notification
+         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+         call_user_func([PluginResourcesNotificationTargetResource::class, 'update80']);
       }
 
-      Plugin::migrateItemType(
-         [4300 => PluginResourcesResource::class,
-          4301 => PluginResourcesTask::class,
-          4303 => PluginResourcesDirectory::class],
-         ["glpi_savedsearches", "glpi_savedsearches_users", "glpi_displaypreferences",
-          "glpi_documents_items", "glpi_infocoms", "glpi_logs", "glpi_items_tickets"],
-         ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
+      //Version 1.7.1
+      if (!$DB->tableExists("glpi_plugin_resources_choiceitems")) {
+         $update171 = true;
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.1.sql");
 
-      Plugin::migrateItemType(
-         [1600 => PluginBadgesBadge::class],
-         ["glpi_plugin_resources_resources_items", "glpi_plugin_resources_choices", "glpi_plugin_resources_tasks_items"]);
+      }
 
-      // Add record notification
-      include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-      call_user_func([PluginResourcesNotificationTargetResource::class, 'update78']);
-   }
+      //Version 1.9.0
+      if (!$DB->tableExists("glpi_plugin_resources_employments")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.0.sql");
 
-   if ($update80) {
-      // Add record notification
-      include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-      call_user_func([PluginResourcesNotificationTargetResource::class, 'update80']);
-   }
-
-   //Version 1.7.1
-   if (!$DB->tableExists("glpi_plugin_resources_choiceitems")) {
-      $update171 = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.1.sql");
-
-   }
-
-   //Version 1.9.0
-   if (!$DB->tableExists("glpi_plugin_resources_employments")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.0.sql");
-
-      $query  = "SELECT * FROM `glpi_plugin_resources_employers`";
-      $result = $DB->query($query);
-      if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetchArray($result)) {
-            $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
+         $query  = "SELECT * FROM `glpi_plugin_resources_employers`";
+         $result = $DB->query($query);
+         if ($DB->numrows($result) > 0) {
+            while ($data = $DB->fetchArray($result)) {
+               $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
                             SET `completename`= '" . $data["name"] . "'
                             WHERE `id`= '" . $data["id"] . "'";
-            $DB->query($queryUpdate) or die($DB->error());
-         }
-      }
-   }
-
-   //Version 1.9.1
-   if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists("glpi_plugin_resources_ranks", "begin_date")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.1.sql");
-   }
-
-   //Version 2.0.3
-   if (!$DB->fieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.3.sql");
-
-      // Add record notification
-      include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-      call_user_func(["PluginResourcesNotificationTargetResource", 'update203']);
-   }
-
-   //Version 2.0.4
-   if (!$DB->tableExists("glpi_plugin_resources_transferentities")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.4.sql");
-
-      // Add record notification
-      include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-      call_user_func(["PluginResourcesNotificationTargetResource", 'update204']);
-   }
-
-   //Version 2.3.1
-   if (!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists("glpi_plugin_resources_resourcebadges")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.1.sql");
-
-      // Add record notification
-      include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-      call_user_func(["PluginResourcesNotificationTargetResource", 'update231']);
-   }
-
-   //Version 2.3.2
-   if (!$DB->tableExists("glpi_plugin_resources_configs")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.2.sql");
-
-      include(PLUGIN_RESOURCES_DIR . "/install/update_231_232.php");
-      update231_232();
-   }
-
-   //Version 2.3.3
-   if (!$DB->fieldExists("glpi_plugin_resources_configs", "security_compliance")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.3.sql");
-   }
-
-   //Version 2.4.4
-   if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.4.4.sql");
-   }
-
-   //Version 2.6.1
-   if (!$DB->tableExists("glpi_plugin_resources_imports")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.1.sql");
-   }
-   if (!$DB->fieldExists("glpi_plugin_resources_configs", "resource_manager")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.3.sql");
-   }
-
-   //Version 2.6.4
-   if ($DB->fieldExists("glpi_plugin_resources_checklistconfigs", "is_deleted")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.4.sql");
-   }
-   //Version 2.7.1
-   if (!$DB->tableExists("glpi_plugin_resources_adconfigs")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.1.sql");
-   }
-   //Version 2.7.2
-   if (!$DB->fieldExists("glpi_plugin_resources_configs", "mandatory_checklist")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.2.sql");
-   }
-   //Version 2.7.3
-   if (!$DB->fieldExists("glpi_plugin_resources_resources", "gender")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.3.sql");
-   }
-
-   //Version 3.0.0
-   if (!$DB->fieldExists("glpi_plugin_resources_configs", "use_service_department_ad")) {
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.0.sql");
-   }
-   if (!$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
-      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
-      $DB->query($query) or die($DB->error());
-      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
-      $DB->query($query) or die($DB->error());
-   }
-   if (!$DB->fieldExists("glpi_plugin_resources_teams", "code")) {
-      $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD   `code` varchar(255) collate utf8_unicode_ci default NULL;";
-      $DB->query($query) or die($DB->error());
-
-   }
-
-   if ($update80) {
-
-      $restrict = ["plugin_resources_resources_id" => -1];
-
-      $checklists                     = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
-      $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
-      if (!empty($checklists)) {
-         foreach ($checklists as $checklist) {
-            $values["name"]        = addslashes($checklist["name"]);
-            $values["address"]     = addslashes($checklist["address"]);
-            $values["comment"]     = addslashes($checklist["comment"]);
-            $values["tag"]         = $checklist["tag"];
-            $values["entities_id"] = $checklist["entities_id"];
-            $PluginResourcesChecklistconfig->add($values);
+               $DB->query($queryUpdate) or die($DB->error());
+            }
          }
       }
 
-      $query = "DELETE FROM `glpi_plugin_resources_checklists`
+      //Version 1.9.1
+      if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists("glpi_plugin_resources_ranks", "begin_date")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.1.sql");
+      }
+
+      //Version 2.0.3
+      if (!$DB->fieldExists("glpi_plugin_resources_reportconfigs", "send_report_notif")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.3.sql");
+
+         // Add record notification
+         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+         call_user_func(["PluginResourcesNotificationTargetResource", 'update203']);
+      }
+
+      //Version 2.0.4
+      if (!$DB->tableExists("glpi_plugin_resources_transferentities")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.4.sql");
+
+         // Add record notification
+         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+         call_user_func(["PluginResourcesNotificationTargetResource", 'update204']);
+      }
+
+      //Version 2.3.1
+      if (!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists("glpi_plugin_resources_resourcebadges")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.1.sql");
+
+         // Add record notification
+         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+         call_user_func(["PluginResourcesNotificationTargetResource", 'update231']);
+      }
+
+      //Version 2.3.2
+      if (!$DB->tableExists("glpi_plugin_resources_configs")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.2.sql");
+
+         include(PLUGIN_RESOURCES_DIR . "/install/update_231_232.php");
+         update231_232();
+      }
+
+      //Version 2.3.3
+      if (!$DB->fieldExists("glpi_plugin_resources_configs", "security_compliance")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.3.sql");
+      }
+
+      //Version 2.4.4
+      if (!$DB->fieldExists("glpi_plugin_resources_contracttypes", "use_habilitation_wizard")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.4.4.sql");
+      }
+
+      //Version 2.6.1
+      if (!$DB->tableExists("glpi_plugin_resources_imports")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.1.sql");
+      }
+      if (!$DB->fieldExists("glpi_plugin_resources_configs", "resource_manager")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.3.sql");
+      }
+
+      //Version 2.6.4
+      if ($DB->fieldExists("glpi_plugin_resources_checklistconfigs", "is_deleted")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.6.4.sql");
+      }
+      //Version 2.7.1
+      if (!$DB->tableExists("glpi_plugin_resources_adconfigs")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.1.sql");
+      }
+      //Version 2.7.2
+      if (!$DB->fieldExists("glpi_plugin_resources_configs", "mandatory_checklist")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.2.sql");
+      }
+      //Version 2.7.3
+      if (!$DB->fieldExists("glpi_plugin_resources_resources", "gender")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.7.3.sql");
+      }
+
+      //Version 3.0.0
+      if (!$DB->fieldExists("glpi_plugin_resources_configs", "use_service_department_ad")) {
+         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.0.sql");
+      }
+      if ($DB->tableExists("glpi_plugin_resources_teams")
+          && !$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
+         $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
+         $DB->query($query) or die($DB->error());
+         $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
+         $DB->query($query) or die($DB->error());
+      }
+      if ($DB->tableExists("glpi_plugin_resources_teams")
+          && !$DB->fieldExists("glpi_plugin_resources_teams", "code")) {
+         $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD   `code` varchar(255) collate utf8_unicode_ci default NULL;";
+         $DB->query($query) or die($DB->error());
+
+      }
+
+      if ($update80) {
+
+         $restrict = ["plugin_resources_resources_id" => -1];
+
+         $checklists                     = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
+         $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
+         if (!empty($checklists)) {
+            foreach ($checklists as $checklist) {
+               $values["name"]        = addslashes($checklist["name"]);
+               $values["address"]     = addslashes($checklist["address"]);
+               $values["comment"]     = addslashes($checklist["comment"]);
+               $values["tag"]         = $checklist["tag"];
+               $values["entities_id"] = $checklist["entities_id"];
+               $PluginResourcesChecklistconfig->add($values);
+            }
+         }
+
+         $query = "DELETE FROM `glpi_plugin_resources_checklists`
                WHERE `plugin_resources_resources_id` ='-1'
                   OR `plugin_resources_resources_id` ='0';";
-      $DB->query($query);
+         $DB->query($query);
 
-      // Put realtime in seconds
-      if ($DB->fieldExists('glpi_plugin_resources_tasks', 'realtime')) {
+         // Put realtime in seconds
+         if ($DB->fieldExists('glpi_plugin_resources_tasks', 'realtime')) {
 
-         $query = "ALTER TABLE `glpi_plugin_resources_tasks`
+            $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             ADD `actiontime` INT( 11 ) NOT NULL DEFAULT 0 ;";
-         $DB->queryOrDie($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
+            $DB->queryOrDie($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
 
-         $query = "UPDATE `glpi_plugin_resources_tasks`
+            $query = "UPDATE `glpi_plugin_resources_tasks`
                    SET `actiontime` = ROUND(realtime * 3600)";
-         $DB->queryOrDie($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
+            $DB->queryOrDie($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
 
-         $query = "ALTER TABLE `glpi_plugin_resources_tasks`
+            $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             DROP `realtime` ;";
-         $DB->queryOrDie($query, "0.80 DROP realtime in glpi_plugin_resources_tasks");
-      }
+            $DB->queryOrDie($query, "0.80 DROP realtime in glpi_plugin_resources_tasks");
+         }
 
-      // ADD plannings for tasks
-      $dbu   = new DbUtils();
-      $tasks = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
-      if (!empty($tasks)) {
-         foreach ($tasks as $task) {
-            $query = "INSERT INTO `glpi_plugin_resources_taskplannings`
+         // ADD plannings for tasks
+         $dbu   = new DbUtils();
+         $tasks = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
+         if (!empty($tasks)) {
+            foreach ($tasks as $task) {
+               $query = "INSERT INTO `glpi_plugin_resources_taskplannings`
                ( `id` , `plugin_resources_tasks_id` , `begin` , `end` )
                VALUES (NULL , '" . $task["id"] . "', '" . $task["date_begin"] . "', '" . $task["date_end"] . "') ;";
-            $DB->query($query);
+               $DB->query($query);
+            }
          }
-      }
 
-      unset($input);
+         unset($input);
 
-      $query = "ALTER TABLE `glpi_plugin_resources_tasks`
+         $query = "ALTER TABLE `glpi_plugin_resources_tasks`
                DROP `date_begin`, DROP `date_end` ;";
-      $DB->queryOrDie($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
+         $DB->queryOrDie($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
 
-      // ADD tasks
-      $PluginResourcesResource = new PluginResourcesResource();
-      $dbu                     = new DbUtils();
-      $taches                  = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
-      if (!empty($taches)) {
-         foreach ($taches as $tache) {
-            $PluginResourcesResource->getFromDB($tache["plugin_resources_resources_id"]);
-            $input["entities_id"] = $PluginResourcesResource->fields["entities_id"];
-            $query                = "UPDATE `glpi_plugin_resources_tasks`
+         // ADD tasks
+         $PluginResourcesResource = new PluginResourcesResource();
+         $dbu                     = new DbUtils();
+         $taches                  = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
+         if (!empty($taches)) {
+            foreach ($taches as $tache) {
+               $PluginResourcesResource->getFromDB($tache["plugin_resources_resources_id"]);
+               $input["entities_id"] = $PluginResourcesResource->fields["entities_id"];
+               $query                = "UPDATE `glpi_plugin_resources_tasks`
                SET `entities_id` =  '" . $PluginResourcesResource->fields["entities_id"] . "' WHERE `id` = '" . $tache["id"] . "' ;";
-            $DB->query($query);
+               $DB->query($query);
+            }
          }
       }
-   }
 
-   if ($install || $update80) {
-      $restrict  = ["itemtype" => PluginResourcesResource::class];
-      $unicities = $dbu->getAllDataFromTable("glpi_fieldunicities", $restrict);
-      if (empty($unicities)) {
-         $query = "INSERT INTO `glpi_fieldunicities`" .
-                  "VALUES (NULL, 'Resources creation', 1, '" . PluginResourcesResource::class . "', '0',
+      if ($install || $update80) {
+         $restrict  = ["itemtype" => PluginResourcesResource::class];
+         $unicities = $dbu->getAllDataFromTable("glpi_fieldunicities", $restrict);
+         if (empty($unicities)) {
+            $query = "INSERT INTO `glpi_fieldunicities`" .
+                     "VALUES (NULL, 'Resources creation', 1, '" . PluginResourcesResource::class . "', '0',
                                              'name,firstname','1',
                                              '1', '1', '',NOW(),NOW());";
-         $DB->queryOrDie($query, " 0.80 Create fieldunicities check");
+            $DB->queryOrDie($query, " 0.80 Create fieldunicities check");
+         }
+
       }
 
-   }
-
-   if ($update171) {
-      $query  = "SELECT * FROM `glpi_plugin_resources_choices`
+      if ($update171) {
+         $query  = "SELECT * FROM `glpi_plugin_resources_choices`
       WHERE `itemtype`!= '' GROUP BY `comment`,`itemtype`";
-      $result = $DB->query($query);
-      $number = $DB->numrows($result);
+         $result = $DB->query($query);
+         $number = $DB->numrows($result);
 
-      $affectedchoices = [];
+         $affectedchoices = [];
 
-      if (!empty($number)) {
-         while ($data = $DB->fetchAssoc($result)) {
+         if (!empty($number)) {
+            while ($data = $DB->fetchAssoc($result)) {
 
-            $restrictaffected = ["itemtype" => $data['raw']["ITEMtype"],
-                                 "comment"  => addslashes($data["comment"])];
-            $affected         = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
+               $restrictaffected = ["itemtype" => $data['raw']["ITEMtype"],
+                                    "comment"  => addslashes($data["comment"])];
+               $affected         = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
 
-            if (!empty($affected)) {
-               foreach ($affected as $affect) {
-                  if ($affect["itemtype"] == $data['raw']["ITEMtype"]
-                      && $affect["comment"] == $data["comment"]) {
-                     $affectedchoices[$data["id"]][] = $affect["plugin_resources_resources_id"];
-                  }
-               }
-            }
-         }
-      }
-      $i = 0;
-      if (!empty($affectedchoices)) {
-         foreach ($affectedchoices as $key => $ressources) {
-            $i++;
-            $choice      = new PluginResourcesChoice();
-            $choice_item = new PluginResourcesChoiceItem();
-
-            $types = [__('Computer')                                 => Computer::class,
-                      __('Monitor')                                  => Monitor::class,
-                      __('Software')                                 => Software::class,
-                      __('Network device')                           => NetworkEquipment::class,
-                      __('Printer')                                  => Printer::class,
-                      __('Peripheral')                               => Peripheral::class,
-                      __('Phone')                                    => Phone::class,
-                      __('Consumable model')                         => ConsumableItem::class,
-                      __('Specific network rights', 'resources')     => '4303',
-                      __('Access to the applications', 'resources')  => '4304',
-                      __('Specific securities groups', 'resources')  => '4305',
-                      __('Specific distribution lists', 'resources') => '4306',
-                      __('Others needs', 'resources')                => '4307',
-                      'PluginBadgesBadge'                            => PluginBadgesBadge::class];
-
-            if ($choice->getFromDB($key)) {
-               $key = array_search($choice->fields["itemtype"], $types);
-               if ($key) {
-                  $name = $key;
-               } else {
-                  $name = $choice->fields["itemtype"];
-               }
-               $valuesparent["name"]         = $i . "." . $name;
-               $valuesparent["entities_id"]  = 0;
-               $valuesparent["is_recursive"] = 1;
-               $newidparent                  = $choice_item->add($valuesparent);
-
-               $comment = "N/A";
-               if (!empty($choice->fields["comment"])) {
-                  $comment = $choice->fields["comment"];
-               }
-               $valueschild["name"]                            = addslashes(Html::resume_text($comment, 50));
-               $valueschild["comment"]                         = addslashes($comment);
-               $valueschild["entities_id"]                     = 0;
-               $valueschild["is_recursive"]                    = 1;
-               $valueschild["plugin_resources_choiceitems_id"] = $newidparent;
-               $newidchild                                     = $choice_item->add($valueschild);
-
-               foreach ($ressources as $id => $val) {
-                  $query  = "UPDATE `glpi_plugin_resources_choices`
-                           SET `plugin_resources_choiceitems_id` = '" . $newidchild . "'
-                          WHERE `plugin_resources_resources_id` = '" . $val . "'
-                          AND `itemtype` = '" . $choice->fields["itemtype"] . "'
-                           AND `comment` = '" . addslashes($choice->fields["comment"]) . "';";
-                  $result = $DB->query($query);
-               }
-            }
-         }
-      }
-
-      $query = "ALTER TABLE `glpi_plugin_resources_choices`
-   DROP `itemtype`,
-   DROP `comment`,
-   ADD UNIQUE KEY `unicity` (`plugin_resources_resources_id`,`plugin_resources_choiceitems_id`);";
-      $DB->query($query);
-
-      $query = "ALTER TABLE `glpi_plugin_resources_choices`
-   ADD `comment` text collate utf8_unicode_ci;";
-      $DB->query($query);
-   }
-
-   //0.83 - Drop Matricule
-   if ($DB->tableExists("glpi_plugin_resources_employees") && $DB->fieldExists("glpi_plugin_resources_employees", "matricule")) {
-
-      $query  = "SELECT * FROM `glpi_users`";
-      $result = $DB->query($query);
-      $number = $DB->numrows($result);
-
-      if (!empty($number)) {
-         while ($data = $DB->fetchAssoc($result)) {
-
-            $restrict = ["items_id" => $data["id"],
-                         "itemtype" => 'User'];
-            $links    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
-
-            if (!empty($links)) {
-
-               foreach ($links as $link) {
-
-                  $employee = new PluginResourcesEmployee();
-                  if ($employee->getFromDBbyResources($link["plugin_resources_resources_id"])) {
-                     $matricule = $employee->fields["matricule"];
-
-                     if (isset($matricule) && !empty($matricule)) {
-                        $query = "UPDATE `glpi_users`
-                           SET `registration_number` = '" . $matricule . "'
-                           WHERE `id` ='" . $link["items_id"] . "'";
-                        $DB->query($query);
+               if (!empty($affected)) {
+                  foreach ($affected as $affect) {
+                     if ($affect["itemtype"] == $data['raw']["ITEMtype"]
+                         && $affect["comment"] == $data["comment"]) {
+                        $affectedchoices[$data["id"]][] = $affect["plugin_resources_resources_id"];
                      }
                   }
                }
             }
          }
+         $i = 0;
+         if (!empty($affectedchoices)) {
+            foreach ($affectedchoices as $key => $ressources) {
+               $i++;
+               $choice      = new PluginResourcesChoice();
+               $choice_item = new PluginResourcesChoiceItem();
+
+               $types = [__('Computer')                                 => Computer::class,
+                         __('Monitor')                                  => Monitor::class,
+                         __('Software')                                 => Software::class,
+                         __('Network device')                           => NetworkEquipment::class,
+                         __('Printer')                                  => Printer::class,
+                         __('Peripheral')                               => Peripheral::class,
+                         __('Phone')                                    => Phone::class,
+                         __('Consumable model')                         => ConsumableItem::class,
+                         __('Specific network rights', 'resources')     => '4303',
+                         __('Access to the applications', 'resources')  => '4304',
+                         __('Specific securities groups', 'resources')  => '4305',
+                         __('Specific distribution lists', 'resources') => '4306',
+                         __('Others needs', 'resources')                => '4307',
+                         'PluginBadgesBadge'                            => PluginBadgesBadge::class];
+
+               if ($choice->getFromDB($key)) {
+                  $key = array_search($choice->fields["itemtype"], $types);
+                  if ($key) {
+                     $name = $key;
+                  } else {
+                     $name = $choice->fields["itemtype"];
+                  }
+                  $valuesparent["name"]         = $i . "." . $name;
+                  $valuesparent["entities_id"]  = 0;
+                  $valuesparent["is_recursive"] = 1;
+                  $newidparent                  = $choice_item->add($valuesparent);
+
+                  $comment = "N/A";
+                  if (!empty($choice->fields["comment"])) {
+                     $comment = $choice->fields["comment"];
+                  }
+                  $valueschild["name"]                            = addslashes(Html::resume_text($comment, 50));
+                  $valueschild["comment"]                         = addslashes($comment);
+                  $valueschild["entities_id"]                     = 0;
+                  $valueschild["is_recursive"]                    = 1;
+                  $valueschild["plugin_resources_choiceitems_id"] = $newidparent;
+                  $newidchild                                     = $choice_item->add($valueschild);
+
+                  foreach ($ressources as $id => $val) {
+                     $query  = "UPDATE `glpi_plugin_resources_choices`
+                           SET `plugin_resources_choiceitems_id` = '" . $newidchild . "'
+                          WHERE `plugin_resources_resources_id` = '" . $val . "'
+                          AND `itemtype` = '" . $choice->fields["itemtype"] . "'
+                           AND `comment` = '" . addslashes($choice->fields["comment"]) . "';";
+                     $result = $DB->query($query);
+                  }
+               }
+            }
+         }
+
+         $query = "ALTER TABLE `glpi_plugin_resources_choices`
+   DROP `itemtype`,
+   DROP `comment`,
+   ADD UNIQUE KEY `unicity` (`plugin_resources_resources_id`,`plugin_resources_choiceitems_id`);";
+         $DB->query($query);
+
+         $query = "ALTER TABLE `glpi_plugin_resources_choices`
+   ADD `comment` text collate utf8_unicode_ci;";
+         $DB->query($query);
       }
 
-      $query = "ALTER TABLE `glpi_plugin_resources_employees`
+      //0.83 - Drop Matricule
+      if ($DB->tableExists("glpi_plugin_resources_employees") && $DB->fieldExists("glpi_plugin_resources_employees", "matricule")) {
+
+         $query  = "SELECT * FROM `glpi_users`";
+         $result = $DB->query($query);
+         $number = $DB->numrows($result);
+
+         if (!empty($number)) {
+            while ($data = $DB->fetchAssoc($result)) {
+
+               $restrict = ["items_id" => $data["id"],
+                            "itemtype" => 'User'];
+               $links    = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
+
+               if (!empty($links)) {
+
+                  foreach ($links as $link) {
+
+                     $employee = new PluginResourcesEmployee();
+                     if ($employee->getFromDBbyResources($link["plugin_resources_resources_id"])) {
+                        $matricule = $employee->fields["matricule"];
+
+                        if (isset($matricule) && !empty($matricule)) {
+                           $query = "UPDATE `glpi_users`
+                           SET `registration_number` = '" . $matricule . "'
+                           WHERE `id` ='" . $link["items_id"] . "'";
+                           $DB->query($query);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+
+         $query = "ALTER TABLE `glpi_plugin_resources_employees`
                DROP `matricule` ;";
-      $DB->query($query);
-   }
+         $DB->query($query);
+      }
 
-   if ($DB->tableExists("glpi_plugin_resources_profiles")) {
+      if ($DB->tableExists("glpi_plugin_resources_profiles")) {
 
-      $notepad_tables = ['glpi_plugin_resources_resources'];
-      $dbu            = new DbUtils();
-      foreach ($notepad_tables as $t) {
-         // Migrate data
-         if ($DB->fieldExists($t, 'notepad')) {
-            $query = "SELECT id, notepad
+         $notepad_tables = ['glpi_plugin_resources_resources'];
+         $dbu            = new DbUtils();
+         foreach ($notepad_tables as $t) {
+            // Migrate data
+            if ($DB->fieldExists($t, 'notepad')) {
+               $query = "SELECT id, notepad
                       FROM `$t`
                       WHERE notepad IS NOT NULL
                             AND notepad <>'';";
-            foreach ($DB->request($query) as $data) {
-               $iq = "INSERT INTO `glpi_notepads`
+               foreach ($DB->request($query) as $data) {
+                  $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
                       VALUES ('" . $dbu->getItemTypeForTable($t) . "', '" . $data['id'] . "',
                               '" . addslashes($data['notepad']) . "', NOW(), NOW())";
-               $DB->queryOrDie($iq, "0.85 migrate notepad data");
+                  $DB->queryOrDie($iq, "0.85 migrate notepad data");
+               }
+               $query = "ALTER TABLE `glpi_plugin_resources_resources` DROP COLUMN `notepad`;";
+               $DB->query($query);
             }
-            $query = "ALTER TABLE `glpi_plugin_resources_resources` DROP COLUMN `notepad`;";
-            $DB->query($query);
          }
       }
    }
-
    $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
    if (!is_dir($rep_files_resources)) {
       mkdir($rep_files_resources);

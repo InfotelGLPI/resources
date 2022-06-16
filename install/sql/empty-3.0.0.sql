@@ -747,15 +747,15 @@ CREATE TABLE `glpi_plugin_resources_configs` (
    `allow_without_contract`  int unsigned NOT NULL default '0',
    `use_service_department_ad` tinyint NOT NULL default '0',
    `use_secondary_service` tinyint NOT NULL default '0',
-   `use_meta_for_changes` int(11) NOT NULL default '0',
-   `use_meta_for_leave` int(11) NOT NULL default '0',
-   `remove_habilitation_on_update` int(11) NOT NULL default '0',
-   `display_habilitations_txt` int(11) NOT NULL default '0',
-   `hide_view_commercial_resource` tinyint(1) NOT NULL default '0',
+   `use_meta_for_changes` int unsigned NOT NULL default '0',
+   `use_meta_for_leave` int unsigned NOT NULL default '0',
+   `remove_habilitation_on_update` int unsigned NOT NULL default '0',
+   `display_habilitations_txt` int unsigned NOT NULL default '0',
+   `hide_view_commercial_resource` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0,0,0);
+INSERT INTO `glpi_plugin_resources_configs` VALUES(1, 0, 0, 0,'','',0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0);
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports` (
@@ -836,7 +836,7 @@ CREATE TABLE `glpi_plugin_resources_linkmetademands` (
    `checklist_in` TEXT collate utf8mb4_unicode_ci default NULL,
    `checklist_out` TEXT collate utf8mb4_unicode_ci default NULL,
    `habilitation` TEXT collate utf8mb4_unicode_ci default NULL,
-   `is_leaving_resource` tinyint(1) NOT NULL default '0',
+   `is_leaving_resource` tinyint NOT NULL default '0',
    PRIMARY KEY  (`id`),
    UNIQUE KEY `unicity` (`plugin_metademands_fields_id`),
    KEY `plugin_metademands_fields_id` (`plugin_metademands_fields_id`)
@@ -873,7 +873,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs` (
    `mail_suffix` varchar(255) NOT NULL default '',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','','','','','','','','','','','','','','','','','','','',0,0,0,0);
+INSERT INTO `glpi_plugin_resources_adconfigs` VALUES(1, 0,'','','','','','','','','','','','','','','','','','','','',0,0,0,'');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
 CREATE TABLE `glpi_plugin_resources_roles` (

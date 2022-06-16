@@ -791,7 +791,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
             echo "<tr class='tab_bg_1'>";
             echo "<td colspan='4' class='center'>";
             echo Html::hidden('itemtype', ['value' => $item->getType()]);
-            echo Html::hidden('itemtype', ['value' => $ID]);
+            echo Html::hidden('items_id', ['value' => $item->getID()]);
             if ($item->getType() == 'Ticket') {
                echo Html::hidden('tickets_id', ['value' => $ID]);
             }
