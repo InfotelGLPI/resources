@@ -36,7 +36,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesResourceBadge extends CommonDBTM {
 
-   static $rightname = 'plugin_resources_resting';
+   static $rightname = 'plugin_resources';
    public $dohistory = true;
 
    /**
@@ -216,13 +216,12 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       echo "<div align='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
-      $canresting = Session::haveright('plugin_resources_resting', UPDATE);
+      $canbadges = Session::haveright('plugin_resources', UPDATE);
 
       echo "<tr class=''>";
-      if ($canresting) {
+      if ($canbadges) {
          $colspan = 1;
          if ($plugin->isActivated("metademands")) {
-            //Add resting resource
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./resourcebadge.form.php?new\">";
             echo "<i class='fas fa-id-badge fa-6x'></i>";
@@ -231,7 +230,6 @@ class PluginResourcesResourceBadge extends CommonDBTM {
          } else {
             $colspan = 2;
          }
-         //List resting resource
          echo "<td class='tab_td_menu center' colspan='$colspan'>";
          echo "<a href=\"./resourcebadge.form.php\">";
          echo "<i class='fas fa-arrow-alt-circle-left fa-6x'></i>";
@@ -265,8 +263,6 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<table class='' style='margin-top:1px;'>";
       echo "<tr>";
       echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
-//      echo "<div class='plugin_resources_presentation_logo'>";
-//      echo "<img src='../pics/newresting.png' alt='newresting' /></div>";
       echo "</td>";
 
       echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
@@ -440,13 +436,13 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                                                                         strtotime($createtime));
       }
 
-      $input["name"]    = __('Badge restitution', 'resources') . '&nbsp;:&nbsp;' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
-      $input["content"] = __('Badge restitution', 'resources') . '&nbsp;:&nbsp;' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-      $input["content"] .= PluginBadgesBadge::getTypeName(1) . '&nbsp;:&nbsp;' . " " . Dropdown::getDropdownName('glpi_plugin_badges_badges', $options['badges_id']);
+      $input["name"]    = __('Badge restitution', 'resources') . ' : ' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
+      $input["content"] = __('Badge restitution', 'resources') . ' :' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
+      $input["content"] .= PluginBadgesBadge::getTypeName(1) . ' : ' . " " . Dropdown::getDropdownName('glpi_plugin_badges_badges', $options['badges_id']);
       $input["content"] .= addslashes("\n\n");
       $input['id']      = 0;
       $ticket           = new Ticket();
-      $input            = Toolbox::addslashes_deep($input);
+      $input            = Glpi\Toolbox\Sanitizer::sanitize($input);
 
       if ($tid = $ticket->add($input)) {
          $msg    = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success

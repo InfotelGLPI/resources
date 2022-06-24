@@ -119,7 +119,7 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
          'datatype' => 'text'
       ];
       $tab[] = [
-         'id'       => '16',
+         'id'       => '17',
          'table'    => $this->getTable(),
          'field'    => 'second_list',
          'name'     => __('Second part list of employer', 'resources'),
