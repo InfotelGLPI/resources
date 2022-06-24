@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-24 15:58+0000\n"
+"POT-Creation-Date: 2022-06-24 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,7 +460,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/checklist.class.php:321 inc/checklist.class.php:700
-#: inc/resource_change.class.php:1422 inc/resourcebadge.class.php:448
+#: inc/resource_change.class.php:1422 inc/resourcebadge.class.php:449
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -1962,8 +1962,8 @@ msgid "Change direction (mutation)"
 msgstr ""
 
 #: inc/resource_change.class.php:125 inc/resourcebadge.class.php:236
-#: inc/resourcebadge.class.php:271 inc/resourcebadge.class.php:439
-#: inc/resourcebadge.class.php:440
+#: inc/resourcebadge.class.php:271 inc/resourcebadge.class.php:440
+#: inc/resourcebadge.class.php:441
 msgid "Badge restitution"
 msgstr ""
 
