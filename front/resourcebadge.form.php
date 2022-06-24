@@ -50,14 +50,14 @@ if ($plugin->isActivated("badges")) {
    }
 
    $badge = new PluginResourcesResourceBadge();
-
+   $pluginbadge = new PluginBadgesBadge();
    if (isset($_POST['add_metademand'])) {
       $badge->check(-1, UPDATE, $_POST);
       $badge->add($_POST);
 
       Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resourcebadge.form.php?config");
    } else if (isset($_GET['menu'])) {
-      if ($badge->canView() || Session::haveRight("config", UPDATE)) {
+      if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
          $badge->showMenu();
       } else {
          echo "<div class='alert alert-important alert-warning d-flex'>";
@@ -66,7 +66,7 @@ if ($plugin->isActivated("badges")) {
 
    } else if (isset($_GET['config'])) {
       if ($plugin->isActivated("metademands")) {
-         if ($badge->canView()) {
+         if ($pluginbadge->canView()) {
             $badge->showFormBadge();
          }
       } else {
@@ -97,7 +97,7 @@ if ($plugin->isActivated("badges")) {
       $badge->createTicket($_POST['plugin_resources_resources_id'], $_POST);
       Html::back();
    } else {
-      if ($badge->canView() || Session::haveRight("config", UPDATE)) {
+      if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
          $badge->showWizardForm();
       }
    }

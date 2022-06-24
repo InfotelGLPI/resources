@@ -334,15 +334,16 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $dbu       = new DbUtils();
       $infos     = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       $users     = [];
+      $crit = [];
       if (!empty($infos)) {
          foreach ($infos as $info) {
-            $users[] = $info['items_id'];
+            $crit[] = ['users_id' => $info['items_id']];
          }
       }
 
       echo "<td class='left'>";
       $rand = PluginBadgesBadge::dropdown(['name'      => 'badges_id',
-                                           'condition' => ['users_id' => $users],
+                                           'condition' => $crit,
                                            'on_change' => 'plugin_resources_load_badge_restitution()'
                                           ]);
 
