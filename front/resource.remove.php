@@ -94,7 +94,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
       $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".$resource->fields['name']." ".$resource->fields['firstname']);
       $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
 
-      $ticket->fields["content"] = $resource->fields['name']." ".$resource->fields['firstname']." ".__("leave on","resources")." ".Html::convDateTime($input["date_end"]);
+      $ticket->fields["content"] = $resource->fields['name']." ".$resource->fields['firstname']." ".__("leave on","resources")." ".Html::convDate($input["date_end"]);
       if(isset($input['plugin_resources_leavingreasons_id']) && !empty($input['plugin_resources_leavingreasons_id'])) {
          $ticket->fields["content"] .= "<br>".PluginResourcesLeavingReason::getTypeName(0)." : ".Dropdown::getDropdownName(PluginResourcesLeavingReason::getTable(),$input["plugin_resources_leavingreasons_id"]);
       }

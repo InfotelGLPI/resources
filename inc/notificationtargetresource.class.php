@@ -419,9 +419,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##resource.users##']           = getUserName($resource['users_id']);
             $tmp['##resource.userssale##']       = getUserName($resource['users_id_sales']);
             $tmp['##resource.usersrecipient##']  = getUserName($resource['users_id_recipient']);
-            $tmp['##resource.datedeclaration##'] = Html::convDateTime($resource['date_declaration']);
-            $tmp['##resource.datebegin##']       = Html::convDateTime($resource['date_begin']);
-            $tmp['##resource.dateend##']         = Html::convDateTime($resource['date_end']);
+            $tmp['##resource.datedeclaration##'] = Html::convDate($resource['date_declaration']);
+            $tmp['##resource.datebegin##']       = Html::convDate($resource['date_begin']);
+            $tmp['##resource.dateend##']         = Html::convDate($resource['date_end']);
             $tmp['##resource.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                              $resource['plugin_resources_departments_id']);
             $resourcehabilitation                = new PluginResourcesResourceHabilitation();
@@ -499,9 +499,9 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
             $tmp['##checklist.users##']           = getUserName($checklist['users_id']);
             $tmp['##checklist.userssale##']       = getUserName($checklist['users_id_sales']);
             $tmp['##checklist.usersrecipient##']  = getUserName($checklist['users_id_recipient']);
-            $tmp['##checklist.datedeclaration##'] = Html::convDateTime($checklist['date_declaration']);
-            $tmp['##checklist.datebegin##']       = Html::convDateTime($checklist['date_begin']);
-            $tmp['##checklist.dateend##']         = Html::convDateTime($checklist['date_end']);
+            $tmp['##checklist.datedeclaration##'] = Html::convDate($checklist['date_declaration']);
+            $tmp['##checklist.datebegin##']       = Html::convDate($checklist['date_begin']);
+            $tmp['##checklist.dateend##']         = Html::convDate($checklist['date_end']);
             $tmp['##checklist.department##']      = Dropdown::getDropdownName('glpi_plugin_resources_departments',
                                                                               $checklist['plugin_resources_departments_id']);
             $resourcehabilitation                 = new PluginResourcesResourceHabilitation();

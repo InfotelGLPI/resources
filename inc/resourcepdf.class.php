@@ -62,7 +62,7 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
       if (isset($res->fields["date_declaration"])) {
          $users_id_recipient=new User();
          $users_id_recipient->getFromDB($res->fields["users_id_recipient"]);
-         $col2 = __('Request date').' : '.Html::convDateTime($res->fields["date_declaration"]).' '.__('Requester').' '.$users_id_recipient->getName();
+         $col2 = __('Request date').' : '.Html::convDate($res->fields["date_declaration"]).' '.__('Requester').' '.$users_id_recipient->getName();
       } else {
          $col2 = '';
       }

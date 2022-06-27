@@ -85,7 +85,7 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       $_POST["plugin_resources_contracttypes_id"] = 0;
       $_POST["users_id"]                          = 0;
       $_POST["users_id_sales"]                    = 0;
-      $_POST["date_end"]                          = "";
+      $_POST["date_end"]                          = date('Y-m-d');
       $_POST["departments_id"]                    = 0;
       $_POST["is_leaving"]                        = 0;
       $_POST["users_id_recipient_leaving"]        = 0;
@@ -114,9 +114,9 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       $_POST["add_from_helpdesk"]  = 1;
       $_POST["comment"]            = addslashes($_POST["comment"]);
       $_POST["locations_id"]       = $User->fields["locations_id"];
-      $_POST["date_begin"]         = $_SESSION["glpi_currenttime"];
+      $_POST["date_begin"]         = date('Y-m-d');
       $_POST["users_id_recipient"] = Session::getLoginUserID();
-      $_POST["date_declaration"]   = $_SESSION["glpi_currenttime"];
+      $_POST["date_declaration"]   = date('Y-m-d');
 
       //add resources
       $newID = $resource->add($_POST);

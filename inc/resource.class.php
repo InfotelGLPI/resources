@@ -1963,7 +1963,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo "<td colspan='2'>";
       if ($ID && $options['withtemplate'] < 2) {
          echo __('Request date') . " : ";
-         echo Html::convDateTime($this->fields["date_declaration"]);
+         echo Html::convDate($this->fields["date_declaration"]);
          echo "&nbsp;" . __('By') . "&nbsp;";
          $users_id_recipient = new User();
          $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
@@ -1979,7 +1979,7 @@ class PluginResourcesResource extends CommonDBTM {
          }
       } else {
          echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
-         echo Html::hidden('date_declaration', ['value' => $_SESSION["glpi_currenttime"]]);
+         echo Html::hidden('date_declaration', ['value' => date('Y-m-d')]);
       }
       echo "</td>";
 
@@ -2999,7 +2999,7 @@ class PluginResourcesResource extends CommonDBTM {
       echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $contract]);
       echo Html::hidden('plugin_resources_resourcestates_id', ['value' => $this->fields["plugin_resources_resourcestates_id"]]);
       echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
-      echo Html::hidden('date_declaration', ['value' => $_SESSION["glpi_currenttime"]]);
+      echo Html::hidden('date_declaration', ['value' => date('Y-m-d')]);
       echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
 
       echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => 0]);
