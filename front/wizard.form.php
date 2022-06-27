@@ -128,7 +128,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
       Html::displayMessageAfterRedirect();
 
-      $resource->wizardSecondForm(0, $values);
+      $resource->wizardSecondForm($_POST['id_template'], $values);
    } else if (isset($_POST['date_begin'])
           && !empty($_POST['date_begin'])
               && isset($_POST['date_end'])

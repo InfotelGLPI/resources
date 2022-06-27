@@ -2292,9 +2292,9 @@ class PluginResourcesResource extends CommonDBTM {
          $options["plugin_resources_roles_id"]                = $this->fields["plugin_resources_roles_id"];
          $options["matricule"]                                = $this->fields["matricule"];
          $options["matricule_second"]                         = $this->fields["matricule_second"];
-         $options["plugin_resources_employers_id"]            = 0;
-
       }
+      $options["plugin_resources_employers_id"]            = 0;
+
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
 
