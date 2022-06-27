@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '3.0.1');
+define('PLUGIN_RESOURCES_VERSION', '3.0.2');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
