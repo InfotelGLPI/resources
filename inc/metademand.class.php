@@ -109,8 +109,9 @@ class PluginResourcesMetademand extends CommonGLPI {
       } else {
          $params['habilitation'] = $params['habilitation'][$p["nbOpt"]];
       }
-
-      $params['is_leaving_resource'] = $linkmeta->fields["is_leaving_resource"];
+      if (isset($linkmeta->fields["is_leaving_resource"])) {
+         $params['is_leaving_resource'] = $linkmeta->fields["is_leaving_resource"];
+      }
       if (!isset($params['is_leaving_resource'])) {
          $params['is_leaving_resource'] = "";
       } else {
