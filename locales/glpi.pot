@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-27 07:16+0000\n"
+"POT-Creation-Date: 2022-07-01 15:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -968,7 +968,7 @@ msgid_plural "Functions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/habilitation.class.php:50 inc/metademand.class.php:147
+#: inc/habilitation.class.php:50 inc/metademand.class.php:148
 #: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
@@ -1393,35 +1393,35 @@ msgstr ""
 msgid "Import configuration"
 msgstr ""
 
-#: inc/metademand.class.php:131
+#: inc/metademand.class.php:132
 msgid "Link a checklist in"
 msgstr ""
 
-#: inc/metademand.class.php:132
+#: inc/metademand.class.php:133
 msgid ""
 "If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 
-#: inc/metademand.class.php:139
+#: inc/metademand.class.php:140
 msgid "Link a checklist out"
 msgstr ""
 
-#: inc/metademand.class.php:140
+#: inc/metademand.class.php:141
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
 msgstr ""
 
-#: inc/metademand.class.php:148
+#: inc/metademand.class.php:149
 msgid ""
 "If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 
-#: inc/metademand.class.php:155
+#: inc/metademand.class.php:156
 msgid "Leaving resource"
 msgstr ""
 
-#: inc/metademand.class.php:156
+#: inc/metademand.class.php:157
 msgid "If yes, the resource will be declared as leaving"
 msgstr ""
 
