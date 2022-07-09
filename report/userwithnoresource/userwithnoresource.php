@@ -50,10 +50,10 @@ $report->setColumns(
                             ['sorton' => 'location'])]);
 
 // SQL statement
-$dbu               = new DbUtils();
-$entities_user     = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_users", '', '', false);
-$entities_resource = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
-
+//$dbu               = new DbUtils();
+//$entities_user     = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_users", '', '', false);
+//$entities_resource = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
+//
 
 //display only resource without user linked
 $query = "SELECT  `glpi_users`.`id` as user_id,
@@ -70,17 +70,15 @@ $query = "SELECT  `glpi_users`.`id` as user_id,
                 OR `glpi_users`.`id` IN (SELECT `glpi_plugin_resources_resources_items`.`items_id`
                 FROM `glpi_plugin_resources_resources_items` 
                 LEFT JOIN `glpi_plugin_resources_resources`
-                ON (`glpi_plugin_resources_resources`.`id` = `plugin_resources_resources_id`)
+                ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
                 WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User' 
                     AND `glpi_plugin_resources_resources`.`is_leaving` = 0 
                     AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                     AND  `glpi_plugin_resources_resources`.`date_begin` IS NULL
-                    " . $entities_resource . "))
+                    ))
           AND `glpi_users`.`is_deleted` = 0
           AND `glpi_users`.`authtype`   = 3
-          AND `glpi_users`.`is_active`  = 1
-
-             " . $entities_user;
+          AND `glpi_users`.`is_active`  = 1";
 
 $report->getOrderBy('user_id');
 
