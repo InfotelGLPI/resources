@@ -834,8 +834,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                                                                                $this->obj->getField('locations_id'));
 
          $this->data['##lang.resource.comment##'] = __('Description');
-         $comment                                 = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
-         $this->data['##resource.comment##']      = Glpi\RichText\RichText::getTextFromHtml($comment);
+
+         $this->data['##resource.comment##']      = Glpi\RichText\RichText::getTextFromHtml($this->obj->getField("comment"));
 
          if ($this->obj->getField('users_id_recipient_leaving')) {
             $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');

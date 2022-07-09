@@ -1254,9 +1254,9 @@ class PluginResourcesResource extends CommonDBTM {
             $default                   = PluginResourcesEmploymentState::getDefault();
             // only current employment
             $restrict = "`plugin_resources_resources_id` = '" . $this->input["id"] . "'
-                        AND ((`begin_date` < '" . $this->input['date_end'] . "'
+                        AND ((`begin_date` < " . $this->input['date_end'] . "
                               OR `begin_date` IS NULL)
-                              AND (`end_date` > '" . $this->input['date_end'] . "'
+                              AND (`end_date` > " . $this->input['date_end'] . "
                                     OR `end_date` IS NULL)) ";
 
             $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
