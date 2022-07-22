@@ -908,10 +908,10 @@ class PluginResourcesResource extends CommonDBTM {
       }
 
       $template_resources = new Self();
-      if (isset($this->input['plugin_resources_resources_id'])) {
-         if ($template_resources->getFromDBByCrit(['id' => $this->input['plugin_resources_resources_id'],
+      if (isset($this->input['id_template'])) {
+         if ($template_resources->getFromDBByCrit(['id' => $this->input['id_template'],
                                                    'is_template' => 1])) {
-            $input["resources_oldID"] = $this->input['plugin_resources_resources_id'];
+            $input["resources_oldID"] = $this->input['id_template'];
          }
       }
 
@@ -933,6 +933,7 @@ class PluginResourcesResource extends CommonDBTM {
 //               'firstname' => $this->fields['firstname']]);
 //      }
 //       Manage add from template
+
       if (isset($this->input["resources_oldID"])) {
 
          // ADD choices
@@ -1254,9 +1255,9 @@ class PluginResourcesResource extends CommonDBTM {
             $default                   = PluginResourcesEmploymentState::getDefault();
             // only current employment
             $restrict = "`plugin_resources_resources_id` = '" . $this->input["id"] . "'
-                        AND ((`begin_date` < " . $this->input['date_end'] . "
+                        AND ((`begin_date` < '" . $this->input['date_end'] . "'
                               OR `begin_date` IS NULL)
-                              AND (`end_date` > " . $this->input['date_end'] . "
+                              AND (`end_date` > '" . $this->input['date_end'] . "'
                                     OR `end_date` IS NULL)) ";
 
             $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
