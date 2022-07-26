@@ -204,8 +204,6 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    function showMenu() {
       global $CFG_GLPI;
 
-      $plugin = new Plugin();
-
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
       echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
 
@@ -221,7 +219,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<tr class=''>";
       if ($canbadges) {
          $colspan = 1;
-         if ($plugin->isActivated("metademands")) {
+         if (Plugin::isPluginActive("metademands")) {
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./resourcebadge.form.php?new\">";
             echo "<i class='fas fa-id-badge fa-6x'></i>";

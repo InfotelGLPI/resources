@@ -35,7 +35,7 @@ $choice               = new PluginResourcesChoice();
 $resourcehabilitation = new PluginResourcesResourceHabilitation();
 
 $resource->checkGlobal(READ);
-$plugin = new Plugin();
+
 if (isset($_POST["secondary_services"])) {
    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
 } else {
@@ -46,7 +46,7 @@ if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    //from helpdesk
-   if ($plugin->isActivated('servicecatalog')) {
+   if (Plugin::isPluginActive('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesResource::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -480,7 +480,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 }
 
 if (Session::getCurrentInterface() != 'central'
-    && $plugin->isActivated('servicecatalog')) {
+    && Plugin::isPluginActive('servicecatalog')) {
 
    PluginServicecatalogMain::showNavBarFooter('resources');
 }

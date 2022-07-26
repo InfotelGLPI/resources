@@ -267,8 +267,7 @@ class PluginResourcesConfig extends CommonDBTM {
          echo "</td>";
          echo "</tr>";
 
-         $plugin = new Plugin();
-         if ($plugin->isActivated('metademands')) {
+         if (Plugin::isPluginActive('metademands')) {
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
             echo __('Use metademand for resources changes', 'resources');

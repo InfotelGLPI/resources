@@ -170,10 +170,9 @@ class PluginResourcesUser extends User {
 
       $pdf->displayTitle('<b>' . self::getTypeName(1) . '</b>');
 
-      $plugin = new Plugin();
       $addDisplayTitle = [];
       $addContent = [];
-      if($plugin->isActivated('fields')){
+      if(Plugin::isPluginActive('fields')){
          $fieldContainer = new PluginFieldsContainer();
          if($fieldContainer->getFromDBByCrit(['itemtypes' => ['LIKE','%User%']])){
             $nameTable = "PluginFieldsUser".$fieldContainer->getField('name');

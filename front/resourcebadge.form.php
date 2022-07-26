@@ -29,16 +29,14 @@
 
 include('../../../inc/includes.php');
 
-$plugin = new Plugin();
-
-if ($plugin->isActivated("badges")) {
+if (Plugin::isPluginActive("badges")) {
 
    if (Session::getCurrentInterface() == 'central') {
       //from central
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
    } else {
       //from helpdesk
-      if ($plugin->isActivated('servicecatalog')) {
+      if (Plugin::isPluginActive('servicecatalog')) {
          PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
       } else {
          Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -65,7 +63,7 @@ if ($plugin->isActivated("badges")) {
       }
 
    } else if (isset($_GET['config'])) {
-      if ($plugin->isActivated("metademands")) {
+      if (Plugin::isPluginActive("metademands")) {
          if ($pluginbadge->canView()) {
             $badge->showFormBadge();
          }
@@ -75,7 +73,7 @@ if ($plugin->isActivated("badges")) {
          echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
       }
    } else if (isset($_GET['new'])) {
-      if ($plugin->isActivated("metademands")) {
+      if (Plugin::isPluginActive("metademands")) {
          $data = $badge->find(['entities_id' => $_SESSION['glpiactive_entity']]);
          $data = array_shift($data);
 
@@ -103,7 +101,7 @@ if ($plugin->isActivated("badges")) {
    }
 
    if (Session::getCurrentInterface() != 'central'
-       && $plugin->isActivated('servicecatalog')) {
+       && Plugin::isPluginActive('servicecatalog')) {
 
       PluginServicecatalogMain::showNavBarFooter('resources');
    }

@@ -29,11 +29,11 @@
 
 include('../../../inc/includes.php');
 
-$plugin = new Plugin();
+
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
-   if ($plugin->isActivated('servicecatalog')) {
+   if (Plugin::isPluginActive('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -129,7 +129,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 }
 
 if (Session::getCurrentInterface() != 'central'
-    && $plugin->isActivated('servicecatalog')) {
+    && Plugin::isPluginActive('servicecatalog')) {
 
    PluginServicecatalogMain::showNavBarFooter('resources');
 }

@@ -351,14 +351,12 @@ else if (isset($_POST["add_checklist"])) {
 
 } else {
    $resource->checkGlobal(READ);
-   $plugin = new Plugin();
-
    if (Session::getCurrentInterface() == 'central') {
       //from central
       Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
    } else {
       //from helpdesk
-      if ($plugin->isActivated('servicecatalog')) {
+      if (Plugin::isPluginActive('servicecatalog')) {
          PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2), true);
       } else {
          Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -368,7 +366,7 @@ else if (isset($_POST["add_checklist"])) {
    $resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
 
    if (Session::getCurrentInterface() != 'central'
-       && $plugin->isActivated('servicecatalog')) {
+       && Plugin::isPluginActive('servicecatalog')) {
 
       PluginServicecatalogMain::showNavBarFooter('resources');
    }

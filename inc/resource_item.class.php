@@ -343,10 +343,9 @@ class PluginResourcesResource_Item extends CommonDBTM {
     */
    function searchAssociatedBadge($ID) {
 
-      $plugin                  = new Plugin();
       $PluginResourcesResource = new PluginResourcesResource();
 
-      if ($plugin->isActivated("badges")) {
+      if (Plugin::isPluginActive("badges")) {
 
          //search is the user have a linked badge
          $restrict = ["itemtype"                      => 'User',
@@ -461,8 +460,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
          $withtemplate = 0;
       }
       $types  = PluginResourcesResource::getTypes();
-      $plugin = new Plugin();
-      if ($plugin->isActivated("badges")) {
+
+      if (Plugin::isPluginActive("badges")) {
          $types[] = 'PluginBadgesBadge';
       }
 

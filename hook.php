@@ -794,8 +794,7 @@ function plugin_resources_AssignToTicket($types) {
  */
 function plugin_resources_getDatabaseRelations() {
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("resources")) {
+   if (Plugin::isPluginActive("resources")) {
       return [
          "glpi_entities"                              => ["glpi_plugin_resources_resources"            => "entities_id",
                                                           "glpi_plugin_resources_resourcestates"       => "entities_id",
@@ -884,8 +883,7 @@ function plugin_resources_getDatabaseRelations() {
  */
 function plugin_resources_getDropdown() {
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("resources")) {
+   if (Plugin::isPluginActive("resources")) {
       return [
          PluginResourcesContractType::class       => PluginResourcesContractType::getTypeName(2),
          PluginResourcesTaskType::class           => PluginResourcesTaskType::getTypeName(2),
@@ -1759,8 +1757,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num) {
  * @return array|mixed
  */
 function plugin_resources_MassiveActions($type) {
-   $plugin = new Plugin();
-   if ($plugin->isActivated('resources')) {
+
+   if (Plugin::isPluginActive('resources')) {
       if (in_array($type, PluginResourcesResource::getTypes())) {
          $resource = new PluginResourcesResource();
          return $resource->massiveActions($type);

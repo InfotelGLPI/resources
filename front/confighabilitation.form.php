@@ -29,14 +29,12 @@
 
 include('../../../inc/includes.php');
 
-$plugin = new Plugin();
-
 if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    //from helpdesk
-   if ($plugin->isActivated('servicecatalog')) {
+   if (Plugin::isPluginActive('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
@@ -64,7 +62,7 @@ if (isset($_POST['add_metademand'])) {
    }
 
 } else if (isset($_GET['config'])) {
-   if ($plugin->isActivated("metademands")) {
+   if (Plugin::isPluginActive("metademands")) {
       if ($habilitation->canView()) {
          $habilitation->showFormHabilitation();
       }
@@ -74,7 +72,7 @@ if (isset($_POST['add_metademand'])) {
       echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
    }
 } else if (isset($_GET['new'])) {
-   if ($plugin->isActivated("metademands")) {
+   if (Plugin::isPluginActive("metademands")) {
       $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
                                  'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
       $data = array_shift($data);
@@ -93,7 +91,7 @@ if (isset($_POST['add_metademand'])) {
    }
 
 } else if (isset($_GET['delete'])) {
-   if ($plugin->isActivated("metademands")) {
+   if (Plugin::isPluginActive("metademands")) {
       $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
                                    'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
       $data = array_shift($data);
@@ -114,7 +112,7 @@ if (isset($_POST['add_metademand'])) {
 }
 
 if (Session::getCurrentInterface() != 'central'
-    && $plugin->isActivated('servicecatalog')) {
+    && Plugin::isPluginActive('servicecatalog')) {
 
    PluginServicecatalogMain::showNavBarFooter('resources');
 }

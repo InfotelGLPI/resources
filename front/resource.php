@@ -29,12 +29,11 @@
 
 include ('../../../inc/includes.php');
 
-$plugin = new Plugin();
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
-   if ($plugin->isActivated('servicecatalog')) {
+   if (Plugin::isPluginActive('servicecatalog')) {
       PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesMenu::getTypeName(2));
@@ -72,7 +71,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
 }
 
 if (Session::getCurrentInterface() != 'central'
-    && $plugin->isActivated('servicecatalog')) {
+    && Plugin::isPluginActive('servicecatalog')) {
 
    PluginServicecatalogMain::showNavBarFooter('resources');
 }

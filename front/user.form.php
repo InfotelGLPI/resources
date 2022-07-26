@@ -86,7 +86,7 @@ if (isset($_POST["update"])) {
    foreach ($ticketResources as $ticketResource){
       $ticket->getFromDB($ticketResource['tickets_id']);
       if($ticket->getField('status')<5){
-         if($plugin->isActivated("escalade")){
+         if(Plugin::isPluginActive("escalade")){
             $first_history = PluginEscaladeHistory::getFirstLineForTicket($ticketResource['tickets_id']);
             //add the first history group (if not already exist)
             $group_ticket = new Group_Ticket;

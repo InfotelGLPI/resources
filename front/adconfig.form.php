@@ -29,8 +29,8 @@
 include ('../../../inc/includes.php');
 
 Session::checkRight("config", UPDATE);
-$plugin = new Plugin();
-if ($plugin->isActivated("resources")) {
+
+if (Plugin::isPluginActive("resources")) {
 
    $config = new PluginResourcesAdconfig();
 

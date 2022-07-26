@@ -31,8 +31,7 @@ include ('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$plugin = new Plugin();
-if ($plugin->isActivated("useditemsexport")) {
+if (Plugin::isPluginActive("useditemsexport")) {
 
    if (isset($_POST['plugin_resources_resources_id'])) {
       $resource_item = new PluginResourcesResource_Item();

@@ -29,8 +29,8 @@
 include ('../../../inc/includes.php');
 
 Session::checkRight("config", UPDATE);
-$plugin = new Plugin();
-if ($plugin->isActivated("resources")) {
+
+if (Plugin::isPluginActive("resources")) {
    $cat = new PluginResourcesTicketCategory();
    $transferEntity = new PluginResourcesTransferEntity();
    $resourceChange = new PluginResourcesResource_Change();
@@ -69,13 +69,12 @@ if ($plugin->isActivated("resources")) {
       $resourceAdConfig->showConfigForm();
 
       //badges
-      $plugin = new Plugin();
-      if ($plugin->isActivated("badges") && $plugin->isActivated("metademands")) {
+      if (Plugin::isPluginActive("badges") && Plugin::isPluginActive("metademands")) {
          $resourceBadge->showConfigForm();
       }
 
       //metademand
-      if ($plugin->isActivated("metademands")) {
+      if (Plugin::isPluginActive("metademands")) {
          $configHabilitation = new PluginResourcesConfigHabilitation();
          $configHabilitation->showConfigForm();
       }
