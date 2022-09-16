@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 14:01+0000\n"
+"POT-Creation-Date: 2022-09-16 10:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1375,13 +1375,12 @@ msgstr ""
 
 #: inc/menu.class.php:355 inc/resourceresting.class.php:298
 #: inc/resourceresting.class.php:299 inc/resourceresting.class.php:416
-#: inc/resourceresting.class.php:515 inc/resourceresting.class.php:1345
+#: inc/resourceresting.class.php:515
 msgid "List of non contract periods"
 msgstr ""
 
 #: inc/menu.class.php:360 inc/resourceholiday.class.php:286
 #: inc/resourceholiday.class.php:287 inc/resourceholiday.class.php:382
-#: inc/resourceholiday.class.php:1165
 msgid "List of forced holidays"
 msgstr ""
 
