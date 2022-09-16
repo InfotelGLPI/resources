@@ -318,6 +318,8 @@ class PluginResourcesBudget extends CommonDBTM {
       $menu['options'][$itemtype]['title']           = self::getTypeName();
       $menu['options'][$itemtype]['page']            = $plugin_page;
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
+       $menu['options'][$itemtype]['links']['lists']  = "";
+       $menu['options'][$itemtype]['lists_itemtype']  = self::getType();
 
       if (Session::haveright(self::$rightname, UPDATE)) {
          $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.form.php';

@@ -39,7 +39,7 @@ include ("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("resourceleavingwithactiveemployment_report_title", "resources"));
 
 // Columns title (optional), from $LANG
-$report->setColumns( [new PluginReportsColumnInteger('registration_number', __('Administrative number'),
+$report->setColumns( [new PluginReportsColumnInteger('registration_number', _x('user', 'Administrative number'),
                                                    ['sorton' => 'registration_number']),
                            new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
                                                    ['sorton' => 'resource_name']),

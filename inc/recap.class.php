@@ -40,6 +40,13 @@ class PluginResourcesRecap extends CommonDBTM {
    static protected $notable = true;
    private $table = "glpi_users";
 
+//    static function getTable($classname = null) {
+//
+//        $dbu = new DbUtils();
+//        return $dbu->getTableForItemType("PluginResourcesEmployment");
+//
+//    }
+
    /**
     * Return the localized name of the current Type
     * Should be overloaded in each new class
@@ -101,7 +108,7 @@ class PluginResourcesRecap extends CommonDBTM {
          'id'       => '1',
          'table'    => $this->table,
          'field'    => 'registration_number',
-         'name'     => __('Administrative number'),
+         'name'     => _x('user', 'Administrative number'),
          'datatype' => 'string'
       ];
 

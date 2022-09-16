@@ -8,6 +8,7 @@
 
 class PluginResourcesMenu extends CommonDBTM {
 
+    static $rightname = 'plugin_resources';
    /**
     * Return the localized name of the current Type
     * Should be overloaded in each new class
@@ -18,6 +19,14 @@ class PluginResourcesMenu extends CommonDBTM {
 
       return _n('Human resource', 'Human resources', $nb, 'resources');
    }
+
+    public static function canView()
+    {
+        if (static::$rightname) {
+            return Session::haveRight(static::$rightname, READ);
+        }
+        return false;
+    }
 
    /**
     * Display menu
@@ -340,7 +349,8 @@ class PluginResourcesMenu extends CommonDBTM {
       $menu['title']           = PluginResourcesResource::getTypeName(2);
       $menu['page']            = $plugin_page;
       $menu['links']['search'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR."/front/resource.php";
-
+      $menu['links']['lists']  = "";
+      $menu['lists_itemtype']  = PluginResourcesResource::getType();
       if (Session::haveright("plugin_resources", CREATE)) {
 
          $menu['links']['add']      = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/wizard.form.php';

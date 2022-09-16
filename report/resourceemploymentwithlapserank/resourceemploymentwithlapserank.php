@@ -247,7 +247,7 @@ if ($nbtot >0) {
    showTitle($output_type, $num, __('Type'), 'type');
    showTitle($output_type, $num, __('Surname'), 'name', true);
    showTitle($output_type, $num, __('First name'), 'firstname', true);
-   showTitle($output_type, $num, __('Administrative number'), 'registration_number', true);
+   showTitle($output_type, $num, _x('user', 'Administrative number'), 'registration_number', true);
    showTitle($output_type, $num, PluginResourcesRank::getTypeName(1), 'rankName', true);
    showTitle($output_type, $num, __('Arrival date', 'resources'), 'date_begin', true);
    showTitle($output_type, $num, __('Departure date', 'resources'), 'date_end', true);

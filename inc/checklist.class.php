@@ -1465,6 +1465,8 @@ class PluginResourcesChecklist extends CommonDBTM {
       $menu['options'][$itemtype]['title']           = self::getTypeName();
       $menu['options'][$itemtype]['page']            = $plugin_page;
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
+       $menu['options'][$itemtype]['links']['lists']  = "";
+       $menu['options'][$itemtype]['lists_itemtype']  = self::getType();
 
       // Add
       if (Session::haveright(self::$rightname, UPDATE)) {

@@ -99,7 +99,10 @@ class PluginResourcesEmployment extends CommonDBTM {
     **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-      if ($item->getType() == 'PluginResourcesResource' && $this->canView() && $withtemplate == 0) {
+      if ($item->getType() == 'PluginResourcesResource'
+          && $this->canView()
+//          && $withtemplate == 0
+      ) {
          if ($_SESSION['glpishow_count_on_tabs']) {
             $dbu = new DbUtils();
             return self::createTabEntry(self::getTypeName(2),
@@ -596,6 +599,8 @@ class PluginResourcesEmployment extends CommonDBTM {
       $menu['options'][$itemtype]['title']           = self::getTypeName();
       $menu['options'][$itemtype]['page']            = $plugin_page;
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
+       $menu['options'][$itemtype]['links']['lists']  = "";
+       $menu['options'][$itemtype]['lists_itemtype']  = self::getType();
 
       if (Session::haveright(self::$rightname, UPDATE)) {
          $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.form.php';

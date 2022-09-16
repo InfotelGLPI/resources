@@ -34,7 +34,7 @@ if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2), false, "PluginResourcesResource");
    } else {
       Html::helpHeader(PluginResourcesMenu::getTypeName(2));
    }

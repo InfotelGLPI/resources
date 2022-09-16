@@ -101,7 +101,7 @@ class PluginResourcesDirectory extends CommonDBTM {
          'id'                 => '1',
          'table'              => $this->table,
          'field'              => 'registration_number',
-         'name'               => __('Administrative number'),
+         'name'               => _x('user', 'Administrative number'),
          'datatype'           => 'string'
       ];
 

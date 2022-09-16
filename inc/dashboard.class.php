@@ -93,10 +93,10 @@ class PluginResourcesDashboard extends CommonGLPI
                   $data["name"] = $name;
 
                   if ($checklist["date_begin"] <= date('Y-m-d') && !empty($checklist["date_begin"])) {
-                     $data["date"] = "<div class='deleted'>" . Html::convDate($checklist["date_begin"]) . "</div>";
+                     $data["date"] = "<div class='deleted'>" . $checklist["date_begin"] . "</div>";
                   } else {
                      $data["date"] = "<div class='plugin_resources_date_day_color'>";
-                     $data["date"] .= Html::convDate($checklist["date_begin"]);
+                     $data["date"] .= $checklist["date_begin"];
                      $data["date"] .= "</div>";
                   }
 
@@ -133,10 +133,10 @@ class PluginResourcesDashboard extends CommonGLPI
                   $data["name"] = $name;
 
                   if ($checklist["date_end"] <= date('Y-m-d') && !empty($checklist["date_end"])) {
-                     $data["date"] = "<div class='deleted'>" . Html::convDate($checklist["date_end"]) . "</div>";
+                     $data["date"] = "<div class='deleted'>" . $checklist["date_end"] . "</div>";
                   } else {
                      $data["date"] = "<div class='plugin_resources_date_day_color'>";
-                     $data["date"] .= Html::convDate($checklist["date_end"]);
+                     $data["date"] .= $checklist["date_end"];
                      $data["date"] .= "</div>";
                   }
 
