@@ -994,6 +994,11 @@ function plugin_resources_getAddSearchOptions($itemtype) {
          $sopt[4325]['name']          = PluginResourcesResource::getTypeName(2) . " - " . __('Sales manager', 'resources');
          $sopt[4325]['massiveaction'] = false;
 
+          $sopt[4326]['table']         = 'glpi_plugin_resources_teams';
+          $sopt[4326]['field']         = 'name';
+          $sopt[4326]['name']          = PluginResourcesResource::getTypeName(2) . " - " . PluginResourcesTeam::getTypeName(1);
+          $sopt[4326]['massiveaction'] = false;
+
       }
    } else if ($itemtype == "Computer") {
       if (Session::haveRight("plugin_resources", READ)) {
@@ -1180,6 +1185,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
        || $new_table == "glpi_plugin_resources_managers"
        || $new_table == "glpi_plugin_resources_salemanagers"
        || $new_table == "glpi_plugin_resources_recipients"
+       || $new_table == "glpi_plugin_resources_teams"
        || $new_table == "glpi_plugin_resources_recipients_leaving") {
       $AS        = " AS glpi_plugin_resources_resources_" . $linkfield;
       $AS_device = " AS glpi_plugin_resources_resources_items_" . $linkfield;
@@ -1293,6 +1299,15 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
          }
          return $out;
          break;
+       case "glpi_plugin_resources_teams" : // From items
+           if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+               $out = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_plugin_resources_resources", "plugin_resources_resources_id");
+               $out .= " LEFT JOIN `glpi_plugin_resources_teams` ON (`glpi_plugin_resources_resources`.`plugin_resources_teams_id` = `glpi_plugin_resources_teams`.`id`) ";
+           } else {
+               $out = " LEFT JOIN `glpi_plugin_resources_teams` ON (`glpi_plugin_resources_resources`.`plugin_resources_teams_id` = `glpi_plugin_resources_teams`.`id`) ";
+           }
+           return $out;
+           break;
       case "glpi_plugin_resources_resourcestates" : // From items
          if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
             $out           = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_plugin_resources_resources", "plugin_resources_resources_id");

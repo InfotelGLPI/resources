@@ -57,7 +57,7 @@ function plugin_init_resources() {
       }
 
       Plugin::registerClass(PluginResourcesResource::class, [
-         'linkuser_types'               => true,
+//         'linkuser_types'               => true,
          'document_types'               => true,
          'ticket_types'                 => true,
          'helpdesk_visible_types'       => true,
