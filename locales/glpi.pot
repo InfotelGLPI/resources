@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-16 11:15+0000\n"
+"POT-Creation-Date: 2022-09-22 08:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,23 +117,23 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1541 inc/resource_item.class.php:898
+#: hook.php:1556 inc/resource_item.class.php:898
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:1815
+#: hook.php:1830
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1847 hook.php:1879 inc/linkad.class.php:754
+#: hook.php:1862 hook.php:1894 inc/linkad.class.php:754
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:1857 inc/linkad.class.php:756
+#: hook.php:1872 inc/linkad.class.php:756
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:1889
+#: hook.php:1904
 msgid "You have to do all checklist out action before"
 msgstr ""
 
