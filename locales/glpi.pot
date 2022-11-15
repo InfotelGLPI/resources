@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-08 12:49+0000\n"
+"POT-Creation-Date: 2022-11-15 10:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -335,7 +335,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/adconfig.class.php:309 inc/checklist.class.php:1127
-#: inc/dashboard.class.php:151 inc/directory.class.php:215
+#: inc/dashboard.class.php:152 inc/directory.class.php:215
 #: inc/linkad.class.php:646 inc/notificationtargetresource.class.php:400
 #: inc/notificationtargetresource.class.php:479
 #: inc/notificationtargetresource.class.php:619
@@ -362,7 +362,7 @@ msgid "Departure date"
 msgstr ""
 
 #: inc/adconfig.class.php:329 inc/linkad.class.php:459 inc/linkad.class.php:640
-#: inc/profile.class.php:264 inc/role.class.php:48
+#: inc/profile.class.php:266 inc/role.class.php:48
 #: inc/rulecontracttype.class.php:271 inc/rulecontracttypehidden.class.php:275
 msgid "Role"
 msgid_plural "Roles"
@@ -453,7 +453,7 @@ msgstr[1] ""
 msgid "Code"
 msgstr ""
 
-#: inc/checklist.class.php:54 inc/menu.class.php:391 inc/profile.class.php:254
+#: inc/checklist.class.php:54 inc/menu.class.php:391 inc/profile.class.php:256
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] ""
@@ -536,12 +536,12 @@ msgstr ""
 msgid "The checklist is finished"
 msgstr ""
 
-#: inc/checklist.class.php:1120 inc/dashboard.class.php:63
-#: inc/dashboard.class.php:158 inc/notificationtargetresource.class.php:466
+#: inc/checklist.class.php:1120 inc/dashboard.class.php:62
+#: inc/dashboard.class.php:159 inc/notificationtargetresource.class.php:466
 msgid "Leaving resource - checklist needs to verificated"
 msgstr ""
 
-#: inc/checklist.class.php:1122 inc/dashboard.class.php:60
+#: inc/checklist.class.php:1122 inc/dashboard.class.php:59
 #: inc/dashboard.class.php:119 inc/notificationtargetresource.class.php:462
 msgid "New resource - checklist needs to verificated"
 msgstr ""
@@ -701,7 +701,7 @@ msgstr ""
 msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr ""
 
-#: inc/config.class.php:125 inc/profile.class.php:209 inc/profile.class.php:295
+#: inc/config.class.php:125 inc/profile.class.php:212 inc/profile.class.php:297
 msgid "Import external"
 msgstr ""
 
@@ -863,10 +863,6 @@ msgid_plural "Budget costs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/dashboard.class.php:59
-msgid "Tables"
-msgstr ""
-
 #: inc/department_service.class.php:59
 msgid "Link Department/Service"
 msgid_plural "Links Department/Service"
@@ -883,7 +879,7 @@ msgstr[1] ""
 msgid "Click here to send your email"
 msgstr ""
 
-#: inc/employee.class.php:51 inc/profile.class.php:259
+#: inc/employee.class.php:51 inc/profile.class.php:261
 msgid "Employee"
 msgid_plural "Employees"
 msgstr[0] ""
@@ -911,7 +907,7 @@ msgstr ""
 msgid "Second part list of employer"
 msgstr ""
 
-#: inc/employment.class.php:57 inc/profile.class.php:285
+#: inc/employment.class.php:57 inc/profile.class.php:287
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:58
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:60
 msgid "Employment"
@@ -920,7 +916,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/employment.class.php:162 inc/employment.class.php:221
-#: inc/employment.class.php:341 inc/menu.class.php:20 inc/profile.class.php:239
+#: inc/employment.class.php:341 inc/menu.class.php:20 inc/profile.class.php:241
 #: inc/resource.class.php:68 inc/taskplanning.class.php:53
 msgid "Human resource"
 msgid_plural "Human resources"
@@ -1304,7 +1300,7 @@ msgstr ""
 
 #: inc/menu.class.php:134 inc/menu.class.php:135
 #: inc/notificationtargetresource.class.php:977
-#: inc/notificationtargetresource.class.php:1353 inc/profile.class.php:270
+#: inc/notificationtargetresource.class.php:1353 inc/profile.class.php:272
 #: inc/resourceresting.class.php:272
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
@@ -1703,35 +1699,35 @@ msgid_plural "Profession categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/profile.class.php:179 inc/profile.class.php:309
+#: inc/profile.class.php:182 inc/profile.class.php:311
 msgid "All resources access"
 msgstr ""
 
-#: inc/profile.class.php:186
+#: inc/profile.class.php:189
 msgid "View employer in core form "
 msgstr ""
 
-#: inc/profile.class.php:197
+#: inc/profile.class.php:200
 msgid "Service company management"
 msgstr ""
 
-#: inc/profile.class.php:202
+#: inc/profile.class.php:205
 msgid "Public service management"
 msgstr ""
 
-#: inc/profile.class.php:275 inc/resourceholiday.class.php:53
+#: inc/profile.class.php:277 inc/resourceholiday.class.php:53
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/profile.class.php:280
+#: inc/profile.class.php:282
 msgid "Super habilitation"
 msgid_plural "Super habilitations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/profile.class.php:290
+#: inc/profile.class.php:292
 msgid "Dropdown management"
 msgstr ""
 
