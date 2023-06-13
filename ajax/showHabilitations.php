@@ -47,7 +47,7 @@ if (count($resForm)) {
    $form->getFromDB($last);
    unset($_SESSION['plugin_metademands']);
    $metademands->getFromDB($_POST['metademands_id']);
-   PluginMetademandsForm_Value::loadFormValues($form->getField('id'));
+   PluginMetademandsForm_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
    $form_name = $form->getField('name');
 
    // Resources id
