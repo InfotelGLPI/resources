@@ -30,6 +30,7 @@
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
+use Glpi\Application\View\TemplateRenderer;
 
 /**
  * Class PluginResourcesResource
@@ -293,6 +294,11 @@ class PluginResourcesResource extends CommonDBTM {
             && $this->canView()) {
             return self::getTypeName(2);
         }
+
+        if ($item->getType() == self::class
+            && $this->canView()) {
+            return __('Recruiting information', 'resources');
+        }
         return '';
     }
 
@@ -313,6 +319,10 @@ class PluginResourcesResource extends CommonDBTM {
         if ($item->getType() == PluginResourcesClient::class) {
             $self = new self();
             $self->showListResourcesForClient($item->getField('id'));
+        }
+        if ($item->getType() == self::class) {
+            $self = new self();
+            $self->wizardEightForm($item->getField('id'),['default_button' => true, 'target' => 'item']);
         }
         return true;
     }
@@ -712,6 +722,109 @@ class PluginResourcesResource extends CommonDBTM {
             'field' => 'matricule_second',
             'name'  => __('Second matricule', 'resources'),
         ];
+        $tab[] = [
+            'id'            => '45',
+            'table'         => $this->getTable(),
+            'field'         => 'date_agreement_candidate',
+            'name'          =>  __('Date agreement candidate', 'resources'),
+            'datatype'      => 'datetime',
+            'massiveaction' => false
+        ];
+
+        $tab[] = [
+            'id'            => '46',
+            'table'         => PluginResourcesDegreeGroup::getTable(),
+            'field'         => 'name',
+            'name'          => PluginResourcesDegreeGroup::getTypeName(),
+            'datatype'      => 'dropdown',
+            'massiveaction' => true
+        ];
+        $tab[] = [
+            'id'            => '47',
+            'table'         => PluginResourcesRecruitingSource::getTable(),
+            'field'         => 'name',
+            'name'          => PluginResourcesRecruitingSource::getTypeName(),
+            'datatype'      => 'dropdown',
+            'massiveaction' => true
+        ];
+        $tab[] = [
+            'id'            => '48',
+            'table'         => $this->getTable(),
+            'field'         => 'yearsexperience',
+            'name'          => __('number of years experience','resources'),
+            'massiveaction' => false,
+            'datatype'      => 'number'
+        ];
+        $tab[] = [
+            'id'            => '49',
+            'table'         => $this->getTable(),
+            'field'         => 'reconversion',
+            'name'          => __('Reconversion','resources'),
+            'datatype'      => 'bool',
+            'massiveaction' => false
+        ];
+
+        $tab[] = [
+            'id'            => '50',
+            'table'         => $this->getTable(),
+            'field'         => 'date_of_last_contract_type',
+            'name'          => __('Date of last contract type','resources'),
+            'datatype'      => 'date',
+            'massiveaction' => false
+        ];
+        $tab[] = [
+            'id'            => '54',
+            'table'         => 'glpi_plugin_resources_contracttypes',
+            'field'         => 'name',
+            'linkfield'         => 'last_contract_type',
+            'name'          => __('Last contract type','resources'),
+            'datatype'      => 'dropdown',
+            'massiveaction' => false
+        ];
+        $tab[] = [
+            'id'            => '52',
+            'table'         => $this->getTable(),
+            'field'         => 'date_of_last_location',
+            'name'          => __('Date of last location','resources'),
+            'datatype'      => 'date',
+            'massiveaction' => false
+        ];
+        $tab[] = [
+            'id'            => '53',
+            'table'         => Location::getTable(),
+            'field'         => 'name',
+            'linkfield'     => 'last_location',
+            'name'          => __('Last location','resources'),
+            'datatype'      => 'dropdown',
+            'massiveaction' => false
+        ];
+
+//        $tab[] = [
+//            'id'        => '54',
+//            'table'     => 'glpi_plugin_resources_workprofiles',
+//            'field'     => 'name',
+//            'linkfield' => 'plugin_resources_workprofiles_id_entrance',
+//            'name'      => PluginResourcesWorkProfile::getTypeName(),
+//            'datatype'  => 'dropdown',
+//            'right'     => 'all'
+//        ];
+        $tab[] = [
+            'id'        => '55',
+            'table'     => 'glpi_plugin_resources_candidateorigins',
+            'field'     => 'name',
+            'linkfield' => 'plugin_resources_candidateorigins_id',
+            'name'      => PluginResourcesCandidateorigin::getTypeName(),
+            'datatype'  => 'dropdown',
+            'right'     => 'all'
+        ];
+        $tab[] = [
+            'id'        => '56',
+            'table'     => $this->getTable(),
+            'field'     => 'gender',
+            'name'      => __('Gender', 'resources'),
+            'datatype'  => 'specific',
+            'searchtype'         => ['equals', 'notequals'],
+        ];
         //      $tab[] = [
         //         'id'    => '45',
         //         'table' => $this->getTable(),
@@ -719,6 +832,7 @@ class PluginResourcesResource extends CommonDBTM {
         //         'name'  => __('Society', 'resources'),
         //      ];
 
+                $tab = array_merge($tab, PluginResourcesLeavingInformation::rawSearchOptionsToAdd(get_class($this)));
         return $tab;
     }
 
@@ -737,6 +851,7 @@ class PluginResourcesResource extends CommonDBTM {
         $ong = [];
 
         $this->addDefaultFormTab($ong);
+        $this->addStandardTab(PluginResourcesResource::class, $ong, $options);
         $this->addStandardTab(PluginResourcesResource_Item::class, $ong, $options);
         $resourceItem  = new PluginResourcesResource_Item();
         $resourceUsers = $resourceItem->find(['plugin_resources_resources_id' => $this->getID(),
@@ -748,6 +863,7 @@ class PluginResourcesResource extends CommonDBTM {
         $this->addStandardTab(PluginResourcesResourceHabilitation::class, $ong, $options);
         $this->addStandardTab(PluginResourcesEmployment::class, $ong, $options);
         $this->addStandardTab(PluginResourcesEmployee::class, $ong, $options);
+        $this->addStandardTab(PluginResourcesLeavingInformation::class, $ong, $options);
         $this->addStandardTab(PluginResourcesChecklist::class, $ong, $options);
         $this->addStandardTab(PluginResourcesTask::class, $ong, $options);
 
@@ -823,13 +939,50 @@ class PluginResourcesResource extends CommonDBTM {
                     || is_null($input[$val])
                     || $input[$val] == "NULL"
                 ) {
-                    if (!$rank->canCreate()
-                        && in_array($val,
-                                    ['plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id'])
-                    ) {
+                    if(isset($input['more_information'])) {
+                        if (!$rank->canCreate()
+                            && !in_array($val,
+                                [
+                                    'date_agreement_candidate','plugin_resources_degreegroups_id',
+                                    'plugin_resources_recruitingsources_id','yearsexperience','reconversion',
+                                    'interview_date', 'users_id','plugin_resources_workprofiles_id',
+                                    'plugin_resources_clients_id','resignation_date','wished_leaving_date',
+                                    'effective_leaving_date','plugin_resources_destinations_id',
+                                    'plugin_resources_leavingreasons_id','company_name','pay_gap','mission_lost'
+                                ])
+                        ) {
+
+                        } else {
+                            $need[] = $val;
+                        }
                     } else {
-                        $need[] = $val;
+                        if ((!$rank->canCreate()
+                            && in_array($val,
+                                [
+                                    'plugin_resources_ranks_id', 'plugin_resources_resourcesituations_id',
+                                    'date_agreement_candidate','plugin_resources_degreegroups_id',
+                                    'plugin_resources_recruitingsources_id','yearsexperience','reconversion',
+                                    'interview_date', 'users_id','plugin_resources_workprofiles_id',
+                                    'plugin_resources_clients_id','resignation_date','wished_leaving_date',
+                                    'effective_leaving_date','plugin_resources_destinations_id',
+                                    'plugin_resources_leavingreasons_id','company_name','pay_gap','mission_lost'
+                                ])) || in_array($val,
+                                [
+
+                                    'date_agreement_candidate','plugin_resources_degreegroups_id',
+                                    'plugin_resources_recruitingsources_id','yearsexperience','reconversion',
+                                    'interview_date', 'users_id','plugin_resources_workprofiles_id',
+                                    'plugin_resources_clients_id','resignation_date','wished_leaving_date',
+                                    'effective_leaving_date','plugin_resources_destinations_id',
+                                    'plugin_resources_leavingreasons_id','company_name','pay_gap','mission_lost'
+                                ])
+                        ) {
+
+                        } else {
+                            $need[] = $val;
+                        }
                     }
+
                 }
             }
         }
@@ -1426,7 +1579,7 @@ class PluginResourcesResource extends CommonDBTM {
         echo ">";
         echo __('Gender', 'resources') . "</td>";
         echo "<td " . $tohide['gender'] . ">";
-        $genders = $this->getGenders();
+        $genders = self::getGenders();
         $option  = ['value' => isset($this->fields["gender"]) ? $this->fields["gender"] : 0];
         Dropdown::showFromArray('gender', $genders, $option);
         echo "</td>";
@@ -2398,7 +2551,7 @@ class PluginResourcesResource extends CommonDBTM {
         echo "</div>";
 
         echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\">";
-        $genders = $this->getGenders();
+        $genders = self::getGenders();
         $option  = ['value' => $options["gender"]];
         Dropdown::showFromArray('gender', $genders, $option);
         echo "</div>";
@@ -3123,6 +3276,40 @@ class PluginResourcesResource extends CommonDBTM {
         echo "</div>";
     }
 
+    function wizardEightForm($ID, $options = []) {
+        global $CFG_GLPI;
+        $tt = [];
+        $mandatory = [];
+
+        $this->initForm($ID, $options);
+        $this->getFromDB($ID);
+        $input['plugin_resources_contracttypes_id'] = $this->fields['plugin_resources_contracttypes_id'];
+        $input['entities_id'] = $this->fields['entities_id'];
+        $input['more_information'] = 1;
+        $mandatory                                   = $this->checkRequiredFields($input);
+        $mandatory = array_flip($mandatory);
+        $hidden                                      = $this->getHiddenFields($input);
+        $hidden = array_flip($hidden);
+        if(isset($options['target']) && $options['target'] == 'item') {
+            $target = null;
+        } else {
+            $target = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/recruitinginformation.html.twig', [
+            'item'   => $this,
+            'params' => [
+                'plugin_resources_resources_id' => $ID,
+                'hidden_fields'       => $hidden,
+                'mandatory_fields'       => $mandatory,
+                'target'       =>  $target ,
+                'default_button'       => $options['default_button'] ?? false,
+                'candel'       => false,
+            ],
+        ]);
+
+    }
+
     function widgetSevenForm($ID, $options = []) {
 
         if ($ID > 0) {
@@ -3837,17 +4024,25 @@ class PluginResourcesResource extends CommonDBTM {
                 $available_contracttype[] = 0;
                 $cond                     = ['plugin_resources_contracttypes_id' => $available_contracttype];
             }
-
+            $rand =mt_rand();
             self::dropdown(['name'      => 'plugin_resources_resources_id',
                             'display'   => true,
                             'entity'    => $_SESSION['glpiactiveentities'],
                             'condition' => $cond,
+                            'rand' => $rand,
                             'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);"]);
 
+            $params = ['plugin_resources_resources_id' => '__VALUE__',
+                'rand'                         => $rand,
+            ];
+            Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_resources_id$rand", "leaving_input", "../ajax/leavingform.php", $params);
+
             echo "</div>";
             echo "</div>";
+            echo "<div id='leaving_input'>";
 
             echo "<div class=\"form-row\">";
+
             echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Departure date', 'resources');
             echo "</div>";
@@ -3856,18 +4051,30 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</div>";
             echo "</div>";
 
+            echo "</div>";
 
-            if (countDistinctElementsInTable(PluginResourcesLeavingReason::getTable(), 'id')) {
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
-                echo PluginResourcesLeavingReason::getTypeName(1);
-                echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
-                Dropdown::show(PluginResourcesLeavingReason::class,
-                               ['entity' => $_SESSION['glpiactiveentities']]);
-                echo "</div>";
-                echo "</div>";
-            }
+//            $leavinginformation = new PluginResourcesLeavingInformation();
+//
+//            TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
+//                'item'   => $leavinginformation,
+//                'params' => [
+//                    'plugin_resources_resources_id' => 10,
+//                    'default_button'       => true,
+//                ],
+//            ]);
+
+
+//            if (countDistinctElementsInTable(PluginResourcesLeavingReason::getTable(), 'id')) {
+//                echo "<div class=\"form-row\">";
+//                echo "<div class=\"bt-feature col-md-4 \">";
+//                echo PluginResourcesLeavingReason::getTypeName(1);
+//                echo "</div>";
+//                echo "<div class=\"bt-feature col-md-4 \">";
+//                Dropdown::show(PluginResourcesLeavingReason::class,
+//                               ['entity' => $_SESSION['glpiactiveentities']]);
+//                echo "</div>";
+//                echo "</div>";
+//            }
 
 
             echo "<div class='center' id='resource_pdf' colspan='2'></div>";
@@ -5448,10 +5655,66 @@ class PluginResourcesResource extends CommonDBTM {
         return false;
     }
 
-    function getGenders() {
+    static function getGenders() {
         return [Dropdown::EMPTY_VALUE,
                 __('Male', 'resources'),
-                __('Female', 'resources')];
+                __('Female', 'resources'),
+                __('Other', 'resources'),
+            ];
+    }
+
+    /**
+     * @param $field
+     * @param $name (default '')
+     * @param $values (default '')
+     * @param $options   array
+     *
+     * @return string
+     **@since version 0.84
+     *
+     */
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = [])
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        $options['display'] = false;
+        switch ($field) {
+
+            case 'gender':
+                return Dropdown::showFromArray($name, self::getGenders(),['display' => false]);
+                break;
+        }
+
+        return parent::getSpecificValueToSelect($field, $name, $values, $options);
+    }
+
+    /**
+     * display a value according to a field
+     *
+     * @param $field     String         name of the field
+     * @param $values    String / Array with the value to display
+     * @param $options   Array          of option
+     *
+     * @return a string
+     **@since version 0.83
+     *
+     */
+    static function getSpecificValueToDisplay($field, $values, array $options = []) {
+
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+         case 'gender':
+             if(empty($values[$field])) {
+                 $values[$field] = 0;
+             }
+                $gender = self::getGenders();
+                return $gender[$values[$field]];
+//            break;
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
     }
 
     //   public function getCloneRelations(): array {

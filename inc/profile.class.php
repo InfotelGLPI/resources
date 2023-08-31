@@ -80,6 +80,7 @@ class PluginResourcesProfile extends Profile
                'plugin_resources_import' => 0,
                'plugin_resources_open_ticket' => 0,
                'plugin_resources_all' => 0,
+               'plugin_resources_leavinginformation' => 0,
                'plugin_resources_employee_core_form' => 0
             ]);
             $prof->showForm($ID);
@@ -108,6 +109,7 @@ class PluginResourcesProfile extends Profile
            'plugin_resources_import' => ALLSTANDARDRIGHT,
            'plugin_resources_open_ticket' => 1,
            'plugin_resources_all' => 1,
+           'plugin_resources_leavinginformation' => 1,
            'plugin_resources_employee_core_form' => 1
         ], true);
     }
@@ -170,7 +172,7 @@ class PluginResourcesProfile extends Profile
         echo "<table class='tab_cadre_fixehov'>";
         echo "<tr class='tab_bg_1'><th colspan='4'>".__('Helpdesk')."</th></tr>\n";
 
-        $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_resources_open_ticket', 'plugin_resources_all', 'plugin_resources_employee_core_form']);
+        $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_resources_open_ticket', 'plugin_resources_all', 'plugin_resources_employee_core_form', 'plugin_resources_leavinginformation']);
         echo "<tr class='tab_bg_2'>";
         echo "<td width='20%'>".__('Associable items to a ticket')."</td>";
         echo "<td colspan='5'>";
@@ -183,6 +185,13 @@ class PluginResourcesProfile extends Profile
         echo "<td colspan='5'>";
         Html::showCheckbox(['name'    => '_plugin_resources_all',
                                  'checked' => $effective_rights['plugin_resources_all']]);
+        echo "</td></tr>\n";
+
+        echo "<tr class='tab_bg_2'>";
+        echo "<td width='20%'>".__('View leaving information', 'resources')."</td>";
+        echo "<td colspan='5'>";
+        Html::showCheckbox(['name'    => '_plugin_resources_leavinginformation',
+                                 'checked' => $effective_rights['plugin_resources_leavinginformation']]);
         echo "</td></tr>\n";
 
         echo "<tr class='tab_bg_2'>";

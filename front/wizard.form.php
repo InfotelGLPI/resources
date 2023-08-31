@@ -180,6 +180,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
          $wizard_need         = PluginResourcesContractType::checkWizardSetup($newresource, "use_need_wizard");
          $wizard_picture      = PluginResourcesContractType::checkWizardSetup($newresource, "use_picture_wizard");
          $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($newresource, "use_habilitation_wizard");
+         $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($newresource, "use_entrance_information");
 
          if ($employee->canCreate() && $wizard_employee) {
             $employee->wizardThirdForm($newresource);
@@ -191,6 +192,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
             $resource->wizardFiveForm($newresource, $values);
          } else if ($wizard_habilitation) {
             $resourcehabilitation->wizardSixForm($newresource);
+         } else if ($wizard_entrance_information) {
+             $resource->wizardEightForm($newresource);
          } else {
             $resource->fields['resources_step'] = 'second_step';
             Plugin::doHook('item_show', $resource);
@@ -222,6 +225,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
                                                                         "use_picture_wizard");
    $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"],
                                                                         "use_habilitation_wizard");
+    $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+
 
    if ($wizard_need) {
       $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
@@ -231,6 +236,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
    } else if ($wizard_habilitation) {
       $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
+   } else if ($wizard_entrance_information) {
+       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
    } else {
       $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
       $resource->fields['resources_step']                = 'third_step';
@@ -241,6 +248,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 } else if (isset($_POST["four_step"])) {
    $wizard_picture      = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_picture_wizard");
    $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
+   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
 
    if ($wizard_picture) {
       $values           = [];
@@ -248,6 +256,8 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
    } else if ($wizard_habilitation) {
       $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
+   } else if ($wizard_entrance_information) {
+       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
    } else {
       $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
       $resource->fields['resources_step']                = 'four_step';
@@ -271,9 +281,25 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
 } else if (isset($_POST["five_step"])) {
    $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
+   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
 
    if ($wizard_habilitation) {
       $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
+   } else if ($wizard_entrance_information) {
+       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
+   } else {
+      $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+      $resource->fields['resources_step']                = 'five_step';
+      Plugin::doHook('item_show', $resource);
+      $resource->redirectToList();
+   }
+
+} else if (isset($_POST["six_step"])) {
+   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
+   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+
+   if ($wizard_entrance_information) {
+       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
    } else {
       $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
       $resource->fields['resources_step']                = 'five_step';
@@ -449,6 +475,49 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $resource->redirectToList();
 
 } else if (isset($_POST["undo_seven_step"])) {
+
+   $resources_id = $_POST['plugin_resources_resources_id'];
+
+   $wizard_employee     = PluginResourcesContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+   $wizard_need         = PluginResourcesContractType::checkWizardSetup($resources_id, "use_need_wizard");
+   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+
+   if ($wizard_habilitation) {
+      $resourcehabilitation->wizardSixForm($resources_id);
+   } else if ($wizard_picture) {
+      $values           = [];
+      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
+      $resource->wizardFiveForm($resources_id, $values);
+   } else if ($wizard_need) {
+      $choice->wizardFourForm($resources_id);
+   } else if ($employee->canCreate() && $wizard_employee) {
+      $employee->wizardThirdForm($resources_id);
+   } else {
+      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
+      $values['withtemplate'] = 0;
+      $values['new']          = 0;
+
+      $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
+   }
+
+} else if (isset($_POST["eight_step"])) {
+
+    $data = [];
+    $data['id'] = $_POST['plugin_resources_resources_id'];
+    $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'];
+    $data['plugin_resources_degreegroups_id'] = $_POST['plugin_resources_degreegroups_id'];
+    $data['plugin_resources_recruitingsources_id'] = $_POST['plugin_resources_recruitingsources_id'];
+    $data['yearsexperience'] = $_POST['yearsexperience'];
+    $data['reconversion'] = $_POST['reconversion'];
+
+   $resource->update($data);
+   $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+   $resource->fields['resources_step']                = 'six_step';
+   Plugin::doHook('item_show', $resource);
+   $resource->redirectToList();
+
+} else if (isset($_POST["undo_eight_step"])) {
 
    $resources_id = $_POST['plugin_resources_resources_id'];
 

@@ -287,6 +287,77 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_plugin_resources_functions_id']['type']  = "yesonly";
       $actions['requiredfields_plugin_resources_functions_id']['force_actions'] = ['assign'];
 
+      $actions['requiredfields_date_agreement_candidate']['name']  = __('Date agreement candidate', 'resources');
+      $actions['requiredfields_date_agreement_candidate']['type']  = "yesonly";
+      $actions['requiredfields_date_agreement_candidate']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_plugin_resources_degreegroups_id']['name']  = PluginResourcesDegreeGroup::getTypeName(1);
+      $actions['requiredfields_plugin_resources_degreegroups_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_degreegroups_id']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_plugin_resources_recruitingsources_id']['name']  = PluginResourcesRecruitingSource::getTypeName(1);
+      $actions['requiredfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
+      $actions['requiredfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_yearsexperience']['name']  = __('number of years experience','resources');
+      $actions['requiredfields_yearsexperience']['type']  = "yesonly";
+      $actions['requiredfields_yearsexperience']['force_actions'] = ['assign'];
+
+      $actions['requiredfields_reconversion']['name']  = __('Reconversion','resources');
+      $actions['requiredfields_reconversion']['type']  = "yesonly";
+      $actions['requiredfields_reconversion']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_interview_date']['name']  = __('Interview date', 'resources');
+       $actions['requiredfields_interview_date']['type']  = "yesonly";
+       $actions['requiredfields_interview_date']['force_actions'] = ['assign'];
+
+//       $actions['requiredfields_users_id']['name']  = __('Sales manager', 'resources');
+//       $actions['requiredfields_users_id']['type']  = "yesonly";
+//       $actions['requiredfields_users_id']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_workprofiles_id']['name']  = PluginResourcesWorkProfile::getTypeName(1);
+       $actions['requiredfields_plugin_resources_workprofiles_id']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_workprofiles_id']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_clients_id']['name']  = PluginResourcesClient::getTypeName(1);
+       $actions['requiredfields_plugin_resources_clients_id']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_clients_id']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_resignation_date']['name']  = __('Resignation date', 'resources');
+       $actions['requiredfields_resignation_date']['type']  = "yesonly";
+       $actions['requiredfields_resignation_date']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_wished_leaving_date']['name']  = __('Wished leaving date', 'resources');
+       $actions['requiredfields_wished_leaving_date']['type']  = "yesonly";
+       $actions['requiredfields_wished_leaving_date']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_effective_leaving_date']['name']  = __('Effective leaving date', 'resources');
+       $actions['requiredfields_effective_leaving_date']['type']  = "yesonly";
+       $actions['requiredfields_effective_leaving_date']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_destinations_id']['name']  = PluginResourcesDestination::getTypeName(1);
+       $actions['requiredfields_plugin_resources_destinations_id']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_destinations_id']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_leavingreasons_id']['name']  = PluginResourcesLeavingReason::getTypeName(1);
+       $actions['requiredfields_plugin_resources_leavingreasons_id']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_leavingreasons_id']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_company_name']['name']  = __('Company name', 'resources');
+       $actions['requiredfields_plugin_resources_company_name']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_company_name']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_pay_gap']['name']  = __('Pay gap','resources');
+       $actions['requiredfields_plugin_resources_pay_gap']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_pay_gap']['force_actions'] = ['assign'];
+
+       $actions['requiredfields_plugin_resources_mission_lost']['name']  = __('Mission lost','resources');
+       $actions['requiredfields_plugin_resources_mission_lost']['type']  = "yesonly";
+       $actions['requiredfields_plugin_resources_mission_lost']['force_actions'] = ['assign'];
+
+
+
+
       if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
 
          $actions['requiredfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);

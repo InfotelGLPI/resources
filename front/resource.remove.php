@@ -41,7 +41,12 @@ if (Session::getCurrentInterface() == 'central') {
 }
 
 if (empty($_POST["date_end"])) {
-   $_POST["date_end"] = date("Y-m-d");
+    if(isset($_POST["resignation_date"]) && !empty($_POST["resignation_date"]) ) {
+        $_POST["date_end"] = $_POST["resignation_date"];
+    }else {
+        $_POST["date_end"] = date("Y-m-d");
+    }
+
 }
 
 $resource        = new PluginResourcesResource();
@@ -70,6 +75,17 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
    $input["users_id_recipient_leaving"]         = Session::getLoginUserID();
    $input['send_notification']                  = 1;
    $resource->update($input);
+   $leavingInformation = new PluginResourcesLeavingInformation();
+
+    $inputleaving = $_POST;
+   if($leavingInformation->getFromDBByCrit(['plugin_resources_resources_id' => $input['id']])) {
+       $inputleaving['id'] = $leavingInformation->getID();
+       $leavingInformation->update($inputleaving);
+   } else {
+       $leavingInformation->add($inputleaving);
+   }
+
+
 
    //test it
    $resource->getFromDB($_POST["plugin_resources_resources_id"]);

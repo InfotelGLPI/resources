@@ -53,7 +53,7 @@ function plugin_resources_install() {
    if (!$DB->tableExists("glpi_plugin_resources_resources")
        && !$DB->tableExists("glpi_plugin_resources_employments")) {
       $install = true;
-      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.0.sql");
+      $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.5.sql");
 
       $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -308,6 +308,29 @@ function plugin_resources_install() {
          $DB->query($query) or die($DB->error());
 
       }
+       if (!$DB->tableExists("glpi_plugin_resources_degreegroups")) {
+           $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.4.sql");
+       }
+
+       if (!$DB->fieldExists("glpi_plugin_resources_resources", "date_of_last_contract_type")) {
+           $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.5.sql");
+       }
+       if (!$DB->fieldExists("glpi_plugin_resources_resources", "date_of_last_contract_type")) {
+           $query = "ALTER TABLE `glpi_plugin_resources_resources` ADD   `plugin_resources_workprofiles_id_entrance` int unsigned NOT NULL default '0'";
+           $DB->query($query) or die($DB->error());
+           $query = "ALTER TABLE `glpi_plugin_resources_resources` ADD   `plugin_resources_candidateorigins_id` int unsigned NOT NULL default '0'";
+           $DB->query($query) or die($DB->error());
+
+           $query = "CREATE TABLE `glpi_plugin_resources_candidateorigins` (
+                                                            `id` int unsigned NOT NULL auto_increment,
+                                                            `entities_id` int unsigned NOT NULL default '0',
+                                                            `is_recursive` tinyint NOT NULL DEFAULT '0',
+                                                            `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+                                                            `comment` text collate utf8mb4_unicode_ci,
+                                                            PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;";
+           $DB->query($query) or die($DB->error());
+       }
 
       if ($update80) {
 
@@ -651,7 +674,15 @@ function plugin_resources_uninstall() {
       "glpi_plugin_resources_linkads",
       "glpi_plugin_resources_linkmetademands",
       "glpi_plugin_resources_contracttypeprofiles",
-      "glpi_plugin_resources_actionprofiles"
+      "glpi_plugin_resources_actionprofiles",
+      "glpi_plugin_resources_businessunits",
+      "glpi_plugin_resources_degreegroups",
+      "glpi_plugin_resources_recruitingsources",
+      "glpi_plugin_resources_destinations",
+      "glpi_plugin_resources_resignationreasons",
+      "glpi_plugin_resources_leavingdetails",
+      "glpi_plugin_resources_workprofiles",
+      "glpi_plugin_resources_leavinginformations",
    ];
 
    foreach ($tables as $table) {
@@ -909,7 +940,14 @@ function plugin_resources_getDropdown() {
          PluginResourcesFunction::class           => PluginResourcesFunction::getTypeName(2),
          PluginResourcesService::class            => PluginResourcesService::getTypeName(2),
          PluginResourcesTeam::class               => PluginResourcesTeam::getTypeName(2),
-         PluginResourcesCost::class               => PluginResourcesCost::getTypeName(2)];
+         PluginResourcesCost::class               => PluginResourcesCost::getTypeName(2),
+         PluginResourcesBusinessUnit::class       => PluginResourcesBusinessUnit::getTypeName(2),
+         PluginResourcesDegreeGroup::class        => PluginResourcesDegreeGroup::getTypeName(2),
+         PluginResourcesRecruitingSource::class   => PluginResourcesRecruitingSource::getTypeName(2),
+         PluginResourcesDestination::class        => PluginResourcesDestination::getTypeName(2),
+         PluginResourcesResignationReason::class  => PluginResourcesResignationReason::getTypeName(2),
+
+      ];
    } else {
       return [];
    }
@@ -1186,17 +1224,25 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
        || $new_table == "glpi_plugin_resources_salemanagers"
        || $new_table == "glpi_plugin_resources_recipients"
        || $new_table == "glpi_plugin_resources_teams"
+       || $new_table == "glpi_plugin_resources_contracttypes"
        || $new_table == "glpi_plugin_resources_recipients_leaving") {
       $AS        = " AS glpi_plugin_resources_resources_" . $linkfield;
       $AS_device = " AS glpi_plugin_resources_resources_items_" . $linkfield;
       $nt        .= "_" . $linkfield;
       $nt_device .= "_" . $linkfield;
    }
-
+    Toolbox::logInFile('test_r',$type,true);
+    Toolbox::logInFile('test_r',$new_table,true);
    switch ($new_table) {
 
       case "glpi_plugin_resources_resources_items" :
-         return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_plugin_resources_resources_items`.`itemtype`= '$type') ";
+
+          if($type != "PluginResourcesResource_Item") {
+              return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_plugin_resources_resources_items`.`itemtype`= '$type') ";
+          } else {
+              return " ";
+              return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id`) ";
+          }
          break;
       case "glpi_plugin_resources_taskplannings" :
          return " LEFT JOIN `glpi_plugin_resources_taskplannings` ON (`glpi_plugin_resources_taskplannings`.`plugin_resources_tasks_id` = `$ref_table`.`id`) ";
@@ -1206,11 +1252,12 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
          break;
       case "glpi_plugin_resources_resources" : // From items
          $out = " ";
-         if ($type != "PluginResourcesDirectory" && $type != PluginResourcesRecap::class) {
+         if ($type != "PluginResourcesDirectory" && $type != PluginResourcesRecap::class ) {
             if ($ref_table != 'glpi_plugin_resources_tasks'
                 && $ref_table != 'glpi_plugin_resources_resourcerestings'
                 && $ref_table != 'glpi_plugin_resources_resourceholidays'
-                && $ref_table != 'glpi_plugin_resources_employments') {
+                && $ref_table != 'glpi_plugin_resources_employments'
+                && $type != "PluginResourcesResource_Item") {
                $out = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_plugin_resources_resources_items", "plugin_resources_resources_id");
                $out .= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type') ";
             } else {
@@ -1221,6 +1268,9 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
          break;
       case "glpi_plugin_resources_contracttypes" : // From items
          if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+             if($linkfield == "last_contract_type") {
+                 return "";
+             }
             $out           = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_plugin_resources_resources", "plugin_resources_resources_id");
             $out           .= " LEFT JOIN `glpi_plugin_resources_contracttypes` ON (`glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` = `glpi_plugin_resources_contracttypes`.`id`) ";
             $transitemtype = getItemTypeForTable("glpi_plugin_resources_contracttypes");

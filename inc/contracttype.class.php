@@ -104,12 +104,20 @@ class PluginResourcesContractType extends CommonDropdown {
                'label' => __('Enter habilitation information ', 'resources'),
                'type'  => 'bool',
                'list'  => true],
+              ['name'  => 'use_entrance_information',
+               'label' => __('Use recruiting information', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
               ['name'  => 'use_second_list_employer',
                'label' => __('Use second list of employer', 'resources'),
                'type'  => 'bool',
                'list'  => true],
               ['name'  => 'use_second_matricule',
                'label' => __('Use second matricule', 'resources'),
+               'type'  => 'bool',
+               'list'  => true],
+              ['name'  => 'use_resignation_form',
+               'label' => __('Use resignation form', 'resources'),
                'type'  => 'bool',
                'list'  => true]
       ];
@@ -157,6 +165,13 @@ class PluginResourcesContractType extends CommonDropdown {
          'table'    => $this->getTable(),
          'field'    => 'use_habilitation_wizard',
          'name'     => __('Enter habilitation information', 'resources'),
+         'datatype' => 'bool'
+      ];
+      $tab[] = [
+         'id'       => '19',
+         'table'    => $this->getTable(),
+         'field'    => 'use_resignation_form',
+         'name'     => __('Use resignation form', 'resources'),
          'datatype' => 'bool'
       ];
 

@@ -340,6 +340,15 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</script>";
             echo "</div>";
             echo "</div>";
+             echo "<div class=\"form-row\">";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             echo __('Date of contract type change', 'resources');
+             echo "</div>";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             Html::showDateField("date_of_change");
+             echo "</script>";
+             echo "</div>";
+             echo "</div>";
 
             break;
          case self::CHANGE_AGENCY :
@@ -364,6 +373,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                         'used'      => [$resource->getField('locations_id')],
                                         'on_change' => 'plugin_resources_load_button_changeresources_agency();']);
 
+
             echo "<script type='text/javascript'>";
             echo "function plugin_resources_load_button_changeresources_agency(){";
             $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_AGENCY, 'locations_id' => '__VALUE__'];
@@ -375,6 +385,42 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "</script>";
             echo "</div>";
             echo "</div>";
+
+             echo "<div class=\"form-row\">";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             echo __("Current team of the resource", "resources");
+             echo "</div>";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_teams', $resource->getField('plugin_resources_teams_id'));
+             echo "</div>";
+             echo "</div>";
+
+             echo "<div class=\"form-row\">";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             echo __('New resource team', 'resources');
+             echo "</div>";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             $rand = PluginResourcesTeam::dropdown(['name'      => "plugin_resources_teams_id",
+                 'entity'    => $resource->fields["entities_id"],
+                 'right'     => 'all',
+                 'used'      => [$resource->getField('plugin_resources_teams_id')],
+               ]);
+
+
+             echo "</div>";
+             echo "</div>";
+
+
+
+             echo "<div class=\"form-row\">";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             echo __('Date of location change', 'resources');
+             echo "</div>";
+             echo "<div class=\"bt-feature col-md-4 \">";
+             Html::showDateField("date_of_change");
+             echo "</script>";
+             echo "</div>";
+             echo "</div>";
 
             break;
 
@@ -977,6 +1023,9 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                                           $options['plugin_resources_contracttypes_id']) . "\n";
 
             $input['plugin_resources_contracttypes_id'] = $options['plugin_resources_contracttypes_id'];
+            $input['contract_type_change'] = 1;
+            $input['date_of_last_contract_type'] = !empty($options['date_of_change']) ?$options['date_of_change'] : date('Y-m-d');
+            $input['last_contract_type'] = $resource->getField('plugin_resources_contracttypes_id');
             break;
          case self::CHANGE_AGENCY :
 
@@ -988,8 +1037,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                 Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')) . "\n";
             $data['content'] .= __("New resource agency", 'resources') . "&nbsp;:&nbsp;" .
                                 Dropdown::getDropdownName('glpi_locations', $options['locations_id']) . "\n";
+            if(!empty($options['plugin_resources_teams_id'])) {
+                $data['content'] .= __("Current team of the resource", 'resources') . "&nbsp;:&nbsp;" .
+                    Dropdown::getDropdownName('glpi_plugin_resources_teams', $resource->getField('plugin_resources_teams_id')) . "\n";
+                $data['content'] .= __("New resource team", 'resources') . "&nbsp;:&nbsp;" .
+                    Dropdown::getDropdownName('glpi_plugin_resources_teams', $options['plugin_resources_teams_id']) . "\n";
+            }
 
             $input['locations_id'] = $options['locations_id'];
+            if(!empty($options['plugin_resources_teams_id'])) {
+                $input['plugin_resources_teams_id'] =  $options['plugin_resources_teams_id'];
+            }
+
+            $input['date_of_last_location'] = !empty($options['date_of_change']) ?$options['date_of_change'] : date('Y-m-d');
+            $input['last_location'] = $resource->getField('locations_id');
             break;
          case self::CHANGE_RESOURCEINFORMATIONS :
 

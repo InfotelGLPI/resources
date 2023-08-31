@@ -323,6 +323,74 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
       $actions['hiddenfields_plugin_resources_functions_id']['type']  = "yesonly";
       $actions['hiddenfields_plugin_resources_functions_id']['force_actions'] = ['assign'];
 
+       $actions['hiddenfields_date_agreement_candidate']['name']  = __('Date agreement candidate', 'resources');
+       $actions['hiddenfields_date_agreement_candidate']['type']  = "yesonly";
+       $actions['hiddenfields_date_agreement_candidate']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_degreegroups_id']['name']  = PluginResourcesDegreeGroup::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_degreegroups_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_degreegroups_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_recruitingsources_id']['name']  = PluginResourcesRecruitingSource::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_yearsexperience']['name']  = __('number of years experience','resources');
+       $actions['hiddenfields_yearsexperience']['type']  = "yesonly";
+       $actions['hiddenfields_yearsexperience']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_reconversion']['name']  = __('Reconversion','resources');
+       $actions['hiddenfields_reconversion']['type']  = "yesonly";
+       $actions['hiddenfields_reconversion']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_interview_date']['name']  = __('Interview date', 'resources');
+       $actions['hiddenfields_interview_date']['type']  = "yesonly";
+       $actions['hiddenfields_interview_date']['force_actions'] = ['assign'];
+
+//       $actions['hiddenfields_users_id']['name']  = __('Sales manager', 'resources');
+//       $actions['hiddenfields_users_id']['type']  = "yesonly";
+//       $actions['hiddenfields_users_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_workprofiles_id']['name']  = PluginResourcesWorkProfile::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_workprofiles_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_workprofiles_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_clients_id']['name']  = PluginResourcesClient::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_clients_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_clients_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_resignation_date']['name']  = __('Resignation date', 'resources');
+       $actions['hiddenfields_resignation_date']['type']  = "yesonly";
+       $actions['hiddenfields_resignation_date']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_wished_leaving_date']['name']  = __('Wished leaving date', 'resources');
+       $actions['hiddenfields_wished_leaving_date']['type']  = "yesonly";
+       $actions['hiddenfields_wished_leaving_date']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_effective_leaving_date']['name']  = __('Effective leaving date', 'resources');
+       $actions['hiddenfields_effective_leaving_date']['type']  = "yesonly";
+       $actions['hiddenfields_effective_leaving_date']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_destinations_id']['name']  = PluginResourcesDestination::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_destinations_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_destinations_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_leavingreasons_id']['name']  = PluginResourcesLeavingReason::getTypeName(1);
+       $actions['hiddenfields_plugin_resources_leavingreasons_id']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_leavingreasons_id']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_company_name']['name']  = __('Company name', 'resources');
+       $actions['hiddenfields_company_name']['type']  = "yesonly";
+       $actions['hiddenfields_company_name']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_pay_gap']['name']  = __('Pay gap','resources');
+       $actions['hiddenfields_plugin_resources_pay_gap']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_pay_gap']['force_actions'] = ['assign'];
+
+       $actions['hiddenfields_plugin_resources_mission_lost']['name']  = __('Mission lost','resources');
+       $actions['hiddenfields_plugin_resources_mission_lost']['type']  = "yesonly";
+       $actions['hiddenfields_plugin_resources_mission_lost']['force_actions'] = ['assign'];
+
       return $actions;
    }
 }

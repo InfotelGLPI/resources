@@ -1133,5 +1133,45 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
          }
       }
    }
+
+    function rawSearchOptions()
+    {
+
+        $tab = parent::rawSearchOptions();
+
+        unset($tab[1]);
+        $tab[] = [
+            'id' => '2',
+            'table' => PluginResourcesResource::getTable(),
+            'field' => 'name',
+            'name'     => PluginResourcesResource::getTypeName(1),
+            'datatype' => 'dropdown'
+        ];
+        $tab[] = [
+            'id' => '3',
+            'table' => $this->getTable(),
+            'field' => 'items_id',
+            'name' => __('Items id'),
+            'datatype' => 'text',
+            'massiveaction' => false,
+        ];
+        $tab[] = [
+            'id' => '4',
+            'table' => $this->getTable(),
+            'field' => 'itemtype',
+            'name' => __('Itemtype'),
+            'datatype' => 'text',
+            'massiveaction' => false,
+        ];
+        $tab[] = [
+            'id' => '5',
+            'table' => $this->getTable(),
+            'field' => 'plugin_resources_resources_id',
+            'name' => __('plugin_resources_resources_id'),
+            'datatype' => 'text',
+            'massiveaction' => false,
+        ];
+        return $tab;
+    }
 }
 
