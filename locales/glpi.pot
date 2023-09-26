@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-31 08:38+0000\n"
+"POT-Creation-Date: 2023-09-26 08:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,7 +104,9 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:1032 inc/notificationtargetresource.class.php:93
+#: hook.php:1032 inc/leavinginformation.class.php:362
+#: inc/leavinginformation.class.php:511
+#: inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
 #: inc/notificationtargetresource.class.php:396
 #: inc/notificationtargetresource.class.php:475
@@ -145,6 +147,34 @@ msgstr[1] ""
 
 #: ajax/employee.php:47 inc/employee.class.php:316 inc/employee.class.php:449
 msgid "Security compliance"
+msgstr ""
+
+#: ajax/leavingform.php:100 inc/adconfig.class.php:309
+#: inc/checklist.class.php:1127 inc/dashboard.class.php:152
+#: inc/directory.class.php:215 inc/linkad.class.php:646
+#: inc/notificationtargetresource.class.php:400
+#: inc/notificationtargetresource.class.php:479
+#: inc/notificationtargetresource.class.php:619
+#: inc/notificationtargetresource.class.php:680
+#: inc/notificationtargetresource.class.php:813
+#: inc/notificationtargetresource.class.php:1349
+#: inc/notificationtargetresource.class.php:1377 inc/recap.class.php:218
+#: inc/resource.class.php:89 inc/resource.class.php:391
+#: inc/resource.class.php:2201 inc/resource.class.php:3045
+#: inc/resource.class.php:4047 inc/resource_change.class.php:478
+#: inc/resource_item.class.php:840 inc/resource_item.class.php:1095
+#: inc/resource_item.class.php:1105 inc/resourcepdf.class.php:85
+#: inc/rulecontracttype.class.php:255 inc/rulecontracttypehidden.class.php:255
+#: report/checkgroup/checkgroup.php:259
+#: report/checkhabilitation/checkhabilitation.php:214
+#: report/checkmissingN0group/checkmissingN0group.php:210
+#: report/checkmissingN1group/checkmissingN1group.php:210
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:253
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:56
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:56
+#: report/resourcewithoutuser/resourcewithoutuser.php:54
+msgid "Departure date"
 msgstr ""
 
 #: ajax/pdfresource.php:77
@@ -334,33 +364,6 @@ msgid_plural "Departments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/adconfig.class.php:309 inc/checklist.class.php:1127
-#: inc/dashboard.class.php:152 inc/directory.class.php:215
-#: inc/linkad.class.php:646 inc/notificationtargetresource.class.php:400
-#: inc/notificationtargetresource.class.php:479
-#: inc/notificationtargetresource.class.php:619
-#: inc/notificationtargetresource.class.php:680
-#: inc/notificationtargetresource.class.php:813
-#: inc/notificationtargetresource.class.php:1349
-#: inc/notificationtargetresource.class.php:1377 inc/recap.class.php:218
-#: inc/resource.class.php:89 inc/resource.class.php:391
-#: inc/resource.class.php:2201 inc/resource.class.php:3045
-#: inc/resource.class.php:4047 inc/resource_change.class.php:478
-#: inc/resource_item.class.php:840 inc/resource_item.class.php:1095
-#: inc/resource_item.class.php:1105 inc/resourcepdf.class.php:85
-#: inc/rulecontracttype.class.php:255 inc/rulecontracttypehidden.class.php:255
-#: report/checkgroup/checkgroup.php:259
-#: report/checkhabilitation/checkhabilitation.php:214
-#: report/checkmissingN0group/checkmissingN0group.php:210
-#: report/checkmissingN1group/checkmissingN1group.php:210
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:255
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:253
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:56
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:56
-#: report/resourcewithoutuser/resourcewithoutuser.php:54
-msgid "Departure date"
-msgstr ""
-
 #: inc/adconfig.class.php:329 inc/linkad.class.php:459 inc/linkad.class.php:640
 #: inc/profile.class.php:275 inc/role.class.php:48
 #: inc/rulecontracttype.class.php:271 inc/rulecontracttypehidden.class.php:275
@@ -452,6 +455,18 @@ msgstr[1] ""
 #: report/professionwithoutvolume/professionwithoutvolume.php:289
 msgid "Code"
 msgstr ""
+
+#: inc/businessunit.class.php:48
+msgid "Business Unit"
+msgid_plural "Business Units"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/candidateorigin.class.php:48 inc/workprofile.class.php:48
+msgid "Work Profile"
+msgid_plural "Work Profiles"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/checklist.class.php:54 inc/menu.class.php:391 inc/profile.class.php:265
 msgid "Checklist"
@@ -871,9 +886,21 @@ msgid_plural "Budget costs"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/degreegroup.class.php:48
+msgid "Degree Group"
+msgid_plural "Degrees Groups"
+msgstr[0] ""
+msgstr[1] ""
+
 #: inc/department_service.class.php:59
 msgid "Link Department/Service"
 msgid_plural "Links Department/Service"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/destination.class.php:48
+msgid "Destination"
+msgid_plural "Destination"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1227,6 +1254,47 @@ msgstr ""
 
 #: inc/ldap.class.php:53
 msgid "LDAP"
+msgstr ""
+
+#: inc/leavinginformation.class.php:55
+msgid "Leaving Information"
+msgid_plural "Leaving Informations"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/leavinginformation.class.php:369 inc/leavinginformation.class.php:530
+#: inc/rulecontracttype.class.php:310 inc/rulecontracttypehidden.class.php:346
+msgid "Interview date"
+msgstr ""
+
+#: inc/leavinginformation.class.php:377 inc/leavinginformation.class.php:542
+#: inc/rulecontracttype.class.php:326 inc/rulecontracttypehidden.class.php:362
+msgid "Resignation date"
+msgstr ""
+
+#: inc/leavinginformation.class.php:385 inc/leavinginformation.class.php:554
+#: inc/rulecontracttype.class.php:330 inc/rulecontracttypehidden.class.php:366
+msgid "Wished leaving date"
+msgstr ""
+
+#: inc/leavinginformation.class.php:393 inc/rulecontracttype.class.php:334
+#: inc/rulecontracttypehidden.class.php:370
+msgid "Effective leaving date"
+msgstr ""
+
+#: inc/leavinginformation.class.php:401 inc/leavinginformation.class.php:566
+#: inc/rulecontracttype.class.php:350 inc/rulecontracttypehidden.class.php:386
+msgid "Pay gap"
+msgstr ""
+
+#: inc/leavinginformation.class.php:409 inc/leavinginformation.class.php:578
+#: inc/rulecontracttype.class.php:354 inc/rulecontracttypehidden.class.php:390
+msgid "Mission lost"
+msgstr ""
+
+#: inc/leavinginformation.class.php:417 inc/leavinginformation.class.php:590
+#: inc/rulecontracttype.class.php:346 inc/rulecontracttypehidden.class.php:382
+msgid "Company name"
 msgstr ""
 
 #: inc/leavingreason.class.php:49
@@ -1750,6 +1818,12 @@ msgid_plural "List Employments / Resources"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/recruitingsource.class.php:48
+msgid "Recruiting Source"
+msgid_plural "Recruiting Sources"
+msgstr[0] ""
+msgstr[1] ""
+
 #: inc/reportconfig.class.php:276 inc/reportconfig.class.php:372
 msgid "Send resource creation report notification"
 msgstr ""
@@ -1765,6 +1839,12 @@ msgstr ""
 #: inc/reportconfig.class.php:341
 msgid "Notification configuration"
 msgstr ""
+
+#: inc/resignationreason.class.php:48
+msgid "Resignation Reason"
+msgid_plural "Resignation Reasons"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/resource.class.php:82
 msgid "Lastname"
@@ -2396,34 +2476,6 @@ msgstr ""
 
 #: inc/rulecontracttype.class.php:55
 msgid "Required Fields"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:310 inc/rulecontracttypehidden.class.php:346
-msgid "Interview date"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:326 inc/rulecontracttypehidden.class.php:362
-msgid "Resignation date"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:330 inc/rulecontracttypehidden.class.php:366
-msgid "Wished leaving date"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:334 inc/rulecontracttypehidden.class.php:370
-msgid "Effective leaving date"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:346 inc/rulecontracttypehidden.class.php:382
-msgid "Company name"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:350 inc/rulecontracttypehidden.class.php:386
-msgid "Pay gap"
-msgstr ""
-
-#: inc/rulecontracttype.class.php:354 inc/rulecontracttypehidden.class.php:390
-msgid "Mission lost"
 msgstr ""
 
 #: inc/rulecontracttypecollection.class.php:52
