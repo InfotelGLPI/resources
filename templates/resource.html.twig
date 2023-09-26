@@ -1,0 +1,123 @@
+{# {% extends "generic_show_form.html.twig" %} #}
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+
+{% set bg = "" %}
+{% if item.isDeleted() %}
+    {% set bg = "asset-deleted" %}
+{% endif %}
+
+    {% set rand = random() %}
+    {% set params  = params ?? [] %}
+    {% set target       = params['target'] ?? item.getFormURL() %}
+    {% set withtemplate = params['withtemplate'] ?? "" %}
+    {% set item_type = item.getType() %}
+    {% set hidden = params['hidden_fields'] ?? [] %}
+    {% set mandatory = params['mandatory_fields'] ?? [] %}
+    {% set default_button = params['default_button'] ?? false %}
+
+
+<div class="asset {{ bg }}">
+    {{ include('components/form/header.html.twig') }}
+    <div class="card-body d-flex">
+        <div class="col-9 flex-column">
+            <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+                <div class="row flex-row align-items-start flex-grow-1">
+                    <div class="row flex-row">
+                        <input type="hidden" name="plugin_resources_resources_id"
+                               value="{{ params['plugin_resources_resources_id'] }}"/>
+                        {% if hidden.date_agreement_candidate is not defined %}
+                            {% if item.isField('date_agreement_candidate') %}
+                                {{ fields.datetimeField(
+                                    'date_agreement_candidate',
+                                    item.fields['date_agreement_candidate'],
+                                    __('Date agreement candidate', 'resources'),
+                                    {
+                                        'required': mandatory.date_agreement_candidate is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+                        {# {{ dump(hidden) }} #}
+                        {% if hidden.plugin_resources_degreegroups_id is not defined %}
+                            {% if item.isField('plugin_resources_degreegroups_id') %}
+                                {{ fields.dropdownField(
+                                    "PluginResourcesDegreeGroup",
+                                    "plugin_resources_degreegroups_id",
+                                    item.fields['plugin_resources_degreegroups_id'],
+                                    "PluginResourcesDegreeGroup"|itemtype_name,
+                                    {
+                                        'required': mandatory.plugin_resources_degreegroups_id is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.plugin_resources_recruitingsources_id is not defined %}
+
+                            {% if item.isField('plugin_resources_recruitingsources_id') %}
+                                {{ fields.dropdownField(
+                                    "PluginResourcesRecruitingSource",
+                                    "plugin_resources_recruitingsources_id",
+                                    item.fields['plugin_resources_recruitingsources_id'],
+                                    "PluginResourcesRecruitingSource"|itemtype_name,
+                                    {
+                                        'required': mandatory.plugin_resources_recruitingsources_id is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+                        {% if hidden.yearsexperience is not defined %}
+                            {% if item.isField('yearsexperience') %}
+                                {{ fields.numberField(
+                                    "yearsexperience",
+                                    item.fields['yearsexperience'],
+                                    __('number of years experience','resources'),
+                                    {
+                                        'required': mandatory.yearsexperience is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.reconversion is not defined %}
+                            {% if item.isField('reconversion') %}
+                                {{ fields.dropdownYesNo('reconversion',
+                                    item.fields['reconversion'],
+                                    __('Reconversion','resources'),
+                                    {
+                                        'field_class': 'col-12 col-sm-6',
+                                        'required': mandatory.reconversion is defined,
+                                    }) }}
+
+                            {% endif %}
+                        {% endif %}
+                    </div> {# .row #}
+                </div> {# .row #}
+            </div> {# .flex-row #}
+        </div>
+    </div> {# .card-body #}
+    {% if not default_button%}
+    <div class=\"form-row\">
+        <div class="bt-feature col-md-12 ">
+       <div class='preview'>
+
+           <button class="btn btn-primary me-2" type="submit" name="undo_eight_step" value="1">
+               <i class="fas fa-plus"></i>
+               <span>{{ _x('button', '< Previous', 'resources') }}</span>
+           </button>
+            </div>
+        <div class='next'>
+            <button class="btn btn-primary me-2" type="submit" name="eight_step" value="1">
+                <i class="fas fa-plus"></i>
+                <span>{{ _x('button', 'Next >', 'resources') }}</span>
+            </button>
+            </div>
+        </div></div>
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
+</div> {# #mainformtable #}
+</form> {# [name=asset_form] #}
+{#{% else %}#}
+{#    {{ include('components/form/buttons.html.twig') }}#}
+{% endif %}
+</div>
