@@ -299,7 +299,7 @@ class PluginResourcesRuleContracttype extends Rule {
       $actions['requiredfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
       $actions['requiredfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
 
-      $actions['requiredfields_yearsexperience']['name']  = __('number of years experience','resources');
+      $actions['requiredfields_yearsexperience']['name']  = __('Number of years experience','resources');
       $actions['requiredfields_yearsexperience']['type']  = "yesonly";
       $actions['requiredfields_yearsexperience']['force_actions'] = ['assign'];
 

@@ -335,7 +335,7 @@ class PluginResourcesRuleContracttypeHidden extends Rule {
        $actions['hiddenfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
        $actions['hiddenfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
 
-       $actions['hiddenfields_yearsexperience']['name']  = __('number of years experience','resources');
+       $actions['hiddenfields_yearsexperience']['name']  = __('Number of years experience','resources');
        $actions['hiddenfields_yearsexperience']['type']  = "yesonly";
        $actions['hiddenfields_yearsexperience']['force_actions'] = ['assign'];
 

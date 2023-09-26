@@ -751,7 +751,7 @@ class PluginResourcesResource extends CommonDBTM {
             'id'            => '48',
             'table'         => $this->getTable(),
             'field'         => 'yearsexperience',
-            'name'          => __('number of years experience','resources'),
+            'name'          => __('Number of years experience','resources'),
             'massiveaction' => false,
             'datatype'      => 'number'
         ];
