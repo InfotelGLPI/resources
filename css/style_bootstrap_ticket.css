@@ -1880,11 +1880,11 @@ label {
    pointer-events: none;
 }
 
-.input-group {
-   position: relative;
-   display: table;
-   border-collapse: separate;
-}
+/*.input-group {*/
+/*   position: relative;*/
+/*   display: table;*/
+/*   border-collapse: separate;*/
+/*}*/
 
 .input-group[class*="col-"] {
    float: none;
@@ -1892,13 +1892,13 @@ label {
    padding-left: 0;
 }
 
-.input-group .form-control {
-   position: relative;
-   z-index: 2;
-   float: left;
-   width: 100%;
-   margin-bottom: 0;
-}
+/*.input-group .form-control {*/
+/*   position: relative;*/
+/*   z-index: 2;*/
+/*   float: left;*/
+/*   width: 100%;*/
+/*   margin-bottom: 0;*/
+/*}*/
 
 .input-group .form-control:focus {
    z-index: 3;
