@@ -68,7 +68,7 @@ class PluginResourcesBusinessUnit extends CommonDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('plugin_resources_budget', READ);
+      return Session::haveRight('dropdown', READ);
    }
 
    /**
