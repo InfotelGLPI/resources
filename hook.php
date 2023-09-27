@@ -946,6 +946,7 @@ function plugin_resources_getDropdown() {
          PluginResourcesRecruitingSource::class   => PluginResourcesRecruitingSource::getTypeName(2),
          PluginResourcesDestination::class        => PluginResourcesDestination::getTypeName(2),
          PluginResourcesResignationReason::class  => PluginResourcesResignationReason::getTypeName(2),
+          PluginResourcesWorkProfile::class  => PluginResourcesWorkProfile::getTypeName(2),
 
       ];
    } else {
