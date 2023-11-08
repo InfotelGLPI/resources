@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-08 17:14+0000\n"
+"POT-Creation-Date: 2023-11-08 17:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,7 +296,7 @@ msgstr ""
 msgid "Please activate the plugin badge"
 msgstr ""
 
-#: front/wizard.form.php:127 front/wizard.form.php:408
+#: front/wizard.form.php:127 front/wizard.form.php:396
 #: inc/resource.class.php:1009
 msgid "Required fields are not filled. Please try again."
 msgstr ""
