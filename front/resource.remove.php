@@ -41,12 +41,13 @@ if (Session::getCurrentInterface() == 'central') {
 }
 
 if (empty($_POST["date_end"])) {
-    if(isset($_POST["resignation_date"]) && !empty($_POST["resignation_date"]) ) {
+    if (isset($_POST["resignation_date"]) && !empty($_POST["resignation_date"]) ) {
         $_POST["date_end"] = $_POST["resignation_date"];
-    }else {
+    } else if (isset($_POST["effective_leaving_date"]) && !empty($_POST["effective_leaving_date"]) ) {
+        $_POST["date_end"] = $_POST["effective_leaving_date"];
+    } else {
         $_POST["date_end"] = date("Y-m-d");
     }
-
 }
 
 $resource        = new PluginResourcesResource();
