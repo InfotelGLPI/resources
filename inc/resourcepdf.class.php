@@ -73,7 +73,7 @@ class PluginResourcesResourcePDF extends PluginPdfCommon {
          '<b><i>'.__('First name').' :</i></b> '.$res->fields['firstname']);
       $pdf->displayLine(
          '<b><i>'.__('Location').' :</i></b> '.Dropdown::getDropdownName('glpi_locations', $res->fields['locations_id']),
-         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.HDropdown::getDropdownName('glpi_plugin_resources_contracttypes', $res->fields['plugin_resources_contracttypes_id']));
+         '<b><i>'.PluginResourcesContractType::getTypeName(1).' :</i></b> '.Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $res->fields['plugin_resources_contracttypes_id']));
 
       $dbu = new DbUtils();
       $pdf->displayLine(
