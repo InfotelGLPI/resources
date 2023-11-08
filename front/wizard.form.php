@@ -294,19 +294,6 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
       $resource->redirectToList();
    }
 
-} else if (isset($_POST["six_step"])) {
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
-   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
-
-   if ($wizard_entrance_information) {
-       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
-   } else {
-      $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-      $resource->fields['resources_step']                = 'five_step';
-      Plugin::doHook('item_show', $resource);
-      $resource->redirectToList();
-   }
-
 } else if (isset($_POST["undo_five_step"])) {
 
    $resources_id = $_POST['plugin_resources_resources_id'];
@@ -394,6 +381,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
    $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
 
 } else if (isset($_POST["six_step"])) {
+
    $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
 
    if ($wizard_habilitation && $_POST['plugin_resources_resources_id'] > 0) {
@@ -469,10 +457,15 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
 } else if (isset($_POST["seven_step"])) {
 
-   $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-   $resource->fields['resources_step']                = 'six_step';
-   Plugin::doHook('item_show', $resource);
-   $resource->redirectToList();
+    $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+    if ($wizard_entrance_information) {
+        $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
+    } else {
+        $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+        $resource->fields['resources_step']                = 'five_step';
+        Plugin::doHook('item_show', $resource);
+        $resource->redirectToList();
+    }
 
 } else if (isset($_POST["undo_seven_step"])) {
 
