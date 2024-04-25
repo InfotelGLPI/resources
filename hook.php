@@ -54,7 +54,7 @@ function plugin_resources_install()
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
         $install = true;
-        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0..sql");
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.5.sql");
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -703,6 +703,7 @@ function plugin_resources_uninstall()
         "glpi_plugin_resources_leavingdetails",
         "glpi_plugin_resources_workprofiles",
         "glpi_plugin_resources_leavinginformations",
+        'glpi_plugin_resources_candidateorigins',
     ];
 
     foreach ($tables as $table) {
