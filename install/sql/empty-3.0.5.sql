@@ -50,6 +50,7 @@ CREATE TABLE `glpi_plugin_resources_resources`
     `last_contract_type`                       int unsigned NOT NULL default '0',
     `last_location`                            int unsigned NOT NULL default '0',
     `yearsexperience`                          int unsigned NOT NULL default '0',
+    `plugin_resources_candidateorigins_id` int unsigned NOT NULL default '0',
     `matricule_second`                         varchar(255) collate utf8mb4_unicode_ci default NULL,
     `secondary_services`                       varchar(255) collate utf8mb4_unicode_ci default NULL,
     `gender`                                   varchar(3) collate utf8mb4_unicode_ci   default NULL,
@@ -1128,6 +1129,15 @@ CREATE TABLE `glpi_plugin_resources_leavinginformations`
     `company_name`                           varchar(255) collate utf8mb4_unicode_ci default NULL,
     `comment`                                text collate utf8mb4_unicode_ci,
     PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `glpi_plugin_resources_candidateorigins` (
+                                                          `id` int unsigned NOT NULL auto_increment,
+                                                          `entities_id` int unsigned NOT NULL default '0',
+                                                          `is_recursive` tinyint NOT NULL DEFAULT '0',
+                                                          `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
+                                                          `comment` text collate utf8mb4_unicode_ci,
+                                                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 
