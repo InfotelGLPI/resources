@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-08 18:10+0000\n"
+"POT-Creation-Date: 2024-04-25 10:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,39 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:59
+#: hook.php:60
 msgid "Long term contract"
 msgstr ""
 
-#: hook.php:64
+#: hook.php:65
 msgid "Fixed term contract"
 msgstr ""
 
-#: hook.php:69
+#: hook.php:70
 msgid "Trainee"
 msgstr ""
 
-#: hook.php:459
+#: hook.php:457
 msgid "Specific network rights"
 msgstr ""
 
-#: hook.php:460
+#: hook.php:458
 msgid "Access to the applications"
 msgstr ""
 
-#: hook.php:461
+#: hook.php:459
 msgid "Specific securities groups"
 msgstr ""
 
-#: hook.php:462
+#: hook.php:460
 msgid "Specific distribution lists"
 msgstr ""
 
-#: hook.php:463 inc/choice.class.php:172 inc/choice.class.php:415
+#: hook.php:461 inc/choice.class.php:172 inc/choice.class.php:415
 msgid "Others needs"
 msgstr ""
 
-#: hook.php:1001 inc/notificationtargetresource.class.php:407
+#: hook.php:1069 inc/notificationtargetresource.class.php:407
 #: inc/notificationtargetresource.class.php:486
 #: inc/notificationtargetresource.class.php:629
 #: inc/notificationtargetresource.class.php:683
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Declared as leaving"
 msgstr ""
 
-#: hook.php:1006 inc/department.class.php:84 inc/department.class.php:116
+#: hook.php:1076 inc/department.class.php:84 inc/department.class.php:116
 #: inc/employer.class.php:48 inc/employment.class.php:207
 #: inc/employment.class.php:288
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:64
@@ -70,13 +70,13 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1010 inc/client.class.php:46
+#: hook.php:1080 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1015 inc/directory.class.php:198
+#: hook.php:1085 inc/directory.class.php:198
 #: inc/notificationtargetresource.class.php:92
 #: inc/notificationtargetresource.class.php:395
 #: inc/notificationtargetresource.class.php:474
@@ -93,7 +93,7 @@ msgstr[1] ""
 msgid "Resource manager"
 msgstr ""
 
-#: hook.php:1027 inc/notificationtargetresource.class.php:95
+#: hook.php:1098 inc/notificationtargetresource.class.php:95
 #: inc/notificationtargetresource.class.php:406
 #: inc/notificationtargetresource.class.php:485
 #: inc/notificationtargetresource.class.php:636
@@ -104,7 +104,7 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:1033 inc/leavinginformation.class.php:362
+#: hook.php:1106 inc/leavinginformation.class.php:362
 #: inc/leavinginformation.class.php:511
 #: inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
@@ -119,23 +119,23 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1607 inc/resource_item.class.php:898
+#: hook.php:1765 inc/resource_item.class.php:898
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:1881
+#: hook.php:2035
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:1913 hook.php:1945 inc/linkad.class.php:754
+#: hook.php:2075 hook.php:2122 inc/linkad.class.php:754
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:1923 inc/linkad.class.php:756
+#: hook.php:2093 inc/linkad.class.php:756
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:1955
+#: hook.php:2140
 msgid "You have to do all checklist out action before"
 msgstr ""
 
