@@ -24,6 +24,10 @@
    </authors>
    <versions>
        <version>
+           <num>3.0.5</num>
+           <compatibility>~10.0</compatibility>
+       </version>
+       <version>
            <num>3.0.4</num>
            <compatibility>~10.0</compatibility>
            <download_url>https://github.com/InfotelGLPI/resources/releases/download/3.0.4/glpi-resources-3.0.4.tar.bz2</download_url>
