@@ -245,7 +245,6 @@ class PluginResourcesMetademand extends CommonGLPI {
                                           }
                                           if($habilitationConfig->getFromDBByCrit(['plugin_resources_resources_id'     => $idResource,
                                                                                    'plugin_resources_habilitations_id' => $c])) {
-                                                                                   'plugin_resources_habilitations_id' => $c])) {
                                              $habilitationToDel[] = $habilitationConfig->getField('id');
                                           }
                                        }
