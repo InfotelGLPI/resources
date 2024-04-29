@@ -48,7 +48,6 @@ function plugin_init_resources() {
    $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
 
    if (Session::getLoginUserID()) {
-
       $PLUGIN_HOOKS['pre_item_form']['resources']  = [PluginResourcesLinkAd::class, 'messageSolution'];
       $PLUGIN_HOOKS['post_item_form']['resources'] = [PluginResourcesLinkAd::class, 'deleteButtton'];
       $noupdate                                    = false;
