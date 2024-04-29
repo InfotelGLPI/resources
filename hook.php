@@ -59,17 +59,17 @@ function plugin_resources_install()
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
 
-        $DB->query($query) or die($DB->error());
+        $DB->doQuery($query) or die($DB->error());
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
                VALUES (2, '" . __('Fixed term contract', 'resources') . "', 0, 1)";
 
-        $DB->query($query) or die($DB->error());
+        $DB->doQuery($query) or die($DB->error());
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
                VALUES (3, '" . __('Trainee', 'resources') . "', 0, 1)";
 
-        $DB->query($query) or die($DB->error());
+        $DB->doQuery($query) or die($DB->error());
 
         // Add record notification
         include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
