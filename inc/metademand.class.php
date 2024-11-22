@@ -179,13 +179,13 @@ class PluginResourcesMetademand extends CommonGLPI
             $input["check_value"] = $_POST["check_value"];
             $linkmeta             = new PluginResourcesLinkmetademand();
             if (isset($_POST["checklist_in"])) {
-                $input["checklist_in"] = PluginMetademandsField::_serialize($_POST["checklist_in"]);
+                $input["checklist_in"] = PluginMetademandsFieldParameter::_serialize($_POST["checklist_in"]);
             }
             if (isset($_POST["checklist_out"])) {
-                $input["checklist_out"] = PluginMetademandsField::_serialize($_POST["checklist_out"]);
+                $input["checklist_out"] = PluginMetademandsFieldParameter::_serialize($_POST["checklist_out"]);
             }
             if (isset($_POST["habilitation"])) {
-                $input["habilitation"] = PluginMetademandsField::_serialize($_POST["habilitation"]);
+                $input["habilitation"] = PluginMetademandsFieldParameter::_serialize($_POST["habilitation"]);
             }
             if (isset($_POST["is_leaving_resource"])) {
                 $input["is_leaving_resource"] = $_POST["is_leaving_resource"];

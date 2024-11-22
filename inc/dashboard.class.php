@@ -30,6 +30,7 @@
 /**
  * Class PluginResourcesDashboard
  */
+#[AllowDynamicProperties]
 class PluginResourcesDashboard extends CommonGLPI
 {
     public $widgets = [];
