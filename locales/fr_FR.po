@@ -5,17 +5,17 @@
 # 
 # Translators:
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2022
-# Xavier CAILLAUD <thetsmr@gmail.com>, 2022
 # Alban Lesellier <alban.lesellier@infotel.com>, 2023
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-26 09:19+0000\n"
+"POT-Creation-Date: 2024-08-05 10:00+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
-"Last-Translator: Alban Lesellier <alban.lesellier@infotel.com>, 2023\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2024\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,39 +23,39 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: hook.php:59
+#: hook.php:60
 msgid "Long term contract"
 msgstr "CDI"
 
-#: hook.php:64
+#: hook.php:65
 msgid "Fixed term contract"
 msgstr "CDD - Interim"
 
-#: hook.php:69
+#: hook.php:70
 msgid "Trainee"
 msgstr "Stagiaire"
 
-#: hook.php:459
+#: hook.php:457
 msgid "Specific network rights"
 msgstr "Droits réseaux spécifiques"
 
-#: hook.php:460
+#: hook.php:458
 msgid "Access to the applications"
 msgstr "Accès aux applications"
 
-#: hook.php:461
+#: hook.php:459
 msgid "Specific securities groups"
 msgstr "Groupes de sécurité spécifiques"
 
-#: hook.php:462
+#: hook.php:460
 msgid "Specific distribution lists"
 msgstr "Listes de distributions spécifiques"
 
-#: hook.php:463 inc/choice.class.php:172 inc/choice.class.php:415
+#: hook.php:461 inc/choice.class.php:172 inc/choice.class.php:415
 msgid "Others needs"
 msgstr "Autres besoins"
 
-#: hook.php:1000 inc/notificationtargetresource.class.php:407
+#: hook.php:1069 inc/notificationtargetresource.class.php:407
 #: inc/notificationtargetresource.class.php:486
 #: inc/notificationtargetresource.class.php:629
 #: inc/notificationtargetresource.class.php:683
@@ -66,7 +66,7 @@ msgstr "Autres besoins"
 msgid "Declared as leaving"
 msgstr "Déclaré partant"
 
-#: hook.php:1005 inc/department.class.php:84 inc/department.class.php:116
+#: hook.php:1076 inc/department.class.php:84 inc/department.class.php:116
 #: inc/employer.class.php:48 inc/employment.class.php:207
 #: inc/employment.class.php:288
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:64
@@ -76,14 +76,14 @@ msgstr[0] "Employeur"
 msgstr[1] "Employeurs"
 msgstr[2] "Employeurs"
 
-#: hook.php:1009 inc/client.class.php:46
+#: hook.php:1080 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Client affecté"
 msgstr[1] "Clients affectés"
 msgstr[2] "Clients affectés"
 
-#: hook.php:1014 inc/directory.class.php:198
+#: hook.php:1085 inc/directory.class.php:198
 #: inc/notificationtargetresource.class.php:92
 #: inc/notificationtargetresource.class.php:395
 #: inc/notificationtargetresource.class.php:474
@@ -100,7 +100,7 @@ msgstr[2] "Clients affectés"
 msgid "Resource manager"
 msgstr "Encadrant direct de la ressource"
 
-#: hook.php:1026 inc/notificationtargetresource.class.php:95
+#: hook.php:1098 inc/notificationtargetresource.class.php:95
 #: inc/notificationtargetresource.class.php:406
 #: inc/notificationtargetresource.class.php:485
 #: inc/notificationtargetresource.class.php:636
@@ -111,7 +111,7 @@ msgstr "Encadrant direct de la ressource"
 msgid "Informant of leaving"
 msgstr "Déclarant du départ de la ressource"
 
-#: hook.php:1032 inc/leavinginformation.class.php:362
+#: hook.php:1106 inc/leavinginformation.class.php:362
 #: inc/leavinginformation.class.php:511
 #: inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
@@ -126,29 +126,29 @@ msgstr "Déclarant du départ de la ressource"
 msgid "Sales manager"
 msgstr "Responsable commercial"
 
-#: hook.php:1606 inc/resource_item.class.php:898
+#: hook.php:1765 inc/resource_item.class.php:898
 msgid "Not defined"
 msgstr "Non défini"
 
-#: hook.php:1880
+#: hook.php:2035
 msgid "Modification of the associated resource's location"
 msgstr "Modification du lieu pour la ressource associée"
 
-#: hook.php:1912 hook.php:1944 inc/linkad.class.php:754
+#: hook.php:2075 hook.php:2122 inc/linkad.class.php:754
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "Vous devez réaliser l'action dans l'annuaire LDAP avant"
 
-#: hook.php:1922 inc/linkad.class.php:756
+#: hook.php:2093 inc/linkad.class.php:756
 msgid "You have to do all checklist in action before"
 msgstr ""
 "Vous devez faire toute les actions de la liste de contrôle d'arrivée avant"
 
-#: hook.php:1954
+#: hook.php:2140
 msgid "You have to do all checklist out action before"
 msgstr ""
 "Vous devez faire toute les actions de la liste de contrôle de départ avant"
 
-#: setup.php:205 inc/metademand.class.php:69
+#: setup.php:204 inc/metademand.class.php:69
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Ressource humaine"
@@ -286,19 +286,19 @@ msgstr ""
 msgid "View by contract type"
 msgstr "Vue par type de contrat"
 
-#: front/resource.remove.php:98
+#: front/resource.remove.php:99
 msgid "Declaration of resource leaving OK"
 msgstr "Déclaration du départ de la ressource effectuée"
 
-#: front/resource.remove.php:110
+#: front/resource.remove.php:111
 msgid "Departure of"
 msgstr "Départ de"
 
-#: front/resource.remove.php:113
+#: front/resource.remove.php:114
 msgid "leave on"
 msgstr "part le"
 
-#: front/resource.remove.php:120 inc/contracttype.class.php:251
+#: front/resource.remove.php:121 inc/contracttype.class.php:251
 #: inc/contracttype.class.php:272 inc/contracttypeprofile.class.php:78
 #: inc/resource.class.php:1483 inc/resource.class.php:2516
 msgid "Without contract"
@@ -312,7 +312,7 @@ msgstr "Vous avez besoin des droits sur le plugin badges"
 msgid "Please activate the plugin badge"
 msgstr "Merci d'activer le plugin badge"
 
-#: front/wizard.form.php:127 front/wizard.form.php:408
+#: front/wizard.form.php:127 front/wizard.form.php:396
 #: inc/resource.class.php:1009
 msgid "Required fields are not filled. Please try again."
 msgstr ""
@@ -1060,7 +1060,7 @@ msgstr[0] "Fonction"
 msgstr[1] "Fonctions"
 msgstr[2] "Fonctions"
 
-#: inc/habilitation.class.php:50 inc/metademand.class.php:148
+#: inc/habilitation.class.php:50 inc/metademand.class.php:152
 #: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
@@ -1536,11 +1536,11 @@ msgstr "Liste des tâches"
 msgid "Import configuration"
 msgstr "Configuration des imports"
 
-#: inc/metademand.class.php:132
+#: inc/metademand.class.php:135
 msgid "Link a checklist in"
 msgstr "Lier à un checklist entrante"
 
-#: inc/metademand.class.php:133
+#: inc/metademand.class.php:136
 msgid ""
 "If the value selected equals the value to check, the checklist in will be "
 "add"
@@ -1548,11 +1548,11 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: inc/metademand.class.php:140
+#: inc/metademand.class.php:143
 msgid "Link a checklist out"
 msgstr "Lier à une checklist sortante"
 
-#: inc/metademand.class.php:141
+#: inc/metademand.class.php:144
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
@@ -1560,7 +1560,7 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: inc/metademand.class.php:149
+#: inc/metademand.class.php:153
 msgid ""
 "If the value selected equals the value to check, the habilitation will be "
 "add"
@@ -1568,11 +1568,11 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, l'habilitation "
 "va être ajoutée"
 
-#: inc/metademand.class.php:156
+#: inc/metademand.class.php:162
 msgid "Leaving resource"
 msgstr "Ressource partante"
 
-#: inc/metademand.class.php:157
+#: inc/metademand.class.php:163
 msgid "If yes, the resource will be declared as leaving"
 msgstr "Si oui, la ressource sera déclarée partante"
 
@@ -2069,7 +2069,7 @@ msgstr "Format de la photo : JPG"
 
 #: inc/resource.class.php:3363
 msgid "Add documents to the resource"
-msgstr "Ajouter des documents à la resource"
+msgstr "Ajouter des documents à la ressource"
 
 #: inc/resource.class.php:4147
 msgid "Actions to be taken"
