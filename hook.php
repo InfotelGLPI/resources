@@ -707,7 +707,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->query("DROP TABLE IF EXISTS `$table`;");
+        $DB->dropTable($table);
     }
 
     //old versions
@@ -726,7 +726,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->query("DROP TABLE IF EXISTS `$table`;");
+        $DB->dropTable($table);
     }
 
     $tables = [
