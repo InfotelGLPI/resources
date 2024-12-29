@@ -2574,7 +2574,7 @@ msgstr "Birimleri aktar"
 
 #: inc/transferentity.class.php:152
 msgid "Entities allowed to transfer a resource"
-msgstr "Bir kaynağa aktarılabilecek varlıklar"
+msgstr "Bir kaynağa aktarılabilecek birimler"
 
 #: report/budgetsummary/budgetsummary.php:37
 msgid "budgetsummary_report_title"
