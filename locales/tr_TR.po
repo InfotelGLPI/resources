@@ -1651,7 +1651,7 @@ msgstr "Kaynak birim grubu"
 
 #: inc/notificationtargetresource.class.php:112
 msgid "Source entity group manager"
-msgstr "Kaynak varlık grubu yönetimi"
+msgstr "Kaynak birim grubu yönetimi"
 
 #: inc/notificationtargetresource.class.php:113
 msgid "Target entity group manager"
