@@ -832,7 +832,7 @@ msgstr "Süper gücü geri al"
 
 #: inc/confighabilitation.class.php:139 inc/resourcebadge.class.php:126
 msgid "The current entity is already linked to a meta-demand"
-msgstr "Geçerli varlık zaten bir meta-demand ile bağlantılı"
+msgstr "Geçerli birim zaten bir meta-demand ile bağlantılı"
 
 #: inc/confighabilitation.class.php:191 inc/resourcebadge.class.php:171
 msgid "Meta-demands linked"
@@ -1113,7 +1113,7 @@ msgstr "GLPI kaynaklarını güncelle"
 
 #: inc/importresource.class.php:668
 msgid "Be careful, new resources will be created in the entity"
-msgstr "Dikkatli olun, varlık içinde yeni kaynaklar oluşturulacak"
+msgstr "Dikkatli olun, birim içinde yeni kaynaklar oluşturulacak"
 
 #: inc/importresource.class.php:675
 msgid "Compare File with GLPI Resources"
