@@ -304,7 +304,7 @@ msgstr "Yaka kartları eklentisini kullanma izniniz olmalıdır"
 
 #: front/resourcebadge.form.php:118
 msgid "Please activate the plugin badge"
-msgstr "Lütfen yaka kartı uygulama ekini etkinleştirin"
+msgstr "Lütfen yaka kartı eklentisini etkinleştirin"
 
 #: front/wizard.form.php:127 front/wizard.form.php:396
 #: inc/resource.class.php:1009
