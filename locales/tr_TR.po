@@ -2025,7 +2025,7 @@ msgstr "Aktarım bildirin"
 
 #: inc/resource.class.php:4243
 msgid "Current entity"
-msgstr "Geçerli varlık"
+msgstr "Geçerli birim"
 
 #: inc/resource.class.php:4296 inc/resource_item.class.php:804
 msgid "Associate a resource"
