@@ -1643,11 +1643,11 @@ msgstr "Görevden sorumlu grup"
 
 #: inc/notificationtargetresource.class.php:110
 msgid "Target entity group"
-msgstr "Hedef varlık grubu"
+msgstr "Hedef birim grubu"
 
 #: inc/notificationtargetresource.class.php:111
 msgid "Source entity group"
-msgstr "Kaynak varlık grubu"
+msgstr "Kaynak birim grubu"
 
 #: inc/notificationtargetresource.class.php:112
 msgid "Source entity group manager"
