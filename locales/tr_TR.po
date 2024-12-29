@@ -1655,7 +1655,7 @@ msgstr "Kaynak birim grubu yönetimi"
 
 #: inc/notificationtargetresource.class.php:113
 msgid "Target entity group manager"
-msgstr "Hedef varlık grubu yönetimi"
+msgstr "Hedef birim grubu yönetimi"
 
 #: inc/notificationtargetresource.class.php:345
 #: inc/notificationtargetresource.class.php:1292
@@ -1739,7 +1739,7 @@ msgstr "İnsan kaynağının aktarımı raporu"
 #: inc/notificationtargetresource.class.php:960
 #: inc/notificationtargetresource.class.php:1398 inc/resource.class.php:4252
 msgid "Target entity"
-msgstr "Hedef varlık"
+msgstr "Hedef birim"
 
 #: inc/notificationtargetresource.class.php:961
 #: inc/notificationtargetresource.class.php:1397
