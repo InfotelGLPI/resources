@@ -2570,7 +2570,7 @@ msgstr "Oluşturulmuş destek kayıtlarının kategorisi"
 
 #: inc/transferentity.class.php:45
 msgid "Transfer entities"
-msgstr "Varlıkları aktar"
+msgstr "Birimleri aktar"
 
 #: inc/transferentity.class.php:152
 msgid "Entities allowed to transfer a resource"
