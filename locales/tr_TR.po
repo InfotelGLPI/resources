@@ -207,7 +207,7 @@ msgstr "Lütfen eklentiyi etkinleştirin"
 #: front/confighabilitation.form.php:109 front/resourcebadge.form.php:73
 #: front/resourcebadge.form.php:91
 msgid "Please activate the plugin metademand"
-msgstr "Lütfen metademand uygulama ekini etkinleştirin"
+msgstr "Lütfen metademand eklentisini etkinleştirin"
 
 #: front/confighabilitation.form.php:83 front/confighabilitation.form.php:103
 #: front/resourcebadge.form.php:84
@@ -300,7 +300,7 @@ msgstr "Sözleşmesiz"
 
 #: front/resourcebadge.form.php:62
 msgid "You need rights into badges plugin"
-msgstr "Yaka kartları uygulama ekini kullanma izniniz olmalıdır"
+msgstr "Yaka kartları eklentisini kullanma izniniz olmalıdır"
 
 #: front/resourcebadge.form.php:118
 msgid "Please activate the plugin badge"
