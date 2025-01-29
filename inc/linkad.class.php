@@ -388,7 +388,7 @@ class PluginResourcesLinkAd extends CommonDBTM {
             if (!$islink) {
                $option = ['value' => $linkAD->fields["login"]];
             }
-            echo Html::input('name', $option);
+            echo Html::input('login', $option);
             echo "</td>";
             echo "<td colspan = ''>" . __('Department', 'resources') . "</td>";
 
@@ -403,14 +403,14 @@ class PluginResourcesLinkAd extends CommonDBTM {
             $option = ['rand'   => $rand,
                        'value'  => $resource->getField("name"),
                        'onChange' => "\"javascript:this.value=this.value.toUpperCase();\" "];
-            $rand1  = Html::input('name', $option);
+            echo Html::input('name', $option);
             echo "</td>";
             echo "<td>" . __('Firstname', 'resources') . "</td>";
             echo "<td>";
             $option = ['rand'   => $rand,
                        'value'  => $resource->getField("firstname"),
                        'onchange' => "First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;'"];
-            $rand2  = Html::input('firstname', $option);
+            echo Html::input('firstname', $option);
             echo "</td>";
 
             echo "</tr>";
