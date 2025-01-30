@@ -191,7 +191,7 @@ class PluginResourcesLDAP extends CommonDBTM
             // does not need to be an admin account. This can also
             // be a full distinguished name of the user account.
             'username' => $configAD->fields['login'],
-            'password' => GLPIKey::decrypt($configAD->fields['password']),
+            'password' => (new GLPIKey())->decrypt($configAD->fields['password']),
         ];
 //      Toolbox::logWarning($config);
         return $config;
@@ -234,7 +234,7 @@ class PluginResourcesLDAP extends CommonDBTM
             // does not need to be an admin account. This can also
             // be a full distinguished name of the user account.
             'username' => $config_ldap->fields['rootdn'],
-            'password' => GLPIKey::decrypt($config_ldap->fields['rootdn_passwd']),
+            'password' => (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd']),
         ];
 
         // Add a connection provider to Adldap.
