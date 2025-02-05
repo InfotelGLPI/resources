@@ -500,8 +500,6 @@ class PluginResourcesLinkAd extends CommonDBTM {
             }
             echo "</tr>";
          }
-      } else {
-
       }
 
       echo "</table>";
