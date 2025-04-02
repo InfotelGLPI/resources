@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Toolbox\Sanitizer;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
@@ -324,6 +326,14 @@ class PluginResourcesLDAP extends CommonDBTM
             $attributes['description'] = $data["role"];
             $user->fill($attributes);
 
+			$firstname = $data["firstname"];
+			$name = $data["name"];
+	        $date_begin = $data["date_begin"];
+
+	        $setPassword = $this->setPasswordUser($firstname,$name, $date_begin);
+
+            $user->setPassword($setPassword);
+
             if ($user->save()) {
                 return true;
             } else {
@@ -331,6 +341,8 @@ class PluginResourcesLDAP extends CommonDBTM
             }
         } catch (Adldap\Models\ModelNotFoundException $e) {
             // Record wasn't found!
+            return false;
+        } catch (\Adldap\AdldapException $e) {
             return false;
         }
     }
@@ -446,7 +458,6 @@ class PluginResourcesLDAP extends CommonDBTM
         }
     }
 
-
     function ldapTimeToUnixTime($ldapTime)
     {
         $secsAfterADEpoch = $ldapTime / 10000000;
@@ -460,6 +471,45 @@ class PluginResourcesLDAP extends CommonDBTM
         $secsAfterADEpoch = intval($ADToUnixConverter + $unixTime);
         return $secsAfterADEpoch * 10000000;
     }
+
+	private function setPasswordUser(string $firstname, string $name, $date)
+	{
+
+		$adconfig = new PluginResourcesAdconfig();
+		$datas = $adconfig->find(['id' => 1]);
+
+		$user_initial = 0;
+		$user_date = 0;
+		$password_end = '';
+
+		foreach ($datas as $item) {
+			$user_initial = $item['user_initial'];
+			$user_date = $item['user_date'];
+			$password_end = $item['password_end'];
+		}
+
+		if($user_initial != 0){
+			$firstLetter_firstname = ucfirst(substr($firstname, 0, 1));
+			$firstLetter_name = ucfirst(substr($name, 0, 1));
+		}else{
+			$firstLetter_firstname = '';
+			$firstLetter_name = '';
+		}
+
+		if($user_date != 0){
+			$date_begin = new DateTime($date);
+			$date_begin = $date_begin->format("$user_date");
+		}else{
+			$date_begin = '';
+		}
+
+		return $firstLetter_firstname.$firstLetter_name.$date_begin.$password_end;
+
+
+
+
+
+	}
 
 
 }

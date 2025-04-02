@@ -363,7 +363,14 @@ else if (isset($_POST["add_checklist"])) {
       }
    }
 
-   $resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
+	if(isset($_POST['tickettemplate'])){
+		$_SESSION['ressources_tickettemplate'] = true;
+		$ticketTemplate = new PluginResourcesTicketTemplate();
+		$ticketTemplate->showTemplate();
+	}else{
+		$resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
+	}
+
 
    if (Session::getCurrentInterface() != 'central'
        && Plugin::isPluginActive('servicecatalog')) {

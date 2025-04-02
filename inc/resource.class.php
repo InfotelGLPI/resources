@@ -3904,6 +3904,9 @@ class PluginResourcesResource extends CommonDBTM {
      * @param int $add
      */
     function listOfTemplates($target, $add = 0) {
+		if(isset($_SESSION['ressources_tickettemplate'])){
+			unset($_SESSION['ressources_tickettemplate']);
+		}
         $dbu = new DbUtils();
 
         $restrict = ["is_template" => 1] +
@@ -3933,6 +3936,24 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<a href=\"$target?id=-1&amp;withtemplate=2\">&nbsp;&nbsp;&nbsp;" . __('Blank Template') . "&nbsp;&nbsp;&nbsp;</a></td>";
             echo "</tr>";
         }
+
+	    if (!$add) {
+		    echo "<tr>";
+		    echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
+		    echo Html::showSimpleForm("$target?withtemplate=1",
+			    'basicpath',
+			    _x('button', __('Add a template'). ' - '. self::getTypeName(2)),
+			    ['id'=> 'hr_template']);
+			echo "</td>";
+
+			echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
+		    echo Html::showSimpleForm("$target?withtemplate=1",
+			    'tickettemplate',
+			    _x('button', __('Add a template'). ' - '. __('Ticket')),
+			    ['id'=> 'tickettemplate']);
+			echo "</td>";
+		    echo "</tr>";
+	    }
 
         foreach ($templates as $template) {
 
@@ -3969,13 +3990,7 @@ class PluginResourcesResource extends CommonDBTM {
             }
             echo "</tr>";
         }
-        if (!$add) {
-            echo "<tr>";
-            echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
-            echo "<b><a href=\"$target?withtemplate=1\">" . __('Add a template...') . "</a></b>";
-            echo "</td>";
-            echo "</tr>";
-        }
+
         echo "</table></div>";
     }
 

@@ -1,0 +1,295 @@
+{# {% extends "generic_show_form.html.twig" %} #}
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% block modal %}
+    <div class="modal fade" id="show_tag" tabindex="-1" role="dialog" aria-labelledby="ShowTagTitle"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="height: 500px; width: 600px">
+                <div class="modal-header">
+                    <h5 class="modal-title"
+                        id="ShowTagTitle">{{ __('Tag list', 'resources') }}</h5>
+                    <button id="close_modal_addMonitor" type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body overflow-auto" id="ShowTagBody">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <td>{{ __('Tag') }}</td>
+                            <td>{{ __('Value') }}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>##gender##</td>
+                            <td>{{ __('Arrival date', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##name##</td>
+                            <td>{{ __('Surname') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##firstname##</td>
+                            <td>{{ __('First name') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##matricule##</td>
+                            <td>{{ __('Arrival date', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##locations_id##</td>
+                            <td>{{ __('Location') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##quota##</td>
+                            <td>{{ __('Quotité', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##resourcestates_id##</td>
+                            <td>{{ __('Status') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##ranks_id##</td>
+                            <td>{{ _n('Rank', 'Ranks', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##contractnatures_id##</td>
+                            <td>{{ _n('Contract nature', 'Contract natures', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##specialities_id##</td>
+                            <td>{{ _n('Speciality', 'Specialities', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##managers_id##</td>
+                            <td>{{ __('Resource manager', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##users_id_sales##</td>
+                            <td>{{ __('Sales manager', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##employees_id##</td>
+                            <td>{{ _n('Employee', 'Employees', 1, 'resources') }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>##departments_id##</td>
+                            <td>{{ _n('Department', 'Departments', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##services_id##</td>
+                            <td>{{ __('Service', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##roles_id##</td>
+                            <td>{{ _n('Role', 'Roles', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##functions_id##</td>
+                            <td>{{ _n('Function', 'Functions', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##teams_id##</td>
+                            <td>{{ _n('Team', 'Teams', 1, 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##date_begin##</td>
+                            <td>{{ __('Arrival date', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##date_end##</td>
+                            <td>{{ __('Departure date', 'resources') }}</td>
+                        </tr>
+                        <tr>
+                            <td>##comment##</td>
+                            <td>{{ __('Description') }}</td>
+                        </tr>
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div>
+        <div class="row text-center py-3">
+            <div class="col-sm">
+                <input type="button" onclick="triggerModalShowTag()"
+                       value="{{ __('show available tag', 'resources') }}">
+            </div>
+        </div>
+        <form id="form_" class="search-form-container" enctype='multipart/form-data' method="post" action="">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+            <div class="row">
+                <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Action - Description', 'resources') }}</div>
+                <div class="hr-text-left col-auto d-flex flex-column picture-block">
+                    <div>
+                        {{ fields.dropdownArrayField(
+                            'type',
+                            select_type,
+                            {0: '-----', 1: __('Creation'), 2: __('Update'), 3: __('Delete')},
+                            'Type',
+                            {
+                                'field_class': 'col-sm-5',
+                                'label_class': 'col-sm-2',
+                                'input_class': 'col-sm-5',
+                            }
+                        ) }}
+                    </div>
+                    <div>
+                        {{ fields.textField(
+                            'name',
+                            params['name'],
+                            __('Title'),
+                            {
+                                'field_class': 'col-sm-5',
+                                'label_class': 'col-sm-2',
+                                'input_class': 'col-sm-5',
+                            }
+                        ) }}
+                    </div>
+                    <div>
+                        {{ fields.textareaField(
+                            'description',
+                            item.fields['description'],
+                            __('Description'), {
+                                'field_class': 'col-sm-5',
+                                'label_class': 'col-sm-2',
+                                'input_class': 'col-sm-5',
+                            }
+                        ) }}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Actors') }}</div>
+                <div>
+                    <div class="hr-text-left col-auto d-flex flex-column picture-block">
+                        <div class="font-weight-bold">{{ __('Requester') }}</div>
+                        <div>
+                            {{ fields.dropdownField(
+                                'Group',
+                                'groups_id_requester',
+                                subitem.fields['groups_id_requester'],
+                                __('Group'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'condition': {'is_requester': 1},
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+
+                                }
+                            ) }}
+                        </div>
+                        <div>
+                            {{ fields.dropdownField(
+                                'User',
+                                'users_id_requester',
+                                item.fields['users_id_tech'],
+                                __('User'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+                                }
+                            ) }}
+                        </div>
+                    </div>
+                    <div class="hr-text-left col-auto d-flex flex-column picture-block">
+                        <div class="font-weight-bold">{{ __('Observer') }}</div>
+
+                        <div>
+                            {{ fields.dropdownField(
+                                'Group',
+                                'groups_id_observer',
+                                subitem.fields['groups_id_observer'],
+                                __('Group'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'condition': {'is_watcher': 1},
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+                                }
+                            ) }}
+                        </div>
+                        <div class="hr-text-left col-auto d-flex flex-column picture-block">
+                            {{ fields.dropdownField(
+                                'User',
+                                'users_id_requester',
+                                item.fields['users_id_tech'],
+                                __('User'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+                                }
+                            ) }}
+                        </div>
+                    </div>
+                    <div class="hr-text-left col-auto d-flex flex-column picture-block">
+                        <div class="font-weight-bold">{{ __('Technician') }}</div>
+
+                        <div>
+                            {{ fields.dropdownField(
+                                'Group',
+                                'groups_id_tech',
+                                subitem.fields['groups_id_tech'],
+                                __('Group'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'condition': {'is_assign': 1},
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+                                }
+                            ) }}
+                        </div>
+                        <div>
+                            {{ fields.dropdownField(
+                                'User',
+                                'users_id_tech',
+                                item.fields['users_id_tech'],
+                                __('User'),
+                                {
+                                    'entity': item.fields['entities_id'],
+                                    'field_class': 'col-sm-5',
+                                    'label_class': 'col-sm-2',
+                                    'input_class': 'col-sm-5',
+                                    'multiple': true,
+                                }
+                            ) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" name="confirm_form_tickettemplate"/>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function triggerModalShowTag() {
+            $('#show_tag').modal('toggle');
+        }
+    </script>
+{% endblock %}
