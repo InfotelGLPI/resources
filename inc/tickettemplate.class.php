@@ -45,4 +45,9 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 			'item' => '',
 		]);
 	}
+
+	public function prepareInputForAdd($input)
+	{
+		echo "helo";
+	}
 }

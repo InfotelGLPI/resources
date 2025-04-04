@@ -152,7 +152,11 @@ else if (isset($_POST["deletehelpdeskitem"])) {
       }
    }
    Html::back();
-} //from central OR helpdesk
+}else if (isset($_POST['confirm_form_tickettemplate'])) {
+	$resource_ticket_template = new PluginResourcesTicketTemplate();
+	$resource_ticket_template->add($_POST);
+}
+//from central OR helpdesk
 //update employee informations from user details form or resource form
 else if (isset($_POST["updateemployee"])) {
    if ($_POST['plugin_resources_resources_id'] > 0) {

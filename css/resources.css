@@ -193,3 +193,20 @@
 .resources_wizard_resp_img {
     vertical-align: middle;
 }
+
+.resources_custom_with_div_container {
+    width: 100%;
+    padding-left: 10px;
+}
+
+.resources_custom_with_div {
+    width: 50% !important;
+}
+
+.font-weight-bold, .bg-red-lt {
+    font-weight: bold;
+}
+
+.picture-block {
+    margin-bottom: 10px;
+}
