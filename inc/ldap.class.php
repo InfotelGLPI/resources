@@ -335,6 +335,10 @@ class PluginResourcesLDAP extends CommonDBTM
             $user->setPassword($setPassword);
 
             if ($user->save()) {
+				$config = new PluginResourcesConfig();
+	            if($config->getField('	create_ticket_template') != 0){
+		            $this->createTicket($config->getField('create_ticket_template'));
+	            }
                 return true;
             } else {
                 return false;
@@ -410,6 +414,11 @@ class PluginResourcesLDAP extends CommonDBTM
                     return [false, $new_value];
                 }
 
+	            $config = new PluginResourcesConfig();
+	            if($config->getField('update_ticket_template') != 0){
+		            $this->createTicket($config->getField('update_ticket_template'));
+	            }
+
                 return [true, $new_value];
             } else {
                 return [false, $new_value];
@@ -446,7 +455,10 @@ class PluginResourcesLDAP extends CommonDBTM
 //            $newParentDn = $newParentDn->removeCn($user->getCommonName());
                 $newParentDn = $adConfig->getField("ouDesactivateUserAD");
                 if ($user->move($newParentDn)) {
-                    return true;
+	                if($config->getField('leave_ticket_template') != 0){
+						$this->createTicket($config->getField('leave_ticket_template'));
+	                }
+					return true;
                 }
                 return false;
             } else {
@@ -505,9 +517,58 @@ class PluginResourcesLDAP extends CommonDBTM
 
 		return $firstLetter_firstname.$firstLetter_name.$date_begin.$password_end;
 
+	}
 
+	private function createTicket($id_template)
+	{
+		global $DB;
+		if(isset($id_template)){
+			$template = new PluginResourcesTicketTemplate();
+			$templateUser = new PluginResourcesTicketTemplateUser();
+			$templateGroup = new PluginResourcesGroupTicketTemplate();
 
+			$datas = $template->find(['id' => $id_template]);
+			$ticket_insert = $datas[$id_template];
+			$ticket = new Ticket();
+			$ticket->add([
+				'entities_id' => $ticket_insert['entities_id'],
+				'name' => $ticket_insert['name'],
+				'content' => $ticket_insert['content'],
+				'itilcategories_id' => $ticket_insert['itilcategories_id'],
+				'type' => $ticket_insert['type'],
+				'urgency' => 2,
+				'impact' => 2,
+				'priority' => 2,
+				'date' => date_create(),
+				'date_creation' => date_create(),
+			]);
 
+			$datas_users = $templateUser->find(['plugin_resources_tickettemplates_id' => $id_template]);
+
+			$last_id = $DB->insertId();
+
+			foreach ($datas_users as $datas_user) {
+				$ticket_user = new Ticket_User();
+				$ticket_user->add([
+					'tickets_id' => $last_id,
+					'users_id' => $datas_user['users_id'],
+					'type' => $datas_user['type'],
+					'use_notification' => 1
+				]);
+			}
+
+			$datas_groups = $templateGroup->find(['plugin_resources_tickettemplates_id' => $id_template]);
+
+			foreach ($datas_groups as $datas_group) {
+				$group_ticket = new Group_Ticket();
+				$group_ticket->add([
+					'tickets_id' => $last_id,
+					'groups_id' => $datas_group['groups_id'],
+					'type' => $datas_group['type'],
+				]);
+			}
+
+		}
 
 	}
 

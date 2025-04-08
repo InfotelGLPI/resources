@@ -210,3 +210,13 @@
 .picture-block {
     margin-bottom: 10px;
 }
+
+/**************************************************************/
+
+/***********************Template Body***************************/
+
+.height_cell{
+    line-height: 4vh;
+    align-items: center;
+}
+

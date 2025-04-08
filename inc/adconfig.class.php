@@ -112,7 +112,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo __('RootDN (for non anonymous binds)');
 			echo "</td>";
 			echo "<td>";
-			echo Html::input('login', ['value' => $this->fields['login'], 'size' => 40]);
+			echo Html::input('login', ['value' => $this->fields['login'] ?? '', 'size' => 40]);
 			echo "</td>";
 			echo "<td>";
 			echo __('Password');
@@ -142,7 +142,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 					$possible_values[$cat['id']] = $cat['completename'];
 				}
 			}
-			$values = json_decode($this->fields['creation_categories_id']);
+			$values = json_decode($this->fields['creation_categories_id'] ?? '');
 			if (!is_array($values)) {
 				$values = [];
 			}
@@ -170,7 +170,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 					$possible_values[$cat['id']] = $cat['completename'];
 				}
 			}
-			$values = json_decode($this->fields['modification_categories_id']);
+			$values = json_decode($this->fields['modification_categories_id'] ?? '');
 			if (!is_array($values)) {
 				$values = [];
 			}
@@ -198,7 +198,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 					$possible_values[$cat['id']] = $cat['completename'];
 				}
 			}
-			$values = json_decode($this->fields['deletion_categories_id']);
+			$values = json_decode($this->fields['deletion_categories_id'] ?? '');
 			if (!is_array($values)) {
 				$values = [];
 			}
@@ -221,14 +221,14 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo __('First Form', 'resources');
 			echo "</td>";
 			echo "<td >";
-			$option = ["value" => $this->fields["first_form"]];
+			$option = ["value" => $this->fields["first_form"] ?? ''];
 			Dropdown::showFromArray("first_form", $this->loginForm(), $option);
 			echo "</td>";
 			echo "<td>";
 			echo __('Second Form', 'resources');
 			echo "</td>";
 			echo "<td >";
-			$option = ["value" => $this->fields["second_form"]];
+			$option = ["value" => $this->fields["second_form"] ?? ''];
 			Dropdown::showFromArray("second_form", $this->loginForm(), $option);
 			echo "</td>";
 			echo "</tr>";
@@ -243,7 +243,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 				'user_initial',
 				$values,
 				[
-					'value' => $this->fields["user_initial"],
+					'value' => $this->fields["user_initial"] ?? '',
 					'display_emptychoice' => true
 				]
 			);
@@ -258,12 +258,12 @@ class PluginResourcesAdconfig extends CommonDBTM
 				'user_date',
 				$values,
 				[
-					'value' => $this->fields["user_date"],
+					'value' => $this->fields["user_date"] ?? '' ,
 					'display_emptychoice' => true
 				]
 			);
 
-			$password_end = $this->fields["password_end"];
+			$password_end = $this->fields["password_end"] ?? '';
 
 			echo "<input type='text'  name='password_end' value='$password_end'>";
 			echo "</td></tr>";
@@ -274,14 +274,14 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo __('Prefix', 'resources');
 			echo "</td>";
 			echo "<td >";
-			$option = ["value" => $this->fields["mail_prefix"]];
+			$option = ["value" => $this->fields["mail_prefix"] ?? ''];
 			Dropdown::showFromArray("mail_prefix", $this->prefixForm(), $option);
 			echo "</td>";
 			echo "<td>";
 			echo __('Suffix', 'resources');
 			echo "</td>";
 			echo "<td >";
-			$option = ["value" => $this->fields["mail_suffix"]];
+			$option = ["value" => $this->fields["mail_suffix"] ?? ''];
 			echo Html::input("mail_suffix", $option);
 			echo "</td>";
 			echo "</tr>";
@@ -294,7 +294,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['logAD'],
+				'value' => $this->fields['logAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('logAD', $option);
@@ -305,7 +305,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['departmentAD'],
+				'value' => $this->fields['departmentAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('departmentAD', $option);
@@ -318,7 +318,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['nameAD'],
+				'value' => $this->fields['nameAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('nameAD', $option);
@@ -329,7 +329,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['firstnameAD'],
+				'value' => $this->fields['firstnameAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('firstnameAD', $option);
@@ -342,7 +342,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['phoneAD'],
+				'value' => $this->fields['phoneAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('phoneAD', $option);
@@ -353,7 +353,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['mailAD'],
+				'value' => $this->fields['mailAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('mailAD', $option);
@@ -365,7 +365,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['companyAD'],
+				'value' => $this->fields['companyAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('companyAD', $option);
@@ -376,7 +376,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['contractEndAD'],
+				'value' => $this->fields['contractEndAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('contractEndAD', $option);
@@ -389,7 +389,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['cellPhoneAD'],
+				'value' => $this->fields['cellPhoneAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('cellPhoneAD', $option);
@@ -400,7 +400,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['roleAD'],
+				'value' => $this->fields['roleAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('roleAD', $option);
@@ -412,7 +412,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['contractTypeAD'],
+				'value' => $this->fields['contractTypeAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('contractTypeAD', $option);
@@ -423,7 +423,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['serviceAD'],
+				'value' => $this->fields['serviceAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('serviceAD', $option);
@@ -437,7 +437,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['locationAD'],
+				'value' => $this->fields['locationAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('locationAD', $option);
@@ -455,7 +455,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['ouDesactivateUserAD'],
+				'value' => $this->fields['ouDesactivateUserAD'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('ouDesactivateUserAD', $option);
@@ -466,7 +466,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 			$option = [
-				'value' => $this->fields['ouUser'],
+				'value' => $this->fields['ouUser'] ?? '',
 				'entity' => -1
 			];
 			echo Html::input('ouUser', $option);
@@ -567,7 +567,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 	 */
 	function useSecurity()
 	{
-		return $this->fields['security_display'];
+		return $this->fields['security_display'] ?? '';
 	}
 
 	/**
@@ -575,7 +575,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 	 */
 	function useSecurityCompliance()
 	{
-		return $this->fields['security_compliance'];
+		return $this->fields['security_compliance'] ?? '';
 	}
 
 	/**
@@ -583,7 +583,7 @@ class PluginResourcesAdconfig extends CommonDBTM
 	 */
 	function useImportExternalDatas()
 	{
-		return $this->fields['import_external_datas'];
+		return $this->fields['import_external_datas'] ?? '';
 	}
 
 	function getArrayAttributes()

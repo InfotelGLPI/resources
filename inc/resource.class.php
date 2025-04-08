@@ -1479,7 +1479,7 @@ class PluginResourcesResource extends CommonDBTM {
         $config = new PluginResourcesConfig();
         $config->getFromDB(1);
         $option = [];
-        if ($config->fields['allow_without_contract'] == 0) {
+        if (isset($config->fields['allow_without_contract']) && $config->fields['allow_without_contract'] == 0) {
             $option[-1] = __('Without contract', 'resources');
         }
         if ($value == 0) {
@@ -2003,9 +2003,11 @@ class PluginResourcesResource extends CommonDBTM {
             $tableUser        = User::getTable();
             $profile_User     = new  Profile_User();
             $prof             = [];
-            foreach (json_decode($config->getField('resource_manager')) as $profs) {
-                $prof[$profs] = $profs;
-            }
+			if($config->getField('resource_manager') != NOT_AVAILABLE){
+	            foreach (json_decode($config->getField('resource_manager')) as $profs) {
+	                $prof[$profs] = $profs;
+	            }
+	        }
             $ids           = join("','", $prof);
             $restrict      = getEntitiesRestrictCriteria($tableProfileUser, 'entities_id', $this->fields["entities_id"], true);
             $restrict      = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
@@ -2062,8 +2064,10 @@ class PluginResourcesResource extends CommonDBTM {
             $tableUser        = User::getTable();
             $profile_User     = new  Profile_User();
             $prof             = [];
-            foreach (json_decode($config->getField('sales_manager')) as $profs) {
-                $prof[$profs] = $profs;
+            if($config->getField('sales_manager') != NOT_AVAILABLE){
+				foreach (json_decode($config->getField('sales_manager')) as $profs) {
+	                $prof[$profs] = $profs;
+	            }
             }
 
             $ids           = join("','", $prof);
@@ -3910,8 +3914,7 @@ class PluginResourcesResource extends CommonDBTM {
         $dbu = new DbUtils();
 
         $restrict = ["is_template" => 1] +
-                    $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()) +
-                    ["ORDER" => "name"];
+                    $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive());
 
         $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
@@ -3921,11 +3924,11 @@ class PluginResourcesResource extends CommonDBTM {
             $colsup = 0;
         }
 
-        echo "<div align='center'><table class='tab_cadre_fixe'>";
+        echo "<div align='center'><table class='table table-sm tab_cadre_fixe'>";
         if ($add) {
-            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Choose a template') . " - " . self::getTypeName(2) . "</th>";
+            echo "<tr><th colspan='" . (3 + $colsup) . "'>" . __('Choose a template') . " - " . self::getTypeName(2) . "</th>";
         } else {
-            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Templates') . " - " . self::getTypeName(2) . "</th>";
+            echo "<tr><th colspan='" . (3 + $colsup) . "'>" . __('Templates') . " - " . self::getTypeName(2) . "</th>";
         }
 
         echo "</tr>";
@@ -3938,56 +3941,117 @@ class PluginResourcesResource extends CommonDBTM {
         }
 
 	    if (!$add) {
-		    echo "<tr>";
-		    echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
+		    echo "<tr class='height_cell'>";
+			echo "<td></td>";
+		    echo "<td class='tab_bg_2 center'>";
 		    echo Html::showSimpleForm("$target?withtemplate=1",
 			    'basicpath',
 			    _x('button', __('Add a template'). ' - '. self::getTypeName(2)),
 			    ['id'=> 'hr_template']);
 			echo "</td>";
 
-			echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
+			echo "<td class='tab_bg_2 center'>";
 		    echo Html::showSimpleForm("$target?withtemplate=1",
 			    'tickettemplate',
 			    _x('button', __('Add a template'). ' - '. __('Ticket')),
 			    ['id'=> 'tickettemplate']);
 			echo "</td>";
+		    echo "<td></td>";
+
 		    echo "</tr>";
 	    }
 
+		$template_list =[];
+
         foreach ($templates as $template) {
+	        $template_list[] = [
+				'id' => $template["id"],
+				'entities_id' => $template["entities_id"],
+				'template_name' => $template["template_name"],
+				'type' => self::getTypeName(2),
+	        ];
+        }
+
+		$template_ticket_class = new PluginResourcesTicketTemplate();
+	    $restrict = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive());
+	    $templates_tickets = $dbu->getAllDataFromTable($template_ticket_class->getTable(), $restrict);
+
+	    foreach ($templates_tickets as $template) {
+		    $template_list[] = [
+			    'id' => $template["id"],
+			    'entities_id' => $template["entities_id"],
+			    'template_name' => $template["name"],
+			    'type' => __('Ticket'),
+		    ];
+	    }
+
+		$template_name = array_column($template_list, 'template_name');
+	    array_multisort($template_name, SORT_ASC, $template_list);
+
+
+		echo "<tr>";
+		echo "<th class='center tab_bg_1'>".__('Name')."</th>";
+	    if (Session::isMultiEntitiesMode()) {
+		    echo "<th class='center tab_bg_1'>" . __('Entity') . "</th>";
+	    }else{
+			echo "<th></th>";
+	    }
+		echo "<th class='center tab_bg_1'>".__('Type')."</th>";
+		echo "<th class='center tab_bg_1'>".__('Action')."</th>";
+
+	    foreach ($template_list as $template) {
 
             $templname = $template["template_name"];
             if ($_SESSION["glpiis_ids_visible"] || empty($template["template_name"])) {
                 $templname .= "(" . $template["id"] . ")";
             }
 
-            echo "<tr>";
+            echo "<tr class='height_cell'>";
             echo "<td class='center tab_bg_1'>";
             if (!$add) {
-                echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=1\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+				if($template["type"] == self::getTypeName(2)){
+					echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=1\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+				}else{
+					echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=1&amp;tickettemplate=1\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+				}
 
                 if (Session::isMultiEntitiesMode()) {
                     echo "<td class='center tab_bg_2'>";
                     echo Dropdown::getDropdownName("glpi_entities", $template['entities_id']);
                     echo "</td>";
                 }
+	            echo "<td class='center tab_bg_1'>". $template["type"] ."</td>";
                 echo "<td class='center tab_bg_2'>";
-                Html::showSimpleForm($target,
-                                     'purge',
-                                     _x('button', 'Delete permanently'),
-                                     ['id' => $template["id"], 'withtemplate' => 1]);
+				if($template["type"] == self::getTypeName(2)){
+					Html::showSimpleForm($target,
+						'purge',
+						_x('button', 'Delete permanently'),
+						['id' => $template["id"], 'withtemplate' => 1]);
+				}else{
+					Html::showSimpleForm($target,
+						'purgeTicketTemplate',
+						_x('button', 'Delete permanently'),
+						['id' => $template["id"], 'withtemplate' => 1]);
+				}
+
                 echo "</td>";
 
-            } else {
-                echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=2\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+            }
+			else {
+				if($template["type"] == self::getTypeName(2)){
+					echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=2\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+				}else{
+					echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=2&amp;tickettemplate=1\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+				}
 
                 if (Session::isMultiEntitiesMode()) {
                     echo "<td class='center tab_bg_2'>";
                     echo Dropdown::getDropdownName("glpi_entities", $template['entities_id']);
                     echo "</td>";
                 }
-            }
+
+	            echo "<td class='center tab_bg_1'>". $template["type"] ."</td>";
+			}
             echo "</tr>";
         }
 

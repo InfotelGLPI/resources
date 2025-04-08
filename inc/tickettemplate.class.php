@@ -39,15 +39,328 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginResourcesTicketTemplate extends CommonDBTM {
 
-	function showTemplate()
+	static $rightname = 'plugin_resources';
+
+	public $dohistory = true;
+
+	const RESOURCES_TICKETTEMPLATE_CREATE       = 1 ;
+	const RESOURCES_TICKETTEMPLATE_UPDATE       = 2;
+	const RESOURCES__TICKETTEMPLATE_LEAVE       = 3;
+
+	function showTemplate($id)
 	{
+		$datas = $this->find(['id' => $id]);
+
+		$users_template = new PluginResourcesTicketTemplateUser();
+		$datas_users = $users_template->find(['plugin_resources_tickettemplates_id' => $id]);
+
+		$groups_template = new PluginResourcesGroupTicketTemplate();
+		$datas_groups = $groups_template->find(['plugin_resources_tickettemplates_id' => $id]);
+
+		foreach ($datas_users as $datas_user) {
+			switch ($datas_user['type']) {
+				case 1:
+					if (isset($datas['users_id_requester'])) {
+						array_push($datas['users_id_requester'], $datas_user['users_id']);
+					} else {
+						$datas['users_id_requester'] = [$datas_user['users_id']];
+					}
+					break;
+				case 2:
+					if (isset($datas['users_id_tech'])) {
+						array_push($datas['users_id_tech'], $datas_user['users_id']);
+					} else {
+						$datas['users_id_tech'] = [$datas_user['users_id']];
+					}
+					break;
+				case 3:
+					if (isset($datas['users_id_observer'])) {
+						array_push($datas['users_id_observer'], $datas_user['users_id']);
+					} else {
+						$datas['users_id_observer'] = [$datas_user['users_id']];
+					}
+					break;
+				default :
+					break;
+			}
+		}
+
+		foreach ($datas_groups as $datas_group) {
+			switch ($datas_group['type']) {
+				case 1:
+					if (isset($datas['group_id_requester'])) {
+						$datas['group_id_requester'][] = $datas_group['groups_id'];
+					} else {
+						$datas['group_id_requester'][] = $datas_group['groups_id'];
+					}
+					break;
+				case 2:
+					if (isset($datas['group_id_tech'])) {
+						array_push($datas['group_id_tech'], $datas_group['groups_id']);
+					} else {
+						$datas['group_id_tech'] = [$datas_group['groups_id']];
+					}
+					break;
+				case 3:
+					if (isset($datas['group_id_observer'])) {
+						array_push($datas['group_id_observer'], $datas_group['groups_id']);
+					} else {
+						$datas['group_id_observer'] = [$datas_group['groups_id']];
+					}
+					break;
+				default :
+					break;
+			}
+		}
+
 		TemplateRenderer::getInstance()->display('@resources/tickettemplate.html.twig', [
-			'item' => '',
+			'items' => $datas[$id] ?? '',
+			'items_g_u' => $datas ?? '',
 		]);
 	}
 
-	public function prepareInputForAdd($input)
+	public function insertTemplate($input)
 	{
-		echo "helo";
+		// Type Value
+		// 1 => CREATE
+		// 2 => Update
+		// 3 => Leave
+
+		global $DB;
+
+		$this->add([
+			'name' => $input['template_name'],
+			'entities_id' => $_SESSION['glpiactive_entity'],
+			'type' => $input['type'],
+			'title' => $input['name'],
+			'content' => $input['description'],
+		]);
+
+		$last_id = $this->find(
+			[],
+			['id DESC'],
+			1
+		);
+		foreach ($last_id as $item) {
+			$last_id = $item['id'];
+		}
+
+		if(isset($input['groups_id_requester'])){
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+			foreach ($input['groups_id_requester'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::REQUESTER,
+				]);
+			}
+		}
+
+		if(isset($input['users_id_requester'])){
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+			foreach ($input['users_id_requester'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'users_id' => $item,
+					'type' => CommonITILActor::REQUESTER,
+				]);
+			}
+		}
+
+		if(isset($input['groups_id_observer'])){
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+			foreach ($input['groups_id_observer'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::OBSERVER,
+				]);
+			}
+		}
+
+		if(isset($input['users_id_observer'])){
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+			foreach ($input['users_id_observer'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'users_id' => $item,
+					'type' => CommonITILActor::OBSERVER,
+				]);
+			}
+		}
+
+		if(isset($input['groups_id_tech'])){
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+			foreach ($input['groups_id_tech'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::ASSIGN,
+				]);
+			}
+		}
+
+		if(isset($input['users_id_tech'])){
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+			foreach ($input['users_id_tech'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $last_id,
+					'users_id' => $item,
+					'type' => CommonITILActor::ASSIGN,
+				]);
+			}
+		}
 	}
+
+	public function getListForDropdown($type)
+	{
+		$datas_request = $this->find(['template_type' => $type]);
+		$datas = [Dropdown::EMPTY_VALUE];
+
+
+		foreach ($datas_request as $item) {
+			$datas[$item['id']] = $item['name'];
+		}
+
+		return $datas;
+	}
+
+	public function updateTemplate(array $datas, mixed $id)
+	{
+		global $DB;
+		$this->update([
+			'id' => $id,
+			'name' => $datas['template_name'],
+			'type' => $datas['type'],
+			'title' => $datas['name'],
+			'content' => $datas['description'],
+		]);
+
+		if(isset($datas['groups_id_requester'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_grouptickettemplates',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::REQUESTER
+				]
+			);
+
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+
+			foreach ($datas['groups_id_requester'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::REQUESTER,
+				]);
+			}
+		}
+
+		if(isset($datas['users_id_requester'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_tickettemplateusers',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::REQUESTER
+				]
+			);
+
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+
+			foreach ($datas['users_id_requester'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'users_id' => $item,
+					'type' => CommonITILActor::REQUESTER,
+				]);
+			}
+		}
+
+		if(isset($datas['groups_id_observer'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_grouptickettemplates',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::OBSERVER
+				]
+			);
+
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+
+			foreach ($datas['groups_id_observer'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::OBSERVER,
+				]);
+			}
+		}
+
+		if(isset($datas['users_id_observer'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_tickettemplateusers',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::OBSERVER
+				]
+			);
+
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+
+			foreach ($datas['users_id_observer'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'users_id' => $item,
+					'type' => CommonITILActor::OBSERVER,
+				]);
+			}
+		}
+
+		if(isset($datas['groups_id_tech'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_grouptickettemplates',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::ASSIGN
+				]
+			);
+
+			$group_ticket = new PluginResourcesGroupTicketTemplate();
+
+			foreach ($datas['groups_id_tech'] as $item) {
+				$group_ticket->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'groups_id' => $item,
+					'type' => CommonITILActor::ASSIGN,
+				]);
+			}
+		}
+
+		if(isset($datas['users_id_tech'])){
+
+			$DB->delete(
+				'glpi_plugin_resources_tickettemplateusers',
+				[
+					'plugin_resources_tickettemplates_id' => $id,
+					'type' => CommonITILActor::ASSIGN
+				]
+			);
+
+			$ticketUser = new PluginResourcesTicketTemplateUser();
+
+			foreach ($datas['users_id_tech'] as $item) {
+				$ticketUser->add([
+					'plugin_resources_tickettemplates_id' => $id,
+					'users_id' => $item,
+					'type' => CommonITILActor::ASSIGN,
+				]);
+			}
+		}
+	}
+
 }

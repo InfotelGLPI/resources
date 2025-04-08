@@ -111,7 +111,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Displaying the security block on the resource', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('security_display', $this->fields['security_display']);
+			Dropdown::showYesNo('security_display', $this->fields['security_display'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 
@@ -125,7 +125,7 @@ class PluginResourcesConfig extends CommonDBTM
 				) . "</span>";
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('security_compliance', $this->fields['security_compliance']);
+			Dropdown::showYesNo('security_compliance', $this->fields['security_compliance'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 
@@ -134,7 +134,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Import external', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);
+			Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 
@@ -152,7 +152,7 @@ class PluginResourcesConfig extends CommonDBTM
 					$possible_values[$profile['id']] = $profile['name'];
 				}
 			}
-			$values = json_decode($this->fields['resource_manager']);
+			$values = json_decode($this->fields['resource_manager'] ?? '');
 			if (!is_array($values)) {
 				$values = [];
 			}
@@ -176,7 +176,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo Html::hidden("sales_manager");
 
 
-			$values = json_decode($this->fields['sales_manager']);
+			$values = json_decode($this->fields['sales_manager'] ?? '');
 			if (!is_array($values)) {
 				$values = [];
 			}
@@ -197,7 +197,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 
-			Dropdown::showYesNo("create_ticket_departure", $this->fields["create_ticket_departure"]);
+			Dropdown::showYesNo("create_ticket_departure", $this->fields["create_ticket_departure"] ?? '');
 
 			echo "</td>";
 			echo "</tr>";
@@ -207,7 +207,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 
-			ITILCategory::dropdown(["name" => "categories_id", "value" => $this->fields["categories_id"]]);
+			ITILCategory::dropdown(["name" => "categories_id", "value" => $this->fields["categories_id"] ?? '']);
 
 			echo "</td>";
 			echo "</tr>";
@@ -217,7 +217,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 
-			Dropdown::showYesNo("mandatory_checklist", $this->fields["mandatory_checklist"]);
+			Dropdown::showYesNo("mandatory_checklist", $this->fields["mandatory_checklist"] ?? '');
 
 			echo "</td>";
 			echo "</tr>";
@@ -227,7 +227,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 
-			Dropdown::showYesNo("mandatory_adcreation", $this->fields["mandatory_adcreation"]);
+			Dropdown::showYesNo("mandatory_adcreation", $this->fields["mandatory_adcreation"] ?? '');
 
 			echo "</td>";
 			echo "</tr>";
@@ -237,7 +237,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo "</td>";
 			echo "<td>";
 
-			Dropdown::showYesNo("allow_without_contract", $this->fields["allow_without_contract"]);
+			Dropdown::showYesNo("allow_without_contract", $this->fields["allow_without_contract"] ?? '');
 
 			echo "</td>";
 			echo "</tr>";
@@ -249,10 +249,9 @@ class PluginResourcesConfig extends CommonDBTM
 			$resource = new PluginResourcesResource();
 			$resource->dropdownTemplate(
 				"plugin_resources_resourcetemplates_id",
-				$this->fields["plugin_resources_resourcetemplates_id"],
+				$this->fields["plugin_resources_resourcetemplates_id"] ?? '',
 				false
 			);
-//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
 
 			echo "</td>";
 			echo "</tr>";
@@ -265,10 +264,9 @@ class PluginResourcesConfig extends CommonDBTM
 			PluginResourcesResourceState::dropdown(
 				[
 					'name' => 'plugin_resources_resourcestates_id_arrival',
-					'value' => $this->fields['plugin_resources_resourcestates_id_arrival']
+					'value' => $this->fields['plugin_resources_resourcestates_id_arrival'] ?? ''
 				]
 			);
-			//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
 
 			echo "</td>";
 			echo "</tr>";
@@ -280,10 +278,9 @@ class PluginResourcesConfig extends CommonDBTM
 			PluginResourcesResourceState::dropdown(
 				[
 					'name' => 'plugin_resources_resourcestates_id_departure',
-					'value' => $this->fields['plugin_resources_resourcestates_id_departure']
+					'value' => $this->fields['plugin_resources_resourcestates_id_departure'] ?? ''
 				]
 			);
-			//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
 
 			echo "</td>";
 			echo "</tr>";
@@ -292,7 +289,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Change checklists for resources during a contract change', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('reaffect_checklist_change', $this->fields['reaffect_checklist_change']);
+			Dropdown::showYesNo('reaffect_checklist_change', $this->fields['reaffect_checklist_change'] ?? '');
 
 			echo "</td>";
 			echo "</tr>";
@@ -310,7 +307,7 @@ class PluginResourcesConfig extends CommonDBTM
 				echo Dropdown::showFromArray(
 					'use_meta_for_changes',
 					$data,
-					['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]
+					['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes'] ?? '']
 				);
 
 				echo "</td>";
@@ -328,7 +325,7 @@ class PluginResourcesConfig extends CommonDBTM
 				echo Dropdown::showFromArray(
 					'use_meta_for_leave',
 					$data,
-					['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']]
+					['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave'] ?? '']
 				);
 
 				echo "</td>";
@@ -339,7 +336,7 @@ class PluginResourcesConfig extends CommonDBTM
 				echo __('Remove habilitation when update resource', 'resources');
 				echo "</td>";
 				echo "<td>";
-				Dropdown::showYesNo("remove_habilitation_on_update", $this->fields["remove_habilitation_on_update"]);
+				Dropdown::showYesNo("remove_habilitation_on_update", $this->fields["remove_habilitation_on_update"] ?? '');
 				echo "</td>";
 				echo "</tr>";
 
@@ -348,7 +345,7 @@ class PluginResourcesConfig extends CommonDBTM
 				echo __('Display habilitation resource with dropdown', 'resources');
 				echo "</td>";
 				echo "<td>";
-				Dropdown::showYesNo("display_habilitations_txt", $this->fields["display_habilitations_txt"]);
+				Dropdown::showYesNo("display_habilitations_txt", $this->fields["display_habilitations_txt"] ?? '');
 				echo "</td>";
 				echo "</tr>";
 			}
@@ -358,7 +355,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Use service and departement from AD', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('use_service_department_ad', $this->fields['use_service_department_ad']);
+			Dropdown::showYesNo('use_service_department_ad', $this->fields['use_service_department_ad'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 
@@ -368,7 +365,7 @@ class PluginResourcesConfig extends CommonDBTM
 				echo __('Use secondaries services', 'resources');
 				echo "</td>";
 				echo "<td>";
-				Dropdown::showYesNo('use_secondary_service', $this->fields['use_secondary_service']);
+				Dropdown::showYesNo('use_secondary_service', $this->fields['use_secondary_service'] ?? '');
 				echo "</td>";
 				echo "</tr>";
 			}
@@ -378,7 +375,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Hide/Show elements', 'resources') . " : " . __('View my resources as a commercial', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('hide_view_commercial_resource', $this->fields['hide_view_commercial_resource']);
+			Dropdown::showYesNo('hide_view_commercial_resource', $this->fields['hide_view_commercial_resource'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 			echo "<tr class='tab_bg_1'>";
@@ -386,7 +383,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Create a ticket if there is a LDAP creation ', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('ticket_ldap_create', $this->fields['ticket_ldap_create']);
+			Dropdown::showYesNo('ticket_ldap_create', $this->fields['ticket_ldap_create'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 			echo "<tr class='tab_bg_1'>";
@@ -394,7 +391,7 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Create a ticket if there is a LDAP Update', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('ticket_ldap_update', $this->fields['ticket_ldap_update']);
+			Dropdown::showYesNo('ticket_ldap_update', $this->fields['ticket_ldap_update'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 			echo "<tr class='tab_bg_1'>";
@@ -402,10 +399,50 @@ class PluginResourcesConfig extends CommonDBTM
 			echo __('Create a ticket if there is a LDAP Delete', 'resources');
 			echo "</td>";
 			echo "<td>";
-			Dropdown::showYesNo('ticket_ldap_delete', $this->fields['ticket_ldap_delete']);
+			Dropdown::showYesNo('ticket_ldap_delete', $this->fields['ticket_ldap_delete'] ?? '');
 			echo "</td>";
 			echo "</tr>";
 
+			echo "<tr><th colspan='2'>" . __('Template configuration', 'resources') . "</th></tr>";
+			echo "<tr class='tab_bg_1'>";
+			echo "<td>";
+			echo __('Create template', 'resources');
+			echo "</td>";
+			echo "<td>";
+
+			$tickettemplate = new PluginResourcesTicketTemplate();
+
+			echo Dropdown::showFromArray(
+				'create_ticket_template',
+				$tickettemplate->getListForDropdown(1),
+				['width' => 250, 'display' => false, 'value' => $this->fields['create_ticket_template'] ?? '']
+			);
+			echo "</td>";
+			echo "</tr>";
+			echo "<tr class='tab_bg_1'>";
+			echo "<td>";
+			echo __('Update template', 'resources');
+			echo "</td>";
+			echo "<td>";
+			echo Dropdown::showFromArray(
+				'update_ticket_template',
+				$tickettemplate->getListForDropdown(2),
+				['width' => 250, 'display' => false, 'value' => $this->fields['update_ticket_template'] ?? '']
+			);
+			echo "</td>";
+			echo "</tr>";
+			echo "<tr class='tab_bg_1'>";
+			echo "<td>";
+			echo __('Leave template', 'resources');
+			echo "</td>";
+			echo "<td>";
+			echo Dropdown::showFromArray(
+				'leave_ticket_template',
+				$tickettemplate->getListForDropdown(3),
+				['width' => 250, 'display' => false, 'value' => $this->fields['leave_ticket_template'] ?? '']
+			);
+			echo "</td>";
+			echo "</tr>";
 
 			echo "<tr>";
 			echo "<td class='tab_bg_2 center' colspan='2'>";
@@ -423,7 +460,7 @@ class PluginResourcesConfig extends CommonDBTM
 	 */
 	function useSecurity()
 	{
-		return $this->fields['security_display'];
+		return $this->fields['security_display'] ?? '';
 	}
 
 	/**
@@ -486,7 +523,7 @@ class PluginResourcesConfig extends CommonDBTM
 	 */
 	function useServiceDepartmentAD()
 	{
-		return $this->fields['use_service_department_ad'];
+		return $this->fields['use_service_department_ad'] ?? '';
 	}
 
 	/**
@@ -494,7 +531,7 @@ class PluginResourcesConfig extends CommonDBTM
 	 */
 	function useSecondaryService()
 	{
-		return $this->fields['use_secondary_service'];
+		return $this->fields['use_secondary_service'] ?? '';
 	}
 
 

@@ -54,7 +54,7 @@ function plugin_resources_install()
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
         $install = true;
-        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.8.sql");
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.9.sql");
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -134,6 +134,8 @@ function plugin_resources_install()
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.7.0.sql");
         }elseif (!$DB->fieldExists("glpi_plugin_resources_adconfigs", "user_initial")) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.8.sql");
+        }elseif (!$DB->tableExists("glpi_plugin_resources_tickettemplates")) {
+            $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.9.sql");
         }
 
         if ($update78) {
@@ -706,11 +708,16 @@ function plugin_resources_uninstall()
         "glpi_plugin_resources_workprofiles",
         "glpi_plugin_resources_leavinginformations",
         'glpi_plugin_resources_candidateorigins',
+        'glpi_plugin_resources_tickettemplates',
+        'glpi_plugin_resources_tickettemplateusers',
+        'glpi_plugin_resources_grouptickettemplates',
     ];
 
     foreach ($tables as $table) {
-        $DB->dropTable($table);
-    }
+	    if($DB->tableExists($table)){
+		    $DB->dropTable($table);
+	    }
+	}
 
     //old versions
     $tables = [
@@ -728,7 +735,9 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->dropTable($table);
+	    if($DB->tableExists($table)){
+		    $DB->dropTable($table);
+	    }
     }
 
     $tables = [
@@ -738,26 +747,17 @@ function plugin_resources_uninstall()
         "glpi_logs",
         "glpi_items_tickets",
         "glpi_dropdowntranslations",
+	    'glpi_fieldunicities',
     ];
 
     foreach ($tables as $table) {
-        $DB->query(
-            "DELETE
-                  FROM `$table`
-                  WHERE `itemtype` LIKE 'PluginResources%'"
-        );
-    }
-
-    $tables = [
-        "glpi_fieldunicities",
-    ];
-
-    foreach ($tables as $table) {
-        $DB->query(
-            "DELETE
-                  FROM `$table`
-                  WHERE `name` LIKE 'PluginResources%'"
-        );
+		if($DB->tableExists($table)){
+	        $DB->query(
+	            "DELETE
+	                  FROM `$table`
+	                  WHERE `itemtype` LIKE 'PluginResources%'"
+	        );
+		}
     }
 
     //drop rules

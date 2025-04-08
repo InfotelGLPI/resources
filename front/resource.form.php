@@ -154,7 +154,13 @@ else if (isset($_POST["deletehelpdeskitem"])) {
    Html::back();
 }else if (isset($_POST['confirm_form_tickettemplate'])) {
 	$resource_ticket_template = new PluginResourcesTicketTemplate();
-	$resource_ticket_template->add($_POST);
+	$resource_ticket_template->insertTemplate($_POST);
+	Html::back();
+}
+else if (isset($_POST['update_form_tickettemplate'])) {
+	$resource_ticket_template = new PluginResourcesTicketTemplate();
+	$resource_ticket_template->updateTemplate($_POST, $_GET['id']);
+	Html::back();
 }
 //from central OR helpdesk
 //update employee informations from user details form or resource form
@@ -241,11 +247,16 @@ else if (isset($_POST["purge"])) {
       $resource->redirectToList();
    }
 } //from central
-//purge resource
-else if (isset($_POST["purge"])) {
-   $resource->check($_POST['id'], UPDATE);
-   $resource->delete($_POST, 1);
-   $resource->redirectToList();
+//purge resource ticket template
+else if (isset($_POST["purgeTicketTemplate"])) {
+	$resource_ticket_template = new PluginResourcesTicketTemplate();
+	$resource_ticket_template->check($_POST['id'], UPDATE);
+	$resource_ticket_template->delete($_POST, 1);
+	if (!empty($_POST["withtemplate"])) {
+		Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/setup.templates.php?add=0");
+	} else {
+		$resource_ticket_template->redirectToList();
+	}
 } //from central
 //add items of a resource
 else if (isset($_POST["additem"])) {
@@ -367,10 +378,10 @@ else if (isset($_POST["add_checklist"])) {
       }
    }
 
-	if(isset($_POST['tickettemplate'])){
+	if(isset($_POST['tickettemplate']) || isset($_SESSION['ressources_tickettemplate']) || isset($_GET['tickettemplate'])){
 		$_SESSION['ressources_tickettemplate'] = true;
 		$ticketTemplate = new PluginResourcesTicketTemplate();
-		$ticketTemplate->showTemplate();
+		$ticketTemplate->showTemplate($_GET["id"]);
 	}else{
 		$resource->display(['id' => $_GET["id"], 'withtemplate' => $_GET["withtemplate"]]);
 	}

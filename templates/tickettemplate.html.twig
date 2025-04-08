@@ -130,12 +130,27 @@
         <form id="form_resource_tickettemplate" class="search-form-container" enctype='multipart/form-data' method="post" action="">
             <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
             <div class="row">
+                <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Template') }}</div>
+
                 <div class="hr-text-left col-auto d-flex flex-column picture-block resources_custom_with_div_container">
                     <div>
                         {{ fields.textField(
                             'template_name',
-                            params['template_name'],
+                            items['name'],
                             __('Template name'),
+                            {
+                                'field_class': 'col-sm-5 resources_custom_with_div',
+                                'label_class': 'col-sm-2',
+                                'input_class': 'col-sm-5',
+                            }
+                        ) }}
+                    </div>
+                    <div>
+                        {{ fields.dropdownArrayField(
+                            'template_type',
+                            items['template_type'],
+                            {0: '-----', 1: __('Creation'), 2: __('Update'), 3: __('Leave', 'resources')},
+                            'Type',
                             {
                                 'field_class': 'col-sm-5 resources_custom_with_div',
                                 'label_class': 'col-sm-2',
@@ -146,13 +161,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Action - Description', 'resources') }}</div>
+                <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Ticket') }}</div>
                 <div class="hr-text-left col-auto d-flex flex-column picture-block resources_custom_with_div_container">
                     <div>
                         {{ fields.dropdownArrayField(
-                            'type',
-                            select_type,
-                            {0: '-----', 1: __('Creation'), 2: __('Update'), 3: __('Delete')},
+                            'template_type',
+                            items['template_type'],
+                            {0: '-----', 1: __('Request'), 2: __('Incident')},
                             'Type',
                             {
                                 'field_class': 'col-sm-5 resources_custom_with_div',
@@ -164,7 +179,7 @@
                     <div>
                         {{ fields.textField(
                             'name',
-                            params['name'],
+                            items['title'],
                             __('Title'),
                             {
                                 'field_class': 'col-sm-5 resources_custom_with_div',
@@ -176,8 +191,20 @@
                     <div>
                         {{ fields.textareaField(
                             'description',
-                            item.fields['description'],
+                            items['content'],
                             __('Description'), {
+                                'field_class': 'col-sm-5 resources_custom_with_div',
+                                'label_class': 'col-sm-2',
+                                'input_class': 'col-sm-5',
+                            }
+                        ) }}
+                    </div>
+                    <div>
+                        {{ fields.dropdownField(
+                            'ITILCategory',
+                            'itilcategories_id',
+                            items['itilcategories_id'],
+                            _n('Category', 'Categories', 1), {
                                 'field_class': 'col-sm-5 resources_custom_with_div',
                                 'label_class': 'col-sm-2',
                                 'input_class': 'col-sm-5',
@@ -195,10 +222,10 @@
                             {{ fields.dropdownField(
                                 'Group',
                                 'groups_id_requester',
-                                subitem.fields['groups_id_requester'],
+                                items_g_u['group_id_requester'],
                                 __('Group'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'condition': {'is_requester': 1},
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
@@ -212,10 +239,10 @@
                             {{ fields.dropdownField(
                                 'User',
                                 'users_id_requester',
-                                item.fields['users_id_tech'],
+                                items_g_u['users_id_tech'],
                                 __('User'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
                                     'input_class': 'col-sm-5',
@@ -231,10 +258,10 @@
                             {{ fields.dropdownField(
                                 'Group',
                                 'groups_id_observer',
-                                subitem.fields['groups_id_observer'],
+                                items_g_u['group_id_observer'],
                                 __('Group'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'condition': {'is_watcher': 1},
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
@@ -247,10 +274,10 @@
                             {{ fields.dropdownField(
                                 'User',
                                 'users_id_observer',
-                                item.fields['users_id_tech'],
+                                items_g_u['users_id_tech'],
                                 __('User'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
                                     'input_class': 'col-sm-5',
@@ -266,10 +293,10 @@
                             {{ fields.dropdownField(
                                 'Group',
                                 'groups_id_tech',
-                                subitem.fields['groups_id_tech'],
+                                items_g_u['group_id_tech'],
                                 __('Group'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'condition': {'is_assign': 1},
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
@@ -282,10 +309,10 @@
                             {{ fields.dropdownField(
                                 'User',
                                 'users_id_tech',
-                                item.fields['users_id_tech'],
+                                items_g_u['users_id_tech'],
                                 __('User'),
                                 {
-                                    'entity': item.fields['entities_id'],
+                                    'entity': items['entities_id'],
                                     'field_class': 'col-sm-5 resources_custom_with_div',
                                     'label_class': 'col-sm-2',
                                     'input_class': 'col-sm-5',
@@ -296,9 +323,15 @@
                     </div>
                 </div>
             </div>
-            <div class="tab_bg_2 center">
-                <input type="submit" name="confirm_form_tickettemplate" class="center btn btn-primary" value="{{ __('Valider') }}"/>
-            </div>
+            {% if(items['name'] != '') %}
+                <div class="tab_bg_2 center">
+                    <input type="submit" name="update_form_tickettemplate" class="center btn btn-primary" value="{{ __('Update') }}"/>
+                </div>
+            {% else %}
+                <div class="tab_bg_2 center">
+                    <input type="submit" name="confirm_form_tickettemplate" class="center btn btn-primary" value="{{ __('Valider') }}"/>
+                </div>
+            {% endif %}
         </form>
     </div>
 
