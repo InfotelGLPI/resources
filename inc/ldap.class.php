@@ -336,8 +336,8 @@ class PluginResourcesLDAP extends CommonDBTM
 
             if ($user->save()) {
 				$config = new PluginResourcesConfig();
-	            if($config->getField('	create_ticket_template') != 0){
-		            $this->createTicket($config->getField('create_ticket_template'));
+	            if($config->getField('create_ticket_template') != 0){
+		            $this->createTicket($config->getField('create_ticket_template'), $data['plugin_resources_resources_id']);
 	            }
                 return true;
             } else {
@@ -416,7 +416,7 @@ class PluginResourcesLDAP extends CommonDBTM
 
 	            $config = new PluginResourcesConfig();
 	            if($config->getField('update_ticket_template') != 0){
-		            $this->createTicket($config->getField('update_ticket_template'));
+		            $this->createTicket($config->getField('update_ticket_template'), $data['plugin_resources_resources_id']);
 	            }
 
                 return [true, $new_value];
@@ -456,7 +456,7 @@ class PluginResourcesLDAP extends CommonDBTM
                 $newParentDn = $adConfig->getField("ouDesactivateUserAD");
                 if ($user->move($newParentDn)) {
 	                if($config->getField('leave_ticket_template') != 0){
-						$this->createTicket($config->getField('leave_ticket_template'));
+						$this->createTicket($config->getField('leave_ticket_template'), $data['plugin_resources_resources_id']);
 	                }
 					return true;
                 }
@@ -519,7 +519,7 @@ class PluginResourcesLDAP extends CommonDBTM
 
 	}
 
-	private function createTicket($id_template)
+	public function createTicket($id_template, $resource_id)
 	{
 		global $DB;
 		if(isset($id_template)){
@@ -527,20 +527,27 @@ class PluginResourcesLDAP extends CommonDBTM
 			$templateUser = new PluginResourcesTicketTemplateUser();
 			$templateGroup = new PluginResourcesGroupTicketTemplate();
 
+			$date = new DateTime('now'); // Fuseau horaire US (Eastern Time)
+
+
 			$datas = $template->find(['id' => $id_template]);
 			$ticket_insert = $datas[$id_template];
-			$ticket = new Ticket();
-			$ticket->add([
+
+			$content = $ticket_insert['content'];
+			$content = $this->convertTag($content, $resource_id);
+			$DB->insert('glpi_tickets',
+				[
 				'entities_id' => $ticket_insert['entities_id'],
 				'name' => $ticket_insert['name'],
-				'content' => $ticket_insert['content'],
+				'content' => $content,
 				'itilcategories_id' => $ticket_insert['itilcategories_id'],
 				'type' => $ticket_insert['type'],
 				'urgency' => 2,
 				'impact' => 2,
 				'priority' => 2,
-				'date' => date_create(),
-				'date_creation' => date_create(),
+				'users_id_recipient' => Session::getLoginUserID(),
+				'date' => $date->format('c'),
+				'date_creation' => $date->format('c'),
 			]);
 
 			$datas_users = $templateUser->find(['plugin_resources_tickettemplates_id' => $id_template]);
@@ -569,6 +576,128 @@ class PluginResourcesLDAP extends CommonDBTM
 			}
 
 		}
+
+	}
+
+	private function convertTag(mixed $content, $resource_id)
+	{
+
+		$resource = new PluginResourcesResource();
+		$datas = $resource::getById($resource_id);
+
+		$gender = $resource->getGenders();
+
+		$resource = new PluginResourcesResource();
+		$datas = $resource::getById($resource_id);
+
+		$gender = $resource->getGenders();
+
+		$location = new Location();
+		$id_location = ($value = $datas->getField('locations_id')) !== NOT_AVAILABLE ? $value : 0;
+		$locations = $location->find(['id' => $id_location]);
+		$location_name = $locations[$id_location]['name'] ?? '';
+
+		$state = new PluginResourcesResourceState();
+		$id_state = ($value = $datas->getField('resourcestates_id')) !== NOT_AVAILABLE ? $value : 0;
+		$states = $state->find(['id' => $id_state]);
+		$state_name = $states[$id_state]['name'] ?? '';
+
+		$rank = new PluginResourcesRank();
+		$id_rank = ($value = $datas->getField('ranks_id')) !== NOT_AVAILABLE ? $value : 0;
+		$ranks = $rank->find(['id' => $id_rank]);
+		$rank_name = $ranks[$id_rank]['name'] ?? '';
+
+		$contratnature = new PluginResourcesContractNature();
+		$id_contratnature = ($value = $datas->getField('contractnatures_id')) !== NOT_AVAILABLE ? $value : 0;
+		$contrats = $contratnature->find(['id' => $id_contratnature]);
+		$contratnature_name = $contrats[$id_contratnature]['name'] ?? '';
+
+		$speciality = new PluginResourcesResourceSpeciality();
+		$id_speciality = ($value = $datas->getField('specialities_id')) !== NOT_AVAILABLE ? $value : 0;
+		$specialities = $speciality->find(['id' => $id_speciality]);
+		$speciality_name = $specialities[$id_speciality]['name'] ?? '';
+
+		$user_sale = new User();
+		$users_id_sales = ($value = $datas->getField('users_id_sales')) !== NOT_AVAILABLE ? $value : 0;
+		$users_sales = $user_sale->find(['id' => $users_id_sales]);
+		$user_sale_name = $users_sales[$users_id_sales]['name'] ?? '';
+
+		$employee = new PluginResourcesEmployee();
+		$employer = new PluginResourcesEmployer();
+
+		$employee_id = ($value = $datas->getField('employees_id')) !== NOT_AVAILABLE ? $value : 0;
+		$employee_data = $employee::getById($employee_id);
+		if ($employee_id != 0) {
+			$employer_id = ($value = $employee_data->getField(
+				'plugin_resources_employers_id'
+			)) !== NOT_AVAILABLE ? $value : 0;
+			$employers = $employer->find(['id' => $employer_id]);
+			$employer_data = $employers[$employer_id]['name'] ?? '';
+		} else {
+			$employer_data = '';
+		}
+
+		$department = new PluginResourcesDepartment();
+		$department_id = ($value = $datas->getField('departments_id')) !== NOT_AVAILABLE ? $value : 0;
+		$departments = $department->find(['id' => $department_id]);
+		$department_name = $departments[$department_id]['name'] ?? '';
+
+		$service = new PluginResourcesService();
+		$service_id = ($value = $datas->getField('services_id')) !== NOT_AVAILABLE ? $value : 0;
+		$services = $service->find(['id' => $service_id]);
+		$service_name = $services[$service_id]['name'] ?? '';
+
+		$role = new PluginResourcesRole();
+		$role_id = ($value = $datas->getField('roles_id')) !== NOT_AVAILABLE ? $value : 0;
+		$roles = $role->find(['id' => $role_id]);
+		$role_name = $roles[$role_id]['name'] ?? '';
+
+		$function = new PluginResourcesFunction();
+		$function_id = ($value = $datas->getField('functions_id')) !== NOT_AVAILABLE ? $value : 0;
+		$functions = $function->find(['id' => $function_id]);
+		$function_name = $functions[$function_id]['name'] ?? '';
+
+		$team = new PluginResourcesTeam();
+		$team_id = ($value = $datas->getField('teams_id')) !== NOT_AVAILABLE ? $value : 0;
+		$teams = $team->find(['id' => $team_id]);
+		$team_name = $teams[$team_id]['name'] ?? '';
+
+		$tag = [
+			'##gender##' => $gender[$datas->getField('gender')],
+			'##name##' => ($value = $datas->getField('name')) !== NOT_AVAILABLE ? $value : '',
+			'##firstname##' => ($value = $datas->getField('firstname')) !== NOT_AVAILABLE ? $value : '',
+			'##matricule##' => ($value = $datas->getField('matricule')) !== NOT_AVAILABLE ? $value : '',
+			'##locations_id##' => $location_name,
+			'##resourcestates_id##' => $state_name,
+			'##ranks_id##' => $rank_name,
+			'##contractnatures_id##' => $contratnature_name,
+			'##specialities_id##' => $speciality_name,
+			'##users_id_sales##' => $user_sale_name,
+			'##employees_id##' => $employer_data,
+			'##departments_id##' => $department_name,
+			'##services_id##' => $service_name,
+			'##roles_id##' => $role_name,
+			'##functions_id##' => $function_name,
+			'##teams_id##' => $team_name,
+			'##quota##' => ($value = $datas->getField('quota')) !== NOT_AVAILABLE ? $value : 0,
+			'##date_begin##' => ($value = $datas->getField('date_begin')) !== NOT_AVAILABLE ? $value : '',
+			'##date_end##' => ($value = $datas->getField('date_end')) !== NOT_AVAILABLE ? $value : '',
+			'##comment##' => ($value = $datas->getField('comment')) !== NOT_AVAILABLE ? $value : '',
+		];
+
+		preg_match_all('/##[a-zA-Z]{1,50}##/', $content, $output_array);
+
+		if(is_array($output_array)){
+			foreach ($output_array as $item_output) {
+				if(is_array($item_output)){
+					foreach ($item_output as $item) {
+						$content = str_replace($item, $tag[$item],$content);
+					}
+				}
+			}
+		}
+
+		return $content;
 
 	}
 

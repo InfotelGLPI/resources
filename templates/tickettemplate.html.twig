@@ -25,7 +25,7 @@
                         <tbody>
                         <tr>
                             <td>##gender##</td>
-                            <td>{{ __('Arrival date', 'resources') }}</td>
+                            <td>{{ __('Gender', 'resources') }}</td>
                         </tr>
                         <tr>
                             <td>##name##</td>
@@ -37,7 +37,7 @@
                         </tr>
                         <tr>
                             <td>##matricule##</td>
-                            <td>{{ __('Arrival date', 'resources') }}</td>
+                            <td>{{ __('Matricule', 'resources') }}</td>
                         </tr>
                         <tr>
                             <td>##locations_id##</td>
@@ -62,10 +62,6 @@
                         <tr>
                             <td>##specialities_id##</td>
                             <td>{{ _n('Speciality', 'Specialities', 1, 'resources') }}</td>
-                        </tr>
-                        <tr>
-                            <td>##managers_id##</td>
-                            <td>{{ __('Resource manager', 'resources') }}</td>
                         </tr>
                         <tr>
                             <td>##users_id_sales##</td>
@@ -106,7 +102,7 @@
                         </tr>
                         <tr>
                             <td>##comment##</td>
-                            <td>{{ __('Description') }}</td>
+                            <td>{{ __('Comment') }}</td>
                         </tr>
 
                         </tbody>
@@ -165,8 +161,8 @@
                 <div class="hr-text-left col-auto d-flex flex-column picture-block resources_custom_with_div_container">
                     <div>
                         {{ fields.dropdownArrayField(
-                            'template_type',
-                            items['template_type'],
+                            'type',
+                            items['type'],
                             {0: '-----', 1: __('Request'), 2: __('Incident')},
                             'Type',
                             {
@@ -239,7 +235,7 @@
                             {{ fields.dropdownField(
                                 'User',
                                 'users_id_requester',
-                                items_g_u['users_id_tech'],
+                                items_g_u['users_id_requester'],
                                 __('User'),
                                 {
                                     'entity': items['entities_id'],
@@ -274,7 +270,7 @@
                             {{ fields.dropdownField(
                                 'User',
                                 'users_id_observer',
-                                items_g_u['users_id_tech'],
+                                items_g_u['users_id_observer'],
                                 __('User'),
                                 {
                                     'entity': items['entities_id'],

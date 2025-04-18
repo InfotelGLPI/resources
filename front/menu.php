@@ -40,6 +40,10 @@ if (Session::getCurrentInterface() == 'central') {
    }
 }
 
+if(isset($_SESSION['ressources_tickettemplate'])){
+	unset($_SESSION['ressources_tickettemplate']);
+}
+
 $resource = new PluginResourcesResource();
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
    PluginResourcesMenu::showMenu($resource);

@@ -131,9 +131,11 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 		$this->add([
 			'name' => $input['template_name'],
 			'entities_id' => $_SESSION['glpiactive_entity'],
+			'template_type' => $input['template_type'],
 			'type' => $input['type'],
 			'title' => $input['name'],
 			'content' => $input['description'],
+			'itilcategories_id' => $input['itilcategories_id'],
 		]);
 
 		$last_id = $this->find(
@@ -229,11 +231,12 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 	{
 		global $DB;
 		$this->update([
-			'id' => $id,
 			'name' => $datas['template_name'],
+			'template_type' => $datas['template_type'],
 			'type' => $datas['type'],
 			'title' => $datas['name'],
 			'content' => $datas['description'],
+			'itilcategories_id' => $datas['itilcategories_id'],
 		]);
 
 		if(isset($datas['groups_id_requester'])){
@@ -257,15 +260,15 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 			}
 		}
 
-		if(isset($datas['users_id_requester'])){
+		$DB->delete(
+			'glpi_plugin_resources_tickettemplateusers',
+			[
+				'plugin_resources_tickettemplates_id' => $id,
+				'type' => CommonITILActor::REQUESTER
+			]
+		);
 
-			$DB->delete(
-				'glpi_plugin_resources_tickettemplateusers',
-				[
-					'plugin_resources_tickettemplates_id' => $id,
-					'type' => CommonITILActor::REQUESTER
-				]
-			);
+		if(isset($datas['users_id_requester'])){
 
 			$ticketUser = new PluginResourcesTicketTemplateUser();
 
@@ -299,15 +302,15 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 			}
 		}
 
-		if(isset($datas['users_id_observer'])){
+		$DB->delete(
+			'glpi_plugin_resources_tickettemplateusers',
+			[
+				'plugin_resources_tickettemplates_id' => $id,
+				'type' => CommonITILActor::OBSERVER
+			]
+		);
 
-			$DB->delete(
-				'glpi_plugin_resources_tickettemplateusers',
-				[
-					'plugin_resources_tickettemplates_id' => $id,
-					'type' => CommonITILActor::OBSERVER
-				]
-			);
+		if(isset($datas['users_id_observer'])){
 
 			$ticketUser = new PluginResourcesTicketTemplateUser();
 
@@ -341,15 +344,15 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 			}
 		}
 
-		if(isset($datas['users_id_tech'])){
+		$DB->delete(
+			'glpi_plugin_resources_tickettemplateusers',
+			[
+				'plugin_resources_tickettemplates_id' => $id,
+				'type' => CommonITILActor::ASSIGN
+			]
+		);
 
-			$DB->delete(
-				'glpi_plugin_resources_tickettemplateusers',
-				[
-					'plugin_resources_tickettemplates_id' => $id,
-					'type' => CommonITILActor::ASSIGN
-				]
-			);
+		if(isset($datas['users_id_tech'])){
 
 			$ticketUser = new PluginResourcesTicketTemplateUser();
 

@@ -812,9 +812,7 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `remove_habilitation_on_update`                int unsigned NOT NULL default '0',
     `display_habilitations_txt`                    int unsigned NOT NULL default '0',
     `hide_view_commercial_resource`                tinyint      NOT NULL default '0',
-    `ticket_ldap_create`                           tinyint      NOT NULL DEFAULT '1',
-    `ticket_ldap_update`                           tinyint      NOT NULL DEFAULT '1',
-    `ticket_ldap_delete`                           tinyint      NOT NULL DEFAULT '1',
+
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
