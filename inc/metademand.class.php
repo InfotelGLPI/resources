@@ -90,14 +90,14 @@ class PluginResourcesMetademand extends CommonGLPI
                                         "plugin_metademands_metademands_id"=>$p["plugin_metademands_metademands_id"]])) {
             $linkmeta->getEmpty();
         }
-        $params['checklist_in'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_in"]);
+        $params['checklist_in'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_in"] ?? '');
         if (!isset($params['checklist_in'][$p["nbOpt"]])) {
             $params['checklist_in'] = "";
         } else {
             $params['checklist_in'] = $params['checklist_in'][$p["nbOpt"]];
         }
 
-        $params['checklist_out'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_out"]);
+        $params['checklist_out'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_out"] ?? '');
         if (!isset($params['checklist_out'][$p["nbOpt"]])) {
             $params['checklist_out'] = "";
         } else {
