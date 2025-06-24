@@ -46,7 +46,7 @@ class PluginResourcesTicketCategory extends CommonDBTM {
 
       $query = "SELECT * FROM `".$this->getTable()."` ".
               "WHERE `ticketcategories_id` = '".$category."' ";
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }

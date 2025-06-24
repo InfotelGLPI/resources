@@ -56,7 +56,8 @@ class PluginResourcesChoice extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -66,22 +67,11 @@ class PluginResourcesChoice extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
-
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
-   }
 
    /**
     * Get Tab Name used for itemtype
@@ -107,7 +97,7 @@ class PluginResourcesChoice extends CommonDBTM {
          if ($_SESSION['glpishow_count_on_tabs']) {
             return self::createTabEntry(self::getTypeName(2), self::countForResource($item));
          }
-         return self::getTypeName(2);
+         return self::createTabEntry(self::getTypeName(2));
       }
       return '';
    }
@@ -172,8 +162,6 @@ class PluginResourcesChoice extends CommonDBTM {
                     "\r\n\r" . __('Others needs', 'resources') . "\r\n\r" . $values['comment'];
       }
 
-      $comment = Html::cleanPostForTextArea($comment);
-
       $resource->update([
                            'id'      => $values['plugin_resources_resources_id'],
                            'comment' => addslashes($comment)]);
@@ -190,8 +178,6 @@ class PluginResourcesChoice extends CommonDBTM {
       $resource->getFromDB($values['plugin_resources_resources_id']);
 
       $comment = $values['comment'];
-
-      $comment = Html::cleanPostForTextArea($comment);
 
       $resource->update([
                            'id'      => $values['plugin_resources_resources_id'],
@@ -243,9 +229,16 @@ class PluginResourcesChoice extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT *
-                 FROM `glpi_plugin_resources_choices`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
+      $query =
+          [
+              'SELECT'    => [
+                  '*',
+              ],
+              'FROM'      => 'glpi_plugin_resources_choices',
+              'WHERE'     => [
+                  'plugin_resources_resources_id'  => $oldid
+              ],
+          ];
 
       foreach ($DB->request($query) as $data) {
          $choice = new self();
@@ -453,11 +446,11 @@ class PluginResourcesChoice extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_four_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_four_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'four_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'four_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div></div>";
          }

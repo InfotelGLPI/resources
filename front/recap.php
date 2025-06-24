@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 //show list of employment linked with a resource
 if (Session::getCurrentInterface() == 'central') {
@@ -108,7 +110,7 @@ if ($recap->canView() || Session::haveRight("config", UPDATE)) {
    Search::showGenericSearch("PluginResourcesRecap", $params);
    $recap->showList("PluginResourcesRecap", $params);
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

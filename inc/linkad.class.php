@@ -63,7 +63,8 @@ class PluginResourcesLinkAd extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -73,22 +74,11 @@ class PluginResourcesLinkAd extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
    }
 
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
-
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
-   }
 
    /**
     * Get Tab Name used for itemtype

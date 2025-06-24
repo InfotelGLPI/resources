@@ -117,7 +117,7 @@ if ($report->criteriasValidated()) {
                       rank,
                       budget_type ".getOrderBy('profession', $columns);
 
-   $res = $DB->query($query);
+   $res = $DB->doQuery($query);
    $nbtot = ($res ? $DB->numrows($res) : 0);
    if ($limit) {
       $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
@@ -125,7 +125,7 @@ if ($report->criteriasValidated()) {
          $start = 0;
       }
       if ($start > 0 || $start + $limit < $nbtot) {
-         $res = $DB->query($query . " LIMIT $start,$limit");
+         $res = $DB->doQuery($query . " LIMIT $start,$limit");
       }
    } else {
       $start = 0;
@@ -259,7 +259,7 @@ if ($report->criteriasValidated()) {
                                        OR `glpi_plugin_resources_ranks`.`end_date` >= '".$date."'))";
          }
 
-         $result1 = $DB->query($calqtvolbudguse);
+         $result1 = $DB->doQuery($calqtvolbudguse);
          $data1=$DB->fetchArray($result1);
 
          //link to recap.php displaying only employments with same rank and profession
@@ -310,7 +310,7 @@ if ($report->criteriasValidated()) {
                                     OR `glpi_plugin_resources_ranks`.`end_date` >= '".$date."'))";
          }
 
-         $result2 = $DB->query($calqtvolreal);
+         $result2 = $DB->doQuery($calqtvolreal);
          $data2=$DB->fetchArray($result2);
 
          //link to recap.php displaying only resource with same rank and profession
@@ -345,7 +345,7 @@ if ($report->criteriasValidated()) {
                  AND (`end_date` IS NULL
                         OR `end_date` >= '".$date."'))";
 
-         $result3 = $DB->query($query3);
+         $result3 = $DB->doQuery($query3);
          $data3=$DB->fetchArray($result3);
 
          //ammount of budget voting

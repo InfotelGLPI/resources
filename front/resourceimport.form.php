@@ -1,4 +1,7 @@
 <?php
+
+use Glpi\Exception\Http\BadRequestHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -60,7 +63,7 @@ if (isset($_POST['save'])){
    }
    redirectWithParameters(PluginResourcesImportResource::getIndexUrl(), $_GET);
 }
-Html::displayErrorAndDie('Lost');
+throw new BadRequestHttpException();
 
 function redirectWithParameters($url, array $parameters){
 

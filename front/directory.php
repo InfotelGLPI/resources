@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 //show list of users linked with a resource
@@ -55,7 +57,7 @@ if (($directory->canView() || Session::haveRight("config", UPDATE))) {
    $directory->showList(PluginResourcesDirectory::class, $params);
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

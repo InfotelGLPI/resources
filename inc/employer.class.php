@@ -57,7 +57,8 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight('plugin_resources', READ);
    }
 
@@ -67,7 +68,8 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
@@ -158,30 +160,25 @@ class PluginResourcesEmployer extends CommonTreeDropdown {
    static function transfer($ID, $entity) {
       global $DB;
 
-      if ($ID>0) {
-         // Not already transfer
-         // Search init item
-         $query = "SELECT *
-                   FROM `glpi_plugin_resources_employers`
-                   WHERE `id` = '$ID'";
+       if ($ID > 0) {
+           $table = self::getTable();
+           $iterator = $DB->request([
+               'FROM'   => $table,
+               'WHERE'  => ['id' => $ID]
+           ]);
 
-         if ($result=$DB->query($query)) {
-            if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID();
-
-               if ($newID<0) {
-                  $newID = $temp->import($input);
+           foreach ($iterator as $data) {
+               $input['name']        = $data['name'];
+               $input['entities_id'] = $entity;
+               $temp                 = new self();
+               $newID                = $temp->getID();
+               if ($newID < 0) {
+                   $newID = $temp->import($input);
                }
 
                return $newID;
-            }
-         }
-      }
+           }
+       }
       return 0;
    }
 }

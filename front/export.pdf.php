@@ -36,6 +36,7 @@ if (Session::getCurrentInterface()
    Session::checkCentralAccess();
 }
 
+global $DB;
 
 if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
    $PluginUseditemsexportExport = new PluginUseditemsexportExport();
@@ -43,11 +44,15 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
    if ($PluginUseditemsexportExport::generatePDF($users_id)) {
       $dbu = new DbUtils();
       $table = $dbu->getTableForItemType('PluginUseditemsexportExport');
-      foreach ($DB->request("SELECT `documents_id` 
-                              FROM $table 
-                              WHERE `users_id` = '$users_id'
-                              ORDER BY `id` DESC
-                              LIMIT 1") as $data) {
+      foreach ($DB->request([
+          'SELECT' => 'documents_id',
+          'FROM' => $table,
+          'WHERE' => [
+              'users_id' => $users_id
+          ],
+          'ORDERBY'   => 'id DESC',
+          'LIMIT' => 1
+      ]) as $data) {
          $doc = new Document();
          if ($doc->getFromDB($data['documents_id'])) {
             if (!empty($doc->fields['filepath'])) {

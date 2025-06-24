@@ -42,5 +42,3 @@ switch ($_POST['action']) {
       break;
 }
 
-Html::ajaxFooter();
-

@@ -32,8 +32,8 @@ define('PLUGIN_RESOURCES_VERSION', '3.0.7');
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
    define("PLUGIN_RESOURCES_NOTFULL_DIR", Plugin::getPhpDir("resources",false));
-   define("PLUGIN_RESOURCES_WEBDIR", Plugin::getWebDir("resources"));
-   define("PLUGIN_RESOURCES_NOTFULL_WEBDIR", Plugin::getWebDir("resources",false));
+    $root = $CFG_GLPI['root_doc'] . '/plugins/resources';
+    define("PLUGIN_RESOURCES_WEBDIR", $root);
 }
 
 // Init the hooks of the plugins -Needed
@@ -157,16 +157,16 @@ function plugin_init_resources() {
 
       // Add specific files to add to the header : javascript or css
       if (Session::haveRight("plugin_resources", READ)) {
-         $PLUGIN_HOOKS['add_css']['resources']        = ["css/resources.css"];
-         $PLUGIN_HOOKS['add_javascript']['resources'] = ["resources.js",
+         $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources']        = ["css/resources.css"];
+         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = ["resources.js",
                                                          "lib/plugins/jquery.address.js",
                                                          "lib/plugins/jquery.mousewheel.js",
                                                          "lib/plugins/jquery.scroll.js",
          ];
 
          if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
-            $PLUGIN_HOOKS['add_javascript']['resources'][] = "lib/resources_card.js";
-            $PLUGIN_HOOKS['add_css']['resources'][]        = "css/resourcecard.css";
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
+            $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][]        = "css/resourcecard.css";
          }
       }
 
@@ -208,8 +208,8 @@ function plugin_version_resources() {
       'homepage'     => 'https://github.com/InfotelGLPI/resources',
       'requirements' => [
          'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0',
+            'min' => '11.0',
+            'max' => '12.0',
             'dev' => false
          ]
       ]

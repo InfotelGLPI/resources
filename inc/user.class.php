@@ -47,11 +47,15 @@ class PluginResourcesUser extends User {
       return _n('User', 'Users', $nb);
    }
 
+    static function getIcon() {
+        return "ti ti-device-laptop";
+    }
+
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       switch ($item->getType()) {
          case 'PluginResourcesResource' :
-            return __('User');
+            return self::createTabEntry(__('User'));
       }
       return '';
    }
@@ -164,7 +168,7 @@ class PluginResourcesUser extends User {
                AND `itemtype` = 'User'
                ORDER BY ID DESC
                LIMIT 1";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
       $pdf->setColumnsSize(100);
 

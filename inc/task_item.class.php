@@ -41,14 +41,16 @@ class PluginResourcesTask_Item extends CommonDBTM {
    /**
     * @return bool|\booleen
     */
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
    /**
     * @return bool|\booleen
     */
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -119,7 +121,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
               "WHERE `plugin_resources_tasks_id` = '".$plugin_resources_tasks_id."' 
 			AND `itemtype` = '".$itemtype."'
 			AND `items_id` = '".$items_id."'";
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }
@@ -186,7 +188,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                FROM `".$this->getTable()."` 
                WHERE `plugin_resources_tasks_id` = '$instID' 
                ORDER BY `itemtype` ";
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
          $number = $DB->numrows($result);
 
          echo "<form method='post' name='addtaskitem' action=\"./task.form.php\">";
@@ -220,7 +222,7 @@ class PluginResourcesTask_Item extends CommonDBTM {
                         AND `".$this->getTable()."`.`items_id` = '".$items_id."' 
                         AND `".$this->getTable()."`.`plugin_resources_tasks_id` = '$instID' ";
                   $query.= "ORDER BY `".$table."`.`name` ";
-                  $result_linked = $DB->query($query);
+                  $result_linked = $DB->doQuery($query);
 
                   if ($DB->numrows($result_linked)) {
 

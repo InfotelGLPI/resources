@@ -62,7 +62,8 @@ class PluginResourcesBudget extends CommonDBTM {
     *
     * @return bool
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -72,7 +73,8 @@ class PluginResourcesBudget extends CommonDBTM {
     *
     * @return bool
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -311,7 +313,7 @@ class PluginResourcesBudget extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page                                   = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.php';
+      $plugin_page                                   = PLUGIN_RESOURCES_WEBDIR.'/front/budget.php';
       $itemtype                                      = strtolower(self::getType());
 
       //Menu entry in admin
@@ -322,7 +324,7 @@ class PluginResourcesBudget extends CommonDBTM {
        $menu['options'][$itemtype]['lists_itemtype']  = self::getType();
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.form.php';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_WEBDIR.'/front/budget.form.php';
       }
 
       return $menu;

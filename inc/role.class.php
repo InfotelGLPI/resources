@@ -51,14 +51,16 @@ class PluginResourcesRole extends CommonDropdown {
    /**
     * @return bool|\booleen
     */
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
    /**
     * @return bool|\booleen
     */
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -112,7 +114,7 @@ class PluginResourcesRole extends CommonDropdown {
                      WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '" . $professionId . "'";
 
             $values[0] = Dropdown::EMPTY_VALUE;
-            if ($result = $DB->query($query)) {
+            if ($result = $DB->doQuery($query)) {
                while ($data = $DB->fetchArray($result)) {
                   $values[$data['id']] = $data['name'];
                }

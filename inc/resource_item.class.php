@@ -53,7 +53,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -63,7 +64,8 @@ class PluginResourcesResource_Item extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -78,6 +80,10 @@ class PluginResourcesResource_Item extends CommonDBTM {
                'items_id' => $item->getField('id')]
       );
    }
+
+    static function getIcon() {
+        return "ti ti-device-laptop";
+    }
 
    /**
     * @param \CommonGLPI $item
@@ -101,7 +107,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
          if ($_SESSION['glpishow_count_on_tabs']) {
             return self::createTabEntry(PluginResourcesResource::getTypeName(2), self::countForItem($item));
          }
-         return PluginResourcesResource::getTypeName(2);
+         return self::createTabEntry(PluginResourcesResource::getTypeName(2));
       }
       return '';
    }
@@ -190,7 +196,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "' 
          AND `itemtype` = '" . $itemtype . "'
          AND `items_id` = '" . $items_id . "'";
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }
@@ -287,9 +293,16 @@ class PluginResourcesResource_Item extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT `itemtype`, `items_id`, `comment`
-                 FROM `glpi_plugin_resources_resources_items`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
+       $query =
+           [
+               'SELECT'    => [
+                   '*',
+               ],
+               'FROM'      => 'glpi_plugin_resources_resources_items',
+               'WHERE'     => [
+                   'plugin_resources_resources_id'  => $oldid
+               ],
+           ];
 
       foreach ($DB->request($query) as $data) {
          $item = new self();
@@ -403,7 +416,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                $query .= ")";
             }
             $query .= " ORDER BY `" . $table . "`.`name`";
-            $result_linked = $DB->query($query);
+            $result_linked = $DB->doQuery($query);
 
             if ($DB->numrows($result_linked)) {
 
@@ -470,7 +483,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
           WHERE `plugin_resources_resources_id` = '$instID' 
           ORDER BY `itemtype` 
           LIMIT " . count($types);
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       if (Session::isMultiEntitiesMode()) {
@@ -498,7 +511,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
                                                 'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
                                                 'itemtypes'       => $types]);
 
-         echo "<span id='warning' hidden><i class='fas fa-exclamation-triangle fa-2x' style='color:orange'></i>&nbsp";
+         echo "<span id='warning' hidden><i class='ti ti-alert-triangle' style='font-size:2em;color:orange'></i>&nbsp";
          echo  __('This computer is already associated to a resource','resources') . "</span>";
          echo "<td colspan='2' class='tab_bg_2'>";
          echo Html::submit(_sx('button', 'Add'), ['name' => 'additem', 'class' => 'btn btn-primary']);
@@ -583,7 +596,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
             }
             $query .= " ORDER BY `glpi_entities`.`completename`, `" . $itemTable . "`.`$column`";
 
-            if ($result_linked = $DB->query($query)) {
+            if ($result_linked = $DB->doQuery($query)) {
                if ($DB->numrows($result_linked)) {
 
                   Session::initNavigateListItems($itemType, PluginResourcesResource::getTypeName(2) . " = " . $resource->fields['name']);
@@ -597,7 +610,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
                      $ID = "";
 
                      if ($itemType == 'User') {
-                        $format = $dbu->formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
+                        $format = $dbu->formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"]);
                      } else {
                         $format = $data["name"];
                      }
@@ -733,7 +746,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
 
       $query .= " ORDER BY `assocName`";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
       $i      = 0;
 
@@ -776,7 +789,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
          if ($item->getType() != 'User') {
             $q .= " $limit";
          }
-         $result = $DB->query($q);
+         $result = $DB->doQuery($q);
          $nb     = $DB->result($result, 0, 0);
 
          echo "<div class='firstbloc'>";
@@ -948,7 +961,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
                FROM `glpi_plugin_resources_resources_items` 
                WHERE `plugin_resources_resources_id` = '$ID' 
                ORDER BY `itemtype` ";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       if (Session::isMultiEntitiesMode()) {
@@ -998,7 +1011,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
                }
                $query .= " ORDER BY `glpi_entities`.`completename`, `" . $table . "`.`$column`";
 
-               if ($result_linked = $DB->query($query)) {
+               if ($result_linked = $DB->doQuery($query)) {
                   if ($DB->numrows($result_linked)) {
 
                      while ($data = $DB->fetchAssoc($result_linked)) {
@@ -1077,7 +1090,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
          AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` "
                . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       if (!$number) {

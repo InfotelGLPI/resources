@@ -54,7 +54,8 @@ class PluginResourcesWorkProfile extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRight('dropdown', UPDATE);
    }
 
@@ -67,7 +68,8 @@ class PluginResourcesWorkProfile extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight('dropdown', READ);
    }
 

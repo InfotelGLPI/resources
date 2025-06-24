@@ -77,7 +77,7 @@ class PluginResourcesImportColumn extends CommonDBChild {
 
       $query.= " ORDER BY resource_column";
 
-      $results = $DB->query($query);
+      $results = $DB->doQuery($query);
 
       $temp = [];
 

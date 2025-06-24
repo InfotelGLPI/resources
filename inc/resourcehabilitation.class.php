@@ -52,7 +52,12 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       return _n('Habilitation', 'Habilitations', $nb, 'resources');
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-lock";
+    }
+
+
+    /**
     * Have I the global right to "view" the Object
     *
     * Default is true and check entity if the objet is entity assign
@@ -61,7 +66,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -71,7 +77,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -95,7 +102,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          if ($_SESSION['glpishow_count_on_tabs']) {
             return self::createTabEntry(self::getTypeName(2), self::countForResource($item));
          }
-         return self::getTypeName(2);
+         return self::createTabEntry(self::getTypeName(2));
       }
       return '';
    }
@@ -236,9 +243,16 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT *
-                 FROM `glpi_plugin_resources_resourcehabilitations`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
+       $query =
+           [
+               'SELECT'    => [
+                   '*',
+               ],
+               'FROM'      => 'glpi_plugin_resources_resourcehabilitations',
+               'WHERE'     => [
+                   'plugin_resources_resources_id'  => $oldid
+               ],
+           ];
 
       foreach ($DB->request($query) as $data) {
          $habilitation = new self();
@@ -343,7 +357,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
                               WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
                               AND `plugin_resources_habilitationlevels_id` = $cpt";
-                  $result_habilitations = $DB->query($query_habilitations);
+                  $result_habilitations = $DB->doQuery($query_habilitations);
                   while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
                      if(!is_null($data_habilitation)) {
                         $value = $data_habilitation['name'];
@@ -359,7 +373,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                      $cleaning_query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
                                         WHERE plugin_resources_resources_id= $plugin_resources_resources_id
                                         AND plugin_resources_habilitations_id= $id";
-                     $DB->query($cleaning_query);
+                     $DB->doQuery($cleaning_query);
                   }
                   $cpt++;
 
@@ -402,10 +416,10 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_six_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_six_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'six_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'six_step', 'class' => 'btn btn-success']);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo "</div>";
             echo "</div>";
@@ -528,7 +542,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $query  = "SELECT * 
                FROM `glpi_plugin_resources_resourcehabilitations` 
                WHERE `plugin_resources_resources_id` = '$ID'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
       $pdf->setColumnsSize(100);
 

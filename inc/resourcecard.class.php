@@ -287,7 +287,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
             $query .= " AND `is_deleted` = 0 ";
          }
          $query  .= $dbu->getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
 
          if ($DB->numrows($result) > 0) {
             $inv = true;

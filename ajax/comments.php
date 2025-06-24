@@ -35,11 +35,12 @@ header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
+global $DB;
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
    // Security
    if (!$DB->tableExists($_REQUEST['table'])) {
-      exit();
+       throw new \Glpi\Exception\Http\NotFoundHttpException();
    }
 
    switch ($_REQUEST["table"]) {
@@ -54,7 +55,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
 
          if (isset($_REQUEST['withlink'])) {
             echo "<script type='text/javascript' >\n";
-            echo Html::jsGetElementbyID($_REQUEST['withlink']).".attr('href', '".$tmpname['link']."');";
+            echo PluginResourcesResource::jsGetElementbyID($_REQUEST['withlink']).".attr('href', '".$tmpname['link']."');";
             echo "</script>\n";
          }
          break;

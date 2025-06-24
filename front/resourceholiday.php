@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 if (Session::getCurrentInterface() == 'central') {
@@ -47,7 +49,7 @@ if (($holiday->canView() || Session::haveRight("config", UPDATE))) {
    Search::show("PluginResourcesResourceHoliday");
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

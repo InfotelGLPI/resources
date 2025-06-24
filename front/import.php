@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
@@ -13,7 +15,7 @@ if ($import->canView()) {
    Search::show('PluginResourcesImport');
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

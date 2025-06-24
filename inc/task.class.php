@@ -54,32 +54,27 @@ class PluginResourcesTask extends CommonDBTM {
       return _n('Task', 'Tasks', $nb);
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-checklist";
+    }
+
+
+    /**
     * @return bool|\booleen
     */
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
    /**
     * @return bool|\booleen
     */
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
-
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
-   }
 
    function cleanDBonPurge() {
 
@@ -253,7 +248,7 @@ class PluginResourcesTask extends CommonDBTM {
       $query  = "UPDATE `glpi_plugin_resources_checklists` 
             SET `plugin_resources_tasks_id` = 0 
             WHERE `plugin_resources_tasks_id` = '" . $this->fields["id"] . "' ";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
    }
 
@@ -274,7 +269,7 @@ class PluginResourcesTask extends CommonDBTM {
       } else if ($item->getType() == 'Central'
                  && $this->canView()
       ) {
-         return PluginResourcesResource::getTypeName(2);
+         return self::createTabEntry(PluginResourcesResource::getTypeName(2));
       }
       return '';
    }
@@ -663,10 +658,10 @@ class PluginResourcesTask extends CommonDBTM {
       $img = "";
       switch ($state) {
          case self::STATE_OK:
-            $img = "<i style='color:green' class='fas fa-check-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            $img = "<i style='color:green' class='ti ti-circle-check fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
             break;
          case self::STATE_KO:
-            $img = "<i style='color:red' class='fas fa-times-circle fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
+            $img = "<i style='color:red' class='ti ti-circle-x fa-2x' title='".PluginResourcesTask::getStatus($state)."'></i>";
             break;
       }
       return $img;
@@ -777,7 +772,7 @@ class PluginResourcesTask extends CommonDBTM {
 
          $query .= " ORDER BY `glpi_plugin_resources_resources`.`name` DESC LIMIT 10;";
 
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
          $number = $DB->numrows($result);
 
          if ($number > 0) {
@@ -885,7 +880,7 @@ class PluginResourcesTask extends CommonDBTM {
       $cron_status = 0;
 
       $resourcetask  = new self();
-      $query_expired = $resourcetask->queryAlert();
+      $query_expired = $resourcetask->doQueryAlert();
 
       $querys = [Alert::END => $query_expired];
 
@@ -1143,7 +1138,7 @@ class PluginResourcesTask extends CommonDBTM {
                FROM `glpi_plugin_resources_tasks` 
                WHERE `plugin_resources_resources_id` = $ID
                AND `is_deleted` = 0";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       $i = $j = 0;

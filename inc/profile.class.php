@@ -47,11 +47,18 @@ class PluginResourcesProfile extends Profile
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == 'Profile') {
-            return PluginResourcesResource::getTypeName(2);
+            return self::createTabEntry(PluginResourcesResource::getTypeName(2));
         }
         return '';
     }
 
+    /**
+     * @return string
+     */
+    public static function getIcon()//self::createTabEntry(
+    {
+        return "fas fa-user-friends";
+    }
     /**
      * @param \CommonGLPI $item
      * @param int         $tabnum

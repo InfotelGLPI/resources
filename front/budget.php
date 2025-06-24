@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesBudget::getType()));
@@ -36,7 +38,7 @@ if ($budget->canView() || Session::haveRight("config", UPDATE)) {
    Search::show("PluginResourcesBudget");
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

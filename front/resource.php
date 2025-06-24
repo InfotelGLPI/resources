@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 //central or helpdesk access
@@ -67,7 +69,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
    Search::show(PluginResourcesResource::class);
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

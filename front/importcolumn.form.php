@@ -1,4 +1,7 @@
 <?php
+
+use Glpi\Exception\Http\BadRequestHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -19,4 +22,4 @@ if (isset($_POST["add"])) {
    $import->update($_POST);
    Html::back();
 }
-Html::displayErrorAndDie('Lost');
+throw new BadRequestHttpException();

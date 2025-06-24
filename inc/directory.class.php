@@ -62,7 +62,8 @@ class PluginResourcesDirectory extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -72,7 +73,8 @@ class PluginResourcesDirectory extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -275,7 +277,7 @@ class PluginResourcesDirectory extends CommonDBTM {
       $data['sql']['count']  = [];
       $data['sql']['search'] = '';
 
-      $searchopt        = &Search::getOptions($data['itemtype']);
+      $searchopt        = Search::getOptions($data['itemtype']);
       $dbu = new DbUtils();
       $blacklist_tables = [];
 

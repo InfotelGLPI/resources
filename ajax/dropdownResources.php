@@ -84,7 +84,7 @@ if ($DB->numrows($result)) {
    while ($data = $DB->fetchArray($result)) {
       array_push($users, ['id'   => $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["username"],
-                                                   $data["name"], $data["firstname"], 0)]);
+                                                   $data["name"], $data["firstname"])]);
       //      $logins[$data["id"]] = $data["name"];
       $linkedUsers[] = $data["userid"];
    }
@@ -105,11 +105,11 @@ if ($_GET['addUnlinkedUsers']) {
                   OR `glpi_users`.`name` ".Search::makeTextSearch($_GET['searchText'])."
                   OR CONCAT(`glpi_users`.`name`,' ',`glpi_users`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) ".
                   Search::makeTextSearch($_GET['searchText']).");";
-   $result = $DB->query($query);
+   $result = $DB->doQuery($query);
    while ($data = $DB->fetchArray($result)) {
       array_push($users, ['id'   => 'users-' . $data["id"],
                           'text' => $dbu->formatUserName($data["id"], $data["name"],
-                                                         $data["realname"], $data["firstname"], 0)]);
+                                                         $data["realname"], $data["firstname"])]);
       //      $logins['users-'.$data["id"]] = $data["name"];
    }
 }

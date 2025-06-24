@@ -52,7 +52,8 @@ class PluginResourcesRank extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       if (Session::haveRight('dropdown', UPDATE)
          && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
          return true;
@@ -69,7 +70,8 @@ class PluginResourcesRank extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
          return true;
       }
@@ -184,7 +186,7 @@ class PluginResourcesRank extends CommonDropdown {
                      WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '" . $professionId . "'";
 
             $values[0] = Dropdown::EMPTY_VALUE;
-            if ($result = $DB->query($query)) {
+            if ($result = $DB->doQuery($query)) {
                while ($data = $DB->fetchArray($result)) {
                   $values[$data['id']] = $data['name'];
                }
@@ -216,38 +218,33 @@ class PluginResourcesRank extends CommonDropdown {
    static function transfer($ID, $entity) {
       global $DB;
 
-      if ($ID>0) {
-         // Not already transfer
-         // Search init item
-         $query = "SELECT *
-                   FROM `glpi_plugin_resources_ranks`
-                   WHERE `id` = '$ID'";
+       if ($ID > 0) {
+           $table = self::getTable();
+           $iterator = $DB->request([
+               'FROM'   => $table,
+               'WHERE'  => ['id' => $ID]
+           ]);
 
-         if ($result=$DB->query($query)) {
-            if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID();
-
-               if ($newID<0) {
-                  $newID = $temp->import($input);
+           foreach ($iterator as $data) {
+               $input['name']        = $data['name'];
+               $input['entities_id'] = $entity;
+               $temp                 = new self();
+               $newID                = $temp->getID();
+               if ($newID < 0) {
+                   $newID = $temp->import($input);
                }
 
                //transfert of the linked profession
                $profession = PluginResourcesProfession::transfer($temp->fields["plugin_resources_professions_id"], $entity);
                if ($profession > 0) {
-                  $values["id"] = $newID;
-                  $values["plugin_resources_professions_id"] = $profession;
-                  $temp->update($values);
+                   $values["id"] = $newID;
+                   $values["plugin_resources_professions_id"] = $profession;
+                   $temp->update($values);
                }
 
                return $newID;
-            }
-         }
-      }
+           }
+       }
       return 0;
    }
 

@@ -235,17 +235,37 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       global $DB;
 
       if (isset($options['reports_id'])) {
-         $query = "SELECT DISTINCT `glpi_users`.`id` AS id,
-                          `glpi_users`.`language` AS language
-                   FROM `glpi_plugin_resources_resources_items`
-                   LEFT JOIN `glpi_users` 
-                     ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id` 
-                           AND `glpi_plugin_resources_resources_items`.`itemtype` = 'USER')
-                   LEFT JOIN `glpi_plugin_resources_reportconfigs` 
-                     ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`)
-                   WHERE `glpi_plugin_resources_reportconfigs`.`id` = '" . $options['reports_id'] . "'";
 
-         foreach ($DB->request($query) as $data) {
+          $criteria = [
+              'SELECT' => [
+                  'glpi_users.id AS id',
+                  'glpi_users.language AS language',
+              ],
+              'DISTINCT'        => true,
+              'FROM' => 'glpi_plugin_resources_resources_items',
+              'LEFT JOIN' => [
+                  'glpi_users' => [
+                      'ON' => [
+                          'glpi_plugin_resources_resources_items' => 'items_id',
+                          'glpi_users' => 'id',
+                          [
+                              'AND' => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+                          ],
+                      ]
+                  ],
+                  'glpi_plugin_resources_reportconfigs' => [
+                      'ON' => [
+                          'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                          'glpi_plugin_resources_reportconfigs' => 'plugin_resources_resources_id'
+                      ]
+                  ]
+              ],
+              'WHERE' => [
+                  'glpi_plugin_resources_reportconfigs.id' => $options['reports_id']
+                  ]
+          ];
+
+         foreach ($DB->request($criteria) as $data) {
             $data['email'] = UserEmail::getDefaultForUser($data['id']);
             $this->addToRecipientsList($data);
          }
@@ -262,13 +282,28 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
          if (is_array($options['tasks_id'])) {
             $options['tasks_id'] = reset($options['tasks_id']);
          }
-         $query = "SELECT DISTINCT `glpi_users`.`id` AS id,
-                          `glpi_users`.`language` AS language
-                   FROM `glpi_plugin_resources_tasks`
-                   LEFT JOIN `glpi_users` ON (`glpi_users`.`id` = `glpi_plugin_resources_tasks`.`users_id`)
-                   WHERE `glpi_plugin_resources_tasks`.`id` = '" . $options['tasks_id'] . "'";
 
-         foreach ($DB->request($query) as $data) {
+          $criteria = [
+              'SELECT' => [
+                  'glpi_users.id AS id',
+                  'glpi_users.language AS language',
+              ],
+              'DISTINCT'        => true,
+              'FROM' => 'glpi_plugin_resources_tasks',
+              'LEFT JOIN' => [
+                  'glpi_users' => [
+                      'ON' => [
+                          'glpi_plugin_resources_tasks' => 'users_id',
+                          'glpi_users' => 'id',
+                      ]
+                  ],
+              ],
+              'WHERE' => [
+                  'glpi_plugin_resources_tasks.id' => $options['tasks_id']
+              ]
+          ];
+
+         foreach ($DB->request($criteria) as $data) {
             $data['email'] = UserEmail::getDefaultForUser($data['id']);
             $this->addToRecipientsList($data);
          }
@@ -1434,7 +1469,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Resources'";
-      $result = $DB->query($query_id) or die($DB->error());
+      $result = $DB->doQuery($query_id) or die($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1496,7 +1531,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
       }
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
                   WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Resources Tasks'";
-      $result = $DB->query($query_id) or die($DB->error());
+      $result = $DB->doQuery($query_id) or die($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1588,7 +1623,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
 
       $query_id = "SELECT `id` FROM `glpi_notificationtemplates` 
                    WHERE `itemtype`='PluginResourcesResource' AND `name` = 'Alert Leaving Resources'";
-      $result = $DB->query($query_id) or die($DB->error());
+      $result = $DB->doQuery($query_id) or die($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1676,7 +1711,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Alert Resources Checklists'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1781,7 +1816,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Leaving Resource'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1873,7 +1908,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Resource Resting'";
 
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -1960,7 +1995,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                              AND `name` = 'Resource Holiday'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -2051,7 +2086,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Send other resource notification'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -2158,7 +2193,7 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Resource Transfer'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -2226,7 +2261,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Alert for sales people'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
@@ -2340,7 +2375,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginResourcesResource'
                        AND `name` = 'Resource Report Creation'";
-      $result = $DB->query($query_id) or die ($DB->error());
+      $result = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');

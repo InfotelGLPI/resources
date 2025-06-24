@@ -130,7 +130,7 @@ $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resourc
 
 $query.=$conditionAll." ".getOrderBy('entity', $columns);
 
-$result = $DB->query($query);
+$result = $DB->doQuery($query);
 for ($row_num = 0; $data=$DB->fetchAssoc($result); $row_num++) {
    $dataAll[$row_num]=$data;
 }

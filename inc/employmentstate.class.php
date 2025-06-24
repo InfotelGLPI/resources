@@ -54,7 +54,8 @@ class PluginResourcesEmploymentState extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
@@ -67,7 +68,8 @@ class PluginResourcesEmploymentState extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight('plugin_resources_employment', READ);
    }
 
@@ -102,30 +104,25 @@ class PluginResourcesEmploymentState extends CommonDropdown {
    static function transfer($ID, $entity) {
       global $DB;
 
-      if ($ID>0) {
-         // Not already transfer
-         // Search init item
-         $query = "SELECT *
-                   FROM `glpi_plugin_resources_employmentstates`
-                   WHERE `id` = '$ID'";
+       if ($ID > 0) {
+           $table = self::getTable();
+           $iterator = $DB->request([
+               'FROM'   => $table,
+               'WHERE'  => ['id' => $ID]
+           ]);
 
-         if ($result=$DB->query($query)) {
-            if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID();
-
-               if ($newID<0) {
-                  $newID = $temp->import($input);
+           foreach ($iterator as $data) {
+               $input['name']        = $data['name'];
+               $input['entities_id'] = $entity;
+               $temp                 = new self();
+               $newID                = $temp->getID();
+               if ($newID < 0) {
+                   $newID = $temp->import($input);
                }
 
                return $newID;
-            }
-         }
-      }
+           }
+       }
       return 0;
    }
 
@@ -173,7 +170,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
          $query = "UPDATE `".$this->getTable()."`
                    SET `is_leaving_state` = 0
                    WHERE `id` <> '".$this->fields['id']."'";
-         $DB->query($query);
+         $DB->doQuery($query);
       }
    }
 
@@ -193,7 +190,7 @@ class PluginResourcesEmploymentState extends CommonDropdown {
             $query = "UPDATE `".$this->getTable()."`
                       SET `is_leaving_state` = 0
                       WHERE `id` <> '".$this->input['id']."'";
-            $DB->query($query);
+            $DB->doQuery($query);
 
          } else {
             Session::addMessageAfterRedirect(__('Be careful: there is no default value'), false, ERROR);
@@ -217,13 +214,21 @@ class PluginResourcesEmploymentState extends CommonDropdown {
     *
     * @return default employmentstate_id
     **/
-   static function getDefault() {
-      global $DB;
+    static function getDefault()
+    {
+        global $DB;
 
-      foreach ($DB->request('glpi_plugin_resources_employmentstates', ['is_leaving_state' => 1]) as $data) {
-         return $data['id'];
-      }
-      return 0;
-   }
+        foreach (
+            $DB->request([
+                'FROM' => 'glpi_plugin_resources_employmentstates',
+                'WHERE' => [
+                    'is_leaving_state' => 1
+                ],
+            ]) as $data
+        ) {
+            return $data['id'];
+        }
+        return 0;
+    }
 }
 

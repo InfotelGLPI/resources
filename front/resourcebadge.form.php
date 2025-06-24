@@ -68,7 +68,7 @@ if (Plugin::isPluginActive("badges")) {
             $badge->showFormBadge();
          }
       } else {
-         Html::header(__('Setup'), '', "config", "plugins");
+         Html::header(__('Setup'), '', "config", "plugin");
          echo "<div class='alert alert-important alert-warning d-flex'>";
          echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
       }
@@ -86,7 +86,7 @@ if (Plugin::isPluginActive("badges")) {
 
 
       } else {
-         Html::header(__('Setup'), '', "config", "plugins");
+         Html::header(__('Setup'), '', "config", "plugin");
          echo "<div class='alert alert-important alert-warning d-flex'>";
          echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
       }
@@ -113,7 +113,7 @@ if (Plugin::isPluginActive("badges")) {
    }
 
 } else {
-   Html::header(__('Setup'), '', "config", "plugins");
+   Html::header(__('Setup'), '', "config", "plugin");
    echo "<div class='alert alert-important alert-warning d-flex'>";
    echo "<b>" . __('Please activate the plugin badge', 'resources') . "</b></div>";
 }

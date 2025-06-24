@@ -57,6 +57,3 @@ if (isset($_POST["id"])) {
    echo __("You don't have permission to perform this action.");
 }
 
-
-Html::ajaxFooter();
-

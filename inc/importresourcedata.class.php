@@ -57,7 +57,7 @@ class PluginResourcesImportResourceData extends CommonDBChild {
       global $DB;
 
       $query = "DELETE FROM `".self::getTable()."`";
-      return $DB->query($query);
+      return $DB->doQuery($query);
    }
 
    public function purgeDataByImportResource($importResourceId){
@@ -67,7 +67,7 @@ class PluginResourcesImportResourceData extends CommonDBChild {
          "DELETE FROM `".self::getTable()."`".
          " WHERE `plugin_resources_importresources_id` = ".$importResourceId;
 
-      return $DB->query($query);
+      return $DB->doQuery($query);
    }
 
    public function getFromParentAndIdentifierLevel($importResourceId, $identifierLevel = null, $order = []){
@@ -93,7 +93,7 @@ class PluginResourcesImportResourceData extends CommonDBChild {
          }
       }
 
-      $results = $DB->query($query);
+      $results = $DB->doQuery($query);
       $temp = [];
 
       while ($data = $DB->fetchAssoc($results)) {

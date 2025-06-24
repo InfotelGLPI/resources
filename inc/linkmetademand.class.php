@@ -62,7 +62,8 @@ class PluginResourcesLinkmetademand extends CommonDBTM {
     *
     * @return bool
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -72,7 +73,8 @@ class PluginResourcesLinkmetademand extends CommonDBTM {
     *
     * @return bool
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 

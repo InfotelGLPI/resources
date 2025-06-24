@@ -55,18 +55,10 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
       return _n('Leaving Information', 'Leaving Informations', $nb, 'resources');
    }
 
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
+    static function getIcon() {
+        return "ti ti-door-exit";
+    }
 
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
-   }
 
    /**
     * Have I the global right to "view" the Object
@@ -77,7 +69,8 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -87,7 +80,8 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -113,7 +107,7 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
           && Session::haveRight('plugin_resources_leavinginformation',1)
           && $item->fields['is_leaving']
       ) {
-         return self::getTypeName(1);
+         return self::createTabEntry(self::getTypeName(1));
       }
       return '';
    }
@@ -142,30 +136,6 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
       return true;
    }
 
-   /**
-    * @param $plugin_resources_resources_id
-    *
-    * @return bool
-    */
-   function getFromDBbyResources($plugin_resources_resources_id) {
-      global $DB;
-
-      $query = "SELECT *
-                FROM `" . $this->getTable() . "`
-                WHERE `plugin_resources_resources_id` = '$plugin_resources_resources_id'";
-
-      if ($result = $DB->query($query)) {
-         if ($DB->numrows($result) != 1) {
-            return false;
-         }
-         $this->fields = $DB->fetchAssoc($result);
-         if (is_array($this->fields) && count($this->fields)) {
-            return true;
-         }
-         return false;
-      }
-      return false;
-   }
 
    /**
     * Prepare input datas for adding the item
@@ -179,7 +149,7 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
       if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
          return false;
       }
-      if ($this->getFromDBbyResources($input['plugin_resources_resources_id'])) {
+      if ($this->getFromDBByCrit(['plugin_resources_resources_id' => $input['plugin_resources_resources_id']])) {
          return false;
       }
       return $input;
@@ -198,9 +168,16 @@ class PluginResourcesLeavingInformation extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT *
-                 FROM `glpi_plugin_resources_employees`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
+       $query =
+           [
+               'SELECT'    => [
+                   '*',
+               ],
+               'FROM'      => 'glpi_plugin_resources_employees',
+               'WHERE'     => [
+                   'plugin_resources_resources_id'  => $oldid
+               ],
+           ];
 
       foreach ($DB->request($query) as $data) {
          $employee = new self();

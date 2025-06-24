@@ -53,5 +53,3 @@ if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklis
 } else {
    echo __("You don't have permission to perform this action.");
 }
-
-Html::ajaxFooter();

@@ -316,10 +316,10 @@ class PluginResourcesMetademand extends CommonGLPI
                     if ($config->fields["remove_habilitation_on_update"] == 1) {
                         if ($habilitationToDelKeep && !$config_data['show_form_changes']) {
                             $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=".$idResource ." AND id NOT IN(".implode(",", $habilitationToDelKeep).")";
-                            $DB->query($query);
+                            $DB->doQuery($query);
                         } elseif ($habilitationToDel && $config_data['show_form_changes']) {
                             $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=".$idResource ." AND id IN(".implode(",", $habilitationToDel).")";
-                            $DB->query($query);
+                            $DB->doQuery($query);
                         }
                     }
                 }

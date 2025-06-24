@@ -40,5 +40,3 @@ if (!isset($_GET['target'])) {
 
 PluginResourcesResource::showSelector($_GET['target']);
 
-Html::ajaxFooter();
-

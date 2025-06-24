@@ -20,7 +20,7 @@ class PluginResourcesMenu extends CommonDBTM {
       return _n('Human resource', 'Human resources', $nb, 'resources');
    }
 
-    public static function canView()
+    static function canView(): bool
     {
         if (static::$rightname) {
             return Session::haveRight(static::$rightname, READ);
@@ -342,53 +342,53 @@ class PluginResourcesMenu extends CommonDBTM {
     * @return array array for menu
     **/
    static function getMenuContent() {
-      $plugin_page =PLUGIN_RESOURCES_NOTFULL_WEBDIR."/front/menu.php";
+      $plugin_page =PLUGIN_RESOURCES_WEBDIR."/front/menu.php";
 
       $menu = [];
       //Menu entry in admin
       $menu['title']           = PluginResourcesResource::getTypeName(2);
       $menu['page']            = $plugin_page;
-      $menu['links']['search'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR."/front/resource.php";
+      $menu['links']['search'] = PLUGIN_RESOURCES_WEBDIR."/front/resource.php";
       $menu['links']['lists']  = "";
       $menu['lists_itemtype']  = PluginResourcesResource::getType();
       if (Session::haveright("plugin_resources", CREATE)) {
 
-         $menu['links']['add']      = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/wizard.form.php';
-         $menu['links']['template'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/setup.templates.php?add=0';
+         $menu['links']['add']      = PLUGIN_RESOURCES_WEBDIR.'/front/wizard.form.php';
+         $menu['links']['template'] = PLUGIN_RESOURCES_WEBDIR.'/front/setup.templates.php?add=0';
       }
 
       // Resource directory
-      $menu['links']["<i class='far fa-address-book fa-1x' title='" . __('Directory', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/directory.php';
+      $menu['links']["<i class='far fa-address-book fa-1x' title='" . __('Directory', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/directory.php';
 
       // Resting
       if (Session::haveright("plugin_resources_resting", UPDATE)) {
-         $menu['links']["<i class='fas fa-file-signature fa-1x' title='" . __('List of non contract periods', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/resourceresting.php';
+         $menu['links']["<i class='fas fa-file-signature fa-1x' title='" . __('List of non contract periods', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/resourceresting.php';
       }
 
       // Holiday
       if (Session::haveright("plugin_resources_holiday", UPDATE)) {
-         $menu['links']["<i class='fas fa-atlas fa-1x' title='" . __('List of forced holidays', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/resourceholiday.php';
+         $menu['links']["<i class='fas fa-atlas fa-1x' title='" . __('List of forced holidays', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/resourceholiday.php';
       }
 
       // Employment
       if (Session::haveright("plugin_resources_employment", READ)) {
-         $menu['links']["<i class='fas fa-list-ul fa-1x' title='" . __('Employment management', 'resources') . "'></i>"]     = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.php';
-         $menu['links']["<i class='fas fa-city fa-1x' title='" . __('List Employments / Resources', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/recap.php';
+         $menu['links']["<i class='fas fa-list-ul fa-1x' title='" . __('Employment management', 'resources') . "'></i>"]     = PLUGIN_RESOURCES_WEBDIR.'/front/employment.php';
+         $menu['links']["<i class='fas fa-city fa-1x' title='" . __('List Employments / Resources', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/recap.php';
       }
 
       // Budget
       if (Session::haveright("plugin_resources_budget", READ)) {
-         $menu['links']["<i class='fas fa-coins fa-1x' title='" . __('Budget management', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/budget.php';
+         $menu['links']["<i class='fas fa-coins fa-1x' title='" . __('Budget management', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/budget.php';
       }
 
       // Task
       if (Session::haveright("plugin_resources_task", READ)) {
-         $menu['links']["<i class='fas fa-tasks fa-1x' title='" . __('Tasks list', 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/task.php';
+         $menu['links']["<i class='fas fa-tasks fa-1x' title='" . __('Tasks list', 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/task.php';
       }
 
       // Checklist
       if (Session::haveright("plugin_resources_checklist", READ)) {
-         $menu['links']["<i class='far fa-calendar-check fa-1x' title='" . _n('Checklist', 'Checklists', 2, 'resources') . "'></i>"] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/checklistconfig.php';
+         $menu['links']["<i class='far fa-calendar-check fa-1x' title='" . _n('Checklist', 'Checklists', 2, 'resources') . "'></i>"] = PLUGIN_RESOURCES_WEBDIR.'/front/checklistconfig.php';
       }
 
       $opt                              = [];
@@ -398,19 +398,19 @@ class PluginResourcesMenu extends CommonDBTM {
       $opt['criteria'][0]['value']      = Session::getLoginUserID();
       $opt['criteria'][0]['link']       = 'AND';
 
-      $url = PLUGIN_RESOURCES_NOTFULL_WEBDIR."/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
+      $url = PLUGIN_RESOURCES_WEBDIR."/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
 
       $menu['links']["<i class='fas fa-user-tie fa-1x' title='" . __('View my resources as a commercial', 'resources') . "'></i>"] = $url;
 
       // Import page
       if (Session::haveRight('plugin_resources_import', READ)) {
          $menu['links']["<i class='fas fa-cog fa-1x' title='" . __('Import configuration', 'resources') . "'></i>"]
-            = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/import.php';
+            = PLUGIN_RESOURCES_WEBDIR.'/front/import.php';
       }
 
       // Config page
       if (Session::haveRight("config", UPDATE)) {
-         $menu['links']['config'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/config.form.php';
+         $menu['links']['config'] = PLUGIN_RESOURCES_WEBDIR.'/front/config.form.php';
       }
 
       // Add menu to class

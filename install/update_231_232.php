@@ -38,7 +38,7 @@ function update231_232() {
    $query = "SELECT *
              FROM `glpi_plugin_resources_accessprofiles`";
 
-   if ($result = $DB->query($query)) {
+   if ($result = $DB->doQuery($query)) {
       if ($DB->numrows($result) > 0) {
          while ($data = $DB->fetchAssoc($result)) {
 
@@ -46,18 +46,18 @@ function update231_232() {
                                                                               comment, allow_resource_creation) 
                           VALUES ('" . $data['entities_id'] . "', '" . $data['is_recursive'] . "', 
                           '" . $data['name'] . "', '" . $data['name'] . "', '" . $data['comment'] . "', '1')";
-            $DB->query($query_add);
+            $DB->doQuery($query_add);
 
             $query_id = "SELECT `id`
                          FROM `glpi_plugin_resources_habilitations`
                          WHERE `name` LIKE '" . $data['name'] . "'";
-            if ($result_id = $DB->query($query_id)) {
+            if ($result_id = $DB->doQuery($query_id)) {
                $id = $DB->result($result_id, 1, 'id');
 
                $query_resource = "SELECT *
                                  FROM `glpi_plugin_resources_resources`
                                  WHERE `plugin_resources_habilitations_id` = '" . $data['id'] . "'";
-               if ($result_resource = $DB->query($query_resource)) {
+               if ($result_resource = $DB->doQuery($query_resource)) {
                   if ($DB->numrows($result_resource) > 0) {
                      while ($data_resource = $DB->fetchAssoc($result_resource)) {
                         if ($data_resource['is_template'] == 0) {
@@ -65,12 +65,12 @@ function update231_232() {
                                              (`plugin_resources_resources_id`, `plugin_resources_habilitations_id`) 
                                              VALUES ('" . $data_resource['id'] . "', '$id')";
 
-                           $DB->query($query_insert);
+                           $DB->doQuery($query_insert);
                         } else {
                            $query_update = "UPDATE glpi_plugin_resources_resources 
                                          SET `plugin_resources_habilitations_id` = '$id'
                                          WHERE `id` = '" . $data_resource['id'] . "'";
-                           $DB->query($query_update);
+                           $DB->doQuery($query_update);
                         }
 
                      }
@@ -84,11 +84,11 @@ function update231_232() {
    }
 
    $query_drop = "DROP TABLE IF EXISTS `glpi_plugin_resources_accessprofiles`;";
-   $DB->query($query_drop);
+   $DB->doQuery($query_drop);
 
    $query_delete_rule = "UPDATE `glpi_ruleactions` SET `field` = 'requiredfields_plugin_resources_habilitations_id'
                           WHERE `glpi_ruleactions`.`field` = 'requiredfields_plugin_resources_accessprofiles_id';";
-   $DB->query($query_delete_rule);
+   $DB->doQuery($query_delete_rule);
 
    return true;
 }

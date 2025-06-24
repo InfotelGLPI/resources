@@ -87,7 +87,6 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
    // Clean text fields
    $values['name']    = stripslashes($values['name']);
-   $values['comment'] = Html::cleanPostForTextArea($values['comment']);
 
    $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
    $values['withtemplate'] = $_POST["withtemplate"];
@@ -110,7 +109,6 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 
       // Clean text fields
       $values['name']    = stripslashes($values['name']);
-      $values['comment'] = Html::cleanPostForTextArea($values['comment']);
 
       $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
       $values['withtemplate'] = $_POST["withtemplate"];

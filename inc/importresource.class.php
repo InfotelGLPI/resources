@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -159,7 +161,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 //      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
 //      $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
 //      if ($p['maybeempty'] && $p['canedit']) {
-//         $output .= "<span class='fas fa-times-circle pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
+//         $output .= "<span class='ti ti-circle-x pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
 //      }
 //
 //      $js = '$(function(){';
@@ -227,7 +229,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       global $DB;
 
       $query = "DELETE FROM `" . self::getTable() . "`";
-      return $DB->query($query);
+      return $DB->doQuery($query);
    }
 
    /**
@@ -608,7 +610,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    function delete(array $input, $force = 0, $history = 1) {
 
       if (!isset($input[self::getIndexName()])) {
-         Html::displayErrorAndDie('Import resources not found');
+          throw new BadRequestHttpException('Import resources not found');
       }
 
       $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
@@ -640,7 +642,7 @@ class PluginResourcesImportResource extends CommonDBTM {
             $this->importFilePage($params);
             break;
          default:
-            Html::displayErrorAndDie('Lost');
+             throw new BadRequestHttpException();
       }
    }
 
@@ -1967,7 +1969,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          ];
 
          if (!$column->getFromDBByCrit($crit)) {
-            Html::displayErrorAndDie("Import column not found");
+             throw new BadRequestHttpException("Import column not found");
          }
 
          $outType = PluginResourcesResource::getDataType($column->getField('resource_column'));
@@ -2175,7 +2177,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $query = "SELECT id FROM " . User::getTable() . ' WHERE CONCAT(firstname," ",realname) LIKE "' . $fullname . '"';
 
 
-      $results = $DB->query($query);
+      $results = $DB->doQuery($query);
       $result = [];
 
       while ($data = $DB->fetchAssoc($results)) {
@@ -2247,7 +2249,7 @@ class PluginResourcesImportResource extends CommonDBTM {
          $query .= $crit[$i];
       }
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       while ($data = $DB->fetchArray($result)) {
          return $data['id'];
@@ -2599,7 +2601,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $query .= ", " . intval($limit);
 
       $resources = [];
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          while ($data = $DB->fetchAssoc($result)) {
             $resources[] = $data;
          }
@@ -2690,7 +2692,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       $query .= " LIMIT " . $start . ", " . $limit;
 
       $resourcesImports = [];
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          while ($data = $DB->fetchAssoc($result)) {
             $resourcesImports[] = $data;
          }
@@ -3008,7 +3010,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       }
 
       $imports = [];
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          while ($data = $DB->fetchAssoc($result)) {
             $imports[] = $data;
          }

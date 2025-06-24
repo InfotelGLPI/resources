@@ -26,6 +26,9 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 if (Session::getCurrentInterface() == 'central') {
@@ -46,7 +49,7 @@ if (($resting->canView() || Session::haveRight("config", UPDATE))) {
    Search::show("PluginResourcesResourceResting");
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'

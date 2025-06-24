@@ -1,4 +1,7 @@
 <?php
+
+use Glpi\Exception\Http\BadRequestHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -26,4 +29,4 @@ if (isset($_POST["add"])) {
    $importResourceDataDBTM->purgeDatabase();
    Html::back();
 }
-Html::displayErrorAndDie('Lost');
+throw new BadRequestHttpException();

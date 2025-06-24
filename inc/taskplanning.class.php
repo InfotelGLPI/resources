@@ -40,7 +40,8 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
    /**
     * @return bool|\booleen
     */
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return (Session::haveRight(self::$rightname, UPDATE));
    }
 
@@ -154,7 +155,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                 FROM `" . $this->getTable() . "`
                 WHERE `plugin_resources_tasks_id` = '$plugin_resources_tasks_id'";
 
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }
@@ -354,7 +355,7 @@ class PluginResourcesTaskPlanning extends CommonDBTM {
                       '$begin' < `end` AND '$end' > `begin` AND `glpi_plugin_resources_tasks`.`is_finished` != 1
                 ORDER BY `begin`";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       if ($DB->numrows($result) > 0) {
          for ($i = 0; $data = $DB->fetchArray($result); $i++) {

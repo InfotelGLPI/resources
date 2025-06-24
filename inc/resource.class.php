@@ -31,7 +31,8 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 use Glpi\Application\View\TemplateRenderer;
-
+use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\DBAL\QueryFunction;
 /**
  * Class PluginResourcesResource
  */
@@ -68,6 +69,7 @@ class PluginResourcesResource extends CommonDBTM {
 
         return _n('Human resource', 'Human resources', $nb, 'resources');
     }
+
 
     static function getIcon() {
         return "fas fa-user-friends";
@@ -117,7 +119,7 @@ class PluginResourcesResource extends CommonDBTM {
         ];
 
         if (!array_key_exists($dataNameID, $dataNames)) {
-            Html::displayErrorAndDie(__("Resource column $dataNameID not found", "resources"));
+            throw new BadRequestHttpException(__("Resource column $dataNameID not found", "resources"));
             return null;
         }
         return $dataNames[$dataNameID];
@@ -151,7 +153,7 @@ class PluginResourcesResource extends CommonDBTM {
         $dataTypes = self::getDataTypes();
 
         if (!array_key_exists($dataNameId, $dataTypes)) {
-            Html::displayErrorAndDie(__("Data Type not found", "resources"));
+            throw new BadRequestHttpException(__("Data Type not found", "resources"));
             return null;
         }
         return $dataTypes[$dataNameId];
@@ -175,7 +177,7 @@ class PluginResourcesResource extends CommonDBTM {
         ];
 
         if (!array_key_exists($dataNameId, $columnNames)) {
-            Html::displayErrorAndDie(__("Resource column name not found", "resources"));
+            throw new BadRequestHttpException(__("Resource column name not found", "resources"));
             return null;
         }
 
@@ -297,7 +299,7 @@ class PluginResourcesResource extends CommonDBTM {
 
         if ($item->getType() == self::class
             && $this->canView()) {
-            return __('Recruiting information', 'resources');
+            return self::createTabEntry(__('Recruiting information', 'resources'));
         }
         return '';
     }
@@ -873,7 +875,7 @@ class PluginResourcesResource extends CommonDBTM {
             $this->addStandardTab(Document_Item::class, $ong, $options);
 
             if (!isset($options['withtemplate']) || empty($options['withtemplate'])) {
-                $this->addStandardTab(Ticket::class, $ong, $options);
+                $this->addStandardTab(Item_Ticket::class, $ong, $options);
                 $this->addStandardTab(Item_Problem::class, $ong, $options);
             }
 
@@ -2381,7 +2383,8 @@ class PluginResourcesResource extends CommonDBTM {
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<div class='next'>";
         echo Html::hidden('withtemplate', ['value' => 2]);
-        echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'first_step', 'class' => 'btn btn-success']);
+        echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'first_step',
+            'class' => 'btn btn-success']);
         echo "</div>";
         echo "</div></div>";
 
@@ -3156,10 +3159,10 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'second_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'second_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -3168,10 +3171,10 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_first_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'second_step_update', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'second_step_update', 'class' => 'btn btn-success']);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
             echo "</div>";
             echo "</div>";
@@ -3260,10 +3263,10 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_five_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_five_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'five_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'five_step', 'class' => 'btn btn-success']);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
             echo "</div>";
             echo "</div></div>";
@@ -3277,7 +3280,7 @@ class PluginResourcesResource extends CommonDBTM {
     }
 
     function wizardEightForm($ID, $options = []) {
-        global $CFG_GLPI;
+
         $tt = [];
         $mandatory = [];
 
@@ -3295,6 +3298,17 @@ class PluginResourcesResource extends CommonDBTM {
         } else {
             $target = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
         }
+        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+
+        echo "<h3><div class='alert alert-secondary' role='alert' >";
+        echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
+        echo __('Resources management', 'resources');
+        echo "</div></h3>";
+
+        echo "<div id ='content'>";
+        echo "<div class='bt-container resources_wizard_resp'> ";
+        echo "<div class='bt-block bt-features' > ";
 
         TemplateRenderer::getInstance()->display('@resources/recruitinginformation.html.twig', [
             'item'   => $this,
@@ -3307,6 +3321,10 @@ class PluginResourcesResource extends CommonDBTM {
                 'candel'       => false,
             ],
         ]);
+
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
 
     }
 
@@ -3370,6 +3388,8 @@ class PluginResourcesResource extends CommonDBTM {
         echo "<div class=\"form-row\">";
         echo "<div class=\"bt-feature col-md-12 \">";
 
+        //TO V11 replace it
+
         $this->displayResourceDocumentForm($ID);
 
         echo "</div></div>";
@@ -3387,10 +3407,10 @@ class PluginResourcesResource extends CommonDBTM {
             echo "<div class=\"form-row\">";
             echo "<div class=\"bt-feature col-md-11\">";
             echo "<div class='preview'>";
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_seven_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_seven_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'seven_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'seven_step', 'class' => 'btn btn-success']);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $this->fields["id"]]);
             echo "</div>";
             echo "</div></div>";
@@ -3474,7 +3494,7 @@ class PluginResourcesResource extends CommonDBTM {
                             AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
                    WHERE `glpi_plugin_resources_resources`.`id` = '$ID' 
                    GROUP BY `glpi_plugin_resources_resources`.`id`";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
             if ($link == 2) {
                 $user = ["name"    => "",
@@ -3487,7 +3507,7 @@ class PluginResourcesResource extends CommonDBTM {
             if ($DB->numrows($result) == 1) {
                 $data     = $DB->fetchAssoc($result);
                 $username = $dbu->formatUserName($data["id"], $data["username"], $data["name"],
-                                                 $data["firstname"], $link);
+                                                 $data["firstname"]);
 
                 if ($link == 2) {
                     $user["name"]    = $username;
@@ -3755,7 +3775,7 @@ class PluginResourcesResource extends CommonDBTM {
                             $pChecklist = new PluginResourcesChecklist();
 
                             $query = "UPDATE " . $pChecklist->getTable() . " SET `is_checked`=1 WHERE `plugin_resources_resources_id`=" . $idResource;
-                            if ($DB->query($query)) {
+                            if ($DB->doQuery($query)) {
                                 $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
                             }
                         } else {
@@ -3895,7 +3915,7 @@ class PluginResourcesResource extends CommonDBTM {
                 $query .= " LIMIT 0," . $CFG_GLPI["dropdown_max"];
             }
         }
-        return $DB->query($query);
+        return $DB->doQuery($query);
     }
 
 
@@ -4756,7 +4776,7 @@ class PluginResourcesResource extends CommonDBTM {
                     $query = "UPDATE `glpi_plugin_resources_checklists`
                          SET `entities_id` = '" . $entities_id . "'
                          WHERE `plugin_resources_resources_id` ='$resources_id'";
-                    $DB->query($query);
+                    $DB->doQuery($query);
                 }
                 $checklistconfig->addChecklistsFromRules($this, PluginResourcesChecklist::RESOURCES_CHECKLIST_TRANSFER);
 
@@ -4872,7 +4892,7 @@ class PluginResourcesResource extends CommonDBTM {
         $cron_status = 0;
 
         $resource      = new self();
-        $query_expired = $resource->queryAlert();
+        $query_expired = $resource->doQueryAlert();
 
         $querys = [Alert::END => $query_expired];
 
@@ -4946,16 +4966,31 @@ class PluginResourcesResource extends CommonDBTM {
         $message     = [];
         $cron_status = 0;
 
-        $query_commercial = $query = "SELECT DISTINCT(`users_id_sales`) 
-                                     FROM `glpi_plugin_resources_resources` 
-                                     WHERE `users_id_sales` != 0
-                                     AND `is_deleted` = 0";
+        $query_commercial = [
+            'SELECT' => [
+                'users_id_sales',
+            ],
+            'DISTINCT'        => true,
+            'FROM' => 'glpi_plugin_resources_resources',
+            'WHERE' => [
+                'is_deleted' => 0,
+                'users_id_sales' => ['<>', 0]
+            ],
+        ];
+
 
         foreach ($DB->request($query_commercial) as $commercial) {
-            $query = "SELECT * 
-                  FROM `glpi_plugin_resources_resources` 
-                  WHERE `users_id_sales` = " . $commercial['users_id_sales'] . " 
-                  AND `is_deleted` = 0";
+
+            $query = [
+                'SELECT' => [
+                    '*',
+                ],
+                'FROM' => 'glpi_plugin_resources_resources',
+                'WHERE' => [
+                    'is_deleted' => 0,
+                    'users_id_sales' => $commercial['users_id_sales']
+                ],
+            ];
 
             $resources = [];
             foreach ($DB->request($query) as $data) {
@@ -5012,12 +5047,20 @@ class PluginResourcesResource extends CommonDBTM {
         $message     = [];
         $cron_status = 1;
 
-        $query_arrival = $query = "SELECT * 
-                                     FROM `glpi_plugin_resources_resources` 
-                                     WHERE `date_begin` IS NOT NULL 
-                                     AND `date_begin` <= NOW()
-                                     AND (`date_end` IS NULL OR `date_end` > NOW())
-                                     AND `is_deleted` = 0";
+        $query_arrival = [
+            'SELECT' => [
+                '*',
+            ],
+            'FROM' => 'glpi_plugin_resources_resources',
+            'WHERE' => [
+                'is_deleted' => 0,
+                'NOT'       => ['date_begin' => 'NULL'],
+                'date_begin' => ['<=', QueryFunction::now()],
+                ['OR' => ['date_end' => 'NULL'],
+                'date_end' => ['>', QueryFunction::now()],
+                ],
+            ],
+        ];
 
         foreach ($DB->request($query_arrival) as $resourceD) {
 
@@ -5032,12 +5075,19 @@ class PluginResourcesResource extends CommonDBTM {
 
         }
 
-        $query_departure = $query = "SELECT * 
-                                     FROM `glpi_plugin_resources_resources` 
-                                     WHERE `date_begin` IS NOT NULL 
-                                     AND `date_begin` <= NOW()
-                                     AND `date_end` < NOW()
-                                     AND `is_deleted` = 0";
+        $query_departure = [
+            'SELECT' => [
+                '*',
+            ],
+            'FROM' => 'glpi_plugin_resources_resources',
+            'WHERE' => [
+                'is_deleted' => 0,
+                'NOT'       => ['date_begin' => 'NULL'],
+                'date_begin' => ['<=', QueryFunction::now()],
+                'date_end' => ['<', QueryFunction::now()]
+            ],
+        ];
+
 
         foreach ($DB->request($query_departure) as $resourceD) {
 
@@ -5325,17 +5375,30 @@ class PluginResourcesResource extends CommonDBTM {
         global $DB;
 
         //Retrieving resource ids for this client
-        $query  = "SELECT *  
-                FROM `glpi_plugin_resources_resources` 
-                LEFT JOIN `glpi_plugin_resources_employees` 
-                  ON `glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_resources_id`
-                WHERE `glpi_plugin_resources_employees`.`plugin_resources_clients_id` = $client_id
-                AND `glpi_plugin_resources_resources`.`is_deleted` = 0";
-        $result = $DB->query($query);
+        $criteria = [
+            'SELECT' => [
+                '*',
+            ],
+            'FROM' => 'glpi_plugin_resources_resources',
+            'LEFT JOIN' => [
+                'glpi_plugin_resources_employees' => [
+                    'ON' => [
+                        'glpi_plugin_resources_employees' => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources' => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                'glpi_plugin_resources_resources.is_deleted' => 0,
+                'glpi_plugin_resources_employees.plugin_resources_clients_id' => $client_id,
+            ],
+        ];
 
         echo "<div align='center'>";
 
-        if ($DB->numrows($result) == 0) {
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) > 0) {
             echo __('No item to display');
         } else {
 
@@ -5350,8 +5413,7 @@ class PluginResourcesResource extends CommonDBTM {
 
             $resource = new PluginResourcesResource();
             $dbu      = new DbUtils();
-
-            foreach ($DB->request($query) as $employee) {
+            foreach ($iterator as $employee) {
                 if ($resource->getFromDB($employee['plugin_resources_resources_id'])) {
                     if (!$resource->fields['is_deleted']) {
                         echo "<tr class='tab_bg_1'>";
@@ -5455,7 +5517,7 @@ class PluginResourcesResource extends CommonDBTM {
         $query .= " " . $join;
         $query .= " " . $where;
 
-        $results = $DB->query($query);
+        $results = $DB->doQuery($query);
 
         while ($data = $results->fetchArray()) {
             return $data['id'];
@@ -5537,12 +5599,12 @@ class PluginResourcesResource extends CommonDBTM {
 
         $pluginResourcesResource = new self();
         if (!$pluginResourcesResource->getFromDB($resourceID)) {
-            Html::displayErrorAndDie("No resource for id " . $resourceID);
+            throw new BadRequestHttpException("No resource for id " . $resourceID);
         }
 
         $pluginResourcesImportResource = new PluginResourcesImportResource();
         if (!$pluginResourcesImportResource->getFromDB($importResourceID)) {
-            Html::displayErrorAndDie("No importResource for id " . $importResourceID);
+            throw new BadRequestHttpException("No importResource for id " . $importResourceID);
         }
 
         $pluginResourcesImportResourceData = new PluginResourcesImportResourceData();
@@ -5612,7 +5674,7 @@ class PluginResourcesResource extends CommonDBTM {
 
         $pluginResourcesResource = new self();
         if (!$pluginResourcesResource->getFromDB($resourceID)) {
-            Html::displayErrorAndDie("No resource for id " . $resourceID);
+            throw new BadRequestHttpException("No resource for id " . $resourceID);
         }
 
         switch ($dataNameID) {
@@ -5729,4 +5791,9 @@ class PluginResourcesResource extends CommonDBTM {
     //         Notepad::class
     //      ];
     //   }
+
+    static function jsGetElementbyID($id)
+    {
+        return "$('#$id')";
+    }
 }

@@ -51,18 +51,10 @@ class PluginResourcesEmployee extends CommonDBTM {
       return _n('Employee', 'Employees', $nb, 'resources');
    }
 
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
+    static function getIcon() {
+        return "ti ti-buildings";
+    }
 
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
-   }
 
    /**
     * Have I the global right to "view" the Object
@@ -73,7 +65,8 @@ class PluginResourcesEmployee extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -83,7 +76,8 @@ class PluginResourcesEmployee extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -108,7 +102,7 @@ class PluginResourcesEmployee extends CommonDBTM {
           && $this->canView()
           && $wizard_employee
       ) {
-         return self::getTypeName(1);
+         return self::createTabEntry(self::getTypeName(1));
       }
       return '';
    }
@@ -135,30 +129,6 @@ class PluginResourcesEmployee extends CommonDBTM {
       return true;
    }
 
-   /**
-    * @param $plugin_resources_resources_id
-    *
-    * @return bool
-    */
-   function getFromDBbyResources($plugin_resources_resources_id) {
-      global $DB;
-
-      $query = "SELECT *
-                FROM `" . $this->getTable() . "`
-                WHERE `plugin_resources_resources_id` = '$plugin_resources_resources_id'";
-
-      if ($result = $DB->query($query)) {
-         if ($DB->numrows($result) != 1) {
-            return false;
-         }
-         $this->fields = $DB->fetchAssoc($result);
-         if (is_array($this->fields) && count($this->fields)) {
-            return true;
-         }
-         return false;
-      }
-      return false;
-   }
 
    /**
     * Prepare input datas for adding the item
@@ -172,7 +142,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
          return false;
       }
-      if ($this->getFromDBbyResources($input['plugin_resources_resources_id'])) {
+      if ($this->getFromDBCrit(['plugin_resources_resources_id' => $input['plugin_resources_resources_id']])) {
          return false;
       }
       return $input;
@@ -191,10 +161,16 @@ class PluginResourcesEmployee extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT *
-                 FROM `glpi_plugin_resources_employees`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
-
+       $query =
+           [
+               'SELECT'    => [
+                   '*',
+               ],
+               'FROM'      => 'glpi_plugin_resources_employees',
+               'WHERE'     => [
+                   'plugin_resources_resources_id'  => $oldid
+               ],
+           ];
       foreach ($DB->request($query) as $data) {
          $employee = new self();
          $employee->add(['plugin_resources_resources_id' => $newid,
@@ -305,10 +281,10 @@ class PluginResourcesEmployee extends CommonDBTM {
                               'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"]);
 
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-            $img = "<i style='color:green' class='fas fa-check-circle' alt=\"".__('OK')."\"></i>";
+            $img = "<i style='color:green' class='ti ti-circle-check' alt=\"".__('OK')."\"></i>";
             $color = "color: green;";
          } else {
-            $img = "<i style='color:red' class='fas fa-times-circle' alt=\"".__('KO')."\"></i>";
+            $img = "<i style='color:red' class='ti ti-circle-x' alt=\"".__('KO')."\"></i>";
             $color = "color: red;";
          }
          echo "</td><td><div id='security_compliance'>";
@@ -447,7 +423,7 @@ class PluginResourcesEmployee extends CommonDBTM {
          echo "<div style='color: green;' id='security_compliance'>";
          if (PluginResourcesClient::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
             echo __('Security compliance', 'resources') . "&nbsp;";
-            echo "<i style='color:green' class='fas fa-check-circle' alt=\"" . __('OK') . "\"></i>";
+            echo "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
          }
          echo "</div>";
          echo "</div>";
@@ -459,10 +435,10 @@ class PluginResourcesEmployee extends CommonDBTM {
             echo Html::hidden('id', ['value' => $ID]);
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo Html::hidden('withtemplate', ['value' => 0]);
-            echo Html::submit(_sx('button', '< Previous', 'resources'), ['name' => 'undo_second_step', 'class' => 'btn btn-primary']);
+            echo Html::submit("< "._sx('button', 'Previous', 'resources'), ['name' => 'undo_second_step', 'class' => 'btn btn-primary']);
             echo "</div>";
             echo "<div class='next'>";
-            echo Html::submit(_sx('button', 'Next >', 'resources'), ['name' => 'third_step', 'class' => 'btn btn-success']);
+            echo Html::submit(_sx('button', 'Next', 'resources')." >", ['name' => 'third_step', 'class' => 'btn btn-success']);
             echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -619,7 +595,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       $query  = "SELECT * 
                FROM `glpi_plugin_resources_employees` 
                WHERE `plugin_resources_resources_id` = '$ID'";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       $pdf->setColumnsSize(100);

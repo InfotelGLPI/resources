@@ -59,7 +59,8 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight('plugin_resources', READ);
    }
 
@@ -69,7 +70,8 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
    }
 
@@ -120,30 +122,25 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
    static function transfer($ID, $entity) {
       global $DB;
 
-      if ($ID>0) {
-         // Not already transfer
-         // Search init item
-         $query = "SELECT *
-                   FROM `glpi_plugin_resources_habilitations`
-                   WHERE `id` = '$ID'";
+       if ($ID > 0) {
+           $table = self::getTable();
+           $iterator = $DB->request([
+               'FROM'   => $table,
+               'WHERE'  => ['id' => $ID]
+           ]);
 
-         if ($result=$DB->query($query)) {
-            if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
-               $input['entities_id']  = $entity;
-               $temp = new self();
-               $newID    = $temp->getID();
-
-               if ($newID<0) {
-                  $newID = $temp->import($input);
+           foreach ($iterator as $data) {
+               $input['name']        = $data['name'];
+               $input['entities_id'] = $entity;
+               $temp                 = new self();
+               $newID                = $temp->getID();
+               if ($newID < 0) {
+                   $newID = $temp->import($input);
                }
 
                return $newID;
-            }
-         }
-      }
+           }
+       }
       return 0;
    }
 
@@ -166,12 +163,22 @@ class PluginResourcesHabilitation extends CommonTreeDropdown {
       if (!$habilitationlevels->getField('number')) {
          $habilitations[''] = Dropdown::EMPTY_VALUE;
       }
-      $dbu   = new DbUtils();
-      $query = "SELECT *
-                FROM `" . $plugin_habilitation->getTable() . "`
-                WHERE `plugin_resources_habilitationlevels_id` = '$plugin_resources_habilitationlevels_id'
-                 " . $dbu->getEntitiesRestrictRequest("AND", $plugin_habilitation->getTable(), "entities_id",
-                                                      $entity, $plugin_habilitation->maybeRecursive());
+
+       $query = [
+           'SELECT' => [
+               '*',
+           ],
+           'FROM' => $plugin_habilitation->getTable(),
+           'WHERE' => [
+               'plugin_resources_habilitationlevels_id' => $plugin_resources_habilitationlevels_id
+           ],
+       ];
+       $query['WHERE'] = $query['WHERE'] + getEntitiesRestrictCriteria(
+               $plugin_habilitation->getTable(),
+               "entities_id",
+               $entity,
+               $plugin_habilitation->maybeRecursive()
+           );
 
       foreach ($DB->request($query) as $habilitation) {
           $habilitations[$habilitation['id']] = $habilitation['name'];

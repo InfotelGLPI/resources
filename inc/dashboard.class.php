@@ -81,7 +81,7 @@ class PluginResourcesDashboard extends CommonGLPI
         switch ($widgetId) {
             case $this->getType() . "1":
                 $query = PluginResourcesChecklist::queryChecklists(true);
-                $checklists = $DB->query($query);
+                $checklists = $DB->doQuery($query);
                 $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
                 $datas = [];
 
@@ -123,7 +123,7 @@ class PluginResourcesDashboard extends CommonGLPI
 
             case $this->getType() . "2":
                 $query = PluginResourcesChecklist::queryChecklists(true, 1);
-                $checklists = $DB->query($query);
+                $checklists = $DB->doQuery($query);
                 $link = Toolbox::getItemTypeFormURL("PluginResourcesResource");
                 $datas = [];
                 if (!empty($checklists)) {

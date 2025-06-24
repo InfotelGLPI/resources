@@ -51,7 +51,11 @@ class PluginResourcesReportConfig extends CommonDBTM {
       return _n('Notification', 'Notifications', $nb);
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-mail";
+    }
+
+    /**
     * Have I the global right to "view" the Object
     *
     * Default is true and check entity if the objet is entity assign
@@ -60,7 +64,8 @@ class PluginResourcesReportConfig extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -70,7 +75,8 @@ class PluginResourcesReportConfig extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -89,7 +95,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
     **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item->getType() == 'PluginResourcesResource' && $this->canView()) {
-         return self::getTypeName(2);
+         return self::createTabEntry(self::getTypeName(2));
       }
       return '';
    }
@@ -171,7 +177,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
 
       $query = "SELECT * FROM `" . $this->getTable() . "`
                   WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "' ";
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }
@@ -197,9 +203,16 @@ class PluginResourcesReportConfig extends CommonDBTM {
    static function cloneItem($oldid, $newid) {
       global $DB;
 
-      $query = "SELECT *
-                 FROM `glpi_plugin_resources_reportconfigs`
-                 WHERE `plugin_resources_resources_id` = '$oldid';";
+       $query =
+           [
+               'SELECT'    => [
+                   '*',
+               ],
+               'FROM'      => 'glpi_plugin_resources_reportconfigs',
+               'WHERE'     => [
+                   'plugin_resources_resources_id'  => $oldid
+               ],
+           ];
 
       foreach ($DB->request($query) as $data) {
          $report = new self();
@@ -328,7 +341,7 @@ class PluginResourcesReportConfig extends CommonDBTM {
                  FROM `glpi_plugin_resources_reportconfigs` ";
       $query .= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`)";
       $query .= " WHERE `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id` = '$ID' LIMIT 1";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       $i       = 0;

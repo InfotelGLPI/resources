@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\BadRequestHttpException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -25,7 +27,11 @@ class PluginResourcesResourceImport extends CommonDBChild {
       return _n('Import', 'Imports', $nb, 'resources');
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-transfer-in";
+    }
+
+    /**
     * Get Tab Name used for itemtype
     *
     * NB : Only called for existing object
@@ -48,7 +54,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
                $dbu->countElementsInTable($table,
                   [self::$items_id => $item->getID()]));
          }
-         return self::getTypeName();
+         return self::createTabEntry(self::getTypeName());
       }
       return '';
    }
@@ -71,7 +77,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
       $pluginResourcesImportColumn = new PluginResourcesImportColumn();
 
       if (!$pluginResourcesImportResource->getFromDB($importID)) {
-         Html::displayErrorAndDie('ImportResource not found');
+          throw new BadRequestHttpException('ImportResource not found');
       }
 
       $resourceInputs = [];
@@ -82,11 +88,11 @@ class PluginResourcesResourceImport extends CommonDBChild {
       foreach ($input['datas'] as $importResourceDataID => $inputValue) {
 
          if (!$pluginResourcesImportResourceData->getFromDB($importResourceDataID)) {
-            Html::displayErrorAndDie('ImportResourceData not found');
+             throw new BadRequestHttpException('ImportResourceData not found');
          }
 
          if (!$pluginResourcesImportColumn->getFromDB($pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id'))) {
-            Html::displayErrorAndDie('ImportColumn not found');
+             throw new BadRequestHttpException('ImportColumn not found');
          }
 
          switch ($pluginResourcesImportColumn->getField('resource_column')) {
@@ -126,13 +132,13 @@ class PluginResourcesResourceImport extends CommonDBChild {
       $resourceID = $resource->add($resourceInputs);
 
       if (!$resourceID) {
-         Html::displayErrorAndDie('Failed to create resources');
+          throw new BadRequestHttpException('Failed to create resources');
       }
 
       foreach ($resourceImportInputs as $resourceImportInput) {
          $resourceImportInput[PluginResourcesResourceImport::$items_id] = $resourceID;
          if (!parent::add($resourceImportInput)) {
-            Html::displayErrorAndDie('Failed to create resourceimports');
+             throw new BadRequestHttpException('Failed to create resourceimports');
          }
       }
    }
@@ -150,11 +156,11 @@ class PluginResourcesResourceImport extends CommonDBChild {
       foreach ($input['datas'] as $importResourceDataID => $inputValue) {
 
          if (!$pluginResourcesImportResourceData->getFromDB($importResourceDataID)) {
-            Html::displayErrorAndDie('ImportResourceData not found');
+             throw new BadRequestHttpException('ImportResourceData not found');
          }
 
          if (!$pluginResourcesImportColumn->getFromDB($pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id'))) {
-            Html::displayErrorAndDie('ImportColumn not found');
+             throw new BadRequestHttpException('ImportColumn not found');
          }
 
          $resourceColumn = $pluginResourcesImportColumn->getField('resource_column');
@@ -175,7 +181,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
                   ];
 
                   if (!parent::update($resourceImportInput)) {
-                     Html::displayErrorAndDie('Error when updating Resource Import');
+                      throw new BadRequestHttpException('Error when updating Resource Import');
                   }
                   // Resource import doesn't exist yet
                } else {
@@ -186,7 +192,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
                   ];
 
                   if (!parent::add($resourceImportInput)) {
-                     Html::displayErrorAndDie('Error when creating Resource Import');
+                      throw new BadRequestHttpException('Error when creating Resource Import');
                   }
                }
                break;
@@ -205,7 +211,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
 
       // Update resource column
       if (!$resource->update($resourceInputs)) {
-         Html::displayErrorAndDie('Error when updating Resource Import');
+          throw new BadRequestHttpException('Error when updating Resource Import');
       }
    }
 

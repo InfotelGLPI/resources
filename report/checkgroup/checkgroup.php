@@ -114,7 +114,7 @@ if ($report->criteriasValidated()) {
    $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 
 
-   $result_resource_user = $DB->query($query_resource_user);
+   $result_resource_user = $DB->doQuery($query_resource_user);
 
    $dataAll = [];
 
@@ -130,7 +130,7 @@ if ($report->criteriasValidated()) {
          $query_resources  = "SELECT `glpi_plugin_resources_resources`.`date_end`
                               FROM `glpi_plugin_resources_resources`
                               WHERE `id` = $resources_id";
-         $result_resources = $DB->query($query_resources);
+         $result_resources = $DB->doQuery($query_resources);
          $date_end         = $DB->result($result_resources, 0, 'date_end');
 
          $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
@@ -138,7 +138,7 @@ if ($report->criteriasValidated()) {
                               LEFT JOIN `glpi_plugin_resources_habilitations` 
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
                               WHERE `plugin_resources_resources_id` = $resources_id";
-         $result_habilitations = $DB->query($query_habilitations);
+         $result_habilitations = $DB->doQuery($query_habilitations);
 
          while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
             $test_hab = explode("-", $data_habilitation['name']);
@@ -157,7 +157,7 @@ if ($report->criteriasValidated()) {
                         FROM `glpi_groups_users` 
                         LEFT JOIN `glpi_groups` ON `glpi_groups`.`id` = `glpi_groups_users`.`groups_id`
                         WHERE `glpi_groups_users`.`users_id` = $users_id";
-         $result_groups = $DB->query($query_groups);
+         $result_groups = $DB->doQuery($query_groups);
          while ($data_group = $DB->fetchAssoc($result_groups)) {
             $test_group_level = explode("-", $data_group['name']);
             if ($filter1->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N0")) {

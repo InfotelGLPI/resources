@@ -142,13 +142,13 @@ function plugin_resources_install()
                     $query = "UPDATE `glpi_plugin_resources_profiles`
                   SET `profiles_id` = '" . $profile["id"] . "'
                   WHERE `id` = '" . $profile["id"] . "';";
-                    $DB->query($query);
+                    $DB->doQuery($query);
                 }
             }
 
             $query = "ALTER TABLE `glpi_plugin_resources_profiles`
                DROP `name` ;";
-            $DB->query($query);
+            $DB->doQuery($query);
 
             $tables = [
                 "glpi_displaypreferences",
@@ -160,7 +160,7 @@ function plugin_resources_install()
 
             foreach ($tables as $table) {
                 $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
-                $DB->query($query);
+                $DB->doQuery($query);
             }
 
             Plugin::migrateItemType(
@@ -216,13 +216,13 @@ function plugin_resources_install()
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.0.sql");
 
             $query = "SELECT * FROM `glpi_plugin_resources_employers`";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             if ($DB->numrows($result) > 0) {
                 while ($data = $DB->fetchArray($result)) {
                     $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
                             SET `completename`= '" . $data["name"] . "'
                             WHERE `id`= '" . $data["id"] . "'";
-                    $DB->query($queryUpdate) or die($DB->error());
+                    $DB->doQuery($queryUpdate) or die($DB->error());
                 }
             }
         }
@@ -314,14 +314,14 @@ function plugin_resources_install()
         if ($DB->tableExists("glpi_plugin_resources_teams")
             && !$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query) or die($DB->error());
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query) or die($DB->error());
         }
         if ($DB->tableExists("glpi_plugin_resources_teams")
             && !$DB->fieldExists("glpi_plugin_resources_teams", "code")) {
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD   `code` varchar(255) collate utf8_unicode_ci default NULL;";
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query) or die($DB->error());
         }
         if (!$DB->tableExists("glpi_plugin_resources_degreegroups")) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.4.sql");
@@ -350,21 +350,21 @@ function plugin_resources_install()
             $query = "DELETE FROM `glpi_plugin_resources_checklists`
                WHERE `plugin_resources_resources_id` ='-1'
                   OR `plugin_resources_resources_id` ='0';";
-            $DB->query($query);
+            $DB->doQuery($query);
 
             // Put realtime in seconds
             if ($DB->fieldExists('glpi_plugin_resources_tasks', 'realtime')) {
                 $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             ADD `actiontime` INT( 11 ) NOT NULL DEFAULT 0 ;";
-                $DB->queryOrDie($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
+                $DB->doQuery($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
 
                 $query = "UPDATE `glpi_plugin_resources_tasks`
                    SET `actiontime` = ROUND(realtime * 3600)";
-                $DB->queryOrDie($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
+                $DB->doQuery($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
 
                 $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             DROP `realtime` ;";
-                $DB->queryOrDie($query, "0.80 DROP realtime in glpi_plugin_resources_tasks");
+                $DB->doQuery($query, "0.80 DROP realtime in glpi_plugin_resources_tasks");
             }
 
             // ADD plannings for tasks
@@ -375,7 +375,7 @@ function plugin_resources_install()
                     $query = "INSERT INTO `glpi_plugin_resources_taskplannings`
                ( `id` , `plugin_resources_tasks_id` , `begin` , `end` )
                VALUES (NULL , '" . $task["id"] . "', '" . $task["date_begin"] . "', '" . $task["date_end"] . "') ;";
-                    $DB->query($query);
+                    $DB->doQuery($query);
                 }
             }
 
@@ -383,7 +383,7 @@ function plugin_resources_install()
 
             $query = "ALTER TABLE `glpi_plugin_resources_tasks`
                DROP `date_begin`, DROP `date_end` ;";
-            $DB->queryOrDie($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
+            $DB->doQuery($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
 
             // ADD tasks
             $PluginResourcesResource = new PluginResourcesResource();
@@ -395,7 +395,7 @@ function plugin_resources_install()
                     $input["entities_id"] = $PluginResourcesResource->fields["entities_id"];
                     $query = "UPDATE `glpi_plugin_resources_tasks`
                SET `entities_id` =  '" . $PluginResourcesResource->fields["entities_id"] . "' WHERE `id` = '" . $tache["id"] . "' ;";
-                    $DB->query($query);
+                    $DB->doQuery($query);
                 }
             }
         }
@@ -408,14 +408,14 @@ function plugin_resources_install()
                     "VALUES (NULL, 'Resources creation', 1, '" . PluginResourcesResource::class . "', '0',
                                              'name,firstname','1',
                                              '1', '1', '',NOW(),NOW());";
-                $DB->queryOrDie($query, " 0.80 Create fieldunicities check");
+                $DB->doQuery($query, " 0.80 Create fieldunicities check");
             }
         }
 
         if ($update171) {
             $query = "SELECT * FROM `glpi_plugin_resources_choices`
       WHERE `itemtype`!= '' GROUP BY `comment`,`itemtype`";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             $number = $DB->numrows($result);
 
             $affectedchoices = [];
@@ -491,7 +491,7 @@ function plugin_resources_install()
                           WHERE `plugin_resources_resources_id` = '" . $val . "'
                           AND `itemtype` = '" . $choice->fields["itemtype"] . "'
                            AND `comment` = '" . addslashes($choice->fields["comment"]) . "';";
-                            $result = $DB->query($query);
+                            $result = $DB->doQuery($query);
                         }
                     }
                 }
@@ -501,11 +501,11 @@ function plugin_resources_install()
    DROP `itemtype`,
    DROP `comment`,
    ADD UNIQUE KEY `unicity` (`plugin_resources_resources_id`,`plugin_resources_choiceitems_id`);";
-            $DB->query($query);
+            $DB->doQuery($query);
 
             $query = "ALTER TABLE `glpi_plugin_resources_choices`
    ADD `comment` text collate utf8_unicode_ci;";
-            $DB->query($query);
+            $DB->doQuery($query);
         }
 
         //0.83 - Drop Matricule
@@ -514,7 +514,7 @@ function plugin_resources_install()
                 "matricule"
             )) {
             $query = "SELECT * FROM `glpi_users`";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             $number = $DB->numrows($result);
 
             if (!empty($number)) {
@@ -528,14 +528,14 @@ function plugin_resources_install()
                     if (!empty($links)) {
                         foreach ($links as $link) {
                             $employee = new PluginResourcesEmployee();
-                            if ($employee->getFromDBbyResources($link["plugin_resources_resources_id"])) {
+                            if ($employee->getFromDBCrit(['plugin_resources_resources_id' => $link['plugin_resources_resources_id']])) {
                                 $matricule = $employee->fields["matricule"];
 
                                 if (isset($matricule) && !empty($matricule)) {
                                     $query = "UPDATE `glpi_users`
                            SET `registration_number` = '" . $matricule . "'
                            WHERE `id` ='" . $link["items_id"] . "'";
-                                    $DB->query($query);
+                                    $DB->doQuery($query);
                                 }
                             }
                         }
@@ -545,7 +545,7 @@ function plugin_resources_install()
 
             $query = "ALTER TABLE `glpi_plugin_resources_employees`
                DROP `matricule` ;";
-            $DB->query($query);
+            $DB->doQuery($query);
         }
 
         if ($DB->tableExists("glpi_plugin_resources_profiles")) {
@@ -554,19 +554,28 @@ function plugin_resources_install()
             foreach ($notepad_tables as $t) {
                 // Migrate data
                 if ($DB->fieldExists($t, 'notepad')) {
-                    $query = "SELECT id, notepad
-                      FROM `$t`
-                      WHERE notepad IS NOT NULL
-                            AND notepad <>'';";
-                    foreach ($DB->request($query) as $data) {
-                        $iq = "INSERT INTO `glpi_notepads`
+                    $iterator = $DB->request([
+                        'SELECT' => [
+                            'notepad',
+                            'id'
+                        ],
+                        'FROM' => $t,
+                        'WHERE' => [
+                            'NOT' => ['notepad' => null],
+                            'notepad' => ['<>', '']
+                        ],
+                    ]);
+                    if (count($iterator) > 0) {
+                        foreach ($iterator as $data) {
+                            $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
                       VALUES ('" . $dbu->getItemTypeForTable($t) . "', '" . $data['id'] . "',
                               '" . addslashes($data['notepad']) . "', NOW(), NOW())";
-                        $DB->queryOrDie($iq, "0.85 migrate notepad data");
+                            $DB->doQuery($iq, "0.85 migrate notepad data");
+                        }
                     }
                     $query = "ALTER TABLE `glpi_plugin_resources_resources` DROP COLUMN `notepad`;";
-                    $DB->query($query);
+                    $DB->doQuery($query);
                 }
             }
         }
@@ -739,7 +748,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->query(
+        $DB->doQuery(
             "DELETE
                   FROM `$table`
                   WHERE `itemtype` LIKE 'PluginResources%'"
@@ -751,7 +760,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->query(
+        $DB->doQuery(
             "DELETE
                   FROM `$table`
                   WHERE `name` LIKE 'PluginResources%'"
@@ -782,27 +791,40 @@ function plugin_resources_uninstall()
         'itemtype' => PluginResourcesResource::class,
         'FIELDS' => 'id'
     ];
-    foreach ($DB->request('glpi_notifications', $options) as $data) {
+    foreach ($DB->request([
+        'FROM' => 'glpi_notifications',
+        'WHERE' => $options]) as $data) {
         $notif->delete($data);
     }
 
     //templates
     $template = new NotificationTemplate();
     $translation = new NotificationTemplateTranslation();
+    $notif_template = new Notification_NotificationTemplate();
     $options = [
         'itemtype' => PluginResourcesResource::class,
         'FIELDS' => 'id'
     ];
-    foreach ($DB->request('glpi_notificationtemplates', $options) as $data) {
+    foreach ($DB->request([
+        'FROM' => 'glpi_notificationtemplates',
+        'WHERE' => $options]) as $data) {
         $options_template = [
             'notificationtemplates_id' => $data['id'],
             'FIELDS' => 'id'
         ];
 
-        foreach ($DB->request('glpi_notificationtemplatetranslations', $options_template) as $data_template) {
+        foreach ($DB->request([
+            'FROM' => 'glpi_notificationtemplatetranslations',
+            'WHERE' => $options_template]) as $data_template) {
             $translation->delete($data_template);
         }
         $template->delete($data);
+
+        foreach ($DB->request([
+            'FROM' => 'glpi_notifications_notificationtemplates',
+            'WHERE' => $options_template]) as $data_template) {
+            $notif_template->delete($data_template);
+        }
     }
 
     if (class_exists(PluginDatainjectionModel::class)) {
@@ -960,7 +982,7 @@ function plugin_resources_getDatabaseRelations()
             "glpi_plugin_resources_employmentstates" => ["glpi_plugin_resources_employments" => "plugin_resources_employmentstates_id"],
             "glpi_plugin_resources_budgettypes" => ["glpi_plugin_resources_budgets" => "plugin_resources_budgettypes_id"],
             "glpi_plugin_resources_budgetvolumes" => ["glpi_plugin_resources_budgets" => "plugin_resources_budgetvolumes_id"],
-            "glpi_plugin_resources_habilitationlevels" => ["glpi_plugin_resources_habilitations" => "plugin_resources_habilitationlevels_id"],
+//            "glpi_plugin_resources_habilitationlevels" => ["glpi_plugin_resources_habilitations" => "plugin_resources_habilitationlevels_id"],
         ];
     } else {
         return [];
@@ -1142,44 +1164,45 @@ function plugin_resources_getAddSearchOptions($itemtype)
  *
  * @return string
  */
-function plugin_resources_addSelect($type, $ID, $num)
-{
-    $searchopt = &Search::getOptions($type);
-    $table = $searchopt[$ID]["table"];
-    $field = $searchopt[$ID]["field"];
-
-
-    // Example of standard Select clause but use it ONLY for specific Select
-    // No need of the function if you do not have specific cases
-    switch ($type) {
-        case "Computer":
-            switch ($table . "." . $field) {
-                case "glpi_plugin_resources_resources.name":
-                    return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`id`, '__NULL__'))
-                   ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
-                    return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`$field`, '__NULL__'), '$#$',`$table`.`id`)
-                  ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
-                    return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
-                    break;
-            }
-            break;
-        default:
-            switch ($table . "." . $field) {
-                case "glpi_plugin_resources_resources.name":
-                    return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
-                    break;
-                case "glpi_plugin_resources_managers.name":
-                case "glpi_plugin_resources_recipients_leaving.name":
-                case "glpi_plugin_resources_recipients.name":
-                case "glpi_plugin_resources_salemanagers.name":
-                    return "`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, `" . $table . "`.`firstname` AS ITEM_" . $num . "_3,`" . $table . "`.`realname` AS ITEM_" . $num . "_4, ";
-                    break;
-            }
-            break;
-    }
-
-    return "";
-}
+//TODO V11
+//function plugin_resources_addSelect($type, $ID, $num)
+//{
+//    $searchopt = Search::getOptions($type);
+//    $table = $searchopt[$ID]["table"];
+//    $field = $searchopt[$ID]["field"];
+//
+//
+//    // Example of standard Select clause but use it ONLY for specific Select
+//    // No need of the function if you do not have specific cases
+//    switch ($type) {
+//        case "Computer":
+//            switch ($table . "." . $field) {
+//                case "glpi_plugin_resources_resources.name":
+//                    return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`id`, '__NULL__'))
+//                   ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
+//                    return " GROUP_CONCAT(DISTINCT CONCAT(IFNULL(`$table`.`$field`, '__NULL__'), '$#$',`$table`.`id`)
+//                  ORDER BY `$table`.`id` SEPARATOR '$$##$$') AS `ITEM_$num`, ";
+//                    return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
+//                    break;
+//            }
+//            break;
+//        default:
+//            switch ($table . "." . $field) {
+//                case "glpi_plugin_resources_resources.name":
+//                    return "`" . $table . "`.`" . $field . "` AS META_$num,`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, ";
+//                    break;
+//                case "glpi_plugin_resources_managers.name":
+//                case "glpi_plugin_resources_recipients_leaving.name":
+//                case "glpi_plugin_resources_recipients.name":
+//                case "glpi_plugin_resources_salemanagers.name":
+//                    return "`" . $table . "`.`" . $field . "` AS ITEM_$num, `" . $table . "`.`id` AS ITEM_" . $num . "_2, `" . $table . "`.`firstname` AS ITEM_" . $num . "_3,`" . $table . "`.`realname` AS ITEM_" . $num . "_4, ";
+//                    break;
+//            }
+//            break;
+//    }
+//
+//    return "";
+//}
 
 /**
  * @param $type
@@ -1254,7 +1277,7 @@ function plugin_resources_addDefaultWhere($type)
  */
 function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
 {
-    $searchopt = &Search::getOptions($type);
+    $searchopt = Search::getOptions($type);
     $table = $searchopt[$ID]["table"];
     $field = $searchopt[$ID]["field"];
 
@@ -1708,7 +1731,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
 {
     global $CFG_GLPI, $DB;
 
-    $searchopt = &Search::getOptions($type);
+    $searchopt = Search::getOptions($type);
     $table = $searchopt[$ID]["table"];
     $field = $searchopt[$ID]["field"];
 
@@ -1741,7 +1764,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                                  FROM `glpi_plugin_resources_tasks`
                                  WHERE `plugin_resources_resources_id` = " . $data['id'] . "
                                  AND `is_deleted` = 0";
-                            $result_tasks = $DB->query($query_tasks);
+                            $result_tasks = $DB->doQuery($query_tasks);
                             $nb_tasks = $DB->result($result_tasks, 0, "nb_tasks");
                             $is_finished = $DB->result($result_tasks, 0, "is_finished");
                             $out .= "&nbsp;(<a href=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?plugin_resources_resources_id=" . $data["id"] . "\">";

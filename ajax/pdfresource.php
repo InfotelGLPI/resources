@@ -65,7 +65,7 @@ if (Plugin::isPluginActive("useditemsexport")) {
             if ($item->maybeDeleted()) {
                $query .= " AND `is_deleted` = 0 ";
             }
-            $result        = $DB->query($query);
+            $result        = $DB->doQuery($query);
             $total_numrows += $DB->numrows($result);
          }
 

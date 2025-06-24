@@ -104,11 +104,11 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
       if (isset($tt->predefined) && count($tt->predefined)) {
          foreach ($tt->predefined as $predeffield => $predefvalue) {
             // Load template data
-            $ticket->fields[$predeffield] = Toolbox::addslashes_deep($predefvalue);
+            $ticket->fields[$predeffield] = $predefvalue;
          }
       }
       $resource->getFromDB($input["id"]);
-      $ticket->fields["name"] =Toolbox::addslashes_deep( __("Departure of",'resources')." ".$resource->fields['name']." ".$resource->fields['firstname']);
+      $ticket->fields["name"] = __("Departure of",'resources')." ".$resource->fields['name']." ".$resource->fields['firstname'];
       $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
 
       $ticket->fields["content"] = $resource->fields['name']." ".$resource->fields['firstname']." ".__("leave on","resources")." ".Html::convDate($input["date_end"]);

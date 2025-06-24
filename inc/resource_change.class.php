@@ -251,16 +251,34 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo __("Current access profile of the resource", "resources");
             echo "</div>";
             echo "<div class=\"bt-feature col-md-4 \">";
-            $query = "SELECT `glpi_plugin_resources_habilitations`.`id` 
-                      FROM `glpi_plugin_resources_resourcehabilitations` 
-                      LEFT JOIN `glpi_plugin_resources_habilitations` 
-                      ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
-                      LEFT JOIN `glpi_plugin_resources_habilitationlevels` 
-                      ON `glpi_plugin_resources_habilitationlevels`.`id` = `glpi_plugin_resources_habilitations`.`plugin_resources_habilitationlevels_id`
-                      WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
-                      AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
+
+             $criteria = [
+                 'SELECT' => [
+                     'glpi_plugin_resources_habilitations.id',
+                 ],
+                 'FROM' => 'glpi_plugin_resources_resourcehabilitations',
+                 'LEFT JOIN' => [
+                     'glpi_plugin_resources_habilitations' => [
+                         'ON' => [
+                             'glpi_plugin_resources_resourcehabilitations' => 'plugin_resources_habilitations_id',
+                             'glpi_plugin_resources_habilitations' => 'id'
+                         ]
+                     ],
+                     'glpi_plugin_resources_habilitationlevels' => [
+                         'ON' => [
+                             'glpi_plugin_resources_habilitations' => 'plugin_resources_habilitationlevels_id',
+                             'glpi_plugin_resources_habilitationlevels' => 'id'
+                         ]
+                     ]
+                 ],
+                 'WHERE' => [
+                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                     'glpi_plugin_resources_habilitationlevels.is_mandatory_creating_resource' => 1,
+                 ],
+             ];
+
             $used  = [];
-            foreach ($DB->request($query) as $data) {
+            foreach ($DB->request($criteria) as $data) {
                echo "&nbsp;" . Dropdown::getDropdownName('glpi_plugin_resources_habilitations', $data['id']) . "<br>";
                $used[] = $data['id'];
             }
@@ -490,7 +508,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
                   plugin_resources_load_button_changeresources_information();
             });";
             echo "function plugin_resources_load_button_changeresources_information(){";
-            $root_doc = PLUGIN_RESOURCES_NOTFULL_WEBDIR;
+            $root_doc = PLUGIN_RESOURCES_WEBDIR;
             echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
                ,{load_button_changeresources:true,action:8,name:$('#textfield_name" . $rand . "').val(),firstname:$('#textfield_firstname" . $rand . "').val(),date_end:$('input[name=\"date_end\"]').val()}
                )";
@@ -990,15 +1008,33 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
 
             $data['content'] .= __("Current access profile of the resource", 'resources') . "&nbsp;:&nbsp;";
-            $query           = "SELECT `glpi_plugin_resources_habilitations`.`id` 
-                      FROM `glpi_plugin_resources_resourcehabilitations` 
-                      LEFT JOIN `glpi_plugin_resources_habilitations` 
-                       ON `glpi_plugin_resources_habilitations`.`id` = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
-                      LEFT JOIN `glpi_plugin_resources_habilitationlevels` 
-                      ON `glpi_plugin_resources_habilitationlevels`.`id` = `glpi_plugin_resources_habilitations`.`plugin_resources_habilitationlevels_id`
-                      WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
-                      AND `glpi_plugin_resources_habilitationlevels`.`is_mandatory_creating_resource` = 1";
-            foreach ($DB->request($query) as $habilitation) {
+
+             $criteria = [
+                 'SELECT' => [
+                     'glpi_plugin_resources_habilitations.id',
+                 ],
+                 'FROM' => 'glpi_plugin_resources_resourcehabilitations',
+                 'LEFT JOIN' => [
+                     'glpi_plugin_resources_habilitations' => [
+                         'ON' => [
+                             'glpi_plugin_resources_resourcehabilitations' => 'plugin_resources_habilitations_id',
+                             'glpi_plugin_resources_habilitations' => 'id'
+                         ]
+                     ],
+                     'glpi_plugin_resources_habilitationlevels' => [
+                         'ON' => [
+                             'glpi_plugin_resources_habilitations' => 'plugin_resources_habilitationlevels_id',
+                             'glpi_plugin_resources_habilitationlevels' => 'id'
+                         ]
+                     ]
+                 ],
+                 'WHERE' => [
+                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                     'glpi_plugin_resources_habilitationlevels.is_mandatory_creating_resource' => 1,
+                 ],
+             ];
+
+            foreach ($DB->request($criteria) as $habilitation) {
                $data['content'] .= Dropdown::getDropdownName('glpi_plugin_resources_habilitations',
                                                              $habilitation['id']) . "\n";
             }
@@ -1477,7 +1513,6 @@ class PluginResourcesResource_Change extends CommonDBTM {
       $input["content"] .= addslashes("\n\n");
       $input['id']      = 0;
       $ticket           = new Ticket();
-      $input            = Toolbox::addslashes_deep($input);
 
       if ($tid = $ticket->add($input)) {
          $msg    = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success

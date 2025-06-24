@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -61,7 +63,7 @@ if (isset($_POST["add"])) {
       $import->display(['id' => $_GET['id']]);
 
    } else {
-      Html::displayRightError();
+       throw new AccessDeniedHttpException();
    }
    Html::footer();
 }

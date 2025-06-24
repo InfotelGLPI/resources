@@ -27,11 +27,13 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 if (isset($_GET["file"])) {
    PluginResourcesResource::sendFile(GLPI_PLUGIN_DOC_DIR."/resources/pictures/".$_GET["file"], $_GET["file"]);
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 

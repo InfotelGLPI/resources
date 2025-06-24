@@ -54,7 +54,11 @@ class PluginResourcesChecklist extends CommonDBTM {
       return _n('Checklist', 'Checklists', $nb, 'resources');
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-checkbox";
+    }
+
+    /**
     * Have I the global right to "view" the Object
     *
     * Default is true and check entity if the objet is entity assign
@@ -63,7 +67,8 @@ class PluginResourcesChecklist extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -73,21 +78,9 @@ class PluginResourcesChecklist extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
-   }
-
-   /**
-    * Clean object veryfing criteria (when a relation is deleted)
-    *
-    * @param $crit array of criteria (should be an index)
-    */
-   public function clean($crit) {
-      global $DB;
-
-      foreach ($DB->request($this->getTable(), $crit) as $data) {
-         $this->delete($data);
-      }
    }
 
    /**
@@ -110,7 +103,7 @@ class PluginResourcesChecklist extends CommonDBTM {
             if ($_SESSION['glpishow_count_on_tabs']) {
                return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
             }
-            return self::getTypeName(2);
+            return self::createTabEntry(self::getTypeName(2));
          }
       }
       return '';
@@ -315,7 +308,6 @@ class PluginResourcesChecklist extends CommonDBTM {
          $input['status']  = Ticket::CLOSED;
          $input['id']      = 0;
          $ticket           = new Ticket();
-         $input            = Toolbox::addslashes_deep($input);
 
          if ($tid = $ticket->add($input)) {
             $msg    = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success
@@ -389,7 +381,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                AND `plugin_resources_contracttypes_id` = '" . $input['plugin_resources_contracttypes_id'] . "' 
                AND `plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "' 
                AND `entities_id` = '" . $input['entities_id'] . "' ";
-      $result        = $DB->query($query);
+      $result        = $DB->doQuery($query);
       $input["rank"] = $DB->result($result, 0, 0) + 1;
 
       return $input;
@@ -431,7 +423,7 @@ class PluginResourcesChecklist extends CommonDBTM {
               FROM `" . $this->getTable() . "`
               WHERE `id` ='" . $input['id'] . "'";
 
-      if ($result = $DB->query($sql)) {
+      if ($result = $DB->doQuery($sql)) {
          if ($DB->numrows($result) == 1) {
             $current_rank = $DB->result($result, 0, 0);
             // Search rules to switch
@@ -457,7 +449,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                   return false;
             }
 
-            if ($result2 = $DB->query($sql2)) {
+            if ($result2 = $DB->doQuery($sql2)) {
                if ($DB->numrows($result2) == 1) {
                   list($other_ID, $new_rank) = $DB->fetchArray($result2);
 
@@ -622,7 +614,7 @@ class PluginResourcesChecklist extends CommonDBTM {
       $isfinished                                  = self::checkifChecklistFinished($values);
 
       if ($isfinished) {
-         $title = "<i style='color:green' class='fas fa-check-circle fa-2x' ></i>";
+         $title = "<i style='color:green' class='ti ti-circle-check fa-2x' ></i>";
       }
       $title .= self::getChecklistType($checklist_type);
       if ($isfinished) {
@@ -1111,7 +1103,7 @@ class PluginResourcesChecklist extends CommonDBTM {
          } else {
             $query = self::queryChecklists(true);
          }
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
          $number = $DB->numrows($result);
 
          if ($number > 0) {
@@ -1185,7 +1177,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                } else {
                   $query_checklists = self::queryListChecklists($data["plugin_resources_resources_id"], self::RESOURCES_CHECKLIST_IN);
                }
-               $result_checklists = $DB->query($query_checklists);
+               $result_checklists = $DB->doQuery($query_checklists);
 
                echo "<table class='tab_cadre' width='100%'>";
                while ($data_checklists = $DB->fetchArray($result_checklists)) {
@@ -1413,7 +1405,7 @@ class PluginResourcesChecklist extends CommonDBTM {
                WHERE `plugin_resources_resources_id` = '$ID' 
                AND `checklist_type` = '$checklist_type' 
                ORDER BY `rank` ";
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       $i = $j = 0;
@@ -1458,7 +1450,7 @@ class PluginResourcesChecklist extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/checklistconfig.php';
+      $plugin_page = PLUGIN_RESOURCES_WEBDIR.'/front/checklistconfig.php';
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -1470,12 +1462,12 @@ class PluginResourcesChecklist extends CommonDBTM {
 
       // Add
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/checklistconfig.form.php?new=1';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_WEBDIR.'/front/checklistconfig.form.php?new=1';
       }
 
       // Config
       if (Session::haveRight("config", UPDATE)) {
-         $menu['options'][$itemtype]['links']['config'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/config.form.php';
+         $menu['options'][$itemtype]['links']['config'] = PLUGIN_RESOURCES_WEBDIR.'/front/config.form.php';
       }
 
       return $menu;

@@ -26,6 +26,9 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
@@ -44,7 +47,7 @@ if (($task->canView() || Session::haveRight("config", UPDATE))) {
 
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

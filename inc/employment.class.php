@@ -57,7 +57,11 @@ class PluginResourcesEmployment extends CommonDBTM {
       return _n('Employment', 'Employments', $nb, 'resources');
    }
 
-   /**
+    static function getIcon() {
+        return "ti ti-briefcase-2";
+    }
+
+    /**
     * Have I the global right to "view" the Object
     *
     * Default is true and check entity if the objet is entity assign
@@ -66,7 +70,8 @@ class PluginResourcesEmployment extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(self::$rightname, READ);
    }
 
@@ -76,7 +81,8 @@ class PluginResourcesEmployment extends CommonDBTM {
     *
     * @return booleen
     **/
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
    }
 
@@ -109,7 +115,7 @@ class PluginResourcesEmployment extends CommonDBTM {
                                         $dbu->countElementsInTable($this->getTable(),
                                                                    ["plugin_resources_resources_id" => $item->getID()]));
          }
-         return self::getTypeName(2);
+         return self::createTabEntry(self::getTypeName(2));
 
       }
       return '';
@@ -514,7 +520,7 @@ class PluginResourcesEmployment extends CommonDBTM {
       $message     = [];
 
       $PluginResourcesEmployment = new PluginResourcesEmployment();
-      $query_expired             = $PluginResourcesEmployment->queryLeavingResources();
+      $query_expired             = $PluginResourcesEmployment->doQueryLeavingResources();
 
       $querys = [Alert::END => $query_expired];
 
@@ -592,7 +598,7 @@ class PluginResourcesEmployment extends CommonDBTM {
     */
    static function getMenuOptions($menu) {
 
-      $plugin_page = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.php';
+      $plugin_page = PLUGIN_RESOURCES_WEBDIR.'/front/employment.php';
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -603,7 +609,7 @@ class PluginResourcesEmployment extends CommonDBTM {
        $menu['options'][$itemtype]['lists_itemtype']  = self::getType();
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_NOTFULL_WEBDIR.'/front/employment.form.php';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RESOURCES_WEBDIR.'/front/employment.form.php';
       }
 
       return $menu;

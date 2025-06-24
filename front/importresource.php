@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -66,7 +68,7 @@ if ($import->canView()) {
    $importResource->displayPageByType($params);
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

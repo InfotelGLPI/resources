@@ -44,7 +44,7 @@ $dbu = new DbUtils();
 
 // Security
 if (!($item = $dbu->getItemForItemtype($_GET['itemtype']))) {
-   exit();
+    throw new \Glpi\Exception\Http\NotFoundHttpException();
 }
 
 $table = $item->getTable();
@@ -195,7 +195,7 @@ if ($item instanceof CommonTreeDropdown) {
              ORDER BY $add_order `completename`
              $LIMIT";
 
-   if ($result = $DB->query($query)) {
+   if ($result = $DB->doQuery($query)) {
       echo "<select class='form-select' id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
              size='1'";
 
@@ -431,7 +431,7 @@ if ($item instanceof CommonTreeDropdown) {
                  $LIMIT";
    }
 
-   if ($result = $DB->query($query)) {
+   if ($result = $DB->doQuery($query)) {
       echo "<select class='form-select' id='dropdown_".$_GET["myname"].$_GET["rand"]."' name='".$_GET['myname']."'
              size='1'";
 

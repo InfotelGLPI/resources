@@ -6,6 +6,7 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    background-color: var(--tblr-bg-surface);
 }
 
 .plugin_resources_date_over_color {
@@ -179,7 +180,7 @@
     z-index: 1;
     text-align: left;
     /*font-size: 12px;*/
-    /*background-color: #ffffff;*/
+    background-color: var(--tblr-bg-surface);
 
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
