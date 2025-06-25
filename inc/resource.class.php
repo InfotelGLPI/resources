@@ -1631,7 +1631,7 @@ class PluginResourcesResource extends CommonDBTM {
                                  _x('button', 'Delete permanently'),
                                  ['id'      => $ID,
                                   'picture' => $this->fields["picture"]],
-                                 'fa-times-circle');
+                                 'ti-circle-x');
         }
         echo "</td></tr>";
 

@@ -27,7 +27,11 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Hooks;
+
 define('PLUGIN_RESOURCES_VERSION', '3.0.7');
+
+global $CFG_GLPI;
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
