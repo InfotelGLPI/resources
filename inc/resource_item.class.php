@@ -984,7 +984,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
       }
 
       if (!$number) {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       } else {
          for ($i = 0; $i < $number; $i++) {
             $type = $DB->result($result, $i, "itemtype");
@@ -1094,7 +1094,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
       $number = $DB->numrows($result);
 
       if (!$number) {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       } else {
          if (Session::isMultiEntitiesMode()) {
             $pdf->setColumnsSize(14, 14, 14, 14, 14, 14, 16);

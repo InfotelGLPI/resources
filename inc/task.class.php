@@ -1212,7 +1212,7 @@ class PluginResourcesTask extends CommonDBTM {
             $j++;
          }
       } else {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       }
 
       $pdf->displaySpace();

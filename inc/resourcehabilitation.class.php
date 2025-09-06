@@ -549,7 +549,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
       $pdf->displayTitle('<b>' . self::getTypeName(2) . '</b>');
 
       if (!$number) {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       } else {
          for ($i = 0; $i < $number; $i++) {
             $habilitaion_id = $DB->result($result, $i, "plugin_resources_habilitations_id");

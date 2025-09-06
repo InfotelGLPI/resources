@@ -4112,7 +4112,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</div>";
 
         } else {
-            echo "<div align='center'>" . __('No item found') . "</div>";
+            echo "<div align='center'>" . __('No results found') . "</div>";
         }
     }
 
@@ -4208,7 +4208,7 @@ class PluginResourcesResource extends CommonDBTM {
             echo "</div>";
 
         } else {
-            echo "<div align='center'>" . __('No item found') . "</div>";
+            echo "<div align='center'>" . __('No results found') . "</div>";
         }
     }
 
@@ -4297,7 +4297,7 @@ class PluginResourcesResource extends CommonDBTM {
                 }
             }
         } else {
-            echo "<div align='center'>" . __('No item found') . "</div>";
+            echo "<div align='center'>" . __('No results found') . "</div>";
         }
     }
 

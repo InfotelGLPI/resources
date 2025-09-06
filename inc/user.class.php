@@ -224,7 +224,7 @@ class PluginResourcesUser extends User {
 
       call_user_func_array([$pdf,"displayTitle"],$titles);
       if (!$number) {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       } else {
          for ($i = 0; $i < $number; $i++) {
             $user = new User();

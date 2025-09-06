@@ -189,7 +189,7 @@ if ($nbtot == 0) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
       Report::title();
    }
-   echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No item found')."</span></div>";
+   echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No results found')."</span></div>";
    Html::footer();
 } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT
            || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {

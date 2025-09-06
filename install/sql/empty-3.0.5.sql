@@ -1145,141 +1145,141 @@ CREATE TABLE `glpi_plugin_resources_candidateorigins`
 
 
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '2', '1', '0');
+VALUES (NULL, 'PluginResourcesResource', '2', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '3', '2', '0');
+VALUES (NULL, 'PluginResourcesResource', '3', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesResource', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '5', '4', '0');
+VALUES (NULL, 'PluginResourcesResource', '5', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '6', '5', '0');
+VALUES (NULL, 'PluginResourcesResource', '6', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResource', '8', '6', '0');
+VALUES (NULL, 'PluginResourcesResource', '8', '6', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesTask', '2', '1', '0');
+VALUES (NULL, 'PluginResourcesTask', '2', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesTask', '3', '2', '0');
+VALUES (NULL, 'PluginResourcesTask', '3', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesTask', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesTask', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesTask', '6', '4', '0');
+VALUES (NULL, 'PluginResourcesTask', '6', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesTask', '7', '5', '0');
+VALUES (NULL, 'PluginResourcesTask', '7', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '34', '1', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '34', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '9', '2', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '9', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '4320', '3', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '4320', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '3', '4', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '3', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '5', '5', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '5', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '10', '6', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '10', '6', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '6', '7', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '6', '7', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '11', '8', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '11', '8', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '4313', '9', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '4313', '9', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '4314', '10', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '4314', '10', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesDirectory', '4316', '11', '0');
+VALUES (NULL, 'PluginResourcesDirectory', '4316', '11', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesChecklistconfig', '2', '1', '0');
+VALUES (NULL, 'PluginResourcesChecklistconfig', '2', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesChecklistconfig', '3', '2', '0');
+VALUES (NULL, 'PluginResourcesChecklistconfig', '3', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesChecklistconfig', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesChecklistconfig', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceResting', '3', '2', '0');
+VALUES (NULL, 'PluginResourcesResourceResting', '3', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceResting', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesResourceResting', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceResting', '5', '4', '0');
+VALUES (NULL, 'PluginResourcesResourceResting', '5', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceResting', '6', '5', '0');
+VALUES (NULL, 'PluginResourcesResourceResting', '6', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceHoliday', '2', '1', '0');
+VALUES (NULL, 'PluginResourcesResourceHoliday', '2', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceHoliday', '3', '2', '0');
+VALUES (NULL, 'PluginResourcesResourceHoliday', '3', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceHoliday', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesResourceHoliday', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesResourceHoliday', '5', '4', '0');
+VALUES (NULL, 'PluginResourcesResourceHoliday', '5', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '9', '1', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '9', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '5', '2', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '5', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '6', '4', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '6', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '7', '5', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '7', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '8', '6', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '8', '6', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesEmployment', '10', '7', '0');
+VALUES (NULL, 'PluginResourcesEmployment', '10', '7', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '6', '1', '0');
+VALUES (NULL, 'PluginResourcesBudget', '6', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '7', '2', '0');
+VALUES (NULL, 'PluginResourcesBudget', '7', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '4', '3', '0');
+VALUES (NULL, 'PluginResourcesBudget', '4', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '3', '4', '0');
+VALUES (NULL, 'PluginResourcesBudget', '3', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '5', '5', '0');
+VALUES (NULL, 'PluginResourcesBudget', '5', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '8', '6', '0');
+VALUES (NULL, 'PluginResourcesBudget', '8', '6', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesBudget', '9', '7', '0');
+VALUES (NULL, 'PluginResourcesBudget', '9', '7', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4350', '1', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4350', '1', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4351', '2', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4351', '2', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4352', '3', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4352', '3', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4353', '4', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4353', '4', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4354', '5', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4354', '5', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4355', '6', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4355', '6', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4356', '7', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4356', '7', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4357', '8', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4357', '8', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4358', '9', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4358', '9', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4359', '10', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4359', '10', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4360', '11', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4360', '11', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4361', '12', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4361', '12', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4362', '13', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4362', '13', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4363', '14', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4363', '14', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4364', '15', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4364', '15', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4365', '16', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4365', '16', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4366', '17', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4366', '17', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4367', '18', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4367', '18', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4368', '19', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4368', '19', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4369', '20', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4369', '20', '0', 'central');
 INSERT INTO `glpi_displaypreferences`
-VALUES (NULL, 'PluginResourcesRecap', '4370', '21', '0');
+VALUES (NULL, 'PluginResourcesRecap', '4370', '21', '0', 'central');
 
 INSERT INTO `glpi_notificationtemplates` (name, itemtype)
 VALUES ('Resources', 'PluginResourcesResource');

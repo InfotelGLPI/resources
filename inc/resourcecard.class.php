@@ -358,7 +358,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
       if ($inv == false) {
          echo "<div class='alert alert-important alert-warning d-flex'>";
-         echo "<b>" . __('No item found') . "</b></div>";
+         echo "<b>" . __('No results found') . "</b></div>";
 
       }
 

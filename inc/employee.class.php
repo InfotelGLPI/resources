@@ -609,7 +609,7 @@ class PluginResourcesEmployee extends CommonDBTM {
       );
 
       if (!$number) {
-         $pdf->displayLine(__('No item found'));
+         $pdf->displayLine(__('No results found'));
       } else {
          for ($i = 0; $i < $number; $i++) {
 
