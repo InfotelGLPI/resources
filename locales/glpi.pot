@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-06 10:02+0000\n"
+"POT-Creation-Date: 2025-09-10 10:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -496,12 +496,12 @@ msgid "Create checklists"
 msgstr ""
 
 #: inc/checklist.class.php:524 inc/checklist.class.php:765
-#: inc/checklistconfig.class.php:108 inc/checklistconfig.class.php:143
+#: inc/checklistconfig.class.php:111 inc/checklistconfig.class.php:147
 #: inc/linkad.class.php:271
 msgid "Important"
 msgstr ""
 
-#: inc/checklist.class.php:533 inc/checklistconfig.class.php:151
+#: inc/checklist.class.php:533 inc/checklistconfig.class.php:155
 #: inc/linkad.class.php:280
 msgid "Link"
 msgstr ""
@@ -599,13 +599,13 @@ msgstr ""
 msgid "No checklist found"
 msgstr ""
 
-#: inc/checklistconfig.class.php:51
+#: inc/checklistconfig.class.php:53
 msgid "Checklist setup"
 msgid_plural "Checklists setup"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/checklistconfig.class.php:365
+#: inc/checklistconfig.class.php:372
 msgid "Generate a rule"
 msgstr ""
 
