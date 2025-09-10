@@ -375,7 +375,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             // Create new Import resource data
             foreach ($datas as $item) {
-               
+
 
 
                $importResourceDataInput = $importResourceData->prepareInput(
@@ -803,9 +803,9 @@ class PluginResourcesImportResource extends CommonDBTM {
          $url = PLUGIN_RESOURCES_WEBDIR. '/ajax/verifyCSVStatistics.php';
 
          $js = "$('#calculate').click(function () {
-                    
+
                     " . $initElemJs . "
-                    
+
                     $('#ajax_loader').show();
                     $.ajax({
                         url: '" . $url . "',
@@ -1288,7 +1288,7 @@ class PluginResourcesImportResource extends CommonDBTM {
                echo sprintf($textInput, $data['value']);
 
                if ($otherIndex == 0) {
-                  echo "<table class='tab_cadrehov' style='margin:0;width:100%;'>";
+                  echo "<table class='tab_cadre_fixe' style='margin:0;width:100%;'>";
                }
 
                echo "<tr>";
@@ -1385,7 +1385,7 @@ class PluginResourcesImportResource extends CommonDBTM {
       echo "<div id='ajax_loader' class=\"ajax_loader hidden\"></div>";
 
       echo "<div align='center'>";
-      echo "<table border='0' class='tab_cadrehov'>";
+      echo "<table border='0' class='tab_cadre_fixe'>";
 
       $params['location'] = $locationOfFiles;
       $params['default'] = $defaultFileSelected;
@@ -1685,7 +1685,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             Html::printPager($start, $nbLines, $_SERVER['PHP_SELF'], $parameters);
 
-            echo "<table border='0' class='tab_cadrehov'>";
+            echo "<table border='0' class='tab_cadre_fixe'>";
 
             $listHeaderParams = [
                'type' => $params['type'],
@@ -2324,7 +2324,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
             Html::printPager($start, $nbOfResources, $_SERVER['PHP_SELF'], $parameters);
 
-            echo "<table border='0' class='tab_cadrehov'>";
+            echo "<table border='0' class='tab_cadre_fixe'>";
 
             $listHeaderParams = [
                'type' => $params['type']
@@ -2618,7 +2618,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    private function showToolTipWithArray($titles, $values, $title = null) {
 
       if (count($titles) == count($values)) {
-         $content = "<table border='0' class='tab_cadrehov'>";
+         $content = "<table border='0' class='tab_cadre_fixe'>";
 
          if (!is_null($title)) {
             $content .= "<tr>";
@@ -2656,7 +2656,7 @@ class PluginResourcesImportResource extends CommonDBTM {
    private function importFilePage($params) {
 
       echo "<div align='center'>";
-      echo "<table border='0' class='tab_cadrehov'>";
+      echo "<table border='0' class='tab_cadre_fixe'>";
 
       $pluginResourcesImport = new PluginResourcesImport();
       $imports = $pluginResourcesImport->find(['is_active' => 1]);
@@ -2865,7 +2865,7 @@ class PluginResourcesImportResource extends CommonDBTM {
 
          echo "<form name='form' method='post' id='import' action ='$formURL' >";
          echo "<div align='center'>";
-         echo "<table border='0' class='tab_cadrehov'>";
+         echo "<table border='0' class='tab_cadre_fixe'>";
 
          echo "<tr class='center'>";
          echo "<td class='center' colspan='100'>";

@@ -242,7 +242,7 @@ class PluginResourcesResourceImport extends CommonDBChild {
 
       echo "<div align='central'>";
 
-      echo "<table class='tab_cadrehov'>";
+      echo "<table class='tab_cadre_fixe'>";
       echo "<tr>" . __("Imported values", 'resources') . "</tr>";
       echo "<tr>";
       echo "<th>" . __("Name") . "</th>";

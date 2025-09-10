@@ -310,8 +310,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
 
          $condition  = $dbu->getEntitiesRestrictCriteria($habilitation_level->getTable(), 'entities_id',$resource->getEntityID(), $habilitation_level->maybeRecursive());
          $levels    = $habilitation_level->find($condition, "name");
-         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -353,7 +353,7 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
                   // check if habilitation is already set for this level
                   $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
-                              LEFT JOIN `glpi_plugin_resources_habilitations` 
+                              LEFT JOIN `glpi_plugin_resources_habilitations`
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
                               WHERE `plugin_resources_resources_id` = $plugin_resources_resources_id
                               AND `plugin_resources_habilitationlevels_id` = $cpt";
@@ -539,8 +539,8 @@ class PluginResourcesResourceHabilitation extends CommonDBTM {
          return false;
       }
 
-      $query  = "SELECT * 
-               FROM `glpi_plugin_resources_resourcehabilitations` 
+      $query  = "SELECT *
+               FROM `glpi_plugin_resources_resourcehabilitations`
                WHERE `plugin_resources_resources_id` = '$ID'";
       $result = $DB->doQuery($query);
       $number = $DB->numrows($result);

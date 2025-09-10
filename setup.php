@@ -35,7 +35,7 @@ global $CFG_GLPI;
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
-   define("PLUGIN_RESOURCES_NOTFULL_DIR", Plugin::getPhpDir("resources",false));
+//   define("PLUGIN_RESOURCES_WEBDIR", Plugin::getPhpDir("resources",false));
     $root = $CFG_GLPI['root_doc'] . '/plugins/resources';
     define("PLUGIN_RESOURCES_WEBDIR", $root);
 }
@@ -112,7 +112,7 @@ function plugin_init_resources() {
 
       if ((Session::haveRight("plugin_resources", READ)
            || Session::haveright("plugin_resources_employee", UPDATE))) {
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_NOTFULL_DIR.'/front/menu.php';
+         $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_WEBDIR.'/front/menu.php';
          $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['resources'] = PluginResourcesResource::getIcon();
       }
 
@@ -147,7 +147,7 @@ function plugin_init_resources() {
       // Resource menu
       if (Session::haveRight("plugin_resources", READ)
           || Session::haveright("plugin_resources_employee", UPDATE)) {
-         $PLUGIN_HOOKS['redirect_page']['resources'] = PLUGIN_RESOURCES_NOTFULL_DIR."/front/resource.form.php";
+         $PLUGIN_HOOKS['redirect_page']['resources'] = PLUGIN_RESOURCES_WEBDIR."/front/resource.form.php";
       }
 
       //

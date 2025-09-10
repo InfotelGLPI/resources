@@ -34,8 +34,8 @@ class PluginResourcesMenu extends CommonDBTM {
    static function showMenu(CommonDBTM $item) {
       global $CFG_GLPI;
 
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<div align='center'>";
 

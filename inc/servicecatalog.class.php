@@ -63,7 +63,7 @@ class PluginResourcesServicecatalog extends CommonGLPI {
    static function getNavBarLink() {
       global $CFG_GLPI;
 
-      return PLUGIN_RESOURCES_NOTFULL_DIR . "/front/menu.php";
+      return PLUGIN_RESOURCES_WEBDIR . "/front/menu.php";
    }
 
    /**

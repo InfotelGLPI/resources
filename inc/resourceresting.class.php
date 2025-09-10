@@ -266,8 +266,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
     */
    function showMenu() {
       global $CFG_GLPI;
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -318,8 +318,8 @@ class PluginResourcesResourceResting extends CommonDBTM {
 
       $this->initForm($ID, $options);
 
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -454,14 +454,14 @@ class PluginResourcesResourceResting extends CommonDBTM {
       global $CFG_GLPI;
 
       $this->initForm($ID, $options);
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert' >";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
       echo __('Resources management', 'resources');
       echo "</div></h3>";
-      
+
       echo "<div id ='content'>";
       echo "<div class='bt-container resources_wizard_resp'> ";
       echo "<div class='bt-block bt-features' > ";

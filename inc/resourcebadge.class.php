@@ -206,8 +206,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    function showMenu() {
       global $CFG_GLPI;
 
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -249,8 +249,8 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    function showWizardForm() {
       global $CFG_GLPI;
 
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-      echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+      echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
       echo "<h3><div class='alert alert-secondary' role='alert'>";
       echo "<i class='fas fa-user-friends'></i>&nbsp;";

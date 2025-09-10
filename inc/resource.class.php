@@ -2347,8 +2347,8 @@ class PluginResourcesResource extends CommonDBTM {
     function wizardFirstForm() {
         global $CFG_GLPI;
 
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -2446,8 +2446,8 @@ class PluginResourcesResource extends CommonDBTM {
         }
         $options["plugin_resources_employers_id"] = 0;
 
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3199,8 +3199,8 @@ class PluginResourcesResource extends CommonDBTM {
         if ($ID > 0) {
             $this->check($ID, READ);
         }
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3298,8 +3298,8 @@ class PluginResourcesResource extends CommonDBTM {
         } else {
             $target = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
         }
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3361,8 +3361,8 @@ class PluginResourcesResource extends CommonDBTM {
             }
         }
 
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3492,7 +3492,7 @@ class PluginResourcesResource extends CommonDBTM {
                       LEFT JOIN `glpi_users`
                         ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
                             AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
-                   WHERE `glpi_plugin_resources_resources`.`id` = '$ID' 
+                   WHERE `glpi_plugin_resources_resources`.`id` = '$ID'
                    GROUP BY `glpi_plugin_resources_resources`.`id`";
             $result = $DB->doQuery($query);
 
@@ -3861,7 +3861,7 @@ class PluginResourcesResource extends CommonDBTM {
             if ($showOnlyLinkedResources) {
                 $query .= "INNER JOIN `glpi_plugin_resources_resources_items`
                         ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`  
+                            = `glpi_plugin_resources_resources`.`id`
                             AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
                       INNER JOIN `glpi_users`
                         ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
@@ -3869,7 +3869,7 @@ class PluginResourcesResource extends CommonDBTM {
             } else {
                 $query .= "LEFT JOIN `glpi_plugin_resources_resources_items`
                         ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id` 
+                            = `glpi_plugin_resources_resources`.`id`
                              AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
                       LEFT JOIN `glpi_users`
                         ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
@@ -4006,8 +4006,8 @@ class PluginResourcesResource extends CommonDBTM {
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -4127,8 +4127,8 @@ class PluginResourcesResource extends CommonDBTM {
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -4224,8 +4224,8 @@ class PluginResourcesResource extends CommonDBTM {
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
             echo "<div align='center'>";
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/css/style_bootstrap_ticket.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -5116,9 +5116,9 @@ class PluginResourcesResource extends CommonDBTM {
 
         $rand = mt_rand();
         Plugin::loadLang('resources');
-        echo Html::css("/public/lib/base.css");
-        echo Html::script("public/lib/base.js");
-        echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR . "/lib/jstree/themes/default/style.min.css");
+        echo Html::css("lib/base.css");
+        echo Html::script("lib/base.js");
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/themes/default/style.min.css");
 
         echo "<div class='alert alert-important alert-info d-flex'>" . __('Select the contract type', 'resources') . "</div><br>";
         echo "<a href='" . $target . "?reset=reset' target='_blank' title=\"" .

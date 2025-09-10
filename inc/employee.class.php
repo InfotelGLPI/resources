@@ -378,8 +378,8 @@ class PluginResourcesEmployee extends CommonDBTM {
 
       if ($employee_spotted && $plugin_resources_resources_id) {
 
-         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_main.css");
-         echo Html::css(PLUGIN_RESOURCES_NOTFULL_DIR."/css/style_bootstrap_ticket.css");
+         echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_main.css");
+         echo Html::css(PLUGIN_RESOURCES_WEBDIR."/css/style_bootstrap_ticket.css");
 
          echo "<h3><div class='alert alert-secondary' role='alert' >";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";
@@ -592,8 +592,8 @@ class PluginResourcesEmployee extends CommonDBTM {
       if (!Session::haveRight("plugin_resources", READ)) {
          return false;
       }
-      $query  = "SELECT * 
-               FROM `glpi_plugin_resources_employees` 
+      $query  = "SELECT *
+               FROM `glpi_plugin_resources_employees`
                WHERE `plugin_resources_resources_id` = '$ID'";
       $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
