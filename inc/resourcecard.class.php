@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Badges\Badge;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -38,7 +40,7 @@ class PluginResourcesResourceCard extends CommonDBTM {
 
    static $rightname = 'plugin_resources';
 
-   static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', 'PluginBadgesBadge'];
+   static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', Badge::class];
 
    /**
     * @param $ID

@@ -163,36 +163,36 @@ function plugin_resources_install()
                 $DB->doQuery($query);
             }
 
-            Plugin::migrateItemType(
-                [
-                    4300 => PluginResourcesResource::class,
-                    4301 => PluginResourcesTask::class,
-                    4303 => PluginResourcesDirectory::class
-                ],
-                [
-                    "glpi_savedsearches",
-                    "glpi_savedsearches_users",
-                    "glpi_displaypreferences",
-                    "glpi_documents_items",
-                    "glpi_infocoms",
-                    "glpi_logs",
-                    "glpi_items_tickets"
-                ],
-                [
-                    "glpi_plugin_resources_resources_items",
-                    "glpi_plugin_resources_choices",
-                    "glpi_plugin_resources_tasks_items"
-                ]
-            );
-
-            Plugin::migrateItemType(
-                [1600 => PluginBadgesBadge::class],
-                [
-                    "glpi_plugin_resources_resources_items",
-                    "glpi_plugin_resources_choices",
-                    "glpi_plugin_resources_tasks_items"
-                ]
-            );
+//            Plugin::migrateItemType(
+//                [
+//                    4300 => PluginResourcesResource::class,
+//                    4301 => PluginResourcesTask::class,
+//                    4303 => PluginResourcesDirectory::class
+//                ],
+//                [
+//                    "glpi_savedsearches",
+//                    "glpi_savedsearches_users",
+//                    "glpi_displaypreferences",
+//                    "glpi_documents_items",
+//                    "glpi_infocoms",
+//                    "glpi_logs",
+//                    "glpi_items_tickets"
+//                ],
+//                [
+//                    "glpi_plugin_resources_resources_items",
+//                    "glpi_plugin_resources_choices",
+//                    "glpi_plugin_resources_tasks_items"
+//                ]
+//            );
+//
+//            Plugin::migrateItemType(
+//                [1600 => Badge::class],
+//                [
+//                    "glpi_plugin_resources_resources_items",
+//                    "glpi_plugin_resources_choices",
+//                    "glpi_plugin_resources_tasks_items"
+//                ]
+//            );
 
             // Add record notification
             include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
@@ -459,7 +459,7 @@ function plugin_resources_install()
                         __('Specific securities groups', 'resources') => '4305',
                         __('Specific distribution lists', 'resources') => '4306',
                         __('Others needs', 'resources') => '4307',
-                        'PluginBadgesBadge' => PluginBadgesBadge::class
+                        Badge::getTypeName(1) => Badge::class
                     ];
 
                     if ($choice->getFromDB($key)) {
@@ -716,7 +716,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->dropTable($table);
+        $DB->dropTable($table, true);
     }
 
     //old versions
@@ -735,7 +735,7 @@ function plugin_resources_uninstall()
     ];
 
     foreach ($tables as $table) {
-        $DB->dropTable($table);
+        $DB->dropTable($table, true);
     }
 
     $tables = [
@@ -1223,22 +1223,22 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
             return $out;
             break;
         case "PluginResourcesRecap" :
-            $out = " LEFT JOIN `glpi_plugin_resources_resources` 
+            $out = " LEFT JOIN `glpi_plugin_resources_resources`
                   ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` " .
-                "AND `glpi_plugin_resources_resources`.`is_deleted` = 0 
+                "AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                 AND `glpi_plugin_resources_resources`.`is_template` = 0) ";
-            $out .= " LEFT JOIN `glpi_plugin_resources_resources_items` 
-                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` 
+            $out .= " LEFT JOIN `glpi_plugin_resources_resources_items`
+                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
                   AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')";
-            $out .= " LEFT JOIN `glpi_users` 
+            $out .= " LEFT JOIN `glpi_users`
                   ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_users`.`is_active` = 1)";
-            $out .= " LEFT JOIN `glpi_plugin_resources_ranks` 
+            $out .= " LEFT JOIN `glpi_plugin_resources_ranks`
                    ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-            $out .= " LEFT JOIN `glpi_plugin_resources_professions` 
+            $out .= " LEFT JOIN `glpi_plugin_resources_professions`
                   ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
-            $out .= " LEFT JOIN `glpi_plugin_resources_professions` AS `glpi_plugin_resources_employmentprofessions` 
+            $out .= " LEFT JOIN `glpi_plugin_resources_professions` AS `glpi_plugin_resources_employmentprofessions`
                   ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_employmentprofessions`.`id`) ";
-            $out .= " LEFT JOIN `glpi_plugin_resources_employers` 
+            $out .= " LEFT JOIN `glpi_plugin_resources_employers`
                   ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
             return $out;
             break;

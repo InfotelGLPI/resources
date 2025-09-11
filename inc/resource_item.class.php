@@ -26,6 +26,9 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use GlpiPlugin\Badges\Badge;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -193,7 +196,7 @@ class PluginResourcesResource_Item extends CommonDBTM {
       global $DB;
 
       $query = "SELECT * FROM `" . $this->getTable() . "` " .
-               "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "' 
+               "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "'
          AND `itemtype` = '" . $itemtype . "'
          AND `items_id` = '" . $items_id . "'";
       if ($result = $DB->doQuery($query)) {
@@ -475,13 +478,13 @@ class PluginResourcesResource_Item extends CommonDBTM {
       $types  = PluginResourcesResource::getTypes();
 
       if (Plugin::isPluginActive("badges")) {
-         $types[] = 'PluginBadgesBadge';
+         $types[] = Badge::class;
       }
 
-      $query  = "SELECT DISTINCT `itemtype` 
-          FROM `glpi_plugin_resources_resources_items` 
-          WHERE `plugin_resources_resources_id` = '$instID' 
-          ORDER BY `itemtype` 
+      $query  = "SELECT DISTINCT `itemtype`
+          FROM `glpi_plugin_resources_resources_items`
+          WHERE `plugin_resources_resources_id` = '$instID'
+          ORDER BY `itemtype`
           LIMIT " . count($types);
       $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
@@ -523,7 +526,7 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
          $js = "$(function(){
              $('#show_items_id$randDropdown').change(function() {
              let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
-               if (item_type == 'Computer') {     
+               if (item_type == 'Computer') {
                   let computer_id = $('#show_items_id$randDropdown :selected').val();
                   $.ajax({
                              url   : '$root_doc/ajax/checkComputerResource.php',
@@ -957,9 +960,9 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
       $pdf->setColumnsSize(100);
       $pdf->displayTitle('<b>' . _n('Associated item', 'Associated items', 2) . '</b>');
 
-      $query  = "SELECT DISTINCT `itemtype` 
-               FROM `glpi_plugin_resources_resources_items` 
-               WHERE `plugin_resources_resources_id` = '$ID' 
+      $query  = "SELECT DISTINCT `itemtype`
+               FROM `glpi_plugin_resources_resources_items`
+               WHERE `plugin_resources_resources_id` = '$ID'
                ORDER BY `itemtype` ";
       $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
@@ -999,8 +1002,8 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
                $query = "SELECT `" . $table . "`.*, `glpi_entities`.`id` AS entity "
                         . " FROM `glpi_plugin_resources_resources_items`, `" . $table
                         . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $table . "`.`entities_id`) "
-                        . " WHERE `" . $table . "`.`id` = `glpi_plugin_resources_resources_items`.`items_id` 
-                  AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type' 
+                        . " WHERE `" . $table . "`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
+                  AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type'
                   AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$ID' ";
                if ($type != 'User') {
                   $query .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', '', $items->maybeRecursive());
@@ -1085,8 +1088,8 @@ $root_doc = PLUGIN_RESOURCES_WEBDIR;
       $query = "SELECT `glpi_plugin_resources_resources`.* "
                . " FROM `glpi_plugin_resources_resources_items`,`glpi_plugin_resources_resources` "
                . " LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `glpi_plugin_resources_resources`.`entities_id`) "
-               . " WHERE `glpi_plugin_resources_resources_items`.`items_id` = '" . $ID . "' 
-         AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $itemtype . "' 
+               . " WHERE `glpi_plugin_resources_resources_items`.`items_id` = '" . $ID . "'
+         AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $itemtype . "'
          AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` "
                . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', '', $PluginResourcesResource->maybeRecursive());
 

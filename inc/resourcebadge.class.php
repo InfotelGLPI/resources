@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Badges\Badge;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -327,7 +329,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
    function loadBadge($plugin_resources_resources_id) {
       global $CFG_GLPI;
 
-      echo "<td>" . PluginBadgesBadge::getTypeName(1) . "</td>";
+      echo "<td>" . Badge::getTypeName(1) . "</td>";
 
       $condition = ["plugin_resources_resources_id" => $plugin_resources_resources_id,
                     "itemtype"                      => 'User'];
@@ -342,7 +344,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       }
 
       echo "<td class='left'>";
-      $rand = PluginBadgesBadge::dropdown(['name'      => 'badges_id',
+      $rand = Badge::dropdown(['name'      => 'badges_id',
                                            'condition' => $crit,
                                            'on_change' => 'plugin_resources_load_badge_restitution()'
                                           ]);
@@ -429,7 +431,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       $input['users_id_recipient']  = Session::getLoginUserID();
       $input['_users_id_requester'] = Session::getLoginUserID();
       $input["items_id"]            = ['PluginResourcesResource' => [$plugin_resources_resources_id],
-                                       'PluginBadgesBadge'       => [$options['badges_id']]];
+                                    Badge::class       => [$options['badges_id']]];
 
       // Compute time_to_resolve if predefined based on create date
       if (isset($predefined['time_to_resolve'])) {
@@ -439,7 +441,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
 
       $input["name"]    = __('Badge restitution', 'resources') . ' : ' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id);
       $input["content"] = __('Badge restitution', 'resources') . ' :' . " " . PluginResourcesResource::getResourceName($plugin_resources_resources_id) . "\n";
-      $input["content"] .= PluginBadgesBadge::getTypeName(1) . ' : ' . " " . Dropdown::getDropdownName('glpi_plugin_badges_badges', $options['badges_id']);
+      $input["content"] .= Badge::getTypeName(1) . ' : ' . " " . Dropdown::getDropdownName('glpi_plugin_badges_badges', $options['badges_id']);
       $input["content"] .= addslashes("\n\n");
       $input['id']      = 0;
       $ticket           = new Ticket();

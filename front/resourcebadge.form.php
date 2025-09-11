@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Badges\Badge;
+
 include('../../../inc/includes.php');
 
 if (Plugin::isPluginActive("badges")) {
@@ -48,7 +50,7 @@ if (Plugin::isPluginActive("badges")) {
    }
 
    $badge = new PluginResourcesResourceBadge();
-   $pluginbadge = new PluginBadgesBadge();
+   $pluginbadge = new Badge();
    if (isset($_POST['add_metademand'])) {
       $badge->check(-1, UPDATE, $_POST);
       $badge->add($_POST);
