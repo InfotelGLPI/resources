@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-10 10:59+0000\n"
+"POT-Creation-Date: 2025-09-11 09:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1788 inc/resource_item.class.php:911
+#: hook.php:1788 inc/resource_item.class.php:914
 msgid "Not defined"
 msgstr ""
 
@@ -162,8 +162,8 @@ msgstr ""
 #: inc/resource.class.php:91 inc/resource.class.php:393
 #: inc/resource.class.php:2203 inc/resource.class.php:3048
 #: inc/resource.class.php:4067 inc/resource_change.class.php:496
-#: inc/resource_item.class.php:853 inc/resource_item.class.php:1108
-#: inc/resource_item.class.php:1118 inc/resourcepdf.class.php:85
+#: inc/resource_item.class.php:856 inc/resource_item.class.php:1111
+#: inc/resource_item.class.php:1121 inc/resourcepdf.class.php:85
 #: inc/rulecontracttype.class.php:257 inc/rulecontracttypehidden.class.php:257
 #: report/checkgroup/checkgroup.php:259
 #: report/checkhabilitation/checkhabilitation.php:214
@@ -196,13 +196,13 @@ msgid "Please activate the plugin"
 msgstr ""
 
 #: front/confighabilitation.form.php:72 front/confighabilitation.form.php:90
-#: front/confighabilitation.form.php:109 front/resourcebadge.form.php:73
-#: front/resourcebadge.form.php:91
+#: front/confighabilitation.form.php:109 front/resourcebadge.form.php:75
+#: front/resourcebadge.form.php:93
 msgid "Please activate the plugin metademand"
 msgstr ""
 
 #: front/confighabilitation.form.php:83 front/confighabilitation.form.php:103
-#: front/resourcebadge.form.php:84
+#: front/resourcebadge.form.php:86
 msgid "No advanced request found"
 msgstr ""
 
@@ -288,11 +288,11 @@ msgstr ""
 msgid "Without contract"
 msgstr ""
 
-#: front/resourcebadge.form.php:62
+#: front/resourcebadge.form.php:64
 msgid "You need rights into badges plugin"
 msgstr ""
 
-#: front/resourcebadge.form.php:118
+#: front/resourcebadge.form.php:120
 msgid "Please activate the plugin badge"
 msgstr ""
 
@@ -475,7 +475,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/checklist.class.php:313 inc/checklist.class.php:692
-#: inc/resource_change.class.php:1518 inc/resourcebadge.class.php:449
+#: inc/resource_change.class.php:1518 inc/resourcebadge.class.php:451
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -571,9 +571,9 @@ msgstr ""
 #: inc/notificationtargetresource.class.php:1411 inc/recap.class.php:212
 #: inc/resource.class.php:90 inc/resource.class.php:386
 #: inc/resource.class.php:2042 inc/resource.class.php:3037
-#: inc/resource_item.class.php:852 inc/resource_item.class.php:1107
-#: inc/resource_item.class.php:1117 inc/resourcecard.class.php:151
-#: inc/resourcecard.class.php:217 inc/resourcepdf.class.php:84
+#: inc/resource_item.class.php:855 inc/resource_item.class.php:1110
+#: inc/resource_item.class.php:1120 inc/resourcecard.class.php:153
+#: inc/resourcecard.class.php:219 inc/resourcepdf.class.php:84
 #: inc/rulecontracttype.class.php:253 inc/rulecontracttypehidden.class.php:253
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:254
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:252
@@ -814,11 +814,11 @@ msgstr ""
 msgid "Remove a super habilitation"
 msgstr ""
 
-#: inc/confighabilitation.class.php:141 inc/resourcebadge.class.php:128
+#: inc/confighabilitation.class.php:141 inc/resourcebadge.class.php:130
 msgid "The current entity is already linked to a meta-demand"
 msgstr ""
 
-#: inc/confighabilitation.class.php:193 inc/resourcebadge.class.php:173
+#: inc/confighabilitation.class.php:193 inc/resourcebadge.class.php:175
 msgid "Meta-demands linked"
 msgstr ""
 
@@ -1390,8 +1390,8 @@ msgstr[1] ""
 msgid "Forced holiday management"
 msgstr ""
 
-#: inc/menu.class.php:161 inc/menu.class.php:162 inc/resourcebadge.class.php:52
-#: inc/resourcebadge.class.php:214 inc/resourcebadge.class.php:257
+#: inc/menu.class.php:161 inc/menu.class.php:162 inc/resourcebadge.class.php:54
+#: inc/resourcebadge.class.php:216 inc/resourcebadge.class.php:259
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -1997,7 +1997,7 @@ msgstr ""
 msgid "Current entity"
 msgstr ""
 
-#: inc/resource.class.php:4316 inc/resource_item.class.php:817
+#: inc/resource.class.php:4316 inc/resource_item.class.php:820
 msgid "Associate a resource"
 msgstr ""
 
@@ -2085,9 +2085,9 @@ msgstr ""
 msgid "Change direction (mutation)"
 msgstr ""
 
-#: inc/resource_change.class.php:125 inc/resourcebadge.class.php:236
-#: inc/resourcebadge.class.php:271 inc/resourcebadge.class.php:440
-#: inc/resourcebadge.class.php:441
+#: inc/resource_change.class.php:125 inc/resourcebadge.class.php:238
+#: inc/resourcebadge.class.php:273 inc/resourcebadge.class.php:442
+#: inc/resourcebadge.class.php:443
 msgid "Badge restitution"
 msgstr ""
 
@@ -2335,35 +2335,35 @@ msgstr ""
 msgid "Managing change actions"
 msgstr ""
 
-#: inc/resource_item.class.php:347
+#: inc/resource_item.class.php:350
 msgid "Modification of the associated user's location"
 msgstr ""
 
-#: inc/resource_item.class.php:515
+#: inc/resource_item.class.php:518
 msgid "This computer is already associated to a resource"
 msgstr ""
 
-#: inc/resource_item.class.php:1075
+#: inc/resource_item.class.php:1078
 msgid "Associated Human Resource"
 msgstr ""
 
-#: inc/resourcebadge.class.php:228
+#: inc/resourcebadge.class.php:230
 msgid "Request new badge"
 msgstr ""
 
-#: inc/resourcebadge.class.php:310
+#: inc/resourcebadge.class.php:312
 msgid "List of badges"
 msgstr ""
 
-#: inc/resourcecard.class.php:91
+#: inc/resourcecard.class.php:93
 msgid "About"
 msgstr ""
 
-#: inc/resourcecard.class.php:92 inc/resourcecard.class.php:260
+#: inc/resourcecard.class.php:94 inc/resourcecard.class.php:262
 msgid "Inventory"
 msgstr ""
 
-#: inc/resourcecard.class.php:134
+#: inc/resourcecard.class.php:136
 msgid "Information, this resource is not linked to a user"
 msgstr ""
 
