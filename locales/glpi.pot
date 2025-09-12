@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 09:41+0000\n"
+"POT-Creation-Date: 2025-09-12 07:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -195,14 +195,14 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: front/confighabilitation.form.php:72 front/confighabilitation.form.php:90
-#: front/confighabilitation.form.php:109 front/resourcebadge.form.php:75
-#: front/resourcebadge.form.php:93
+#: front/confighabilitation.form.php:74 front/confighabilitation.form.php:92
+#: front/confighabilitation.form.php:111 front/resourcebadge.form.php:76
+#: front/resourcebadge.form.php:94
 msgid "Please activate the plugin metademand"
 msgstr ""
 
-#: front/confighabilitation.form.php:83 front/confighabilitation.form.php:103
-#: front/resourcebadge.form.php:86
+#: front/confighabilitation.form.php:85 front/confighabilitation.form.php:105
+#: front/resourcebadge.form.php:87
 msgid "No advanced request found"
 msgstr ""
 
@@ -249,59 +249,59 @@ msgstr ""
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
-#: front/resource.card.form.php:78
+#: front/resource.card.form.php:80
 msgid "Please select a user"
 msgstr ""
 
-#: front/resource.form.php:307
+#: front/resource.form.php:310
 msgid "The checklist is not finished"
 msgstr ""
 
-#: front/resource.form.php:333
+#: front/resource.form.php:336
 msgid "Notification sent"
 msgstr ""
 
-#: front/resource.form.php:335 inc/resource.class.php:4804
+#: front/resource.form.php:338 inc/resource.class.php:4804
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
 
-#: front/resource.php:56 front/resource.php:57 front/resource.php:62
+#: front/resource.php:57 front/resource.php:58 front/resource.php:63
 msgid "View by contract type"
 msgstr ""
 
-#: front/resource.remove.php:99
+#: front/resource.remove.php:101
 msgid "Declaration of resource leaving OK"
 msgstr ""
 
-#: front/resource.remove.php:111
+#: front/resource.remove.php:113
 msgid "Departure of"
 msgstr ""
 
-#: front/resource.remove.php:114
+#: front/resource.remove.php:116
 msgid "leave on"
 msgstr ""
 
-#: front/resource.remove.php:121 inc/contracttype.class.php:248
+#: front/resource.remove.php:123 inc/contracttype.class.php:248
 #: inc/contracttype.class.php:269 inc/contracttypeprofile.class.php:78
 #: inc/resource.class.php:1485 inc/resource.class.php:2519
 msgid "Without contract"
 msgstr ""
 
-#: front/resourcebadge.form.php:64
+#: front/resourcebadge.form.php:65
 msgid "You need rights into badges plugin"
 msgstr ""
 
-#: front/resourcebadge.form.php:120
+#: front/resourcebadge.form.php:121
 msgid "Please activate the plugin badge"
 msgstr ""
 
-#: front/wizard.form.php:125 front/wizard.form.php:394
+#: front/wizard.form.php:127 front/wizard.form.php:396
 #: inc/resource.class.php:1011
 msgid "Required fields are not filled. Please try again."
 msgstr ""
 
-#: front/wizard.form.php:136
+#: front/wizard.form.php:138
 msgid "The start date must be greater than the end date"
 msgstr ""
 
