@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Servicecatalog\Main;
+
 include('../../../inc/includes.php');
 
 $resource             = new PluginResourcesResource();
@@ -47,7 +49,7 @@ if (Session::getCurrentInterface() == 'central') {
 } else {
    //from helpdesk
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesResource::getTypeName(2));
+       Main::showDefaultHeaderHelpdesk(PluginResourcesResource::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -542,7 +544,7 @@ if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

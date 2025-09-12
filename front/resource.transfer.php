@@ -27,13 +27,13 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Servicecatalog\Main;
 
 if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
 } else {
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -60,7 +60,7 @@ if (isset($_POST["transferresources"])) {
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('resources');
+   Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

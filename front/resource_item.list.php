@@ -27,11 +27,13 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Servicecatalog\Main;
+
 include ('../../../inc/includes.php');
 
 //from helpdesk
 if (Plugin::isPluginActive('servicecatalog')) {
-   PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+    Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
 } else {
    Html::helpHeader(PluginResourcesResource::getTypeName(2));
 }
@@ -80,7 +82,7 @@ else if (isset($_POST["deletehelpdeskitem"])) {
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 Html::helpFooter();

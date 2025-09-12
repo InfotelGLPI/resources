@@ -28,6 +28,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Servicecatalog\Main;
 
 include ('../../../inc/includes.php');
 
@@ -36,7 +37,7 @@ if (Session::getCurrentInterface() == 'central') {
    Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
 } else {
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -52,7 +53,7 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('resources');
+   Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

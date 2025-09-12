@@ -26,6 +26,9 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use GlpiPlugin\Servicecatalog\Main;
+
 include('../../../inc/includes.php');
 
 if (!isset($_GET["id"])) {
@@ -357,7 +360,7 @@ else if (isset($_POST["add_checklist"])) {
    } else {
       //from helpdesk
       if (Plugin::isPluginActive('servicecatalog')) {
-         PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2), true);
+         Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2), true);
       } else {
          Html::helpHeader(PluginResourcesResource::getTypeName(2));
       }
@@ -368,7 +371,7 @@ else if (isset($_POST["add_checklist"])) {
    if (Session::getCurrentInterface() != 'central'
        && Plugin::isPluginActive('servicecatalog')) {
 
-      PluginServicecatalogMain::showNavBarFooter('resources');
+      Main::showNavBarFooter('resources');
    }
 
    if (Session::getCurrentInterface() == 'central') {

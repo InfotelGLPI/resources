@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Servicecatalog\Main;
+
 include ('../../../inc/includes.php');
 
 if (Session::getCurrentInterface() == 'central') {
@@ -35,7 +37,7 @@ if (Session::getCurrentInterface() == 'central') {
 } else {
    //from helpdesk
    if (Plugin::isPluginActive('servicecatalog')) {
-      PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+       Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
    } else {
       Html::helpHeader(PluginResourcesResource::getTypeName(2));
    }
@@ -73,7 +75,7 @@ if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_i
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
 
-   PluginServicecatalogMain::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {

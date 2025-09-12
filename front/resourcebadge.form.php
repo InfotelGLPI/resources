@@ -28,6 +28,7 @@
  */
 
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Servicecatalog\Main;
 
 include('../../../inc/includes.php');
 
@@ -39,7 +40,7 @@ if (Plugin::isPluginActive("badges")) {
    } else {
       //from helpdesk
       if (Plugin::isPluginActive('servicecatalog')) {
-         PluginServicecatalogMain::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+          Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
       } else {
          Html::helpHeader(PluginResourcesResource::getTypeName(2));
       }
@@ -105,7 +106,7 @@ if (Plugin::isPluginActive("badges")) {
    if (Session::getCurrentInterface() != 'central'
        && Plugin::isPluginActive('servicecatalog')) {
 
-      PluginServicecatalogMain::showNavBarFooter('resources');
+       Main::showNavBarFooter('resources');
    }
 
    if (Session::getCurrentInterface() == 'central') {
