@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 07:54+0000\n"
+"POT-Creation-Date: 2025-09-13 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,7 +139,7 @@ msgstr ""
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: setup.php:208 inc/metademand.class.php:69
+#: setup.php:210 inc/metademand.class.php:73
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
@@ -475,7 +475,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/checklist.class.php:313 inc/checklist.class.php:692
-#: inc/resource_change.class.php:1518 inc/resourcebadge.class.php:451
+#: inc/resource_change.class.php:1518 inc/resourcebadge.class.php:453
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -700,125 +700,125 @@ msgstr ""
 msgid "CFI - Supplier card"
 msgstr ""
 
-#: inc/config.class.php:107
+#: inc/config.class.php:110
 msgid "Displaying the security block on the resource"
 msgstr ""
 
-#: inc/config.class.php:116
+#: inc/config.class.php:119
 msgid "Security compliance management"
 msgstr ""
 
-#: inc/config.class.php:117
+#: inc/config.class.php:120
 msgid "Display of four additional security fields in the clients"
 msgstr ""
 
-#: inc/config.class.php:118
+#: inc/config.class.php:121
 msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr ""
 
-#: inc/config.class.php:127 inc/profile.class.php:228 inc/profile.class.php:313
+#: inc/config.class.php:130 inc/profile.class.php:228 inc/profile.class.php:313
 msgid "Import external"
 msgstr ""
 
-#: inc/config.class.php:136
+#: inc/config.class.php:139
 msgid "Resource managers selection : only these users with these profiles"
 msgstr ""
 
-#: inc/config.class.php:162
+#: inc/config.class.php:165
 msgid "Sales managers selection : only these users with these profiles"
 msgstr ""
 
-#: inc/config.class.php:181
+#: inc/config.class.php:184
 msgid "Create a ticket with departure"
 msgstr ""
 
-#: inc/config.class.php:191
+#: inc/config.class.php:194
 msgid "Category of departure ticket"
 msgstr ""
 
-#: inc/config.class.php:201
+#: inc/config.class.php:204
 msgid ""
 "All checklist done is mandatory for arrival and departure to close ticket"
 msgstr ""
 
-#: inc/config.class.php:211
+#: inc/config.class.php:214
 msgid "Create or delete user in ldap is mandatory to close ticket"
 msgstr ""
 
-#: inc/config.class.php:221
+#: inc/config.class.php:224
 msgid "If other contract are available don't display without contract"
 msgstr ""
 
-#: inc/config.class.php:231
+#: inc/config.class.php:234
 msgid "Default contract template selected"
 msgstr ""
 
-#: inc/config.class.php:243
+#: inc/config.class.php:246
 msgid "Resource state for working people"
 msgstr ""
 
-#: inc/config.class.php:254
+#: inc/config.class.php:257
 msgid "Resource state for left people"
 msgstr ""
 
-#: inc/config.class.php:264
+#: inc/config.class.php:267
 msgid "Change checklists for resources during a contract change"
 msgstr ""
 
-#: inc/config.class.php:275
+#: inc/config.class.php:278
 msgid "Use metademand for resources changes"
 msgstr ""
 
-#: inc/config.class.php:289
+#: inc/config.class.php:292
 msgid "Use metademand for leaving resources"
 msgstr ""
 
-#: inc/config.class.php:303
+#: inc/config.class.php:306
 msgid "Remove habilitation when update resource"
 msgstr ""
 
-#: inc/config.class.php:312
+#: inc/config.class.php:315
 msgid "Display habilitation resource with dropdown"
 msgstr ""
 
-#: inc/config.class.php:322
+#: inc/config.class.php:325
 msgid "Use service and departement from AD"
 msgstr ""
 
-#: inc/config.class.php:332
+#: inc/config.class.php:335
 msgid "Use secondaries services"
 msgstr ""
 
-#: inc/config.class.php:342
+#: inc/config.class.php:345
 msgid "Hide/Show elements"
 msgstr ""
 
-#: inc/config.class.php:342 inc/menu.class.php:195 inc/menu.class.php:196
+#: inc/config.class.php:345 inc/menu.class.php:195 inc/menu.class.php:196
 #: inc/menu.class.php:403
 msgid "View my resources as a commercial"
 msgstr ""
 
-#: inc/confighabilitation.class.php:54
+#: inc/confighabilitation.class.php:57
 msgid "Super habilitation management"
 msgid_plural "Super habilitations management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/confighabilitation.class.php:91 inc/confighabilitation.class.php:251
-#: inc/confighabilitation.class.php:252
+#: inc/confighabilitation.class.php:94 inc/confighabilitation.class.php:254
+#: inc/confighabilitation.class.php:255
 msgid "Declare a super habilitation"
 msgstr ""
 
-#: inc/confighabilitation.class.php:93 inc/confighabilitation.class.php:259
-#: inc/confighabilitation.class.php:260
+#: inc/confighabilitation.class.php:96 inc/confighabilitation.class.php:262
+#: inc/confighabilitation.class.php:263
 msgid "Remove a super habilitation"
 msgstr ""
 
-#: inc/confighabilitation.class.php:141 inc/resourcebadge.class.php:130
+#: inc/confighabilitation.class.php:144 inc/resourcebadge.class.php:132
 msgid "The current entity is already linked to a meta-demand"
 msgstr ""
 
-#: inc/confighabilitation.class.php:193 inc/resourcebadge.class.php:175
+#: inc/confighabilitation.class.php:196 inc/resourcebadge.class.php:177
 msgid "Meta-demands linked"
 msgstr ""
 
@@ -999,7 +999,7 @@ msgid_plural "Functions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/habilitation.class.php:50 inc/metademand.class.php:152
+#: inc/habilitation.class.php:50 inc/metademand.class.php:154
 #: inc/resourcehabilitation.class.php:52
 msgid "Habilitation"
 msgid_plural "Habilitations"
@@ -1390,8 +1390,8 @@ msgstr[1] ""
 msgid "Forced holiday management"
 msgstr ""
 
-#: inc/menu.class.php:161 inc/menu.class.php:162 inc/resourcebadge.class.php:54
-#: inc/resourcebadge.class.php:216 inc/resourcebadge.class.php:259
+#: inc/menu.class.php:161 inc/menu.class.php:162 inc/resourcebadge.class.php:56
+#: inc/resourcebadge.class.php:218 inc/resourcebadge.class.php:261
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -1464,35 +1464,35 @@ msgstr ""
 msgid "Import configuration"
 msgstr ""
 
-#: inc/metademand.class.php:135
+#: inc/metademand.class.php:137
 msgid "Link a checklist in"
 msgstr ""
 
-#: inc/metademand.class.php:136
+#: inc/metademand.class.php:138
 msgid ""
 "If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 
-#: inc/metademand.class.php:143
+#: inc/metademand.class.php:145
 msgid "Link a checklist out"
 msgstr ""
 
-#: inc/metademand.class.php:144
+#: inc/metademand.class.php:146
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
 msgstr ""
 
-#: inc/metademand.class.php:153
+#: inc/metademand.class.php:155
 msgid ""
 "If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 
-#: inc/metademand.class.php:162
+#: inc/metademand.class.php:164
 msgid "Leaving resource"
 msgstr ""
 
-#: inc/metademand.class.php:163
+#: inc/metademand.class.php:165
 msgid "If yes, the resource will be declared as leaving"
 msgstr ""
 
@@ -2085,9 +2085,9 @@ msgstr ""
 msgid "Change direction (mutation)"
 msgstr ""
 
-#: inc/resource_change.class.php:125 inc/resourcebadge.class.php:238
-#: inc/resourcebadge.class.php:273 inc/resourcebadge.class.php:442
-#: inc/resourcebadge.class.php:443
+#: inc/resource_change.class.php:125 inc/resourcebadge.class.php:240
+#: inc/resourcebadge.class.php:275 inc/resourcebadge.class.php:444
+#: inc/resourcebadge.class.php:445
 msgid "Badge restitution"
 msgstr ""
 
@@ -2347,11 +2347,11 @@ msgstr ""
 msgid "Associated Human Resource"
 msgstr ""
 
-#: inc/resourcebadge.class.php:230
+#: inc/resourcebadge.class.php:232
 msgid "Request new badge"
 msgstr ""
 
-#: inc/resourcebadge.class.php:312
+#: inc/resourcebadge.class.php:314
 msgid "List of badges"
 msgstr ""
 
