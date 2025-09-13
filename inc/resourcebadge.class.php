@@ -28,6 +28,8 @@
  */
 
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Metademands\Metademand;
+use GlpiPlugin\Metademands\Metademand_Resource;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
@@ -88,7 +90,7 @@ class PluginResourcesResourceBadge extends CommonDBTM {
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<a href=\"./resourcebadge.form.php?config\">" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</a>";
+      echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
       echo "</td></tr></table></div>";
       Html::closeForm();
       echo "<br>";
@@ -135,10 +137,10 @@ class PluginResourcesResourceBadge extends CommonDBTM {
                  Toolbox::getItemTypeFormURL('PluginResourcesResourceBadge') . "'>";
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
+            echo "<tr class='tab_bg_1'><th>" . Metademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
-            echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', ['name'   => 'plugin_metademands_metademands_id',
+            echo Metademand::getTypeName(1) . '&nbsp;';
+            Dropdown::show(Metademand::class, ['name'   => 'plugin_metademands_metademands_id',
                                                            'used'   => $used_data,
                                                            'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";

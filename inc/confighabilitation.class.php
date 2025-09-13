@@ -27,6 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Metademands\Metademand;
+use GlpiPlugin\Metademands\Metademand_Resource;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -103,7 +106,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<a href=\"./confighabilitation.form.php?config\">".PluginMetademandsMetademand_Resource::getTypeName(2)."</a>";
+      echo "<a href=\"./confighabilitation.form.php?config\">".Metademand_Resource::getTypeName(2)."</a>";
       echo "</td></tr></table></div>";
       Html::closeForm();
       echo "<br>";
@@ -146,7 +149,7 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
                Toolbox::getItemTypeFormURL('PluginResourcesConfigHabilitation') . "'>";
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='2'>" . PluginMetademandsMetademand_Resource::getTypeName(2) . "</th></tr>";
+            echo "<tr class='tab_bg_1'><th colspan='2'>" . Metademand_Resource::getTypeName(2) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo _n('Action', 'Actions', 1) . '&nbsp;';
             Dropdown::showFromArray('action',
@@ -154,8 +157,8 @@ class PluginResourcesConfigHabilitation extends CommonDBTM {
                      self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)],
                ['used' => $used_data]);
             echo "</td><td>";
-            echo PluginMetademandsMetademand::getTypeName(1) . '&nbsp;';
-            Dropdown::show('PluginMetademandsMetademand', ['name' => 'plugin_metademands_metademands_id',
+            echo Metademand::getTypeName(1) . '&nbsp;';
+            Dropdown::show(Metademand::class, ['name' => 'plugin_metademands_metademands_id',
                                                                 'entity' => $_SESSION['glpiactive_entity']]);
             echo "</td></tr>";
 

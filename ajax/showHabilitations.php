@@ -27,6 +27,11 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Metademands\Form;
+use GlpiPlugin\Metademands\Form_Value;
+use GlpiPlugin\Metademands\Metademand;
+use GlpiPlugin\Metademands\Wizard;
+
 include('../../../inc/includes.php');
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -36,9 +41,9 @@ Session::checkLoginUser();
 
 $KO = false;
 
-$metademands = new PluginMetademandsMetademand();
-$wizard      = new PluginMetademandsWizard();
-$form      = new PluginMetademandsForm();
+$metademands = new Metademand();
+$wizard      = new Wizard();
+$form      = new Form();
 $resForm = $form->find(['plugin_metademands_metademands_id' => $_POST['metademands_id'],'resources_id' => $_POST['value']]);
 if (count($resForm)) {
    foreach ($resForm as $res){
@@ -47,7 +52,7 @@ if (count($resForm)) {
    $form->getFromDB($last);
    unset($_SESSION['plugin_metademands']);
    $metademands->getFromDB($_POST['metademands_id']);
-   PluginMetademandsForm_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
+   Form_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
    $form_name = $form->getField('name');
 
    // Resources id

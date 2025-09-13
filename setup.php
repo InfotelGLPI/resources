@@ -28,6 +28,8 @@
  */
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Behaviors\Common;
+use GlpiPlugin\Behaviors\Rule;
 
 define('PLUGIN_RESOURCES_VERSION', '3.0.7');
 
@@ -127,10 +129,10 @@ function plugin_init_resources() {
          //$PLUGIN_HOOKS['plugin_positions']['PluginResourcesResource']='plugin_resources_positions_pics';
       }
 
-      if (class_exists('PluginBehaviorsCommon')) {
-         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleChecklist::class, 'PluginBehaviorsRule');
-         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttype::class, 'PluginBehaviorsRule');
-         PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttypeHidden::class, 'PluginBehaviorsRule'); // TODO Confirm usefull
+      if (class_exists(Common::class)) {
+          Common::addCloneType(PluginResourcesRuleChecklist::class, Rule::class);
+          Common::addCloneType(PluginResourcesRuleContracttype::class, Rule::class);
+          Common::addCloneType(PluginResourcesRuleContracttypeHidden::class, Rule::class); // TODO Confirm usefull
       }
 
       if (class_exists('PluginTreeviewConfig')) {

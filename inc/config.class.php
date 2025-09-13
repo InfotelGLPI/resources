@@ -26,6 +26,9 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use GlpiPlugin\Metademands\Metademand;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -276,7 +279,7 @@ class PluginResourcesConfig extends CommonDBTM {
             echo "</td>";
             echo "<td>";
 
-            $meta                   = new PluginMetademandsMetademand();
+            $meta                   = new Metademand();
             $options['empty_value'] = true;
             $data                   = $meta->listMetademands(false, $options);
             echo Dropdown::showFromArray('use_meta_for_changes', $data, ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]);
@@ -290,7 +293,7 @@ class PluginResourcesConfig extends CommonDBTM {
             echo "</td>";
             echo "<td>";
 
-            $meta                   = new PluginMetademandsMetademand();
+            $meta                   = new Metademand();
             $options['empty_value'] = true;
             $data                   = $meta->listMetademands(false, $options);
             echo Dropdown::showFromArray('use_meta_for_leave', $data, ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']]);

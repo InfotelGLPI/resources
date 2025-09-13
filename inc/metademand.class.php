@@ -28,6 +28,10 @@
  */
 
 
+use GlpiPlugin\Metademands\Field;
+use GlpiPlugin\Metademands\FieldParameter;
+use GlpiPlugin\Metademands\Config as MetaConfig;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
@@ -90,21 +94,21 @@ class PluginResourcesMetademand extends CommonGLPI
                                         "plugin_metademands_metademands_id"=>$p["plugin_metademands_metademands_id"]])) {
             $linkmeta->getEmpty();
         }
-        $params['checklist_in'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_in"]);
+        $params['checklist_in'] = Field::_unserialize($linkmeta->fields["checklist_in"]);
         if (!isset($params['checklist_in'][$p["nbOpt"]])) {
             $params['checklist_in'] = "";
         } else {
             $params['checklist_in'] = $params['checklist_in'][$p["nbOpt"]];
         }
 
-        $params['checklist_out'] = PluginMetademandsField::_unserialize($linkmeta->fields["checklist_out"]);
+        $params['checklist_out'] = Field::_unserialize($linkmeta->fields["checklist_out"]);
         if (!isset($params['checklist_out'][$p["nbOpt"]])) {
             $params['checklist_out'] = "";
         } else {
             $params['checklist_out'] = $params['checklist_out'][$p["nbOpt"]];
         }
         if (isset($linkmeta->fields["habilitation"])) {
-            $params['habilitation'] = PluginMetademandsField::_unserialize($linkmeta->fields["habilitation"]);
+            $params['habilitation'] = Field::_unserialize($linkmeta->fields["habilitation"]);
             if (!isset($params['habilitation'][$p["nbOpt"]])) {
                 $params['habilitation'] = "";
             } else {
@@ -116,8 +120,6 @@ class PluginResourcesMetademand extends CommonGLPI
         }
         if (!isset($params['is_leaving_resource'])) {
             $params['is_leaving_resource'] = "";
-        } else {
-            $params['is_leaving_resource'] = $params['is_leaving_resource'];
         }
 
         return $params;
@@ -179,13 +181,13 @@ class PluginResourcesMetademand extends CommonGLPI
             $input["check_value"] = $_POST["check_value"];
             $linkmeta             = new PluginResourcesLinkmetademand();
             if (isset($_POST["checklist_in"])) {
-                $input["checklist_in"] = PluginMetademandsFieldParameter::_serialize($_POST["checklist_in"]);
+                $input["checklist_in"] = FieldParameter::_serialize($_POST["checklist_in"]);
             }
             if (isset($_POST["checklist_out"])) {
-                $input["checklist_out"] = PluginMetademandsFieldParameter::_serialize($_POST["checklist_out"]);
+                $input["checklist_out"] = FieldParameter::_serialize($_POST["checklist_out"]);
             }
             if (isset($_POST["habilitation"])) {
-                $input["habilitation"] = PluginMetademandsFieldParameter::_serialize($_POST["habilitation"]);
+                $input["habilitation"] = FieldParameter::_serialize($_POST["habilitation"]);
             }
             if (isset($_POST["is_leaving_resource"])) {
                 $input["is_leaving_resource"] = $_POST["is_leaving_resource"];
@@ -221,7 +223,7 @@ class PluginResourcesMetademand extends CommonGLPI
         $values = $p["values"];
         $line = $p["line"];
         $config = new PluginResourcesConfig();
-        $config_data = PluginMetademandsConfig::getInstance();
+        $config_data = MetaConfig::getInstance();
         if (plugin::isPluginActive('resources')) {
             if (isset($options["resources_id"])) {
                 $checklistConfig = new PluginResourcesChecklistconfig();
@@ -236,10 +238,10 @@ class PluginResourcesMetademand extends CommonGLPI
                         if (isset($values["fields"]) && is_array($values["fields"]) && array_key_exists($v["id"], $values["fields"])) {
                             $Pfield = new PluginResourcesLinkmetademand();
                             if ($Pfield->getFromDBByCrit(["plugin_metademands_fields_id"=>$v["id"]])) {
-                                $checkvalues =  PluginMetademandsField::_unserialize($Pfield->fields["check_value"]);
-                                $checklist_in =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_in"]);
-                                $checklist_out =  PluginMetademandsField::_unserialize($Pfield->fields["checklist_out"]);
-                                $habilitation =  PluginMetademandsField::_unserialize($Pfield->fields["habilitation"]);
+                                $checkvalues =  Field::_unserialize($Pfield->fields["check_value"]);
+                                $checklist_in =  Field::_unserialize($Pfield->fields["checklist_in"]);
+                                $checklist_out =  Field::_unserialize($Pfield->fields["checklist_out"]);
+                                $habilitation =  Field::_unserialize($Pfield->fields["habilitation"]);
                                 $is_leaving_resource =  $Pfield->fields["is_leaving_resource"]??0;
                                 if (isset($checkvalues) && is_array($checkvalues)) {
                                     foreach ($checkvalues as $k => $checkvalue) {
