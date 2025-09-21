@@ -3940,7 +3940,7 @@ class PluginResourcesResource extends CommonDBTM {
 
         echo "<div align='center'><table class='tab_cadre_fixe'>";
         if ($add) {
-            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Choose a template') . " - " . self::getTypeName(2) . "</th>";
+            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Choose a template', 'resources') . " - " . self::getTypeName(2) . "</th>";
         } else {
             echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Templates') . " - " . self::getTypeName(2) . "</th>";
         }
@@ -3992,7 +3992,7 @@ class PluginResourcesResource extends CommonDBTM {
         if (!$add) {
             echo "<tr>";
             echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
-            echo "<b><a href=\"$target?withtemplate=1\">" . __('Add a template...') . "</a></b>";
+            echo "<b><a href=\"$target?withtemplate=1\">" . __('Add a template') . "</a></b>";
             echo "</td>";
             echo "</tr>";
         }

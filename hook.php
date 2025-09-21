@@ -788,8 +788,7 @@ function plugin_resources_uninstall()
     $notif = new Notification();
 
     $options = [
-        'itemtype' => PluginResourcesResource::class,
-        'FIELDS' => 'id'
+        'itemtype' => PluginResourcesResource::class
     ];
     foreach ($DB->request([
         'FROM' => 'glpi_notifications',
@@ -802,15 +801,13 @@ function plugin_resources_uninstall()
     $translation = new NotificationTemplateTranslation();
     $notif_template = new Notification_NotificationTemplate();
     $options = [
-        'itemtype' => PluginResourcesResource::class,
-        'FIELDS' => 'id'
+        'itemtype' => PluginResourcesResource::class
     ];
     foreach ($DB->request([
         'FROM' => 'glpi_notificationtemplates',
         'WHERE' => $options]) as $data) {
         $options_template = [
-            'notificationtemplates_id' => $data['id'],
-            'FIELDS' => 'id'
+            'notificationtemplates_id' => $data['id']
         ];
 
         foreach ($DB->request([

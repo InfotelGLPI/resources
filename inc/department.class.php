@@ -97,9 +97,6 @@ class PluginResourcesDepartment extends CommonDropdown {
    function displaySpecificTypeField($ID, $field = [], array $options = []) {
 
       switch ($field['type']) {
-         //         case 'dropdownRollbacks' :
-         //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
-         //            break;
          case 'dropdownEmployers' :
             $this->getFromDB($ID);
             PluginResourcesEmployer::dropdown(["name" => "plugin_resources_employers_id","value"=>$this->fields["plugin_resources_employers_id"]]);
