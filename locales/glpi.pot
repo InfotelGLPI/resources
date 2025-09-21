@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 09:24+0000\n"
+"POT-Creation-Date: 2025-09-21 14:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Others needs"
 msgstr ""
 
-#: hook.php:1091 inc/notificationtargetresource.class.php:442
+#: hook.php:1088 inc/notificationtargetresource.class.php:442
 #: inc/notificationtargetresource.class.php:521
 #: inc/notificationtargetresource.class.php:664
 #: inc/notificationtargetresource.class.php:718
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Declared as leaving"
 msgstr ""
 
-#: hook.php:1098 inc/department.class.php:86 inc/department.class.php:118
+#: hook.php:1095 inc/department.class.php:86 inc/department.class.php:115
 #: inc/employer.class.php:48 inc/employment.class.php:213
 #: inc/employment.class.php:294
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:64
@@ -70,13 +70,13 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1102 inc/client.class.php:46
+#: hook.php:1099 inc/client.class.php:46
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1107 inc/directory.class.php:200
+#: hook.php:1104 inc/directory.class.php:200
 #: inc/notificationtargetresource.class.php:92
 #: inc/notificationtargetresource.class.php:430
 #: inc/notificationtargetresource.class.php:509
@@ -93,7 +93,7 @@ msgstr[1] ""
 msgid "Resource manager"
 msgstr ""
 
-#: hook.php:1120 inc/notificationtargetresource.class.php:95
+#: hook.php:1117 inc/notificationtargetresource.class.php:95
 #: inc/notificationtargetresource.class.php:441
 #: inc/notificationtargetresource.class.php:520
 #: inc/notificationtargetresource.class.php:671
@@ -104,7 +104,7 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:1128 inc/leavinginformation.class.php:339
+#: hook.php:1125 inc/leavinginformation.class.php:339
 #: inc/leavinginformation.class.php:488
 #: inc/notificationtargetresource.class.php:93
 #: inc/notificationtargetresource.class.php:117
@@ -119,27 +119,27 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:1788 inc/resource_item.class.php:914
+#: hook.php:1785 inc/resource_item.class.php:914
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:2058
+#: hook.php:2055
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:2098 hook.php:2145 inc/linkad.class.php:742
+#: hook.php:2095 hook.php:2142 inc/linkad.class.php:742
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:2116 inc/linkad.class.php:744
+#: hook.php:2113 inc/linkad.class.php:744
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2163
+#: hook.php:2160
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: setup.php:210 inc/metademand.class.php:73
+#: setup.php:215 inc/metademand.class.php:73
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
@@ -1978,6 +1978,10 @@ msgstr ""
 
 #: inc/resource.class.php:3381
 msgid "Add documents to the resource"
+msgstr ""
+
+#: inc/resource.class.php:3943
+msgid "Choose a template"
 msgstr ""
 
 #: inc/resource.class.php:4167
