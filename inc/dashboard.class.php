@@ -27,6 +27,10 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Mydashboard\Datatable;
+use GlpiPlugin\Mydashboard\Menu;
+use GlpiPlugin\Mydashboard\Widget;
+
 /**
  * Class PluginResourcesDashboard
  */
@@ -56,12 +60,12 @@ class PluginResourcesDashboard extends CommonGLPI
     public function getWidgetsForItem()
     {
         $widgets = [
-            PluginMydashboardMenu::$USERS => [
+            Menu::$USERS => [
                 $this->getType() . "1" => ["title" => __('New resource - checklist needs to verificated', 'resources'),
-                                           "type"    => PluginMydashboardWidget::$TABLE,
+                                           "type"    => Widget::$TABLE,
                                            "comment" => ""],
                 $this->getType() . "2" => ["title" => __('Leaving resource - checklist needs to verificated', 'resources'),
-                                           "type"    => PluginMydashboardWidget::$TABLE,
+                                           "type"    => Widget::$TABLE,
                                            "comment" => ""],
             ],
         ];
@@ -72,7 +76,7 @@ class PluginResourcesDashboard extends CommonGLPI
     /**
      * @param $widgetId
      *
-     * @return \PluginMydashboardDatatable
+     * @return Datatable
      */
     public function getWidgetContentForItem($widgetId)
     {
@@ -112,7 +116,7 @@ class PluginResourcesDashboard extends CommonGLPI
 
                 $headers = [PluginResourcesResource::getTypeName(1), __('Arrival date', 'resources'), __('Entity'), __('Location'), PluginResourcesContractType::getTypeName(1)];
 
-                $widget = new PluginMydashboardDatatable();
+                $widget = new Datatable();
                 $widget->setTabNames($headers);
                 $widget->setTabDatas($datas);
             //               $widget->setOption("bSort", false);
@@ -152,7 +156,7 @@ class PluginResourcesDashboard extends CommonGLPI
                 }
                 $headers = [PluginResourcesResource::getTypeName(1), __('Departure date', 'resources'), __('Entity'), __('Location'), PluginResourcesContractType::getTypeName(1)];
 
-                $widget = new PluginMydashboardDatatable();
+                $widget = new Datatable();
                 $widget->setTabNames($headers);
                 $widget->setTabDatas($datas);
             //               $widget->setOption("bSort", false);

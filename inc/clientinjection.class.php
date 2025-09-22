@@ -37,19 +37,10 @@ if (!defined('GLPI_ROOT')) {
 class PluginResourcesClientInjection extends PluginResourcesClient
    implements PluginDatainjectionInjectionInterface {
 
-   /**
-    * Return the table used to store this object
-    *
-    * @param string $classname Force class (to avoid late_binding on inheritance)
-    *
-    * @return string
-    **/
-   static function getTable($classname = null) {
-
-      $parenttype = get_parent_class();
-      return $parenttype::getTable();
-
-   }
+    public static function getTable($classname = null)
+    {
+        return PluginResourcesClient::getTable();
+    }
 
    /**
     * @return bool
@@ -84,17 +75,6 @@ class PluginResourcesClientInjection extends PluginResourcesClient
       return $tab;
    }
 
-   /**
-    * Standard method to delete an object into glpi
-    * WILL BE INTEGRATED INTO THE CORE IN 0.80
-    * @param fields fields to add into glpi
-    * @param options options used during creation
-    */
-   function deleteObject($values = [], $options = []) {
-      $lib = new PluginDatainjectionCommonInjectionLib($this, $values, $options);
-      $lib->deleteObject();
-      return $lib->getInjectionResults();
-   }
 
    /**
     * Standard method to add an object into glpi
