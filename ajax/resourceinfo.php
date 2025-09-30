@@ -27,18 +27,17 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 switch ($_POST['action']) {
-   case 'groupEntity':
-      if (isset($_POST["entities_id"])) {
-         echo __('Group')."&nbsp;";
-         Dropdown::show('Group', ['entity' => $_POST["entities_id"], 'entity_sons' => true]);
-      }
-      break;
+    case 'groupEntity':
+        if (isset($_POST["entities_id"])) {
+            echo __('Group') . "&nbsp;";
+            Dropdown::show('Group', ['entity' => $_POST["entities_id"], 'entity_sons' => true]);
+        }
+        break;
 }
 

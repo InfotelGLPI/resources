@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -28,6 +29,61 @@
  */
 
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Resources\Adconfig;
+use GlpiPlugin\Resources\Budget;
+use GlpiPlugin\Resources\BudgetType;
+use GlpiPlugin\Resources\BudgetVolume;
+use GlpiPlugin\Resources\BusinessUnit;
+use GlpiPlugin\Resources\Checklist;
+use GlpiPlugin\Resources\Checklistconfig;
+use GlpiPlugin\Resources\Choice;
+use GlpiPlugin\Resources\ChoiceItem;
+use GlpiPlugin\Resources\Client;
+use GlpiPlugin\Resources\ClientInjection;
+use GlpiPlugin\Resources\ContractType;
+use GlpiPlugin\Resources\ContractNature;
+use GlpiPlugin\Resources\Cost;
+use GlpiPlugin\Resources\DegreeGroup;
+use GlpiPlugin\Resources\Department;
+use GlpiPlugin\Resources\Destination;
+use GlpiPlugin\Resources\Employee;
+use GlpiPlugin\Resources\Employer;
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\EmploymentState;
+use GlpiPlugin\Resources\Habilitation;
+use GlpiPlugin\Resources\HabilitationInjection;
+use GlpiPlugin\Resources\HabilitationLevel;
+use GlpiPlugin\Resources\ImportResource;
+use GlpiPlugin\Resources\LeavingReason;
+use GlpiPlugin\Resources\LinkAd;
+use GlpiPlugin\Resources\NotificationTargetResource;
+use GlpiPlugin\Resources\Profession;
+use GlpiPlugin\Resources\ProfessionCategory;
+use GlpiPlugin\Resources\ProfessionLine;
+use GlpiPlugin\Resources\Profile;
+use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Recap;
+use GlpiPlugin\Resources\RecruitingSource;
+use GlpiPlugin\Resources\ResignationReason;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Item;
+use GlpiPlugin\Resources\ResourceFunction;
+use GlpiPlugin\Resources\ResourceHoliday;
+use GlpiPlugin\Resources\ResourceInjection;
+use GlpiPlugin\Resources\ResourceResting;
+use GlpiPlugin\Resources\ResourceSituation;
+use GlpiPlugin\Resources\ResourceSpeciality;
+use GlpiPlugin\Resources\ResourceState;
+use GlpiPlugin\Resources\Role;
+use GlpiPlugin\Resources\RuleChecklist;
+use GlpiPlugin\Resources\RuleContracttype;
+use GlpiPlugin\Resources\RuleContracttypeHidden;
+use GlpiPlugin\Resources\Service;
+use GlpiPlugin\Resources\Task;
+use GlpiPlugin\Resources\TaskPlanning;
+use GlpiPlugin\Resources\TaskType;
+use GlpiPlugin\Resources\Team;
+use GlpiPlugin\Resources\WorkProfile;
 
 /**
  * @return bool
@@ -36,15 +92,15 @@ function plugin_resources_install()
 {
     global $DB;
 
-    foreach (glob(PLUGIN_RESOURCES_DIR . '/inc/*.php') as $file) {
-        if (!preg_match('/resourceinjection/', $file)
-            && !preg_match('/clientinjection/', $file)
-            && !preg_match('/habilitationinjection/', $file)
-            && !preg_match('/resourcepdf/', $file)
-            && !preg_match('/datecriteria/', $file)) {
-            include_once($file);
-        }
-    }
+    //    foreach (glob(PLUGIN_RESOURCES_DIR . '/src/*.php') as $file) {
+    //        if (!preg_match('/Resourceinjection/', $file)
+    //            && !preg_match('/Clientinjection/', $file)
+    //            && !preg_match('/Habilitationinjection/', $file)
+    //            && !preg_match('/Resourcepdf/', $file)
+    //            && !preg_match('/Datecriteria/', $file)) {
+    //            include_once($file);
+    //        }
+    //    }
 
     $update = false;
     $update78 = false;
@@ -56,7 +112,7 @@ function plugin_resources_install()
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
         $install = true;
-        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-3.0.5.sql");
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-4.0.0.sql");
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
@@ -74,8 +130,8 @@ function plugin_resources_install()
         $DB->doQuery($query) or die($DB->error());
 
         // Add record notification
-        include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-        call_user_func([PluginResourcesNotificationTargetResource::class, 'install']);
+        //        include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+        call_user_func([NotificationTargetResource::class, 'install']);
     } else {
         if ($DB->tableExists("glpi_plugin_resources")
             && !$DB->tableExists("glpi_plugin_resources_employee")) {
@@ -157,7 +213,7 @@ function plugin_resources_install()
                 "glpi_documents_items",
                 "glpi_savedsearches",
                 "glpi_logs",
-                "glpi_items_tickets"
+                "glpi_items_tickets",
             ];
 
             foreach ($tables as $table) {
@@ -165,46 +221,46 @@ function plugin_resources_install()
                 $DB->doQuery($query);
             }
 
-//            Plugin::migrateItemType(
-//                [
-//                    4300 => PluginResourcesResource::class,
-//                    4301 => PluginResourcesTask::class,
-//                    4303 => PluginResourcesDirectory::class
-//                ],
-//                [
-//                    "glpi_savedsearches",
-//                    "glpi_savedsearches_users",
-//                    "glpi_displaypreferences",
-//                    "glpi_documents_items",
-//                    "glpi_infocoms",
-//                    "glpi_logs",
-//                    "glpi_items_tickets"
-//                ],
-//                [
-//                    "glpi_plugin_resources_resources_items",
-//                    "glpi_plugin_resources_choices",
-//                    "glpi_plugin_resources_tasks_items"
-//                ]
-//            );
-//
-//            Plugin::migrateItemType(
-//                [1600 => Badge::class],
-//                [
-//                    "glpi_plugin_resources_resources_items",
-//                    "glpi_plugin_resources_choices",
-//                    "glpi_plugin_resources_tasks_items"
-//                ]
-//            );
+            //            Plugin::migrateItemType(
+            //                [
+            //                    4300 => Resource::class,
+            //                    4301 => Task::class,
+            //                    4303 => Directory::class
+            //                ],
+            //                [
+            //                    "glpi_savedsearches",
+            //                    "glpi_savedsearches_users",
+            //                    "glpi_displaypreferences",
+            //                    "glpi_documents_items",
+            //                    "glpi_infocoms",
+            //                    "glpi_logs",
+            //                    "glpi_items_tickets"
+            //                ],
+            //                [
+            //                    "glpi_plugin_resources_resources_items",
+            //                    "glpi_plugin_resources_choices",
+            //                    "glpi_plugin_resources_tasks_items"
+            //                ]
+            //            );
+            //
+            //            Plugin::migrateItemType(
+            //                [1600 => Badge::class],
+            //                [
+            //                    "glpi_plugin_resources_resources_items",
+            //                    "glpi_plugin_resources_choices",
+            //                    "glpi_plugin_resources_tasks_items"
+            //                ]
+            //            );
 
             // Add record notification
-            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-            call_user_func([PluginResourcesNotificationTargetResource::class, 'update78']);
+            //            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+            call_user_func([NotificationTargetResource::class, 'update78']);
         }
 
         if ($update80) {
             // Add record notification
-            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-            call_user_func([PluginResourcesNotificationTargetResource::class, 'update80']);
+            //            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+            call_user_func([NotificationTargetResource::class, 'update80']);
         }
 
         //Version 1.7.1
@@ -231,9 +287,9 @@ function plugin_resources_install()
 
         //Version 1.9.1
         if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists(
-                "glpi_plugin_resources_ranks",
-                "begin_date"
-            )) {
+            "glpi_plugin_resources_ranks",
+            "begin_date"
+        )) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.1.sql");
         }
 
@@ -242,8 +298,8 @@ function plugin_resources_install()
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.3.sql");
 
             // Add record notification
-            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-            call_user_func(["PluginResourcesNotificationTargetResource", 'update203']);
+            //            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+            call_user_func([NotificationTargetResource::class, 'update203']);
         }
 
         //Version 2.0.4
@@ -251,19 +307,19 @@ function plugin_resources_install()
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.0.4.sql");
 
             // Add record notification
-            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-            call_user_func(["PluginResourcesNotificationTargetResource", 'update204']);
+            //            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+            call_user_func([NotificationTargetResource::class, 'update204']);
         }
 
         //Version 2.3.1
         if (!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists(
-                "glpi_plugin_resources_resourcebadges"
-            )) {
+            "glpi_plugin_resources_resourcebadges"
+        )) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.1.sql");
 
             // Add record notification
-            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-            call_user_func(["PluginResourcesNotificationTargetResource", 'update231']);
+            //            include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
+            call_user_func([NotificationTargetResource::class, 'update231']);
         }
 
         //Version 2.3.2
@@ -337,7 +393,7 @@ function plugin_resources_install()
             $restrict = ["plugin_resources_resources_id" => -1];
 
             $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
-            $PluginResourcesChecklistconfig = new PluginResourcesChecklistconfig();
+            $Checklistconfig = new Checklistconfig();
             if (!empty($checklists)) {
                 foreach ($checklists as $checklist) {
                     $values["name"] = addslashes($checklist["name"]);
@@ -345,7 +401,7 @@ function plugin_resources_install()
                     $values["comment"] = addslashes($checklist["comment"]);
                     $values["tag"] = $checklist["tag"];
                     $values["entities_id"] = $checklist["entities_id"];
-                    $PluginResourcesChecklistconfig->add($values);
+                    $Checklistconfig->add($values);
                 }
             }
 
@@ -388,26 +444,26 @@ function plugin_resources_install()
             $DB->doQuery($query, "0.80 Drop date_begin and date_end in glpi_plugin_resources_tasks");
 
             // ADD tasks
-            $PluginResourcesResource = new PluginResourcesResource();
+            $Resource = new Resource();
             $dbu = new DbUtils();
             $taches = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
             if (!empty($taches)) {
                 foreach ($taches as $tache) {
-                    $PluginResourcesResource->getFromDB($tache["plugin_resources_resources_id"]);
-                    $input["entities_id"] = $PluginResourcesResource->fields["entities_id"];
+                    $Resource->getFromDB($tache["plugin_resources_resources_id"]);
+                    $input["entities_id"] = $Resource->fields["entities_id"];
                     $query = "UPDATE `glpi_plugin_resources_tasks`
-               SET `entities_id` =  '" . $PluginResourcesResource->fields["entities_id"] . "' WHERE `id` = '" . $tache["id"] . "' ;";
+               SET `entities_id` =  '" . $Resource->fields["entities_id"] . "' WHERE `id` = '" . $tache["id"] . "' ;";
                     $DB->doQuery($query);
                 }
             }
         }
 
         if ($install || $update80) {
-            $restrict = ["itemtype" => PluginResourcesResource::class];
+            $restrict = ["itemtype" => Resource::class];
             $unicities = $dbu->getAllDataFromTable("glpi_fieldunicities", $restrict);
             if (empty($unicities)) {
-                $query = "INSERT INTO `glpi_fieldunicities`" .
-                    "VALUES (NULL, 'Resources creation', 1, '" . PluginResourcesResource::class . "', '0',
+                $query = "INSERT INTO `glpi_fieldunicities`"
+                    . "VALUES (NULL, 'Resources creation', 1, '" . Resource::class . "', '0',
                                              'name,firstname','1',
                                              '1', '1', '',NOW(),NOW());";
                 $DB->doQuery($query, " 0.80 Create fieldunicities check");
@@ -426,7 +482,7 @@ function plugin_resources_install()
                 while ($data = $DB->fetchAssoc($result)) {
                     $restrictaffected = [
                         "itemtype" => $data['raw']["ITEMtype"],
-                        "comment" => addslashes($data["comment"])
+                        "comment" => addslashes($data["comment"]),
                     ];
                     $affected = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
 
@@ -444,8 +500,8 @@ function plugin_resources_install()
             if (!empty($affectedchoices)) {
                 foreach ($affectedchoices as $key => $ressources) {
                     $i++;
-                    $choice = new PluginResourcesChoice();
-                    $choice_item = new PluginResourcesChoiceItem();
+                    $choice = new Choice();
+                    $choice_item = new ChoiceItem();
 
                     $types = [
                         __('Computer') => Computer::class,
@@ -461,7 +517,7 @@ function plugin_resources_install()
                         __('Specific securities groups', 'resources') => '4305',
                         __('Specific distribution lists', 'resources') => '4306',
                         __('Others needs', 'resources') => '4307',
-                        Badge::getTypeName(1) => Badge::class
+                        Badge::getTypeName(1) => Badge::class,
                     ];
 
                     if ($choice->getFromDB($key)) {
@@ -512,9 +568,9 @@ function plugin_resources_install()
 
         //0.83 - Drop Matricule
         if ($DB->tableExists("glpi_plugin_resources_employees") && $DB->fieldExists(
-                "glpi_plugin_resources_employees",
-                "matricule"
-            )) {
+            "glpi_plugin_resources_employees",
+            "matricule"
+        )) {
             $query = "SELECT * FROM `glpi_users`";
             $result = $DB->doQuery($query);
             $number = $DB->numrows($result);
@@ -523,14 +579,16 @@ function plugin_resources_install()
                 while ($data = $DB->fetchAssoc($result)) {
                     $restrict = [
                         "items_id" => $data["id"],
-                        "itemtype" => 'User'
+                        "itemtype" => 'User',
                     ];
                     $links = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
 
                     if (!empty($links)) {
                         foreach ($links as $link) {
-                            $employee = new PluginResourcesEmployee();
-                            if ($employee->getFromDBCrit(['plugin_resources_resources_id' => $link['plugin_resources_resources_id']])) {
+                            $employee = new Employee();
+                            if ($employee->getFromDBByCrit(
+                                ['plugin_resources_resources_id' => $link['plugin_resources_resources_id']]
+                            )) {
                                 $matricule = $employee->fields["matricule"];
 
                                 if (isset($matricule) && !empty($matricule)) {
@@ -559,12 +617,12 @@ function plugin_resources_install()
                     $iterator = $DB->request([
                         'SELECT' => [
                             'notepad',
-                            'id'
+                            'id',
                         ],
                         'FROM' => $t,
                         'WHERE' => [
                             'NOT' => ['notepad' => null],
-                            'notepad' => ['<>', '']
+                            'notepad' => ['<>', ''],
                         ],
                     ]);
                     if (count($iterator) > 0) {
@@ -582,6 +640,11 @@ function plugin_resources_install()
             }
         }
     }
+    //Version 4.0.0
+    if (!$DB->tableExists("glpi_plugin_resources_resourcefunctions")) {
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.0.sql");
+    }
+
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     if (!is_dir($rep_files_resources)) {
         mkdir($rep_files_resources);
@@ -603,36 +666,36 @@ function plugin_resources_install()
         mkdir($rep_files_resources . "/import/verify");
     }
 
-    CronTask::Register(PluginResourcesResource::class, 'Resources', DAY_TIMESTAMP);
-    CronTask::Register(PluginResourcesTask::class, 'ResourcesTask', DAY_TIMESTAMP);
-    CronTask::Register(PluginResourcesChecklist::class, 'ResourcesChecklist', DAY_TIMESTAMP);
+    CronTask::Register(Resource::class, 'Resources', DAY_TIMESTAMP);
+    CronTask::Register(Task::class, 'ResourcesTask', DAY_TIMESTAMP);
+    CronTask::Register(Checklist::class, 'ResourcesChecklist', DAY_TIMESTAMP);
     CronTask::Register(
-        PluginResourcesEmployment::class,
+        Employment::class,
         'ResourcesLeaving',
         DAY_TIMESTAMP,
         ['state' => CronTask::STATE_DISABLE]
     );
     CronTask::Register(
-        PluginResourcesResource::class,
+        Resource::class,
         'AlertCommercialManager',
         MONTH_TIMESTAMP,
         ['state' => CronTask::STATE_DISABLE]
     );
     CronTask::Register(
-        PluginResourcesImportResource::class,
+        ImportResource::class,
         'ResourceImport',
         MONTH_TIMESTAMP,
         ['state' => CronTask::STATE_DISABLE]
     );
     CronTask::Register(
-        PluginResourcesResource::class,
+        Resource::class,
         'UpdateResourcesState',
         DAY_TIMESTAMP,
         ['state' => CronTask::STATE_DISABLE]
     );
 
-    PluginResourcesProfile::initProfile();
-    PluginResourcesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+    Profile::initProfile();
+    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     $migration = new Migration("2.3.0");
     $migration->dropTable('glpi_plugin_resources_profiles');
     return true;
@@ -697,7 +760,7 @@ function plugin_resources_uninstall()
         "glpi_plugin_resources_resourceimports",
         "glpi_plugin_resources_adconfigs",
         "glpi_plugin_resources_roles",
-        "glpi_plugin_resources_functions",
+        "glpi_plugin_resources_resourcefunctions",
         "glpi_plugin_resources_teams",
         "glpi_plugin_resources_services",
         "glpi_plugin_resources_roles_services",
@@ -733,28 +796,50 @@ function plugin_resources_uninstall()
         "glpi_dropdown_plugin_resources_department",
         "glpi_dropdown_plugin_resources_tasks_type",
         "glpi_plugin_resources_mailingsettings",
-        "glpi_plugin_resources_mailing"
+        "glpi_plugin_resources_mailing",
     ];
 
     foreach ($tables as $table) {
         $DB->dropTable($table, true);
     }
 
-    $tables = [
-        "glpi_displaypreferences",
-        "glpi_documents_items",
-        "glpi_savedsearches",
-        "glpi_logs",
-        "glpi_items_tickets",
-        "glpi_dropdowntranslations",
-    ];
+    $itemtypes = ['Alert',
+        'DisplayPreference',
+        'Document_Item',
+        'ImpactItem',
+        'Item_Ticket',
+        'Link_Itemtype',
+        'Notepad',
+        'SavedSearch',
+        'DropdownTranslation',
+        'NotificationTemplate',
+        'Notification'];
+    foreach ($itemtypes as $itemtype) {
 
-    foreach ($tables as $table) {
-        $DB->doQuery(
-            "DELETE
-                  FROM `$table`
-                  WHERE `itemtype` LIKE 'PluginResources%'"
-        );
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Checklistconfig::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Directory::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Employment::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Recap::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Resource::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => ResourceHoliday::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => ResourceResting::class]);
+
+        $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Task::class]);
+
     }
 
     $tables = [
@@ -765,24 +850,24 @@ function plugin_resources_uninstall()
         $DB->doQuery(
             "DELETE
                   FROM `$table`
-                  WHERE `name` LIKE 'PluginResources%'"
+                  WHERE `name` LIKE 'GLPIPlugin\\Resources%'"
         );
     }
 
     //drop rules
     $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => PluginResourcesRuleChecklist::class]);
+    $a_rules = $Rule->find(['sub_type' => RuleChecklist::class]);
     foreach ($a_rules as $data) {
         $Rule->delete($data);
     }
 
     $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => PluginResourcesRuleContracttype::class]);
+    $a_rules = $Rule->find(['sub_type' => RuleContracttype::class]);
     foreach ($a_rules as $data) {
         $Rule->delete($data);
     }
     $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => PluginResourcesRuleContracttypeHidden::class]);
+    $a_rules = $Rule->find(['sub_type' => RuleContracttypeHidden::class]);
     foreach ($a_rules as $data) {
         $Rule->delete($data);
     }
@@ -790,11 +875,13 @@ function plugin_resources_uninstall()
     $notif = new Notification();
 
     $options = [
-        'itemtype' => PluginResourcesResource::class
+        'itemtype' => Resource::class,
     ];
     foreach ($DB->request([
         'FROM' => 'glpi_notifications',
-        'WHERE' => $options]) as $data) {
+        'WHERE' => $options,
+    ]) as $data
+    ) {
         $notif->delete($data);
     }
 
@@ -803,40 +890,44 @@ function plugin_resources_uninstall()
     $translation = new NotificationTemplateTranslation();
     $notif_template = new Notification_NotificationTemplate();
     $options = [
-        'itemtype' => PluginResourcesResource::class
+        'itemtype' => Resource::class,
     ];
     foreach ($DB->request([
         'FROM' => 'glpi_notificationtemplates',
-        'WHERE' => $options]) as $data) {
+        'WHERE' => $options,
+    ]) as $data
+    ) {
         $options_template = [
-            'notificationtemplates_id' => $data['id']
+            'notificationtemplates_id' => $data['id'],
         ];
 
         foreach ($DB->request([
             'FROM' => 'glpi_notificationtemplatetranslations',
-            'WHERE' => $options_template]) as $data_template) {
+            'WHERE' => $options_template,
+        ]) as $data_template
+        ) {
             $translation->delete($data_template);
         }
         $template->delete($data);
 
         foreach ($DB->request([
             'FROM' => 'glpi_notifications_notificationtemplates',
-            'WHERE' => $options_template]) as $data_template) {
+            'WHERE' => $options_template,
+        ]) as $data_template
+        ) {
             $notif_template->delete($data_template);
         }
     }
 
     if (class_exists(PluginDatainjectionModel::class)) {
-        PluginDatainjectionModel::clean(['itemtype' => PluginResourcesResource::class]);
-        PluginDatainjectionModel::clean(['itemtype' => PluginResourcesClient::class]);
+        PluginDatainjectionModel::clean(['itemtype' => Resource::class]);
+        PluginDatainjectionModel::clean(['itemtype' => Client::class]);
     }
 
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     Toolbox::deleteDir($rep_files_resources);
 
-    include_once(PLUGIN_RESOURCES_DIR . "/inc/profile.class.php");
-
-    PluginResourcesProfile::removeRightsFromSession();
+    Profile::removeRightsFromSession();
 
     return true;
 }
@@ -849,14 +940,14 @@ function plugin_resources_postinit()
     $PLUGIN_HOOKS['pre_item_add']['resources'] = ['ITILSolution' => 'plugin_pre_item_add_solutions'];
     $PLUGIN_HOOKS['item_purge']['resources'] = [];
 
-    foreach (PluginResourcesResource::getTypes(true) as $type) {
+    foreach (Resource::getTypes(true) as $type) {
         $PLUGIN_HOOKS['item_purge']['resources'][$type]
-            = ['PluginResourcesResource_Item', 'cleanForItem'];
+            = [Resource_Item::class, 'cleanForItem'];
 
-        CommonGLPI::registerStandardTab($type, 'PluginResourcesResource_Item');
+        CommonGLPI::registerStandardTab($type, Resource_Item::class);
     }
 
-    CommonGLPI::registerStandardTab("Central", PluginResourcesTask::class);
+    CommonGLPI::registerStandardTab("Central", Task::class);
 }
 
 /**
@@ -867,7 +958,7 @@ function plugin_resources_postinit()
 function plugin_resources_AssignToTicket($types)
 {
     if (Session::haveRight("plugin_resources_open_ticket", 1)) {
-        $types[PluginResourcesResource::class] = PluginResourcesResource::getTypeName(2);
+        $types[Resource::class] = Resource::getTypeName(2);
     }
 
     return $types;
@@ -907,20 +998,20 @@ function plugin_resources_getDatabaseRelations()
                 "glpi_plugin_resources_costs" => "entities_id",
                 "glpi_plugin_resources_budgettypes" => "entities_id",
                 "glpi_plugin_resources_budgetvolumes" => "entities_id",
-                "glpi_plugin_resources_transferentities" => "entities_id"
+                "glpi_plugin_resources_transferentities" => "entities_id",
             ],
             "glpi_plugin_resources_contracttypes" => [
                 "glpi_plugin_resources_resources" => "plugin_resources_contracttypes_id",
-                "glpi_plugin_resources_checklists" => "plugin_resources_contracttypes_id"
+                "glpi_plugin_resources_checklists" => "plugin_resources_contracttypes_id",
             ],
             "glpi_users" => [
                 "glpi_plugin_resources_resources" => [
                     'users_id',
                     'users_id_recipient',
                     'users_id_recipient_leaving',
-                    'users_id_sales'
+                    'users_id_sales',
                 ],
-                "glpi_plugin_resources_tasks" => "users_id"
+                "glpi_plugin_resources_tasks" => "users_id",
             ],
             "glpi_plugin_resources_departments" => ["glpi_plugin_resources_resources" => "plugin_resources_departments_id"],
             "glpi_plugin_resources_habilitations" => ["glpi_plugin_resources_resourcehabilitations" => "plugin_resources_habilitations_id"],
@@ -932,7 +1023,7 @@ function plugin_resources_getDatabaseRelations()
             "glpi_locations" => [
                 "glpi_plugin_resources_resources" => "locations_id",
                 "glpi_plugin_resources_employers" => "locations_id",
-                "glpi_plugin_resources_resourcerestings" => "locations_id"
+                "glpi_plugin_resources_resourcerestings" => "locations_id",
             ],
             "glpi_plugin_resources_leavingreasons" => ["glpi_plugin_resources_resources" => "plugin_resources_leavingreasons_id"],
             "glpi_plugin_resources_resources" => [
@@ -944,16 +1035,16 @@ function plugin_resources_getDatabaseRelations()
                 "glpi_plugin_resources_reportconfigs" => "plugin_resources_resources_id",
                 "glpi_plugin_resources_resourcerestings" => "plugin_resources_resources_id",
                 "glpi_plugin_resources_resourceholidays" => "plugin_resources_resources_id",
-                "glpi_plugin_resources_employments" => "plugin_resources_resources_id"
+                "glpi_plugin_resources_employments" => "plugin_resources_resources_id",
             ],
             "glpi_plugin_resources_choiceitems" => [
                 "glpi_plugin_resources_choices" => "plugin_resources_choiceitems_id",
-                "glpi_plugin_resources_choiceitems" => "plugin_resources_choiceitems_id"
+                "glpi_plugin_resources_choiceitems" => "plugin_resources_choiceitems_id",
             ],
             "glpi_plugin_resources_employers" => [
                 "glpi_plugin_resources_employees" => "plugin_resources_employers_id",
                 "glpi_plugin_resources_employers" => "plugin_resources_employers_id",
-                "glpi_plugin_resources_employments" => "plugin_resources_employers_id"
+                "glpi_plugin_resources_employments" => "plugin_resources_employers_id",
             ],
             "glpi_plugin_resources_clients" => ["glpi_plugin_resources_employees" => "plugin_resources_clients_id"],
             "glpi_plugin_resources_tasktypes" => ["glpi_plugin_resources_tasks" => "plugin_resources_tasktypes_id"],
@@ -961,27 +1052,27 @@ function plugin_resources_getDatabaseRelations()
             "glpi_plugin_resources_tasks" => [
                 "glpi_plugin_resources_tasks_items" => "plugin_resources_tasks_id",
                 "glpi_plugin_resources_checklists" => "plugin_resources_tasks_id",
-                "glpi_plugin_resources_taskplannings" => "plugin_resources_tasks_id"
+                "glpi_plugin_resources_taskplannings" => "plugin_resources_tasks_id",
             ],
             //"glpi_itilcategories"                      => ["glpi_plugin_resources_ticketcategories" => "ticketcategories_id"],
             "glpi_plugin_resources_professions" => [
                 "glpi_plugin_resources_ranks" => "plugin_resources_professions_id",
                 "glpi_plugin_resources_employments" => "plugin_resources_professions_id",
                 "glpi_plugin_resources_budgets" => "plugin_resources_professions_id",
-                "glpi_plugin_resources_costs" => "plugin_resources_professions_id"
+                "glpi_plugin_resources_costs" => "plugin_resources_professions_id",
             ],
             "glpi_plugin_resources_ranks" => [
                 "glpi_plugin_resources_resourcespecialities" => "plugin_resources_ranks_id",
                 "glpi_plugin_resources_employments" => "plugin_resources_ranks_id",
                 "glpi_plugin_resources_budgets" => "plugin_resources_ranks_id",
-                "glpi_plugin_resources_costs" => "plugin_resources_ranks_id"
+                "glpi_plugin_resources_costs" => "plugin_resources_ranks_id",
             ],
             "glpi_plugin_resources_professionlines" => ["glpi_plugin_resources_professions" => "plugin_resources_professionlines_id"],
             "glpi_plugin_resources_professioncategories" => ["glpi_plugin_resources_professions" => "plugin_resources_professioncategories_id"],
             "glpi_plugin_resources_employmentstates" => ["glpi_plugin_resources_employments" => "plugin_resources_employmentstates_id"],
             "glpi_plugin_resources_budgettypes" => ["glpi_plugin_resources_budgets" => "plugin_resources_budgettypes_id"],
             "glpi_plugin_resources_budgetvolumes" => ["glpi_plugin_resources_budgets" => "plugin_resources_budgetvolumes_id"],
-//            "glpi_plugin_resources_habilitationlevels" => ["glpi_plugin_resources_habilitations" => "plugin_resources_habilitationlevels_id"],
+            //            "glpi_plugin_resources_habilitationlevels" => ["glpi_plugin_resources_habilitations" => "plugin_resources_habilitationlevels_id"],
         ];
     } else {
         return [];
@@ -996,41 +1087,41 @@ function plugin_resources_getDropdown()
 {
     if (Plugin::isPluginActive("resources")) {
         return [
-            PluginResourcesContractType::class => PluginResourcesContractType::getTypeName(2),
-            PluginResourcesTaskType::class => PluginResourcesTaskType::getTypeName(2),
-            PluginResourcesResourceState::class => PluginResourcesResource::getTypeName(
-                    2
-                ) . " - " . PluginResourcesResourceSituation::getTypeName(2),
-            PluginResourcesDepartment::class => PluginResourcesDepartment::getTypeName(2),
-            PluginResourcesEmployer::class => PluginResourcesEmployer::getTypeName(2),
-            PluginResourcesClient::class => PluginResourcesClient::getTypeName(2),
-            PluginResourcesChoiceItem::class => PluginResourcesChoiceItem::getTypeName(2),
-            PluginResourcesResourceSituation::class => PluginResourcesEmployer::getTypeName(
-                    2
-                ) . " - " . PluginResourcesResourceSituation::getTypeName(2),
-            PluginResourcesContractNature::class => PluginResourcesContractNature::getTypeName(2),
-            PluginResourcesRank::class => PluginResourcesRank::getTypeName(2),
-            PluginResourcesResourceSpeciality::class => PluginResourcesResourceSpeciality::getTypeName(2),
-            PluginResourcesLeavingReason::class => PluginResourcesLeavingReason::getTypeName(2),
-            PluginResourcesProfession::class => PluginResourcesProfession::getTypeName(2),
-            PluginResourcesProfessionLine::class => PluginResourcesProfessionLine::getTypeName(2),
-            PluginResourcesProfessionCategory::class => PluginResourcesProfessionCategory::getTypeName(2),
-            PluginResourcesEmploymentState::class => PluginResourcesEmploymentState::getTypeName(2),
-            PluginResourcesBudgetType::class => PluginResourcesBudgetType::getTypeName(2),
-            PluginResourcesBudgetVolume::class => PluginResourcesBudgetVolume::getTypeName(2),
-            PluginResourcesHabilitation::class => PluginResourcesHabilitation::getTypeName(2),
-            PluginResourcesHabilitationLevel::class => PluginResourcesHabilitationLevel::getTypeName(2),
-            PluginResourcesRole::class => PluginResourcesRole::getTypeName(2),
-            PluginResourcesFunction::class => PluginResourcesFunction::getTypeName(2),
-            PluginResourcesService::class => PluginResourcesService::getTypeName(2),
-            PluginResourcesTeam::class => PluginResourcesTeam::getTypeName(2),
-            PluginResourcesCost::class => PluginResourcesCost::getTypeName(2),
-            PluginResourcesBusinessUnit::class => PluginResourcesBusinessUnit::getTypeName(2),
-            PluginResourcesDegreeGroup::class => PluginResourcesDegreeGroup::getTypeName(2),
-            PluginResourcesRecruitingSource::class => PluginResourcesRecruitingSource::getTypeName(2),
-            PluginResourcesDestination::class => PluginResourcesDestination::getTypeName(2),
-            PluginResourcesResignationReason::class => PluginResourcesResignationReason::getTypeName(2),
-            PluginResourcesWorkProfile::class => PluginResourcesWorkProfile::getTypeName(2),
+            ContractType::class => ContractType::getTypeName(2),
+            TaskType::class => TaskType::getTypeName(2),
+            ResourceState::class => Resource::getTypeName(
+                2
+            ) . " - " . ResourceSituation::getTypeName(2),
+            Department::class => Department::getTypeName(2),
+            Employer::class => Employer::getTypeName(2),
+            Client::class => Client::getTypeName(2),
+            ChoiceItem::class => ChoiceItem::getTypeName(2),
+            ResourceSituation::class => Employer::getTypeName(
+                2
+            ) . " - " . ResourceSituation::getTypeName(2),
+            ContractNature::class => ContractNature::getTypeName(2),
+            Rank::class => Rank::getTypeName(2),
+            ResourceSpeciality::class => ResourceSpeciality::getTypeName(2),
+            LeavingReason::class => LeavingReason::getTypeName(2),
+            Profession::class => Profession::getTypeName(2),
+            ProfessionLine::class => ProfessionLine::getTypeName(2),
+            ProfessionCategory::class => ProfessionCategory::getTypeName(2),
+            EmploymentState::class => EmploymentState::getTypeName(2),
+            BudgetType::class => BudgetType::getTypeName(2),
+            BudgetVolume::class => BudgetVolume::getTypeName(2),
+            Habilitation::class => Habilitation::getTypeName(2),
+            HabilitationLevel::class => HabilitationLevel::getTypeName(2),
+            Role::class => Role::getTypeName(2),
+            ResourceFunction::class => ResourceFunction::getTypeName(2),
+            Service::class => Service::getTypeName(2),
+            Team::class => Team::getTypeName(2),
+            Cost::class => Cost::getTypeName(2),
+            BusinessUnit::class => BusinessUnit::getTypeName(2),
+            DegreeGroup::class => DegreeGroup::getTypeName(2),
+            RecruitingSource::class => RecruitingSource::getTypeName(2),
+            Destination::class => Destination::getTypeName(2),
+            ResignationReason::class => ResignationReason::getTypeName(2),
+            WorkProfile::class => WorkProfile::getTypeName(2),
 
         ];
     } else {
@@ -1053,83 +1144,83 @@ function plugin_resources_getAddSearchOptions($itemtype)
         if (Session::haveRight("plugin_resources", READ)) {
             $sopt[4311]['table'] = 'glpi_plugin_resources_contracttypes';
             $sopt[4311]['field'] = 'name';
-            $sopt[4311]['name'] = PluginResourcesResource::getTypeName(
-                    2
-                ) . " - " . PluginResourcesContractType::getTypeName(1);
+            $sopt[4311]['name'] = Resource::getTypeName(
+                2
+            ) . " - " . ContractType::getTypeName(1);
 
             $sopt[4313]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4313]['field'] = 'date_begin';
-            $sopt[4313]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Begin date');
+            $sopt[4313]['name'] = Resource::getTypeName(2) . " - " . __('Begin date');
             $sopt[4313]['datatype'] = 'date';
 
             $sopt[4314]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4314]['field'] = 'date_end';
-            $sopt[4314]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('End date');
+            $sopt[4314]['name'] = Resource::getTypeName(2) . " - " . __('End date');
             $sopt[4314]['datatype'] = 'date';
 
             $sopt[4315]['table'] = 'glpi_plugin_resources_departments';
             $sopt[4315]['field'] = 'name';
-            $sopt[4315]['name'] = PluginResourcesResource::getTypeName(
-                    2
-                ) . " - " . PluginResourcesDepartment::getTypeName(1);
+            $sopt[4315]['name'] = Resource::getTypeName(
+                2
+            ) . " - " . Department::getTypeName(1);
 
             $sopt[4316]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4316]['field'] = 'date_declaration';
-            $sopt[4316]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Request date');
+            $sopt[4316]['name'] = Resource::getTypeName(2) . " - " . __('Request date');
             $sopt[4316]['datatype'] = 'date';
             $sopt[4316]['massiveaction'] = false;
 
             $sopt[4317]['table'] = 'glpi_plugin_resources_locations';
             $sopt[4317]['field'] = 'completename';
-            $sopt[4317]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Location');
+            $sopt[4317]['name'] = Resource::getTypeName(2) . " - " . __('Location');
             $sopt[4317]['massiveaction'] = false;
 
             $sopt[4318]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4318]['field'] = 'is_leaving';
-            $sopt[4318]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __(
-                    'Declared as leaving',
-                    'resources'
-                );
+            $sopt[4318]['name'] = Resource::getTypeName(2) . " - " . __(
+                'Declared as leaving',
+                'resources'
+            );
             $sopt[4318]['datatype'] = 'bool';
 
             $sopt[4320]['table'] = 'glpi_plugin_resources_employers';
             $sopt[4320]['field'] = 'name';
-            $sopt[4320]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Employer', 'resources');
+            $sopt[4320]['name'] = Resource::getTypeName(2) . " - " . __('Employer', 'resources');
 
             $sopt[4321]['table'] = 'glpi_plugin_resources_clients';
             $sopt[4321]['field'] = 'name';
-            $sopt[4321]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Affected client', 'resources');
+            $sopt[4321]['name'] = Resource::getTypeName(2) . " - " . __('Affected client', 'resources');
 
             $sopt[4322]['table'] = 'glpi_plugin_resources_managers';
             $sopt[4322]['field'] = 'name';
             $sopt[4322]['linkfield'] = 'users_id';
-            $sopt[4322]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Resource manager', 'resources');
+            $sopt[4322]['name'] = Resource::getTypeName(2) . " - " . __('Resource manager', 'resources');
             $sopt[4322]['massiveaction'] = false;
 
             $sopt[4323]['table'] = 'glpi_plugin_resources_recipients';
             $sopt[4323]['field'] = 'name';
             $sopt[4323]['linkfield'] = 'users_id_recipient';
-            $sopt[4323]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Recipient');
+            $sopt[4323]['name'] = Resource::getTypeName(2) . " - " . __('Recipient');
             $sopt[4323]['massiveaction'] = false;
 
             $sopt[4324]['table'] = 'glpi_plugin_resources_recipients_leaving';
             $sopt[4324]['field'] = 'name';
             $sopt[4324]['linkfield'] = 'users_id_recipient_leaving';
-            $sopt[4324]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __(
-                    'Informant of leaving',
-                    'resources'
-                );
+            $sopt[4324]['name'] = Resource::getTypeName(2) . " - " . __(
+                'Informant of leaving',
+                'resources'
+            );
             $sopt[4324]['massiveaction'] = false;
 
             $sopt[4325]['table'] = 'glpi_plugin_resources_salemanagers';
             $sopt[4325]['field'] = 'name';
             $sopt[4325]['linkfield'] = 'users_id_sales';
-            $sopt[4325]['name'] = PluginResourcesResource::getTypeName(2) . " - " . __('Sales manager', 'resources');
+            $sopt[4325]['name'] = Resource::getTypeName(2) . " - " . __('Sales manager', 'resources');
             $sopt[4325]['massiveaction'] = false;
 
             $sopt[4326]['table'] = 'glpi_plugin_resources_teams';
             $sopt[4326]['field'] = 'name';
-            $sopt[4326]['name'] = PluginResourcesResource::getTypeName(2) . " - " . PluginResourcesTeam::getTypeName(1);
+            $sopt[4326]['name'] = Resource::getTypeName(2) . " - " . Team::getTypeName(1);
             $sopt[4326]['massiveaction'] = false;
         }
     } elseif ($itemtype == "Computer") {
@@ -1148,9 +1239,9 @@ function plugin_resources_getAddSearchOptions($itemtype)
             //               ]
             //            ]
             //         ];
-            $sopt[4331]['name'] = PluginResourcesResource::getTypeName(
-                    2
-                ) . " - " . PluginResourcesResource::getTypeName(1);
+            $sopt[4331]['name'] = Resource::getTypeName(
+                2
+            ) . " - " . Resource::getTypeName(1);
         }
     }
     return $sopt;
@@ -1215,16 +1306,15 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
     // Example of default JOIN clause
     // No need of the function if you do not have specific cases
     switch ($type) {
-        case "PluginResourcesDirectory" :
+        case Directory::class:
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`) ";
             $out .= " LEFT JOIN `glpi_profiles_users` ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id` ) ";
             return $out;
-            break;
-        case "PluginResourcesRecap" :
+        case Recap::class:
             $out = " LEFT JOIN `glpi_plugin_resources_resources`
-                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` " .
-                "AND `glpi_plugin_resources_resources`.`is_deleted` = 0
+                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` "
+                . "AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                 AND `glpi_plugin_resources_resources`.`is_template` = 0) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources_items`
                   ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
@@ -1240,7 +1330,6 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
             $out .= " LEFT JOIN `glpi_plugin_resources_employers`
                   ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
             return $out;
-            break;
     }
     return "";
 }
@@ -1255,7 +1344,7 @@ function plugin_resources_addDefaultWhere($type)
     // Example of default WHERE item to be added
     // No need of the function if you do not have specific cases
     switch ($type) {
-        case PluginResourcesResource::class :
+        case Resource::class:
             $who = Session::getLoginUserID();
             if (!Session::haveRight("plugin_resources_all", READ)) {
                 return " (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
@@ -1292,8 +1381,6 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
                 $ADD = " OR `$table`.`$field` IS NULL";
             }
             return $link . " (`$table`.`$field` $SEARCH " . $ADD . " ) ";
-
-            break;
     }
     return "";
 }
@@ -1305,7 +1392,7 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
  * @param $linkfield
  * @param $already_link_tables
  *
- * @return \Left|string
+ * @return string
  */
 function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield, &$already_link_tables)
 {
@@ -1327,32 +1414,27 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
         $nt .= "_" . $linkfield;
         $nt_device .= "_" . $linkfield;
     }
-    Toolbox::logInFile('test_r', $type, true);
-    Toolbox::logInFile('test_r', $new_table, true);
     switch ($new_table) {
-        case "glpi_plugin_resources_resources_items" :
-
-            if ($type != "PluginResourcesResource_Item") {
+        case "glpi_plugin_resources_resources_items":
+            if ($type != Resource_Item::class) {
                 return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id` AND `glpi_plugin_resources_resources_items`.`itemtype`= '$type') ";
             } else {
                 return " ";
-                return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id`) ";
+                //                return " LEFT JOIN `glpi_plugin_resources_resources_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_resources_items`.`items_id`) ";
             }
-            break;
-        case "glpi_plugin_resources_taskplannings" :
+            // no break
+        case "glpi_plugin_resources_taskplannings":
             return " LEFT JOIN `glpi_plugin_resources_taskplannings` ON (`glpi_plugin_resources_taskplannings`.`plugin_resources_tasks_id` = `$ref_table`.`id`) ";
-            break;
-        case "glpi_plugin_resources_tasks_items" :
+        case "glpi_plugin_resources_tasks_items":
             return " LEFT JOIN `glpi_plugin_resources_tasks_items` ON (`$ref_table`.`id` = `glpi_plugin_resources_tasks_items`.`items_id` AND `glpi_plugin_resources_tasks_items`.`itemtype`= '$type') ";
-            break;
-        case "glpi_plugin_resources_resources" : // From items
+        case "glpi_plugin_resources_resources": // From items
             $out = " ";
-            if ($type != "PluginResourcesDirectory" && $type != PluginResourcesRecap::class) {
+            if ($type != Directory::class && $type != Recap::class) {
                 if ($ref_table != 'glpi_plugin_resources_tasks'
                     && $ref_table != 'glpi_plugin_resources_resourcerestings'
                     && $ref_table != 'glpi_plugin_resources_resourceholidays'
                     && $ref_table != 'glpi_plugin_resources_employments'
-                    && $type != "PluginResourcesResource_Item") {
+                    && $type != Resource_Item::class) {
                     $out = Search::addLeftJoin(
                         $type,
                         $ref_table,
@@ -1366,9 +1448,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 }
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_contracttypes" : // From items
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_contracttypes": // From items
+            if ($type != Directory::class && $type != Recap::class) {
                 if ($linkfield == "last_contract_type") {
                     return "";
                 }
@@ -1408,47 +1489,41 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 }
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_managers" : // From items
+        case "glpi_plugin_resources_managers": // From items
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
-            if ($type == PluginResourcesDirectory::class) {
+            if ($type == Directory::class) {
                 $out .= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_managers` ON (`glpi_plugin_resources_resources`.`users_id` = `glpi_plugin_resources_managers`.`id`) ";
             } else {
                 $out .= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_managers` ON (`$nt`.`users_id` = `glpi_plugin_resources_managers`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_salemanagers" : // From items
+        case "glpi_plugin_resources_salemanagers": // From items
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
-            if ($type == PluginResourcesDirectory::class) {
+            if ($type == Directory::class) {
                 $out .= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_salemanagers` ON (`glpi_plugin_resources_resources`.`users_id_sales` = `glpi_plugin_resources_salemanagers`.`id`) ";
             } else {
                 $out .= " LEFT JOIN `glpi_users` AS `glpi_plugin_resources_salemanagers` ON (`$nt`.`users_id_sales` = `glpi_plugin_resources_salemanagers`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_recipients" : // From items
+        case "glpi_plugin_resources_recipients": // From items
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
             $out .= " LEFT JOIN `glpi_users` AS glpi_plugin_resources_recipients ON (`$nt`.`users_id_recipient` = `glpi_plugin_resources_recipients`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_recipients_leaving" : // From items
+        case "glpi_plugin_resources_recipients_leaving": // From items
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
             $out .= " LEFT JOIN `glpi_users` AS glpi_plugin_resources_recipients_leaving ON (`$nt`.`users_id_recipient_leaving` = `glpi_plugin_resources_recipients_leaving`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_locations" : // From items
+        case "glpi_plugin_resources_locations": // From items
             $out = " LEFT JOIN `glpi_plugin_resources_resources_items` $AS_device ON (`$ref_table`.`id` = `$nt_device`.`items_id`) ";
             $out .= " LEFT JOIN `glpi_plugin_resources_resources` $AS ON (`$nt`.`id` = `$nt_device`.`plugin_resources_resources_id` AND `$nt_device`.`itemtype` = '$type') ";
             $out .= " LEFT JOIN `glpi_locations` AS glpi_plugin_resources_locations ON (`$nt`.`locations_id` = `glpi_plugin_resources_locations`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_departments" : // From items
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_departments": // From items
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1461,9 +1536,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_departments` ON (`glpi_plugin_resources_resources`.`plugin_resources_departments_id` = `glpi_plugin_resources_departments`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_teams" : // From items
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_teams": // From items
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1476,9 +1550,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_teams` ON (`glpi_plugin_resources_resources`.`plugin_resources_teams_id` = `glpi_plugin_resources_teams`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_resourcestates" : // From items
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_resourcestates": // From items
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1503,9 +1576,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_resourcestates` ON (`glpi_plugin_resources_resources`.`plugin_resources_resourcestates_id` = `glpi_plugin_resources_resourcestates`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_employees" : // From items
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_employees": // From items
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1518,9 +1590,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_employees` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employees`.`plugin_resources_resources_id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_resourcesituations" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_resourcesituations": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1533,9 +1604,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_resourcesituations` ON (`glpi_plugin_resources_resources`.`plugin_resources_resourcesituations_id` = `glpi_plugin_resources_resourcesituations`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_contractnatures" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_contractnatures": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1548,9 +1618,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_contractnatures` ON (`glpi_plugin_resources_resources`.`plugin_resources_contractnatures_id` = `glpi_plugin_resources_contractnatures`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_resourcespecialities" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_resourcespecialities": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1563,9 +1632,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_resourcespecialities` ON (`glpi_plugin_resources_resources`.`plugin_resources_resourcespecialities_id` = `glpi_plugin_resources_resourcespecialities`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_employments" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_employments": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1574,16 +1642,15 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     "plugin_resources_resources_id"
                 );
                 $out .= " LEFT JOIN `glpi_plugin_resources_employments` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id`) ";
-            } elseif ($type == PluginResourcesRecap::class) {
+            } elseif ($type == Recap::class) {
                 $out = " ";
             } else {
                 $out = " LEFT JOIN `glpi_plugin_resources_employments` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_ranks" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
-                if ($type == PluginResourcesResource::class) {
+        case "glpi_plugin_resources_ranks": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
+                if ($type == Resource::class) {
                     $out = Search::addLeftJoin(
                         $type,
                         $ref_table,
@@ -1592,63 +1659,55 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         "plugin_resources_resources_id"
                     );
                     $out .= " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-                } elseif ($type == PluginResourcesEmployment::class) {
+                } elseif ($type == Employment::class) {
                     $out = " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-                } elseif ($type == PluginResourcesBudget::class) {
+                } elseif ($type == Budget::class) {
                     $out = " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_budgets`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-                } elseif ($type == PluginResourcesCost::class) {
+                } elseif ($type == Cost::class) {
                     $out = " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_costs`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
-                } elseif ($type == PluginResourcesResourceSpeciality::class) {
+                } elseif ($type == ResourceSpeciality::class) {
                     $out = " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_resourcespecialities`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
                 }
-            } elseif ($type == PluginResourcesRecap::class) {
+            } elseif ($type == Recap::class) {
                 $out = " ";
             } else {
                 $out = " LEFT JOIN `glpi_plugin_resources_ranks` ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_professions" : // For recap class
+        case "glpi_plugin_resources_professions": // For recap class
             $out = " ";
-            if ($type == PluginResourcesRecap::class) {
+            if ($type == Recap::class) {
                 $out = " ";
-            } elseif ($type == PluginResourcesEmployment::class) { // for employment
+            } elseif ($type == Employment::class) { // for employment
                 $out = " LEFT JOIN `glpi_plugin_resources_professions` ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
-            } elseif ($type == PluginResourcesBudget::class) {
+            } elseif ($type == Budget::class) {
                 $out = " LEFT JOIN `glpi_plugin_resources_professions` ON (`glpi_plugin_resources_budgets`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
-            } elseif ($type == PluginResourcesCost::class) {
+            } elseif ($type == Cost::class) {
                 $out = " LEFT JOIN `glpi_plugin_resources_professions` ON (`glpi_plugin_resources_costs`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
-            } elseif ($type == PluginResourcesRank::class) {
+            } elseif ($type == Rank::class) {
                 $out = " LEFT JOIN `glpi_plugin_resources_professions` ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_professionlines" : // For recap class
+        case "glpi_plugin_resources_professionlines": // For recap class
             $out = " LEFT JOIN `glpi_plugin_resources_professionlines` ON (`glpi_plugin_resources_professions`.`plugin_resources_professionlines_id` = `glpi_plugin_resources_professionlines`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_professioncategories" : // For recap class
+        case "glpi_plugin_resources_professioncategories": // For recap class
             $out = " LEFT JOIN `glpi_plugin_resources_professioncategories` ON (`glpi_plugin_resources_professions`.`plugin_resources_professioncategories_id` = `glpi_plugin_resources_professioncategories`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employmentranks" : // For recap class
+        case "glpi_plugin_resources_employmentranks": // For recap class
             $out = " LEFT JOIN `glpi_plugin_resources_ranks` AS `glpi_plugin_resources_employmentranks` ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = `glpi_plugin_resources_employmentranks`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employmentprofessions" : // For recap class
+        case "glpi_plugin_resources_employmentprofessions": // For recap class
             $out = " ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employmentprofessionlines" : // For recap class
+        case "glpi_plugin_resources_employmentprofessionlines": // For recap class
             $out = " LEFT JOIN `glpi_plugin_resources_professionlines` AS `glpi_plugin_resources_employmentprofessionlines` ON (`glpi_plugin_resources_employmentprofessions`.`plugin_resources_professionlines_id` = `glpi_plugin_resources_employmentprofessionlines`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employmentprofessioncategories" : // For recap class
+        case "glpi_plugin_resources_employmentprofessioncategories": // For recap class
             $out = " LEFT JOIN `glpi_plugin_resources_professioncategories` AS `glpi_plugin_resources_employmentprofessioncategories` ON (`glpi_plugin_resources_employmentprofessions`.`plugin_resources_professioncategories_id` = `glpi_plugin_resources_employmentprofessioncategories`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employers" : // From recap class
-            if ($type != PluginResourcesRecap::class && $type != PluginResourcesEmployment::class) {
+        case "glpi_plugin_resources_employers": // From recap class
+            if ($type != Recap::class && $type != Employment::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1657,14 +1716,13 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     "plugin_resources_employees_id"
                 );
                 $out .= " LEFT JOIN `glpi_plugin_resources_employers` ON (`glpi_plugin_resources_employees`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
-            } elseif ($type == PluginResourcesRecap::class) {
+            } elseif ($type == Recap::class) {
                 $out = " ";
             } else {
                 $out = " LEFT JOIN `glpi_plugin_resources_employers` ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_plugin_resources_clients" : // From items
+        case "glpi_plugin_resources_clients": // From items
             $out = Search::addLeftJoin(
                 $type,
                 $ref_table,
@@ -1674,9 +1732,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             );
             $out .= " LEFT JOIN `glpi_plugin_resources_clients` ON (`glpi_plugin_resources_employees`.`plugin_resources_clients_id` = `glpi_plugin_resources_clients`.`id`) ";
             return $out;
-            break;
-        case "glpi_plugin_resources_employmentstates" : // For recap class
-            if ($type != PluginResourcesDirectory::class && $type != PluginResourcesRecap::class) {
+        case "glpi_plugin_resources_employmentstates": // For recap class
+            if ($type != Directory::class && $type != Recap::class) {
                 $out = Search::addLeftJoin(
                     $type,
                     $ref_table,
@@ -1689,15 +1746,13 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out = " LEFT JOIN `glpi_plugin_resources_employmentstates` ON (`glpi_plugin_resources_employments`.`plugin_resources_employmentstates_id` = `glpi_plugin_resources_employmentstates`.`id`) ";
             }
             return $out;
-            break;
-        case "glpi_locations" : // From recap class
-            if ($type != PluginResourcesRecap::class) {
+        case "glpi_locations": // From recap class
+            if ($type != Recap::class) {
                 $out = Search::addLeftJoin($type, $ref_table, $already_link_tables, "glpi_locations", "locations_id");
             } else {
                 $out = " LEFT JOIN `glpi_locations` ON (`glpi_plugin_resources_employers`.`locations_id` = `glpi_locations`.`id`) ";
             }
             return $out;
-            break;
     }
     return "";
 }
@@ -1710,12 +1765,11 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 function plugin_resources_forceGroupBy($type)
 {
     return true;
-    switch ($type) {
-        case PluginResourcesResource::class:
-            return true;
-            break;
-    }
-    return false;
+    //    switch ($type) {
+    //        case Resource::class:
+    //            return true;
+    //    }
+    //    return false;
 }
 
 /**
@@ -1741,12 +1795,12 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
     }
 
     switch ($type) {
-        case PluginResourcesResource::class:
+        case Resource::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_resources.name" :
+                case "glpi_plugin_resources_resources.name":
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $link = Toolbox::getItemTypeFormURL(PluginResourcesResource::class);
+                        $link = Toolbox::getItemTypeFormURL(Resource::class);
                         if ($output_type == Search::HTML_OUTPUT) {
                             $out = "<a href=\"" . $link . "?id=" . $data['raw']["ITEM_" . $num . "_2"] . "\">";
                         }
@@ -1777,22 +1831,20 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         }
                     }
                     return $out;
-                    break;
-                case "glpi_plugin_resources_resources.date_end" :
+                case "glpi_plugin_resources_resources.date_end":
                     if ($data['raw']["ITEM_$num"] <= date('Y-m-d') && !empty($data['raw']["ITEM_$num"])) {
                         $out = "<span class='plugin_resources_date_color'>" . Html::convDate(
-                                $data['raw']["ITEM_$num"]
-                            ) . "</span>";
+                            $data['raw']["ITEM_$num"]
+                        ) . "</span>";
                     } elseif (empty($data['raw']["ITEM_$num"])) {
                         $out = __('Not defined', 'resources');
                     } else {
                         $out = Html::convDate($data['raw']["ITEM_$num"]);
                     }
                     return $out;
-                    break;
-                case "glpi_plugin_resources_resources_items.items_id" :
-                    $restrict = ["plugin_resources_resources_id" => $data['id']] +
-                        ["ORDER" => "`itemtype`, `items_id`"];
+                case "glpi_plugin_resources_resources_items.items_id":
+                    $restrict = ["plugin_resources_resources_id" => $data['id']]
+                        + ["ORDER" => "`itemtype`, `items_id`"];
                     $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                     $out = '';
                     if (!empty($items)) {
@@ -1821,23 +1873,19 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         $out = ' ';
                     }
                     return $out;
-                    break;
-                case "glpi_plugin_resources_resources.quota" :
+                case "glpi_plugin_resources_resources.quota":
                     if (!empty($data['raw']["ITEM_$num"])) {
                         $out = floatval($data['raw']["ITEM_$num"]);
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
-        case PluginResourcesTask::class:
-
+        case Task::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_resources.name" :
+                case "glpi_plugin_resources_resources.name":
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $user = PluginResourcesResource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
+                        $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
                         $out = "<a href='" . $user['link'] . "'>";
                         $out .= $user["name"];
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
@@ -1846,14 +1894,11 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         $out .= "</a>";
                     }
                     return $out;
-                    break;
                 case 'glpi_plugin_resources_tasks.is_finished':
-                    return PluginResourcesTask::getStatusImg($data['raw']["ITEM_$num"]);
-
-                    break;
-                case "glpi_plugin_resources_tasks_items.items_id" :
-                    $restrict = ["plugin_resources_tasks_id" => $data['id']] +
-                        ["ORDER" => "`itemtype`, `items_id`"];
+                    return Task::getStatusImg($data['raw']["ITEM_$num"]);
+                case "glpi_plugin_resources_tasks_items.items_id":
+                    $restrict = ["plugin_resources_tasks_id" => $data['id']]
+                        + ["ORDER" => "`itemtype`, `items_id`"];
                     $items = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks_items", $restrict);
                     $out = '';
                     if (!empty($items)) {
@@ -1864,40 +1909,33 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         }
                     }
                     return $out;
-                    break;
-                case "glpi_plugin_resources_taskplannings.id" :
+                case "glpi_plugin_resources_taskplannings.id":
                     if (!empty($data['raw']["ITEM_$num"])) {
-                        $plan = new PluginResourcesTaskPlanning();
+                        $plan = new TaskPlanning();
                         $plan->getFromDB($data['raw']["ITEM_$num"]);
-                        $out = Html::convDateTime($plan->fields["begin"]) . "<br>&nbsp;->&nbsp;" .
-                            Html::convDateTime($plan->fields["end"]);
+                        $out = Html::convDateTime($plan->fields["begin"]) . "<br>&nbsp;->&nbsp;"
+                            . Html::convDateTime($plan->fields["end"]);
                     } else {
                         $out = __('None');
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
         case 'User':
-
             switch ($table . '.' . $field) {
                 case "glpi_plugin_resources_recipients_leaving.name":
                 case "glpi_plugin_resources_managers.name":
                 case "glpi_plugin_resources_salemanagers.name":
-                case "glpi_plugin_resources_recipients.name" :
+                case "glpi_plugin_resources_recipients.name":
                     $out = $dbu->getUserName($data['raw']["ITEM_" . $num . "_2"]);
                     return $out;
-                    break;
             }
             return "";
-            break;
-        case PluginResourcesResourceResting::class:
-
+        case ResourceResting::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_resources.name" :
+                case "glpi_plugin_resources_resources.name":
                     if (!empty($data["id"])) {
-                        $link = Toolbox::getItemTypeFormURL(PluginResourcesResourceResting::class);
+                        $link = Toolbox::getItemTypeFormURL(ResourceResting::class);
                         $out = "<a href=\"" . $link . "?id=" . $data["id"] . "\">";
                         $out .= $data['raw']["ITEM_$num"];
                         if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["ITEM_$num"])) {
@@ -1906,16 +1944,13 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         $out .= "</a>";
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
-        case PluginResourcesResourceHoliday::class:
-
+        case ResourceHoliday::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_resources.name" :
+                case "glpi_plugin_resources_resources.name":
                     if (!empty($data["id"])) {
-                        $link = Toolbox::getItemTypeFormURL(PluginResourcesResourceHoliday::class);
+                        $link = Toolbox::getItemTypeFormURL(ResourceHoliday::class);
                         $out = "<a href=\"" . $link . "?id=" . $data["id"] . "\">";
                         $out .= $data['raw']["ITEM_$num"];
                         if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["ITEM_$num"])) {
@@ -1924,32 +1959,25 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         $out .= "</a>";
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
-
-        case PluginResourcesDirectory::class:
-
+        case Directory::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_managers.name" :
-                case "glpi_plugin_resources_salemanagers.name" :
+                case "glpi_plugin_resources_managers.name":
+                case "glpi_plugin_resources_salemanagers.name":
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
                         $out = $dbu->getUserName($data['raw']["ITEM_" . $num . "_2"]);
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
-        case PluginResourcesEmployment::class:
-
+        case Employment::class:
             switch ($table . '.' . $field) {
-                case "glpi_plugin_resources_resources.name" :
+                case "glpi_plugin_resources_resources.name":
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $user = PluginResourcesResource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
+                        $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
                         $out = "<a href='" . $user['link'] . "'>";
                         $out .= $user["name"];
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
@@ -1958,14 +1986,11 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                         $out .= "</a>";
                     }
                     return $out;
-                    break;
             }
             return "";
-            break;
         case Computer::class:
-
             switch ($ID) {
-                case 4331 :
+                case 4331:
                     $result = "";
                     if (isset($data["Computer_4331"]) && !is_null($data["Computer_4331"])) {
                         if (isset($data["Computer_4331"]["count"])) {
@@ -1975,15 +2000,13 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                                 if ($i != 0) {
                                     $result .= "\n";
                                 }
-                                $result .= PluginResourcesResource::getResourceName($data["Computer_4331"][$i]["name"]);
+                                $result .= Resource::getResourceName($data["Computer_4331"][$i]["name"]);
                             }
                         }
                     }
                     return $result;
-                    break;
             }
             return "";
-            break;
     }
     return "";
 }
@@ -1997,8 +2020,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
 function plugin_resources_MassiveActions($type)
 {
     if (Plugin::isPluginActive('resources')) {
-        if (in_array($type, PluginResourcesResource::getTypes())) {
-            $resource = new PluginResourcesResource();
+        if (in_array($type, Resource::getTypes())) {
+            $resource = new Resource();
             return $resource->massiveActions($type);
         }
     }
@@ -2013,12 +2036,12 @@ function plugin_resources_MassiveActions($type)
  */
 function plugin_resources_dynamicReport($parm)
 {
-    $allowed = [PluginResourcesDirectory::class, PluginResourcesRecap::class];
+    $allowed = [Directory::class, Recap::class];
 
     if (in_array($parm["item_type"], $allowed)) {
         $params = Search::manageParams($parm["item_type"], $parm);
         $data = Search::prepareDatasForSearch($parm["item_type"], $params);
-        PluginResourcesDirectory::constructSQL($data);
+        Directory::constructSQL($data);
         Search::constructData($data);
         Search::displayData($data);
         return true;
@@ -2037,22 +2060,22 @@ function plugin_pre_item_update_resources($item)
         && !isset($item->input["_UpdateFromResource_"])) {
         $restrict = [
             "itemtype" => get_class($item),
-            "items_id" => $item->getField('id')
+            "items_id" => $item->getField('id'),
         ];
         $dbu = new DbUtils();
         $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
         if (!empty($items)) {
             foreach ($items as $device) {
-                $PluginResourcesResource = new PluginResourcesResource();
-                $PluginResourcesResource->GetfromDB($device["plugin_resources_resources_id"]);
-                if (isset($PluginResourcesResource->fields["locations_id"]) && isset($item->input["locations_id"])) {
-                    if ($item->input["locations_id"] != 0 && $PluginResourcesResource->fields["locations_id"] != $item->input["locations_id"]) {
+                $Resource = new Resource();
+                $Resource->GetfromDB($device["plugin_resources_resources_id"]);
+                if (isset($Resource->fields["locations_id"]) && isset($item->input["locations_id"])) {
+                    if ($item->input["locations_id"] != 0 && $Resource->fields["locations_id"] != $item->input["locations_id"]) {
                         $values = [];
                         $values["id"] = $device["plugin_resources_resources_id"];
                         $values["locations_id"] = $item->input["locations_id"];
                         $values["withtemplate"] = 0;
                         $values["_UpdateFromUser_"] = 1;
-                        $PluginResourcesResource->update($values);
+                        $Resource->update($values);
                         Session::addMessageAfterRedirect(
                             __("Modification of the associated resource's location", "resources"),
                             true
@@ -2072,26 +2095,25 @@ function plugin_pre_item_update_resources($item)
 function plugin_pre_item_add_solutions($item)
 {
     if (isset($item->fields["itemtype"])) {
-        $ticket = new $item->fields["itemtype"];
+        $ticket = new $item->fields["itemtype"]();
         if ($ticket->getFromDB($item->fields["items_id"])) {
-            $adconfig = new PluginResourcesAdconfig();
+            $adconfig = new Adconfig();
             $adconfig->getFromDB(1);
             $adconfig->fields = $adconfig->prepareFields($adconfig->fields);
-            $linkad = new PluginResourcesLinkAd();
+            $linkad = new LinkAd();
             $items = new Item_Ticket();
-            $conf = new PluginResourcesConfig();
+            $conf = new Config();
             $conf->getFromDB(1);
             if (is_array($adconfig->fields["creation_categories_id"])
                 && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["creation_categories_id"])) {
                 if ($items->getFromDBByCrit([
                     "tickets_id" => $ticket->getID(),
-                    "itemtype" => PluginResourcesResource::getType()
+                    "itemtype" => Resource::getType(),
                 ])) {
                     if ($conf->fields["mandatory_adcreation"] == 1) {
-                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]
-                            ) || ($linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) && $linkad->getField('action_done') == 0)) {
+                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(
+                            ['plugin_resources_resources_id' => $items->getField('items_id')]
+                        ) && $linkad->getField('action_done') == 0)) {
                             $item->input = null;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),
@@ -2101,12 +2123,12 @@ function plugin_pre_item_add_solutions($item)
                         }
                     }
                     if ($conf->fields["mandatory_checklist"] == 1) {
-                        $checklist = new PluginResourcesChecklist();
+                        $checklist = new Checklist();
                         $checklists = $checklist->find(
                             [
                                 "plugin_resources_resources_id" => $items->getField('items_id'),
                                 "is_checked" => 0,
-                                "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_IN
+                                "checklist_type" => Checklist::RESOURCES_CHECKLIST_IN,
                             ]
                         );
                         if (!empty($checklists)) {
@@ -2120,7 +2142,7 @@ function plugin_pre_item_add_solutions($item)
                     }
                 }
                 //         } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
-                //            if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()])) {
+                //            if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()])) {
                 //               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
                 //                  $item->input = null;
                 //                  Session::addMessageAfterRedirect(
@@ -2132,13 +2154,12 @@ function plugin_pre_item_add_solutions($item)
             } elseif (is_array($adconfig->fields["deletion_categories_id"])
                 && in_array($ticket->fields["itilcategories_id"], $adconfig->fields["deletion_categories_id"])) {
                 if ($items->getFromDBByCrit(
-                    ["tickets_id" => $ticket->getID(), "itemtype" => PluginResourcesResource::getType()]
+                    ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
                 )) {
                     if ($conf->fields["mandatory_adcreation"] == 1) {
-                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]
-                            ) || ($linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) && $linkad->getField('action_done') == 0)) {
+                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(
+                            ['plugin_resources_resources_id' => $items->getField('items_id')]
+                        ) && $linkad->getField('action_done') == 0)) {
                             $item->input = null;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),
@@ -2148,12 +2169,12 @@ function plugin_pre_item_add_solutions($item)
                         }
                     }
                     if ($conf->fields["mandatory_checklist"] == 1) {
-                        $checklist = new PluginResourcesChecklist();
+                        $checklist = new Checklist();
                         $checklists = $checklist->find(
                             [
                                 "plugin_resources_resources_id" => $items->getField('items_id'),
                                 "is_checked" => 0,
-                                "checklist_type" => PluginResourcesChecklist::RESOURCES_CHECKLIST_OUT
+                                "checklist_type" => Checklist::RESOURCES_CHECKLIST_OUT,
                             ]
                         );
                         if (!empty($checklists)) {
@@ -2174,7 +2195,7 @@ function plugin_pre_item_add_solutions($item)
 function plugin_datainjection_populate_resources()
 {
     global $INJECTABLE_TYPES;
-    $INJECTABLE_TYPES[PluginResourcesResourceInjection::class] = 'resources';
-    $INJECTABLE_TYPES[PluginResourcesClientInjection::class] = 'resources';
-    $INJECTABLE_TYPES[PluginResourcesHabilitationInjection::class] = 'resources';
+    $INJECTABLE_TYPES[ResourceInjection::class] = 'resources';
+    $INJECTABLE_TYPES[ClientInjection::class] = 'resources';
+    $INJECTABLE_TYPES[HabilitationInjection::class] = 'resources';
 }

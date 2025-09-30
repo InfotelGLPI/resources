@@ -27,32 +27,32 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Checklist;
+use GlpiPlugin\Resources\Checklistconfig;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$checklistconfig = new PluginResourcesChecklistconfig();
+$checklistconfig = new Checklistconfig();
 
 if (isset($_POST["add"])) {
-   $checklistconfig->check(-1, UPDATE, $_POST);
-   $newID = $checklistconfig->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["purge"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $checklistconfig->delete($_POST, 1);
-   $checklistconfig->redirectToList();
-
-} else if (isset($_POST["update"])) {
-   $checklistconfig->check($_POST['id'], UPDATE);
-   $checklistconfig->update($_POST);
-   Html::back();
-
+    $checklistconfig->check(-1, UPDATE, $_POST);
+    $newID = $checklistconfig->add($_POST);
+    Html::back();
+} elseif (isset($_POST["purge"])) {
+    $checklistconfig->check($_POST['id'], UPDATE);
+    $checklistconfig->delete($_POST, 1);
+    $checklistconfig->redirectToList();
+} elseif (isset($_POST["update"])) {
+    $checklistconfig->check($_POST['id'], UPDATE);
+    $checklistconfig->update($_POST);
+    Html::back();
 } else {
-   $checklistconfig->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
-   $checklistconfig->display(['id' => $_GET["id"]]);
-   Html::footer();
+    $checklistconfig->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Checklist::class);
+    $checklistconfig->display(['id' => $_GET["id"]]);
+    Html::footer();
 }

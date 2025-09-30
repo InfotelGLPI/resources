@@ -1,1 +1,3 @@
-ALTER TABLE `glpi_plugin_resources` ADD `helpdesk_visible` int(11) NOT NULL default '1',ADD `date_mod` datetime default NULL;
+ALTER TABLE `glpi_plugin_resources`
+    ADD `helpdesk_visible` int(11) NOT NULL default '1',
+    ADD `date_mod`         datetime default NULL;

@@ -28,100 +28,98 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Recap;
 use GlpiPlugin\Servicecatalog\Main;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
-include ('../../../inc/includes.php');
 //show list of employment linked with a resource
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
-$recap = new PluginResourcesRecap();
+$recap = new Recap();
 
 if ($recap->canView() || Session::haveRight("config", UPDATE)) {
+    //if $_GET["employment_professions_id"] exist this show list of resource / employment
+    //by employment rank and profession
+    if (isset($_GET["employment_professions_id"]) && !empty($_GET["employment_professions_id"])) {
+        $_GET["criteria"][0]["field"] = "4373";
+        $_GET["criteria"][0]["searchtype"] = 'equals';
+        $_GET["criteria"][0]["value"] = $_GET["employment_professions_id"];
 
-   //if $_GET["employment_professions_id"] exist this show list of resource / employment
-   //by employment rank and profession
-   if (isset($_GET["employment_professions_id"]) && !empty($_GET["employment_professions_id"])) {
-      $_GET["criteria"][0]["field"]      = "4373";
-      $_GET["criteria"][0]["searchtype"] = 'equals';
-      $_GET["criteria"][0]["value"]      = $_GET["employment_professions_id"];
+        //depending on the date
+        $_GET["criteria"][1]["link"] = 'AND';
+        $_GET["criteria"][1]["field"] = "4367";
+        $_GET["criteria"][1]["searchtype"] = 'lessthan';
+        $_GET["criteria"][1]["value"] = $_GET["date"];
 
-      //depending on the date
-      $_GET["criteria"][1]["link"]       = 'AND';
-      $_GET["criteria"][1]["field"]      = "4367";
-      $_GET["criteria"][1]["searchtype"] = 'lessthan';
-      $_GET["criteria"][1]["value"]      = $_GET["date"];
+        $_GET["criteria"][2]["link"] = 'AND';
+        $_GET["criteria"][2]["field"] = "4368";
+        $_GET["criteria"][2]["searchtype"] = 'contains';
+        $_GET["criteria"][2]["value"] = 'NULL';
 
-      $_GET["criteria"][2]["link"]       = 'AND';
-      $_GET["criteria"][2]["field"]      = "4368";
-      $_GET["criteria"][2]["searchtype"] = 'contains';
-      $_GET["criteria"][2]["value"]      = 'NULL';
+        $_GET["criteria"][3]["link"] = 'OR';
+        $_GET["criteria"][3]["field"] = "4368";
+        $_GET["criteria"][3]["searchtype"] = 'morethan';
+        $_GET["criteria"][3]["value"] = $_GET["date"];
 
-      $_GET["criteria"][3]["link"]       = 'OR';
-      $_GET["criteria"][3]["field"]      = "4368";
-      $_GET["criteria"][3]["searchtype"] = 'morethan';
-      $_GET["criteria"][3]["value"]      = $_GET["date"];
+        if (isset($_GET["employment_ranks_id"]) && $_GET["employment_ranks_id"] != 0) {
+            $_GET["criteria"][4]["link"] = 'AND';
+            $_GET["criteria"][4]["field"] = "4372";
+            $_GET["criteria"][4]["searchtype"] = 'equals';
+            $_GET["criteria"][4]["value"] = $_GET["employment_ranks_id"];
+        }
+        //by resource rank and profession
+    } elseif (isset($_GET["resource_professions_id"]) && !empty($_GET["resource_professions_id"])) {
+        $_GET["criteria"][0]["field"] = "4375";
+        $_GET["criteria"][0]["searchtype"] = 'equals';
+        $_GET["criteria"][0]["value"] = $_GET["resource_professions_id"];
 
-      if (isset($_GET["employment_ranks_id"]) && $_GET["employment_ranks_id"] != 0) {
-         $_GET["criteria"][4]["link"]       = 'AND';
-         $_GET["criteria"][4]["field"]      = "4372";
-         $_GET["criteria"][4]["searchtype"] = 'equals';
-         $_GET["criteria"][4]["value"]      = $_GET["employment_ranks_id"];
-      }
+        //depending on the date
+        $_GET["criteria"][1]["link"] = 'AND';
+        $_GET["criteria"][1]["field"] = "4367";
+        $_GET["criteria"][1]["searchtype"] = 'lessthan';
+        $_GET["criteria"][1]["value"] = $_GET["date"];
 
-      //by resource rank and profession
-   } else if (isset($_GET["resource_professions_id"]) && !empty($_GET["resource_professions_id"])) {
+        $_GET["criteria"][2]["link"] = 'AND';
+        $_GET["criteria"][2]["field"] = "4368";
+        $_GET["criteria"][2]["searchtype"] = 'contains';
+        $_GET["criteria"][2]["value"] = 'NULL';
 
-      $_GET["criteria"][0]["field"]      = "4375";
-      $_GET["criteria"][0]["searchtype"] = 'equals';
-      $_GET["criteria"][0]["value"]      = $_GET["resource_professions_id"];
+        $_GET["criteria"][3]["link"] = 'OR';
+        $_GET["criteria"][3]["field"] = "4368";
+        $_GET["criteria"][3]["searchtype"] = 'morethan';
+        $_GET["criteria"][3]["value"] = $_GET["date"];
 
-      //depending on the date
-      $_GET["criteria"][1]["link"]       = 'AND';
-      $_GET["criteria"][1]["field"]      = "4367";
-      $_GET["criteria"][1]["searchtype"] = 'lessthan';
-      $_GET["criteria"][1]["value"]      = $_GET["date"];
+        if (isset($_GET["resource_ranks_id"]) && $_GET["resource_ranks_id"] != 0) {
+            $_GET["criteria"][4]["link"] = 'AND';
+            $_GET["criteria"][4]["field"] = "4374";
+            $_GET["criteria"][4]["searchtype"] = 'equals';
+            $_GET["criteria"][4]["value"] = $_GET["resource_ranks_id"];
+        }
+    }
 
-      $_GET["criteria"][2]["link"]       = 'AND';
-      $_GET["criteria"][2]["field"]      = "4368";
-      $_GET["criteria"][2]["searchtype"] = 'contains';
-      $_GET["criteria"][2]["value"]      = 'NULL';
-
-      $_GET["criteria"][3]["link"]       = 'OR';
-      $_GET["criteria"][3]["field"]      = "4368";
-      $_GET["criteria"][3]["searchtype"] = 'morethan';
-      $_GET["criteria"][3]["value"]      = $_GET["date"];
-
-      if (isset($_GET["resource_ranks_id"]) && $_GET["resource_ranks_id"] != 0) {
-         $_GET["criteria"][4]["link"]       = 'AND';
-         $_GET["criteria"][4]["field"]      = "4374";
-         $_GET["criteria"][4]["searchtype"] = 'equals';
-         $_GET["criteria"][4]["value"]      = $_GET["resource_ranks_id"];
-      }
-   }
-
-   $params = Search::manageParams("PluginResourcesRecap", $_GET);
-   Search::showGenericSearch("PluginResourcesRecap", $params);
-   $recap->showList("PluginResourcesRecap", $params);
+    $params = Search::manageParams(Recap::class, $_GET);
+    Search::showGenericSearch(Recap::class, $params);
+    $recap->showList(Recap::class, $params);
 } else {
     throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

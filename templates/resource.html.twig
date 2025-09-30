@@ -97,25 +97,26 @@
             </div> {# .flex-row #}
         </div>
     </div> {# .card-body #}
-    {% if not default_button%}
+    {% if not default_button %}
     <div class=\"form-row\">
         <div class="bt-feature col-md-12 ">
-       <div class='preview'>
+            <div class='preview'>
 
-           <button class="btn btn-primary me-2" type="submit" name="undo_eight_step" value="1">
-               <span>{{ _x('button', '< Previous', 'resources') }}</span>
-           </button>
+                <button class="btn btn-primary me-2" type="submit" name="undo_eight_step" value="1">
+                    <span>{{ _x('button', '< Previous', 'resources') }}</span>
+                </button>
             </div>
-        <div class='next'>
-            <button class="btn btn-primary me-2" type="submit" name="eight_step" value="1">
-                <span>{{ _x('button', 'Next >', 'resources') }}</span>
-            </button>
+            <div class='next'>
+                <button class="btn btn-primary me-2" type="submit" name="eight_step" value="1">
+                    <span>{{ _x('button', 'Next >', 'resources') }}</span>
+                </button>
             </div>
-        </div></div>
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
+        </div>
+    </div>
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
 </div> {# #mainformtable #}
-</form> {# [name=asset_form] #}
-{#{% else %}#}
-{#    {{ include('components/form/buttons.html.twig') }}#}
+    </form> {# [name=asset_form] #}
+{# {% else %} #}
+{#    {{ include('components/form/buttons.html.twig') }} #}
 {% endif %}
 </div>

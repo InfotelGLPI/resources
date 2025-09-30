@@ -27,27 +27,24 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\LeavingInformation;
 
 Session::checkLoginUser();
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
-$leavingReason = new PluginResourcesLeavingInformation();
+$leavingReason = new LeavingInformation();
 
 if (isset($_POST["add"])) {
-   $leavingReason->check(-1, CREATE, $_POST);
-   $leavingReason->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["purge"])) {
-   $leavingReason->check($_POST['id'], PURGE);
-   $leavingReason->delete($_POST);
-   Html::back();
-
-} else if (isset($_POST["update"])) {
-   $leavingReason->check($_POST['id'], UPDATE);
-   $leavingReason->update($_POST);
-   Html::back();
-
+    $leavingReason->check(-1, CREATE, $_POST);
+    $leavingReason->add($_POST);
+    Html::back();
+} elseif (isset($_POST["purge"])) {
+    $leavingReason->check($_POST['id'], PURGE);
+    $leavingReason->delete($_POST);
+    Html::back();
+} elseif (isset($_POST["update"])) {
+    $leavingReason->check($_POST['id'], UPDATE);
+    $leavingReason->update($_POST);
+    Html::back();
 }

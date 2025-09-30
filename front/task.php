@@ -28,24 +28,23 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Task;
 
-include ('../../../inc/includes.php');
+Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-
-$task = new PluginResourcesTask();
+$task = new Task();
 
 if (($task->canView() || Session::haveRight("config", UPDATE))) {
-   //if $_GET["plugin_resources_resources_id"] exist this show list of tasks from a resource
-   //else show all resources
-   if (isset($_GET["plugin_resources_resources_id"]) && !empty($_GET["plugin_resources_resources_id"])) {
-      $_GET["field"] = [0 => "13"];
-      $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
-   }
+    //if $_GET["plugin_resources_resources_id"] exist this show list of tasks from a resource
+    //else show all resources
+    if (isset($_GET["plugin_resources_resources_id"]) && !empty($_GET["plugin_resources_resources_id"])) {
+        $_GET["field"] = [0 => "13"];
+        $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
+    }
 
-   Search::show("PluginResourcesTask");
-
-
+    Search::show(Task::class);
 } else {
     throw new AccessDeniedHttpException();
 }

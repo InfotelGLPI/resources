@@ -24,27 +24,29 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Actionprofile;
 
-$actionprofile = new PluginResourcesActionprofile();
+$actionprofile = new Actionprofile();
 if (isset($_POST["addAction"])) {
+    $actionprofile->check(-1, CREATE, $_POST);
+    if (isset($_POST["actions_id"])) {
+        $_POST["actions_id"] = json_encode($_POST["actions_id"]);
+    } else {
+        $_POST["actions_id"] = "[]";
+    }
+    if ($actionprofile->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])) {
+        $actionprofile->update([
+            'id' => $actionprofile->fields['id'],
+            'actions_id' => $_POST['actions_id']
+        ]);
+    } else {
+        $actionprofile->add([
+            'actions_id' => $_POST['actions_id'],
+            'profiles_id' => $_POST['profiles_id']
+        ]);
+    }
 
-      $actionprofile->check(-1, CREATE, $_POST);
-      if(isset($_POST["actions_id"])){
-         $_POST["actions_id"] = json_encode($_POST["actions_id"]);
-      }else{
-         $_POST["actions_id"] = "[]";
-      }
-      if($actionprofile->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])){
-         $actionprofile->update(['id'   => $actionprofile->fields['id'],
-                         'actions_id'   => $_POST['actions_id']]);
-      } else{
-         $actionprofile->add(['actions_id'   => $_POST['actions_id'],
-                      'profiles_id' => $_POST['profiles_id']]);
-      }
-
-      Html::back();
-
+    Html::back();
 } else {
-   Html::back();
+    Html::back();
 }

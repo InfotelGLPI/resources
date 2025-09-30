@@ -27,27 +27,27 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\ResourceResting;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 if (isset($_POST['action'])) {
-   $resting = new PluginResourcesResourceResting();
-   switch ($_POST['action']) {
-      case "loadResting" :
-         $resting->loadResting($_POST['plugin_resources_resources_id']);
-         break;
+    $resting = new ResourceResting();
+    switch ($_POST['action']) {
+        case "loadResting" :
+            $resting->loadResting($_POST['plugin_resources_resources_id']);
+            break;
 
 
-      case "loadEndDateResting" :
-         $resting->loadEndDateResting($_POST['plugin_resources_resting_id']);
-         break;
+        case "loadEndDateResting" :
+            $resting->loadEndDateResting($_POST['plugin_resources_resting_id']);
+            break;
 
-      case "loadButtonResting" :
-         $resting->loadButtonResting($_POST['plugin_resources_resting_id']);
-         break;
-
-   }
+        case "loadButtonResting" :
+            $resting->loadButtonResting($_POST['plugin_resources_resting_id']);
+            break;
+    }
 }

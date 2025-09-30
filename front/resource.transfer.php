@@ -28,43 +28,42 @@
  */
 
 use GlpiPlugin\Servicecatalog\Main;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
-$resource = new PluginResourcesResource();
+$resource = new Resource();
 
 if (isset($_POST["transferresources"])) {
-   if ($resource->checkTransferMandatoryFields($_POST)) {
-      $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
-      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resource.change.php");
-
-   } else {
-      Html::back();
-   }
-
+    if ($resource->checkTransferMandatoryFields($_POST)) {
+        $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
+        Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php");
+    } else {
+        Html::back();
+    }
 } else {
-   if ($resource->canView() || Session::haveRight("config", "w")) {
-      //show remove resource form
-      $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
-   }
+    if ($resource->canView() || Session::haveRight("config", "w")) {
+        //show remove resource form
+        $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

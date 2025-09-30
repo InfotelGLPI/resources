@@ -28,51 +28,96 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE        = 1;
-$DBCONNECTION_REQUIRED = 1;
+use GlpiPlugin\Resources\Employer;
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\EmploymentState;
+use GlpiPlugin\Resources\Profession;
+use GlpiPlugin\Resources\ProfessionCategory;
+use GlpiPlugin\Resources\ProfessionLine;
+use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Resource;
 
-include ("../../../../inc/includes.php");
+$USEDBREPLICATE = 1;
+$DBCONNECTION_REQUIRED = 1;
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("resourceemploymentdiff_report_title", "resources"));
 
 // Columns title (optional)
-$report->setColumns( [new PluginReportsColumn('registration_number', _x('user', 'Administrative number'),
-                                                   ['sorton' => 'registration_number']),
-                           new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
-                                                   ['sorton' => 'resource_name']),
-                           new PluginReportsColumn('firstname', __('First name'),
-                                                   ['sorton' => 'firstname']),
-                           new PluginReportsColumnInteger('quota', __('Quota', 'resources'),
-                                                   ['sorton' => 'quota']),
-                           new PluginReportsColumn('resource_rank', __('Resource', 'resources')." - ".PluginResourcesRank::getTypeName(1),
-                                                   ['sorton' => 'resource_rank']),
-                           new PluginReportsColumn('resource_profession', __('Resource', 'resources')." - ".PluginResourcesProfession::getTypeName(1),
-                                                   ['sorton' => 'resource_profession']),
-                           new PluginReportsColumn('resource_professionline', __('Resource', 'resources')." - ".PluginResourcesProfessionLine::getTypeName(1),
-                                                   ['sorton' => 'resource_professionline']),
-                           new PluginReportsColumn('resource_professioncategory', __('Resource', 'resources')." - ".PluginResourcesProfessionCategory::getTypeName(1),
-                                                   ['sorton' => 'resource_professioncategory']),
-                           new PluginReportsColumnLink('employment_id', __('Name')." - ".PluginResourcesEmployment::getTypeName(1),
-                                                   'PluginResourcesEmployment', ['sorton' => 'employment_name']),
-                           new PluginReportsColumnFloat('ratio_employment_budget', __('Ratio Employment / Budget', 'resources'),
-                                                   ['sorton' => 'ratio_employment_budget']),
-                           new PluginReportsColumn('employment_rank', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesRank::getTypeName(1),
-                                                   ['sorton' => 'employment_rank']),
-                           new PluginReportsColumn('employment_profession', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfession::getTypeName(1),
-                                                   ['sorton' => 'employment_profession']),
-                           new PluginReportsColumn('employment_professionline', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionLine::getTypeName(1),
-                                                   ['sorton' => 'employment_professionline']),
-                           new PluginReportsColumn('employment_professioncategory', PluginResourcesEmployment::getTypeName(1)." - ".PluginResourcesProfessionCategory::getTypeName(1),
-                                                   ['sorton' => 'employment_professioncategory']),
-                           new PluginReportsColumnDate('begin_date', __('Begin date'),
-                                                   ['sorton' => 'begin_date']),
-                           new PluginReportsColumnDate('end_date', __('End date'),
-                                                   ['sorton' => 'end_date']),
-                           new PluginReportsColumn('employment_state', PluginResourcesEmploymentState::getTypeName(1),
-                                                   ['sorton' => 'employment_state']),
-                           new PluginReportsColumn('employer_name', __('Name')." - ".PluginResourcesEmployer::getTypeName(1),
-                                                   ['sorton' => 'employer_name']),]);
+$report->setColumns([
+    new PluginReportsColumn(
+        'registration_number', _x('user', 'Administrative number'),
+        ['sorton' => 'registration_number']
+    ),
+    new PluginReportsColumnLink(
+        'resource_id', __('Surname'), Resource::class,
+        ['sorton' => 'resource_name']
+    ),
+    new PluginReportsColumn(
+        'firstname', __('First name'),
+        ['sorton' => 'firstname']
+    ),
+    new PluginReportsColumnInteger(
+        'quota', __('Quota', 'resources'),
+        ['sorton' => 'quota']
+    ),
+    new PluginReportsColumn(
+        'resource_rank', __('Resource', 'resources') . " - " . Rank::getTypeName(1),
+        ['sorton' => 'resource_rank']
+    ),
+    new PluginReportsColumn(
+        'resource_profession', __('Resource', 'resources') . " - " . Profession::getTypeName(1),
+        ['sorton' => 'resource_profession']
+    ),
+    new PluginReportsColumn(
+        'resource_professionline', __('Resource', 'resources') . " - " . ProfessionLine::getTypeName(1),
+        ['sorton' => 'resource_professionline']
+    ),
+    new PluginReportsColumn(
+        'resource_professioncategory', __('Resource', 'resources') . " - " . ProfessionCategory::getTypeName(1),
+        ['sorton' => 'resource_professioncategory']
+    ),
+    new PluginReportsColumnLink(
+        'employment_id', __('Name') . " - " . Employment::getTypeName(1),
+        Employment::class, ['sorton' => 'employment_name']
+    ),
+    new PluginReportsColumnFloat(
+        'ratio_employment_budget', __('Ratio Employment / Budget', 'resources'),
+        ['sorton' => 'ratio_employment_budget']
+    ),
+    new PluginReportsColumn(
+        'employment_rank', Employment::getTypeName(1) . " - " . Rank::getTypeName(1),
+        ['sorton' => 'employment_rank']
+    ),
+    new PluginReportsColumn(
+        'employment_profession', Employment::getTypeName(1) . " - " . Profession::getTypeName(1),
+        ['sorton' => 'employment_profession']
+    ),
+    new PluginReportsColumn(
+        'employment_professionline', Employment::getTypeName(1) . " - " . ProfessionLine::getTypeName(1),
+        ['sorton' => 'employment_professionline']
+    ),
+    new PluginReportsColumn(
+        'employment_professioncategory', Employment::getTypeName(1) . " - " . ProfessionCategory::getTypeName(1),
+        ['sorton' => 'employment_professioncategory']
+    ),
+    new PluginReportsColumnDate(
+        'begin_date', __('Begin date'),
+        ['sorton' => 'begin_date']
+    ),
+    new PluginReportsColumnDate(
+        'end_date', __('End date'),
+        ['sorton' => 'end_date']
+    ),
+    new PluginReportsColumn(
+        'employment_state', EmploymentState::getTypeName(1),
+        ['sorton' => 'employment_state']
+    ),
+    new PluginReportsColumn(
+        'employer_name', __('Name') . " - " . Employer::getTypeName(1),
+        ['sorton' => 'employer_name']
+    ),
+]);
 
 $dbu = new DbUtils();
 // SQL statement
@@ -133,11 +178,11 @@ $query = "SELECT `glpi_users`.`registration_number`,
                           AND `glpi_plugin_resources_employments`.`plugin_resources_resources_id` <> 0
                           AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                           AND `glpi_plugin_resources_resources`.`is_template` = 0
-                          ".$condition." )
+                          " . $condition . " )
                    GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`
                    HAVING (resource_profession <> employment_profession
-                                 OR resource_rank <> employment_rank)".
-                     $report->getOrderBy('registration_number');
+                                 OR resource_rank <> employment_rank)" .
+    $report->getOrderBy('registration_number');
 
 
 $report->setSqlRequest($query);

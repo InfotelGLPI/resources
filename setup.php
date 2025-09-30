@@ -31,14 +31,35 @@
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Behaviors\Common;
 use GlpiPlugin\Behaviors\Rule;
+use GlpiPlugin\Mydashboard\Menu as DashboardMenu;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Resources\Dashboard;
+use GlpiPlugin\Resources\Directory;
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\LinkAd;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Metademand;
+use GlpiPlugin\Resources\Notification;
+use GlpiPlugin\Resources\Profile;
+use GlpiPlugin\Resources\Recap;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Item;
+use GlpiPlugin\Resources\ResourcePDF;
+use GlpiPlugin\Resources\RuleChecklist;
+use GlpiPlugin\Resources\RuleChecklistCollection;
+use GlpiPlugin\Resources\RuleContracttype;
+use GlpiPlugin\Resources\RuleContracttypeCollection;
+use GlpiPlugin\Resources\RuleContracttypeHidden;
+use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
+use GlpiPlugin\Resources\ServiceCatalog;
+use GlpiPlugin\Resources\TaskPlanning;
 
-define('PLUGIN_RESOURCES_VERSION', '3.0.7');
+define('PLUGIN_RESOURCES_VERSION', '4.0.0');
 
 global $CFG_GLPI;
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
     define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
-    //   define("PLUGIN_RESOURCES_WEBDIR", Plugin::getPhpDir("resources",false));
     $root = $CFG_GLPI['root_doc'] . '/plugins/resources';
     define("PLUGIN_RESOURCES_WEBDIR", $root);
 }
@@ -51,105 +72,104 @@ function plugin_init_resources()
     // add autoload for vendor
     include_once(PLUGIN_RESOURCES_DIR . "/vendor/autoload.php");
 
-    $PLUGIN_HOOKS['csrf_compliant']['resources']   = true;
-    $PLUGIN_HOOKS['change_profile']['resources']   = [PluginResourcesProfile::class, 'initProfile'];
+    $PLUGIN_HOOKS['csrf_compliant']['resources'] = true;
+    $PLUGIN_HOOKS['change_profile']['resources'] = [Profile::class, 'initProfile'];
     $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
 
     if (Session::getLoginUserID()) {
-        $PLUGIN_HOOKS['pre_item_form']['resources']  = [PluginResourcesLinkAd::class, 'messageSolution'];
-        $PLUGIN_HOOKS['post_item_form']['resources'] = [PluginResourcesLinkAd::class, 'deleteButtton'];
-        $noupdate                                    = false;
+        $PLUGIN_HOOKS['pre_item_form']['resources'] = [LinkAd::class, 'messageSolution'];
+        $PLUGIN_HOOKS['post_item_form']['resources'] = [LinkAd::class, 'deleteButtton'];
+        $noupdate = false;
         if (Session::getCurrentInterface() != 'central') {
             $noupdate = true;
         }
 
-        Plugin::registerClass(PluginResourcesResource::class, [
+        Plugin::registerClass(Resource::class, [
             //         'linkuser_types'               => true,
-            'document_types'               => true,
-            'ticket_types'                 => true,
-            'helpdesk_visible_types'       => true,
-            'notificationtemplates_types'  => true,
-            'unicity_types'                => true,
+            'document_types' => true,
+            'ticket_types' => true,
+            'helpdesk_visible_types' => true,
+            'notificationtemplates_types' => true,
+            'unicity_types' => true,
             //         'massiveaction_nodelete_types' => $noupdate,
             //         'massiveaction_noupdate_types' => $noupdate
         ]);
 
-        Plugin::registerClass(PluginResourcesDirectory::class, [
+        Plugin::registerClass(Directory::class, [
             //         'massiveaction_nodelete_types' => true,
             //         'massiveaction_noupdate_types' => true
         ]);
 
-        Plugin::registerClass(PluginResourcesRecap::class, [
+        Plugin::registerClass(Recap::class, [
             //         'massiveaction_nodelete_types' => true,
             //         'massiveaction_noupdate_types' => true
         ]);
 
-        Plugin::registerClass(PluginResourcesTaskPlanning::class, [
+        Plugin::registerClass(TaskPlanning::class, [
             'planning_types' => true,
         ]);
 
-        Plugin::registerClass(PluginResourcesRuleChecklistCollection::class, [
+        Plugin::registerClass(RuleChecklistCollection::class, [
             'rulecollections_types' => true,
 
         ]);
 
-        Plugin::registerClass(PluginResourcesRuleContracttypeCollection::class, [
+        Plugin::registerClass(RuleContracttypeCollection::class, [
             'rulecollections_types' => true,
 
         ]);
-        Plugin::registerClass(PluginResourcesRuleContracttypeHiddenCollection::class, [
+        Plugin::registerClass(RuleContracttypeHiddenCollection::class, [
             'rulecollections_types' => true,
 
         ]);
 
         Plugin::registerClass(
-            PluginResourcesProfile::class,
+            Profile::class,
             ['addtabon' => 'Profile']
         );
 
-        Plugin::registerClass(PluginResourcesEmployment::class, [
+        Plugin::registerClass(Employment::class, [
             //         'massiveaction_nodelete_types' => true
         ]);
 
         if (Session::haveRight("plugin_servicecatalog", READ)
             || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
-            $PLUGIN_HOOKS['servicecatalog']['resources'] = ['PluginResourcesServicecatalog'];
+            $PLUGIN_HOOKS['servicecatalog']['resources'] = [ServiceCatalog::class];
         }
 
         if ((Session::haveRight("plugin_resources", READ)
-             || Session::haveright("plugin_resources_employee", UPDATE))) {
+            || Session::haveright("plugin_resources_employee", UPDATE))) {
             $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_WEBDIR . '/front/menu.php';
-            $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['resources'] = PluginResourcesResource::getIcon();
+            $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['resources'] = Resource::getIcon();
         }
 
         if (Session::haveright("plugin_resources_checklist", READ)
-            && class_exists('PluginMydashboardMenu')
+            && class_exists(DashboardMenu::class)
         ) {
-            $PLUGIN_HOOKS['mydashboard']['resources'] = ["PluginResourcesDashboard"];
+            $PLUGIN_HOOKS['mydashboard']['resources'] = [Dashboard::class];
         }
 
-        if (class_exists('PluginPositionsPosition')) {
-            PluginPositionsPosition::registerType('PluginResourcesResource');
-            //$PLUGIN_HOOKS['plugin_positions']['PluginResourcesResource']='plugin_resources_positions_pics';
+        if (class_exists(Position::class)) {
+            Position::registerType(Resource::class);
         }
 
         if (class_exists(Common::class)) {
-            Common::addCloneType(PluginResourcesRuleChecklist::class, Rule::class);
-            Common::addCloneType(PluginResourcesRuleContracttype::class, Rule::class);
-            Common::addCloneType(PluginResourcesRuleContracttypeHidden::class, Rule::class); // TODO Confirm usefull
+            Common::addCloneType(RuleChecklist::class, Rule::class);
+            Common::addCloneType(RuleContracttype::class, Rule::class);
+            Common::addCloneType(RuleContracttypeHidden::class, Rule::class); // TODO Confirm usefull
         }
 
         if (class_exists('PluginTreeviewConfig')) {
-            PluginTreeviewConfig::registerType(PluginResourcesResource::class);
-            $PLUGIN_HOOKS['treeview']['PluginResourcesResource'] = '../resources/pics/miniresources.png';
-            $PLUGIN_HOOKS['treeview_params']['resources']        = [PluginResourcesResource::class, 'showResourceTreeview'];
+            PluginTreeviewConfig::registerType(Resource::class);
+            $PLUGIN_HOOKS['treeview'][Resource::class] = '../resources/pics/miniresources.png';
+            $PLUGIN_HOOKS['treeview_params']['resources'] = [Resource::class, 'showResourceTreeview'];
         }
 
         if ((Session::haveRight("plugin_resources", READ)
-             || Session::haveright("plugin_resources_employee", UPDATE))) {
-            $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => 'PluginResourcesMenu'];
+            || Session::haveright("plugin_resources_employee", UPDATE))) {
+            $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => Menu::class];
         }
-        Plugin::registerClass(PluginResourcesLinkAd::class, ['addtabon' => 'Ticket']);
+        Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
         // Resource menu
         if (Session::haveRight("plugin_resources", READ)
             || Session::haveright("plugin_resources_employee", UPDATE)) {
@@ -167,8 +187,9 @@ function plugin_init_resources()
 
         // Add specific files to add to the header : javascript or css
         if (Session::haveRight("plugin_resources", READ)) {
-            $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources']        = ["css/resources.css"];
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = ["resources.js",
+            $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'] = ["css/resources.css"];
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
+                "resources.js",
                 "lib/plugins/jquery.address.js",
                 "lib/plugins/jquery.mousewheel.js",
                 "lib/plugins/jquery.scroll.js",
@@ -176,32 +197,36 @@ function plugin_init_resources()
 
             if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
                 $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
-                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][]        = "css/resourcecard.css";
+                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
             }
         }
 
 
         //TODO : Check
-        $PLUGIN_HOOKS['plugin_pdf']['PluginResourcesResource'] = 'PluginResourcesResourcePDF';
+        $PLUGIN_HOOKS['plugin_pdf'][Resource::class] = ResourcePDF::class;
 
         //Clean Plugin on Profile delete
-        if (class_exists('PluginResourcesResource_Item')) { // only if plugin activated
-            $PLUGIN_HOOKS['pre_item_purge']['resources']                = ['PluginResourcesResource' => ['PluginResourcesNotification', 'purgeNotification']];
+        if (class_exists(Resource_Item::class)) { // only if plugin activated
+            $PLUGIN_HOOKS['pre_item_purge']['resources'] = [
+                Resource::class => [
+                    Notification::class,
+                    'purgeNotification'
+                ]
+            ];
             $PLUGIN_HOOKS['plugin_datainjection_populate']['resources'] = 'plugin_datainjection_populate_resources';
         }
 
         //planning action
-        $PLUGIN_HOOKS['planning_populate']['resources'] = ['PluginResourcesTaskPlanning', 'populatePlanning'];
-        $PLUGIN_HOOKS['display_planning']['resources']  = ['PluginResourcesTaskPlanning', 'displayPlanningItem'];
-        $PLUGIN_HOOKS['migratetypes']['resources']      = 'plugin_datainjection_migratetypes_resources';
+        $PLUGIN_HOOKS['planning_populate']['resources'] = [TaskPlanning::class, 'populatePlanning'];
+        $PLUGIN_HOOKS['display_planning']['resources'] = [TaskPlanning::class, 'displayPlanningItem'];
+        $PLUGIN_HOOKS['migratetypes']['resources'] = 'plugin_datainjection_migratetypes_resources';
 
-        $PLUGIN_HOOKS['metademands']['resources'] = ['PluginResourcesMetademand'];
+        $PLUGIN_HOOKS['metademands']['resources'] = [Metademand::class];
     }
 
 
     // End init, when all types are registered
     $PLUGIN_HOOKS['post_init']['resources'] = 'plugin_resources_postinit';
-
 }
 
 // Get the name and the version of the plugin - Needed
@@ -210,13 +235,12 @@ function plugin_init_resources()
  */
 function plugin_version_resources()
 {
-
     return [
-        'name'         => _n('Human Resource', 'Human Resources', 2, 'resources'),
-        'version'      => PLUGIN_RESOURCES_VERSION,
-        'license'      => 'GPLv2+',
-        'author'       => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD",
-        'homepage'     => 'https://github.com/InfotelGLPI/resources',
+        'name' => _n('Human Resource', 'Human Resources', 2, 'resources'),
+        'version' => PLUGIN_RESOURCES_VERSION,
+        'license' => 'GPLv2+',
+        'author' => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD",
+        'homepage' => 'https://github.com/InfotelGLPI/resources',
         'requirements' => [
             'glpi' => [
                 'min' => '11.0',
@@ -236,7 +260,6 @@ function plugin_version_resources()
  */
 function plugin_resources_check_prerequisites()
 {
-
     if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
         echo "Run composer install --no-dev in the plugin directory<br>";
         return false;
@@ -252,6 +275,6 @@ function plugin_resources_check_prerequisites()
  */
 function plugin_datainjection_migratetypes_resources($types)
 {
-    $types[4300] = PluginResourcesResource::class;
+    $types[4300] = Resource::class;
     return $types;
 }

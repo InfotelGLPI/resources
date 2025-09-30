@@ -27,25 +27,32 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Service;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownService.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkLoginUser();
 
-if ($_POST['plugin_resources_departments_id']>0) {
-   $rand = $_POST['rand'];
-   $opt = ['name'   => "plugin_resources_services_id",
-           'entity' => $_SESSION['glpiactiveentities'],
-           'rand' => $rand,
-           'display' => false];
-   $params = ['plugin_resources_services_id' => '__VALUE__',
-              'rand'  => $rand,
-   ];
-   Ajax::updateItemOnSelectEvent("dropdown_plugin_resources_services_id$rand", "show_roles", "../ajax/dropdownRole.php", $params);
-   echo PluginResourcesService::dropdownFromDepart($_POST['plugin_resources_departments_id'],$opt);
-
-
+if ($_POST['plugin_resources_departments_id'] > 0) {
+    $rand = $_POST['rand'];
+    $opt = [
+        'name' => "plugin_resources_services_id",
+        'entity' => $_SESSION['glpiactiveentities'],
+        'rand' => $rand,
+        'display' => false
+    ];
+    $params = [
+        'plugin_resources_services_id' => '__VALUE__',
+        'rand' => $rand,
+    ];
+    Ajax::updateItemOnSelectEvent(
+        "dropdown_plugin_resources_services_id$rand",
+        "show_roles",
+        "../ajax/dropdownRole.php",
+        $params
+    );
+    echo Service::dropdownFromDepart($_POST['plugin_resources_departments_id'], $opt);
 }
 

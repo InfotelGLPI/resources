@@ -24,27 +24,29 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Contracttypeprofile;
 
-$contracttype = new PluginResourcesContracttypeprofile();
+$contracttype = new Contracttypeprofile();
 if (isset($_POST["addContracttype"])) {
+    $contracttype->check(-1, CREATE, $_POST);
+    if (isset($_POST["plugin_resources_contracttypes_id"])) {
+        $_POST["plugin_resources_contracttypes_id"] = json_encode($_POST["plugin_resources_contracttypes_id"]);
+    } else {
+        $_POST["plugin_resources_contracttypes_id"] = "[]";
+    }
+    if ($contracttype->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])) {
+        $contracttype->update([
+            'id' => $contracttype->fields['id'],
+            'plugin_resources_contracttypes_id' => $_POST['plugin_resources_contracttypes_id']
+        ]);
+    } else {
+        $contracttype->add([
+            'plugin_resources_contracttypes_id' => $_POST['plugin_resources_contracttypes_id'],
+            'profiles_id' => $_POST['profiles_id']
+        ]);
+    }
 
-      $contracttype->check(-1, CREATE, $_POST);
-      if(isset($_POST["plugin_resources_contracttypes_id"])){
-         $_POST["plugin_resources_contracttypes_id"] = json_encode($_POST["plugin_resources_contracttypes_id"]);
-      }else{
-         $_POST["plugin_resources_contracttypes_id"] = "[]";
-      }
-      if($contracttype->getFromDBByCrit(['profiles_id' => $_POST['profiles_id']])){
-         $contracttype->update(['id'   => $contracttype->fields['id'],
-                         'plugin_resources_contracttypes_id'   => $_POST['plugin_resources_contracttypes_id']]);
-      } else{
-         $contracttype->add(['plugin_resources_contracttypes_id'   => $_POST['plugin_resources_contracttypes_id'],
-                      'profiles_id' => $_POST['profiles_id']]);
-      }
-
-      Html::back();
-
+    Html::back();
 } else {
-   Html::back();
+    Html::back();
 }

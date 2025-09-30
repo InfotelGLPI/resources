@@ -28,35 +28,56 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE        = 1;
+use GlpiPlugin\Resources\Profession;
+use GlpiPlugin\Resources\Rank;
+
+$USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
 
-include ("../../../../inc/includes.php");
+include("../../../../inc/includes.php");
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("lapserankprofession_report_title", "resources"));
 
 // Columns title (optional)
-$report->setColumns( [new PluginReportsColumnLink('rank_id', PluginResourcesRank::getTypeName(1), 'PluginResourcesRank',
-                                                   ['sorton' => 'rank_name']),
-                           new PluginReportsColumn('rank_code', PluginResourcesRank::getTypeName(1)." - ".__('Code', 'resources'),
-                                                   ['sorton' => 'rank_code']),
-                           new PluginReportsColumnDate('rank_begin_date', PluginResourcesRank::getTypeName(1)." - ".__('Begin date'),
-                                                   ['sorton' => 'rank_begin_date']),
-                           new PluginReportsColumnDate('rank_end_date', PluginResourcesRank::getTypeName(1)." - ".__('End date'),
-                                                   ['sorton' => 'rank_end_date']),
-                           new PluginReportsColumnLink('prof_id', PluginResourcesProfession::getTypeName(1), 'PluginResourcesProfession',
-                                                   ['sorton' => 'prof_name']),
-                           new PluginReportsColumn('prof_code', PluginResourcesProfession::getTypeName(1)." - ".__('Code', 'resources'),
-                                                   ['sorton' => 'prof_code']),
-                           new PluginReportsColumnDate('prof_begin_date', PluginResourcesProfession::getTypeName(1)." - ".__('Begin date'),
-                                                   ['sorton' => 'prof_begin_date']),
-                           new PluginReportsColumnDate('prof_end_date', PluginResourcesProfession::getTypeName(1)." - ".__('End date'),
-                                                   ['sorton' => 'prof_end_date']),]);
+$report->setColumns([
+    new PluginReportsColumnLink(
+        'rank_id', Rank::getTypeName(1), Rank::class,
+        ['sorton' => 'rank_name']
+    ),
+    new PluginReportsColumn(
+        'rank_code', Rank::getTypeName(1) . " - " . __('Code', 'resources'),
+        ['sorton' => 'rank_code']
+    ),
+    new PluginReportsColumnDate(
+        'rank_begin_date', Rank::getTypeName(1) . " - " . __('Begin date'),
+        ['sorton' => 'rank_begin_date']
+    ),
+    new PluginReportsColumnDate(
+        'rank_end_date', Rank::getTypeName(1) . " - " . __('End date'),
+        ['sorton' => 'rank_end_date']
+    ),
+    new PluginReportsColumnLink(
+        'prof_id', Profession::getTypeName(1), Profession::class,
+        ['sorton' => 'prof_name']
+    ),
+    new PluginReportsColumn(
+        'prof_code', Profession::getTypeName(1) . " - " . __('Code', 'resources'),
+        ['sorton' => 'prof_code']
+    ),
+    new PluginReportsColumnDate(
+        'prof_begin_date', Profession::getTypeName(1) . " - " . __('Begin date'),
+        ['sorton' => 'prof_begin_date']
+    ),
+    new PluginReportsColumnDate(
+        'prof_end_date', Profession::getTypeName(1) . " - " . __('End date'),
+        ['sorton' => 'prof_end_date']
+    ),
+]);
 
 // SQL statement
 $condition = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
-$date=date("Y-m-d");
+$date = date("Y-m-d");
 
 //display only leaving resource with active employment
 $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
@@ -73,9 +94,9 @@ $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
           LEFT JOIN `glpi_plugin_resources_professions`
                ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`
                AND ((`glpi_plugin_resources_professions`.`begin_date` IS NULL)
-                        OR (`glpi_plugin_resources_professions`.`begin_date` < '".$date."')
+                        OR (`glpi_plugin_resources_professions`.`begin_date` < '" . $date . "')
                     AND (`glpi_plugin_resources_professions`.`end_date` IS NULL)
-                        OR (`glpi_plugin_resources_professions`.`end_date` > '".$date."')))
+                        OR (`glpi_plugin_resources_professions`.`end_date` > '" . $date . "')))
           WHERE (`glpi_plugin_resources_ranks`.`is_active` <> `glpi_plugin_resources_professions`.`is_active`)
                OR (`glpi_plugin_resources_ranks`.`begin_date` > `glpi_plugin_resources_professions`.`end_date`)
                OR (`glpi_plugin_resources_ranks`.`end_date` < `glpi_plugin_resources_professions`.`begin_date`)
@@ -83,7 +104,7 @@ $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
                OR (`glpi_plugin_resources_ranks`.`begin_date` < `glpi_plugin_resources_professions`.`begin_date`)
                OR (`glpi_plugin_resources_ranks`.`end_date` IS NULL AND `glpi_plugin_resources_professions`.`end_date` IS NOT NULL)
                OR (`glpi_plugin_resources_ranks`.`end_date` IS NOT NULL AND `glpi_plugin_resources_professions`.`end_date` IS NULL)
-             ".$condition.$report->getOrderBy('rank_id');
+             " . $condition . $report->getOrderBy('rank_id');
 
 
 $report->setSqlRequest($query);

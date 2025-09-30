@@ -28,10 +28,10 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE         = 1;
-$DBCONNECTION_REQUIRED  = 0;
+$USEDBREPLICATE = 1;
+$DBCONNECTION_REQUIRED = 0;
 
-include ("../../../../inc/includes.php");
+include("../../../../inc/includes.php");
 
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
@@ -39,8 +39,12 @@ include ("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("userwithmorethanoneresource_report_title", "resources"));
 
 // Columns title (optional)
-$report->setColumns( [new PluginReportsColumnLink('items_id', __('User'), 'User',
-                                                  ['sorton' => 'items_id']),]);
+$report->setColumns([
+    new PluginReportsColumnLink(
+        'items_id', __('User'), 'User',
+        ['sorton' => 'items_id']
+    ),
+]);
 
 
 //display only resource without user linked
@@ -50,8 +54,8 @@ $query = "SELECT `glpi_plugin_resources_resources_items`.`items_id` as items_id
                ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
           LEFT JOIN `glpi_users`
                ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`)
-          WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User' 
-            AND `glpi_users`.`is_active` = 1 
+          WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User'
+            AND `glpi_users`.`is_active` = 1
             AND `glpi_users`.`is_deleted` = 0
           AND `glpi_plugin_resources_resources`.`is_deleted` = 0
           GROUP BY items_id HAVING COUNT(items_id) > 1 ";

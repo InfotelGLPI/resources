@@ -27,61 +27,59 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Choice;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Servicecatalog\Main;
 
-include ('../../../inc/includes.php');
 
 //from helpdesk
 if (Plugin::isPluginActive('servicecatalog')) {
-    Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+    Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+    Html::helpHeader(Resource::getTypeName(2));
 }
 
-$choice = new PluginResourcesChoice();
-$resource = new PluginResourcesResource();
+$choice = new Choice();
+$resource = new Resource();
 
 //add items needs from helpdesk
 if (isset($_POST["addhelpdeskitem"])) {
-   if ($_POST['plugin_resources_choiceitems_id'] > 0
-           && $_POST['plugin_resources_resources_id'] > 0) {
-      if ($resource->canCreate()) {
-         $choice->addHelpdeskItem($_POST);
-      }
-   }
-   Html::back();
+    if ($_POST['plugin_resources_choiceitems_id'] > 0
+        && $_POST['plugin_resources_resources_id'] > 0) {
+        if ($resource->canCreate()) {
+            $choice->addHelpdeskItem($_POST);
+        }
+    }
+    Html::back();
 } //delete items needs from helpdesk
-else if (isset($_POST["deletehelpdeskitem"])) {
-   if ($resource->canCreate()) {
-      $choice->delete(['id' => $_POST["id"]]);
-   }
-   Html::back();
-
-   //next step : email and finish resource creation
-} else if (isset($_POST["finish"])) {
-   $resource->redirectToList();
-
-} else if (isset($_POST["updateneedcomment"])) {
-   if ($resource->canCreate()) {
-      foreach ($_POST["updateneedcomment"] as $key => $val) {
-         $varcomment = "commentneed".$key;
-         $values['id'] = $key;
-         $values['commentneed'] = $_POST[$varcomment];
-         $choice->addNeedComment($values);
-      }
-   }
-   Html::back();
-
+elseif (isset($_POST["deletehelpdeskitem"])) {
+    if ($resource->canCreate()) {
+        $choice->delete(['id' => $_POST["id"]]);
+    }
+    Html::back();
+    //next step : email and finish resource creation
+} elseif (isset($_POST["finish"])) {
+    $resource->redirectToList();
+} elseif (isset($_POST["updateneedcomment"])) {
+    if ($resource->canCreate()) {
+        foreach ($_POST["updateneedcomment"] as $key => $val) {
+            $varcomment = "commentneed" . $key;
+            $values['id'] = $key;
+            $values['commentneed'] = $_POST[$varcomment];
+            $choice->addNeedComment($values);
+        }
+    }
+    Html::back();
 } else {
-   //show form items needs from helpdesk
-   if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-      $choice->showItemHelpdesk($_GET["id"], $_GET["exist"]);
-   }
+    //show form items needs from helpdesk
+    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+        $choice->showItemHelpdesk($_GET["id"], $_GET["exist"]);
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 

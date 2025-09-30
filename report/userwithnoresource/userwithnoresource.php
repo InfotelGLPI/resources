@@ -28,7 +28,7 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE        = 1;
+$USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
 include("../../../../inc/includes.php");
@@ -40,14 +40,25 @@ $report = new PluginReportsAutoReport(__("User without resource", "resources"));
 
 // Columns title (optional)
 $report->setColumns(
-   [new PluginReportsColumnLink('user_id', _n('User', 'Users', 1), 'User',
-                                ['sorton' => 'user_name']),
-    new PluginReportsColumn('realname', __('Surname'),
-                            ['sorton' => 'realname']),
-    new PluginReportsColumn('firstname', __('First name'),
-                            ['sorton' => 'firstname']),
-    new PluginReportsColumn('location', __('Location'),
-                            ['sorton' => 'location'])]);
+    [
+        new PluginReportsColumnLink(
+            'user_id', _n('User', 'Users', 1), 'User',
+            ['sorton' => 'user_name']
+        ),
+        new PluginReportsColumn(
+            'realname', __('Surname'),
+            ['sorton' => 'realname']
+        ),
+        new PluginReportsColumn(
+            'firstname', __('First name'),
+            ['sorton' => 'firstname']
+        ),
+        new PluginReportsColumn(
+            'location', __('Location'),
+            ['sorton' => 'location']
+        )
+    ]
+);
 
 // SQL statement
 //$dbu               = new DbUtils();
@@ -68,11 +79,11 @@ $query = "SELECT  `glpi_users`.`id` as user_id,
                FROM `glpi_plugin_resources_resources_items`
                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
                 OR `glpi_users`.`id` IN (SELECT `glpi_plugin_resources_resources_items`.`items_id`
-                FROM `glpi_plugin_resources_resources_items` 
+                FROM `glpi_plugin_resources_resources_items`
                 LEFT JOIN `glpi_plugin_resources_resources`
                 ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
-                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User' 
-                    AND `glpi_plugin_resources_resources`.`is_leaving` = 0 
+                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User'
+                    AND `glpi_plugin_resources_resources`.`is_leaving` = 0
                     AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                     AND  `glpi_plugin_resources_resources`.`date_begin` IS NULL
                     ))

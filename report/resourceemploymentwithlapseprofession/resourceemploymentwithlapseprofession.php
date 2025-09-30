@@ -28,10 +28,14 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE         = 1;
-$DBCONNECTION_REQUIRED  = 0;
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\Profession;
+use GlpiPlugin\Resources\Resource;
 
-include ("../../../../inc/includes.php");
+$USEDBREPLICATE = 1;
+$DBCONNECTION_REQUIRED = 0;
+
+include("../../../../inc/includes.php");
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("resourceemploymentwithlapseprofession_report_title", "resources"));
@@ -40,37 +44,39 @@ $report = new PluginReportsAutoReport(__("resourceemploymentwithlapseprofession_
 //"Report listing resource or employment with lapse profession";
 
 //colname with sort allowed
-$columns = ['entity' => ['sorton' => 'entity'],
-   'name' => ['sorton' => 'name'],
-   'firstname' => ['sorton' => 'firstname'],
-   'registration_number' => ['sorton' => 'registration_number'],
-   'profession' => ['sorton' => 'profession'],
-   'date_begin' => ['sorton' => 'date_begin'],
-   'date_end' => ['sorton' => 'date_end'],
-   'begin_date' => ['sorton' => 'begin_date'],
-   'end_date' => ['sorton' => 'end_date'],];
+$columns = [
+    'entity' => ['sorton' => 'entity'],
+    'name' => ['sorton' => 'name'],
+    'firstname' => ['sorton' => 'firstname'],
+    'registration_number' => ['sorton' => 'registration_number'],
+    'profession' => ['sorton' => 'profession'],
+    'date_begin' => ['sorton' => 'date_begin'],
+    'date_end' => ['sorton' => 'date_end'],
+    'begin_date' => ['sorton' => 'begin_date'],
+    'end_date' => ['sorton' => 'end_date'],
+];
 
 $output_type = Search::HTML_OUTPUT;
 
 if (isset ($_POST['list_limit'])) {
-   $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-   unset ($_POST['list_limit']);
+    $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+    unset ($_POST['list_limit']);
 }
 if (!isset ($_REQUEST['sort'])) {
-   $_REQUEST['sort'] = "entity";
-   $_REQUEST['order'] = "ASC";
+    $_REQUEST['sort'] = "entity";
+    $_REQUEST['order'] = "ASC";
 }
 
 $limit = $_SESSION['glpilist_limit'];
 
 if (isset ($_POST["display_type"])) {
-   $output_type = $_POST["display_type"];
-   if ($output_type < 0) {
-      $output_type = - $output_type;
-      $limit = 0;
-   }
+    $output_type = $_POST["display_type"];
+    if ($output_type < 0) {
+        $output_type = -$output_type;
+        $limit = 0;
+    }
 } else {
-   $output_type = Search::HTML_OUTPUT;
+    $output_type = Search::HTML_OUTPUT;
 }
 
 $title = $report->getFullTitle();
@@ -78,8 +84,8 @@ $title = $report->getFullTitle();
 //to verify if resources exist
 // SQL statement
 $condition = getEntitiesRestrictRequest('WHERE', 'glpi_plugin_resources_resources');
-$date=date("Y-m-d");
-$dataAll=[];
+$date = date("Y-m-d");
+$dataAll = [];
 
 //case resource
 $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
@@ -104,17 +110,17 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
                   ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`)
              LEFT JOIN `glpi_plugin_resources_professions`
                   ON (`glpi_plugin_resources_professions`.`id` = `glpi_plugin_resources_ranks`.`plugin_resources_professions_id`)
-             WHERE ((`glpi_plugin_resources_resources`.`date_begin` < '".$date."'
+             WHERE ((`glpi_plugin_resources_resources`.`date_begin` < '" . $date . "'
                      AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
-                           OR `glpi_plugin_resources_resources`.`date_end` > '".$date."'))
+                           OR `glpi_plugin_resources_resources`.`date_end` > '" . $date . "'))
                      AND `glpi_plugin_resources_professions`.`id` IS NOT NULL
                      AND `glpi_plugin_resources_resources`.`is_leaving` = 0
                      AND `glpi_plugin_resources_resources`.`is_deleted` = 0
                      AND `glpi_plugin_resources_resources`.`is_template` = 0)
                      AND ((`glpi_plugin_resources_resources`.`date_begin` > `glpi_plugin_resources_professions`.`end_date`
                            OR `glpi_plugin_resources_resources`.`date_end` < `glpi_plugin_resources_professions`.`begin_date`)
-                        OR (`glpi_plugin_resources_professions`.`end_date` < '".$date."'
-                           OR `glpi_plugin_resources_professions`.`begin_date` > '".$date."'))";
+                        OR (`glpi_plugin_resources_professions`.`end_date` < '" . $date . "'
+                           OR `glpi_plugin_resources_professions`.`begin_date` > '" . $date . "'))";
 //             WHERE ((`glpi_plugin_resources_resources`.`date_begin` > `glpi_plugin_resources_ranks`.`end_date`
 //                   OR `glpi_plugin_resources_resources`.`date_end` < `glpi_plugin_resources_professions`.`begin_date`
 //                   OR `glpi_plugin_resources_resources`.`date_begin` < '".$date."'
@@ -128,11 +134,11 @@ $query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
 
 $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
 
-$query.=$conditionAll." ".getOrderBy('entity', $columns);
+$query .= $conditionAll . " " . getOrderBy('entity', $columns);
 
 $result = $DB->doQuery($query);
-for ($row_num = 0; $data=$DB->fetchAssoc($result); $row_num++) {
-   $dataAll[$row_num]=$data;
+for ($row_num = 0; $data = $DB->fetchAssoc($result); $row_num++) {
+    $dataAll[$row_num] = $data;
 }
 
 //case employment
@@ -151,14 +157,14 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
              FROM `glpi_plugin_resources_employments`
              LEFT JOIN `glpi_plugin_resources_professions`
                   ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`)
-             WHERE ((`glpi_plugin_resources_employments`.`begin_date` < '".$date."'
+             WHERE ((`glpi_plugin_resources_employments`.`begin_date` < '" . $date . "'
                      AND (`glpi_plugin_resources_employments`.`end_date` IS NULL
-                           OR `glpi_plugin_resources_employments`.`end_date` > '".$date."'))
+                           OR `glpi_plugin_resources_employments`.`end_date` > '" . $date . "'))
                      AND `glpi_plugin_resources_professions`.`id` IS NOT NULL)
                      AND ((`glpi_plugin_resources_employments`.`begin_date` > `glpi_plugin_resources_professions`.`end_date`
                            OR `glpi_plugin_resources_employments`.`end_date` < `glpi_plugin_resources_professions`.`begin_date`)
-                        OR (`glpi_plugin_resources_professions`.`end_date` < '".$date."'
-                           OR `glpi_plugin_resources_professions`.`begin_date` > '".$date."'))";
+                        OR (`glpi_plugin_resources_professions`.`end_date` < '" . $date . "'
+                           OR `glpi_plugin_resources_professions`.`begin_date` > '" . $date . "'))";
 //             WHERE ((`glpi_plugin_resources_employments`.`begin_date` > `glpi_plugin_resources_ranks`.`end_date`
 //                     OR `glpi_plugin_resources_employments`.`end_date` < `glpi_plugin_resources_professions`.`begin_date`
 //                     OR `glpi_plugin_resources_employments`.`begin_date` < '".$date."')
@@ -169,143 +175,142 @@ $queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS enti
 
 $conditionAll = getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
 
-$queryEmploy.=$conditionAll." ".getOrderBy('entity', $columns);
+$queryEmploy .= $conditionAll . " " . getOrderBy('entity', $columns);
 
 foreach ($DB->request($queryEmploy) as $dataEmploy) {
-   $dataAll[$row_num]=$dataEmploy;
-   $row_num++;
+    $dataAll[$row_num] = $dataEmploy;
+    $row_num++;
 }
 
 $nbtot = count($dataAll);
 if ($limit) {
-   $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
-   if ($start >= $nbtot) {
-      $start = 0;
-   }
+    $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+    if ($start >= $nbtot) {
+        $start = 0;
+    }
 } else {
-   $start = 0;
+    $start = 0;
 }
 
 if ($nbtot == 0) {
-   if (!$HEADER_LOADED) {
-      Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-      Report::title();
-   }
-   echo "<div class='center'><span style='color : red;font-weight:bold;'>".__('No results found')."</span></div>";
-   Html::footer();
-} else if ($output_type == Search::PDF_OUTPUT_PORTRAIT
-           || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-   include (GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
-} else if ($output_type == Search::HTML_OUTPUT) {
-   if (!$HEADER_LOADED) {
-      Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-      Report::title();
-   }
-   echo "<div class='center'><table class='tab_cadre_fixe'>";
-   echo "<tr><th>$title</th></tr>\n";
-   echo "<tr class='tab_bg_2 center'><td class='center'>";
-   echo "<form method='POST' action='" .$_SERVER["PHP_SELF"] . "?start=$start'>\n";
+    if (!$HEADER_LOADED) {
+        Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+        Report::title();
+    }
+    echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No results found') . "</span></div>";
+    Html::footer();
+} elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT
+    || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
+    include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
+} elseif ($output_type == Search::HTML_OUTPUT) {
+    if (!$HEADER_LOADED) {
+        Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+        Report::title();
+    }
+    echo "<div class='center'><table class='tab_cadre_fixe'>";
+    echo "<tr><th>$title</th></tr>\n";
+    echo "<tr class='tab_bg_2 center'><td class='center'>";
+    echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
 
-   $param = "";
-   foreach ($_POST as $key => $val) {
-      if (is_array($val)) {
-         foreach ($val as $k => $v) {
-            $name = $key."[$k]";
-            echo Html::hidden($name, ['value' => $v]);
-            if (!empty ($param)) {
-               $param .= "&";
+    $param = "";
+    foreach ($_POST as $key => $val) {
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $name = $key . "[$k]";
+                echo Html::hidden($name, ['value' => $v]);
+                if (!empty ($param)) {
+                    $param .= "&";
+                }
+                $param .= $key . "[" . $k . "]=" . urlencode($v);
             }
-            $param .= $key."[".$k."]=".urlencode($v);
-         }
-      } else {
-         echo Html::hidden($key, ['value' => $val]);
-         if (!empty ($param)) {
-            $param .= "&";
-         }
-         $param .= "$key=" . urlencode($val);
-      }
-   }
-   Dropdown::showOutputFormat();
-   Html::closeForm();
-   echo "</td></tr>";
-   echo "</table></div>";
+        } else {
+            echo Html::hidden($key, ['value' => $val]);
+            if (!empty ($param)) {
+                $param .= "&";
+            }
+            $param .= "$key=" . urlencode($val);
+        }
+    }
+    Dropdown::showOutputFormat();
+    Html::closeForm();
+    echo "</td></tr>";
+    echo "</table></div>";
 
-   Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
+    Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
 }
 
-if ($nbtot >0) {
-   $nbcols = $DB->num_fields($result);
-   $nbrows = $DB->numrows($result);
-   $num = 1;
-   $link  = $_SERVER['PHP_SELF'];
-   $order = 'ASC';
-   $issort = false;
+if ($nbtot > 0) {
+    $nbcols = $DB->num_fields($result);
+    $nbrows = $DB->numrows($result);
+    $num = 1;
+    $link = $_SERVER['PHP_SELF'];
+    $order = 'ASC';
+    $issort = false;
 
-   echo Search::showHeader($output_type, $nbrows, $nbcols, true);
+    echo Search::showHeader($output_type, $nbrows, $nbcols, true);
 
-   echo Search::showNewLine($output_type);
+    echo Search::showNewLine($output_type);
 
-   showTitle($output_type, $num, __('Entity'), 'entity', true);
-   showTitle($output_type, $num, __('Type'), 'type');
-   showTitle($output_type, $num, __('Surname'), 'name', true);
-   showTitle($output_type, $num, __('First name'), 'firstname', true);
-   showTitle($output_type, $num, _x('user', 'Administrative number'), 'registration_number', true);
-   showTitle($output_type, $num, PluginResourcesProfession::getTypeName(1), 'profession', true);
-   showTitle($output_type, $num, __('Arrival date', 'resources'), 'date_begin', true);
-   showTitle($output_type, $num, __('Departure date', 'resources'), 'date_end', true);
-   showTitle($output_type, $num, PluginResourcesProfession::getTypeName(1)." - ".__('Begin date'), 'begin_date', true);
-   showTitle($output_type, $num, PluginResourcesProfession::getTypeName(1)." - ".__('End date'), 'end_date', true);
+    showTitle($output_type, $num, __('Entity'), 'entity', true);
+    showTitle($output_type, $num, __('Type'), 'type');
+    showTitle($output_type, $num, __('Surname'), 'name', true);
+    showTitle($output_type, $num, __('First name'), 'firstname', true);
+    showTitle($output_type, $num, _x('user', 'Administrative number'), 'registration_number', true);
+    showTitle($output_type, $num, Profession::getTypeName(1), 'profession', true);
+    showTitle($output_type, $num, __('Arrival date', 'resources'), 'date_begin', true);
+    showTitle($output_type, $num, __('Departure date', 'resources'), 'date_end', true);
+    showTitle($output_type, $num, Profession::getTypeName(1) . " - " . __('Begin date'), 'begin_date', true);
+    showTitle($output_type, $num, Profession::getTypeName(1) . " - " . __('End date'), 'end_date', true);
 
-   echo Search::showEndLine($output_type);
+    echo Search::showEndLine($output_type);
 
-   if ($limit) {
-      $dataAll= array_slice($dataAll, $start, $limit);
-   }
+    if ($limit) {
+        $dataAll = array_slice($dataAll, $start, $limit);
+    }
 
-   foreach ($dataAll as $key=>$data) {
-      $num = 1;
+    foreach ($dataAll as $key => $data) {
+        $num = 1;
 
-      echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_entities', $data['entity']), $num, $key);
-      if ($data['typeName'] == 'Resource') {
-         $type = PluginResourcesResource::getTypeName(0);
-         $link=Toolbox::getItemTypeFormURL("PluginResourcesResource");
-      } else if ($data['typeName'] == 'Employment') {
-         $type = PluginResourcesEmployment::getTypeName(0);
-         $link=Toolbox::getItemTypeFormURL("PluginResourcesEmployment");
-      }
-      echo Search::showItem($output_type, $type, $num, $key);
+        echo Search::showNewLine($output_type);
+        echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_entities', $data['entity']), $num, $key);
+        if ($data['typeName'] == 'Resource') {
+            $type = Resource::getTypeName(0);
+            $link = Toolbox::getItemTypeFormURL(Resource::class);
+        } elseif ($data['typeName'] == 'Employment') {
+            $type = Employment::getTypeName(0);
+            $link = Toolbox::getItemTypeFormURL(Employment::class);
+        }
+        echo Search::showItem($output_type, $type, $num, $key);
 
 
-      $name = "<a href='".$link."?id=".$data["ID"]."' target='_blank'>";
-      if ($data["name"] == null) {
-         $name.="(".$data["ID"].")";
-      } else {
-         $name.=$data["name"];
-      }
-      $name.="</a>";
-      echo Search::showItem($output_type, $name, $num, $key);
+        $name = "<a href='" . $link . "?id=" . $data["ID"] . "' target='_blank'>";
+        if ($data["name"] == null) {
+            $name .= "(" . $data["ID"] . ")";
+        } else {
+            $name .= $data["name"];
+        }
+        $name .= "</a>";
+        echo Search::showItem($output_type, $name, $num, $key);
 
-      echo Search::showItem($output_type, $data['firstname'], $num, $key);
-      echo Search::showItem($output_type, $data['registration_number'], $num, $key);
+        echo Search::showItem($output_type, $data['firstname'], $num, $key);
+        echo Search::showItem($output_type, $data['registration_number'], $num, $key);
 
-      $link1=Toolbox::getItemTypeFormURL("PluginResourcesProfession");
-      $profName = "<a href='".$link1."?id=".$data["profID"]."' target='_blank'>".$data["profession"]."</a>";
-      echo Search::showItem($output_type, $profName, $num, $key);
+        $link1 = Toolbox::getItemTypeFormURL(Profession::class);
+        $profName = "<a href='" . $link1 . "?id=" . $data["profID"] . "' target='_blank'>" . $data["profession"] . "</a>";
+        echo Search::showItem($output_type, $profName, $num, $key);
 
-      echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);
-      echo Search::showItem($output_type, Html::convDate($data['date_end']), $num, $key);
-      echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
-      echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
-      echo Search::showEndLine($output_type);
+        echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);
+        echo Search::showItem($output_type, Html::convDate($data['date_end']), $num, $key);
+        echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
+        echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
+        echo Search::showEndLine($output_type);
+    }
 
-   }
-
-   echo Search::showFooter($output_type, $title);
+    echo Search::showFooter($output_type, $title);
 }
 
 if ($output_type == Search::HTML_OUTPUT) {
-   Html::footer();
+    Html::footer();
 }
 
 /**
@@ -318,33 +323,39 @@ if ($output_type == Search::HTML_OUTPUT) {
  * @param bool $sort
  * @return mixed
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
-
-   if ($output_type != Search::HTML_OUTPUT ||$sort==false) {
-      echo Search::showHeaderItem($output_type, $title, $num);
-      return;
-   }
-   $order = 'ASC';
-   $issort = false;
-   if (isset($_REQUEST['sort']) && $_REQUEST['sort']==$columnname) {
-      $issort = true;
-      if (isset($_REQUEST['order']) && $_REQUEST['order']=='ASC') {
-         $order = 'DESC';
-      }
-   }
-   $link  = $_SERVER['PHP_SELF'];
-   $first = true;
-   foreach ($_REQUEST as $name => $value) {
-      if (!in_array($name, ['sort','order','PHPSESSID'])) {
-         $link .= ($first ? '?' : '&amp;');
-         $link .= $name .'='.urlencode($value);
-         $first = false;
-      }
-   }
-   $link .= ($first ? '?' : '&amp;').'sort='.urlencode($columnname);
-   $link .= '&amp;order='.$order;
-   echo Search::showHeaderItem($output_type, $title, $num,
-      $link, $issort, ($order=='ASC'?'DESC':'ASC'));
+function showTitle($output_type, &$num, $title, $columnname, $sort = false)
+{
+    if ($output_type != Search::HTML_OUTPUT || $sort == false) {
+        echo Search::showHeaderItem($output_type, $title, $num);
+        return;
+    }
+    $order = 'ASC';
+    $issort = false;
+    if (isset($_REQUEST['sort']) && $_REQUEST['sort'] == $columnname) {
+        $issort = true;
+        if (isset($_REQUEST['order']) && $_REQUEST['order'] == 'ASC') {
+            $order = 'DESC';
+        }
+    }
+    $link = $_SERVER['PHP_SELF'];
+    $first = true;
+    foreach ($_REQUEST as $name => $value) {
+        if (!in_array($name, ['sort', 'order', 'PHPSESSID'])) {
+            $link .= ($first ? '?' : '&amp;');
+            $link .= $name . '=' . urlencode($value);
+            $first = false;
+        }
+    }
+    $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
+    $link .= '&amp;order=' . $order;
+    echo Search::showHeaderItem(
+        $output_type,
+        $title,
+        $num,
+        $link,
+        $issort,
+        ($order == 'ASC' ? 'DESC' : 'ASC')
+    );
 }
 
 /**
@@ -353,20 +364,20 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
  * @param $default string, name of the column used by default
  * @return string
  */
-function getOrderBy($default, $columns) {
+function getOrderBy($default, $columns)
+{
+    if (!isset($_REQUEST['order']) || $_REQUEST['order'] != 'DESC') {
+        $_REQUEST['order'] = 'ASC';
+    }
+    $order = $_REQUEST['order'];
 
-   if (!isset($_REQUEST['order']) || $_REQUEST['order']!='DESC') {
-      $_REQUEST['order'] = 'ASC';
-   }
-   $order   = $_REQUEST['order'];
-
-   $tabs[] = getOrderByFields($default, $columns);
-   if (count($tabs) > 0) {
-      foreach ($tabs as $tab) {
-         return " ORDER BY " . $tab . " " . $order;
-      }
-   }
-   return '';
+    $tabs[] = getOrderByFields($default, $columns);
+    if (count($tabs) > 0) {
+        foreach ($tabs as $tab) {
+            return " ORDER BY " . $tab . " " . $order;
+        }
+    }
+    return '';
 }
 
 /**
@@ -376,19 +387,19 @@ function getOrderBy($default, $columns) {
  *
  * @return array of column names
  */
-function getOrderByFields($default, $columns) {
+function getOrderByFields($default, $columns)
+{
+    if (!isset($_REQUEST['sort'])) {
+        $_REQUEST['sort'] = $default;
+    }
+    $colsort = $_REQUEST['sort'];
 
-   if (!isset($_REQUEST['sort'])) {
-      $_REQUEST['sort'] = $default;
-   }
-   $colsort = $_REQUEST['sort'];
-
-   foreach ($columns as $colname => $column) {
-      if ($colname==$colsort) {
-         return $column['sorton'];
-      }
-   }
-   return [];
+    foreach ($columns as $colname => $column) {
+        if ($colname == $colsort) {
+            return $column['sorton'];
+        }
+    }
+    return [];
 }
 
 

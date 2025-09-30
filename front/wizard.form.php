@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -27,528 +28,586 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Choice;
+use GlpiPlugin\Resources\ContractType;
+use GlpiPlugin\Resources\Employee;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\ResourceHabilitation;
+use GlpiPlugin\Resources\Wizard;
 use GlpiPlugin\Servicecatalog\Main;
 
-include('../../../inc/includes.php');
-
-$resource             = new PluginResourcesResource();
-$employee             = new PluginResourcesEmployee();
-$choice               = new PluginResourcesChoice();
-$resourcehabilitation = new PluginResourcesResourceHabilitation();
+$wizard = new Wizard();
+$resource = new Resource();
+$employee = new Employee();
+$choice = new Choice();
+$resourcehabilitation = new ResourceHabilitation();
 
 $resource->checkGlobal(READ);
 
-if (isset($_POST["secondary_services"])) {
-   $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
-} else {
-   $_POST["secondary_services"] = "";
-}
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-       Main::showDefaultHeaderHelpdesk(PluginResourcesResource::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Resource::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 if (empty($_POST)) {
-   $_POST = $_GET;
+    $_POST = $_GET;
 }
 
-if (isset($_POST["first_step"]) || isset($_GET["first_step"])) {
-   if (!isset($_POST["template"])) {
-      $_POST["template"] = $_GET["template"];
-   }
-   if (!isset($_POST["withtemplate"])) {
-      $_POST["withtemplate"] = $_GET["withtemplate"];
-   }
+if (isset($_POST["secondary_services"])) {
+    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
+} else {
+    $_POST["secondary_services"] = "";
+}
 
-   // Set default value...
-   $values = ['name'                                     => '',
-              'firstname'                                => '',
-              'comment'                                  => '',
-              'locations_id'                             => 0,
-              'users_id'                                 => 0,
-              'users_id_sales'                           => 0,
-              'plugin_resources_departments_id'          => 0,
-              'date_begin'                               => 'NULL',
-              'date_end'                                 => 'NULL',
-              'quota'                                    => 1.0000,
-              'plugin_resources_resourcesituations_id'   => 0,
-              'plugin_resources_contractnatures_id'      => 0,
-              'plugin_resources_ranks_id'                => 0,
-              'plugin_resources_resourcespecialities_id' => 0,
-              'plugin_resources_leavingreasons_id'       => 0,
-              'plugin_resources_habilitations_id'        => 0,
-              'sensitize_security'                       => 0,
-              'read_chart'                               => 0,
-   ];
+if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
+    if (!isset($_POST["template"])) {
+        $_POST["template"] = $_GET["template"];
+    }
+    if (!isset($_POST["withtemplate"])) {
+        $_POST["withtemplate"] = $_GET["withtemplate"];
+    }
 
-   // Clean text fields
-   $values['name']    = stripslashes($values['name']);
+    // Set default value...
+    $values = [
+        'name' => '',
+        'firstname' => '',
+        'comment' => '',
+        'locations_id' => 0,
+        'users_id' => 0,
+        'users_id_sales' => 0,
+        'plugin_resources_departments_id' => 0,
+        'date_begin' => 'NULL',
+        'date_end' => 'NULL',
+        'quota' => 1.0000,
+        'plugin_resources_resourcesituations_id' => 0,
+        'plugin_resources_contractnatures_id' => 0,
+        'plugin_resources_ranks_id' => 0,
+        'plugin_resources_resourcespecialities_id' => 0,
+        'plugin_resources_leavingreasons_id' => 0,
+        'plugin_resources_habilitations_id' => 0,
+        'sensitize_security' => 0,
+        'read_chart' => 0,
+    ];
 
-   $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-   $values['withtemplate'] = $_POST["withtemplate"];
-   $values['new']          = 1;
-   $resource->wizardSecondForm($_POST["template"], $values);
+    // Clean text fields
+    $values['name'] = stripslashes($values['name']);
 
-} else if (isset($_POST["undo_first_step"])) {
-   //if ($resource->getfromDB($_POST["id"]))
-   //$resource->deleteByCriteria(array('id' => $_POST["id"]));
-   $resource->wizardFirstForm();
-
-} else if (isset($_POST["second_step"]) || isset($_POST["second_step_update"])) {
-   $required    = $resource->checkRequiredFields($_POST);
-
-   if (count($required) > 0) {
-      // Set default value...
-      foreach ($_POST as $key => $val) {
-         $values[$key] = $val;
-      }
-
-      // Clean text fields
-      $values['name']    = stripslashes($values['name']);
-
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = $_POST["withtemplate"];
-
-      if (isset($_POST["second_step"])) {
-         $values['new'] = 1;
-      } else if (isset($_POST["second_step_update"])) {
-         $values['new'] = 0;
-      }
-
-      $values["requiredfields"] = 1;
-
-      $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3>" .
-                                                    __('Required fields are not filled. Please try again.', 'resources') . "</h3>"];
-
-      Html::displayMessageAfterRedirect();
-
-      $resource->wizardSecondForm($_POST['id_template'], $values);
-   } else if (isset($_POST['date_begin'])
-          && !empty($_POST['date_begin'])
-              && isset($_POST['date_end'])
-              && !empty($_POST['date_end'])
-          && $_POST['date_end'] < $_POST['date_begin']) {
-         $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3><span class='red'>" .
-                                                       __('The start date must be greater than the end date', 'resources') . "</span></h3>"];
-         Html::displayMessageAfterRedirect();
-         foreach ($_POST as $key => $val) {
-            $values[$key] = $val;
-         }
-         $values['requiredfields'] = 1;
-         $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-         $resource->wizardSecondForm($_POST["id"], $values);
-   } else {
-      $newresource = 0;
-      if ($resource->canCreate() && isset($_POST["second_step"])) {
-
-         unset($_POST['id']);
-         $newresource = $resource->add($_POST);
-         if (isset($_POST['plugin_resources_employers_id']) && $newresource > 0) {
-            $employee = new PluginResourcesEmployee();
-            $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                            'plugin_resources_resources_id' => $newresource,
-                            'plugin_resources_clients_id'   => 0]);
-         }
-      } else if ($resource->canCreate() && isset($_POST["second_step_update"])) {
-         $resource->update($_POST);
-         $newresource = $_POST["id"];
-         if (isset($_POST['plugin_resources_employers_id'])) {
-            $employee = new PluginResourcesEmployee();
-            if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newresource])) {
-               $employee->update(['id'                            => $employee->getID(),
-                                  'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                                  'plugin_resources_resources_id' => $newresource,
-                                  'plugin_resources_clients_id'   => 0]);
-            } else {
-               $employee->add(['plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                               'plugin_resources_resources_id' => $newresource,
-                               'plugin_resources_clients_id'   => 0]);
-            }
-         }
-      }
-
-      //if employee right : next step
-      if ($newresource > 0) {
-
-         $wizard_employee     = PluginResourcesContractType::checkWizardSetup($newresource, "use_employee_wizard");
-         $wizard_need         = PluginResourcesContractType::checkWizardSetup($newresource, "use_need_wizard");
-         $wizard_picture      = PluginResourcesContractType::checkWizardSetup($newresource, "use_picture_wizard");
-         $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($newresource, "use_habilitation_wizard");
-         $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($newresource, "use_entrance_information");
-
-         if ($employee->canCreate() && $wizard_employee) {
-            $employee->wizardThirdForm($newresource);
-         } else if ($wizard_need) {
-            $choice->wizardFourForm($newresource);
-         } else if ($wizard_picture) {
-            $values           = [];
-            $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-            $resource->wizardFiveForm($newresource, $values);
-         } else if ($wizard_habilitation) {
-            $resourcehabilitation->wizardSixForm($newresource);
-         } else if ($wizard_entrance_information) {
-             $resource->wizardEightForm($newresource);
-         } else {
-            $resource->fields['resources_step'] = 'second_step';
-            Plugin::doHook('item_show', $resource);
-            $resource->redirectToList();
-         }
-      } else {
-         Html::back();
-      }
-   }
-
-} else if (isset($_POST["undo_second_step"])) {
-   // Set default value...
-   $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-   $values['withtemplate'] = 0;
-   $values['new']          = 0;
-
-   $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
+    $values['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
+    $values['withtemplate'] = $_POST["withtemplate"];
+    $values['new'] = 1;
+    //OK
+    $wizard->wizardSecondStep($_POST["template"], $values);
 
 } else if (isset($_POST["third_step"])) {
-   if (isset($_POST['id']) && $_POST['id'] > 0) {
-      $employee->update($_POST);
-   } else {
-      $newid = $employee->add($_POST);
-   }
 
-   $wizard_need         = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"],
-                                                                        "use_need_wizard");
-   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"],
-                                                                        "use_picture_wizard");
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"],
-                                                                        "use_habilitation_wizard");
-    $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+    $required = $resource->checkRequiredFields($_POST);
 
+    if (count($required) > 0) {
+        // Set default value...
+        foreach ($_POST as $key => $val) {
+            $values[$key] = $val;
+        }
 
-   if ($wizard_need) {
-      $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-   } else if ($wizard_picture) {
-      $values           = [];
-      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
-   } else if ($wizard_habilitation) {
-      $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
-   } else if ($wizard_entrance_information) {
-       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
-   } else {
-      $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-      $resource->fields['resources_step']                = 'third_step';
-      Plugin::doHook('item_show', $resource);
-      $resource->redirectToList();
-   }
+        // Clean text fields
+        $values['name'] = stripslashes($values['name']);
+        $values['withtemplate'] = $_POST["withtemplate"];
+        $values["requiredfields"] = 1;
 
-} else if (isset($_POST["four_step"])) {
-   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_picture_wizard");
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
-   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+        Session::addMessageAfterRedirect(
+            __('Required fields are not filled. Please try again.', 'resources'),
+            false,
+            ERROR
+        );
+        //OK
+        $wizard->wizardSecondStep($_POST['id_template'], $values);
 
-   if ($wizard_picture) {
-      $values           = [];
-      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
-   } else if ($wizard_habilitation) {
-      $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
-   } else if ($wizard_entrance_information) {
-       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
-   } else {
-      $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-      $resource->fields['resources_step']                = 'four_step';
-      Plugin::doHook('item_show', $resource);
-      $resource->redirectToList();
-   }
-} else if (isset($_POST["undo_four_step"])) {
+    } elseif (isset($_POST['date_begin'])
+        && !empty($_POST['date_begin'])
+        && isset($_POST['date_end'])
+        && !empty($_POST['date_end'])
+        && $_POST['date_end'] < $_POST['date_begin']) {
 
-   $wizard_employee = PluginResourcesContractType::checkWizardSetup($_POST['plugin_resources_resources_id'],
-                                                                    "use_employee_wizard");
+        foreach ($_POST as $key => $val) {
+            $values[$key] = $val;
+        }
 
-   if ($wizard_employee) {
-      $employee->wizardThirdForm($_POST['plugin_resources_resources_id']);
-   } else {
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = 0;
-      $values['new']          = 0;
+        // Clean text fields
+        $values['name'] = stripslashes($values['name']);
+        $values['withtemplate'] = $_POST["withtemplate"];
+        $values["requiredfields"] = 1;
 
-      $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
-   }
+        Session::addMessageAfterRedirect(
+            __('The start date must be greater than the end date', 'resources'),
+            false,
+            ERROR
+        );
+        //OK
+        $wizard->wizardSecondStep($_POST['id_template'], $values);
 
-} else if (isset($_POST["five_step"])) {
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
-   $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
+    } else {
+        $newresource = 0;
+        if ($resource->canCreate() && isset($_POST["third_step"])) {
+            unset($_POST['id']);
+            $newresource = $resource->add($_POST);
+            if (isset($_POST['plugin_resources_employers_id']) && $newresource > 0) {
+                $employee = new Employee();
+                $employee->add([
+                    'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+                    'plugin_resources_resources_id' => $newresource,
+                    'plugin_resources_clients_id' => 0,
+                ]);
+            }
+        } else {
 
-   if ($wizard_habilitation) {
-      $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
-   } else if ($wizard_entrance_information) {
-       $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
-   } else {
-      $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-      $resource->fields['resources_step']                = 'five_step';
-      Plugin::doHook('item_show', $resource);
-      $resource->redirectToList();
-   }
+            foreach ($_POST as $key => $val) {
+                $values[$key] = $val;
+            }
+            // Clean text fields
+            $values['name'] = stripslashes($values['name']);
+            $values['withtemplate'] = $_POST["withtemplate"];
+            $values["requiredfields"] = 1;
 
-} else if (isset($_POST["undo_five_step"])) {
+            Session::addMessageAfterRedirect(
+                __('There is a right problem', 'resources'),
+                false,
+                ERROR
+            );
+            //OK
+            $wizard->wizardSecondStep($_POST['id_template'], $values);
+        }
+//        elseif ($resource->canCreate() && isset($_POST["second_step_update"])) {
+//            $resource->update($_POST);
+//            $newresource = $_POST["id"];
+//            if (isset($_POST['plugin_resources_employers_id'])) {
+//                $employee = new Employee();
+//                if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newresource])) {
+//                    $employee->update([
+//                        'id' => $employee->getID(),
+//                        'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+//                        'plugin_resources_resources_id' => $newresource,
+//                        'plugin_resources_clients_id' => 0,
+//                    ]);
+//                } else {
+//                    $employee->add([
+//                        'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
+//                        'plugin_resources_resources_id' => $newresource,
+//                        'plugin_resources_clients_id' => 0,
+//                    ]);
+//                }
+//            }
+//        }
 
-   $resources_id = $_POST['plugin_resources_resources_id'];
+        //if employee right : next step
+        if ($newresource > 0) {
 
-   $wizard_employee = PluginResourcesContractType::checkWizardSetup($resources_id, "use_employee_wizard");
-   $wizard_need     = PluginResourcesContractType::checkWizardSetup($resources_id, "use_need_wizard");
+            $resources_id = $newresource;
 
-   if ($wizard_need) {
-      $choice->wizardFourForm($resources_id);
-   } else if ($wizard_employee) {
-      $employee->wizardThirdForm($resources_id);
-   } else {
-      // Set default value...
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = 0;
-      $values['new']          = 0;
+            $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+            $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+            $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+            $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+            $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+            $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
 
-      $resource->wizardSecondForm($resources_id, $values);
-   }
+            if ($employee->canCreate() && $wizard_employee) {
+                $wizard->wizardThirdStep($resources_id);
+            } elseif ($wizard_need) {
+                $wizard->wizardFourStep($resources_id);
+            } elseif ($wizard_picture) {
+                $wizard->wizardFiveStep($resources_id);
+            } elseif ($wizard_habilitation) {
+                $wizard->wizardSixStep($resources_id);
+            } elseif ($wizard_documents) {
+                $wizard->wizardSevenStep($resources_id);
+            } elseif ($wizard_entrance_information) {
+                $wizard->wizardEightStep($resources_id);
+            } else {
+                $resource->fields['resources_step'] = 'third_step';
+                Plugin::doHook('item_show', $resource);
+                $resource->redirectToList();
+            }
+        } else {
+            Html::back();
+        }
+    }
+} elseif (isset($_POST["four_step"])) {
+    if (isset($_POST['id']) && $_POST['id'] > 0) {
+        $employee->update($_POST);
+    } else {
+        $newid = $employee->add($_POST);
+    }
 
-} else if (isset($_POST["updateneedcomment"])) {
-   if ($resource->canCreate()) {
-      foreach ($_POST["updateneedcomment"] as $key => $val) {
-         $varcomment            = "commentneed" . $key;
-         $values['id']          = $key;
-         $values['commentneed'] = $_POST[$varcomment];
-         $choice->addNeedComment($values);
-      }
-   }
+    $resources_id = $_POST["plugin_resources_resources_id"];
 
-   $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
+    $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+    $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
 
-} else if (isset($_POST["addcomment"])) {
-   if ($resource->canCreate()) {
-      $choice->addComment($_POST);
-   }
-
-   $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-
-} else if (isset($_POST["updatecomment"])) {
-   if ($resource->canCreate()) {
-      $choice->updateComment($_POST);
-   }
-
-   $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-
-} else if (isset($_POST["addchoice"])) {
-   if ($resource->canCreate() && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
-      $choice->addHelpdeskItem($_POST);
-   }
-   $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-
-} else if (isset($_POST["deletechoice"])) {
-   if ($resource->canCreate()) {
-      $choice->delete(['id' => $_POST["id"]]);
-   }
-
-   $choice->wizardFourForm($_POST["plugin_resources_resources_id"]);
-
-   //next step : email and finish resource creation
-} else if (isset($_POST["upload_five_step"])) {
-   if (isset($_FILES) && isset($_FILES['picture'])) {
-      if ($_FILES['picture']['type'] == "image/jpeg" || $_FILES['picture']['type'] == "image/pjpeg") {
-         $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-         if ($_FILES['picture']['size'] <= $max_size) {
-            $resource->getFromDB($_POST["plugin_resources_resources_id"]);
-            $_POST['picture'] = $resource->addPhoto($resource);
-
-            $_POST["id"] = $_POST["plugin_resources_resources_id"];
-            $resource->update($_POST);
-            $newID = $_POST["id"];
-         } else {
-            echo "<div align='center'><b><span class='plugin_resources_date_over_color'>" .
-                 __('Failed to send the file (probably too large)') . "</span></b></div><br \>";
-         }
-      } else {
-         echo "<div align='center'><b><span class='plugin_resources_date_over_color'>" .
-              __('Invalid filename') . " : " . $_FILES['picture']['type'] . "</span></b></div><br \>";
-      }
-   }
-
-   $values           = [];
-   $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-
-   $resource->wizardFiveForm($_POST["plugin_resources_resources_id"], $values);
-
-} else if (isset($_POST["six_step"])) {
-
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_habilitation_wizard");
-
-   if ($wizard_habilitation && $_POST['plugin_resources_resources_id'] > 0) {
-      if ($resourcehabilitation->checkRequiredFields($_POST)) {
-         $resourcehabilitation->addResourceHabilitation($_POST);
-
-         $_POST['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-         $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
-
-      } else {
-         $_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR] = ["<h3>" .
-                                                       __('Required fields are not filled. Please try again.', 'resources') . "</h3>"];
-
-         Html::displayMessageAfterRedirect();
-         $resourcehabilitation->wizardSixForm($_POST["plugin_resources_resources_id"]);
-         $continue = false;
-      }
-
-   }
-
-} else if (isset($_POST["undo_six_step"])) {
-
-   $resources_id = $_POST['plugin_resources_resources_id'];
-
-   $wizard_employee     = PluginResourcesContractType::checkWizardSetup($resources_id, "use_employee_wizard");
-   $wizard_need         = PluginResourcesContractType::checkWizardSetup($resources_id, "use_need_wizard");
-   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($resources_id, "use_picture_wizard");
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
-
-   if ($wizard_picture) {
-      $values           = [];
-      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $resource->wizardFiveForm($resources_id, $values);
-   } else if ($wizard_need) {
-      $choice->wizardFourForm($resources_id);
-   } else if ($employee->canCreate() && $wizard_employee) {
-      $employee->wizardThirdForm($resources_id);
-   } else {
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = 0;
-      $values['new']          = 0;
-
-      $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
-   }
-
-} else if (isset($_POST["add_doc_seven_step"])) {
-
-   $document_item = new Document_Item();
-   $document_item->check(-1, CREATE, $_POST);
-   $document_item->add($_POST);
-
-   $_POST['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-
-   $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
-
-} else if (isset($_POST["upload_seven_step"])) {
-
-   $doc = new Document();
-   $doc->check(-1, CREATE, $_POST);
-   if (isset($_POST['_filename']) && is_array($_POST['_filename'])) {
-      $fic    = $_POST['_filename'];
-      $tag    = $_POST['_tag_filename'];
-      $prefix = $_POST['_prefix_filename'];
-      foreach (array_keys($fic) as $key) {
-         $_POST['_filename']        = [$fic[$key]];
-         $_POST['_tag_filename']    = [$tag[$key]];
-         $_POST['_prefix_filename'] = [$prefix[$key]];
-         $newID                     = $doc->add($_POST);
-      }
-   }
-   $_POST['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-   $resource->widgetSevenForm($_POST['plugin_resources_resources_id'], $_POST);
-
-} else if (isset($_POST["seven_step"])) {
-
-    $wizard_entrance_information = PluginResourcesContractType::checkWizardSetup($_POST["plugin_resources_resources_id"], "use_entrance_information");
-    if ($wizard_entrance_information) {
-        $resource->wizardEightForm($_POST["plugin_resources_resources_id"]);
+    if ($wizard_need) {
+        $wizard->wizardFourStep($resources_id);
+    } elseif ($wizard_picture) {
+        $wizard->wizardFiveStep($resources_id);
+    } elseif ($wizard_habilitation) {
+        $wizard->wizardSixStep($resources_id);
+    } elseif ($wizard_documents) {
+        $wizard->wizardSevenStep($resources_id);
+    } elseif ($wizard_entrance_information) {
+        $wizard->wizardEightStep($resources_id);
     } else {
         $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-        $resource->fields['resources_step']                = 'five_step';
+        $resource->fields['resources_step'] = 'four_step';
+        Plugin::doHook('item_show', $resource);
+        $resource->redirectToList();
+    }
+} elseif (isset($_POST["updateneedcomment"])) {
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    if ($resource->canCreate()) {
+        foreach ($_POST["updateneedcomment"] as $key => $val) {
+            $varcomment = "commentneed" . $key;
+            $values['id'] = $key;
+            $values['commentneed'] = $_POST[$varcomment];
+            $choice->addNeedComment($values);
+        }
+    }
+
+    $wizard->wizardFourStep($resources_id);
+
+} elseif (isset($_POST["addcomment"])) {
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    if ($resource->canCreate()) {
+        $choice->addComment($_POST);
+    }
+
+    $wizard->wizardFourStep($resources_id);
+} elseif (isset($_POST["updatecomment"])) {
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    if ($resource->canCreate()) {
+        $choice->updateComment($_POST);
+    }
+
+    $wizard->wizardFourStep($resources_id);
+} elseif (isset($_POST["addchoice"])) {
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    if ($resource->canCreate(
+        ) && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
+        $choice->addHelpdeskItem($_POST);
+    }
+    $wizard->wizardFourStep($resources_id);
+} elseif (isset($_POST["deletechoice"])) {
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    if ($resource->canCreate()) {
+        $choice->delete(['id' => $_POST["id"]]);
+    }
+
+    $wizard->wizardFourStep($resources_id);
+
+} elseif (isset($_POST["five_step"])) {
+
+    $resources_id = $_POST["plugin_resources_resources_id"];
+
+    $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+
+
+    if ($wizard_picture) {
+        $wizard->wizardFiveStep($resources_id);
+    } elseif ($wizard_habilitation) {
+        $wizard->wizardSixStep($resources_id);
+    } elseif ($wizard_documents) {
+        $wizard->wizardSevenStep($resources_id);
+    } elseif ($wizard_entrance_information) {
+        $wizard->wizardEightStep($resources_id);
+    } else {
+        $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+        $resource->fields['resources_step'] = 'four_step';
+        Plugin::doHook('item_show', $resource);
+        $resource->redirectToList();
+    }
+} elseif (isset($_POST["six_step"])) {
+
+    $resources_id = $_POST["plugin_resources_resources_id"];
+
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+
+    if ($wizard_habilitation) {
+        $wizard->wizardSixStep($resources_id);
+    } elseif ($wizard_documents) {
+        $wizard->wizardSevenStep($resources_id);
+    } elseif ($wizard_entrance_information) {
+        $wizard->wizardEightStep($resources_id);
+    } else {
+        $resource->fields['plugin_resources_resources_id'] = $resources_id;
+        $resource->fields['resources_step'] = 'five_step';
+        Plugin::doHook('item_show', $resource);
+        $resource->redirectToList();
+    }
+} elseif (isset($_POST["upload_five_step"])) {
+
+    if (isset($_FILES) && isset($_FILES['picture'])) {
+
+        $resources_id = $_POST["plugin_resources_resources_id"];
+
+        if ($_FILES['picture']['type'] == "image/jpeg" || $_FILES['picture']['type'] == "image/pjpeg") {
+            $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
+            if ($_FILES['picture']['size'] <= $max_size) {
+                $resource->getFromDB($resources_id);
+                $_POST['picture'] = $resource->addPhoto($resource);
+
+                $_POST["id"] = $resources_id;
+                $resource->update($_POST);
+
+            } else {
+                Session::addMessageAfterRedirect(
+                    __('Failed to send the file (probably too large)'),
+                    false,
+                    ERROR
+                );
+            }
+        } else {
+            Session::addMessageAfterRedirect(
+                __('Invalid filename') . " : " . $_FILES['picture']['type'],
+                false,
+                ERROR
+            );
+        }
+    }
+
+    $wizard->wizardFiveStep($_POST["plugin_resources_resources_id"]);
+
+} elseif (isset($_POST["seven_step"])) {
+
+    $resources_id = $_POST["plugin_resources_resources_id"];
+
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+
+    if ($wizard_habilitation) {
+        if ($resourcehabilitation->checkRequiredFields($_POST)) {
+            $resourcehabilitation->addResourceHabilitation($_POST);
+            $wizard->wizardSevenStep($_POST['plugin_resources_resources_id']);
+        } else {
+
+            Session::addMessageAfterRedirect(
+                __('Required fields are not filled. Please try again.', 'resources'),
+                false,
+                ERROR
+            );
+            $wizard->wizardSixStep($resources_id);
+            $continue = false;
+        }
+    } elseif ($wizard_documents) {
+        $wizard->wizardSevenStep($resources_id);
+    } elseif ($wizard_entrance_information) {
+        $wizard->wizardEightStep($resources_id);
+    } else {
+        $resource->fields['plugin_resources_resources_id'] = $resources_id;
+        $resource->fields['resources_step'] = 'six_step';
         Plugin::doHook('item_show', $resource);
         $resource->redirectToList();
     }
 
-} else if (isset($_POST["undo_seven_step"])) {
+} elseif (isset($_POST["add_doc_seven_step"])) {
 
-   $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $_POST["items_id"];
+    $document_item = new Document_Item();
+    $document_item->check(-1, CREATE, $_POST);
+    $document_item->add($_POST);
+    $wizard->wizardSevenStep($resources_id);
 
-   $wizard_employee     = PluginResourcesContractType::checkWizardSetup($resources_id, "use_employee_wizard");
-   $wizard_need         = PluginResourcesContractType::checkWizardSetup($resources_id, "use_need_wizard");
-   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($resources_id, "use_picture_wizard");
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+} elseif (isset($_POST["upload_seven_step"])) {
 
-   if ($wizard_habilitation) {
-      $resourcehabilitation->wizardSixForm($resources_id);
-   } else if ($wizard_picture) {
-      $values           = [];
-      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $resource->wizardFiveForm($resources_id, $values);
-   } else if ($wizard_need) {
-      $choice->wizardFourForm($resources_id);
-   } else if ($employee->canCreate() && $wizard_employee) {
-      $employee->wizardThirdForm($resources_id);
-   } else {
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = 0;
-      $values['new']          = 0;
+    $resources_id = $_POST["items_id"];
 
-      $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
-   }
+    $doc = new Document();
+    $doc->check(-1, CREATE, $_POST);
+    if (isset($_POST['_filename']) && is_array($_POST['_filename'])) {
+        $fic = $_POST['_filename'];
+        $tag = $_POST['_tag_filename'];
+        $prefix = $_POST['_prefix_filename'];
+        foreach (array_keys($fic) as $key) {
+            $_POST['_filename'] = [$fic[$key]];
+            $_POST['_tag_filename'] = [$tag[$key]];
+            $_POST['_prefix_filename'] = [$prefix[$key]];
+            $newID = $doc->add($_POST);
+        }
+    }
+    if (isset($newID) && $newID > 0) {
+        $document_item = new Document_Item();
+        $input['items_id'] = $resources_id;
+        $input['itemtype'] = Resource::getType();
+        $input['documents_id'] = $newID;
+        $document_item->add($input);
+    }
 
-} else if (isset($_POST["eight_step"])) {
+    $wizard->wizardSevenStep($resources_id);
 
+} elseif (isset($_POST["eight_step"])) {
+
+    $resources_id = $_POST["plugin_resources_resources_id"];
+    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+    if ($wizard_entrance_information) {
+        $wizard->wizardEightStep($resources_id);
+    } else {
+        $resource->fields['plugin_resources_resources_id'] = $resources_id;
+        $resource->fields['resources_step'] = 'seven_step';
+        Plugin::doHook('item_show', $resource);
+        $resource->redirectToList();
+    }
+
+} elseif (isset($_POST["nine_step"])) {
+
+    $resources_id = $_POST["plugin_resources_resources_id"];
     $data = [];
     $data['id'] = $_POST['plugin_resources_resources_id'];
-    $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'];
-    $data['plugin_resources_degreegroups_id'] = $_POST['plugin_resources_degreegroups_id'];
-    $data['plugin_resources_recruitingsources_id'] = $_POST['plugin_resources_recruitingsources_id'];
-    $data['yearsexperience'] = $_POST['yearsexperience'];
-    $data['reconversion'] = $_POST['reconversion'];
+    $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'] ?? NULL;
+    $data['plugin_resources_degreegroups_id'] = $_POST['plugin_resources_degreegroups_id'] ?? 0;
+    $data['plugin_resources_recruitingsources_id'] = $_POST['plugin_resources_recruitingsources_id'] ?? 0;
+    $data['yearsexperience'] = $_POST['yearsexperience'] ?? 0;
+    $data['reconversion'] = $_POST['reconversion'] ?? 0;
 
-   $resource->update($data);
-   $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
-   $resource->fields['resources_step']                = 'six_step';
-   Plugin::doHook('item_show', $resource);
-   $resource->redirectToList();
+    $resource->update($data);
+    $resource->fields['plugin_resources_resources_id'] = $resources_id;
+    $resource->fields['resources_step'] = 'eight_step';
+    Plugin::doHook('item_show', $resource);
+    $resource->redirectToList();
 
-} else if (isset($_POST["undo_eight_step"])) {
 
-   $resources_id = $_POST['plugin_resources_resources_id'];
+    //Revert cases//
+} elseif (isset($_POST["undo_second_step"])) {
+    // Set default value...
+    $values['withtemplate'] = 0;
+    $values['new'] = 0;
+    //OK
+    $wizard->wizardFirstStep(0, $values);
 
-   $wizard_employee     = PluginResourcesContractType::checkWizardSetup($resources_id, "use_employee_wizard");
-   $wizard_need         = PluginResourcesContractType::checkWizardSetup($resources_id, "use_need_wizard");
-   $wizard_picture      = PluginResourcesContractType::checkWizardSetup($resources_id, "use_picture_wizard");
-   $wizard_habilitation = PluginResourcesContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+} elseif (isset($_POST["undo_third_step"])) {
+    $resources_id = $_POST['plugin_resources_resources_id'];
+    //OK
+    $wizard->wizardSecondStep($resources_id);
 
-   if ($wizard_habilitation) {
-      $resourcehabilitation->wizardSixForm($resources_id);
-   } else if ($wizard_picture) {
-      $values           = [];
-      $values['target'] = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $resource->wizardFiveForm($resources_id, $values);
-   } else if ($wizard_need) {
-      $choice->wizardFourForm($resources_id);
-   } else if ($employee->canCreate() && $wizard_employee) {
-      $employee->wizardThirdForm($resources_id);
-   } else {
-      $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
-      $values['withtemplate'] = 0;
-      $values['new']          = 0;
+} elseif (isset($_POST["undo_four_step"])) {
 
-      $resource->wizardSecondForm($_POST["plugin_resources_resources_id"], $values);
-   }
+    $resources_id = $_POST['plugin_resources_resources_id'];
 
+    $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+
+    if ($employee->canCreate() && $wizard_employee) {
+        $wizard->wizardThirdStep($resources_id);
+    } else {
+        $values['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
+        $values['withtemplate'] = 0;
+        $values['new'] = 0;
+
+        $wizard->wizardSecondStep($resources_id, $values);
+    }
+} elseif (isset($_POST["undo_five_step"])) {
+    $resources_id = $_POST['plugin_resources_resources_id'];
+
+    $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+    $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+
+    if ($wizard_need) {
+        $wizard->wizardFourStep($resources_id);
+    } elseif ($employee->canCreate() && $wizard_employee) {
+        $wizard->wizardThirdStep($resources_id);
+    } else {
+        // Set default value...
+        $values['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
+        $values['withtemplate'] = 0;
+        $values['new'] = 0;
+
+        $wizard->wizardSecondStep($resources_id, $values);
+    }
+} elseif (isset($_POST["undo_six_step"])) {
+    $resources_id = $_POST['plugin_resources_resources_id'];
+
+    $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+    $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+    $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+
+    if ($wizard_picture) {
+        $wizard->wizardFiveStep($resources_id);
+    } elseif ($wizard_need) {
+        $wizard->wizardFourStep($resources_id);
+    } elseif ($employee->canCreate() && $wizard_employee) {
+        $wizard->wizardThirdStep($resources_id);
+    } else {
+        $values['withtemplate'] = 0;
+        $values['new'] = 0;
+        $wizard->wizardSecondStep($resources_id, $values);
+    }
+} elseif (isset($_POST["undo_seven_step"])) {
+    $resources_id = $_POST['plugin_resources_resources_id'];
+
+    $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+    $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+    $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+
+    if ($wizard_habilitation) {
+        $wizard->wizardSixStep($resources_id);
+    } elseif ($wizard_picture) {
+        $wizard->wizardFiveStep($resources_id);
+    } elseif ($wizard_need) {
+        $wizard->wizardFourStep($resources_id);
+    } elseif ($employee->canCreate() && $wizard_employee) {
+        $wizard->wizardThirdStep($resources_id);
+    } else {
+        $values['withtemplate'] = 0;
+        $values['new'] = 0;
+        $wizard->wizardSecondStep($resources_id, $values);
+    }
+
+    //next step : email and finish resource creation
+} elseif (isset($_POST["undo_eight_step"])) {
+    $resources_id = $_POST['plugin_resources_resources_id'];
+
+    $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
+    $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
+    $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
+    $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
+    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+
+    if ($wizard_documents) {
+        $wizard->wizardSevenStep($resources_id);
+    } elseif ($wizard_habilitation) {
+        $wizard->wizardSixStep($resources_id);
+    } elseif ($wizard_picture) {
+        $wizard->wizardFiveStep($resources_id);
+    } elseif ($wizard_need) {
+        $wizard->wizardFourStep($resources_id);
+    } elseif ($employee->canCreate() && $wizard_employee) {
+        $wizard->wizardThirdStep($resources_id);
+    } else {
+        $values['withtemplate'] = 0;
+        $values['new'] = 0;
+        $wizard->wizardSecondStep($resources_id, $values);
+    }
 } else {
-   $resource->wizardFirstForm();
+    $wizard->wizardFirstStep();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

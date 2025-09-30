@@ -27,16 +27,17 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Checklist;
+use GlpiPlugin\Resources\Checklistconfig;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
-include ('../../../inc/includes.php');
+Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Checklist::class);
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
-
-$checklistconfig = new PluginResourcesChecklistconfig();
+$checklistconfig = new Checklistconfig();
 if (($checklistconfig->canView() || Session::haveRight("config", UPDATE))) {
-   Search::show("PluginResourcesChecklistconfig");
-
+    Search::show(Checklistconfig::class);
 } else {
     throw new AccessDeniedHttpException();
 }

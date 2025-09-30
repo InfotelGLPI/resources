@@ -28,10 +28,14 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE         = 1;
-$DBCONNECTION_REQUIRED  = 0;
+use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\ResourceSituation;
+use GlpiPlugin\Resources\ResourceState;
 
-include ("../../../../inc/includes.php");
+$USEDBREPLICATE = 1;
+$DBCONNECTION_REQUIRED = 0;
+
 
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
@@ -39,25 +43,41 @@ include ("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("resourcewithoutuser_report_title", "resources"));
 
 // Columns title (optional)
-$report->setColumns( [new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
-                                                   ['sorton' => 'resource_name']),
-                           new PluginReportsColumn('firstname', __('First name'),
-                                                   ['sorton' => 'firstname']),
-                           new PluginReportsColumn('rank', PluginResourcesRank::getTypeName(1),
-                                                   ['sorton' => 'rank']),
-                           new PluginReportsColumn('situation', PluginResourcesResourceSituation::getTypeName(1),
-                                                   ['sorton' => 'situation']),
-                           new PluginReportsColumn('state', PluginResourcesResourceState::getTypeName(1),
-                                                   ['sorton' => 'state']),
-                           new PluginReportsColumnDate('date_begin', __('Arrival date', 'resources'),
-                                                   ['sorton' => 'date_begin']),
-                           new PluginReportsColumnDate('date_end', __('Departure date', 'resources'),
-                                                   ['sorton' => 'date_end'])]);
+$report->setColumns([
+    new PluginReportsColumnLink(
+        'resource_id', __('Surname'), Resource::class,
+        ['sorton' => 'resource_name']
+    ),
+    new PluginReportsColumn(
+        'firstname', __('First name'),
+        ['sorton' => 'firstname']
+    ),
+    new PluginReportsColumn(
+        'rank', Rank::getTypeName(1),
+        ['sorton' => 'rank']
+    ),
+    new PluginReportsColumn(
+        'situation', ResourceSituation::getTypeName(1),
+        ['sorton' => 'situation']
+    ),
+    new PluginReportsColumn(
+        'state', ResourceState::getTypeName(1),
+        ['sorton' => 'state']
+    ),
+    new PluginReportsColumnDate(
+        'date_begin', __('Arrival date', 'resources'),
+        ['sorton' => 'date_begin']
+    ),
+    new PluginReportsColumnDate(
+        'date_end', __('Departure date', 'resources'),
+        ['sorton' => 'date_end']
+    )
+]);
 
 // SQL statement
-$dbu       = new DbUtils();
+$dbu = new DbUtils();
 $condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
-$date      = date("Y-m-d");
+$date = date("Y-m-d");
 
 //display only resource without user linked
 $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
@@ -81,12 +101,12 @@ $query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
              AND `glpi_plugin_resources_resources`.`is_deleted` = 0
              AND `glpi_plugin_resources_resources`.`is_template` = 0
-             ".$condition.")
+             " . $condition . ")
              AND ((`glpi_plugin_resources_resources`.`date_end` IS NULL )
-                  OR (`glpi_plugin_resources_resources`.`date_end` > '".$date."' ))
+                  OR (`glpi_plugin_resources_resources`.`date_end` > '" . $date . "' ))
              AND ((`glpi_plugin_resources_resources`.`date_begin` IS NULL)
-                  OR ( `glpi_plugin_resources_resources`.`date_begin` < '".$date."'))".
-          $report->getOrderBy('resource_id');
+                  OR ( `glpi_plugin_resources_resources`.`date_begin` < '" . $date . "'))" .
+    $report->getOrderBy('resource_id');
 
 
 $report->setSqlRequest($query);

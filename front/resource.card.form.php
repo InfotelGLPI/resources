@@ -27,67 +27,72 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Resource_Item;
+use GlpiPlugin\Resources\ResourceCard;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 if (isset($_POST['plugin_resources_resources_id'])) {
-   $plugin_resources_resources_id = $_POST['plugin_resources_resources_id'];
+    $plugin_resources_resources_id = $_POST['plugin_resources_resources_id'];
 } else {
-   $resource_item = new PluginResourcesResource_Item();
-   $resource = $resource_item->find(['itemtype' => 'User',
-                                     'items_id' => $_SESSION['glpiID']],
-                                    [],
-                                    [1]);
+    $resource_item = new Resource_Item();
+    $resource = $resource_item->find([
+        'itemtype' => 'User',
+        'items_id' => $_SESSION['glpiID']
+    ],
+        [],
+        [1]);
 
-   $resource = reset($resource);
-   $plugin_resources_resources_id = isset($resource['plugin_resources_resources_id'])?$resource['plugin_resources_resources_id']:0;
+    $resource = reset($resource);
+    $plugin_resources_resources_id = isset($resource['plugin_resources_resources_id']) ? $resource['plugin_resources_resources_id'] : 0;
 }
 
 if (Session::haveRight("plugin_resources", UPDATE)) {
-   echo "<div align='center'>";
-   echo "<form name='main' action=\"./resource.card.form.php\" method=\"post\">";
-   echo "<table class='tab_cadre' width='31%'>";
-   echo "<tr class='tab_bg_2 center'>";
-   echo "<td>";
-   PluginResourcesResource::dropdown(['name'      => 'plugin_resources_resources_id',
-                                      'display'   => true,
-                                           'entity' => $_SESSION['glpiactiveentities'],
-                                           'value'     => $plugin_resources_resources_id,
-                                           'on_change' => 'main.submit();']);
-   echo "</td>";
-   echo "</tr>";
-   echo "</table>";
-   Html::closeForm();
-   echo "</div>";
+    echo "<div class='center'>";
+    echo "<form name='main' action=\"./resource.card.form.php\" method=\"post\">";
+    echo "<table class='tab_cadre' width='31%'>";
+    echo "<tr class='tab_bg_2 center'>";
+    echo "<td>";
+    Resource::dropdown([
+        'name' => 'plugin_resources_resources_id',
+        'display' => true,
+        'entity' => $_SESSION['glpiactiveentities'],
+        'value' => $plugin_resources_resources_id,
+        'on_change' => 'main.submit();'
+    ]);
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
+    Html::closeForm();
+    echo "</div>";
 }
 
 if ($plugin_resources_resources_id > 0) {
-   PluginResourcesResourceCard::resourceCard($plugin_resources_resources_id);
+    ResourceCard::resourceCard($plugin_resources_resources_id);
 } else {
-   echo "<div class='center'><br><br>".
-        "<i  class='fas fa-info-circle' alt='information'></i>";
-   echo "&nbsp;<b>".__('Please select a user', 'resources')."</b></div>";
+    echo "<div class='center'><br><br>" .
+        "<i  class='ti ti-info-circle' alt='information'></i>";
+    echo "&nbsp;<b>" . __('Please select a user', 'resources') . "</b></div>";
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

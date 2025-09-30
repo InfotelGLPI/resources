@@ -29,58 +29,61 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Menu::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2), false, "PluginResourcesResource");
-   } else {
-      Html::helpHeader(PluginResourcesMenu::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2), false, Resource::class);
+    } else {
+        Html::helpHeader(Menu::getTypeName(2));
+    }
 }
 
-$resource = new PluginResourcesResource();
+$resource = new Resource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-   if (Session::haveRight("plugin_resources_all", READ)) {
+    if (Session::haveRight("plugin_resources_all", READ)) {
+        global $CFG_GLPI;
 
-      global $CFG_GLPI;
+        //Have right to see all resources
+        //Have not right to see all resources
+        echo "<div class='center'>";
 
-      //Have right to see all resources
-      //Have not right to see all resources
-      echo "<div align='center'>";
+        echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='submit btn btn-primary' title='" . __(
+                'View by contract type',
+                'resources'
+            ) . "' >";
+        echo __('View by contract type', 'resources');
+        echo "</a>";
+        echo "</div><br>";
+        echo Ajax::createIframeModalWindow(
+            'seetypemodal',
+            PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetree.php",
+            [
+                'title' => __('View by contract type', 'resources'),
+                'display' => false,
+                'width' => 600,
+                'height' => 500
+            ]
+        );
+    }
 
-      echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='submit btn btn-primary' title='" . __('View by contract type', 'resources') . "' >";
-      echo __('View by contract type', 'resources');
-      echo "</a>";
-      echo "</div><br>";
-      echo Ajax::createIframeModalWindow('seetypemodal',
-                                         PLUGIN_RESOURCES_WEBDIR. "/ajax/resourcetree.php",
-                                         ['title'   => __('View by contract type', 'resources'),
-                                          'display'       => false,
-                                          'width'         => 600,
-                                          'height'        => 500]);
-
-   }
-
-   Search::show(PluginResourcesResource::class);
-
+    Search::show(Resource::class);
 } else {
     throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

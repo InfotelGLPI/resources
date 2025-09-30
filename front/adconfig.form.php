@@ -26,26 +26,24 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+use GlpiPlugin\Resources\Adconfig;
 
 Session::checkRight("config", UPDATE);
 
 if (Plugin::isPluginActive("resources")) {
+    $config = new Adconfig();
 
-   $config = new PluginResourcesAdconfig();
 
-
-  if (isset($_POST["update_setup"])) {
-      $config->check(-1, UPDATE, $_POST);
-      $config->update($_POST);
-      Html::back();
-
-   }
-
+    if (isset($_POST["update_setup"])) {
+        $config->check(-1, UPDATE, $_POST);
+        $config->update($_POST);
+        Html::back();
+    }
 } else {
-   Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='alert alert-important alert-warning d-flex'>";
-   echo "<b>".__('Please activate the plugin', 'resources')."</b></div>";
+    Html::header(__('Setup'), '', "config", "plugin");
+    echo "<div class='alert alert-important alert-warning d-flex'>";
+    echo "<b>" . __('Please activate the plugin', 'resources') . "</b></div>";
 }
 
 Html::footer();

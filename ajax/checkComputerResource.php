@@ -27,21 +27,22 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Resource_Item;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 if (!defined('GLPI_ROOT')) {
-   die("Can not acces directly to this file");
+    die("Can not acces directly to this file");
 }
 
 
 if (isset($_POST["computer_id"])) {
-   $resource_item = new PluginResourcesResource_Item();
-   $resources = $resource_item->find(['itemtype' => Computer::getType(), 'items_id' => $_POST["computer_id"]]);
-   if (count($resources) > 0) {
-      echo true;
-   }
+    $resource_item = new Resource_Item();
+    $resources = $resource_item->find(['itemtype' => Computer::getType(), 'items_id' => $_POST["computer_id"]]);
+    if (count($resources) > 0) {
+        echo true;
+    }
 }

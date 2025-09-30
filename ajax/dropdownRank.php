@@ -27,20 +27,22 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Rank;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownRank.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
 Session::checkLoginUser();
 
 //allow rank's diplay depending on profession
-$options =[
-   'plugin_resources_professions_id' =>$_POST['plugin_resources_professions_id'],
-   'entity'                          =>$_POST['entity_restrict'],
-   'rand'                            =>$_POST['rand'],
-   'sort'                            =>$_POST['sort']];
+$options = [
+    'plugin_resources_professions_id' => $_POST['plugin_resources_professions_id'],
+    'entity' => $_POST['entity_restrict'],
+    'rand' => $_POST['rand'],
+    'sort' => $_POST['sort']
+];
 
-PluginResourcesRank::showRank($options);
+Rank::showRank($options);
 

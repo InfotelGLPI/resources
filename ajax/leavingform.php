@@ -26,62 +26,68 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Resources\LeavingInformation;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\ContractType;
+use GlpiPlugin\Resources\Config;
+
 if (strpos($_SERVER['PHP_SELF'], "leavingform.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkLoginUser();
 
-if ($_POST['plugin_resources_resources_id']>0) {
-
-    $contracttype = new PluginResourcesContractType();
-    $resource = new PluginResourcesResource();
+if ($_POST['plugin_resources_resources_id'] > 0) {
+    $contracttype = new ContractType();
+    $resource = new Resource();
     $resource->getFromDB($_POST['plugin_resources_resources_id']);
     $contracttype->getFromDB($resource->fields['plugin_resources_contracttypes_id']);
-    if(isset($contracttype->fields['use_resignation_form']) && $contracttype->fields['use_resignation_form']) {
-        $leavinginformation = new PluginResourcesLeavingInformation();
-        $config = new PluginResourcesConfig();
+    if (isset($contracttype->fields['use_resignation_form']) && $contracttype->fields['use_resignation_form']) {
+        $leavinginformation = new LeavingInformation();
+        $config = new Config();
         if (($config->getField('sales_manager') != "")) {
-
-
             $tableProfileUser = Profile_User::getTable();
-            $tableUser        = User::getTable();
-            $profile_User     = new  Profile_User();
-            $prof             = [];
+            $tableUser = User::getTable();
+            $profile_User = new  Profile_User();
+            $prof = [];
             foreach (json_decode($config->getField('sales_manager')) as $profs) {
                 $prof[$profs] = $profs;
             }
 
-            $ids           = join("','", $prof);
-            $restrict      = getEntitiesRestrictCriteria($tableProfileUser, 'entities_id', $resource->fields["entities_id"], true);
-            $restrict      = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
+            $ids = join("','", $prof);
+            $restrict = getEntitiesRestrictCriteria(
+                $tableProfileUser,
+                'entities_id',
+                $resource->fields["entities_id"],
+                true
+            );
+            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
             $profiles_User = $profile_User->find($restrict);
-            $used          = [];
+            $used = [];
             foreach ($profiles_User as $profileUser) {
                 $user = new User();
                 $user->getFromDB($profileUser["users_id"]);
                 $used[$profileUser["users_id"]] = $user->getFriendlyName();
             }
             TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
-                'item'   => $leavinginformation,
+                'item' => $leavinginformation,
                 'params' => [
                     'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id'],
-                    'default_button'       => true,
+                    'default_button' => true,
                     'element_sales' => $used,
 
                 ],
             ]);
-
 //            Dropdown::showFromArray("users_id_sales", $used, ['value' => $resource->fields["users_id_sales"], 'display_emptychoice' => true]);;
         } else {
             TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
-                'item'   => $leavinginformation,
+                'item' => $leavinginformation,
                 'params' => [
                     'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id'],
-                    'default_button'       => true,
-                    'right_sales'       => true,
+                    'default_button' => true,
+                    'right_sales' => true,
                 ],
             ]);
 
@@ -91,8 +97,6 @@ if ($_POST['plugin_resources_resources_id']>0) {
 //                'entity_sons' => true,
 //                'right'       => 'all']);
         }
-
-
     } else {
         echo "<div class=\"form-row\">";
 
@@ -104,7 +108,5 @@ if ($_POST['plugin_resources_resources_id']>0) {
         echo "</div>";
         echo "</div>";
     }
-
-
 }
 

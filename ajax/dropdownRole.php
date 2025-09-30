@@ -27,20 +27,21 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Role;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownRole.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkLoginUser();
 
-if ($_POST['plugin_resources_services_id']>0) {
-
-   $opt = ['name'   => "plugin_resources_roles_id",
-           'entity' => $_SESSION['glpiactiveentities'],
-           'rand' => $_POST['rand'],
-           'display' => false];
-   echo PluginResourcesRole::dropdownFromService($_POST['plugin_resources_services_id'],$opt);
-
+if ($_POST['plugin_resources_services_id'] > 0) {
+    $opt = [
+        'name' => "plugin_resources_roles_id",
+        'entity' => $_SESSION['glpiactiveentities'],
+        'rand' => $_POST['rand'],
+        'display' => false
+    ];
+    echo Role::dropdownFromService($_POST['plugin_resources_services_id'], $opt);
 }
 

@@ -28,18 +28,17 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Budget;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
-include ('../../../inc/includes.php');
+Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Budget::class);
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesBudget::getType()));
-
-$budget = new PluginResourcesBudget();
+$budget = new Budget();
 if ($budget->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show("PluginResourcesBudget");
-
+    Search::show(Budget::class);
 } else {
     throw new AccessDeniedHttpException();
 }
 
 Html::footer();
-

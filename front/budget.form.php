@@ -27,47 +27,44 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Budget;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$budget = new PluginResourcesBudget();
+$budget = new Budget();
 
 if (isset($_POST["add"])) {
-   $budget->check(-1, UPDATE);
-   $newID = $budget->add($_POST);
+    $budget->check(-1, UPDATE);
+    $newID = $budget->add($_POST);
 
-   Html::back();
+    Html::back();
+} elseif (isset($_POST["update"])) {
+    $budget->check($_POST["id"], UPDATE);
+    $budget->update($_POST);
 
-} else if (isset($_POST["update"])) {
-   $budget->check($_POST["id"], UPDATE);
-   $budget->update($_POST);
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    $budget->check($_POST["id"], UPDATE);
+    $budget->delete($_POST);
 
-   Html::back();
+    $budget->redirectToList();
+} elseif (isset($_POST["purge"])) {
+    $budget->check($_POST['id'], UPDATE);
+    $budget->delete($_POST, 1);
 
-} else if (isset($_POST["delete"])) {
-   $budget->check($_POST["id"], UPDATE);
-   $budget->delete($_POST);
+    $budget->redirectToList();
+} elseif (isset($_POST["restore"])) {
+    $budget->check($_POST["id"], UPDATE);
+    $budget->restore($_POST);
 
-   $budget->redirectToList();
-
-} else if (isset($_POST["purge"])) {
-   $budget->check($_POST['id'], UPDATE);
-   $budget->delete($_POST, 1);
-
-   $budget->redirectToList();
-
-} else if (isset($_POST["restore"])) {
-   $budget->check($_POST["id"], UPDATE);
-   $budget->restore($_POST);
-
-   $budget->redirectToList();
-
+    $budget->redirectToList();
 } else {
-   $budget->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesBudget::getType()));
-   $budget->display(['id' => $_GET["id"]]);
-   Html::footer();
+    $budget->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, strtolower(Budget::getType()));
+    $budget->display(['id' => $_GET["id"]]);
+    Html::footer();
 }

@@ -9,10 +9,11 @@ BEFORE SUBMITTING YOUR ISSUE, please make sure to read and follow these steps :
 The Plugin team.
 
 ------------
-* Version of the plugin : 
+
+* Version of the plugin :
 
 
-* Version of your GLPI : 
+* Version of your GLPI :
 
 
 * Steps to reproduce (which actions have you made) :

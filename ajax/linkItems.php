@@ -28,32 +28,29 @@
  */
 
 if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
-   $AJAX_INCLUDE = 1;
-   include('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    $AJAX_INCLUDE = 1;
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
 Session::checkCentralAccess();
 
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
-   $values = 0;
-   if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
-      if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
-         $values = $_POST['values'];
-      }
+    $values = 0;
+    if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
+        if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
+            $values = $_POST['values'];
+        }
 
 
-      $option["name"] = "items";
-      if(isset($values)){
-         $option["value"] = $values;
-      }else{
-         $option["value"] = 0;
-      }
+        $option["name"] = "items";
+        if (isset($values)) {
+            $option["value"] = $values;
+        } else {
+            $option["value"] = 0;
+        }
 
 
-      $_POST["type"]::dropdown($option);
-   }
-
-
+        $_POST["type"]::dropdown($option);
+    }
 }

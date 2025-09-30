@@ -28,23 +28,23 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
-include ('../../../inc/includes.php');
 
-Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesEmployment::getType()));
+Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Employment::class);
 
-$employment = new PluginResourcesEmployment();
+$employment = new Employment();
 
 if ($employment->canView() || Session::haveRight("config", UPDATE)) {
-   if (isset($_GET["plugin_resources_resources_id"])
-           && !empty($_GET["plugin_resources_resources_id"])) {
+    if (isset($_GET["plugin_resources_resources_id"])
+        && !empty($_GET["plugin_resources_resources_id"])) {
+        $_GET["field"] = [0 => "13"];
+        $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
+    }
 
-      $_GET["field"] = [0 => "13"];
-      $_GET["contains"] = [0 => $_GET["plugin_resources_resources_id"]];
-   }
-
-   Search::show("PluginResourcesEmployment");
-
+    Search::show(Employment::class);
 } else {
     throw new AccessDeniedHttpException();
 }

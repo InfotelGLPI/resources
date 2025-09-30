@@ -27,55 +27,53 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Resource_Change;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 
-$resource = new PluginResourcesResource();
-$resource_change = new PluginResourcesResource_Change();
+$resource = new Resource();
+$resource_change = new Resource_Change();
 
 if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["plugin_resources_resources_id"] != 0) {
-
-   if ($_POST["change_action"] == PluginResourcesResource_Change::CHANGE_TRANSFER && isset($_POST['plugin_resources_resources_id'])) {
-      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']);
-   } else {
-      $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
-      Html::back();
-   }
-
-} else if (isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0) {
-
-   if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-      //show remove resource form
-      $resource->showResourcesToChange($_POST);
-   }
-
+    if ($_POST["change_action"] == Resource_Change::CHANGE_TRANSFER && isset($_POST['plugin_resources_resources_id'])) {
+        Html::redirect(
+            PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']
+        );
+    } else {
+        $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
+        Html::back();
+    }
+} elseif (isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0) {
+    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+        //show remove resource form
+        $resource->showResourcesToChange($_POST);
+    }
 } else {
-   if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-      //show remove resource form
-      $resource->showResourcesToChange($_POST);
-   }
+    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+        //show remove resource form
+        $resource->showResourcesToChange($_POST);
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

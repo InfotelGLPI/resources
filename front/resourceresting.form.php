@@ -27,68 +27,63 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\ResourceResting;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-       Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$resting = new PluginResourcesResourceResting();
+$resting = new ResourceResting();
 
 if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $resting->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $resting->update($_POST);
-   Html::back();
-
-} else if (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {
-   $resting->fields = ['id' => $_POST['id'], 'date_end' => $_POST['date_end']];
-   $resting->updateInDB(['date_end']);
-   Html::back();
-
-} else if (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $resting->delete($_POST, 1);
-   $resting->redirectToList();
-
-} else if (isset($_GET['menu'])) {
-   if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-      $resting->showMenu();
-   }
-
-} else if (isset($_GET['end'])) {
-   if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-      $resting->showFormEnd($_GET["id"], []);
-   }
+    $resting->add($_POST);
+    Html::back();
+} elseif (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $resting->update($_POST);
+    Html::back();
+} elseif (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {
+    $resting->fields = ['id' => $_POST['id'], 'date_end' => $_POST['date_end']];
+    $resting->updateInDB(['date_end']);
+    Html::back();
+} elseif (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $resting->delete($_POST, 1);
+    $resting->redirectToList();
+} elseif (isset($_GET['menu'])) {
+    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+        $resting->showMenu();
+    }
+} elseif (isset($_GET['end'])) {
+    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+        $resting->showFormEnd($_GET["id"], []);
+    }
 } else {
-   if ($resting->canView() || Session::haveRight("config", UPDATE)) {
-      $resting->showForm($_GET["id"], []);
-   }
+    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+        $resting->showForm($_GET["id"], []);
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

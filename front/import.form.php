@@ -28,42 +28,37 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Import;
+use GlpiPlugin\Resources\Menu;
 
 Session::checkLoginUser();
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
-$import = new PluginResourcesImport();
+$import = new Import();
 
 if (isset($_POST["add"])) {
-   $import->check(-1, CREATE, $_POST);
-   $import->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["purge"])) {
-   $import->check($_POST['id'], PURGE);
-   $import->delete($_POST);
-   $import->redirectToList();
-
-} else if (isset($_POST["update"])) {
-   $import->check($_POST['id'], UPDATE);
-   $import->update($_POST);
-   Html::back();
-
+    $import->check(-1, CREATE, $_POST);
+    $import->add($_POST);
+    Html::back();
+} elseif (isset($_POST["purge"])) {
+    $import->check($_POST['id'], PURGE);
+    $import->delete($_POST);
+    $import->redirectToList();
+} elseif (isset($_POST["update"])) {
+    $import->check($_POST['id'], UPDATE);
+    $import->update($_POST);
+    Html::back();
 } else {
+    $import->checkGlobal(READ);
 
-   $import->checkGlobal(READ);
+    Html::header(Menu::getTypeName(2), '', "admin", Menu::class);
 
-   Html::header(PluginResourcesMenu::getTypeName(2), '', "admin", "pluginresourcesmenu");
-
-   if ($import->canView()) {
-      $import->showTitle(false);
-      $import->display(['id' => $_GET['id']]);
-
-   } else {
-       throw new AccessDeniedHttpException();
-   }
-   Html::footer();
+    if ($import->canView()) {
+        $import->showTitle(false);
+        $import->display(['id' => $_GET['id']]);
+    } else {
+        throw new AccessDeniedHttpException();
+    }
+    Html::footer();
 }

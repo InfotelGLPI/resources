@@ -27,52 +27,50 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\ResourceHabilitation;
 use GlpiPlugin\Servicecatalog\Main;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-       Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$habilitation = new PluginResourcesResourceHabilitation();
+$habilitation = new ResourceHabilitation();
 
 if (isset($_POST['add'])) {
-   if (isset($_POST['plugin_resources_habilitations_id']) &&
-       !empty($_POST['plugin_resources_habilitations_id']) &&
-       $_POST['plugin_resources_habilitations_id']) {
-      $habilitation->check(-1, UPDATE, $_POST);
-      $habilitation->add($_POST);
-   }
-   Html::back();
-
-} else if (isset($_POST["delete"])) {
-   $habilitation->check($_POST["id"], UPDATE);
-   $habilitation->delete($_POST);
-   Html::back();
-
+    if (isset($_POST['plugin_resources_habilitations_id']) &&
+        !empty($_POST['plugin_resources_habilitations_id']) &&
+        $_POST['plugin_resources_habilitations_id']) {
+        $habilitation->check(-1, UPDATE, $_POST);
+        $habilitation->add($_POST);
+    }
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    $habilitation->check($_POST["id"], UPDATE);
+    $habilitation->delete($_POST);
+    Html::back();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

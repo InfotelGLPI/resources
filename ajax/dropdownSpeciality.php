@@ -26,19 +26,22 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+use GlpiPlugin\Resources\ResourceSpeciality;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownSpeciality.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
 Session::checkLoginUser();
 
 //allow speciality's display depending on rank
-$options =[
-   'plugin_resources_ranks_id' =>$_POST['plugin_resources_ranks_id'],
-   'entity'                    =>$_POST['entity_restrict'],
-   'rand'                      =>$_POST['rand']];
+$options = [
+    'plugin_resources_ranks_id' => $_POST['plugin_resources_ranks_id'],
+    'entity' => $_POST['entity_restrict'],
+    'rand' => $_POST['rand']
+];
 
-PluginResourcesResourceSpeciality::showSpeciality($options);
+ResourceSpeciality::showSpeciality($options);
 

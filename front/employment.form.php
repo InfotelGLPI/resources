@@ -27,55 +27,53 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Employment;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 if (!isset($_GET["plugin_resources_resources_id"])) {
-   $_GET["plugin_resources_resources_id"] = 0;
+    $_GET["plugin_resources_resources_id"] = 0;
 }
 
-$employment = new PluginResourcesEmployment();
+$employment = new Employment();
 
 if (isset($_POST["add"])) {
-   $employment->check(-1, UPDATE);
-   $newID = $employment->add($_POST);
-   Html::back();
+    $employment->check(-1, UPDATE);
+    $newID = $employment->add($_POST);
+    Html::back();
+} elseif (isset($_POST["update"])) {
+    $employment->check($_POST["id"], UPDATE);
+    $employment->update($_POST);
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    $employment->check($_POST["id"], UPDATE);
+    $employment->delete($_POST);
+    $employment->redirectToList();
+} elseif (isset($_POST["purge"])) {
+    $employment->check($_POST['id'], UPDATE);
+    $employment->delete($_POST, 1);
+    $employment->redirectToList();
+} elseif (isset($_POST["restore"])) {
+    $employment->check($_POST["id"], UPDATE);
+    $employment->restore($_POST);
+    $employment->redirectToList();
+} elseif (isset($_POST["add_item"])) {
+    if (!empty($_POST['itemtype'])) {
+        $input['id'] = $_POST['plugin_resources_employments_id'];
+        $input['plugin_resources_resources_id'] = $_POST['items_id'];
 
-} else if (isset($_POST["update"])) {
-   $employment->check($_POST["id"], UPDATE);
-   $employment->update($_POST);
-   Html::back();
-
-} else if (isset($_POST["delete"])) {
-   $employment->check($_POST["id"], UPDATE);
-   $employment->delete($_POST);
-   $employment->redirectToList();
-
-} else if (isset($_POST["purge"])) {
-   $employment->check($_POST['id'], UPDATE);
-   $employment->delete($_POST, 1);
-   $employment->redirectToList();
-
-} else if (isset($_POST["restore"])) {
-   $employment->check($_POST["id"], UPDATE);
-   $employment->restore($_POST);
-   $employment->redirectToList();
-
-} else if (isset($_POST["add_item"])) {
-   if (!empty($_POST['itemtype'])) {
-      $input['id'] = $_POST['plugin_resources_employments_id'];
-      $input['plugin_resources_resources_id'] = $_POST['items_id'];
-
-      $employment->check($input["id"], UPDATE);
-      $employment->update($input);
-   }
-   Html::back();
-
+        $employment->check($input["id"], UPDATE);
+        $employment->update($input);
+    }
+    Html::back();
 } else {
-   $employment->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesEmployment::getType()));
-   $employment->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]);
-   Html::footer();
+    $employment->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Employment::class);
+    $employment->display(
+        ['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]
+    );
+    Html::footer();
 }

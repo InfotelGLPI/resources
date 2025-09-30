@@ -27,15 +27,15 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
-$resource = new PluginResourcesResource();
+$resource = new Resource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php", $_GET["add"]);
 
-   $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR."/front/resource.form.php", $_GET["add"]);
-
-   Html::footer();
+    Html::footer();
 }

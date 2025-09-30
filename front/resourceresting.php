@@ -28,39 +28,38 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\ResourceResting;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-       Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
-$resting = new PluginResourcesResourceResting();
+$resting = new ResourceResting();
 
 if (($resting->canView() || Session::haveRight("config", UPDATE))) {
-   Search::show("PluginResourcesResourceResting");
-
+    Search::show(ResourceResting::class);
 } else {
     throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

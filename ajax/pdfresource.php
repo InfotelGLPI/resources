@@ -27,62 +27,70 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Resource_Item;
 
 Session::checkLoginUser();
 
+global $CFG_GLPI, $DB;
+
 if (Plugin::isPluginActive("useditemsexport")) {
+    if (isset($_POST['plugin_resources_resources_id'])) {
+        $resource_item = new Resource_Item();
+        $resource = $resource_item->find([
+            'itemtype' => 'User',
+            'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id']
+        ],
+            [],
+            [1]);
+        if (count($resource) == 1) {
+            $resource = reset($resource);
+            $users_id = $resource['items_id'];
 
-   if (isset($_POST['plugin_resources_resources_id'])) {
-      $resource_item = new PluginResourcesResource_Item();
-      $resource      = $resource_item->find(['itemtype'                      => 'User',
-                                             'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id']],
-                                            [],
-                                            [1]);
-      if (count($resource) == 1) {
-         $resource = reset($resource);
-         $users_id = $resource['items_id'];
+            $type_user = $CFG_GLPI['linkuser_types'];
+            $field_user = 'users_id';
 
-         $type_user  = $CFG_GLPI['linkuser_types'];
-         $field_user = 'users_id';
+            $total_numrows = 0;
+            $dbu = new DbUtils();
 
-         $total_numrows = 0;
-         $dbu           = new DbUtils();
+            foreach ($type_user as $itemtype) {
+                if (!($item = $dbu->getItemForItemtype($itemtype))) {
+                    continue;
+                }
 
-         foreach ($type_user as $itemtype) {
-            if (!($item = $dbu->getItemForItemtype($itemtype))) {
-               continue;
-            }
-
-            $itemtable = $dbu->getTableForItemType($itemtype);
-            $query     = "SELECT *
+                $itemtable = $dbu->getTableForItemType($itemtype);
+                $query = "SELECT *
                       FROM `$itemtable`
                       WHERE `" . $field_user . "` = '$users_id'";
 
-            if ($item->maybeTemplate()) {
-               $query .= " AND `is_template` = 0 ";
+                if ($item->maybeTemplate()) {
+                    $query .= " AND `is_template` = 0 ";
+                }
+                if ($item->maybeDeleted()) {
+                    $query .= " AND `is_deleted` = 0 ";
+                }
+                $result = $DB->doQuery($query);
+                $total_numrows += $DB->numrows($result);
             }
-            if ($item->maybeDeleted()) {
-               $query .= " AND `is_deleted` = 0 ";
+
+            if ($total_numrows > 0) {
+                $rand = mt_rand();
+
+                $url = PLUGIN_RESOURCES_WEBDIR . "/front/export.pdf.php";
+                echo __('Please ensure that the return form is signed by the employee', 'resources') . "<br><br>";
+                echo "<span class='red'>" .
+                    __(
+                        "The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)",
+                        'resources'
+                    ) .
+                    "</span><br><br>";
+
+                echo "<a class='submit btn btn-warning' style='color: white;' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __(
+                        'Download the restitution form',
+                        'resources'
+                    ) . "</a>";
+
+                Html::closeForm();
             }
-            $result        = $DB->doQuery($query);
-            $total_numrows += $DB->numrows($result);
-         }
-
-         if ($total_numrows > 0) {
-
-            $rand = mt_rand();
-
-            $url = PLUGIN_RESOURCES_WEBDIR. "/front/export.pdf.php";
-            echo __('Please ensure that the return form is signed by the employee', 'resources') . "<br><br>";
-            echo "<span class='red'>" .
-                 __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources') .
-                 "</span><br><br>";
-
-            echo "<a class='submit btn btn-warning' style='color: white;' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __('Download the restitution form', 'resources') . "</a>";
-
-            Html::closeForm();
-         }
-      }
-   }
+        }
+    }
 }

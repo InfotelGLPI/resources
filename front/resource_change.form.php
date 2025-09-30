@@ -27,22 +27,23 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Change;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$resource_change = new PluginResourcesResource_Change();
+$resource_change = new Resource_Change();
 
 if (isset($_POST['add_entity_category'])) {
-   $resource_change->check(-1, UPDATE, $_POST);
-   $resource_change->add($_POST);
-   Html::back();
-
+    $resource_change->check(-1, UPDATE, $_POST);
+    $resource_change->add($_POST);
+    Html::back();
 } else {
-   $resource_change->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesConfig::getType()));
-   $resource_change->showFormActions();
-   Html::footer();
+    $resource_change->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, ResourcesConfig::class);
+    $resource_change->showFormActions();
+    Html::footer();
 }

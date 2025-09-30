@@ -27,42 +27,44 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Checklist;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 if (!isset($_GET["plugin_resources_contracttypes_id"])) {
-   $_GET["plugin_resources_contracttypes_id"] = 0;
+    $_GET["plugin_resources_contracttypes_id"] = 0;
 }
 if (!isset($_GET["checklist_type"])) {
-   $_GET["checklist_type"] = 0;
+    $_GET["checklist_type"] = 0;
 }
 if (!isset($_GET["plugin_resources_resources_id"])) {
-   $_GET["plugin_resources_resources_id"] = -1;
+    $_GET["plugin_resources_resources_id"] = -1;
 }
 
-$checklist = new PluginResourcesChecklist();
+$checklist = new Checklist();
 
 //from central
 //update checklist
 if (isset($_POST["add"])) {
-   $checklist->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["update"])) {
-   if ($checklist->canCreate()) {
-      $checklist->update($_POST);
-   }
-   Html::back();
-
+    $checklist->add($_POST);
+    Html::back();
+} elseif (isset($_POST["update"])) {
+    if ($checklist->canCreate()) {
+        $checklist->update($_POST);
+    }
+    Html::back();
 } else {
-   $checklist->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType(), strtolower(PluginResourcesChecklist::getType()));
-   $options = ['id'                                => $_GET["id"],
-               'checklist_type'                    => $_GET["checklist_type"],
-               'plugin_resources_contracttypes_id' => $_GET["plugin_resources_contracttypes_id"],
-               'plugin_resources_resources_id'     => $_GET["plugin_resources_resources_id"]];
-   $checklist->display($options);
-   Html::footer();
+    $checklist->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Checklist::class);
+    $options = [
+        'id' => $_GET["id"],
+        'checklist_type' => $_GET["checklist_type"],
+        'plugin_resources_contracttypes_id' => $_GET["plugin_resources_contracttypes_id"],
+        'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]
+    ];
+    $checklist->display($options);
+    Html::footer();
 }

@@ -27,33 +27,34 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 if (isset($_POST["id"])) {
-   $items_id = $_POST["id"];
-   $rand = $_POST["rand"];
-   echo "<div id='addcommentneed$items_id$rand'class='center'>";
-   echo Html::textarea([
-                          'name'    => 'commentneed'.$items_id,
-                          'cols'    => '30',
-                          'rows'    => '3',
-                          'display' => false,
-                       ]);
-   echo Html::hidden('id', ['value' => $items_id]);
-   echo "</div>";
-   echo "<div id='viewaccept$items_id'class='center'>";
-   echo "<p>";
-   $name = "updateneedcomment[".$items_id."]";
-   echo Html::submit(_sx('button', 'Add'), ['name' => $name, 'class' => 'btn btn-primary']);
-   echo "&nbsp;";
-   echo Html::submit(_sx('button', 'Cancel'), ['name' => 'cancel', 'class' => 'btn btn-primary', 'onclick' => "hideAddForm$items_id();"]);
-   echo "</div>";
-
+    $items_id = $_POST["id"];
+    $rand = $_POST["rand"];
+    echo "<div id='addcommentneed$items_id$rand'class='center'>";
+    echo Html::textarea([
+        'name' => 'commentneed' . $items_id,
+        'cols' => '30',
+        'rows' => '3',
+        'display' => false,
+    ]);
+    echo Html::hidden('id', ['value' => $items_id]);
+    echo "</div>";
+    echo "<div id='viewaccept$items_id'class='center'>";
+    echo "<p>";
+    $name = "updateneedcomment[" . $items_id . "]";
+    echo Html::submit(_sx('button', 'Add'), ['name' => $name, 'class' => 'btn btn-primary']);
+    echo "&nbsp;";
+    echo Html::submit(
+        _sx('button', 'Cancel'),
+        ['name' => 'cancel', 'class' => 'btn btn-primary', 'onclick' => "hideAddForm$items_id();"]
+    );
+    echo "</div>";
 } else {
-   echo __("You don't have permission to perform this action.");
+    echo __("You don't have permission to perform this action.");
 }
 

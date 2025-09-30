@@ -27,53 +27,55 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\ReportConfig;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
 if (!isset($_GET["withtemplate"])) {
-   $_GET["withtemplate"] = "";
+    $_GET["withtemplate"] = "";
 }
 
 if (!isset($_GET["plugin_resources_resources_id"])) {
-   $_GET["plugin_resources_resources_id"] = "";
+    $_GET["plugin_resources_resources_id"] = "";
 }
 
-$reportconfig = new PluginResourcesReportConfig();
+$reportconfig = new ReportConfig();
 
 if (isset($_POST["add"])) {
-   if ($reportconfig->canCreate()) {
-      $reportconfig->add($_POST);
-   }
-   Html::back();
+    if ($reportconfig->canCreate()) {
+        $reportconfig->add($_POST);
+    }
+    Html::back();
+} elseif (isset($_POST["update"])) {
+    if ($reportconfig->canCreate()) {
+        $reportconfig->update($_POST);
+    }
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    if ($reportconfig->canCreate()) {
+        $reportconfig->delete($_POST, 1);
+    }
 
-} else if (isset($_POST["update"])) {
-   if ($reportconfig->canCreate()) {
-      $reportconfig->update($_POST);
-   }
-   Html::back();
-
-} else if (isset($_POST["delete"])) {
-   if ($reportconfig->canCreate()) {
-      $reportconfig->delete($_POST, 1);
-   }
-
-   Html::redirect(Toolbox::getItemTypeFormURL('PluginResourcesResource').
-           "?id=".$_POST["plugin_resources_resources_id"]);
-
-} else if (isset($_POST["delete_report"])) {
-   if ($reportconfig->canCreate()) {
-      foreach ($_POST["check"] as $ID => $value) {
-         $reportconfig->delete(["id" => $ID], 1);
-      }
-   }
-   Html::back();
-
+    Html::redirect(
+        Toolbox::getItemTypeFormURL(Resource::class) .
+        "?id=" . $_POST["plugin_resources_resources_id"]
+    );
+} elseif (isset($_POST["delete_report"])) {
+    if ($reportconfig->canCreate()) {
+        foreach ($_POST["check"] as $ID => $value) {
+            $reportconfig->delete(["id" => $ID], 1);
+        }
+    }
+    Html::back();
 } else {
-   $reportconfig->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-   $reportconfig->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]);
-   Html::footer();
+    $reportconfig->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+    $reportconfig->display(
+        ['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"]]
+    );
+    Html::footer();
 }

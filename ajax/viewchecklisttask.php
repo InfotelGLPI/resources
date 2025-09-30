@@ -27,29 +27,31 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Checklist;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
-$item = new PluginResourcesChecklist();
+$item = new Checklist();
 
 if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklist_type"])) {
-   $options = ['id'                                => $_POST["id"],
-                    'target'                            => $_POST["target"],
-                    'plugin_resources_contracttypes_id' => $_POST["plugin_resources_contracttypes_id"],
-                    'checklist_type'                    => $_POST["checklist_type"],
-                    'plugin_resources_resources_id'     => $_POST["plugin_resources_resources_id"]];
+    $options = [
+        'id' => $_POST["id"],
+        'target' => $_POST["target"],
+        'plugin_resources_contracttypes_id' => $_POST["plugin_resources_contracttypes_id"],
+        'checklist_type' => $_POST["checklist_type"],
+        'plugin_resources_resources_id' => $_POST["plugin_resources_resources_id"]
+    ];
 
-   echo "<table class='tab_cadre'>";
-   echo "<tr class='tab_bg_1'>";
-   echo "<td>";
-   $item->showForm($_POST["id"], $options);
-   echo "</td>";
-   echo "</tr>";
-   echo "</table>";
-
+    echo "<table class='tab_cadre'>";
+    echo "<tr class='tab_bg_1'>";
+    echo "<td>";
+    $item->showForm($_POST["id"], $options);
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
 } else {
-   echo __("You don't have permission to perform this action.");
+    echo __("You don't have permission to perform this action.");
 }

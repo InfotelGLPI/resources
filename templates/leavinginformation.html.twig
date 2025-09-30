@@ -18,138 +18,138 @@
     {% set right_sales = params['right_sales'] ?? false %}
     {% set element_sales = params['element_sales'] ?? [] %}
 <div class="bt-feature col-md-12 ">
-<div class="asset {{ bg }}">
-    {% if not default_button%}
-        {{ include('components/form/header.html.twig') }}
-    {% endif %}
-    <div class="card-body d-flex">
-        <div class="col-9 flex-column">
-            <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
-                <div class="row flex-row align-items-start flex-grow-1">
-                    <div class="row flex-row">
-                        <input type="hidden" name="plugin_resources_resources_id"
-                               value="{{ params['plugin_resources_resources_id'] }}"/>
-                        {% if hidden.interview_date is not defined %}
-                            {% if item.isField('interview_date') %}
-                                {{ fields.datetimeField(
-                                    'interview_date',
-                                    item.fields['interview_date'],
-                                    __('Interview date', 'resources'),
-                                    {
-                                        'required': mandatory.interview_date is defined,
-                                    }
-                                ) }}
-                            {% endif %}
-                        {% endif %}
-                        {# {{ dump(hidden) }} #}
-                        {% if hidden.users_id is not defined %}
-                            {% if item.isField('users_id') %}
-                                {% if not right_sales%}
-                                    {{ fields.dropdownArrayField('users_id', subitem.item['users_id'], element_sales
-                                        , __('Sales manager', 'resources'),
+    <div class="asset {{ bg }}">
+        {% if not default_button %}
+            {{ include('components/form/header.html.twig') }}
+        {% endif %}
+        <div class="card-body d-flex">
+            <div class="col-9 flex-column">
+                <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+                    <div class="row flex-row align-items-start flex-grow-1">
+                        <div class="row flex-row">
+                            <input type="hidden" name="plugin_resources_resources_id"
+                                   value="{{ params['plugin_resources_resources_id'] }}"/>
+                            {% if hidden.interview_date is not defined %}
+                                {% if item.isField('interview_date') %}
+                                    {{ fields.datetimeField(
+                                        'interview_date',
+                                        item.fields['interview_date'],
+                                        __('Interview date', 'resources'),
                                         {
-                                        'display_emptychoice': true,
-                                        'rand': rand,
-                                            'field_class': 'col-12 col-sm-6',
-
-
-                                    }) }}
+                                            'required': mandatory.interview_date is defined,
+                                        }
+                                    ) }}
                                 {% endif %}
-                                {% if right_sales%}
-                                {{ fields.dropdownField(
-                                    "User",
-                                    "users_id",
-                                    item.fields['users_id'],
-                                    __('Sales manager', 'resources'),
-                                    {
-                                        'required': mandatory.users_id is defined,
-                                        'right': 'all',
-                                    }
-                                ) }}
+                            {% endif %}
+                            {# {{ dump(hidden) }} #}
+                            {% if hidden.users_id is not defined %}
+                                {% if item.isField('users_id') %}
+                                    {% if not right_sales %}
+                                        {{ fields.dropdownArrayField('users_id', subitem.item['users_id'], element_sales
+                                            , __('Sales manager', 'resources'),
+                                            {
+                                                'display_emptychoice': true,
+                                                'rand': rand,
+                                                'field_class': 'col-12 col-sm-6',
+
+
+                                            }) }}
+                                    {% endif %}
+                                    {% if right_sales %}
+                                        {{ fields.dropdownField(
+                                            "User",
+                                            "users_id",
+                                            item.fields['users_id'],
+                                            __('Sales manager', 'resources'),
+                                            {
+                                                'required': mandatory.users_id is defined,
+                                                'right': 'all',
+                                            }
+                                        ) }}
+                                    {% endif %}
+
                                 {% endif %}
+                            {% endif %}
 
-                            {% endif %}
-                        {% endif %}
+                            {% if hidden.plugin_resources_workprofiles_id is not defined %}
 
-                        {% if hidden.plugin_resources_workprofiles_id is not defined %}
+                                {% if item.isField('plugin_resources_workprofiles_id') %}
+                                    {{ fields.dropdownField(
+                                        "PluginResourcesWorkProfile",
+                                        "plugin_resources_workprofiles_id",
+                                        item.fields['plugin_resources_workprofiles_id'],
+                                        "PluginResourcesWorkProfile"|itemtype_name,
+                                        {
+                                            'required': mandatory.plugin_resources_workprofiles_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                            {% if hidden.plugin_resources_clients_id is not defined %}
+                                {% if item.isField('plugin_resources_clients_id') %}
+                                    {{ fields.dropdownField(
+                                        "PluginResourcesClient",
+                                        "plugin_resources_clients_id",
+                                        item.fields['plugin_resources_clients_id'],
+                                        "PluginResourcesClient"|itemtype_name,
+                                        {
+                                            'required': mandatory.plugin_resources_clients_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                            {% if hidden.resignation_date is not defined %}
+                                {% if item.isField('resignation_date') %}
+                                    {{ fields.datetimeField(
+                                        'resignation_date',
+                                        item.fields['resignation_date'],
+                                        __('Resignation date', 'resources'),
+                                        {
+                                            'required': mandatory.resignation_date is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                            {% if hidden.wished_leaving_date is not defined %}
+                                {% if item.isField('wished_leaving_date') %}
+                                    {{ fields.datetimeField(
+                                        'wished_leaving_date',
+                                        item.fields['wished_leaving_date'],
+                                        __('Wished leaving date', 'resources'),
+                                        {
+                                            'required': mandatory.wished_leaving_date is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                            {% if hidden.effective_leaving_date is not defined %}
+                                {% if item.isField('effective_leaving_date') %}
+                                    {{ fields.datetimeField(
+                                        'effective_leaving_date',
+                                        item.fields['effective_leaving_date'],
+                                        __('Effective leaving date', 'resources'),
+                                        {
+                                            'required': mandatory.effective_leaving_date is defined,
+                                        }
 
-                            {% if item.isField('plugin_resources_workprofiles_id') %}
-                                {{ fields.dropdownField(
-                                    "PluginResourcesWorkProfile",
-                                    "plugin_resources_workprofiles_id",
-                                    item.fields['plugin_resources_workprofiles_id'],
-                                    "PluginResourcesWorkProfile"|itemtype_name,
-                                    {
-                                        'required': mandatory.plugin_resources_workprofiles_id is defined,
-                                    }
-                                ) }}
+                                    ) }}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        {% if hidden.plugin_resources_clients_id is not defined %}
-                            {% if item.isField('plugin_resources_clients_id') %}
-                                {{ fields.dropdownField(
-                                    "PluginResourcesClient",
-                                    "plugin_resources_clients_id",
-                                    item.fields['plugin_resources_clients_id'],
-                                    "PluginResourcesClient"|itemtype_name,
-                                    {
-                                        'required': mandatory.plugin_resources_clients_id is defined,
-                                    }
-                                ) }}
+                            {% if hidden.plugin_resources_destinations_id is not defined %}
+                                {% if item.isField('plugin_resources_destinations_id') %}
+                                    {{ fields.dropdownField(
+                                        "PluginResourcesDestination",
+                                        "plugin_resources_destinations_id",
+                                        item.fields['plugin_resources_destinations_id'],
+                                        "PluginResourcesDestination"|itemtype_name,
+                                        {
+                                            'required': mandatory.plugin_resources_destinations_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        {% if hidden.resignation_date is not defined %}
-                            {% if item.isField('resignation_date') %}
-                                {{ fields.datetimeField(
-                                    'resignation_date',
-                                    item.fields['resignation_date'],
-                                    __('Resignation date', 'resources'),
-                                    {
-                                        'required': mandatory.resignation_date is defined,
-                                    }
-                                ) }}
-                            {% endif %}
-                        {% endif %}
-                        {% if hidden.wished_leaving_date is not defined %}
-                            {% if item.isField('wished_leaving_date') %}
-                                {{ fields.datetimeField(
-                                    'wished_leaving_date',
-                                    item.fields['wished_leaving_date'],
-                                    __('Wished leaving date', 'resources'),
-                                    {
-                                        'required': mandatory.wished_leaving_date is defined,
-                                    }
-                                ) }}
-                            {% endif %}
-                        {% endif %}
-                        {% if hidden.effective_leaving_date is not defined %}
-                            {% if item.isField('effective_leaving_date') %}
-                                {{ fields.datetimeField(
-                                    'effective_leaving_date',
-                                    item.fields['effective_leaving_date'],
-                                    __('Effective leaving date', 'resources'),
-                                    {
-                                        'required': mandatory.effective_leaving_date is defined,
-                                    }
-
-                                ) }}
-                            {% endif %}
-                        {% endif %}
-                        {% if hidden.plugin_resources_destinations_id is not defined %}
-                            {% if item.isField('plugin_resources_destinations_id') %}
-                                {{ fields.dropdownField(
-                                    "PluginResourcesDestination",
-                                    "plugin_resources_destinations_id",
-                                    item.fields['plugin_resources_destinations_id'],
-                                    "PluginResourcesDestination"|itemtype_name,
-                                    {
-                                        'required': mandatory.plugin_resources_destinations_id is defined,
-                                    }
-                                ) }}
-                            {% endif %}
-                        {% endif %}
-                        {% if hidden.plugin_resources_resignationreasons_id is not defined %}
-{#                            {% if item.isField('plugin_resources_leavingreasons_id') %}#}
+                            {% if hidden.plugin_resources_resignationreasons_id is not defined %}
+                                {#                            {% if item.isField('plugin_resources_leavingreasons_id') %} #}
                                 {{ fields.dropdownField(
                                     "PluginResourcesLeavingReason",
                                     "plugin_resources_leavingreasons_id",
@@ -159,65 +159,65 @@
                                         'required': mandatory.plugin_resources_leavingreasons_id is defined,
                                     }
                                 ) }}
-{#                            {% endif %}#}
-                        {% endif %}
-                        {% if hidden.plugin_resources_resignationreasons_id is not defined %}
-                            {% if item.isField('plugin_resources_resignationreasons_id') %}
-                                {{ fields.dropdownField(
-                                    "PluginResourcesResignationReason",
-                                    "plugin_resources_resignationreasons_id",
-                                    item.fields['plugin_resources_resignationreasons_id'],
-                                    "PluginResourcesResignationReason"|itemtype_name,
-                                    {
-                                        'required': mandatory.plugin_resources_leavingreasons_id is defined,
-                                    }
-                                ) }}
+                                {#                            {% endif %} #}
                             {% endif %}
-                        {% endif %}
-                        {% if hidden.company_name is not defined %}
-                            {% if item.isField('company_name') %}
-                                {{ fields.autoNameField(
-                                    'company_name',
-                                    item,
-                                    __('Company name', 'resources'),
-                                    withtemplate,
-                                    {
-                                        'required': mandatory.company_name is defined,
-                                    }
-                                ) }}
+                            {% if hidden.plugin_resources_resignationreasons_id is not defined %}
+                                {% if item.isField('plugin_resources_resignationreasons_id') %}
+                                    {{ fields.dropdownField(
+                                        "PluginResourcesResignationReason",
+                                        "plugin_resources_resignationreasons_id",
+                                        item.fields['plugin_resources_resignationreasons_id'],
+                                        "PluginResourcesResignationReason"|itemtype_name,
+                                        {
+                                            'required': mandatory.plugin_resources_leavingreasons_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        {% if hidden.pay_gap is not defined %}
-                            {% if item.isField('pay_gap') %}
-                                {{ fields.dropdownYesNo('pay_gap',
-                                    item.fields['pay_gap'],
-                                    __('Pay gap','resources'),
-                                    {
-                                        'field_class': 'col-12 col-sm-6',
-                                        'required': mandatory.pay_gap is defined,
-                                    }) }}
+                            {% if hidden.company_name is not defined %}
+                                {% if item.isField('company_name') %}
+                                    {{ fields.autoNameField(
+                                        'company_name',
+                                        item,
+                                        __('Company name', 'resources'),
+                                        withtemplate,
+                                        {
+                                            'required': mandatory.company_name is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                            {% if hidden.pay_gap is not defined %}
+                                {% if item.isField('pay_gap') %}
+                                    {{ fields.dropdownYesNo('pay_gap',
+                                        item.fields['pay_gap'],
+                                        __('Pay gap','resources'),
+                                        {
+                                            'field_class': 'col-12 col-sm-6',
+                                            'required': mandatory.pay_gap is defined,
+                                        }) }}
 
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        {% if hidden.mission_lost is not defined %}
-                            {% if item.isField('mission_lost') %}
-                                {{ fields.dropdownYesNo('mission_lost',
-                                    item.fields['mission_lost'],
-                                    __('Mission lost','resources'),
-                                    {
-                                        'field_class': 'col-12 col-sm-6',
-                                        'required': mandatory.mission_lost is defined,
-                                    }) }}
+                            {% if hidden.mission_lost is not defined %}
+                                {% if item.isField('mission_lost') %}
+                                    {{ fields.dropdownYesNo('mission_lost',
+                                        item.fields['mission_lost'],
+                                        __('Mission lost','resources'),
+                                        {
+                                            'field_class': 'col-12 col-sm-6',
+                                            'required': mandatory.mission_lost is defined,
+                                        }) }}
 
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
+                        </div> {# .row #}
                     </div> {# .row #}
-                </div> {# .row #}
-            </div> {# .flex-row #}
-        </div>
-    </div> {# .card-body #}
-    {% if not default_button%}
-        {{ include('components/form/buttons.html.twig') }}
-    {% endif %}
-</div>
+                </div> {# .flex-row #}
+            </div>
+        </div> {# .card-body #}
+        {% if not default_button %}
+            {{ include('components/form/buttons.html.twig') }}
+        {% endif %}
+    </div>
 </div>

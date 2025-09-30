@@ -27,9 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
 
-$rulecollection = new PluginResourcesRuleContracttypeHiddenCollection($_SESSION['glpiactive_entity']);
+$rulecollection = new RuleContracttypeHiddenCollection($_SESSION['glpiactive_entity']);
 
-include (GLPI_ROOT . "/front/rule.common.php");
+include(GLPI_ROOT . "/front/rule.common.php");
 

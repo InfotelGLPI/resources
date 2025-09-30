@@ -27,40 +27,41 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+
+use GlpiPlugin\Resources\ImportResource;
+
 header('Content-Type: application/json');
 Html::header_nocache();
 
 Session::checkLoginUser();
 
 if (isset($_GET['page']) && isset($_GET['file'])) {
+    $ImportResource = new ImportResource();
 
-   $pluginResourcesImportResource = new PluginResourcesImportResource();
+    $absoluteFilePath = $ImportResource::getLocationOfVerificationFiles() . "/" . $_GET['file'];
 
-   $absoluteFilePath = $pluginResourcesImportResource::getLocationOfVerificationFiles() . "/" . $_GET['file'];
+    $temp = $ImportResource->readCSVLines($absoluteFilePath, 0, 1);
+    $header = array_shift($temp);
 
-   $temp = $pluginResourcesImportResource->readCSVLines($absoluteFilePath, 0, 1);
-   $header = array_shift($temp);
+    $importId = $ImportResource->checkHeader($header);
 
-   $importId = $pluginResourcesImportResource->checkHeader($header);
+    $listParams = $ImportResource->fillVerifyParams(
+        1,
+        INF,
+        $_GET['page'],
+        $absoluteFilePath,
+        $importId,
+        $_GET['file'],
+        $ImportResource::DISPLAY_STATISTICS,
+        true
+    );
 
-   $listParams = $pluginResourcesImportResource->fillVerifyParams(
-      1,
-      INF,
-      $_GET['page'],
-      $absoluteFilePath,
-      $importId,
-      $_GET['file'],
-      $pluginResourcesImportResource::DISPLAY_STATISTICS,
-      true
-   );
-
-   switch ($_GET['page']) {
-      case PluginResourcesImportResource::VERIFY_FILE:
-         $pluginResourcesImportResource->showVerificationFileList($listParams);
-         break;
-      case PluginResourcesImportResource::VERIFY_GLPI:
-         $pluginResourcesImportResource->showVerificationGLPIFromFileList($listParams);
-         break;
-   }
+    switch ($_GET['page']) {
+        case ImportResource::VERIFY_FILE:
+            $ImportResource->showVerificationFileList($listParams);
+            break;
+        case ImportResource::VERIFY_GLPI:
+            $ImportResource->showVerificationGLPIFromFileList($listParams);
+            break;
+    }
 }

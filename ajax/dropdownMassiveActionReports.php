@@ -27,24 +27,21 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-$AJAX_INCLUDE=1;
+$AJAX_INCLUDE = 1;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
-if (isset($_POST["action"])||isset($_POST["id"])) {
-   echo Html::hidden('action', ['value' => $_POST["action"]]);
-   echo Html::hidden('id', ['value' => $_POST["id"]]);
-   switch ($_POST["action"]) {
-
-      case "delete":
-         echo "&nbsp;";
-         echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction_reports', 'class' => 'btn btn-primary']);
-        break;
-
-   }
+if (isset($_POST["action"]) || isset($_POST["id"])) {
+    echo Html::hidden('action', ['value' => $_POST["action"]]);
+    echo Html::hidden('id', ['value' => $_POST["id"]]);
+    switch ($_POST["action"]) {
+        case "delete":
+            echo "&nbsp;";
+            echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction_reports', 'class' => 'btn btn-primary']);
+            break;
+    }
 }
 

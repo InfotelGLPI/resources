@@ -26,67 +26,72 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+use GlpiPlugin\Resources\Adconfig;
+use GlpiPlugin\Resources\Config;
+use GlpiPlugin\Resources\ConfigHabilitation;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Change;
+use GlpiPlugin\Resources\ResourceBadge;
+use GlpiPlugin\Resources\TicketCategory;
+use GlpiPlugin\Resources\TransferEntity;
 
 Session::checkRight("config", UPDATE);
 
 if (Plugin::isPluginActive("resources")) {
-   $cat = new PluginResourcesTicketCategory();
-   $transferEntity = new PluginResourcesTransferEntity();
-   $resourceChange = new PluginResourcesResource_Change();
-   $resourceAdConfig = new PluginResourcesAdconfig();
-   $resourceBadge = new PluginResourcesResourceBadge();
-   $config = new PluginResourcesConfig();
+    $cat = new TicketCategory();
+    $transferEntity = new TransferEntity();
+    $resourceChange = new Resource_Change();
+    $resourceAdConfig = new Adconfig();
+    $resourceBadge = new ResourceBadge();
+    $config = new Config();
 
-   if (isset($_POST["add_ticket"])) {
-      $cat->addTicketCategory($_POST['ticketcategories_id']);
-      Html::back();
+    if (isset($_POST["add_ticket"])) {
+        $cat->addTicketCategory($_POST['ticketcategories_id']);
+        Html::back();
+    } elseif (isset($_POST["delete_ticket"])) {
+        if (isset($_POST['id'])) {
+            $cat->delete(['id' => $_POST['id']]);
+        }
+        Html::back();
+    } elseif (isset($_POST["add_transferentity"])) {
+        $transferEntity->check(-1, UPDATE, $_POST);
+        $transferEntity->add($_POST);
+        Html::back();
+    } elseif (isset($_POST["update_setup"])) {
+        $config->check(-1, UPDATE, $_POST);
+        $config->update($_POST);
+        Html::back();
+    } else {
+        Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+        //setup
+        $config->showConfigForm();
 
-   } else if (isset($_POST["delete_ticket"])) {
-      if (isset($_POST['id'])) {
-         $cat->delete(['id' => $_POST['id']]);
-      }
-      Html::back();
+        //changes
+        $resourceChange->showConfigForm();
 
-   } else if (isset($_POST["add_transferentity"])) {
-      $transferEntity->check(-1, UPDATE, $_POST);
-      $transferEntity->add($_POST);
-      Html::back();
+        $resourceAdConfig->showConfigForm();
 
-   } else if (isset($_POST["update_setup"])) {
-      $config->check(-1, UPDATE, $_POST);
-      $config->update($_POST);
-      Html::back();
+        //badges
+        if (Plugin::isPluginActive("badges")
+            && Plugin::isPluginActive("metademands")) {
+            $resourceBadge->showConfigForm();
+        }
 
-   } else {
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-      //setup
-      $config->showConfigForm();
+        //metademand
+        if (Plugin::isPluginActive("metademands")) {
+            $configHabilitation = new ConfigHabilitation();
+            $configHabilitation->showConfigForm();
+        }
 
-      //changes
-      $resourceChange->showConfigForm();
-
-      $resourceAdConfig->showConfigForm();
-
-      //badges
-      if (Plugin::isPluginActive("badges") && Plugin::isPluginActive("metademands")) {
-         $resourceBadge->showConfigForm();
-      }
-
-      //metademand
-      if (Plugin::isPluginActive("metademands")) {
-         $configHabilitation = new PluginResourcesConfigHabilitation();
-         $configHabilitation->showConfigForm();
-      }
-
-      $cat->showConfigForm($_SERVER['PHP_SELF']);
-      $transferEntity->showConfigForm($_SERVER['PHP_SELF']);
-   }
-
+        $cat->showConfigForm($_SERVER['PHP_SELF']);
+        $transferEntity->showConfigForm($_SERVER['PHP_SELF']);
+    }
 } else {
-   Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='alert alert-important alert-warning d-flex'>";
-   echo "<b>".__('Please activate the plugin', 'resources')."</b></div>";
+    Html::header(__('Setup'), '', "config", "plugin");
+    echo "<div class='alert alert-important alert-warning d-flex'>";
+    echo "<b>" . __('Please activate the plugin', 'resources') . "</b></div>";
 }
 
 Html::footer();

@@ -29,46 +29,45 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Directory;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 //show list of users linked with a resource
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
-$directory = new PluginResourcesDirectory();
+$directory = new Directory();
 
 if (($directory->canView() || Session::haveRight("config", UPDATE))) {
-   if (empty($_GET["sort"])) {
-      $_GET["sort"] = "34";
-   }
-   if (empty($_GET["order"])) {
-      $_GET["order"] = "ASC";
-   }
+    if (empty($_GET["sort"])) {
+        $_GET["sort"] = "34";
+    }
+    if (empty($_GET["order"])) {
+        $_GET["order"] = "ASC";
+    }
 
-   $params = Search::manageParams(PluginResourcesDirectory::class, $_GET);
-   Search::showGenericSearch(PluginResourcesDirectory::class, $params);
-   $directory->showList(PluginResourcesDirectory::class, $params);
-
+    $params = Search::manageParams(Directory::class, $_GET);
+    Search::showGenericSearch(Directory::class, $params);
+    $directory->showList(Directory::class, $params);
 } else {
     throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

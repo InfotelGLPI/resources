@@ -28,10 +28,15 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE         = 1;
-$DBCONNECTION_REQUIRED  = 0;
+use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\ResourceSituation;
+use GlpiPlugin\Resources\ResourceState;
 
-include ("../../../../inc/includes.php");
+$USEDBREPLICATE = 1;
+$DBCONNECTION_REQUIRED = 0;
+
+include("../../../../inc/includes.php");
 
 //"Rapport listant les ressources partantes ayant des emplois actifs"
 //"Report listing resource leaving with employment active";
@@ -39,30 +44,57 @@ include ("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("resourceleavingwithactiveemployment_report_title", "resources"));
 
 // Columns title (optional), from $LANG
-$report->setColumns( [new PluginReportsColumnInteger('registration_number', _x('user', 'Administrative number'),
-                                                   ['sorton' => 'registration_number']),
-                           new PluginReportsColumnLink('resource_id', __('Surname'), 'PluginResourcesResource',
-                                                   ['sorton' => 'resource_name']),
-                           new PluginReportsColumn('firstname', __('First name'),
-                                                   ['sorton' => 'firstname']),
-                           new PluginReportsColumn('resource_rank', PluginResourcesRank::getTypeName(1),
-                                                   ['sorton' => 'resource_rank']),
-                           new PluginReportsColumn('resources_situation', PluginResourcesResourceSituation::getTypeName(1),
-                                                   ['sorton' => 'resources_situation']),
-                           new PluginReportsColumn('resource_state', PluginResourcesResourceState::getTypeName(1),
-                                                   ['sorton' => 'resource_state']),
-                           new PluginReportsColumnDate('date_begin', __('Arrival date', 'resources'),
-                                                   ['sorton' => 'date_begin']),
-                           new PluginReportsColumnDate('date_end', __('Departure date', 'resources'),
-                                                   ['sorton' => 'date_end']),
-                           new PluginReportsColumnLink('employment_id', __('Name')." - "._n('Employment', 'Employments', 1, 'resources'),
-                                                   'PluginResourcesEmployment', ['sorton' => 'employment_name']),
-                           new PluginReportsColumn('employment_profession', _n('Employment', 'Employments', 1, 'resources')." - "._n('Profession', 'Professions', 2, 'resources'),
-                                                   ['sorton' => 'employment_profession']),
-                           new PluginReportsColumn('employment_state', _n('Employment state', 'Employment states', 1, 'resources'),
-                                                   ['sorton' => 'employment_state']),
-                           new PluginReportsColumn('employer_name', __('Name')." - "._n('Employer', 'Employers', 1, 'resources'),
-                                                   ['sorton' => 'employer_name']),]);
+$report->setColumns([
+    new PluginReportsColumnInteger(
+        'registration_number', _x('user', 'Administrative number'),
+        ['sorton' => 'registration_number']
+    ),
+    new PluginReportsColumnLink(
+        'resource_id', __('Surname'), Resource::class,
+        ['sorton' => 'resource_name']
+    ),
+    new PluginReportsColumn(
+        'firstname', __('First name'),
+        ['sorton' => 'firstname']
+    ),
+    new PluginReportsColumn(
+        'resource_rank', Rank::getTypeName(1),
+        ['sorton' => 'resource_rank']
+    ),
+    new PluginReportsColumn(
+        'resources_situation', ResourceSituation::getTypeName(1),
+        ['sorton' => 'resources_situation']
+    ),
+    new PluginReportsColumn(
+        'resource_state', ResourceState::getTypeName(1),
+        ['sorton' => 'resource_state']
+    ),
+    new PluginReportsColumnDate(
+        'date_begin', __('Arrival date', 'resources'),
+        ['sorton' => 'date_begin']
+    ),
+    new PluginReportsColumnDate(
+        'date_end', __('Departure date', 'resources'),
+        ['sorton' => 'date_end']
+    ),
+    new PluginReportsColumnLink(
+        'employment_id', __('Name') . " - " . _n('Employment', 'Employments', 1, 'resources'),
+        Employment::class, ['sorton' => 'employment_name']
+    ),
+    new PluginReportsColumn(
+        'employment_profession',
+        _n('Employment', 'Employments', 1, 'resources') . " - " . _n('Profession', 'Professions', 2, 'resources'),
+        ['sorton' => 'employment_profession']
+    ),
+    new PluginReportsColumn(
+        'employment_state', _n('Employment state', 'Employment states', 1, 'resources'),
+        ['sorton' => 'employment_state']
+    ),
+    new PluginReportsColumn(
+        'employer_name', __('Name') . " - " . _n('Employer', 'Employers', 1, 'resources'),
+        ['sorton' => 'employer_name']
+    ),
+]);
 
 // SQL statement
 $dbu = new DbUtils();
@@ -110,9 +142,9 @@ $query = "SELECT `glpi_users`.`registration_number`,
              AND `glpi_plugin_resources_resources`.`is_deleted` = 0
              AND `glpi_plugin_resources_resources`.`is_template` = 0
              AND `glpi_plugin_resources_employmentstates`.`is_active` = 1
-             ".$condition." )
-             GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`".
-                     $report->getOrderBy('registration_number');
+             " . $condition . " )
+             GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`" .
+    $report->getOrderBy('registration_number');
 
 
 $report->setSqlRequest($query);

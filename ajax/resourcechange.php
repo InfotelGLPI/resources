@@ -27,32 +27,29 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Resource_Change;
 
 Session::checkLoginUser();
 
-$resource_change = new PluginResourcesResource_Change();
+$resource_change = new Resource_Change();
 
 if (isset($_POST['load_button_changeresources'])) {
-   $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
-} else if (isset($_POST['action'])) {
-
-   switch ($_POST['action']) {
-      case "loadEntity" :
-         $resource_change->loadEntity($_POST['actions_id']);
-         break;
-      case "loadCategory" :
-         $resource_change->displayCategory($_POST['entities_id']);
-         break;
-      case "loadButtonAdd" :
-         $resource_change->displayButtonAdd($_POST['itilcategories_id']);
-         break;
-      case "clean" :
-         echo "";
-         break;
-
-   }
-
+    $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
+} elseif (isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case "loadEntity" :
+            $resource_change->loadEntity($_POST['actions_id']);
+            break;
+        case "loadCategory" :
+            $resource_change->displayCategory($_POST['entities_id']);
+            break;
+        case "loadButtonAdd" :
+            $resource_change->displayButtonAdd($_POST['itilcategories_id']);
+            break;
+        case "clean" :
+            echo "";
+            break;
+    }
 } else {
-   $resource_change->setFieldByAction($_POST["id"], $_POST['plugin_resources_resources_id']);
+    $resource_change->setFieldByAction($_POST["id"], $_POST['plugin_resources_resources_id']);
 }

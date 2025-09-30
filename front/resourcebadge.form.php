@@ -28,95 +28,91 @@
  */
 
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Resources\ResourceBadge;
 use GlpiPlugin\Servicecatalog\Main;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Plugin::isPluginActive("badges")) {
+    if (Session::getCurrentInterface() == 'central') {
+        //from central
+        Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+    } else {
+        //from helpdesk
+        if (Plugin::isPluginActive('servicecatalog')) {
+            Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+        } else {
+            Html::helpHeader(Resource::getTypeName(2));
+        }
+    }
 
-   if (Session::getCurrentInterface() == 'central') {
-      //from central
-      Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-   } else {
-      //from helpdesk
-      if (Plugin::isPluginActive('servicecatalog')) {
-          Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-      } else {
-         Html::helpHeader(PluginResourcesResource::getTypeName(2));
-      }
-   }
+    if (!isset($_GET["id"])) {
+        $_GET["id"] = "";
+    }
 
-   if (!isset($_GET["id"])) {
-      $_GET["id"] = "";
-   }
+    $badge = new ResourceBadge();
+    $pluginbadge = new Badge();
+    if (isset($_POST['add_metademand'])) {
+        $badge->check(-1, UPDATE, $_POST);
+        $badge->add($_POST);
 
-   $badge = new PluginResourcesResourceBadge();
-   $pluginbadge = new Badge();
-   if (isset($_POST['add_metademand'])) {
-      $badge->check(-1, UPDATE, $_POST);
-      $badge->add($_POST);
+        Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php?config");
+    } elseif (isset($_GET['menu'])) {
+        if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
+            $badge->showMenu();
+        } else {
+            echo "<div class='alert alert-important alert-warning d-flex'>";
+            echo "<b>" . __('You need rights into badges plugin', 'resources') . "</b></div>";
+        }
+    } elseif (isset($_GET['config'])) {
+        if (Plugin::isPluginActive("metademands")) {
+            if ($pluginbadge->canView()) {
+                $badge->showFormBadge();
+            }
+        } else {
+            Html::header(__('Setup'), '', "config", "plugin");
+            echo "<div class='alert alert-important alert-warning d-flex'>";
+            echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+        }
+    } elseif (isset($_GET['new'])) {
+        if (Plugin::isPluginActive("metademands")) {
+            $data = $badge->find(['entities_id' => $_SESSION['glpiactive_entity']]);
+            $data = array_shift($data);
 
-      Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/resourcebadge.form.php?config");
-   } else if (isset($_GET['menu'])) {
-      if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
-         $badge->showMenu();
-      } else {
-         echo "<div class='alert alert-important alert-warning d-flex'>";
-         echo "<b>" . __('You need rights into badges plugin', 'resources') . "</b></div>";
-      }
+            if (!empty($data["plugin_metademands_metademands_id"])) {
+                Html::redirect(
+                    PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2"
+                );
+            } else {
+                echo "<div class='center'><br><br>";
+                echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+            }
+        } else {
+            Html::header(__('Setup'), '', "config", "plugin");
+            echo "<div class='alert alert-important alert-warning d-flex'>";
+            echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+        }
+    } elseif (isset($_POST['plugin_resources_badge_restitution'])) {
+        $badge->createTicket($_POST['plugin_resources_resources_id'], $_POST);
+        Html::back();
+    } else {
+        if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
+            $badge->showWizardForm();
+        }
+    }
 
-   } else if (isset($_GET['config'])) {
-      if (Plugin::isPluginActive("metademands")) {
-         if ($pluginbadge->canView()) {
-            $badge->showFormBadge();
-         }
-      } else {
-         Html::header(__('Setup'), '', "config", "plugin");
-         echo "<div class='alert alert-important alert-warning d-flex'>";
-         echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
-      }
-   } else if (isset($_GET['new'])) {
-      if (Plugin::isPluginActive("metademands")) {
-         $data = $badge->find(['entities_id' => $_SESSION['glpiactive_entity']]);
-         $data = array_shift($data);
+    if (Session::getCurrentInterface() != 'central'
+        && Plugin::isPluginActive('servicecatalog')) {
+        Main::showNavBarFooter('resources');
+    }
 
-         if (!empty($data["plugin_metademands_metademands_id"])) {
-            Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
-         } else {
-            echo "<div align='center'><br><br>";
-            echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
-         }
-
-
-      } else {
-         Html::header(__('Setup'), '', "config", "plugin");
-         echo "<div class='alert alert-important alert-warning d-flex'>";
-         echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
-      }
-
-   } else if (isset($_POST['plugin_resources_badge_restitution'])) {
-      $badge->createTicket($_POST['plugin_resources_resources_id'], $_POST);
-      Html::back();
-   } else {
-      if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
-         $badge->showWizardForm();
-      }
-   }
-
-   if (Session::getCurrentInterface() != 'central'
-       && Plugin::isPluginActive('servicecatalog')) {
-
-       Main::showNavBarFooter('resources');
-   }
-
-   if (Session::getCurrentInterface() == 'central') {
-      Html::footer();
-   } else {
-      Html::helpFooter();
-   }
-
+    if (Session::getCurrentInterface() == 'central') {
+        Html::footer();
+    } else {
+        Html::helpFooter();
+    }
 } else {
-   Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='alert alert-important alert-warning d-flex'>";
-   echo "<b>" . __('Please activate the plugin badge', 'resources') . "</b></div>";
+    Html::header(__('Setup'), '', "config", "plugin");
+    echo "<div class='alert alert-important alert-warning d-flex'>";
+    echo "<b>" . __('Please activate the plugin badge', 'resources') . "</b></div>";
 }

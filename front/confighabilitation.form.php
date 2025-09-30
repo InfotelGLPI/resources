@@ -27,100 +27,102 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\ConfigHabilitation;
 use GlpiPlugin\Servicecatalog\Main;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-      Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$habilitation = new PluginResourcesConfigHabilitation();
+$habilitation = new ConfigHabilitation();
 
 if (isset($_POST['add_metademand'])) {
-   $habilitation->check(-1, UPDATE, $_POST);
-   if ($_POST['plugin_metademands_metademands_id']
-      && isset($_POST['action'])
-         && $_POST['action']) {
-      $habilitation->add($_POST);
-   }
+    $habilitation->check(-1, UPDATE, $_POST);
+    if ($_POST['plugin_metademands_metademands_id']
+        && isset($_POST['action'])
+        && $_POST['action']) {
+        $habilitation->add($_POST);
+    }
 
-   Html::redirect(PLUGIN_RESOURCES_WEBDIR. "/front/confighabilitation.form.php?config");
-} else if (isset($_GET['menu'])) {
-   if ($habilitation->canView() || Session::haveRight("config", UPDATE)) {
-      $habilitation->showMenu();
-   }
+    Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/confighabilitation.form.php?config");
+} elseif (isset($_GET['menu'])) {
+    if ($habilitation->canView() || Session::haveRight("config", UPDATE)) {
+        $habilitation->showMenu();
+    }
+} elseif (isset($_GET['config'])) {
+    if (Plugin::isPluginActive("metademands")) {
+        if ($habilitation->canView()) {
+            $habilitation->showFormHabilitation();
+        }
+    } else {
+        Html::header(__('Setup'), '', "config", "plugin");
+        echo "<div class='alert alert-important alert-warning d-flex'>";
+        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+    }
+} elseif (isset($_GET['new'])) {
+    if (Plugin::isPluginActive("metademands")) {
+        $data = $habilitation->find([
+            'entities_id' => $_SESSION['glpiactive_entity'],
+            'action' => ConfigHabilitation::ACTION_ADD
+        ]);
+        $data = array_shift($data);
+        if (!empty($data["plugin_metademands_metademands_id"])) {
+            Html::redirect(
+                PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2"
+            );
+        } else {
+            echo "<div class='center'><br><br>";
+            echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+        }
+    } else {
+        Html::header(__('Setup'), '', "config", "plugin");
+        echo "<div class='alert alert-important alert-warning d-flex'>";
+        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+    }
+} elseif (isset($_GET['delete'])) {
+    if (Plugin::isPluginActive("metademands")) {
+        $data = $habilitation->find([
+            'entities_id' => $_SESSION['glpiactive_entity'],
+            'action' => ConfigHabilitation::ACTION_ADD
+        ]);
+        $data = array_shift($data);
 
-} else if (isset($_GET['config'])) {
-   if (Plugin::isPluginActive("metademands")) {
-      if ($habilitation->canView()) {
-         $habilitation->showFormHabilitation();
-      }
-   } else {
-      Html::header(__('Setup'), '', "config", "plugin");
-      echo "<div class='alert alert-important alert-warning d-flex'>";
-      echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
-   }
-} else if (isset($_GET['new'])) {
-   if (Plugin::isPluginActive("metademands")) {
-      $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
-                                 'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
-      $data = array_shift($data);
-      if (!empty($data["plugin_metademands_metademands_id"])) {
-         Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
-      } else {
-         echo "<div align='center'><br><br>";
-         echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
-      }
-
-
-   } else {
-      Html::header(__('Setup'), '', "config", "plugin");
-      echo "<div class='alert alert-important alert-warning d-flex'>";
-      echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
-   }
-
-} else if (isset($_GET['delete'])) {
-   if (Plugin::isPluginActive("metademands")) {
-      $data = $habilitation->find(['entities_id' => $_SESSION['glpiactive_entity'],
-                                   'action' => PluginResourcesConfigHabilitation::ACTION_ADD]);
-      $data = array_shift($data);
-
-      if (!empty($data["plugin_metademands_metademands_id"])) {
-         Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2");
-      } else {
-         echo "<div align='center'><br><br>";
-         echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
-      }
-
-   } else {
-      Html::header(__('Setup'), '', "config", "");
-      echo "<div class='alert alert-important alert-warning d-flex'>";
-      echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
-   }
-
+        if (!empty($data["plugin_metademands_metademands_id"])) {
+            Html::redirect(
+                PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2"
+            );
+        } else {
+            echo "<div class='center'><br><br>";
+            echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+        }
+    } else {
+        Html::header(__('Setup'), '', "config", "");
+        echo "<div class='alert alert-important alert-warning d-flex'>";
+        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

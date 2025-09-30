@@ -24,7 +24,7 @@ jobs:
         # uses: whtsky/msgfmt-action@6b2181f051b002182d01a1e1f1aff216230c5a4d
         uses: whtsky/msgfmt-action@20190305
       - name: Generate mo
-        run:  perl tools/update_mo.pl;
+        run: perl tools/update_mo.pl;
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9

@@ -27,71 +27,85 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Task;
+use GlpiPlugin\Resources\Task_Item;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 if (!isset($_GET["withtemplate"])) {
-   $_GET["withtemplate"] = "";
+    $_GET["withtemplate"] = "";
 }
 if (!isset($_GET["plugin_resources_resources_id"])) {
-   $_GET["plugin_resources_resources_id"] = 0;
+    $_GET["plugin_resources_resources_id"] = 0;
 }
 
-$task = new PluginResourcesTask();
-$task_item = new PluginResourcesTask_Item();
+$task = new Task();
+$task_item = new Task_Item();
 
 //add tasks
 if (isset($_POST['add'])) {
-   $task->check(-1, UPDATE, $_POST);
-   $newID = $task->add($_POST);
-   Html::back();
+    $task->check(-1, UPDATE, $_POST);
+    $newID = $task->add($_POST);
+    Html::back();
 } //update task
-else if (isset($_POST["update"])) {
-   $task->check($_POST['id'], UPDATE);
-   $task->update($_POST);
-   //no sending mail here : see post_updateItem of PluginResourcesTask
-   Html::back();
+elseif (isset($_POST["update"])) {
+    $task->check($_POST['id'], UPDATE);
+    $task->update($_POST);
+    //no sending mail here : see post_updateItem of Task
+    Html::back();
 } //from central
 //delete task
-else if (isset($_POST["delete"])) {
-   $task->check($_POST['id'], UPDATE);
-   $task->delete($_POST);
-   Html::redirect(Toolbox::getItemTypeFormURL('PluginResourcesResource')."?id=".
-           $_POST["plugin_resources_resources_id"]);
+elseif (isset($_POST["delete"])) {
+    $task->check($_POST['id'], UPDATE);
+    $task->delete($_POST);
+    Html::redirect(
+        Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
+        $_POST["plugin_resources_resources_id"]
+    );
 } //from central
 //restore task
-else if (isset($_POST["restore"])) {
-   $task->check($_POST['id'], UPDATE);
-   $task->restore($_POST);
-   Html::redirect(Toolbox::getItemTypeFormURL('PluginResourcesResource')."?id=".
-           $_POST["plugin_resources_resources_id"]);
+elseif (isset($_POST["restore"])) {
+    $task->check($_POST['id'], UPDATE);
+    $task->restore($_POST);
+    Html::redirect(
+        Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
+        $_POST["plugin_resources_resources_id"]
+    );
 } //from central
 //purge task
-else if (isset($_POST["purge"])) {
-   $task->check($_POST['id'], UPDATE);
-   $task->delete($_POST, 1);
-   Html::redirect(Toolbox::getItemTypeFormURL('PluginResourcesResource')."?id=".
-           $_POST["plugin_resources_resources_id"]);
+elseif (isset($_POST["purge"])) {
+    $task->check($_POST['id'], UPDATE);
+    $task->delete($_POST, 1);
+    Html::redirect(
+        Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
+        $_POST["plugin_resources_resources_id"]
+    );
 } //from central
 //add item to task
-else if (isset($_POST["addtaskitem"])) {
-   if ($task->canCreate()) {
-      $task_item->addTaskItem($_POST);
-   }
-   Html::back();
+elseif (isset($_POST["addtaskitem"])) {
+    if ($task->canCreate()) {
+        $task_item->addTaskItem($_POST);
+    }
+    Html::back();
 } //from central
 //delete item to task
-else if (isset($_POST["deletetaskitem"])) {
-   if ($task->canCreate()) {
-      $task_item->delete(['id' => $_POST["id"]]);
-   }
-   Html::back();
-
+elseif (isset($_POST["deletetaskitem"])) {
+    if ($task->canCreate()) {
+        $task_item->delete(['id' => $_POST["id"]]);
+    }
+    Html::back();
 } else {
-   $task->checkGlobal(READ);
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
-   $task->display(['id' => $_GET["id"], 'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"], 'withtemplate' => $_GET["withtemplate"]]);
-   Html::footer();
+    $task->checkGlobal(READ);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+    $task->display(
+        [
+            'id' => $_GET["id"],
+            'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"],
+            'withtemplate' => $_GET["withtemplate"]
+        ]
+    );
+    Html::footer();
 }

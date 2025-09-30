@@ -27,59 +27,55 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\ResourceHoliday;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
-   //from central
-   Html::header(PluginResourcesResource::getTypeName(2), '', "admin", PluginResourcesMenu::getType());
+    //from central
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 } else {
-   //from helpdesk
-   if (Plugin::isPluginActive('servicecatalog')) {
-       Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
-   } else {
-      Html::helpHeader(PluginResourcesResource::getTypeName(2));
-   }
+    //from helpdesk
+    if (Plugin::isPluginActive('servicecatalog')) {
+        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+    } else {
+        Html::helpHeader(Resource::getTypeName(2));
+    }
 }
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 
-$holiday = new PluginResourcesResourceHoliday();
+$holiday = new ResourceHoliday();
 
 if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $holiday->add($_POST);
-   Html::back();
-
-} else if (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $holiday->update($_POST);
-   Html::back();
-
-} else if (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-   $holiday->delete($_POST, 1);
-   $holiday->redirectToList();
-
-} else if (isset($_GET['menu'])) {
-   if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
-      $holiday->showMenu();
-   }
-
+    $holiday->add($_POST);
+    Html::back();
+} elseif (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $holiday->update($_POST);
+    Html::back();
+} elseif (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $holiday->delete($_POST, 1);
+    $holiday->redirectToList();
+} elseif (isset($_GET['menu'])) {
+    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
+        $holiday->showMenu();
+    }
 } else {
-   if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
-      $holiday->display($_GET);
-   }
+    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
+        $holiday->display($_GET);
+    }
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
     Main::showNavBarFooter('resources');
 }
 
 if (Session::getCurrentInterface() == 'central') {
-   Html::footer();
+    Html::footer();
 } else {
-   Html::helpFooter();
+    Html::helpFooter();
 }

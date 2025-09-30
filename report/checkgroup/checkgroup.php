@@ -28,7 +28,9 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-$USEDBREPLICATE        = 1;
+use GlpiPlugin\Resources\Resource;
+
+$USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
 include("../../../../inc/includes.php");
@@ -39,14 +41,20 @@ include("../../../../inc/includes.php");
 $report = new PluginReportsAutoReport(__("checkgroup_report_title", "resources"));
 
 //Report's search criterias
-$tab     = [0 => __('No'),
-            1 => __('Yes')];
+$tab = [
+    0 => __('No'),
+    1 => __('Yes')
+];
 $filter1 = new PluginReportsArrayCriteria($report, 'groupsN0', __('Display N0 Groups'), $tab);
-$tab     = [0 => __('No'),
-            1 => __('Yes')];
+$tab = [
+    0 => __('No'),
+    1 => __('Yes')
+];
 $filter2 = new PluginReportsArrayCriteria($report, 'groupsN1', __('Display N1 Groups'), $tab);
-$tab     = [0 => __('No'),
-            1 => __('Yes')];
+$tab = [
+    0 => __('No'),
+    1 => __('Yes')
+];
 $filter3 = new PluginReportsArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
 
 $filter4 = new PluginReportsGroupCriteria($report, 'groups_id', __('Filter by Groups'));
@@ -55,243 +63,254 @@ $filter4 = new PluginReportsGroupCriteria($report, 'groups_id', __('Filter by Gr
 $report->displayCriteriasForm();
 
 //colname with sort allowed
-$columns = ['entity'              => ['sorton' => 'entity'],
-            'name'                => ['sorton' => 'name'],
-            'firstname'           => ['sorton' => 'firstname'],
-            'registration_number' => ['sorton' => 'registration_number'],
-            'rank'                => ['sorton' => 'rank'],
-            'date_begin'          => ['sorton' => 'date_begin'],
-            'date_end'            => ['sorton' => 'date_end'],
-            'begin_date'          => ['sorton' => 'begin_date'],
-            'end_date'            => ['sorton' => 'end_date'],];
+$columns = [
+    'entity' => ['sorton' => 'entity'],
+    'name' => ['sorton' => 'name'],
+    'firstname' => ['sorton' => 'firstname'],
+    'registration_number' => ['sorton' => 'registration_number'],
+    'rank' => ['sorton' => 'rank'],
+    'date_begin' => ['sorton' => 'date_begin'],
+    'date_end' => ['sorton' => 'date_end'],
+    'begin_date' => ['sorton' => 'begin_date'],
+    'end_date' => ['sorton' => 'end_date'],
+];
 
 $output_type = Search::HTML_OUTPUT;
 
 // Form validate
 if ($report->criteriasValidated()) {
-   if (isset ($_POST['list_limit'])) {
-      $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-      unset ($_POST['list_limit']);
-   }
-   if (!isset ($_REQUEST['sort'])) {
-      $_REQUEST['sort']  = "entity";
-      $_REQUEST['order'] = "ASC";
-   }
+    if (isset ($_POST['list_limit'])) {
+        $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+        unset ($_POST['list_limit']);
+    }
+    if (!isset ($_REQUEST['sort'])) {
+        $_REQUEST['sort'] = "entity";
+        $_REQUEST['order'] = "ASC";
+    }
 
-   $limit = $_SESSION['glpilist_limit'];
+    $limit = $_SESSION['glpilist_limit'];
 
-   if (isset ($_POST["display_type"])) {
-      $output_type = $_POST["display_type"];
-      if ($output_type < 0) {
-         $output_type = -$output_type;
-         $limit       = 0;
-      }
-   } else {
-      $output_type = Search::HTML_OUTPUT;
-   }
+    if (isset ($_POST["display_type"])) {
+        $output_type = $_POST["display_type"];
+        if ($output_type < 0) {
+            $output_type = -$output_type;
+            $limit = 0;
+        }
+    } else {
+        $output_type = Search::HTML_OUTPUT;
+    }
 
-   $title = $report->getFullTitle();
-   $dbu   = new DbUtils();
-   $group = $filter4->getParameterValue();
-   $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
-                        FROM `glpi_plugin_resources_resources` 
+    $title = $report->getFullTitle();
+    $dbu = new DbUtils();
+    $group = $filter4->getParameterValue();
+    $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
+                        FROM `glpi_plugin_resources_resources`
                         LEFT JOIN glpi_plugin_resources_resources_items ON glpi_plugin_resources_resources_items.plugin_resources_resources_id = glpi_plugin_resources_resources.id
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'
                         LEFT JOIN glpi_users ON glpi_plugin_resources_resources_items.items_id = glpi_users.id
                         AND glpi_plugin_resources_resources_items.itemtype = 'User'";
-   if($group != 0) {
-      $query_resource_user .=  " LEFT JOIN `glpi_groups_users` ON glpi_users.id = `glpi_groups_users`.`users_id`";
-   }
+    if ($group != 0) {
+        $query_resource_user .= " LEFT JOIN `glpi_groups_users` ON glpi_users.id = `glpi_groups_users`.`users_id`";
+    }
 
-   $query_resource_user .= " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
-                        AND `glpi_plugin_resources_resources`.`is_template` = 0 
+    $query_resource_user .= " WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
+                        AND `glpi_plugin_resources_resources`.`is_template` = 0
                         AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
-   if($group != 0) {
-      $query_resource_user .=  " AND glpi_groups_users.groups_id = $group ";
-   }
+    if ($group != 0) {
+        $query_resource_user .= " AND glpi_groups_users.groups_id = $group ";
+    }
 
-   $query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
-   $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
+    $query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+    $query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
 
 
-   $result_resource_user = $DB->doQuery($query_resource_user);
+    $result_resource_user = $DB->doQuery($query_resource_user);
 
-   $dataAll = [];
+    $dataAll = [];
 
-   $display_habilitation = [];
+    $display_habilitation = [];
 
-   while ($data = $DB->fetchAssoc($result_resource_user)) {
-      $habilitations = [];
-      $groups        = [];
-      if (!empty($data['glpi_users_id'])) {
-         $users_id     = $data['glpi_users_id'];
-         $resources_id = $data['id'];
+    while ($data = $DB->fetchAssoc($result_resource_user)) {
+        $habilitations = [];
+        $groups = [];
+        if (!empty($data['glpi_users_id'])) {
+            $users_id = $data['glpi_users_id'];
+            $resources_id = $data['id'];
 
-         $query_resources  = "SELECT `glpi_plugin_resources_resources`.`date_end`
+            $query_resources = "SELECT `glpi_plugin_resources_resources`.`date_end`
                               FROM `glpi_plugin_resources_resources`
                               WHERE `id` = $resources_id";
-         $result_resources = $DB->doQuery($query_resources);
-         $date_end         = $DB->result($result_resources, 0, 'date_end');
+            $result_resources = $DB->doQuery($query_resources);
+            $date_end = $DB->result($result_resources, 0, 'date_end');
 
-         $query_habilitations  = "SELECT `glpi_plugin_resources_habilitations` .*
+            $query_habilitations = "SELECT `glpi_plugin_resources_habilitations` .*
                               FROM `glpi_plugin_resources_resourcehabilitations`
-                              LEFT JOIN `glpi_plugin_resources_habilitations` 
+                              LEFT JOIN `glpi_plugin_resources_habilitations`
                               ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
                               WHERE `plugin_resources_resources_id` = $resources_id";
-         $result_habilitations = $DB->doQuery($query_habilitations);
+            $result_habilitations = $DB->doQuery($query_habilitations);
 
-         while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
-            $test_hab = explode("-", $data_habilitation['name']);
-            if ($filter1->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N0")) {
-               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+            while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
+                $test_hab = explode("-", $data_habilitation['name']);
+                if ($filter1->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N0")) {
+                    $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+                }
+                if ($filter2->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N1")) {
+                    $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+                }
+                if ($filter3->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N2")) {
+                    $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
+                }
             }
-            if ($filter2->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N1")) {
-               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
-            }
-            if ($filter3->getParameterValue() && (isset($test_hab[1]) && $test_hab[1] == "N2")) {
-               $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
-            }
-         }
 
-         $query_groups  = "SELECT `glpi_groups`.* 
-                        FROM `glpi_groups_users` 
+            $query_groups = "SELECT `glpi_groups`.*
+                        FROM `glpi_groups_users`
                         LEFT JOIN `glpi_groups` ON `glpi_groups`.`id` = `glpi_groups_users`.`groups_id`
                         WHERE `glpi_groups_users`.`users_id` = $users_id";
-         $result_groups = $DB->doQuery($query_groups);
-         while ($data_group = $DB->fetchAssoc($result_groups)) {
-            $test_group_level = explode("-", $data_group['name']);
-            if ($filter1->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N0")) {
-               $groups[$data_group['id']] = $data_group['name'];
+            $result_groups = $DB->doQuery($query_groups);
+            while ($data_group = $DB->fetchAssoc($result_groups)) {
+                $test_group_level = explode("-", $data_group['name']);
+                if ($filter1->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N0")) {
+                    $groups[$data_group['id']] = $data_group['name'];
+                }
+                if ($filter2->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N1")) {
+                    $groups[$data_group['id']] = $data_group['name'];
+                }
+                if ($filter3->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N2")) {
+                    $groups[$data_group['id']] = $data_group['name'];
+                }
             }
-            if ($filter2->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N1")) {
-               $groups[$data_group['id']] = $data_group['name'];
+
+            $display_habilitation = array_diff($groups, $habilitations);
+
+            if (count($display_habilitation) > 0) {
+                $dataAll[] = [
+                    'resources_id' => $resources_id,
+                    'resources_date_end' => $date_end,
+                    'users_id' => $users_id,
+                    'groups' => $groups,
+                    'diff' => $display_habilitation
+                ];
             }
-            if ($filter3->getParameterValue() && (isset($test_group_level[1]) && $test_group_level[1] == "N2")) {
-               $groups[$data_group['id']] = $data_group['name'];
+        }
+    }
+
+    $nbtot = count($dataAll);
+
+    if ($limit) {
+        $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+        if ($start >= $nbtot) {
+            $start = 0;
+        }
+    } else {
+        $start = 0;
+    }
+
+    if ($nbtot == 0) {
+        if (!$HEADER_LOADED) {
+            Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+            Report::title();
+        }
+        echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __(
+                'No results found'
+            ) . "</span></div>";
+        Html::footer();
+    } elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
+        include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
+    } elseif ($output_type == Search::HTML_OUTPUT) {
+        if (!$HEADER_LOADED) {
+            Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+            Report::title();
+        }
+        echo "<div class='center'><table class='tab_cadre_fixe'>";
+        echo "<tr><th>$title</th></tr>\n";
+        echo "<tr class='tab_bg_2 center'><td class='center'>";
+        echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+
+        $param = "";
+        foreach ($_POST as $key => $val) {
+            if (is_array($val)) {
+                foreach ($val as $k => $v) {
+                    $name = $key . "[$k]";
+                    echo Html::hidden($name, ['value' => $v]);
+                    if (!empty ($param)) {
+                        $param .= "&";
+                    }
+                    $param .= $key . "[" . $k . "]=" . urlencode($v);
+                }
+            } else {
+                echo Html::hidden($key, ['value' => $val]);
+                if (!empty ($param)) {
+                    $param .= "&";
+                }
+                $param .= "$key=" . urlencode($val);
             }
-         }
+        }
+        Dropdown::showOutputFormat();
+        Html::closeForm();
+        echo "</td></tr>";
+        echo "</table></div>";
 
-         $display_habilitation = array_diff($groups, $habilitations);
+        Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
+    }
 
-         if (count($display_habilitation) > 0) {
-            $dataAll[] = [
-               'resources_id'       => $resources_id,
-               'resources_date_end' => $date_end,
-               'users_id'           => $users_id,
-               'groups'             => $groups,
-               'diff'               => $display_habilitation
-            ];
-         }
-      }
-   }
+    if ($nbtot > 0) {
+        $nbcols = 4;
+        $nbrows = count($dataAll);
+        $num = 1;
+        $link = $_SERVER['PHP_SELF'];
+        $order = 'ASC';
+        $issort = false;
 
-   $nbtot = count($dataAll);
+        echo Search::showHeader($output_type, $nbrows, $nbcols, true);
 
-   if ($limit) {
-      $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
-      if ($start >= $nbtot) {
-         $start = 0;
-      }
-   } else {
-      $start = 0;
-   }
+        echo Search::showNewLine($output_type);
 
-   if ($nbtot == 0) {
-      if (!$HEADER_LOADED) {
-         Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-         Report::title();
-      }
-      echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No results found') . "</span></div>";
-      Html::footer();
-   } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-      include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
-   } else if ($output_type == Search::HTML_OUTPUT) {
-      if (!$HEADER_LOADED) {
-         Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
-         Report::title();
-      }
-      echo "<div class='center'><table class='tab_cadre_fixe'>";
-      echo "<tr><th>$title</th></tr>\n";
-      echo "<tr class='tab_bg_2 center'><td class='center'>";
-      echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+        echo Search::showHeaderItem($output_type, Resource::getTypeName(1), $num);
+        echo Search::showHeaderItem($output_type, Location::getTypeName(1), $num);
+        echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
+        echo Search::showHeaderItem($output_type, __('Group'), $num);
+        echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
+        echo Search::showHeaderItem($output_type, __('Login'), $num);
+        echo Search::showHeaderItem($output_type, __('Missing habilitation', 'resources'), $num);
 
-      $param = "";
-      foreach ($_POST as $key => $val) {
-         if (is_array($val)) {
-            foreach ($val as $k => $v) {
-               $name = $key."[$k]";
-               echo Html::hidden($name, ['value' => $v]);
-               if (!empty ($param)) {
-                  $param .= "&";
-               }
-               $param .= $key . "[" . $k . "]=" . urlencode($v);
+        echo Search::showEndLine($output_type);
+
+        if ($limit) {
+            $dataAll = array_slice($dataAll, $start, $limit);
+        }
+
+        foreach ($dataAll as $key => $data) {
+            if (!empty($data['diff'])) {
+                echo Search::showNewLine($output_type);
+                $resource = new Resource();
+                $resource->getFromDB($data['resources_id']);
+
+                echo Search::showItem($output_type, $resource->getLink(), $num, $key);
+                echo Search::showItem(
+                    $output_type,
+                    Dropdown::getDropdownName(
+                        'glpi_locations',
+                        $resource->getField('locations_id')
+                    ),
+                    $num,
+                    $key
+                );
+                echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
+                echo Search::showItem($output_type, implode('<br>', $data['groups']), $num, $key);
+                $user = new User();
+                $user->getFromDB($data['users_id']);
+                echo Search::showItem($output_type, $user->getLink(), $num, $key);
+                echo Search::showItem($output_type, $user->getField('name'), $num, $key);
+                echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
+
+                echo Search::showEndLine($output_type);
             }
-         } else {
-            echo Html::hidden($key, ['value' => $val]);
-            if (!empty ($param)) {
-               $param .= "&";
-            }
-            $param .= "$key=" . urlencode($val);
-         }
-      }
-      Dropdown::showOutputFormat();
-      Html::closeForm();
-      echo "</td></tr>";
-      echo "</table></div>";
+        }
 
-      Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
-   }
-
-   if ($nbtot > 0) {
-      $nbcols = 4;
-      $nbrows = count($dataAll);
-      $num    = 1;
-      $link   = $_SERVER['PHP_SELF'];
-      $order  = 'ASC';
-      $issort = false;
-
-      echo Search::showHeader($output_type, $nbrows, $nbcols, true);
-
-      echo Search::showNewLine($output_type);
-
-      echo Search::showHeaderItem($output_type, PluginResourcesResource::getTypeName(1), $num);
-      echo Search::showHeaderItem($output_type, Location::getTypeName(1), $num);
-      echo Search::showHeaderItem($output_type, __('Departure date', 'resources'), $num);
-      echo Search::showHeaderItem($output_type, __('Group'), $num);
-      echo Search::showHeaderItem($output_type, User::getTypeName(1), $num);
-      echo Search::showHeaderItem($output_type, __('Login'), $num);
-      echo Search::showHeaderItem($output_type, __('Missing habilitation', 'resources'), $num);
-
-      echo Search::showEndLine($output_type);
-
-      if ($limit) {
-         $dataAll = array_slice($dataAll, $start, $limit);
-      }
-
-      foreach ($dataAll as $key => $data) {
-         if (!empty($data['diff'])) {
-            echo Search::showNewLine($output_type);
-            $resource = new PluginResourcesResource();
-            $resource->getFromDB($data['resources_id']);
-
-            echo Search::showItem($output_type, $resource->getLink(), $num, $key);
-            echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_locations',
-                                                                          $resource->getField('locations_id')), $num, $key);
-            echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
-            echo Search::showItem($output_type, implode('<br>', $data['groups']), $num, $key);
-            $user = new User();
-            $user->getFromDB($data['users_id']);
-            echo Search::showItem($output_type, $user->getLink(), $num, $key);
-            echo Search::showItem($output_type, $user->getField('name'), $num, $key);
-            echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
-
-            echo Search::showEndLine($output_type);
-         }
-      }
-
-      echo Search::showFooter($output_type, $title);
-   }
+        echo Search::showFooter($output_type, $title);
+    }
 }
 if ($output_type == Search::HTML_OUTPUT) {
-   Html::footer();
+    Html::footer();
 }

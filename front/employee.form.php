@@ -27,34 +27,33 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Employee;
+use GlpiPlugin\Resources\Menu;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Servicecatalog\Main;
-
-include ('../../../inc/includes.php');
 
 //from helpdesk
 if (Plugin::isPluginActive('servicecatalog')) {
-   Main::showDefaultHeaderHelpdesk(PluginResourcesMenu::getTypeName(2));
+    Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
 } else {
-   Html::helpHeader(PluginResourcesResource::getTypeName(2));
+    Html::helpHeader(Resource::getTypeName(2));
 }
 
-$employee = new PluginResourcesEmployee();
+$employee = new Employee();
 
 //add employee informations from helpdesk
 //next step : show list needs of the new ressource
 if (isset($_POST["add_helpdesk_employee"])) {
-   $newID = $employee->add($_POST);
-   Html::redirect("./resource_item.list.php?id=".$_POST["plugin_resources_resources_id"]."&exist=0");
-
+    $newID = $employee->add($_POST);
+    Html::redirect("./resource_item.list.php?id=" . $_POST["plugin_resources_resources_id"] . "&exist=0");
 } else {
-   //show form employee informations from helpdesk
-   $employee->showFormHelpdesk($_GET["id"], 0);
+    //show form employee informations from helpdesk
+    $employee->showFormHelpdesk($_GET["id"], 0);
 }
 
 if (Session::getCurrentInterface() != 'central'
     && Plugin::isPluginActive('servicecatalog')) {
-
-   Main::showNavBarFooter('resources');
+    Main::showNavBarFooter('resources');
 }
 
 Html::helpFooter();

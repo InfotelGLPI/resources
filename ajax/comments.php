@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Resources\Resource;
+
 $AJAX_INCLUDE = 1;
 
 // Send UTF8 Headers
@@ -38,32 +40,32 @@ Session::checkLoginUser();
 global $DB;
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
-   // Security
-   if (!$DB->tableExists($_REQUEST['table'])) {
-       throw new \Glpi\Exception\Http\NotFoundHttpException();
-   }
+    // Security
+    if (!$DB->tableExists($_REQUEST['table'])) {
+        throw new NotFoundHttpException();
+    }
 
-   switch ($_REQUEST["table"]) {
-      case "glpi_plugin_resources_resources" :
-         if ($_REQUEST['value']==0) {
-            $tmpname['link']    = PLUGIN_RESOURCES_WEBDIR. "/front/resource.php";
-            $tmpname['comment'] = "";
-         } else {
-            $tmpname = PluginResourcesResource::getResourceName($_REQUEST["value"], 2);
-         }
-         echo $tmpname["comment"];
-
-         if (isset($_REQUEST['withlink'])) {
-            echo "<script type='text/javascript' >\n";
-            echo PluginResourcesResource::jsGetElementbyID($_REQUEST['withlink']).".attr('href', '".$tmpname['link']."');";
-            echo "</script>\n";
-         }
-         break;
-
-      default :
-         if ($_REQUEST["value"]>0) {
-            $tmpname = Dropdown::getDropdownName($_REQUEST["table"], $_REQUEST["value"], 1);
+    switch ($_REQUEST["table"]) {
+        case "glpi_plugin_resources_resources" :
+            if ($_REQUEST['value'] == 0) {
+                $tmpname['link'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
+                $tmpname['comment'] = "";
+            } else {
+                $tmpname = Resource::getResourceName($_REQUEST["value"], 2);
+            }
             echo $tmpname["comment"];
-         }
-   }
+
+            if (isset($_REQUEST['withlink'])) {
+                echo "<script type='text/javascript' >\n";
+                echo Resource::jsGetElementbyID($_REQUEST['withlink']) . ".attr('href', '" . $tmpname['link'] . "');";
+                echo "</script>\n";
+            }
+            break;
+
+        default :
+            if ($_REQUEST["value"] > 0) {
+                $tmpname = Dropdown::getDropdownName($_REQUEST["table"], $_REQUEST["value"], 1);
+                echo $tmpname["comment"];
+            }
+    }
 }

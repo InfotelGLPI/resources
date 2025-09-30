@@ -32,7 +32,6 @@ use GlpiPlugin\Metademands\Form_Value;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Wizard;
 
-include('../../../inc/includes.php');
 header("Content-Type: application/json; charset=UTF-8");
 
 Html::header_nocache();
@@ -42,40 +41,45 @@ Session::checkLoginUser();
 $KO = false;
 
 $metademands = new Metademand();
-$wizard      = new Wizard();
-$form      = new Form();
-$resForm = $form->find(['plugin_metademands_metademands_id' => $_POST['metademands_id'],'resources_id' => $_POST['value']]);
+$wizard = new Wizard();
+$form = new Form();
+$resForm = $form->find(
+    ['plugin_metademands_metademands_id' => $_POST['metademands_id'], 'resources_id' => $_POST['value']]
+);
 if (count($resForm)) {
-   foreach ($resForm as $res){
-      $last = $res['id'];
-   }
-   $form->getFromDB($last);
-   unset($_SESSION['plugin_metademands']);
-   $metademands->getFromDB($_POST['metademands_id']);
-   Form_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
-   $form_name = $form->getField('name');
+    foreach ($resForm as $res) {
+        $last = $res['id'];
+    }
+    $form->getFromDB($last);
+    unset($_SESSION['plugin_metademands']);
+    $metademands->getFromDB($_POST['metademands_id']);
+    Form_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
+    $form_name = $form->getField('name');
 
-   // Resources id
-   if (isset($_POST['resources_id'])) {
-      $_SESSION['plugin_metademands']['fields']['resources_id'] = $_POST['value'];
-   }
+    // Resources id
+    if (isset($_POST['resources_id'])) {
+        $_SESSION['plugin_metademands']['fields']['resources_id'] = $_POST['value'];
+    }
 
-   //Category id if have category field
-   $_SESSION['plugin_metademands']['field_type']                                    = $metademands->fields['type'];
-   $_SESSION['plugin_metademands']['plugin_metademands_forms_id']                  = $form->getField('id');
-   $_SESSION['plugin_metademands']['plugin_metademands_forms_name']                = $form_name;
+    //Category id if have category field
+    $_SESSION['plugin_metademands']['field_type'] = $metademands->fields['type'];
+    $_SESSION['plugin_metademands']['plugin_metademands_forms_id'] = $form->getField('id');
+    $_SESSION['plugin_metademands']['plugin_metademands_forms_name'] = $form_name;
 
 
-   Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=".$_POST['value']."&metademands_id=". $_POST['metademands_id']."&step=2");
-
-}  else if(isset($_POST['value'])) {
-   unset($_SESSION['plugin_metademands']);
-   Html::redirect(PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=".$_POST['value']."&metademands_id=". $_POST['metademands_id']."&step=2");
+    Html::redirect(
+        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $_POST['value'] . "&metademands_id=" . $_POST['metademands_id'] . "&step=2"
+    );
+} elseif (isset($_POST['value'])) {
+    unset($_SESSION['plugin_metademands']);
+    Html::redirect(
+        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $_POST['value'] . "&metademands_id=" . $_POST['metademands_id'] . "&step=2"
+    );
 } else {
-   $KO = true;
+    $KO = true;
 }
 if ($KO === false) {
-   echo 0;
+    echo 0;
 } else {
-   echo $KO;
+    echo $KO;
 }

@@ -27,25 +27,26 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Resources\Client;
+use GlpiPlugin\Resources\Resource_Change;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
-$resource_change = new PluginResourcesResource_Change();
+$resource_change = new Resource_Change();
 
 if (isset($_POST['plugin_resources_clients_id'])) {
-   if (PluginResourcesClient::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
-      $img = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
-      $color = "color: green;";
-   } else {
-      $img = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
-      $color = "color: red;";
-   }
-   echo "<span style='$color'>";
-   echo __('Security compliance', 'resources')."&nbsp;";
-   echo $img;
-   echo "</span>";
-
+    if (Client::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
+        $img = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
+        $color = "color: green;";
+    } else {
+        $img = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
+        $color = "color: red;";
+    }
+    echo "<span style='$color'>";
+    echo __('Security compliance', 'resources') . "&nbsp;";
+    echo $img;
+    echo "</span>";
 }
