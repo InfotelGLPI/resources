@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Resources - Accounts plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 17:50+0000\n"
+"POT-Creation-Date: 2025-10-01 10:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,7 +68,7 @@ msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
 
-#: front/wizard.form.php:124 front/wizard.form.php:405 src/Resource.php:1113
+#: front/wizard.form.php:124 src/Resource.php:1113
 msgid "Required fields are not filled. Please try again."
 msgstr ""
 
