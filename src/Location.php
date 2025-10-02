@@ -34,9 +34,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesLocation
+ * Class Location
  */
-class PluginResourcesLocation extends CommonDBTM {
+class Location extends CommonDBTM {
 
 
 }

@@ -32,9 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesRecipient
+ * Class Recipient
  */
-class PluginResourcesRecipient extends CommonDBTM {
+class Recipient extends CommonDBTM {
 
 
 }

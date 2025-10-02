@@ -32,9 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesManager
+ * Class Manager
  */
-class PluginResourcesManager extends CommonDBTM {
+class Manager extends CommonDBTM {
 
 
 }

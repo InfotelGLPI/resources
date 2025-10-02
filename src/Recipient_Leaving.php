@@ -31,9 +31,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginResourcesRecipient_Leaving
+ * Class Recipient_Leaving
  */
-class PluginResourcesRecipient_Leaving extends CommonDBTM {
+class Recipient_Leaving extends CommonDBTM {
 
 
 }
