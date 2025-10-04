@@ -2239,7 +2239,7 @@ msgstr "Kontrol listesi türü"
 
 #: src/RuleChecklist.php:235
 msgid "Checklist action"
-msgstr "Kontrol listesi eylemi"
+msgstr "Kontrol listesi işlemi"
 
 #: src/ResourceHabilitation.php:295
 #, php-format
