@@ -295,7 +295,7 @@ msgstr "checkmissingN1group_report_title"
 #: src/RuleContracttypeHidden.php:266 src/Resource_Change.php:557
 #: src/LinkAd.php:719
 msgid "Departure date"
-msgstr "Ayrılma tarihi"
+msgstr "Gidiş tarihi"
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:44
 msgid "resourceleavingwithactiveemployment_report_title"
