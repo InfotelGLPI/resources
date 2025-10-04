@@ -260,7 +260,7 @@ msgstr "İşlemi önce LDAP dizini üzerinde yapmalısınız"
 
 #: hook.php:2137 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
-msgstr "İşlemden önce kontrol listesindeki tüm girişler tamamlanmalıdır"
+msgstr "İşlemden önce kontrol listesi tamamlanmalıdır"
 
 #: hook.php:2183
 msgid "You have to do all checklist out action before"
