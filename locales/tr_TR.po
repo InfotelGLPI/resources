@@ -127,7 +127,7 @@ msgstr "kullanıcı etkisizleştirildi ve LDAP dizinine taşındı"
 
 #: front/linkad.form.php:162
 msgid "the user has not been disabled and moved to the LDAP directory"
-msgstr "kullanıcı devre dışı bırakılmadı ve LDAP dizinine taşınmadı"
+msgstr "kullanıcı etkisizleştirilmesi ve LDAP dizinine taşınmadı"
 
 #: front/resource.remove.php:110
 msgid "Declaration of resource leaving OK"
