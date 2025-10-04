@@ -2066,7 +2066,7 @@ msgstr "Alan eşleşmesi"
 
 #: src/Adconfig.php:428
 msgid "Destination OU on user deactivation"
-msgstr "Devre dışı bırakıldığında kullanıcının taşınacağı OU"
+msgstr "Etkisizleştirildiğinde kullanıcının taşınacağı OU"
 
 #: src/Adconfig.php:439
 msgid "Destination OU during user creation"
