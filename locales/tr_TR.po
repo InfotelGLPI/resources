@@ -264,7 +264,7 @@ msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 
 #: hook.php:2183
 msgid "You have to do all checklist out action before"
-msgstr "İşlemden önce kontrol listesindeki tüm çıkışlar tamamlanmalıdır"
+msgstr "Önce kontrol listesindeki tüm çıkış işlemleri tamamlanmalıdır"
 
 #: report/checkmissingN1group/checkmissingN1group.php:42
 msgid "checkmissingN1group_report_title"
