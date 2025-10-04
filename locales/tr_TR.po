@@ -1566,7 +1566,7 @@ msgstr "Soyad"
 
 #: src/Resource.php:127
 msgid "ContractType"
-msgstr "SözleşmeTürü"
+msgstr "Sözleşme türü"
 
 #: src/Resource.php:128
 msgid "Associed User"
