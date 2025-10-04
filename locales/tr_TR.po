@@ -2592,7 +2592,7 @@ msgstr[1] "Sütunlar"
 
 #: src/ImportColumn.php:71
 msgid "Integer"
-msgstr "Tamsayı"
+msgstr "Tam sayı"
 
 #: src/ImportColumn.php:72
 msgid "Decimal"
