@@ -119,7 +119,7 @@ msgstr "kullanıcı LDAP dizininde güncellenmedi"
 #: front/linkad.form.php:152
 #, php-format
 msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
-msgstr "%1$s %2$s devre dışı bırakıldı ve LDAP dizinine taşındı"
+msgstr "%1$s %2$s etkisizleştirildi ve LDAP dizinine taşındı"
 
 #: front/linkad.form.php:159
 msgid "the user has been disabled and moved to the LDAP directory"
