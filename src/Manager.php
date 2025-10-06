@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Resources;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -34,8 +36,11 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class Manager
  */
-class Manager extends CommonDBTM {
+class Manager {
 
-
+    public static function getTable($classname = null)
+    {
+        return "glpi_plugin_resources_managers";
+    }
 }
 

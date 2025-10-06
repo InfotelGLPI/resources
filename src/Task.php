@@ -1029,7 +1029,7 @@ class Task extends CommonDBTM
         $query =
             [
                 'SELECT' => [
-                    $this->getTable().'*',
+                    $this->getTable().'.*',
                     'glpi_plugin_resources_resources.entities_id',
                     'glpi_plugin_resources_taskplannings.end AS date_end'
                 ],

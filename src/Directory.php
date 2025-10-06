@@ -50,6 +50,11 @@ class Directory extends CommonDBTM
     protected static $notable = true;
     private $table = "glpi_users";
 
+    public static function getTable($classname = null)
+    {
+        return \User::getTable();
+    }
+
     /**
      * Return the localized name of the current Type
      * Should be overloaded in each new class
@@ -60,7 +65,7 @@ class Directory extends CommonDBTM
      **/
     static function getTypeName($nb = 0)
     {
-        return _n('Directory', 'Directories', $nb, 'resources');
+        return __('Resources directory', 'resources');
     }
 
     /**
@@ -257,7 +262,7 @@ class Directory extends CommonDBTM
     static function showList($itemtype, $params)
     {
         $data = Search::prepareDatasForSearch($itemtype, $params);
-        self::constructSQL($data);
+        Search::constructSQL($data);
         Search::constructData($data);
         Search::displayData($data);
     }

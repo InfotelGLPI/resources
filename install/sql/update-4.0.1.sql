@@ -1,0 +1,15 @@
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Resources' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResource';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Task' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesTask';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ResourceResting' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResourceResting';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ResourceHoliday' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResourceHoliday';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Directory' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesDirectory';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Checklistconfig' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesChecklistconfig';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ChoiceItem' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesChoiceItem';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Employment' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesEmployment';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Budget' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesBudget';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Recap' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesRecap';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Client' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesClient';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Habilitation' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesHabilitation';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ContractType' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesContractType';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Team' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesTeam';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ResignationReason' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResignationReason';
