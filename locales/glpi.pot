@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Resources - Accounts plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 14:52+0000\n"
+"POT-Creation-Date: 2025-10-07 11:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,39 +141,39 @@ msgstr ""
 msgid "Without contract"
 msgstr ""
 
-#: hook.php:119
+#: hook.php:122
 msgid "Long term contract"
 msgstr ""
 
-#: hook.php:124
+#: hook.php:127
 msgid "Fixed term contract"
 msgstr ""
 
-#: hook.php:129
+#: hook.php:132
 msgid "Trainee"
 msgstr ""
 
-#: hook.php:516
+#: hook.php:519
 msgid "Specific network rights"
 msgstr ""
 
-#: hook.php:517
+#: hook.php:520
 msgid "Access to the applications"
 msgstr ""
 
-#: hook.php:518
+#: hook.php:521
 msgid "Specific securities groups"
 msgstr ""
 
-#: hook.php:519
+#: hook.php:522
 msgid "Specific distribution lists"
 msgstr ""
 
-#: hook.php:520 src/Wizard.php:1278 src/Choice.php:182
+#: hook.php:523 src/Wizard.php:1278 src/Choice.php:182
 msgid "Others needs"
 msgstr ""
 
-#: hook.php:1203 src/NotificationTargetResource.php:481
+#: hook.php:1206 src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:819
@@ -184,7 +184,7 @@ msgstr ""
 msgid "Declared as leaving"
 msgstr ""
 
-#: hook.php:1210
+#: hook.php:1213
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
 #: src/Employment.php:230 src/Employment.php:312 src/Department.php:92
 #: src/Department.php:125 src/Employer.php:56
@@ -193,13 +193,13 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1214 src/Client.php:52
+#: hook.php:1217 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1219 src/RuleContracttype.php:251
+#: hook.php:1222 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -215,7 +215,7 @@ msgstr[1] ""
 msgid "Resource manager"
 msgstr ""
 
-#: hook.php:1232 src/NotificationTargetResource.php:114
+#: hook.php:1235 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Informant of leaving"
 msgstr ""
 
-#: hook.php:1240 src/RuleContracttype.php:255
+#: hook.php:1243 src/RuleContracttype.php:255
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
@@ -240,23 +240,23 @@ msgstr ""
 msgid "Sales manager"
 msgstr ""
 
-#: hook.php:2033 src/Resource_Item.php:971
+#: hook.php:2343 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
-#: hook.php:2277
+#: hook.php:2585
 msgid "Modification of the associated resource's location"
 msgstr ""
 
-#: hook.php:2316 hook.php:2362 src/LinkAd.php:850
+#: hook.php:2624 hook.php:2670 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: hook.php:2334 src/LinkAd.php:852
+#: hook.php:2642 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2380
+#: hook.php:2688
 msgid "You have to do all checklist out action before"
 msgstr ""
 
@@ -285,7 +285,7 @@ msgstr ""
 #: src/ResourcePDF.php:109 src/Resource.php:133 src/Resource.php:440
 #: src/Resource.php:2420 src/Resource.php:3324 src/Adconfig.php:349
 #: src/Resource_Item.php:903 src/Resource_Item.php:1175
-#: src/Resource_Item.php:1185 src/Recap.php:229
+#: src/Resource_Item.php:1185 src/Recap.php:233
 #: src/RuleContracttypeHidden.php:266 src/Resource_Change.php:557
 #: src/LinkAd.php:719
 msgid "Departure date"
@@ -311,7 +311,7 @@ msgstr ""
 #: src/ResourcePDF.php:108 src/Resource.php:132 src/Resource.php:433
 #: src/Resource.php:2243 src/ResourceCard.php:179 src/ResourceCard.php:265
 #: src/Resource_Item.php:902 src/Resource_Item.php:1174
-#: src/Resource_Item.php:1184 src/Recap.php:221
+#: src/Resource_Item.php:1184 src/Recap.php:225
 #: src/RuleContracttypeHidden.php:262
 msgid "Arrival date"
 msgstr ""
@@ -402,7 +402,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:959
 #: src/NotificationTargetResource.php:1592
 #: src/NotificationTargetResource.php:1620 src/Wizard.php:382
-#: src/Resource.php:559 src/Resource.php:1847 src/Recap.php:149
+#: src/Resource.php:559 src/Resource.php:1847 src/Recap.php:153
 #: src/RuleContracttypeHidden.php:270
 msgid "Quota"
 msgstr ""
@@ -416,7 +416,7 @@ msgid "Resource"
 msgstr ""
 
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:85
-#: src/Recap.php:245 src/Employment.php:237 src/Employment.php:360
+#: src/Recap.php:249 src/Employment.php:237 src/Employment.php:360
 msgid "Ratio Employment / Budget"
 msgstr ""
 
@@ -2131,7 +2131,7 @@ msgstr ""
 msgid "Associated Human Resource"
 msgstr ""
 
-#: src/Recap.php:69
+#: src/Recap.php:67
 msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
 msgstr[0] ""
