@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Resources - Accounts plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 11:15+0000\n"
+"POT-Creation-Date: 2025-10-06 14:52+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2025\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
@@ -147,39 +147,39 @@ msgstr "ayrılma zamanı"
 msgid "Without contract"
 msgstr "Sözleşmesiz"
 
-#: hook.php:118
+#: hook.php:119
 msgid "Long term contract"
 msgstr "Uzun dönemli sözleşme"
 
-#: hook.php:123
+#: hook.php:124
 msgid "Fixed term contract"
 msgstr "Sabit dönemli sözleşme"
 
-#: hook.php:128
+#: hook.php:129
 msgid "Trainee"
 msgstr "Stajer"
 
-#: hook.php:515
+#: hook.php:516
 msgid "Specific network rights"
 msgstr "Özel ağ hakları"
 
-#: hook.php:516
+#: hook.php:517
 msgid "Access to the applications"
 msgstr "Uygulama erişimi"
 
-#: hook.php:517
+#: hook.php:518
 msgid "Specific securities groups"
 msgstr "Özel güvenlik grupları"
 
-#: hook.php:518
+#: hook.php:519
 msgid "Specific distribution lists"
 msgstr "Özel dağıtım listeleri"
 
-#: hook.php:519 src/Wizard.php:1278 src/Choice.php:182
+#: hook.php:520 src/Wizard.php:1278 src/Choice.php:182
 msgid "Others needs"
 msgstr "Diğer gereksinimler"
 
-#: hook.php:1181 src/NotificationTargetResource.php:481
+#: hook.php:1203 src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:819
@@ -190,7 +190,7 @@ msgstr "Diğer gereksinimler"
 msgid "Declared as leaving"
 msgstr "Ayrılacağı bildirildi"
 
-#: hook.php:1188
+#: hook.php:1210
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
 #: src/Employment.php:230 src/Employment.php:312 src/Department.php:92
 #: src/Department.php:125 src/Employer.php:56
@@ -199,13 +199,13 @@ msgid_plural "Employers"
 msgstr[0] "İşveren"
 msgstr[1] "İşverenler"
 
-#: hook.php:1192 src/Client.php:52
+#: hook.php:1214 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Etkilenen müşteri"
 msgstr[1] "Etkilenen müşteriler"
 
-#: hook.php:1197 src/RuleContracttype.php:251
+#: hook.php:1219 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -214,14 +214,14 @@ msgstr[1] "Etkilenen müşteriler"
 #: src/NotificationTargetResource.php:962
 #: src/NotificationTargetResource.php:1597
 #: src/NotificationTargetResource.php:1625 src/Wizard.php:501
-#: src/Directory.php:210 src/ResourcePDF.php:100 src/Task.php:850
+#: src/Directory.php:215 src/ResourcePDF.php:100 src/Task.php:850
 #: src/Task.php:1276 src/Resource.php:130 src/Resource.php:420
 #: src/Resource.php:2191 src/Resource.php:2884
 #: src/RuleContracttypeHidden.php:250
 msgid "Resource manager"
 msgstr "Kaynak yönetimi"
 
-#: hook.php:1210 src/NotificationTargetResource.php:114
+#: hook.php:1232 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
@@ -232,7 +232,7 @@ msgstr "Kaynak yönetimi"
 msgid "Informant of leaving"
 msgstr "Ayrılma bilgileri"
 
-#: hook.php:1218 src/RuleContracttype.php:255
+#: hook.php:1240 src/RuleContracttype.php:255
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
@@ -246,23 +246,23 @@ msgstr "Ayrılma bilgileri"
 msgid "Sales manager"
 msgstr "Satış sorumlusu"
 
-#: hook.php:1840 src/Resource_Item.php:971
+#: hook.php:2033 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr "Belirtilmemiş"
 
-#: hook.php:2080
+#: hook.php:2277
 msgid "Modification of the associated resource's location"
 msgstr "İlgili kaynak konumunda değişiklik"
 
-#: hook.php:2119 hook.php:2165 src/LinkAd.php:850
+#: hook.php:2316 hook.php:2362 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "İşlemi önce LDAP dizini üzerinde yapmalısınız"
 
-#: hook.php:2137 src/LinkAd.php:852
+#: hook.php:2334 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 
-#: hook.php:2183
+#: hook.php:2380
 msgid "You have to do all checklist out action before"
 msgstr "Önce kontrol listesindeki tüm çıkış işlemleri tamamlanmalıdır"
 
@@ -287,7 +287,7 @@ msgstr "checkmissingN1group_report_title"
 #: src/NotificationTargetResource.php:977
 #: src/NotificationTargetResource.php:1601
 #: src/NotificationTargetResource.php:1629 src/Wizard.php:831
-#: src/Checklist.php:1204 src/Dashboard.php:177 src/Directory.php:227
+#: src/Checklist.php:1204 src/Dashboard.php:177 src/Directory.php:232
 #: src/ResourcePDF.php:109 src/Resource.php:133 src/Resource.php:440
 #: src/Resource.php:2420 src/Resource.php:3324 src/Adconfig.php:349
 #: src/Resource_Item.php:903 src/Resource_Item.php:1175
@@ -313,7 +313,7 @@ msgstr "resourceleavingwithactiveemployment_report_title"
 #: src/NotificationTargetResource.php:974
 #: src/NotificationTargetResource.php:1600
 #: src/NotificationTargetResource.php:1628 src/Wizard.php:820
-#: src/Checklist.php:1206 src/Dashboard.php:129 src/Directory.php:219
+#: src/Checklist.php:1206 src/Dashboard.php:129 src/Directory.php:224
 #: src/ResourcePDF.php:108 src/Resource.php:132 src/Resource.php:433
 #: src/Resource.php:2243 src/ResourceCard.php:179 src/ResourceCard.php:265
 #: src/Resource_Item.php:902 src/Resource_Item.php:1174
@@ -1247,7 +1247,7 @@ msgstr "Kontrol listesi tamamlandı"
 msgid "Reset the checklist"
 msgstr "Kontrol listesini sıfırla"
 
-#: src/Checklist.php:831 src/Checklist.php:1543
+#: src/Checklist.php:831 src/Checklist.php:1542
 msgid "Linked task"
 msgstr "Bağlantılı görev"
 
@@ -1272,15 +1272,15 @@ msgstr "Destek kaydı ekle"
 msgid "The checklist is finished"
 msgstr "Kontol listesi tamamlanmış"
 
-#: src/Checklist.php:1312 src/Checklist.php:1437
+#: src/Checklist.php:1312 src/Checklist.php:1436
 msgid "Checklists Verification"
 msgstr "Kontrol listesi doğrulama"
 
-#: src/Checklist.php:1544
+#: src/Checklist.php:1543
 msgid "Checked"
 msgstr "Tamamlandı"
 
-#: src/Checklist.php:1567
+#: src/Checklist.php:1566
 msgid "No checklist found"
 msgstr "Henüz bir kontrol listesi yok"
 
@@ -1366,13 +1366,11 @@ msgstr[1] "Super güçler"
 msgid "Dropdown management"
 msgstr "Açılan kutu yönetimi"
 
-#: src/Directory.php:63 src/Menu.php:439
-msgid "Directory"
-msgid_plural "Directories"
-msgstr[0] "Klasör"
-msgstr[1] "Klasörler"
+#: src/Directory.php:68
+msgid "Resources directory"
+msgstr "Kaynaklar klasörü"
 
-#: src/Directory.php:1194 src/Resource.php:4585
+#: src/Directory.php:1199 src/Resource.php:4585
 msgid "Click here to send your email"
 msgstr "E-postanızı göndermek için buraya tıklayın"
 
@@ -2010,6 +2008,10 @@ msgstr "İçe aktarmaları yapılandır"
 #: src/Menu.php:403
 msgid "Purge imported resources"
 msgstr "İçe aktarılmış kaynakları sil"
+
+#: src/Menu.php:439
+msgid "Directory"
+msgstr "Klasör"
 
 #: src/Menu.php:454 src/ResourceHoliday.php:323 src/ResourceHoliday.php:326
 #: src/ResourceHoliday.php:423
