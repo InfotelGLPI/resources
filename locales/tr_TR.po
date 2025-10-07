@@ -2011,7 +2011,7 @@ msgstr "İçe aktarılmış kaynakları sil"
 
 #: src/Menu.php:439
 msgid "Directory"
-msgstr "Klasör"
+msgstr "Dizin"
 
 #: src/Menu.php:454 src/ResourceHoliday.php:323 src/ResourceHoliday.php:326
 #: src/ResourceHoliday.php:423
