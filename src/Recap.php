@@ -49,12 +49,10 @@ class Recap extends CommonDBTM
     static protected $notable = true;
     private $table = "glpi_users";
 
-//    static function getTable($classname = null) {
-//
-//        $dbu = new DbUtils();
-//        return $dbu->getTableForItemType(Employment::class);
-//
-//    }
+    public static function getTable($classname = null)
+    {
+        return \User::getTable();
+    }
 
     /**
      * Return the localized name of the current Type
@@ -115,6 +113,12 @@ class Recap extends CommonDBTM
     function rawSearchOptions()
     {
         $tab = [];
+
+        $tab[] = [
+            'id' => 'common',
+            'name' => self::getTypeName(2)
+        ];
+
         $tab[] = [
             'id' => '1',
             'table' => $this->table,
@@ -363,7 +367,7 @@ class Recap extends CommonDBTM
     static function showList($itemtype, $params)
     {
         $data = Search::prepareDatasForSearch($itemtype, $params);
-        self::constructSQL($data);
+        Search::constructSQL($data);
         Search::constructData($data);
         Search::displayData($data);
     }
