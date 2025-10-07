@@ -1368,7 +1368,7 @@ msgstr "Açılan kutu yönetimi"
 
 #: src/Directory.php:68
 msgid "Resources directory"
-msgstr "Kaynaklar klasörü"
+msgstr "Kaynaklar dizini"
 
 #: src/Directory.php:1199 src/Resource.php:4585
 msgid "Click here to send your email"
