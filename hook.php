@@ -28,8 +28,6 @@
  --------------------------------------------------------------------------
  */
 
-use Glpi\DBAL\QueryExpression;
-use Glpi\DBAL\QueryFunction;
 use Glpi\Search\Provider\SQLProvider;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Resources\Adconfig;
@@ -648,8 +646,8 @@ function plugin_resources_install()
     if (!$DB->tableExists("glpi_plugin_resources_resourcefunctions")) {
         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.0.sql");
     }
-    //Version 4.0.1
-    $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.1.sql");
+    //Version 4.0.2
+    $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.2.sql");
 
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     if (!is_dir($rep_files_resources)) {

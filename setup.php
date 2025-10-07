@@ -54,7 +54,7 @@ use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
 use GlpiPlugin\Resources\ServiceCatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.1');
+define('PLUGIN_RESOURCES_VERSION', '4.0.2');
 
 global $CFG_GLPI;
 
