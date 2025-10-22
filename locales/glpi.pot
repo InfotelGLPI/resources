@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-10 13:56+0000\n"
+"POT-Creation-Date: 2025-10-22 12:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,7 +110,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: hook.php:518
+#: hook.php:519
 msgid "Access to the applications"
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 msgid "Additional informations"
 msgstr ""
 
-#: hook.php:1215 src/Client.php:52
+#: hook.php:1216 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -556,7 +556,7 @@ msgstr ""
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Directory.php:1199 src/Resource.php:4585
+#: src/Directory.php:1199 src/Resource.php:4584
 msgid "Click here to send your email"
 msgstr ""
 
@@ -803,7 +803,7 @@ msgstr ""
 msgid "Declare an employment"
 msgstr ""
 
-#: hook.php:1204 src/NotificationTargetResource.php:481
+#: hook.php:1205 src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:819
@@ -961,7 +961,7 @@ msgid_plural "Employees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1211
+#: hook.php:1212
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
 #: src/Employment.php:230 src/Employment.php:312 src/Department.php:92
 #: src/Department.php:125 src/Employer.php:56
@@ -1047,11 +1047,11 @@ msgstr ""
 msgid "FIFOUR - Supplier's sheet"
 msgstr ""
 
-#: src/Resource.php:4395 src/Resource.php:4400
+#: src/Resource.php:4394 src/Resource.php:4399
 msgid "Failed to Send alert to the commercial manager"
 msgstr ""
 
-#: src/Resource.php:5129
+#: src/Resource.php:5128
 msgid "Female"
 msgstr ""
 
@@ -1077,7 +1077,7 @@ msgstr ""
 msgid "Firstname"
 msgstr ""
 
-#: hook.php:125
+#: hook.php:126
 msgid "Fixed term contract"
 msgstr ""
 
@@ -1234,7 +1234,7 @@ msgstr ""
 msgid "Imported values"
 msgstr ""
 
-#: hook.php:1233 src/NotificationTargetResource.php:114
+#: hook.php:1234 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
@@ -1397,7 +1397,7 @@ msgstr ""
 msgid "Login Creation"
 msgstr ""
 
-#: hook.php:120
+#: hook.php:121
 msgid "Long term contract"
 msgstr ""
 
@@ -1405,7 +1405,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:5128
+#: src/Resource.php:5127
 msgid "Male"
 msgstr ""
 
@@ -1463,7 +1463,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2583
+#: hook.php:2584
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1630,7 +1630,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2341 src/Resource_Item.php:971
+#: hook.php:2342 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
@@ -1671,7 +1671,7 @@ msgstr ""
 msgid "Number of years experience"
 msgstr ""
 
-#: src/Resource.php:135 src/Resource.php:5130 src/Notification.php:198
+#: src/Resource.php:135 src/Resource.php:5129 src/Notification.php:198
 msgid "Other"
 msgstr ""
 
@@ -1687,7 +1687,7 @@ msgstr ""
 msgid "Others declarations"
 msgstr ""
 
-#: hook.php:521 src/Wizard.php:1278 src/Choice.php:182
+#: hook.php:522 src/Wizard.php:1278 src/Choice.php:182
 msgid "Others needs"
 msgstr ""
 
@@ -1914,7 +1914,7 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1220 src/RuleContracttype.php:251
+#: hook.php:1221 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -1924,7 +1924,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:1597
 #: src/NotificationTargetResource.php:1625 src/Wizard.php:501
 #: src/Directory.php:215 src/ResourcePDF.php:100 src/Task.php:850
-#: src/Task.php:1276 src/Resource.php:130 src/Resource.php:420
+#: src/Task.php:1275 src/Resource.php:130 src/Resource.php:420
 #: src/Resource.php:2191 src/Resource.php:2884
 #: src/RuleContracttypeHidden.php:250
 msgid "Resource manager"
@@ -1970,7 +1970,7 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:4800
+#: src/Resource.php:4799
 msgid "Resources list"
 msgstr ""
 
@@ -1999,7 +1999,7 @@ msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1241 src/RuleContracttype.php:255
+#: hook.php:1242 src/RuleContracttype.php:255
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
@@ -2050,11 +2050,11 @@ msgstr ""
 msgid "Security compliance management"
 msgstr ""
 
-#: src/Resource.php:4497
+#: src/Resource.php:4496
 msgid "Select the contract type"
 msgstr ""
 
-#: src/Resource.php:4382 src/Resource.php:4388
+#: src/Resource.php:4381 src/Resource.php:4387
 msgid "Send alert to the commercial manager"
 msgstr ""
 
@@ -2117,15 +2117,15 @@ msgid_plural "Specialities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:520
+#: hook.php:521
 msgid "Specific distribution lists"
 msgstr ""
 
-#: hook.php:517
+#: hook.php:518
 msgid "Specific network rights"
 msgstr ""
 
-#: hook.php:519
+#: hook.php:520
 msgid "Specific securities groups"
 msgstr ""
 
@@ -2293,7 +2293,7 @@ msgid "There is a right problem"
 msgstr ""
 
 #: src/NotificationTargetResource.php:84 src/NotificationTargetResource.php:463
-#: src/Resource.php:4258
+#: src/Resource.php:4257
 msgid "These resources have normally left the company"
 msgstr ""
 
@@ -2344,7 +2344,7 @@ msgstr ""
 msgid "Total lines in the file"
 msgstr ""
 
-#: hook.php:130
+#: hook.php:131
 msgid "Trainee"
 msgstr ""
 
@@ -2515,15 +2515,15 @@ msgid_plural "Work Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2640 src/LinkAd.php:852
+#: hook.php:2641 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2686
+#: hook.php:2687
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2622 hook.php:2668 src/LinkAd.php:850
+#: hook.php:2623 hook.php:2669 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
