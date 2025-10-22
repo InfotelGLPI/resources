@@ -1021,7 +1021,7 @@ class Task extends CommonDBTM
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function queryAlert()
     {
@@ -1050,9 +1050,8 @@ class Task extends CommonDBTM
                 ],
 
                 'WHERE' => [
-                    'NOT'       => ['glpi_plugin_resources_taskplannings.end' => null],
+                    'NOT'       => ['glpi_plugin_resources_taskplannings.end' => null, 'is_leaving' => 1],
                     'glpi_plugin_resources_taskplannings.end'    => ['<=', $date],
-                    'NOT'       => ['is_leaving' => 1],
                     'glpi_plugin_resources_resources.is_deleted'    => 0,
                     'glpi_plugin_resources_resources.is_template'    => 0,
                     $this->getTable() . '.is_deleted'    => 0,

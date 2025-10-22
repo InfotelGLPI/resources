@@ -86,6 +86,7 @@ use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Resources\TaskType;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\WorkProfile;
+use function Safe\mkdir;
 
 /**
  * @return bool
@@ -873,7 +874,7 @@ function plugin_resources_uninstall()
         $DB->doQuery(
             "DELETE
                   FROM `$table`
-                  WHERE `name` LIKE 'GLPIPlugin\\Resources%'"
+                  WHERE `name` LIKE 'GlpiPlugin\\Resources%'"
         );
     }
 

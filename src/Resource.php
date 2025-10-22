@@ -4209,9 +4209,8 @@ class Resource extends CommonDBTM
                 ],
                 'FROM' => $this->getTable(),
                 'WHERE' => [
-                    'NOT'       => ['date_end' => null],
+                    'NOT'       => ['date_end' => null, 'is_leaving' => 1],
                     'date_end'    => ['<=', $date],
-                    'NOT'       => ['is_leaving' => 1],
                     'is_deleted'    => 0,
                     'is_template'    => 0,
                 ],
