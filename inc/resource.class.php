@@ -3973,7 +3973,7 @@ class PluginResourcesResource extends CommonDBTM {
         }
 
 		$template_ticket_class = new PluginResourcesTicketTemplate();
-	    $restrict = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive());
+	    $restrict = $dbu->getEntitiesRestrictCriteria($template_ticket_class->getTable(), '', '', $this->maybeRecursive());
 	    $templates_tickets = $dbu->getAllDataFromTable($template_ticket_class->getTable(), $restrict);
 
 	    foreach ($templates_tickets as $template) {

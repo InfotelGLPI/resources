@@ -125,6 +125,7 @@
         </div>
         <form id="form_resource_tickettemplate" class="search-form-container" enctype='multipart/form-data' method="post" action="">
             <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="id" value="{{ items['id'] }}"/>
             <div class="row">
                 <div class="card-header d-flex justify-content-between align-items-center md-color bg-red-lt my-3">{{ __('Template') }}</div>
 

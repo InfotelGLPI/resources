@@ -128,88 +128,82 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 
 		global $DB;
 
-		$this->add([
+		$last_id = $this->add([
 			'name' => $input['template_name'],
 			'entities_id' => $_SESSION['glpiactive_entity'],
 			'template_type' => $input['template_type'],
 			'type' => $input['type'],
 			'title' => $input['name'],
 			'content' => $input['description'],
-			'itilcategories_id' => $input['itilcategories_id'],
+			'itilcategories_id' => $input['itilcategories_id'] ?? 0,
 		]);
 
-		$last_id = $this->find(
-			[],
-			['id DESC'],
-			1
-		);
-		foreach ($last_id as $item) {
-			$last_id = $item['id'];
-		}
-
-		if(isset($input['groups_id_requester'])){
-			$group_ticket = new PluginResourcesGroupTicketTemplate();
-			foreach ($input['groups_id_requester'] as $item) {
-				$group_ticket->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'groups_id' => $item,
-					'type' => CommonITILActor::REQUESTER,
-				]);
+		if($last_id != 0){
+			if(isset($input['groups_id_requester'])){
+				$group_ticket = new PluginResourcesGroupTicketTemplate();
+				foreach ($input['groups_id_requester'] as $item) {
+					$group_ticket->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'groups_id' => $item,
+						'type' => CommonITILActor::REQUESTER,
+					]);
+				}
 			}
-		}
 
-		if(isset($input['users_id_requester'])){
-			$ticketUser = new PluginResourcesTicketTemplateUser();
-			foreach ($input['users_id_requester'] as $item) {
-				$ticketUser->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'users_id' => $item,
-					'type' => CommonITILActor::REQUESTER,
-				]);
+
+			if(isset($input['users_id_requester'])){
+				$ticketUser = new PluginResourcesTicketTemplateUser();
+				foreach ($input['users_id_requester'] as $item) {
+					$ticketUser->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'users_id' => $item,
+						'type' => CommonITILActor::REQUESTER,
+					]);
+				}
 			}
-		}
 
-		if(isset($input['groups_id_observer'])){
-			$group_ticket = new PluginResourcesGroupTicketTemplate();
-			foreach ($input['groups_id_observer'] as $item) {
-				$group_ticket->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'groups_id' => $item,
-					'type' => CommonITILActor::OBSERVER,
-				]);
+			if(isset($input['groups_id_observer'])){
+				$group_ticket = new PluginResourcesGroupTicketTemplate();
+				foreach ($input['groups_id_observer'] as $item) {
+					$group_ticket->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'groups_id' => $item,
+						'type' => CommonITILActor::OBSERVER,
+					]);
+				}
 			}
-		}
 
-		if(isset($input['users_id_observer'])){
-			$ticketUser = new PluginResourcesTicketTemplateUser();
-			foreach ($input['users_id_observer'] as $item) {
-				$ticketUser->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'users_id' => $item,
-					'type' => CommonITILActor::OBSERVER,
-				]);
+			if(isset($input['users_id_observer'])){
+				$ticketUser = new PluginResourcesTicketTemplateUser();
+				foreach ($input['users_id_observer'] as $item) {
+					$ticketUser->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'users_id' => $item,
+						'type' => CommonITILActor::OBSERVER,
+					]);
+				}
 			}
-		}
 
-		if(isset($input['groups_id_tech'])){
-			$group_ticket = new PluginResourcesGroupTicketTemplate();
-			foreach ($input['groups_id_tech'] as $item) {
-				$group_ticket->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'groups_id' => $item,
-					'type' => CommonITILActor::ASSIGN,
-				]);
+			if(isset($input['groups_id_tech'])){
+				$group_ticket = new PluginResourcesGroupTicketTemplate();
+				foreach ($input['groups_id_tech'] as $item) {
+					$group_ticket->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'groups_id' => $item,
+						'type' => CommonITILActor::ASSIGN,
+					]);
+				}
 			}
-		}
 
-		if(isset($input['users_id_tech'])){
-			$ticketUser = new PluginResourcesTicketTemplateUser();
-			foreach ($input['users_id_tech'] as $item) {
-				$ticketUser->add([
-					'plugin_resources_tickettemplates_id' => $last_id,
-					'users_id' => $item,
-					'type' => CommonITILActor::ASSIGN,
-				]);
+			if(isset($input['users_id_tech'])){
+				$ticketUser = new PluginResourcesTicketTemplateUser();
+				foreach ($input['users_id_tech'] as $item) {
+					$ticketUser->add([
+						'plugin_resources_tickettemplates_id' => $last_id,
+						'users_id' => $item,
+						'type' => CommonITILActor::ASSIGN,
+					]);
+				}
 			}
 		}
 	}
@@ -231,6 +225,7 @@ class PluginResourcesTicketTemplate extends CommonDBTM {
 	{
 		global $DB;
 		$this->update([
+			'id' => $datas['id'],
 			'name' => $datas['template_name'],
 			'template_type' => $datas['template_type'],
 			'type' => $datas['type'],

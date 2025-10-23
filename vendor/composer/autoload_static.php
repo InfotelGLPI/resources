@@ -4,6 +4,8 @@
 
 namespace Composer\Autoload;
 
+use \Composer\Autoload\ClassLoader;
+
 class ComposerStaticInit87a15768044813464bee3c156d0bc299
 {
     public static $files = array (
@@ -82,7 +84,7 @@ class ComposerStaticInit87a15768044813464bee3c156d0bc299
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'old\\metademands\\vendor\\composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',

@@ -328,13 +328,18 @@ class PluginResourcesLDAP extends CommonDBTM
 
 			$firstname = $data["firstname"];
 			$name = $data["name"];
-	        $date_begin = $data["date_begin"];
+	        $resource_id = $data["plugin_resources_resources_id"];
 
-	        $setPassword = $this->setPasswordUser($firstname,$name, $date_begin);
-
-            $user->setPassword($setPassword);
+	        $setPassword = $this->setPasswordUser($firstname,$name, $resource_id);
 
             if ($user->save()) {
+
+	            try {
+		            $user->changePassword('', "$setPassword", true);
+	            } catch (Exception $ex) {
+					Toolbox::logInFile('LDAPERROR', "Erreur LDAP : ". $ex->getMessage());
+	            }
+
 				$config = new PluginResourcesConfig();
 	            if($config->getField('create_ticket_template') != 0){
 		            $this->createTicket($config->getField('create_ticket_template'), $data['plugin_resources_resources_id']);
@@ -484,11 +489,13 @@ class PluginResourcesLDAP extends CommonDBTM
         return $secsAfterADEpoch * 10000000;
     }
 
-	private function setPasswordUser(string $firstname, string $name, $date)
+	private function setPasswordUser(string $firstname, string $name, $resource_id)
 	{
 
 		$adconfig = new PluginResourcesAdconfig();
 		$datas = $adconfig->find(['id' => 1]);
+
+		$resource_date_begin = '';
 
 		$user_initial = 0;
 		$user_date = 0;
@@ -508,15 +515,30 @@ class PluginResourcesLDAP extends CommonDBTM
 			$firstLetter_name = '';
 		}
 
+		$resource = new PluginResourcesResource();
+		$data_resource = $resource->find(['id' => $resource_id]);
+
+		foreach ($data_resource as $item) {
+			$resource_date_begin = $item['date_begin'];
+		}
+
 		if($user_date != 0){
-			$date_begin = new DateTime($date);
-			$date_begin = $date_begin->format("$user_date");
+			$date_begin = new DateTime($resource_date_begin);
+			if($user_date == 'DMY'){
+				$format = 'dmY';
+			}else{
+				$format = 'Ymd';
+			}
+			$date_begin = $date_begin->format("$format");
 		}else{
 			$date_begin = '';
 		}
 
-		return $firstLetter_firstname.$firstLetter_name.$date_begin.$password_end;
+		$password = $firstLetter_firstname . $firstLetter_name . $date_begin . $password_end;
 
+		Toolbox::logInFile('LDAPDEBUG', 'Mot de passe généré : ' . $password);
+
+		return $password;
 	}
 
 	public function createTicket($id_template, $resource_id)
@@ -546,8 +568,8 @@ class PluginResourcesLDAP extends CommonDBTM
 				'impact' => 2,
 				'priority' => 2,
 				'users_id_recipient' => Session::getLoginUserID(),
-				'date' => $date->format('c'),
-				'date_creation' => $date->format('c'),
+				'date' => $date->format('Y-m-d H:i:s'),
+				'date_creation' => $date->format('Y-m-d H:i:s'),
 			]);
 
 			$datas_users = $templateUser->find(['plugin_resources_tickettemplates_id' => $id_template]);
@@ -581,11 +603,6 @@ class PluginResourcesLDAP extends CommonDBTM
 
 	private function convertTag(mixed $content, $resource_id)
 	{
-
-		$resource = new PluginResourcesResource();
-		$datas = $resource::getById($resource_id);
-
-		$gender = $resource->getGenders();
 
 		$resource = new PluginResourcesResource();
 		$datas = $resource::getById($resource_id);

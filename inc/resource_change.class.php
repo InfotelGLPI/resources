@@ -92,7 +92,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $conf = [];
             $conf = $self->find(['actions_id' => $key]);
             if (count($conf) == 0) {
-               unset($actions[$key]);
+               //unset($actions[$key]);
             }
          }
       }
@@ -457,7 +457,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $option = ['rand'     => $rand,
                        'value'    => $resource->fields["name"],
                        'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
-            $rand1  = Html::input('name', $option);
+            echo Html::input('name', $option);
             echo "</div>";
             echo "</div>";
 
@@ -469,7 +469,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $option = ['rand'     => $rand,
                        'value'    => $resource->fields["firstname"],
                        'onChange' => "'First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' "];
-            $rand2  = Html::input('firstname', $option);
+            echo Html::input('firstname', $option);
             echo "</div>";
             echo "</div>";
 

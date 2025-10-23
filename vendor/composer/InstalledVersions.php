@@ -12,7 +12,7 @@
 
 namespace Composer;
 
-use Composer\Autoload\ClassLoader;
+use \Composer\Autoload\ClassLoader;
 use Composer\Semver\VersionParser;
 
 /**
@@ -318,7 +318,7 @@ class InstalledVersions
     private static function getInstalled()
     {
         if (null === self::$canGetVendors) {
-            self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders');
+            self::$canGetVendors = method_exists('\Composer\Autoload\ClassLoader', 'getRegisteredLoaders');
         }
 
         $installed = array();
