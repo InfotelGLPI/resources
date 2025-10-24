@@ -1271,10 +1271,10 @@ class Checklist extends CommonDBTM
                             self::RESOURCES_CHECKLIST_IN
                         );
                     }
-                    $result_checklists = $DB->doQuery($query_checklists);
+                    $iterator = $DB->request($query_checklists);
 
                     echo "<table class='tab_cadre' width='100%'>";
-                    while ($data_checklists = $DB->fetchArray($result_checklists)) {
+                    foreach ($iterator as $data_checklists) {
                         echo "<tr class='tab_bg_1'><td>";
                         if ($data_checklists["tag"]) {
                             echo "<span class='plugin_resources_date_over_color'>";
@@ -1386,17 +1386,35 @@ class Checklist extends CommonDBTM
      * @param $ID
      * @param $checklist_type
      *
-     * @return string
+     * @return array
      */
     static function queryListChecklists($ID, $checklist_type)
     {
-        $query = "SELECT `glpi_plugin_resources_checklists`.*  ";
-        $query .= " FROM `glpi_plugin_resources_checklists`,`glpi_plugin_resources_resources` ";
-        $query .= " WHERE `glpi_plugin_resources_resources`.`id` = " . $ID . "
-                        AND `glpi_plugin_resources_checklists`.`checklist_type` = '" . $checklist_type . "'
-                        AND `glpi_plugin_resources_checklists`.`is_checked` = 0
-                        AND `glpi_plugin_resources_checklists`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` ";
-        $query .= "  ORDER BY `glpi_plugin_resources_checklists`.`rank` ASC;";
+
+        $query =
+            [
+                'SELECT' => [
+                    'glpi_plugin_resources_checklists.*',
+                ],
+                'FROM' => 'glpi_plugin_resources_checklists',
+                'LEFT JOIN'       => [
+                    'glpi_plugin_resources_resources' => [
+                        'ON' => [
+                            'glpi_plugin_resources_checklists' => 'plugin_resources_resources_id',
+                            'glpi_plugin_resources_resources'          => 'id'
+                        ]
+                    ]
+                ],
+                'WHERE' => [
+                    'glpi_plugin_resources_resources.id'    => $ID,
+                    'glpi_plugin_resources_checklists.checklist_type'    => $checklist_type,
+                    'glpi_plugin_resources_checklists.is_checked'    => 0,
+                    'glpi_plugin_resources_resources.is_deleted'    => 0,
+                    'glpi_plugin_resources_resources.is_template'    => 0,
+                ],
+                'ORDERBY' => 'glpi_plugin_resources_checklists.rank ASC'
+            ];
+
 
         return $query;
     }

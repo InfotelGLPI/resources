@@ -94,12 +94,13 @@ class Dashboard extends CommonGLPI
 
         switch ($widgetId) {
             case $this->getType() . "1":
-                $query = Checklist::queryChecklists(true);
-                $checklists = $DB->doQuery($query);
+                $criteria = Checklist::queryChecklists(true);
+                $checklists = $DB->request($criteria);
+
                 $link = Toolbox::getItemTypeFormURL(Resource::class);
                 $datas = [];
 
-                if (!empty($checklists)) {
+                if (count($checklists) > 0) {
                     foreach ($checklists as $key => $checklist) {
                         $name = "<a href='" . $link . "?id=" . $checklist["plugin_resources_resources_id"] . "' target='_blank'>";
                         $name .= $checklist["resource_name"] . " " . $checklist["resource_firstname"] . "</a>";
@@ -144,8 +145,8 @@ class Dashboard extends CommonGLPI
                 break;
 
             case $this->getType() . "2":
-                $query = Checklist::queryChecklists(true, 1);
-                $checklists = $DB->doQuery($query);
+                $criteria = Checklist::queryChecklists(true, 1);
+                $checklists = $DB->request($criteria);
                 $link = Toolbox::getItemTypeFormURL(Resource::class);
                 $datas = [];
                 if (!empty($checklists)) {
