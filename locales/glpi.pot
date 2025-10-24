@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 12:27+0000\n"
+"POT-Creation-Date: 2025-10-24 08:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Assignment rules of a checklist to a contract type"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:95
+#: /home/runner/work/resources/resources/templates/document_item.html.twig:92
 msgctxt "button"
 msgid "Associate"
 msgstr ""
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Associate a resource"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:79
+#: /home/runner/work/resources/resources/templates/document_item.html.twig:76
 msgid "Associate an existing document"
 msgstr ""
 
