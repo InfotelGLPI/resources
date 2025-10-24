@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 08:55+0000\n"
+"POT-Creation-Date: 2025-10-24 09:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -238,7 +238,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:974
 #: src/NotificationTargetResource.php:1600
 #: src/NotificationTargetResource.php:1628 src/Wizard.php:820
-#: src/Checklist.php:1206 src/Dashboard.php:129 src/Directory.php:224
+#: src/Checklist.php:1206 src/Dashboard.php:130 src/Directory.php:224
 #: src/ResourcePDF.php:108 src/Resource.php:132 src/Resource.php:433
 #: src/Resource.php:2243 src/ResourceCard.php:179 src/ResourceCard.php:265
 #: src/Resource_Item.php:902 src/Resource_Item.php:1174
@@ -512,7 +512,7 @@ msgstr ""
 msgid "Check list done"
 msgstr ""
 
-#: src/Checklist.php:1543
+#: src/Checklist.php:1561
 msgid "Checked"
 msgstr ""
 
@@ -540,7 +540,7 @@ msgstr[1] ""
 msgid "Checklist type"
 msgstr ""
 
-#: src/Checklist.php:1312 src/Checklist.php:1436
+#: src/Checklist.php:1312 src/Checklist.php:1454
 msgid "Checklists Verification"
 msgstr ""
 
@@ -865,7 +865,7 @@ msgstr[1] ""
 #: src/NotificationTargetResource.php:977
 #: src/NotificationTargetResource.php:1601
 #: src/NotificationTargetResource.php:1629 src/Wizard.php:831
-#: src/Checklist.php:1204 src/Dashboard.php:177 src/Directory.php:232
+#: src/Checklist.php:1204 src/Dashboard.php:178 src/Directory.php:232
 #: src/ResourcePDF.php:109 src/Resource.php:133 src/Resource.php:440
 #: src/Resource.php:2420 src/Resource.php:3324 src/Adconfig.php:349
 #: src/Resource_Item.php:903 src/Resource_Item.php:1175
@@ -1308,7 +1308,7 @@ msgid "Leaving resource"
 msgstr ""
 
 #: src/NotificationTargetResource.php:559 src/Checklist.php:1197
-#: src/Dashboard.php:76 src/Dashboard.php:189
+#: src/Dashboard.php:76 src/Dashboard.php:190
 msgid "Leaving resource - checklist needs to verificated"
 msgstr ""
 
@@ -1352,7 +1352,7 @@ msgstr ""
 msgid "Link metademands"
 msgstr ""
 
-#: src/Checklist.php:831 src/Checklist.php:1542
+#: src/Checklist.php:831 src/Checklist.php:1560
 msgid "Linked task"
 msgstr ""
 
@@ -1504,7 +1504,7 @@ msgid "New resource"
 msgstr ""
 
 #: src/NotificationTargetResource.php:552 src/Checklist.php:1199
-#: src/Dashboard.php:71 src/Dashboard.php:141
+#: src/Dashboard.php:71 src/Dashboard.php:142
 msgid "New resource - checklist needs to verificated"
 msgstr ""
 
@@ -1596,7 +1596,7 @@ msgstr ""
 msgid "No advanced request found"
 msgstr ""
 
-#: src/Checklist.php:1566
+#: src/Checklist.php:1584
 msgid "No checklist found"
 msgstr ""
 
