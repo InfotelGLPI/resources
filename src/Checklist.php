@@ -1184,14 +1184,14 @@ class Checklist extends CommonDBTM
             }
 
             if ($is_leaving) {
-                $query = self::queryChecklists(true, 1);
+                $criteria = self::queryChecklists(true, 1);
             } else {
-                $query = self::queryChecklists(true);
+                $criteria = self::queryChecklists(true);
             }
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
 
-            if ($number > 0) {
+            $iterator = $DB->request($criteria);
+
+            if (count($iterator) > 0) {
                 echo "<div class='center'><table class='tab_cadre' width='100%'>";
                 if ($is_leaving) {
                     $title = __('Leaving resource - checklist needs to verificated', 'resources');
@@ -1212,7 +1212,7 @@ class Checklist extends CommonDBTM
                 echo "<th>" . ContractType::getTypeName(1) . "</th>";
                 echo "<th>" . __('Checklist needs to verificated', 'resources') . "</th></tr>";
 
-                while ($data = $DB->fetchArray($result)) {
+                foreach ($iterator as $data) {
                     echo "<tr class='tab_bg_1'>";
 
                     echo "<td class='center'>";
@@ -1320,7 +1320,7 @@ class Checklist extends CommonDBTM
      * @param     $entity_restrict
      * @param int $is_leaving
      *
-     * @return string
+     * @return array
      */
     static function queryChecklists($entity_restrict, $is_leaving = 0)
     {

@@ -41,7 +41,7 @@
             </div>
             <div class="card-body">
                 {% set target       = params['target'] %}
-                <form method="post" action="{{ target }}" enctype="multipart/form-data" data-submit-once>
+{#                <form method="post" action="{{ target }}" enctype="multipart/form-data" data-submit-once>#}
                     <div class="d-flex flex-column align-items-center">
                         {{ fields.dropdownField('DocumentCategory', 'documentcategories_id', item.fields['documentcategories_id'] ?? '', 'DocumentCategory'|itemtype_name, {
                             entity: entities,
@@ -62,12 +62,9 @@
                         {{ inputs.hidden('is_recursive', item.isRecursive() ? '1' : '0') }}
                         {{ inputs.hidden('itemtype', item.getType()) }}
                         {{ inputs.hidden('items_id', item.getID()) }}
-                        {% if item.getType == 'Ticket' %}
-                            {{ inputs.hidden('tickets_id', item.getID()) }}
-                        {% endif %}
                         {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
                     </div>
-                </form>
+{#                </form>#}
             </div>
         </div>
     </div>
@@ -79,7 +76,7 @@
                     {{ __('Associate an existing document') }}
                 </div>
                 <div class="card-body d-flex flex-column h-100">
-                    <form method="post" action="{{ target }}" data-submit-once class="d-flex flex-column h-100">
+{#                    <form method="post" action="{{ target }}" data-submit-once class="d-flex flex-column h-100">#}
 
                         <div class="d-flex flex-column align-items-center">
                             {{ fields.dropdownField('Document', 'documents_id', null, 'Document'|itemtype_name, {
@@ -97,12 +94,8 @@
 
                         {{ inputs.hidden('itemtype', item.getType()) }}
                         {{ inputs.hidden('items_id', item.getID()) }}
-                        {% if item.getType() == 'Ticket' %}
-                            {{ inputs.hidden('tickets_id', item.getID()) }}
-                            {{ inputs.hidden('documentcategories_id', config('documentcategories_id_forticket')) }}
-                        {% endif %}
                         {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
-                    </form>
+{#                    </form>#}
                 </div>
             </div>
         </div>
