@@ -311,7 +311,7 @@ class ResourceCard extends CommonDBTM
 
         echo "<div class='scrollable'  style='padding-right: 8px;height:420px;'>";
 
-        $type_user = $CFG_GLPI['linkuser_types'];
+        $type_user = $CFG_GLPI['assignable_types'];
         $field_user = 'users_id';
 
         $ID = $user->getID();
