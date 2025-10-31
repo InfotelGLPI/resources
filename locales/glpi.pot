@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 09:20+0000\n"
+"POT-Creation-Date: 2025-10-31 18:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "2 letters of given name + 2 letters of name"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/resource.html.twig:106
+#: templates/resource.html.twig:106
 msgctxt "button"
 msgid "< Previous"
 msgstr ""
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Add a comment"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:40
+#: templates/document_item.html.twig:40
 msgid "Add a document"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Add a need"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:58
+#: templates/document_item.html.twig:58
 msgctxt "button"
 msgid "Add a new file"
 msgstr ""
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Assignment rules of a checklist to a contract type"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:92
+#: templates/document_item.html.twig:92
 msgctxt "button"
 msgid "Associate"
 msgstr ""
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Associate a resource"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/document_item.html.twig:76
+#: templates/document_item.html.twig:76
 msgid "Associate an existing document"
 msgstr ""
 
@@ -592,6 +592,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:358 src/LeavingInformation.php:395
 #: src/LeavingInformation.php:566 src/RuleContracttypeHidden.php:392
+#: templates/leavinginformation.html.twig:182
 msgid "Company name"
 msgstr ""
 
@@ -726,7 +727,8 @@ msgid "Date"
 msgstr ""
 
 #: src/RuleContracttype.php:302 src/Resource.php:794
-#: src/RuleContracttypeHidden.php:336
+#: src/RuleContracttypeHidden.php:336 templates/resource.html.twig:34
+#: templates/recruitinginformation.html.twig:36
 msgid "Date agreement candidate"
 msgstr ""
 
@@ -948,6 +950,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:346 src/LeavingInformation.php:371
 #: src/RuleContracttypeHidden.php:380
+#: templates/leavinginformation.html.twig:130
 msgid "Effective leaving date"
 msgstr ""
 
@@ -1264,6 +1267,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:322 src/LeavingInformation.php:347
 #: src/LeavingInformation.php:506 src/RuleContracttypeHidden.php:356
+#: templates/leavinginformation.html.twig:37
 msgid "Interview date"
 msgstr ""
 
@@ -1456,6 +1460,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:366 src/LeavingInformation.php:387
 #: src/LeavingInformation.php:554 src/RuleContracttypeHidden.php:400
+#: templates/leavinginformation.html.twig:206
 msgid "Mission lost"
 msgstr ""
 
@@ -1568,12 +1573,12 @@ msgstr ""
 
 #: src/Wizard.php:96 src/Wizard.php:954 src/Wizard.php:971 src/Wizard.php:1099
 #: src/Wizard.php:1328 src/Wizard.php:1427 src/Wizard.php:1610
-#: src/Wizard.php:1718 /home/runner/work/resources/resources/templates/recruitinginformation.html.twig:113
+#: src/Wizard.php:1718 templates/recruitinginformation.html.twig:113
 msgctxt "button"
 msgid "Next"
 msgstr ""
 
-#: /home/runner/work/resources/resources/templates/resource.html.twig:111
+#: templates/resource.html.twig:111
 msgctxt "button"
 msgid "Next >"
 msgstr ""
@@ -1667,7 +1672,8 @@ msgid "Number of titles and values of tooltip doesn't match"
 msgstr ""
 
 #: src/RuleContracttype.php:314 src/Resource.php:819
-#: src/RuleContracttypeHidden.php:348
+#: src/RuleContracttypeHidden.php:348 templates/resource.html.twig:75
+#: templates/recruitinginformation.html.twig:77
 msgid "Number of years experience"
 msgstr ""
 
@@ -1693,6 +1699,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:362 src/LeavingInformation.php:379
 #: src/LeavingInformation.php:542 src/RuleContracttypeHidden.php:396
+#: templates/leavinginformation.html.twig:194
 msgid "Pay gap"
 msgstr ""
 
@@ -1749,7 +1756,7 @@ msgstr ""
 
 #: src/Wizard.php:948 src/Wizard.php:965 src/Wizard.php:1093
 #: src/Wizard.php:1321 src/Wizard.php:1421 src/Wizard.php:1604
-#: src/Wizard.php:1712 /home/runner/work/resources/resources/templates/recruitinginformation.html.twig:108
+#: src/Wizard.php:1712 templates/recruitinginformation.html.twig:108
 msgctxt "button"
 msgid "Previous"
 msgstr ""
@@ -1822,7 +1829,8 @@ msgid "Reading the security charter"
 msgstr ""
 
 #: src/RuleContracttype.php:318 src/Resource.php:827
-#: src/RuleContracttypeHidden.php:352
+#: src/RuleContracttypeHidden.php:352 templates/resource.html.twig:87
+#: templates/recruitinginformation.html.twig:89
 msgid "Reconversion"
 msgstr ""
 
@@ -1887,6 +1895,7 @@ msgstr[1] ""
 
 #: src/RuleContracttype.php:338 src/LeavingInformation.php:355
 #: src/LeavingInformation.php:518 src/RuleContracttypeHidden.php:372
+#: templates/leavinginformation.html.twig:106
 msgid "Resignation date"
 msgstr ""
 
@@ -2009,7 +2018,8 @@ msgstr[1] ""
 #: src/NotificationTargetResource.php:965 src/Wizard.php:552
 #: src/Resource.php:134 src/Resource.php:611 src/Resource.php:2258
 #: src/LeavingInformation.php:340 src/LeavingInformation.php:487
-#: src/RuleContracttypeHidden.php:254
+#: src/RuleContracttypeHidden.php:254 templates/leavinginformation.html.twig:49
+#: templates/leavinginformation.html.twig:63
 msgid "Sales manager"
 msgstr ""
 
@@ -2496,6 +2506,7 @@ msgstr ""
 
 #: src/RuleContracttype.php:342 src/LeavingInformation.php:363
 #: src/LeavingInformation.php:530 src/RuleContracttypeHidden.php:376
+#: templates/leavinginformation.html.twig:118
 msgid "Wished leaving date"
 msgstr ""
 
