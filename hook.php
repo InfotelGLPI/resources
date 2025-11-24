@@ -1545,7 +1545,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                             ],
                         ],
                     ];
-                    $out['LEFT JOIN'] = array_merge($out, $left);
+                    $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
                 } else {
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_resources' => [
@@ -1579,7 +1579,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_contracttypes' => [
@@ -1758,7 +1758,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_departments' => [
@@ -1787,7 +1787,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_teams' => [
@@ -1816,7 +1816,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcestates' => [
@@ -1845,7 +1845,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employees' => [
@@ -1874,7 +1874,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcesituations' => [
@@ -1903,7 +1903,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_contractnatures' => [
@@ -1932,7 +1932,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcespecialities' => [
@@ -1961,7 +1961,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employments' => [
@@ -1991,7 +1991,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                             ],
                         ],
                     ];
-                    $out['LEFT JOIN'] = array_merge($out, $left);
+                    $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
                 } elseif ($type == Employment::class) {
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_ranks' => [
@@ -2179,7 +2179,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employers' => [
@@ -2208,7 +2208,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     ],
                 ],
             ];
-            $out['LEFT JOIN'] = array_merge($out, $left);
+            $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             return $out;
         case "glpi_plugin_resources_employmentstates": // For recap class
             if ($type != Directory::class && $type != Recap::class) {
@@ -2228,7 +2228,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-                $out['LEFT JOIN'] = array_merge($out, $left);
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
             } else {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employmentstates' => [
