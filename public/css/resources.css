@@ -33,9 +33,14 @@
 
 /**********************Wizard table****************************/
 
+.bt-feature {
+    margin-bottom: 2px;
+}
+
 .plugin_resources_wizard_margin {
     border-bottom: 1px #CCC dashed;
-    margin-bottom: 10px;
+    margin: 10px;
+    padding: 10px;
 }
 
 .plugin_resources_wizard {

@@ -195,10 +195,10 @@ function plugin_init_resources()
                 "lib/plugins/jquery.scroll.js",
             ];
 
-            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
-                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
-                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
-            }
+//            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
+//                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
+//                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
+//            }
         }
 
 

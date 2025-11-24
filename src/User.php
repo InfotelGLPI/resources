@@ -64,7 +64,7 @@ class User extends \User
 
     static function getIcon()
     {
-        return "ti ti-device-laptop";
+        return "ti ti-user";
     }
 
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -102,19 +102,22 @@ class User extends \User
 
     function showForm($ID, array $options = [])
     {
-        global $CFG_GLPI, $DB;
-
         // Affiche un formulaire User simplifié
-        if (($ID != Session::getLoginUserID()) && !user::canView()) {
+        if (!\User::canView()) {
             return false;
         }
-        $user = new User();
+        $user = new \User();
 
         $user->initForm($ID, $options);
+
+        $plugin_resources_resources_id = $options['resourcesID'];
         $this->fields['id'] = 0;
         $this->showFormHeader($options);
         echo Html::input('idResource', ['type' => 'hidden', 'value' => $options['resourcesID']]);
-        echo "<td>" . __('Authentication') . "</td><td>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Authentication') . "</td>";
+        echo "<td>";
         echo Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"]);
         if (!empty($user->fields["date_sync"])) {
             //TRANS: %s is the date of last sync
@@ -129,6 +132,7 @@ class User extends \User
         if ($user->fields['is_deleted_ldap']) {
             echo '<br>' . __('User missing in LDAP directory');
         }
+        echo "</tr>";
 
         $phonerand = mt_rand();
         echo "<tr class='tab_bg_1'>";
@@ -142,6 +146,7 @@ class User extends \User
         echo "</td>";
         echo "</tr>";
         $user->showFormButtons($options);
+
         return true;
     }
 

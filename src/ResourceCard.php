@@ -68,10 +68,11 @@ class ResourceCard extends CommonDBTM
         ], [], [1]);
 
         $data = reset($data);
-        $users_id = $data['items_id'];
 
-        $user = new User();
-        if ($user->getFromDB($users_id)) {
+        $users_id = $data['items_id'] ?? 0;
+
+        $user = new \User();
+        if ($users_id > 0 && $user->getFromDB($users_id)) {
             echo "<div id='plugin_resources_container'>";
 
             echo "<div id='plugin_resources_card'>";
@@ -102,13 +103,13 @@ class ResourceCard extends CommonDBTM
             echo "<nav>";
             echo "<ul class='plugin_resources_clearfix'>";
             echo "<li class='active'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#about'>" . __(
-                    'About',
-                    'resources'
-                ) . "</a></li>";
+                'About',
+                'resources'
+            ) . "</a></li>";
             echo "<li><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#inventory'>" . __(
-                    'Inventory',
-                    'resources'
-                ) . "</a></li>";
+                'Inventory',
+                'resources'
+            ) . "</a></li>";
             echo "</ul>";
             echo "</nav>";
         } else {
@@ -132,7 +133,6 @@ class ResourceCard extends CommonDBTM
             echo "<div id='plugin_resources_card-footer'></div>";
 
             echo "</div>"; //end plugin_resources_container
-
         }
     }
 
@@ -149,9 +149,9 @@ class ResourceCard extends CommonDBTM
         if ($user === false) {
             echo "<p>";
             echo "<span class='b red'>" . __(
-                    'Information, this resource is not linked to a user',
-                    'resources'
-                ) . "</br>";
+                'Information, this resource is not linked to a user',
+                'resources'
+            ) . "</br>";
             echo "</p>";
 
             echo "<div id='plugin_resources_about-image'>";
@@ -165,20 +165,20 @@ class ResourceCard extends CommonDBTM
             echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
             echo "<p>";
             echo sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Location'),
-                    "</span>" .
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Location'),
+                "</span>" .
                     Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
                         $resource->fields['locations_id']
                     )
-                ) . "</br>";
+            ) . "</br>";
 
             echo "<p>" . sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Arrival date', 'resources'),
-                    "</span>" . Html::convDate($resource->fields["date_begin"])
-                ) . "</br>";
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Arrival date', 'resources'),
+                "</span>" . Html::convDate($resource->fields["date_begin"])
+            ) . "</br>";
             echo "</p>";
 
             if (ResourceHabilitation::canView()) {
@@ -186,8 +186,7 @@ class ResourceCard extends CommonDBTM
                     echo "<h3>" . ResourceHabilitation::getTypeName($count) . "</h3>";
 
                     $resourcehabilitation = new ResourceHabilitation();
-                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]
-                    );
+                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
 
                     echo "<table class='tab_cadre_fixe'>";
                     echo "<tr>";
@@ -196,9 +195,9 @@ class ResourceCard extends CommonDBTM
                     foreach ($datas as $data) {
                         echo "<tr class='tab_bg_1'>";
                         echo "<td class='center'>" . Dropdown::getDropdownName(
-                                'glpi_plugin_resources_habilitations',
-                                $data['plugin_resources_habilitations_id']
-                            ) . "</td>";
+                            'glpi_plugin_resources_habilitations',
+                            $data['plugin_resources_habilitations_id']
+                        ) . "</td>";
                         echo "</tr>";
                     }
                     echo "</table>";
@@ -207,7 +206,6 @@ class ResourceCard extends CommonDBTM
 
             echo "</div>"; //end plugin_resources_scrollable
             echo "</div>"; //end plugin_resources_about-content
-
         } else {
             echo "<div id='plugin_resources_about-image'>";
             echo "<img src='" . Resource::getThumbnailURLForPicture($resource->fields['picture']) . "' alt='' />";
@@ -220,29 +218,29 @@ class ResourceCard extends CommonDBTM
             echo "<div style='height:10px;'></div>";
             echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
             echo "<p>" . sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Phone'),
-                    "</span>" . $user->fields['phone']
-                ) . "</br>";
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Phone'),
+                "</span>" . $user->fields['phone']
+            ) . "</br>";
             echo sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Phone 2'),
-                    "</span>" . $user->fields['phone2']
-                ) . "</br>";
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Phone 2'),
+                "</span>" . $user->fields['phone2']
+            ) . "</br>";
             echo sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Mobile phone'),
-                    "</span>" . $user->fields['mobile']
-                ) . "</br>";
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Mobile phone'),
+                "</span>" . $user->fields['mobile']
+            ) . "</br>";
             echo sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Location'),
-                    "</span>" .
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Location'),
+                "</span>" .
                     Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
                         $user->fields['locations_id']
                     )
-                ) . "</br>";
+            ) . "</br>";
 
             $emails = $user->getAllEmails($user->getID());
 
@@ -261,10 +259,10 @@ class ResourceCard extends CommonDBTM
             echo "</p>";
 
             echo "<p>" . sprintf(
-                    __('%1$s: %2$s'),
-                    "<span class='b'>" . __('Arrival date', 'resources'),
-                    "</span>" . Html::convDate($resource->fields["date_begin"])
-                ) . "</br>";
+                __('%1$s: %2$s'),
+                "<span class='b'>" . __('Arrival date', 'resources'),
+                "</span>" . Html::convDate($resource->fields["date_begin"])
+            ) . "</br>";
             echo "</p>";
 
             if (ResourceHabilitation::canView()) {
@@ -272,8 +270,7 @@ class ResourceCard extends CommonDBTM
                     echo "<h3>" . ResourceHabilitation::getTypeName($count) . "</h3>";
 
                     $resourcehabilitation = new ResourceHabilitation();
-                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]
-                    );
+                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
 
                     echo "<table class='tab_cadre_fixe'>";
                     echo "<tr>";
@@ -282,9 +279,9 @@ class ResourceCard extends CommonDBTM
                     foreach ($datas as $data) {
                         echo "<tr class='tab_bg_1'>";
                         echo "<td class='center'>" . Dropdown::getDropdownName(
-                                'glpi_plugin_resources_habilitations',
-                                $data['plugin_resources_habilitations_id']
-                            ) . "</td>";
+                            'glpi_plugin_resources_habilitations',
+                            $data['plugin_resources_habilitations_id']
+                        ) . "</td>";
                         echo "</tr>";
                     }
                     echo "</table>";
@@ -293,10 +290,8 @@ class ResourceCard extends CommonDBTM
 
             echo "</div>"; //end plugin_resources_scrollable
             echo "</div>"; //end plugin_resources_about-content
-
         }
         echo "</div>"; //end plugin_resources_about
-
     }
 
     /**
@@ -410,5 +405,4 @@ class ResourceCard extends CommonDBTM
         echo "</div>";
         echo "</div>";
     }
-
 }

@@ -234,8 +234,8 @@ class ResourceBadge extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert'>";
         echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -277,8 +277,8 @@ class ResourceBadge extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert'>";
         echo "<i class='ti ti-friends'></i>&nbsp;";

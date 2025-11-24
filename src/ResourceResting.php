@@ -291,8 +291,8 @@ class ResourceResting extends CommonDBTM
     function showMenu()
     {
         global $CFG_GLPI;
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert'>";
         echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -352,8 +352,8 @@ class ResourceResting extends CommonDBTM
 
         $this->initForm($ID, $options);
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/bootstrap_main.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -366,7 +366,7 @@ class ResourceResting extends CommonDBTM
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+        echo "<div class=\"row plugin_resources_wizard_margin\">";
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<h4 class=\"bt-title-divider\">";
         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png' alt='newresting'/>&nbsp;";
@@ -377,7 +377,7 @@ class ResourceResting extends CommonDBTM
         echo $title;
         echo "</h4></div></div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo Resource::getTypeName(1);
 
@@ -393,7 +393,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('Begin date');
         echo "</div>";
@@ -402,7 +402,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('End date');
         echo "</div>";
@@ -411,7 +411,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('Agency concerned', 'resources');
         echo "</div>";
@@ -420,7 +420,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('At home', 'resources');
         echo "</div>";
@@ -429,7 +429,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('Comments');
         echo "</div>";
@@ -444,7 +444,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<div class='preview'>";
         echo "<a href=\"./resourceresting.form.php\">";
@@ -456,7 +456,7 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div></div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<div class='next'>";
         if ($ID > 0) {
@@ -498,8 +498,8 @@ class ResourceResting extends CommonDBTM
         global $CFG_GLPI;
 
         $this->initForm($ID, $options);
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -512,14 +512,14 @@ class ResourceResting extends CommonDBTM
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+        echo "<div class=\"row plugin_resources_wizard_margin\">";
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<h4 class=\"bt-title-divider\">";
         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png' alt='newresting'/>&nbsp;";
         echo __('Declaring the end of non contract periods', 'resources');
         echo "</h4></div></div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo Resource::getTypeName(1);
         echo "</div>";
@@ -555,7 +555,7 @@ class ResourceResting extends CommonDBTM
         echo "<div id='plugin_resources_endate_resting'>";
         echo "</div>";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-12 \">";
         echo "<div class='preview'>";
         echo "<a href=\"./resourceresting.php\">";
@@ -605,7 +605,7 @@ class ResourceResting extends CommonDBTM
                 );
         }
 
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('Choosing the intercontrat', 'resources');
         echo "</div>";
@@ -647,7 +647,7 @@ class ResourceResting extends CommonDBTM
      */
     function loadEndDateResting($plugin_resources_resting_id)
     {
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('End date');
         echo "</div>";

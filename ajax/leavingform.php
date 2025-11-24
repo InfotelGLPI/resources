@@ -98,7 +98,7 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
 //                'right'       => 'all']);
         }
     } else {
-        echo "<div class=\"form-row\">";
+        echo "<div class=\"row\">";
 
         echo "<div class=\"bt-feature col-md-4 \">";
         echo __('Departure date', 'resources');

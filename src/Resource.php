@@ -89,7 +89,7 @@ class Resource extends CommonDBTM
         Printer::class,
         Software::class,
         ConsumableItem::class,
-        User::class,
+        \User::class,
         Appliance::class,
         ComputerType::class,
         PhoneType::class
@@ -3253,8 +3253,8 @@ class Resource extends CommonDBTM
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3267,14 +3267,14 @@ class Resource extends CommonDBTM
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php\">";
 
-            echo "<div class=\"form-row plugin_resources_wizard_margin \">";
+            echo "<div class=\"row plugin_resources_wizard_margin \">";
             echo "<div class=\"bt-feature col-md-12 \" >";
             echo "<h4 class=\"bt-title-divider\">";
             echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png' alt='removeresource'/>&nbsp;";
             echo __('Declare a departure', 'resources');
             echo "</h4></div></div>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
             echo self::getTypeName(1);
             echo "</div>";
@@ -3318,7 +3318,7 @@ class Resource extends CommonDBTM
             echo "</div>";
             echo "<div id='leaving_input'>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"row\">";
 
             echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Departure date', 'resources');
@@ -3342,7 +3342,7 @@ class Resource extends CommonDBTM
 
 
 //            if (countDistinctElementsInTable(LeavingReason::getTable(), 'id')) {
-//                echo "<div class=\"form-row\">";
+//                echo "<div class=\"row\">";
 //                echo "<div class=\"bt-feature col-md-4 \">";
 //                echo LeavingReason::getTypeName(1);
 //                echo "</div>";
@@ -3356,7 +3356,7 @@ class Resource extends CommonDBTM
 
             echo "<div class='center' id='resource_pdf' colspan='2'></div>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"row\">";
             echo "<div class=\"bt-feature col-md-12 \">";
             echo "<div class='next'>";
             echo Html::submit(
@@ -3387,8 +3387,8 @@ class Resource extends CommonDBTM
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3401,14 +3401,14 @@ class Resource extends CommonDBTM
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php\">";
 
-            echo "<div class=\"form-row plugin_resources_wizard_margin \">";
+            echo "<div class=\"row plugin_resources_wizard_margin \">";
             echo "<div class=\"bt-feature col-md-12 \" >";
             echo "<h4 class=\"bt-title-divider\">";
             echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='changeresource'/>&nbsp;";
             echo __('Declare a change', 'resources');
             echo "</h4></div></div>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
             echo self::getTypeName(1);
             echo "</div>";
@@ -3424,7 +3424,7 @@ class Resource extends CommonDBTM
             echo "</div>";
 
             //choose actions
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"row\">";
             echo "<div class=\"bt-feature col-md-4 \">";
             echo __('Actions to be taken', 'resources');
             echo "</div>";
@@ -3490,8 +3490,8 @@ class Resource extends CommonDBTM
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
             echo "<div class='center'>";
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
@@ -3507,14 +3507,14 @@ class Resource extends CommonDBTM
             if (isset($plugin_resources_resources_id)) {
                 $resource = new Resource();
                 if ($resource->getFromDB($plugin_resources_resources_id)) {
-                    echo "<div class=\"form-row plugin_resources_wizard_margin \">";
+                    echo "<div class=\"row plugin_resources_wizard_margin \">";
                     echo "<div class=\"bt-feature col-md-12 \" >";
                     echo "<h4 class=\"bt-title-divider\">";
                     echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png' alt='transferresource'/>&nbsp;";
                     echo __('Declare a transfer', 'resources');
                     echo "</h4></div></div>";
 
-                    echo "<div class=\"form-row\">";
+                    echo "<div class=\"row\">";
                     echo "<div class=\"bt-feature col-md-4 \">";
                     echo self::getTypeName(1);
                     echo "</div>";
@@ -3523,7 +3523,7 @@ class Resource extends CommonDBTM
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"form-row\">";
+                    echo "<div class=\"row\">";
                     echo "<div class=\"bt-feature col-md-4 \">";
                     echo __('Current entity', 'resources');
                     echo "</div>";
@@ -3532,7 +3532,7 @@ class Resource extends CommonDBTM
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"form-row\">";
+                    echo "<div class=\"row\">";
                     echo "<div class=\"bt-feature col-md-4 \">";
                     echo __('Target entity', 'resources') . " <span class='red'>*</span>";
                     echo "</div>";
@@ -3550,7 +3550,7 @@ class Resource extends CommonDBTM
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"form-row\">";
+                    echo "<div class=\"row\">";
                     echo "<div class=\"bt-feature col-md-12 \">";
                     echo "<div class='next'>";
                     echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);

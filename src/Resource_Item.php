@@ -581,15 +581,15 @@ class Resource_Item extends CommonDBTM
 
         echo "<div class='spaced'>";
         if ($canedit && $number && $withtemplate < 2) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
+            Html::openMassiveActionsForm('mass' . 'Resource' . $rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . 'Resource' . $rand];
             Html::showMassiveActions($massiveactionparams);
         }
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr>";
 
         if ($canedit && $number && $withtemplate < 2) {
-            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . 'Resource' . $rand) . "</th>";
         }
 
         echo "<th>" . __('Type') . "</th>";

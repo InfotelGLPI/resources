@@ -57,8 +57,8 @@ class Wizard extends CommonDBTM
     {
         $resource = new Resource();
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
         echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
@@ -71,15 +71,14 @@ class Wizard extends CommonDBTM
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' method='post'>";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
         echo "<h4 class=\"bt-title-divider\">";
         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
         echo __('Welcome to the wizard resource', 'resources');
-        echo "</h4></div></div>";
+        echo "</h4></div>";
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
         echo __('This wizard lets you create new resources in GLPI', 'resources');
         echo "<br /><br />";
         echo __('To begin, select type of contract', 'resources');
@@ -89,13 +88,13 @@ class Wizard extends CommonDBTM
 
         echo "</div></div>";
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
         echo "<div class='next'>";
         echo Html::hidden('withtemplate', ['value' => 2]);
         echo Html::submit(_sx('button', 'Next', 'resources') . " >", [
             'name' => 'second_step',
-            'class' => 'btn btn-success'
+            'class' => 'btn btn-success',
         ]);
         echo "</div>";
         echo "</div></div>";
@@ -161,8 +160,8 @@ class Wizard extends CommonDBTM
         }
         $options["plugin_resources_employers_id"] = 0;
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
@@ -176,12 +175,11 @@ class Wizard extends CommonDBTM
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' method='post'>";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
         echo "<h4 class=\"bt-title-divider\">";
         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
         echo __('Enter general information about the resource', 'resources');
-        echo "</h4></div></div>";
+        echo "</h4></div>";
 
         if (!$resource->canView()) {
             return false;
@@ -219,10 +217,9 @@ class Wizard extends CommonDBTM
             $tohide['plugin_resources_employers_id'] = "hidden";
         }
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div class=\"bt-feature col-md-4 \">";
         echo "<span class='b'>";
@@ -259,12 +256,11 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         echo "</div>";
-        echo "</div>";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-        echo "<div class=\"bt-feature col-md-12\" >";
+        echo "<div class=\"plugin_resources_wizard_margin\">";
 
-        echo "<div  class=\"form-row\">";
+        echo "<div class='row'>";
+
         echo "<div " . $tohide['gender'] . " class=\"bt-feature col-md-3\"";
         if (in_array("gender", $required)) {
             echo " style='color:red;'";
@@ -278,9 +274,10 @@ class Wizard extends CommonDBTM
         $option = ['value' => $options["gender"]];
         Dropdown::showFromArray('gender', $genders, $option);
         echo "</div>";
+
         echo "</div>";
 
-        echo "<div  class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['name'] . " class=\"bt-feature col-md-3\"";
         if (in_array("name", $required)) {
@@ -289,11 +286,12 @@ class Wizard extends CommonDBTM
         echo ">";
         echo __('Surname');
         echo "</div>";
+
         echo "<div " . $tohide['name'] . " class=\"bt-feature col-md-3\">";
         $option = [
             'value' => $options["name"],
             'size' => 30,
-            'onchange' => "javascript:this.value=this.value.toUpperCase();"
+            'onchange' => "javascript:this.value=this.value.toUpperCase();",
         ];
         echo Html::input('name', $option);
         echo "<br><span class='plugin_resources_wizard_comment' style='color:red;'>";
@@ -313,17 +311,17 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         echo "<div " . $tohide['firstname'] . " class=\"bt-feature col-md-3\">";
-
         $option = [
             'value' => $options["firstname"],
             'size' => 30,
-            'onChange' => "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'"
+            'onChange' => "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'",
         ];
         echo Html::input('firstname', $option);
         echo "</div>";
 
         echo "</div>";
-        echo "<div class=\"form-row\">";
+
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['matricule'] . " class=\"bt-feature col-md-3\"";
         if (in_array("matricule", $required)) {
@@ -332,10 +330,12 @@ class Wizard extends CommonDBTM
         echo ">";
         echo __('Matricule', 'resources') . "</td>";
         echo "</div>";
+
         echo "<div " . $tohide['matricule'] . " class=\"bt-feature col-md-3\">";
         $option = ['value' => $options['matricule']];
         echo Html::input('matricule', $option);
         echo "</div>";
+
         $contractType = new ContractType();
         $second_matricule = false;
         if ($contractType->getFromDB($resource->fields["plugin_resources_contracttypes_id"])) {
@@ -343,7 +343,6 @@ class Wizard extends CommonDBTM
                 $second_matricule = true;
             }
         }
-
         if ($second_matricule === true) {
             echo "<div " . $tohide['matricule_second'] . " class=\"bt-feature col-md-3\"";
             if (in_array("matricule_second", $required)) {
@@ -358,11 +357,9 @@ class Wizard extends CommonDBTM
             echo "</div>";
         }
 
-
         echo "</div>";
 
-
-        echo "<div class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['locations_id'] . " class=\"bt-feature col-md-3\"";
         if (in_array("locations_id", $required)) {
@@ -388,13 +385,11 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         echo "</div>";
-        echo "</div>";
 
         if ($rank->canView()) {
-            echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-            echo "<div class=\"bt-feature col-md-12  \" >";
+            echo "<div class=\"plugin_resources_wizard_margin\">";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
 
             echo "<div " . $tohide['plugin_resources_resourcesituations_id'] . " class=\"bt-feature col-md-3\"";
             if (in_array("plugin_resources_resourcesituations_id", $required)) {
@@ -409,7 +404,7 @@ class Wizard extends CommonDBTM
                 'value' => $options['plugin_resources_resourcesituations_id'],
                 'entity' => $resource->fields["entities_id"],
                 'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownContractnature.php",
-                'span' => 'span_contractnature'
+                'span' => 'span_contractnature',
             ];
             Resource::showGenericDropdown(ResourceSituation::class, $params);
             echo "</div>";
@@ -437,7 +432,7 @@ class Wizard extends CommonDBTM
 
             echo "</div>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
 
             echo "<div " . $tohide['plugin_resources_ranks_id'] . " class=\"bt-feature col-md-3\"";
             if (in_array("plugin_resources_ranks_id", $required)) {
@@ -452,10 +447,9 @@ class Wizard extends CommonDBTM
                 'value' => $options['plugin_resources_ranks_id'],
                 'entity' => $resource->fields["entities_id"],
                 'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownSpeciality.php",
-                'span' => 'span_speciality'
+                'span' => 'span_speciality',
             ];
             Resource::showGenericDropdown(Rank::class, $params);
-
             echo "</div>";
 
             echo "<div " . $tohide['plugin_resources_resourcespecialities_id'] . " class=\"bt-feature col-md-3\"";
@@ -477,9 +471,9 @@ class Wizard extends CommonDBTM
                 echo __('None');
             }
             echo "</div>";
-            echo "</div>";
 
             echo "</div>";
+
             echo "</div>";
         } else {
             echo Html::hidden('plugin_resources_resourcesituations_id', ['value' => 0]);
@@ -488,10 +482,9 @@ class Wizard extends CommonDBTM
             echo Html::hidden('plugin_resources_resourcespecialities_id', ['value' => 0]);
         }
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
 
-        echo "<div class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['users_id'] . " class=\"bt-feature col-md-3\"";
         if (in_array("users_id", $required)) {
@@ -500,6 +493,7 @@ class Wizard extends CommonDBTM
         echo ">";
         echo __('Resource manager', 'resources');
         echo "</div>";
+
         $config = new Config();
         if ($config->getField('resource_manager') != "") {
             echo "<div " . $tohide['users_id'] . " class=\"bt-feature col-md-3\">";
@@ -507,7 +501,7 @@ class Wizard extends CommonDBTM
 
             $tableProfileUser = Profile_User::getTable();
             $tableUser = \User::getTable();
-            $profile_User = new  Profile_User();
+            $profile_User = new Profile_User();
             $prof = [];
             foreach (json_decode($config->getField('resource_manager')) as $profs) {
                 $prof[$profs] = $profs;
@@ -544,6 +538,7 @@ class Wizard extends CommonDBTM
             ]);
             echo "</div>";
         }
+
         echo "<div " . $tohide['users_id_sales'] . " class=\"bt-feature col-md-3\"";
         if (in_array("users_id_sales", $required)) {
             echo " style='color:red;'";
@@ -556,7 +551,7 @@ class Wizard extends CommonDBTM
             echo "<div " . $tohide['users_id_sales'] . " class=\"bt-feature col-md-3\">";
             $tableProfileUser = Profile_User::getTable();
             $tableUser = \User::getTable();
-            $profile_User = new  Profile_User();
+            $profile_User = new Profile_User();
             $prof = [];
             foreach (json_decode($config->getField('sales_manager')) as $profs) {
                 $prof[$profs] = $profs;
@@ -597,6 +592,9 @@ class Wizard extends CommonDBTM
             echo "</div>";
         }
         echo "</div>";
+        echo "</div>";
+
+        echo "<div class=\"plugin_resources_wizard_margin\">";
 
         $contractType = new ContractType();
         $display_employee = false;
@@ -612,7 +610,7 @@ class Wizard extends CommonDBTM
         }
 
         if (Session::haveRight('plugin_resources_employee_core_form', READ) && !$display_employee) {
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
 
             echo "<div " . $tohide['plugin_resources_employers_id'] . " class=\"bt-feature col-md-3\"";
             if (in_array("plugin_resources_employers_id", $required)) {
@@ -621,6 +619,7 @@ class Wizard extends CommonDBTM
             echo ">";
             echo Employer::getTypeName(1);
             echo "</div>";
+
             echo "<div " . $tohide['plugin_resources_employers_id'] . " class=\"bt-feature col-md-3\">";
 
             Dropdown::show(
@@ -629,7 +628,7 @@ class Wizard extends CommonDBTM
                     'name' => "plugin_resources_employers_id",
                     'value' => $options["plugin_resources_employers_id"],
                     'entity' => $_SESSION['glpiactiveentities'],
-                    'condition' => $condition_emp
+                    'condition' => $condition_emp,
                 ]
             );
             echo "</div>";
@@ -643,7 +642,7 @@ class Wizard extends CommonDBTM
             echo "</div>";
         }
 
-        echo "<div class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['plugin_resources_departments_id'] . " class=\"bt-feature col-md-3\"";
         if (in_array("plugin_resources_departments_id", $required)) {
@@ -659,7 +658,7 @@ class Wizard extends CommonDBTM
                 [
                     'name' => "plugin_resources_departments_id",
                     'value' => $resource->fields["plugin_resources_departments_id"],
-                    'rand' => $rand
+                    'rand' => $rand,
                 ]
             );
         } else {
@@ -669,7 +668,7 @@ class Wizard extends CommonDBTM
                     'name' => "plugin_resources_departments_id",
                     'value' => $options["plugin_resources_departments_id"],
                     'entity' => $_SESSION['glpiactiveentities'],
-                    'rand' => $rand
+                    'rand' => $rand,
                 ]
             );
         }
@@ -682,13 +681,14 @@ class Wizard extends CommonDBTM
         echo ">";
         echo Service::getTypeName(1);
         echo "</div>";
+
         echo "<div " . $tohide['plugin_resources_services_id'] . " class=\"bt-feature col-md-3\" id='show_services'>";
         if ($config->useServiceDepartmentAD()) {
             UserCategory::dropdown(
                 [
                     'name' => "plugin_resources_services_id",
                     'value' => $resource->fields["plugin_resources_services_id"],
-                    'rand' => $rand
+                    'rand' => $rand,
                 ]
             );
         } else {
@@ -700,7 +700,7 @@ class Wizard extends CommonDBTM
                 'name' => "plugin_resources_services_id",
                 'value' => $options["plugin_resources_services_id"],
                 'entity' => $_SESSION['glpiactiveentities'],
-                'rand' => $rand
+                'rand' => $rand,
             ]);
             $params = [
                 'plugin_resources_services_id' => '__VALUE__',
@@ -737,7 +737,7 @@ class Wizard extends CommonDBTM
             'name' => "plugin_resources_roles_id",
             'value' => $options["plugin_resources_roles_id"],
             'entity' => $_SESSION['glpiactiveentities'],
-            'rand' => $rand
+            'rand' => $rand,
         ]);
 
         echo "</div>";
@@ -763,7 +763,7 @@ class Wizard extends CommonDBTM
                         $resource->fields['secondary_services'],
                         true
                     ) : [],
-                    'multiple' => true
+                    'multiple' => true,
                 ]
             );
             echo "</div>";
@@ -783,7 +783,7 @@ class Wizard extends CommonDBTM
             [
                 'name' => "plugin_resources_functions_id",
                 'value' => $options["plugin_resources_functions_id"],
-                'entity' => $_SESSION['glpiactiveentities']
+                'entity' => $_SESSION['glpiactiveentities'],
             ]
         );
 
@@ -802,7 +802,7 @@ class Wizard extends CommonDBTM
             [
                 'name' => "plugin_resources_teams_id",
                 'value' => $options["plugin_resources_teams_id"],
-                'entity' => $_SESSION['glpiactiveentities']
+                'entity' => $_SESSION['glpiactiveentities'],
             ]
         );
 
@@ -810,7 +810,7 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
 
-        echo "<div class=\"form-row\">";
+        echo "<div class='row'>";
 
         echo "<div " . $tohide['date_begin'] . " class=\"bt-feature col-md-3\"";
         if (in_array("date_begin", $required)) {
@@ -840,15 +840,13 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         echo "</div>";
-        echo "</div>";
 
         $config = new Config();
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-        echo "<div class=\"bt-feature col-md-12  \" >";
-
         if ($config->useSecurity()) {
-            echo "<div class=\"form-row\">";
+            echo "<div class=\"plugin_resources_wizard_margin\">";
+            echo "<div class='row'>";
+
             echo "<div class=\"bt-feature col-md-3\">";
             echo __('Sensitized to security', 'resources');
             echo "</div>";
@@ -871,24 +869,23 @@ class Wizard extends CommonDBTM
             echo "<input type='checkbox' name='read_chart' $checked value='1'>";
             echo "</div>";
             echo "</div>";
-
-            echo "</div>";
             echo "</div>";
         }
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin\">";
+        echo "<div class=\"plugin_resources_wizard_margin\">";
 
-        echo "<div class=\"bt-feature col-md-12  \" >";
+        echo "<div>";
 
-        echo "<div " . $tohide['comment'] . " class=\"form-row\">";
+        echo "<div " . $tohide['comment'] . " class='row'>";
 
-        echo "<div class=\"bt-feature col-md-12\">";
+        echo "<div>";
         echo __('Description');
         echo "</div>";
+
         echo "</div>";
 
-        echo "<div " . $tohide['comment'] . " class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12\">";
+        echo "<div " . $tohide['comment'] . " class='row'>";
+        echo "<div>";
         echo Html::textarea([
             'name' => 'comment',
             'value' => $options["comment"],
@@ -900,8 +897,8 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12\">";
+        echo "<div class='row'>";
+        echo "<div>";
         echo __('Send a notification');
         echo "&nbsp;<input type='checkbox' name='send_notification' checked = true";
         if (Session::getCurrentInterface() != 'central') {
@@ -915,8 +912,8 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         if (!empty($required)) {
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12\" style='color:red;'>";
+            echo "<div class='row'>";
+            echo "<div style='color:red;'>";
             echo __('The fields in red must be completed', 'resources');
             echo "</div>";
             echo "</div>";
@@ -941,8 +938,8 @@ class Wizard extends CommonDBTM
         echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => 0]);
 
         if ($resource->canCreate() && (empty($ID) || $options['withtemplate'] == 2)) {
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12 \">";
+            echo "<div class='row'>";
+            echo "<div>";
             echo "<div class='preview'>";
             echo Html::submit(
                 "< " . _sx('button', 'Previous', 'resources'),
@@ -958,8 +955,8 @@ class Wizard extends CommonDBTM
             echo "</div>";
             echo "</div>";
         } elseif ($resource->canCreate() && !empty($ID) && $options["new"] != 1) {
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12 \">";
+            echo "<div class='row'>";
+            echo "<div>";
             echo "<div class='preview'>";
             echo Html::submit(
                 "< " . _sx('button', 'Previous', 'resources'),
@@ -1027,8 +1024,8 @@ class Wizard extends CommonDBTM
         }
 
         if ($employee_spotted && $plugin_resources_resources_id) {
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -1042,8 +1039,8 @@ class Wizard extends CommonDBTM
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' method='post'>";
 
-            echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-            echo "<div class=\"bt-feature col-md-12 \">";
+            echo "<div class=\"plugin_resources_wizard_margin\">";
+            echo "<div>";
             echo "<h4 class=\"bt-title-divider\">";
             echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
             echo __('Enter employer information about the resource', 'resources');
@@ -1051,7 +1048,7 @@ class Wizard extends CommonDBTM
 
             $entity = $resource->fields["entities_id"];
 
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
             echo "<div class=\"bt-feature col-md-3 \">";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
             echo Employer::getTypeName(1);
@@ -1060,7 +1057,7 @@ class Wizard extends CommonDBTM
             Dropdown::show(Employer::class, [
                 'name' => "plugin_resources_employers_id",
                 'value' => $employee->fields["plugin_resources_employers_id"],
-                'entity' => $entity
+                'entity' => $entity,
             ]);
             echo "</div>";
             echo "<div class=\"bt-feature col-md-3 \">";
@@ -1071,7 +1068,7 @@ class Wizard extends CommonDBTM
                 'name' => "plugin_resources_clients_id",
                 'value' => $employee->fields["plugin_resources_clients_id"],
                 'entity' => $entity,
-                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"
+                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);",
             ]);
 
             echo "<div style='color: green;' id='security_compliance'>";
@@ -1083,8 +1080,8 @@ class Wizard extends CommonDBTM
             echo "</div>";
             echo "</div>";
             if ($employee->canCreate()) {
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \">";
+                echo "<div class='row'>";
+                echo "<div>";
                 echo "<div class='preview'>";
                 echo Html::hidden('id', ['value' => $ID]);
                 echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
@@ -1154,8 +1151,8 @@ class Wizard extends CommonDBTM
         }
 
         if ($spotted && $plugin_resources_resources_id) {
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -1169,8 +1166,8 @@ class Wizard extends CommonDBTM
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' name=\"choice\" method='post'>";
 
-            echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-            echo "<div class=\"bt-feature col-md-12 \"'>";
+            echo "<div class=\"plugin_resources_wizard_margin\">";
+            echo "<div '>";
             echo "<h4 class=\"bt-title-divider\">";
             echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
             echo __('Enter the computing needs of the resource', 'resources');
@@ -1179,8 +1176,8 @@ class Wizard extends CommonDBTM
             $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
             $choices = $dbu->getAllDataFromTable($choice->getTable(), $restrict);
 
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+            echo "<div class='row'>";
+            echo "<div  style='border-bottom: #CCC;border-bottom-style: dashed;'>";
             echo "<h5 class=\"bt-title-divider\">";
             echo __('Add a need', 'resources');
             echo "</h5>";
@@ -1201,7 +1198,7 @@ class Wizard extends CommonDBTM
                         'name' => 'plugin_resources_choiceitems_id',
                         'entity' => $_SESSION['glpiactive_entity'],
                         'condition' => ['is_helpdesk_visible' => 1],
-                        'used' => $used
+                        'used' => $used,
                     ]
                 );
                 echo "&nbsp;";
@@ -1211,8 +1208,8 @@ class Wizard extends CommonDBTM
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12 \" style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+            echo "<div class='row'>";
+            echo "<div  style='border-bottom: #CCC;border-bottom-style: dashed;'>";
             echo "<h5 class=\"bt-title-divider\">";
             echo __('IT needs identified', 'resources');
             echo "</h5>";
@@ -1221,7 +1218,7 @@ class Wizard extends CommonDBTM
                 foreach ($choices as $choice) {
                     $used[] = $choice["plugin_resources_choiceitems_id"];
 
-                    echo "<div class=\"form-row\" style='border:#CCC;border-style: dashed;'>";
+                    echo "<div class='row' style='border:#CCC;border-style: dashed;'>";
 
                     $items = Dropdown::getDropdownName(
                         "glpi_plugin_resources_choiceitems",
@@ -1258,8 +1255,8 @@ class Wizard extends CommonDBTM
                     echo "</div><br><br>";
                 }
             } else {
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \">";
+                echo "<div class='row'>";
+                echo "<div>";
                 echo __('None');
                 echo "</div>";
                 echo "</div>";
@@ -1267,8 +1264,8 @@ class Wizard extends CommonDBTM
 
             if ($choice->canCreate()) {
                 $rand = mt_rand();
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \" style='border-top: #CCC;border-top-style: dashed;'>";
+                echo "<div class='row'>";
+                echo "<div  style='border-top: #CCC;border-top-style: dashed;'>";
                 //            echo "<a href=\"javascript:showHideDiv('view_comment','commentimg$rand','" .
                 //                 $CFG_GLPI["root_doc"] . "/pics/deplier_down.png','" .
                 //                 $CFG_GLPI["root_doc"] . "/pics/deplier_up.png');\">";
@@ -1282,8 +1279,8 @@ class Wizard extends CommonDBTM
                 echo "</div>";
 
                 //            echo "<div class='center' style='display:none;' id='view_comment'>";
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \">";
+                echo "<div class='row'>";
+                echo "<div>";
                 $comment = "";
                 //            if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
 
@@ -1314,8 +1311,8 @@ class Wizard extends CommonDBTM
             }
 
             if ($choice->canCreate()) {
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \">";
+                echo "<div class='row'>";
+                echo "<div>";
                 echo "<div class='preview'>";
                 echo Html::submit(
                     "< " . _sx('button', 'Previous', 'resources'),
@@ -1354,8 +1351,8 @@ class Wizard extends CommonDBTM
         if ($ID > 0) {
             $ressource->check($ID, READ);
         }
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
@@ -1369,8 +1366,8 @@ class Wizard extends CommonDBTM
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' enctype='multipart/form-data' method='post'>";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
+        echo "<div  >";
         echo "<h4 class=\"bt-title-divider\">";
         echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='newresource'/>&nbsp;";
         echo __('Add the photo of the resource', 'resources');
@@ -1380,8 +1377,8 @@ class Wizard extends CommonDBTM
             return false;
         }
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
 
         if (isset($ressource->fields["picture"])) {
             $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $ressource->fields["picture"];
@@ -1396,8 +1393,8 @@ class Wizard extends CommonDBTM
         }
         echo "</div></div>";
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
 
         echo __('Photo format : JPG', 'resources') . "<br>";
         //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $ressource->fields["picture"],
@@ -1407,15 +1404,15 @@ class Wizard extends CommonDBTM
 
         echo "</div></div>";
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
         echo Html::submit(_sx('button', 'Add'), ['name' => 'upload_five_step', 'class' => 'btn btn-success']);
         echo Html::hidden('plugin_resources_resources_id', ['value' => $ressource->fields["id"]]);
         echo "</div></div>";
 
         if ($ressource->canCreate() && (!empty($ID))) {
-            echo "<div class=\"form-row\">";
-            echo "<div class=\"bt-feature col-md-12 \">";
+            echo "<div class='row'>";
+            echo "<div>";
             echo "<div class='preview'>";
             echo Html::submit(
                 "< " . _sx('button', 'Previous', 'resources'),
@@ -1439,7 +1436,6 @@ class Wizard extends CommonDBTM
         echo "</div>";
 
         return true;
-
     }
 
     /**
@@ -1475,8 +1471,8 @@ class Wizard extends CommonDBTM
                 $habilitation_level->maybeRecursive()
             );
             $levels = $habilitation_level->find($condition, "name");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+            //            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
             echo "<h3><div class='alert alert-secondary' role='alert' >";
             echo "<i class='ti ti-friends'></i>&nbsp;";
@@ -1491,11 +1487,11 @@ class Wizard extends CommonDBTM
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' method='post'>";
 
-            echo "<div class=\"form-row plugin_resources_wizard_margin\">";
-            echo "<div class=\"bt-feature col-md-12\">";
+            echo "<div class=\"plugin_resources_wizard_margin\">";
+            echo "<div>";
             echo "<h4 class=\"bt-title-divider\">";
-            echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR .
-                "/pics/newresource.png' alt='newresource'/>&nbsp;";
+            echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR
+                . "/pics/newresource.png' alt='newresource'/>&nbsp;";
             echo __('Enter habilitations about the resource', 'resources');
             echo "</h4></div></div>";
 
@@ -1503,8 +1499,8 @@ class Wizard extends CommonDBTM
                 $cpt = 1;
                 //One line per level
                 foreach ($levels as $level) {
-                    echo "<div class=\"form-row\">";
-                    echo "<div class=\"bt-feature col-md-12\">";
+                    echo "<div class='row'>";
+                    echo "<div>";
 
                     if ($habilitation_level->getFromDB($level['id'])) {
                         $mandatory = "";
@@ -1544,7 +1540,7 @@ class Wizard extends CommonDBTM
                         }
                         $cpt++;
 
-                        echo "<div class=\"form-row\">";
+                        echo "<div class='row'>";
                         echo "<div class=\"bt-feature col-md-4\" $mandatory>";
                         echo $habilitation_level->getName();
                         echo "</div>";
@@ -1559,7 +1555,7 @@ class Wizard extends CommonDBTM
                                 $habilitations,
                                 [
                                     'multiple' => true,
-                                    'width' => 200
+                                    'width' => 200,
                                 ]
                             );
                         } else {
@@ -1590,15 +1586,15 @@ class Wizard extends CommonDBTM
                 }
             } else {
                 //No level of habilitations no addition of authorizations to the resource
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12\">";
+                echo "<div class='row'>";
+                echo "<div>";
                 echo __('No habilitation level, you cannot add habilitation for this resource.', 'resources');
                 echo "</div></div>";
             }
 
             if ($ressourcehabilitation->canCreate()) {
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-12 \">";
+                echo "<div class='row'>";
+                echo "<div>";
                 echo "<div class='preview'>";
                 echo Html::submit(
                     "< " . _sx('button', 'Previous', 'resources'),
@@ -1645,7 +1641,7 @@ class Wizard extends CommonDBTM
         $doc_item = new Document_Item();
         $used_found = $doc_item->find([
             'items_id' => $ressource->getID(),
-            'itemtype' => $ressource->getType()
+            'itemtype' => $ressource->getType(),
         ]);
         $used = array_keys($used_found);
         $used = array_combine($used, $used);
@@ -1663,8 +1659,8 @@ class Wizard extends CommonDBTM
             }
         }
 
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
@@ -1678,8 +1674,8 @@ class Wizard extends CommonDBTM
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' enctype='multipart/form-data' method='post'>";
 
-        echo "<div class=\"form-row plugin_resources_wizard_margin \">";
-        echo "<div class=\"bt-feature col-md-12 \" >";
+        echo "<div class=\"plugin_resources_wizard_margin \">";
+        echo "<div  >";
         echo "<h4 class=\"bt-title-divider\">";
         echo __('Add documents to the resource', 'resources');
         echo "</h4></div></div>";
@@ -1688,24 +1684,24 @@ class Wizard extends CommonDBTM
             return false;
         }
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div>";
 
         Resource::showAddFormForItem($ressource);
 
         echo "</div></div>";
 
-        echo "<div class=\"form-row\">";
-        echo "<div class=\"bt-feature col-md-12\">";
+        echo "<div class='row'>";
+        echo "<div>";
 
-        Document_item::showListForItem($ressource, 99); // With template 99 to disable massive action
+        Document_Item::showListForItem($ressource, 99); // With template 99 to disable massive action
 
         echo "</div></div>";
 
         echo Html::hidden('plugin_resources_resources_id', ['value' => $ressource->fields["id"]]);
 
         if ($ressource->canCreate() && (!empty($ID))) {
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
             echo "<div class=\"bt-feature col-md-11\">";
             echo "<div class='preview'>";
             echo Html::submit(
@@ -1758,8 +1754,8 @@ class Wizard extends CommonDBTM
         } else {
             $target = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
         }
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
+        //        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<h3><div class='alert alert-secondary' role='alert' >";
         echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";

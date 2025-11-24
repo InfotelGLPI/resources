@@ -187,7 +187,7 @@ class Resource_Change extends CommonDBTM
         //Display for each action
         switch ($action_id) {
             case self::CHANGE_RESOURCEMANAGER:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Manager for the current resource", "resources");
                 echo "</div>";
@@ -196,7 +196,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource manager', 'resources');
                 echo "</div>";
@@ -231,7 +231,7 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_RESOURCESALE:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Sales manager for the current resource", "resources");
                 echo "</div>";
@@ -240,7 +240,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource sales manager', 'resources');
                 echo "</div>";
@@ -275,7 +275,7 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_ACCESSPROFIL:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current access profile of the resource", "resources");
                 echo "</div>";
@@ -317,7 +317,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New access profile of the resource', 'resources');
                 echo "</div>";
@@ -360,7 +360,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_CONTRACTTYPE:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current contract type of the resource", "resources");
                 echo "</div>";
@@ -373,7 +373,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New type of contract', 'resources');
                 echo "</div>";
@@ -403,7 +403,7 @@ class Resource_Change extends CommonDBTM
                 echo "</script>";
                 echo "</div>";
                 echo "</div>";
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('Date of contract type change', 'resources');
                 echo "</div>";
@@ -415,7 +415,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_AGENCY:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current agency of the resource", "resources");
                 echo "</div>";
@@ -424,7 +424,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource agency', 'resources');
                 echo "</div>";
@@ -456,7 +456,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current team of the resource", "resources");
                 echo "</div>";
@@ -468,7 +468,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource team', 'resources');
                 echo "</div>";
@@ -485,7 +485,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
 
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('Date of location change', 'resources');
                 echo "</div>";
@@ -513,7 +513,7 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_RESOURCEINFORMATIONS:
-                //            echo "<div class=\"form-row\">";
+                //            echo "<div class=\"row\">";
                 //            echo "<div class=\"bt-feature col-md-4 \">";
                 //            echo __("Current name of the resource", "resources");
                 //            echo "</div>";
@@ -523,7 +523,7 @@ class Resource_Change extends CommonDBTM
                 //            echo "</div>";
                 //            echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('Name', 'resources');
                 echo "</div>";
@@ -538,7 +538,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('Firstname', 'resources');
                 echo "</div>";
@@ -552,7 +552,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('Departure date', 'resources');
                 echo "</div>";
@@ -581,7 +581,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCECOMPANY:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current company of the resource", "resources");
                 echo "</div>";
@@ -595,7 +595,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource company', 'resources');
                 echo "</div>";
@@ -627,7 +627,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEDEPARTMENT:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current department of the resource", "resources");
                 echo "</div>";
@@ -641,7 +641,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource department', 'resources');
                 echo "</div>";
@@ -676,7 +676,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCESERVICE:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current service of the resource", "resources");
                 echo "</div>";
@@ -690,7 +690,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource service', 'resources');
                 echo "</div>";
@@ -728,7 +728,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEROLE:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current role of the resource", "resources");
                 echo "</div>";
@@ -742,7 +742,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource role', 'resources');
                 echo "</div>";
@@ -780,7 +780,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEFUNCTION:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current function of the resource", "resources");
                 echo "</div>";
@@ -794,7 +794,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource function', 'resources');
                 echo "</div>";
@@ -829,7 +829,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCETEAM:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Current team of the resource", "resources");
                 echo "</div>";
@@ -841,7 +841,7 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New resource function', 'resources');
                 echo "</div>";
@@ -876,7 +876,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEMATERIAL:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __("Change material", "resources");
                 echo "</div>";
@@ -899,7 +899,7 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEITEMAPPLICATION:
-                echo "<div class=\"form-row\">";
+                echo "<div class=\"row\">";
                 echo "<div class=\"bt-feature col-md-4 \">";
                 echo __('New Application to add to the resource', 'resources');
                 echo "</div>";
