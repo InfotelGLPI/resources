@@ -1932,7 +1932,7 @@ msgstr "Supprimer une super habilitation"
 msgid "Remove habilitation when update resource"
 msgstr ""
 "Supprimer les habilitations lors de la mise à jour d'une ressource depuis "
-"metademand"
+"métademandes"
 
 #: src/NotificationTargetResource.php:1218
 #: src/NotificationTargetResource.php:1253
