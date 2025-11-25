@@ -1227,7 +1227,7 @@ msgstr "Identifiants"
 
 #: src/Config.php:297
 msgid "If other contract are available don't display without contract"
-msgstr "Si un autre contrat est disponible ne pas afficher le sans contrat"
+msgstr "Si un autre contrat est disponible ne pas afficher le \"Sans contrat\""
 
 #: src/Metademand.php:151
 msgid ""
