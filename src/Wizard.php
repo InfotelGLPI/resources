@@ -1152,7 +1152,7 @@ class Wizard extends CommonDBTM
             $choices = $dbu->getAllDataFromTable($choice->getTable(), $restrict);
 
             echo "<div class='row'>";
-            echo "<div  style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+            echo "<div>";
             echo "<h5 class=\"bt-title-divider\">";
             echo __('Add a need', 'resources');
             echo "</h5>";
@@ -1184,7 +1184,7 @@ class Wizard extends CommonDBTM
             echo "</div>";
 
             echo "<div class='row'>";
-            echo "<div  style='border-bottom: #CCC;border-bottom-style: dashed;'>";
+            echo "<div>";
             echo "<h5 class=\"bt-title-divider\">";
             echo __('IT needs identified', 'resources');
             echo "</h5>";
@@ -1255,7 +1255,7 @@ class Wizard extends CommonDBTM
 
                 //            echo "<div class='center' style='display:none;' id='view_comment'>";
                 echo "<div class='row'>";
-                echo "<div>";
+                echo "<div style='margin-bottom: 5px;'>";
                 $comment = "";
                 //            if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
 
@@ -1360,7 +1360,7 @@ class Wizard extends CommonDBTM
         echo "</div></div>";
 
         echo "<div class='row'>";
-        echo "<div>";
+        echo "<div style='margin-bottom: 5px;'>";
 
         echo __('Photo format : JPG', 'resources') . "<br>";
         //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $ressource->fields["picture"],

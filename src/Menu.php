@@ -58,6 +58,40 @@ class Menu extends CommonDBTM
         return false;
     }
 
+    public static function showMenuBlock($title, $actions)
+    {
+        echo "<div class='container'>";
+
+        Wizard::WizardHeader($title);
+
+        echo "<div class='row'>";
+
+        foreach ($actions as $action => $labels) {
+
+            echo "<div class='col-md-2 mb-2'>";
+
+            echo "<div class='card' style='min-height: 140px;'>";
+            echo "<div class='card-body'>";
+            echo "<div class='card-text'>";
+
+            echo "<a href='" . $labels['url'] . "'>";
+            if (isset($labels['icon']) && !empty($labels['icon'])) {
+                echo "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
+            } else if (isset($labels['pics']) && !empty($labels['pics'])) {
+                echo "<img src='" . $labels['pics'] . "'>";
+            }
+            echo "<br>" . $labels['title'] . "</a>";
+            echo "</div>";
+            echo "</div>";
+            echo "</div>";
+
+            echo "</div>";
+        }
+
+        echo "</div>";
+
+        echo "</div>";
+    }
     /**
      * Display menu
      */
@@ -77,55 +111,35 @@ class Menu extends CommonDBTM
 
         if ($item->canCreate()) {
 
-            Wizard::WizardHeader();
-
-            echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
-
-            echo "<tr class=''>";
-
-            //Add a resource
-            echo "<td class=' center' colspan='2' width='200'>";
-            echo "<a href=\"./wizard.form.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='" . __(
-                'Declare an arrival',
-                'resources'
-            ) . "'>";
-            echo "<br>" . __('Declare an arrival', 'resources') . "</a>";
-            echo "</td>";
-
-            //Add a change
-            echo "<td class=' center' colspan='2'  width='200'>";
             $config = new Config();
-            if (!empty($config->fields["use_meta_for_changes"]) && Plugin::isPluginActive('metademands')) {
-                $url = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
-                echo "<a href=\"" . $url . "\">";
+            if (!empty($config->fields["use_meta_for_changes"])
+                && Plugin::isPluginActive('metademands')) {
+                $url_change = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
             } else {
-                echo "<a href=\"./resource.change.php\">";
+                $url_change = PLUGIN_RESOURCES_WEBDIR . '/front/resource.change.php';
             }
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='" . __(
-                'Declare a change',
-                'resources'
-            ) . "'>";
-            echo "<br>" . __('Declare a change', 'resources') . "</a>";
-            echo "</td>";
-
-            //Remove resources
-            echo "<td class=' center' colspan='2'  width='200'>";
-            if (!empty($config->fields["use_meta_for_leave"]) && Plugin::isPluginActive('metademands')) {
-                $url = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
-                echo "<a href=\"" . $url . "\">";
+            if (!empty($config->fields["use_meta_for_leave"])
+                && Plugin::isPluginActive('metademands')) {
+                $url_remove = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
             } else {
-                echo "<a href=\"./resource.remove.php\">";
+                $url_remove = PLUGIN_RESOURCES_WEBDIR . '/front/resource.remove.php';
             }
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png' alt='" . __(
-                'Declare a departure',
-                'resources'
-            ) . "'>";
-            echo "<br>" . __('Declare a departure', 'resources') . "</a>";
-            echo "</td>";
 
-            echo "</tr>";
-            echo " </table>";
+            $actions = ['new' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                                'title' => __('Declare an arrival','resources'),
+                                 'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php'
+                                ],
+                        'change' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                            'title' => __('Declare a change','resources'),
+                            'url' => $url_change
+                        ],
+                        'remove' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/removeresource.png',
+                            'title' => __('Declare a departure','resources'),
+                            'url' => $url_remove
+                        ]
+                    ];
+
+            self::showMenuBlock("", $actions);
         }
 
         $confighab = new ConfigHabilitation();
@@ -138,280 +152,160 @@ class Menu extends CommonDBTM
             $canbadges = false;
         }
 
+        $actions_declare = [];
         if ($canresting || $canholiday || $canbadges || $canhabilitation) {
 
-            echo "<br>";
-
-            $title = __('Others declarations', 'resources');
-            Wizard::WizardHeader($title);
-
-            echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
-
-            $num_col = 0;
             if ($canresting) {
-                $num_col += 1;
-            }
-            if ($canholiday) {
-                $num_col += 1;
-            }
-            if ($canhabilitation && Plugin::isPluginActive("metademands")) {
-                $num_col += 1;
-            }
-            if ($canbadges && Plugin::isPluginActive("badges")) {
-                $num_col += 1;
-            }
-            if ($num_col == 0) {
-                $colspan = 0;
-            } else {
-                $colspan = floor(6 / $num_col);
-            }
-
-            echo "<tr class=''>";
-            if ($colspan == 1) {
-                echo "<td></td>";
-            }
-            if ($canresting) {
-                //Management of a non contract period
-                echo "<td colspan=$colspan class=' center'>";
-                echo "<a href=\"./resourceresting.form.php?menu\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/deleteresting.png' alt='" . _n(
-                    'Non contract period management',
-                    'Non contract periods management',
-                    2,
-                    'resources'
-                ) . "'>";
-                echo "<br>" . _n(
-                    'Non contract period management',
-                    'Non contract periods management',
-                    2,
-                    'resources'
-                ) . "</a>";
-                echo "</td>";
+                $actions_declare['resting'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/deleteresting.png",
+                    'title' =>  _n(
+                        'Non contract period management',
+                        'Non contract periods management',
+                        2,
+                        'resources'
+                    ),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceresting.form.php?menu'
+                ];
             }
 
             if ($canholiday) {
-                //Management of a non contract period
-                echo "<td colspan=$colspan class=' center'>";
-                echo "<a href=\"./resourceholiday.form.php?menu\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png' alt='" . __(
-                    'Forced holiday management',
-                    'resources'
-                ) . "'>";
-                echo "<br>" . __('Forced holiday management', 'resources') . "</a>";
-                echo "</td>";
+                $actions_declare['holiday'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png",
+                    'title' =>  __(
+                        'Forced holiday management',
+                        'resources'
+                    ),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceholiday.form.php?menu'
+                ];
             }
 
             if ($canhabilitation && Plugin::isPluginActive("metademands")) {
                 //Management of a super habilitation
-                echo "<td colspan=$colspan class=' center'>";
-                echo "<a href=\"./confighabilitation.form.php?menu\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/habilitation.png' alt='" . ConfigHabilitation::getTypeName(
-                    1
-                ) . "'>";
-                echo "<br>" . ConfigHabilitation::getTypeName(1) . "</a>";
-                echo "</td>";
+                $actions_declare['habilitation'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitation.png",
+                    'title' =>  ConfigHabilitation::getTypeName(
+                        1
+                    ),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/confighabilitation.form.php?menu'
+                ];
             }
 
             if ($canbadges && Plugin::isPluginActive("badges")) {
-                //Management of a non contract period
-                echo "<td colspan=$colspan class=' center'>";
-                echo "<a href=\"./resourcebadge.form.php?menu\">";
-                echo "<img src='" . PLUGIN_BADGES_WEBDIR . "/badges.png' alt='" . _n(
-                    'Badge management',
-                    'Badges management',
-                    2,
-                    'resources'
-                ) . "'>";
-                echo "<br>" . _n('Badge management', 'Badges management', 2, 'resources') . "</a>";
-                echo "</td>";
+                $actions_declare['badge'] = ['pics' => PLUGIN_BADGES_WEBDIR . "/badges.png",
+                    'title' =>  _n(
+                        'Badge management',
+                        'Badges management',
+                        2,
+                        'resources'
+                    ),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourcebadge.form.php?menu'
+                ];
             }
-            if ($colspan == 1) {
-                echo "<td></td>";
-            }
-            echo "</tr>";
-            echo " </table>";
+
+            $title_declare = __('Others declarations', 'resources');
+            self::showMenuBlock($title_declare, $actions_declare);
+
         }
 
         if ($item->canView()) {
 
-            echo "<br>";
+            $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
+                'title' => __('Search resources', 'resources'),
+                'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset'
+            ],
+                'directory' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
+                    'title' => Directory::getTypeName(1),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php'
+                ]
+            ];
 
-            $title = __('Others actions', 'resources');
-            Wizard::WizardHeader($title);
-
-            echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
-
-            echo "<tr class=''>";
-
-            $opt = [];
-            $opt['reset'] = 'reset';
-            $opt['criteria'][0]['field'] = 27;
-            $opt['criteria'][0]['searchtype'] = 'equals';
-            $opt['criteria'][0]['value'] = Session::getLoginUserID();
-            $opt['criteria'][0]['link'] = 'AND';
-
-            $url = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
             $config = new Config();
             if (!$config->fields["hide_view_commercial_resource"]) {
-                echo "<td class=' center'>";
-                echo "<a href=\"$url\">";
-                echo "<i class='ti ti-tie' style='font-size:4em' title='" . __(
-                    'View my resources as a commercial',
-                    'resources'
-                ) . "'></i>";
-                echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
-                echo "</td>";
+
+                $opt = [];
+                $opt['reset'] = 'reset';
+                $opt['criteria'][0]['field'] = 27;
+                $opt['criteria'][0]['searchtype'] = 'equals';
+                $opt['criteria'][0]['value'] = Session::getLoginUserID();
+                $opt['criteria'][0]['link'] = 'AND';
+
+                $url_commercial = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
+
+                $actions_others['commercial'] =  ['pics' => '',
+                    'icon' => 'ti ti-tie',
+                    'title' => __('View my resources as a commercial', 'resources'),
+                    'url' => $url_commercial
+                ];
             }
 
-            //See resources
-            echo "<td class=' center'>";
-            echo "<a href=\"./resource.php?reset=reset\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/resourcelist.png' alt='" . __(
-                'Search resources',
-                'resources'
-            ) . "'>";
-            echo "<br>" . __('Search resources', 'resources') . "</a>";
-            echo "</td>";
+            $title = __('Others actions', 'resources');
+            self::showMenuBlock($title, $actions_others);
 
-            //         echo "<td class=' center'>";
-            //         echo "<a href=\"./resource.card.form.php\">";
-            //         echo "<img src='" . PLUGIN_RESOURCES_WEBDIR. "/pics/detailresource.png' alt='" . __('See details of a resource', 'resources') . "'>";
-            //         echo "<br>" . __('See details of a resource', 'resources') . "</a>";
-            //         echo "</td>";
-
-            echo "<td class=' center'>";
-            echo "<a href=\"./directory.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/directory.png' alt='" . Directory::getTypeName(
-                1
-            ) . "'>";
-            echo "<br>" . Directory::getTypeName(1) . "</a>";
-            echo "</td>";
-
-            echo "</tr>";
-            echo " </table>";
         }
 
         if ($canseeemployment || $canseebudget) {
-            $colspan = 0;
 
-            echo "<br>";
-            $title = __('Employments / budgets management', 'resources');
-            Wizard::WizardHeader($title);
-
-            echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
-
-            echo "<tr class=''>";
-            echo "<td class='center'>";
-            echo "</td>";
+            $actions_employment = [];
 
             if ($canseeemployment) {
                 if ($canemployment) {
                     //Add an employment
-                    echo "<td class=' center'>";
-                    echo "<a href=\"./employment.form.php\">";
-                    echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png' alt='" . __(
-                        'Declare an employment',
-                        'resources'
-                    ) . "'>";
-                    echo "<br>" . __('Declare an employment', 'resources') . "</a>";
-                    echo "</td>";
-                } else {
-                    $colspan += 1;
+                    $actions_employment['new'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png",
+                        'title' =>  __('Declare an employment', 'resources'),
+                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php'
+                    ];
                 }
-                //See managment employments
-                echo "<td class=' center'>";
-                echo "<a href=\"./employment.php\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png' alt='" . __(
-                    'Employment management',
-                    'resources'
-                ) . "'>";
-                echo "<br>" . __('Employment management', 'resources') . "</a>";
-                echo "</td>";
-            } else {
-                $colspan += 1;
+                $actions_employment['listemployment'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png",
+                    'title' =>  __('Employment management', 'resources'),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.php'
+                ];
             }
+
             if ($canseebudget) {
-                //See managment budgets
-                echo "<td class=' center'>";
-                echo "<a href=\"./budget.php\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/budgetlist.png' alt='" . __(
-                    'Budget management',
-                    'resources'
-                ) . "'>";
-                echo "<br>" . __('Budget management', 'resources') . "</a>";
-                echo "</td>";
-            } else {
-                $colspan += 1;
+                $actions_employment['listbudget'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/budgetlist.png",
+                    'title' =>  __('Budget management', 'resources'),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/budget.php'
+                ];
             }
 
             if ($canseeemployment) {
-                //See recap ressource / employment
-                echo "<td class=' center'>";
-                echo "<a href=\"./recap.php\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='" . __(
-                    'List Employments / Resources',
-                    'resources'
-                ) . "'>";
-                echo "<br>" . __('List Employments / Resources', 'resources') . "</a>";
-                echo "</td>";
-            } else {
-                $colspan += 1;
+                $actions_employment['recap'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
+                    'title' =>  __('List Employments / Resources', 'resources'),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/recap.php'
+                ];
             }
 
-            echo "<td class='center' colspan='" . ($colspan + 1) . "'></td>";
+            $title_employment = __('Employments / budgets management', 'resources');
+            self::showMenuBlock($title_employment, $actions_employment);
 
-            echo "</tr>";
-            echo " </table>";
         }
 
         if ($canImport) {
 
-            echo "<br>";
-            $title = __('Import resources', 'resources');
-            Wizard::WizardHeader($title);
+            $actions_import = ['update' => ['pics' => '',
+                'icon' => 'ti ti-user-edit',
+                'title' =>  __('Update GLPI Resources', 'resources'),
+                'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::UPDATE_RESOURCES
+            ],
+                'csv' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/csv_check.png",
+                    'title' => __('Verify CSV file', 'resources'),
+                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_FILE
+                ],
+                'glpi' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/resource_check.png",
+                    'title' => __('Verify GLPI resources', 'resources'),
+                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_GLPI
+                ],
+                'config' => ['pics' => '',
+                    'icon' => 'ti ti-settings',
+                    'title' => __('Configure Imports', 'resources'),
+                    'url' => Import::getIndexUrl()
+                ],
+                'trash' => ['pics' => '',
+                    'icon' => 'ti ti-trash',
+                    'title' => __('Purge imported resources', 'resources'),
+                    'url' => ImportResource::getFormURL() . "?reset-imports=1"
+                ]
+            ];
 
-            echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
-
-            echo "<tr class=''>";
-            echo "<td class=' center' colspan='2'>";
-            echo "<a href='" . ImportResource::getIndexUrl() . "?type=" . ImportResource::UPDATE_RESOURCES . "'>";
-            echo "<i class=\"ti ti-user-edit\" style='font-size: 4em'></i>";
-            echo "<br>" . __('Update GLPI Resources', 'resources') . "</a>";
-            echo "</td>";
-
-            echo "<td class=' center' colspan='2'>";
-            echo "<a href='" . ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_FILE . "'>";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/csv_check.png' />";
-            echo "<br>" . __('Verify CSV file', 'resources') . "</a>";
-            echo "</td>";
-
-            echo "<td class=' center' colspan='2'>";
-            echo "<a href='" . ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_GLPI . "'>";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/resource_check.png' />";
-            echo "<br>" . __('Verify GLPI resources', 'resources') . "</a>";
-            echo "</td>";
-
-            echo "</tr>";
-
-            echo "<tr class=''>";
-
-            echo "<td class=' center' colspan='2'>";
-            echo "<a href='" . Import::getIndexUrl() . "'>";
-            echo "<i class=\"ti ti-settings\" style='font-size: 3em'></i>";
-            echo "<br>" . __('Configure Imports', 'resources') . "</a>";
-            echo "</td>";
-
-            echo "<td class=' center' colspan='2'>";
-            echo "<a href='" . ImportResource::getFormURL() . "?reset-imports=1'>";
-            echo "<i class=\"ti ti-trash\" style='font-size: 3em'></i>";
-            echo "<br>" . __('Purge imported resources', 'resources') . "</a>";
-            echo "</td>";
-
-            echo "<td colspan='2'></td>";
-
-            echo "</tr>";
-
-            echo " </table>";
+            $title_import = __('Import resources', 'resources');
+            self::showMenuBlock($title_import, $actions_import);
         }
 
         echo "</div>";
