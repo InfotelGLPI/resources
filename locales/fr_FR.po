@@ -1793,7 +1793,7 @@ msgstr "Merci d'activer le plugin badge"
 #: front/confighabilitation.form.php:115 front/resourcebadge.form.php:75
 #: front/resourcebadge.form.php:93
 msgid "Please activate the plugin metademand"
-msgstr "Merci d'activer le plugin metademand"
+msgstr "Merci d'activer le plugin métademandes"
 
 #: src/NotificationTargetResource.php:664
 msgid "Please check the leaving checklist of the resource"
