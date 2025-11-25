@@ -290,14 +290,9 @@ class ResourceResting extends CommonDBTM
      */
     function showMenu()
     {
-        global $CFG_GLPI;
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-        echo "<h3><div class='alert alert-secondary' role='alert'>";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo _n('Non contract period management', 'Non contract periods management', 2, 'resources');
-        echo "</div></h3>";
+        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
+        Wizard::WizardHeader($title);
 
         echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
@@ -352,37 +347,28 @@ class ResourceResting extends CommonDBTM
 
         $this->initForm($ID, $options);
 
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
+        echo "<div class='card container' style='min-width: 80%;'>";
 
-        echo "<h3><div class='alert alert-secondary' role='alert' >";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo __('Resources management', 'resources');
-        echo "</div></h3>";
+        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
+        Wizard::WizardHeader($title);
 
-        echo "<div id ='content'>";
-        echo "<div class='bt-container resources_wizard_resp'> ";
-        echo "<div class='bt-block bt-features' > ";
+        echo "<div class='card-body'>";
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
 
-        echo "<div class=\"row plugin_resources_wizard_margin\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
-        echo "<h4 class=\"bt-title-divider\">";
-        echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png' alt='newresting'/>&nbsp;";
         $title = __('Declare a non contract period', 'resources');
         if ($ID > 0) {
             $title = __('Detail of non contract period', 'resources');
         }
-        echo $title;
-        echo "</h4></div></div>";
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
+        Wizard::WizardTitle($img, $title);
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo Resource::getTypeName(1);
 
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'display' => true,
@@ -393,47 +379,47 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Begin date');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('End date');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Agency concerned', 'resources');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Dropdown::show('Location', ['value' => $this->fields["locations_id"]]);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('At home', 'resources');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Dropdown::showYesNo('at_home', $this->fields['at_home']);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Comments');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         echo Html::textarea([
             'name' => 'comment',
             'value' => $this->fields["comment"],
@@ -444,8 +430,8 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
         echo "<div class='preview'>";
         echo "<a href=\"./resourceresting.form.php\">";
         echo __('Declare a non contract period', 'resources');
@@ -456,8 +442,8 @@ class ResourceResting extends CommonDBTM
         echo "</div>";
         echo "</div></div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
         echo "<div class='next'>";
         if ($ID > 0) {
             echo Html::hidden('id', ['value' => $ID]);
@@ -475,14 +461,13 @@ class ResourceResting extends CommonDBTM
                 ['name' => 'deleterestingresources', 'class' => 'btn btn-primary']
             );
         } else {
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'addrestingresources', 'class' => 'btn btn-primary']);
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addrestingresources', 'class' => 'btn btn-success']);
         }
         echo "</div>";
         echo "</div></div>";
 
         Html::closeForm();
 
-        echo "</div>";
         echo "</div>";
         echo "</div>";
     }
@@ -498,32 +483,25 @@ class ResourceResting extends CommonDBTM
         global $CFG_GLPI;
 
         $this->initForm($ID, $options);
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-        echo "<h3><div class='alert alert-secondary' role='alert' >";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo __('Resources management', 'resources');
-        echo "</div></h3>";
+        echo "<div class='card container' style='min-width: 80%;'>";
 
-        echo "<div id ='content'>";
-        echo "<div class='bt-container resources_wizard_resp'> ";
-        echo "<div class='bt-block bt-features' > ";
+        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
+        Wizard::WizardHeader($title);
+
+        echo "<div class='card-body'>";
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
 
-        echo "<div class=\"row plugin_resources_wizard_margin\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
-        echo "<h4 class=\"bt-title-divider\">";
-        echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png' alt='newresting'/>&nbsp;";
-        echo __('Declaring the end of non contract periods', 'resources');
-        echo "</h4></div></div>";
+        $title = __('Declaring the end of non contract periods', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
+        Wizard::WizardTitle($img, $title);
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo Resource::getTypeName(1);
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         $rand = Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'on_change' => 'plugin_resources_load_user_resting()',
@@ -555,8 +533,8 @@ class ResourceResting extends CommonDBTM
         echo "<div id='plugin_resources_endate_resting'>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
         echo "<div class='preview'>";
         echo "<a href=\"./resourceresting.php\">";
         echo __('List of non contract periods', 'resources');
@@ -569,7 +547,6 @@ class ResourceResting extends CommonDBTM
 
         Html::closeForm();
 
-        echo "</div>";
         echo "</div>";
         echo "</div>";
     }
@@ -605,11 +582,11 @@ class ResourceResting extends CommonDBTM
                 );
         }
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Choosing the intercontrat', 'resources');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         $rand = Dropdown::showFromArray(
             'plugin_resources_resting_id',
             $elements,
@@ -647,11 +624,11 @@ class ResourceResting extends CommonDBTM
      */
     function loadEndDateResting($plugin_resources_resting_id)
     {
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('End date');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_end");
         echo Html::hidden('id', ['value' => $plugin_resources_resting_id]);
         echo "</div>";
@@ -665,7 +642,7 @@ class ResourceResting extends CommonDBTM
      */
     function loadButtonResting($plugin_resources_resting_id)
     {
-        echo Html::submit(_sx('button', 'Save'), ['name' => 'addenddaterestingresources', 'class' => 'btn btn-primary']
+        echo Html::submit(_sx('button', 'Save'), ['name' => 'addenddaterestingresources', 'class' => 'btn btn-success']
         );
     }
 }

@@ -42,8 +42,6 @@ Session::checkRight("config", UPDATE);
 if (Plugin::isPluginActive("resources")) {
     $cat = new TicketCategory();
     $transferEntity = new TransferEntity();
-    $resourceChange = new Resource_Change();
-    $resourceAdConfig = new Adconfig();
     $resourceBadge = new ResourceBadge();
     $config = new Config();
 
@@ -66,27 +64,7 @@ if (Plugin::isPluginActive("resources")) {
     } else {
         Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
         //setup
-        $config->showConfigForm();
-
-        //changes
-        $resourceChange->showConfigForm();
-
-        $resourceAdConfig->showConfigForm();
-
-        //badges
-        if (Plugin::isPluginActive("badges")
-            && Plugin::isPluginActive("metademands")) {
-            $resourceBadge->showConfigForm();
-        }
-
-        //metademand
-        if (Plugin::isPluginActive("metademands")) {
-            $configHabilitation = new ConfigHabilitation();
-            $configHabilitation->showConfigForm();
-        }
-
-        $cat->showConfigForm($_SERVER['PHP_SELF']);
-        $transferEntity->showConfigForm($_SERVER['PHP_SELF']);
+        $config->display($_GET);
     }
 } else {
     Html::header(__('Setup'), '', "config", "plugin");

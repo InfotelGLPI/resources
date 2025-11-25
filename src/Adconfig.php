@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use AuthLDAP;
 use CommonDBTM;
+use CommonGLPI;
 use Dropdown;
 use GLPIKey;
 use Html;
@@ -91,6 +92,33 @@ class Adconfig extends CommonDBTM
         if ($DB->tableExists($this->getTable())) {
             $this->getFromDB(1);
         }
+    }
+
+    static function getIcon()
+    {
+        return "ti ti-vocabulary";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showConfigForm();
+        }
+        return true;
     }
 
     /**

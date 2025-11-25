@@ -31,7 +31,6 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
-use Html;
 use Plugin;
 use Session;
 use Toolbox;
@@ -64,10 +63,6 @@ class Menu extends CommonDBTM
      */
     public static function showMenu(CommonDBTM $item)
     {
-        global $CFG_GLPI;
-
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
         echo "<div class='center'>";
 
@@ -81,10 +76,8 @@ class Menu extends CommonDBTM
         $canImport = Session::haveright('plugin_resources_import', READ);
 
         if ($item->canCreate()) {
-            echo "<h3><div class='alert alert-secondary' role='alert'>";
-            echo "<i class='ti ti-friends'></i>&nbsp;";
-            echo __('Resources management', 'resources');
-            echo "</div></h3>";
+
+            Wizard::WizardHeader();
 
             echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
 
@@ -94,9 +87,9 @@ class Menu extends CommonDBTM
             echo "<td class=' center' colspan='2' width='200'>";
             echo "<a href=\"./wizard.form.php\">";
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png' alt='" . __(
-                    'Declare an arrival',
-                    'resources'
-                ) . "'>";
+                'Declare an arrival',
+                'resources'
+            ) . "'>";
             echo "<br>" . __('Declare an arrival', 'resources') . "</a>";
             echo "</td>";
 
@@ -110,9 +103,9 @@ class Menu extends CommonDBTM
                 echo "<a href=\"./resource.change.php\">";
             }
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='" . __(
-                    'Declare a change',
-                    'resources'
-                ) . "'>";
+                'Declare a change',
+                'resources'
+            ) . "'>";
             echo "<br>" . __('Declare a change', 'resources') . "</a>";
             echo "</td>";
 
@@ -125,9 +118,9 @@ class Menu extends CommonDBTM
                 echo "<a href=\"./resource.remove.php\">";
             }
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png' alt='" . __(
-                    'Declare a departure',
-                    'resources'
-                ) . "'>";
+                'Declare a departure',
+                'resources'
+            ) . "'>";
             echo "<br>" . __('Declare a departure', 'resources') . "</a>";
             echo "</td>";
 
@@ -136,10 +129,11 @@ class Menu extends CommonDBTM
         }
 
         if ($canresting || $canholiday || $canbadges || $canhabilitation) {
-            echo "<br><h3><div class='alert alert-secondary' role='alert'>";
-            echo "<i class='ti ti-friends'></i>&nbsp;";
-            echo __('Others declarations', 'resources');
-            echo "</div></h3>";
+
+            echo "<br>";
+
+            $title = __('Others declarations', 'resources');
+            Wizard::WizardHeader($title);
 
             echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
 
@@ -171,17 +165,17 @@ class Menu extends CommonDBTM
                 echo "<td colspan=$colspan class=' center'>";
                 echo "<a href=\"./resourceresting.form.php?menu\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/deleteresting.png' alt='" . _n(
-                        'Non contract period management',
-                        'Non contract periods management',
-                        2,
-                        'resources'
-                    ) . "'>";
+                    'Non contract period management',
+                    'Non contract periods management',
+                    2,
+                    'resources'
+                ) . "'>";
                 echo "<br>" . _n(
-                        'Non contract period management',
-                        'Non contract periods management',
-                        2,
-                        'resources'
-                    ) . "</a>";
+                    'Non contract period management',
+                    'Non contract periods management',
+                    2,
+                    'resources'
+                ) . "</a>";
                 echo "</td>";
             }
 
@@ -190,9 +184,9 @@ class Menu extends CommonDBTM
                 echo "<td colspan=$colspan class=' center'>";
                 echo "<a href=\"./resourceholiday.form.php?menu\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png' alt='" . __(
-                        'Forced holiday management',
-                        'resources'
-                    ) . "'>";
+                    'Forced holiday management',
+                    'resources'
+                ) . "'>";
                 echo "<br>" . __('Forced holiday management', 'resources') . "</a>";
                 echo "</td>";
             }
@@ -202,8 +196,8 @@ class Menu extends CommonDBTM
                 echo "<td colspan=$colspan class=' center'>";
                 echo "<a href=\"./confighabilitation.form.php?menu\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/habilitation.png' alt='" . ConfigHabilitation::getTypeName(
-                        1
-                    ) . "'>";
+                    1
+                ) . "'>";
                 echo "<br>" . ConfigHabilitation::getTypeName(1) . "</a>";
                 echo "</td>";
             }
@@ -213,11 +207,11 @@ class Menu extends CommonDBTM
                 echo "<td colspan=$colspan class=' center'>";
                 echo "<a href=\"./resourcebadge.form.php?menu\">";
                 echo "<img src='" . PLUGIN_BADGES_WEBDIR . "/badges.png' alt='" . _n(
-                        'Badge management',
-                        'Badges management',
-                        2,
-                        'resources'
-                    ) . "'>";
+                    'Badge management',
+                    'Badges management',
+                    2,
+                    'resources'
+                ) . "'>";
                 echo "<br>" . _n('Badge management', 'Badges management', 2, 'resources') . "</a>";
                 echo "</td>";
             }
@@ -229,10 +223,11 @@ class Menu extends CommonDBTM
         }
 
         if ($item->canView()) {
-            echo "<br><h3><div class='alert alert-secondary' role='alert'>";
-            echo "<i class='ti ti-friends'></i>&nbsp;";
-            echo __('Others actions', 'resources');
-            echo "</div></h3>";
+
+            echo "<br>";
+
+            $title = __('Others actions', 'resources');
+            Wizard::WizardHeader($title);
 
             echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
 
@@ -251,9 +246,9 @@ class Menu extends CommonDBTM
                 echo "<td class=' center'>";
                 echo "<a href=\"$url\">";
                 echo "<i class='ti ti-tie' style='font-size:4em' title='" . __(
-                        'View my resources as a commercial',
-                        'resources'
-                    ) . "'></i>";
+                    'View my resources as a commercial',
+                    'resources'
+                ) . "'></i>";
                 echo "<br>" . __('View my resources as a commercial', 'resources') . "</a>";
                 echo "</td>";
             }
@@ -262,9 +257,9 @@ class Menu extends CommonDBTM
             echo "<td class=' center'>";
             echo "<a href=\"./resource.php?reset=reset\">";
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/resourcelist.png' alt='" . __(
-                    'Search resources',
-                    'resources'
-                ) . "'>";
+                'Search resources',
+                'resources'
+            ) . "'>";
             echo "<br>" . __('Search resources', 'resources') . "</a>";
             echo "</td>";
 
@@ -277,8 +272,8 @@ class Menu extends CommonDBTM
             echo "<td class=' center'>";
             echo "<a href=\"./directory.php\">";
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/directory.png' alt='" . Directory::getTypeName(
-                    1
-                ) . "'>";
+                1
+            ) . "'>";
             echo "<br>" . Directory::getTypeName(1) . "</a>";
             echo "</td>";
 
@@ -289,10 +284,9 @@ class Menu extends CommonDBTM
         if ($canseeemployment || $canseebudget) {
             $colspan = 0;
 
-            echo "<br><h3><div class='alert alert-secondary' role='alert'>";
-            echo "<i class='ti ti-friends'></i>&nbsp;";
-            echo __('Employments / budgets management', 'resources');
-            echo "</div></h3>";
+            echo "<br>";
+            $title = __('Employments / budgets management', 'resources');
+            Wizard::WizardHeader($title);
 
             echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
 
@@ -306,9 +300,9 @@ class Menu extends CommonDBTM
                     echo "<td class=' center'>";
                     echo "<a href=\"./employment.form.php\">";
                     echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png' alt='" . __(
-                            'Declare an employment',
-                            'resources'
-                        ) . "'>";
+                        'Declare an employment',
+                        'resources'
+                    ) . "'>";
                     echo "<br>" . __('Declare an employment', 'resources') . "</a>";
                     echo "</td>";
                 } else {
@@ -318,9 +312,9 @@ class Menu extends CommonDBTM
                 echo "<td class=' center'>";
                 echo "<a href=\"./employment.php\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png' alt='" . __(
-                        'Employment management',
-                        'resources'
-                    ) . "'>";
+                    'Employment management',
+                    'resources'
+                ) . "'>";
                 echo "<br>" . __('Employment management', 'resources') . "</a>";
                 echo "</td>";
             } else {
@@ -331,9 +325,9 @@ class Menu extends CommonDBTM
                 echo "<td class=' center'>";
                 echo "<a href=\"./budget.php\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/budgetlist.png' alt='" . __(
-                        'Budget management',
-                        'resources'
-                    ) . "'>";
+                    'Budget management',
+                    'resources'
+                ) . "'>";
                 echo "<br>" . __('Budget management', 'resources') . "</a>";
                 echo "</td>";
             } else {
@@ -345,9 +339,9 @@ class Menu extends CommonDBTM
                 echo "<td class=' center'>";
                 echo "<a href=\"./recap.php\">";
                 echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='" . __(
-                        'List Employments / Resources',
-                        'resources'
-                    ) . "'>";
+                    'List Employments / Resources',
+                    'resources'
+                ) . "'>";
                 echo "<br>" . __('List Employments / Resources', 'resources') . "</a>";
                 echo "</td>";
             } else {
@@ -361,10 +355,10 @@ class Menu extends CommonDBTM
         }
 
         if ($canImport) {
-            echo "<br><h3><div class='alert alert-secondary' role='alert'>";
-            echo "<i class='ti ti-friends'></i>&nbsp;";
-            echo __('Import resources', 'resources');
-            echo "</div></h3>";
+
+            echo "<br>";
+            $title = __('Import resources', 'resources');
+            Wizard::WizardHeader($title);
 
             echo "<table class='tab_cadre_fixe resources_menu' style='width: 400px;'>";
 

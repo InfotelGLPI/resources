@@ -98,12 +98,12 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
 //                'right'       => 'all']);
         }
     } else {
-        echo "<div class=\"row\">";
+        echo "<div class='row'>";
 
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Departure date', 'resources');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_end", ['value' => date("Y-m-d")]);
         echo "</div>";
         echo "</div>";

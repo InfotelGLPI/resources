@@ -32,6 +32,7 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use Appliance;
 use CommonDBTM;
+use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use Entity;
@@ -74,6 +75,44 @@ class Resource_Change extends CommonDBTM
     const CHANGE_RESOURCEFUNCTION = 15;
     const CHANGE_RESOURCETEAM = 16;
 
+
+    /**
+     * Return the localized name of the current Type
+     * Should be overloaded in each new class
+     *
+     * @return string
+     **/
+    static function getTypeName($nb = 0)
+    {
+        return __("Managing change actions", 'resources');
+    }
+
+
+    static function getIcon()
+    {
+        return "ti ti-replace-user";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showFormActions();
+        }
+        return true;
+    }
 
     /**
      * Returns all actions
@@ -187,20 +226,20 @@ class Resource_Change extends CommonDBTM
         //Display for each action
         switch ($action_id) {
             case self::CHANGE_RESOURCEMANAGER:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Manager for the current resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id'));
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource manager', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = User::dropdown([
                     'name' => "users_id",
                     'entity' => $resource->fields["entities_id"],
@@ -231,20 +270,20 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_RESOURCESALE:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Sales manager for the current resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id_sales'));
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource sales manager', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = User::dropdown([
                     'name' => "users_id_sales",
                     'entity' => $resource->fields["entities_id"],
@@ -275,11 +314,11 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_ACCESSPROFIL:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current access profile of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
 
                 $criteria = [
                     'SELECT' => [
@@ -317,8 +356,8 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New access profile of the resource', 'resources');
                 echo "</div>";
 
@@ -330,7 +369,7 @@ class Resource_Change extends CommonDBTM
                     $condition["plugin_resources_habilitationlevels_id"] = $level['id'];
                 }
 
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Habilitation::dropdown([
                     'name' => "plugin_resources_habilitations_id",
                     'entity' => $resource->fields["entities_id"],
@@ -360,11 +399,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_CONTRACTTYPE:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current contract type of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . Dropdown::getDropdownName(
                     'glpi_plugin_resources_contracttypes',
                     $resource->getField('plugin_resources_contracttypes_id')
@@ -373,11 +412,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New type of contract', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = ContractType::dropdown([
                     'name' => "plugin_resources_contracttypes_id",
                     'entity' => $resource->fields["entities_id"],
@@ -403,11 +442,11 @@ class Resource_Change extends CommonDBTM
                 echo "</script>";
                 echo "</div>";
                 echo "</div>";
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('Date of contract type change', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 Html::showDateField("date_of_change");
                 echo "</script>";
                 echo "</div>";
@@ -415,20 +454,20 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_AGENCY:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current agency of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource agency', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Location::dropdown([
                     'name' => "locations_id",
                     'entity' => $resource->fields["entities_id"],
@@ -456,11 +495,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current team of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . Dropdown::getDropdownName(
                     'glpi_plugin_resources_teams',
                     $resource->getField('plugin_resources_teams_id')
@@ -468,11 +507,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource team', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Team::dropdown([
                     'name' => "plugin_resources_teams_id",
                     'entity' => $resource->fields["entities_id"],
@@ -485,11 +524,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
 
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('Date of location change', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 Html::showDateField("date_of_change");
                 echo "</script>";
                 echo "</div>";
@@ -513,21 +552,21 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_RESOURCEINFORMATIONS:
-                //            echo "<div class=\"row\">";
-                //            echo "<div class=\"bt-feature col-md-4 \">";
+                //            echo "<div class='row'>";
+                //            echo "<div class='col-md-4 mb-2'>";
                 //            echo __("Current name of the resource", "resources");
                 //            echo "</div>";
-                //            echo "<div class=\"bt-feature col-md-4 \">";
+                //            echo "<div class='col-md-4 mb-2'>";
                 //            echo "&nbsp;" . $resource->getField('name');
                 //
                 //            echo "</div>";
                 //            echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('Name', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = mt_rand();
                 $option = [
                     'rand' => $rand,
@@ -538,11 +577,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('Firstname', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $option = [
                     'rand' => $rand,
                     'value' => $resource->fields["firstname"],
@@ -552,11 +591,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('Departure date', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $option = ['onChange' => "javascript:this.value=this.value.toUpperCase();"];
                 $rand3 = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
                 //            $rand = Html::autocompletionTextField($resource, "firstname", $option);
@@ -581,11 +620,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCECOMPANY:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current company of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
                 echo "&nbsp;" . Dropdown::getDropdownName(
@@ -595,11 +634,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource company', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Employer::dropdown([
                     'name' => "employer_id",
                     'right' => 'all',
@@ -627,11 +666,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEDEPARTMENT:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current department of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
                 echo "&nbsp;" . Dropdown::getDropdownName(
@@ -641,11 +680,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource department', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Department::dropdown([
                     'name' => "department_id",
                     'entity' => $resource->fields["entities_id"],
@@ -676,11 +715,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCESERVICE:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current service of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
                 echo "&nbsp;" . Dropdown::getDropdownName(
@@ -690,11 +729,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource service', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Service::dropdownFromDepart(
                     $resource->fields["plugin_resources_departments_id"],
                     [
@@ -728,11 +767,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEROLE:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current role of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
                 echo "&nbsp;" . Dropdown::getDropdownName(
@@ -742,11 +781,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource role', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Role::dropdownFromService(
                     $resource->fields["plugin_resources_services_id"],
                     [
@@ -780,11 +819,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEFUNCTION:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current function of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_functions_id" => $resource->getID()]);
                 echo "&nbsp;" . Dropdown::getDropdownName(
@@ -794,11 +833,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource function', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = ResourceFunction::dropdown([
                     'name' => "function_id",
                     'entity' => $resource->fields["entities_id"],
@@ -829,11 +868,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCETEAM:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Current team of the resource", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 echo "&nbsp;" . Dropdown::getDropdownName(
                     'glpi_plugin_resources_teams',
                     $resource->getField("plugin_functions_teams_id")
@@ -841,11 +880,11 @@ class Resource_Change extends CommonDBTM
                 echo "</div>";
                 echo "</div>";
 
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New resource function', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $rand = Team::dropdown([
                     'name' => "team_id",
                     'entity' => $resource->fields["entities_id"],
@@ -876,11 +915,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEMATERIAL:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __("Change material", "resources");
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 Html::textarea(['name' => "content"]);
                 //            echo "<script type='text/javascript'>";
 
@@ -899,11 +938,11 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEITEMAPPLICATION:
-                echo "<div class=\"row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='row'>";
+                echo "<div class='col-md-4 mb-2'>";
                 echo __('New Application to add to the resource', 'resources');
                 echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
+                echo "<div class='col-md-4 mb-2'>";
                 $appliance = new Appliance();
                 $resource_item = new Resource_Item();
 
@@ -1443,26 +1482,19 @@ class Resource_Change extends CommonDBTM
         // Dropdown list according to the entity
         echo "<script type='text/javascript'>";
         echo "function plugin_resources_load_entity(){";
-        $params = [
-            'action' => 'loadEntity',
-            'actions_id' => '__VALUE__'
-        ];
-        Ajax::updateItemJsCode(
-            'plugin_resources_entity_itil_categories',
+        $params = ['action'     => 'loadEntity',
+            'actions_id' => '__VALUE__'];
+        Ajax::updateItemJsCode('plugin_resources_entity_itil_categories',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
             $params,
-            'dropdown_actions_id' . $rand
-        );
-        $params = [
-            'action' => 'clean',
-            'actions_id' => '__VALUE__'
-        ];
-        Ajax::updateItemJsCode(
-            'plugin_resources_button_add',
+            'dropdown_actions_id' . $rand);
+        echo ";";
+        $params = ['action'     => 'clean',
+            'actions_id' => '__VALUE__'];
+        Ajax::updateItemJsCode('plugin_resources_button_add',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
             $params,
-            'dropdown_actions_id' . $rand
-        );
+            'dropdown_actions_id' . $rand);
         echo "}";
         echo "</script>";
         echo "</td>";
@@ -1497,46 +1529,49 @@ class Resource_Change extends CommonDBTM
 
         $rand = mt_rand();
 
-        echo "<div class='left'>";
-        if ($canedit) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th colspan='4'>" . __('List') . "</th>";
-        echo "</tr>";
-        echo "<tr>";
-        echo "<th width='10'>";
-        if ($canedit) {
-            echo Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
-        }
-        echo "</th>";
-        echo "<th>" . __('Action') . "</th>";
-        echo "<th>" . __('Entity') . "</th>";
-        echo "<th>" . __('Category') . "</th>";
-        echo "</tr>";
-        foreach ($datas as $action) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td width='10'>";
+        if (count($datas) > 0) {
+            echo "<div class='left'>";
             if ($canedit) {
-                Html::showMassiveActionCheckBox(__CLASS__, $action['id']);
+                Html::openMassiveActionsForm('massResource_Change' . $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massResource_Change' . $rand];
+                Html::showMassiveActions($massiveactionparams);
             }
-            echo "</td>";
-            //DATA LINE
-            echo "<td>" . self::getNameActions($action['actions_id']) . "</td>";
-            echo "<td>" . Dropdown::getDropdownName('glpi_entities', $action['entities_id']) . "</td>";
-            echo "<td>" . Dropdown::getDropdownName('glpi_itilcategories', $action['itilcategories_id']) . "</td>";
+            echo "<table class='tab_cadre_fixe'>";
+            echo "<tr>";
+            echo "<th colspan='4'>" . __('List') . "</th>";
             echo "</tr>";
+            echo "<tr>";
+            echo "<th width='10'>";
+            if ($canedit) {
+                echo Html::getCheckAllAsCheckbox('massResource_Change' .  $rand);
+            }
+            echo "</th>";
+            echo "<th>" . __('Action') . "</th>";
+            echo "<th>" . __('Entity') . "</th>";
+            echo "<th>" . __('Category') . "</th>";
+            echo "</tr>";
+            foreach ($datas as $action) {
+                echo "<tr class='tab_bg_1'>";
+                echo "<td width='10'>";
+                if ($canedit) {
+                    Html::showMassiveActionCheckBox(__CLASS__, $action['id']);
+                }
+                echo "</td>";
+                //DATA LINE
+                echo "<td>" . self::getNameActions($action['actions_id']) . "</td>";
+                echo "<td>" . Dropdown::getDropdownName('glpi_entities', $action['entities_id']) . "</td>";
+                echo "<td>" . Dropdown::getDropdownName('glpi_itilcategories', $action['itilcategories_id']) . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+            if ($canedit) {
+                $massiveactionparams['ontop'] = false;
+                Html::showMassiveActions($massiveactionparams);
+                Html::closeForm();
+            }
+            echo "</div>";
         }
-        echo "</table>";
-        if ($canedit) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
-        echo "</div>";
+
     }
 
     /**

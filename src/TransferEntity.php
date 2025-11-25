@@ -31,9 +31,11 @@ namespace GlpiPlugin\Resources;
 
 use Ajax;
 use CommonDBTM;
+use CommonGLPI;
 use Dropdown;
 use Html;
 use Session;
+use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -81,15 +83,41 @@ class TransferEntity extends CommonDBTM
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
+    static function getIcon()
+    {
+        return "ti ti-trending-up-2";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showConfigForm($_SERVER['PHP_SELF']);
+        }
+        return true;
+    }
 
     /**
      * @param $target
      *
      * @return bool
      */
-    function showConfigForm($target)
+    function showConfigForm()
     {
-        global $CFG_GLPI;
+        $target = Toolbox::getItemTypeFormURL(Config::class);
 
         if (!$this->canView()) {
             return false;
@@ -162,10 +190,10 @@ class TransferEntity extends CommonDBTM
     {
         $rand = mt_rand();
 
-        echo "<div class='center'>";
+        echo "<div class='left'>";
         if ($canedit) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
+            Html::openMassiveActionsForm('massEntity'  . $rand);
+            $massiveactionparams = ['item' => __CLASS__, 'container' => 'massEntity' . $rand];
             Html::showMassiveActions($massiveactionparams);
         }
         echo "<table class='tab_cadre_fixe'>";
@@ -175,7 +203,7 @@ class TransferEntity extends CommonDBTM
         echo "<tr>";
         echo "<th width='10'>";
         if ($canedit) {
-            echo Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
+            echo Html::getCheckAllAsCheckbox('massEntity'  . $rand);
         }
         echo "</th>";
         echo "<th>" . __('Entity') . "</th>";
@@ -193,13 +221,11 @@ class TransferEntity extends CommonDBTM
             echo "<td>" . Dropdown::getDropdownName('glpi_groups', $field['groups_id']) . "</td>";
             echo "</tr>";
         }
-
+        echo "</table>";
         if ($canedit) {
             $massiveactionparams['ontop'] = false;
             Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
         }
-        echo "</table>";
         echo "</div>";
     }
 

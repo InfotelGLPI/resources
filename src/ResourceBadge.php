@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use Ajax;
 use CommonDBTM;
+use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use GlpiPlugin\Badges\Badge;
@@ -95,6 +96,33 @@ class ResourceBadge extends CommonDBTM
     static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+
+    static function getIcon()
+    {
+        return "ti ti-id";
+    }
+
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showConfigForm();
+        }
+        return true;
     }
 
     /**
@@ -232,15 +260,9 @@ class ResourceBadge extends CommonDBTM
      */
     function showMenu()
     {
-        global $CFG_GLPI;
 
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
-
-        echo "<h3><div class='alert alert-secondary' role='alert'>";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo _n('Badge management', 'Badges management', 2, 'resources');
-        echo "</div></h3>";
+        $title = _n('Badge management', 'Badges management', 2, 'resources');
+        Wizard::WizardHeader($title);
 
         echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
@@ -275,15 +297,8 @@ class ResourceBadge extends CommonDBTM
      */
     function showWizardForm()
     {
-        global $CFG_GLPI;
-
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
-
-        echo "<h3><div class='alert alert-secondary' role='alert'>";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo _n('Badge management', 'Badges management', 2, 'resources');
-        echo "</div></h3>";
+        $title = _n('Badge management', 'Badges management', 2, 'resources');
+        Wizard::WizardHeader($title);
 
         echo "<div class='center'>";
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php\">";

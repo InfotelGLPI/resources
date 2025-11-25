@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use CommonGLPI;
 use Dropdown;
 use GlpiPlugin\Metademands\Metademand;
 use Html;
@@ -93,6 +94,56 @@ class Config extends CommonDBTM
         if ($DB->tableExists($this->getTable())) {
             $this->getFromDB(1);
         }
+    }
+
+    static function getIcon()
+    {
+        return "ti ti-settings";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     */
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == __CLASS__) {
+            $item->showConfigForm();
+        }
+        return true;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return array
+     * @see CommonGLPI::defineTabs()
+     */
+    public function defineTabs($options = [])
+    {
+        $ong = [];
+
+        $this->addStandardTab(__CLASS__, $ong, $options);
+        $this->addStandardTab(Resource_Change::class, $ong, $options);
+        $this->addStandardTab(Adconfig::class, $ong, $options);
+        //badges
+        if (Plugin::isPluginActive("badges")
+            && Plugin::isPluginActive("metademands")) {
+            $this->addStandardTab(ResourceBadge::class, $ong, $options);
+        }
+        if (Plugin::isPluginActive("metademands")) {
+            $this->addStandardTab(ConfigHabilitation::class, $ong, $options);
+        }
+        $this->addStandardTab(TicketCategory::class, $ong, $options);
+        $this->addStandardTab(TransferEntity::class, $ong, $options);
+        return $ong;
     }
 
     /**

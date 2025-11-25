@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use CommonGLPI;
 use Dropdown;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Metademand_Resource;
@@ -53,6 +54,7 @@ class ConfigHabilitation extends CommonDBTM
 
     const ACTION_ADD = 1;
     const ACTION_DELETE = 2;
+
 
     /**
      * Return the localized name of the current Type
@@ -100,11 +102,38 @@ class ConfigHabilitation extends CommonDBTM
     static function getNameAction($action)
     {
         switch ($action) {
-            case self::ACTION_ADD :
+            case self::ACTION_ADD:
                 return __('Declare a super habilitation', 'resources');
-            case self::ACTION_DELETE :
+            case self::ACTION_DELETE:
                 return __('Remove a super habilitation', 'resources');
         }
+    }
+
+
+    static function getIcon()
+    {
+        return "ti ti-lock-down";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showFormHabilitation();
+        }
+        return true;
     }
 
     /**
@@ -205,8 +234,8 @@ class ConfigHabilitation extends CommonDBTM
             $rand = mt_rand();
             echo "<div class='left'>";
             if ($canedit) {
-                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
+                Html::openMassiveActionsForm('massHabilitation' .  $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massHabilitation' .  $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
             echo "<table class='tab_cadre_fixe'>";
@@ -215,7 +244,7 @@ class ConfigHabilitation extends CommonDBTM
             echo "</tr>";
             echo "<tr>";
             if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('massHabilitation' .  $rand) . "</th>";
             }
             echo "<th>" . __('Name') . "</th>";
             echo "<th>" . __('Action') . "</th>";
@@ -229,9 +258,9 @@ class ConfigHabilitation extends CommonDBTM
                 }
                 //DATA LINE
                 echo "<td>" . Dropdown::getDropdownName(
-                        'glpi_plugin_metademands_metademands',
-                        $field['plugin_metademands_metademands_id']
-                    ) . "</td>";
+                    'glpi_plugin_metademands_metademands',
+                    $field['plugin_metademands_metademands_id']
+                ) . "</td>";
                 echo "<td>" . self::getNameAction($field['action']) . "</td>";
                 echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
                 echo "</tr>";
@@ -251,13 +280,9 @@ class ConfigHabilitation extends CommonDBTM
      */
     function showMenu()
     {
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-        echo "<h3><div class='alert alert-secondary' role='alert'>";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo self::getTypeName(2);
-        echo "</div></h3>";
+        $title = self::getTypeName(2);
+        Wizard::WizardHeader($title);
 
         echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
@@ -290,5 +315,4 @@ class ConfigHabilitation extends CommonDBTM
         echo "</tr></table>";
         echo "</div>";
     }
-
 }

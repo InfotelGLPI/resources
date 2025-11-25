@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Config;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Change;
@@ -43,7 +44,7 @@ if (isset($_POST['add_entity_category'])) {
     Html::back();
 } else {
     $resource_change->checkGlobal(READ);
-    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, ResourcesConfig::class);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Config::class);
     $resource_change->showFormActions();
     Html::footer();
 }

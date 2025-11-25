@@ -42,7 +42,6 @@ if (Session::getCurrentInterface() == 'central') {
     }
 }
 
-
 $resource = new Resource();
 $resource_change = new Resource_Change();
 

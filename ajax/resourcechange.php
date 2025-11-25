@@ -37,16 +37,16 @@ if (isset($_POST['load_button_changeresources'])) {
     $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
 } elseif (isset($_POST['action'])) {
     switch ($_POST['action']) {
-        case "loadEntity" :
+        case "loadEntity":
             $resource_change->loadEntity($_POST['actions_id']);
             break;
-        case "loadCategory" :
+        case "loadCategory":
             $resource_change->displayCategory($_POST['entities_id']);
             break;
-        case "loadButtonAdd" :
+        case "loadButtonAdd":
             $resource_change->displayButtonAdd($_POST['itilcategories_id']);
             break;
-        case "clean" :
+        case "clean":
             echo "";
             break;
     }

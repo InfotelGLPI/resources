@@ -57,8 +57,8 @@ if (isset($_POST['add_metademand'])) {
         && $_POST['action']) {
         $habilitation->add($_POST);
     }
+    Html::back();
 
-    Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/confighabilitation.form.php?config");
 } elseif (isset($_GET['menu'])) {
     if ($habilitation->canView() || Session::haveRight("config", UPDATE)) {
         $habilitation->showMenu();

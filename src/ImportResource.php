@@ -1259,7 +1259,7 @@ class ImportResource extends CommonDBTM
                     }
                     $config = new Config();
                     if (($config->getField('sales_manager') != "")) {
-                        echo "<div class=\"bt-feature col-md-3\">";
+                        echo "<div class='col-md-3 mb-2'>";
                         $tableProfileUser = Profile_User::getTable();
                         $tableUser = User::getTable();
                         $profile_User = new  Profile_User();

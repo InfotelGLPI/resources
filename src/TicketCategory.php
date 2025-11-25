@@ -31,9 +31,11 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use Html;
+use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -44,6 +46,16 @@ if (!defined('GLPI_ROOT')) {
  */
 class TicketCategory extends CommonDBTM
 {
+
+    /**
+     * functions mandatory
+     * getTypeName(), canCreate(), canView()
+     * */
+    static function getTypeName($nb = 0)
+    {
+        return __('Category of created tickets', 'resources');
+    }
+
     /**
      * @param $category
      *
@@ -87,13 +99,42 @@ class TicketCategory extends CommonDBTM
         }
     }
 
+    static function getIcon()
+    {
+        return "ti ti-file-info";
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(self::getTypeName());
+    }
+
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     * @see CommonGLPI::displayTabContentForItem()
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Config::class) {
+            $self = new self();
+            $self->showConfigForm();
+        }
+        return true;
+    }
+
     /**
      * @param $target
      */
-    public function showConfigForm($target)
+    public function showConfigForm()
     {
         $dbu = new DbUtils();
         $categories = $dbu->getAllDataFromTable($this->getTable());
+
+        $target = Toolbox::getItemTypeFormURL(Config::class);
         if (!empty($categories)) {
             echo "<div class='center'>";
             echo "<form method='post' action='" . $target . "'>";

@@ -2259,7 +2259,7 @@ class Resource extends CommonDBTM
         echo "<td>";
         $config = new Config();
         if (($config->getField('sales_manager') != "")) {
-            echo "<div class=\"bt-feature col-md-3\">";
+            echo "<div class='col-md-3 mb-2'>";
             $tableProfileUser = Profile_User::getTable();
             $tableUser = User::getTable();
             $profile_User = new  Profile_User();
@@ -3253,32 +3253,24 @@ class Resource extends CommonDBTM
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-            echo "<h3><div class='alert alert-secondary' role='alert' >";
-            echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
-            echo __('Resources management', 'resources');
-            echo "</div></h3>";
+            echo "<div class='card container' style='min-width: 80%;'>";
 
-            echo "<div id ='content'>";
-            echo "<div class='bt-container resources_wizard_resp'>";
-            echo "<div class='bt-block bt-features' >";
+            Wizard::WizardHeader();
+
+            echo "<div class='card-body'>";
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php\">";
 
-            echo "<div class=\"row plugin_resources_wizard_margin \">";
-            echo "<div class=\"bt-feature col-md-12 \" >";
-            echo "<h4 class=\"bt-title-divider\">";
-            echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png' alt='removeresource'/>&nbsp;";
-            echo __('Declare a departure', 'resources');
-            echo "</h4></div></div>";
+            $title = __('Declare a departure', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png";
+            Wizard::WizardTitle($img, $title);
 
-            echo "<div class=\"row\">";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='row'>";
+            echo "<div class='col-md-4 mb-2'>";
             echo self::getTypeName(1);
             echo "</div>";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             $available_contracttype = false;
             $contracttypeprofile = new Contracttypeprofile();
             if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
@@ -3318,12 +3310,12 @@ class Resource extends CommonDBTM
             echo "</div>";
             echo "<div id='leaving_input'>";
 
-            echo "<div class=\"row\">";
+            echo "<div class='row'>";
 
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             echo __('Departure date', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             Html::showDateField("date_end", ['value' => $_POST["date_end"]]);
             echo "</div>";
             echo "</div>";
@@ -3342,11 +3334,11 @@ class Resource extends CommonDBTM
 
 
 //            if (countDistinctElementsInTable(LeavingReason::getTable(), 'id')) {
-//                echo "<div class=\"row\">";
-//                echo "<div class=\"bt-feature col-md-4 \">";
+//                echo "<div class='row'>";
+//                echo "<div class='col-md-4 mb-2'>";
 //                echo LeavingReason::getTypeName(1);
 //                echo "</div>";
-//                echo "<div class=\"bt-feature col-md-4 \">";
+//                echo "<div class='col-md-4 mb-2'>";
 //                Dropdown::show(LeavingReason::class,
 //                               ['entity' => $_SESSION['glpiactiveentities']]);
 //                echo "</div>";
@@ -3356,8 +3348,8 @@ class Resource extends CommonDBTM
 
             echo "<div class='center' id='resource_pdf' colspan='2'></div>";
 
-            echo "<div class=\"row\">";
-            echo "<div class=\"bt-feature col-md-12 \">";
+            echo "<div class='row'>";
+            echo "<div class='col-md-12 mb-2'>";
             echo "<div class='next'>";
             echo Html::submit(
                 __s('Declare a departure', 'resources'),
@@ -3367,7 +3359,6 @@ class Resource extends CommonDBTM
             echo "</div></div>";
 
             Html::closeForm();
-            echo "</div>";
             echo "</div>";
             echo "</div>";
         } else {
@@ -3387,32 +3378,24 @@ class Resource extends CommonDBTM
         $dbu = new DbUtils();
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-            echo "<h3><div class='alert alert-secondary' role='alert' >";
-            echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
-            echo __('Resources management', 'resources');
-            echo "</div></h3>";
+            echo "<div class='card container' style='min-width: 80%;'>";
 
-            echo "<div id ='content'>";
-            echo "<div class='bt-container resources_wizard_resp'> ";
-            echo "<div class='bt-block bt-features' > ";
+            Wizard::WizardHeader();
+
+            echo "<div class='card-body'>";
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php\">";
 
-            echo "<div class=\"row plugin_resources_wizard_margin \">";
-            echo "<div class=\"bt-feature col-md-12 \" >";
-            echo "<h4 class=\"bt-title-divider\">";
-            echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png' alt='changeresource'/>&nbsp;";
-            echo __('Declare a change', 'resources');
-            echo "</h4></div></div>";
+            $title = __('Declare a change', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png";
+            Wizard::WizardTitle($img, $title);
 
-            echo "<div class=\"row\">";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='row'>";
+            echo "<div class='col-md-4 mb-2'>";
             echo self::getTypeName(1);
             echo "</div>";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             self::dropdown([
                 'name' => 'plugin_resources_resources_id',
                 'display' => true,
@@ -3424,11 +3407,11 @@ class Resource extends CommonDBTM
             echo "</div>";
 
             //choose actions
-            echo "<div class=\"row\">";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='row'>";
+            echo "<div class='col-md-4 mb-2'>";
             echo __('Actions to be taken', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             $actions = Resource_Change::getAllActions();
             $actionProfile = new Actionprofile();
             if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
@@ -3471,7 +3454,6 @@ class Resource extends CommonDBTM
             Html::closeForm();
             echo "</div>";
             echo "</div>";
-            echo "</div>";
         } else {
             echo "<div class='center'>" . __('No results found') . "</div>";
         }
@@ -3490,53 +3472,46 @@ class Resource extends CommonDBTM
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
             echo "<div class='center'>";
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//            echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-            echo "<h3><div class='alert alert-secondary' role='alert' >";
-            echo "<i class='" . self::getIcon() . "'></i>&nbsp;";
-            echo __('Resources management', 'resources');
-            echo "</div></h3>";
+            echo "<div class='card container' style='min-width: 80%;'>";
 
-            echo "<div id ='content'>";
-            echo "<div class='bt-container resources_wizard_resp'>";
-            echo "<div class='bt-block bt-features' >";
+            Wizard::WizardHeader();
+
+            echo "<div class='card-body'>";
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php\">";
 
             if (isset($plugin_resources_resources_id)) {
                 $resource = new Resource();
                 if ($resource->getFromDB($plugin_resources_resources_id)) {
-                    echo "<div class=\"row plugin_resources_wizard_margin \">";
-                    echo "<div class=\"bt-feature col-md-12 \" >";
-                    echo "<h4 class=\"bt-title-divider\">";
-                    echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png' alt='transferresource'/>&nbsp;";
-                    echo __('Declare a transfer', 'resources');
-                    echo "</h4></div></div>";
 
-                    echo "<div class=\"row\">";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    $title = __('Declare a transfer', 'resources');
+                    $img = PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png";
+                    Wizard::WizardTitle($img, $title);
+
+                    echo "<div class='row'>";
+                    echo "<div class='col-md-4 mb-2'>";
                     echo self::getTypeName(1);
                     echo "</div>";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    echo "<div class='col-md-4 mb-2'>";
                     echo self::getResourceName($plugin_resources_resources_id);
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"row\">";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    echo "<div class='row'>";
+                    echo "<div class='col-md-4 mb-2'>";
                     echo __('Current entity', 'resources');
                     echo "</div>";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    echo "<div class='col-md-4 mb-2'>";
                     echo Dropdown::getDropdownName('glpi_entities', $resource->fields['entities_id']);
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"row\">";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    echo "<div class='row'>";
+                    echo "<div class='col-md-4 mb-2'>";
                     echo __('Target entity', 'resources') . " <span class='red'>*</span>";
                     echo "</div>";
-                    echo "<div class=\"bt-feature col-md-4 \">";
+                    echo "<div class='col-md-4 mb-2'>";
                     $transferentity = new TransferEntity();
                     $data = $transferentity->find();
                     $elements = [Dropdown::EMPTY_VALUE];
@@ -3550,8 +3525,8 @@ class Resource extends CommonDBTM
                     echo "</div>";
                     echo "</div>";
 
-                    echo "<div class=\"row\">";
-                    echo "<div class=\"bt-feature col-md-12 \">";
+                    echo "<div class='row'>";
+                    echo "<div class='col-md-12 mb-2'>";
                     echo "<div class='next'>";
                     echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                     echo Html::submit(
@@ -3562,7 +3537,6 @@ class Resource extends CommonDBTM
                     echo "</div></div>";
 
                     Html::closeForm();
-                    echo "</div>";
                     echo "</div>";
                     echo "</div>";
                 }

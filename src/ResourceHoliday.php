@@ -294,14 +294,8 @@ class ResourceHoliday extends CommonDBTM
      */
     function showMenu()
     {
-        global $CFG_GLPI;
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
-
-        echo "<h3><div class='alert alert-secondary' role='alert'>";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo __('Forced holiday management', 'resources');
-        echo "</div></h3>";
+        $title = __('Forced holiday management', 'resources');
+        Wizard::WizardHeader($title);
 
         echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
 
@@ -341,36 +335,28 @@ class ResourceHoliday extends CommonDBTM
         global $CFG_GLPI;
 
         $this->initForm($ID, $options);
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_main.css");
-//        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/style_bootstrap_ticket.css");
 
-        echo "<h3><div class='alert alert-secondary' role='alert' >";
-        echo "<i class='ti ti-friends'></i>&nbsp;";
-        echo __('Resources management', 'resources');
-        echo "</div></h3>";
+        echo "<div class='card container' style='min-width: 80%;'>";
 
-        echo "<div id ='content'>";
-        echo "<div class='bt-container resources_wizard_resp'> ";
-        echo "<div class='bt-block bt-features' > ";
+        $title = __('Forced holiday management', 'resources');
+        Wizard::WizardHeader($title);
+
+        echo "<div class='card-body'>";
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceholiday.form.php\">";
 
-        echo "<div class=\"row plugin_resources_wizard_margin\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
-        echo "<h4 class=\"bt-title-divider\">";
-        echo "<img class='resources_wizard_resp_img' src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png' alt='holidayresource'/>&nbsp;";
         $title = __('Declare a forced holiday', 'resources');
         if ($ID > 0) {
             $title = __('Detail of the forced holiday', 'resources');
         }
-        echo $title;
-        echo "</h4></div></div>";
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png";
+        Wizard::WizardTitle($img, $title);
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo Resource::getTypeName(1);
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'display' => true,
@@ -380,29 +366,29 @@ class ResourceHoliday extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Begin date');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('End date');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
         echo __('Comments');
         echo "</div>";
-        echo "<div class=\"bt-feature col-md-4 \">";
+        echo "<div class='col-md-4 mb-2'>";
         echo Html::textarea([
             'name' => 'comment',
             'value' => $this->fields["comment"],
@@ -413,8 +399,8 @@ class ResourceHoliday extends CommonDBTM
         echo "</div>";
         echo "</div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
         echo "<div class='preview'>";
         echo "<a href=\"./resourceholiday.form.php\">";
         echo __('Declare a forced holiday', 'resources');
@@ -425,8 +411,8 @@ class ResourceHoliday extends CommonDBTM
         echo "</div>";
         echo "</div></div>";
 
-        echo "<div class=\"row\">";
-        echo "<div class=\"bt-feature col-md-12 \">";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
         echo "<div class='next'>";
 
         if ($ID > 0) {
@@ -445,7 +431,7 @@ class ResourceHoliday extends CommonDBTM
                 ['name' => 'deleteholidayresources', 'class' => 'btn btn-primary']
             );
         } else {
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'addholidayresources', 'class' => 'btn btn-primary']);
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'addholidayresources', 'class' => 'btn btn-success']);
         }
 
         echo "</div>";
@@ -453,7 +439,6 @@ class ResourceHoliday extends CommonDBTM
 
         Html::closeForm();
 
-        echo "</div>";
         echo "</div>";
         echo "</div>";
     }
