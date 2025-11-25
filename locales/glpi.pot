@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 13:21+0000\n"
+"POT-Creation-Date: 2025-11-25 13:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1474,7 +1474,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2587
+#: hook.php:2644
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1642,7 +1642,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2345 src/Resource_Item.php:971
+#: hook.php:2402 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
@@ -2525,15 +2525,15 @@ msgid_plural "Work Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2644 src/LinkAd.php:852
+#: hook.php:2701 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2690
+#: hook.php:2747
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2626 hook.php:2672 src/LinkAd.php:850
+#: hook.php:2683 hook.php:2729 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
