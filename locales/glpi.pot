@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 15:13+0000\n"
+"POT-Creation-Date: 2025-11-25 17:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -325,8 +325,7 @@ msgstr ""
 msgid "Available contract type"
 msgstr ""
 
-#: src/ResourceBadge.php:73 src/ResourceBadge.php:264 src/Menu.php:220
-#: src/Menu.php:225
+#: src/ResourceBadge.php:73 src/ResourceBadge.php:264 src/Menu.php:193
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -348,7 +347,7 @@ msgid_plural "Budget costs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:338 src/Menu.php:341 src/Menu.php:478
+#: src/Menu.php:263 src/Menu.php:372
 msgid "Budget management"
 msgstr ""
 
@@ -525,7 +524,7 @@ msgstr ""
 msgid "Checked"
 msgstr ""
 
-#: src/Checklist.php:79 src/Profile.php:304 src/Menu.php:494
+#: src/Checklist.php:79 src/Profile.php:304 src/Menu.php:388
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] ""
@@ -613,7 +612,7 @@ msgstr ""
 msgid "Compare GLPI Resources with File"
 msgstr ""
 
-#: src/Menu.php:401
+#: src/Menu.php:297
 msgid "Configure Imports"
 msgstr ""
 
@@ -774,12 +773,11 @@ msgstr ""
 msgid "Declaration of resource transfer OK"
 msgstr ""
 
-#: src/Resource.php:3385 src/Menu.php:106 src/Menu.php:109
+#: src/Resource.php:3385 src/Menu.php:133
 msgid "Declare a change"
 msgstr ""
 
-#: src/Resource.php:3262 src/Resource.php:3356 src/Menu.php:121
-#: src/Menu.php:124
+#: src/Resource.php:3262 src/Resource.php:3356 src/Menu.php:137
 msgid "Declare a departure"
 msgstr ""
 
@@ -806,11 +804,11 @@ msgstr ""
 msgid "Declare a transfer"
 msgstr ""
 
-#: src/Menu.php:90 src/Menu.php:93
+#: src/Menu.php:129
 msgid "Declare an arrival"
 msgstr ""
 
-#: src/Menu.php:313 src/Menu.php:316
+#: src/Menu.php:251
 msgid "Declare an employment"
 msgstr ""
 
@@ -926,7 +924,7 @@ msgstr ""
 msgid "Different to GLPI"
 msgstr ""
 
-#: src/Menu.php:443
+#: src/Menu.php:337
 msgid "Directory"
 msgstr ""
 
@@ -1002,7 +1000,7 @@ msgid_plural "Employments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:325 src/Menu.php:328 src/Menu.php:466
+#: src/Menu.php:256 src/Menu.php:360
 msgid "Employment management"
 msgstr ""
 
@@ -1027,7 +1025,7 @@ msgstr ""
 msgid "Employment volume (€)"
 msgstr ""
 
-#: src/Menu.php:298
+#: src/Menu.php:275
 msgid "Employments / budgets management"
 msgstr ""
 
@@ -1110,7 +1108,7 @@ msgid "Forced holiday declaration of a resource performed"
 msgstr ""
 
 #: src/NotificationTargetResource.php:1230
-#: src/NotificationTargetResource.php:1615 src/Menu.php:197 src/Menu.php:200
+#: src/NotificationTargetResource.php:1615 src/Menu.php:173
 #: src/ResourceHoliday.php:297
 msgid "Forced holiday management"
 msgstr ""
@@ -1233,7 +1231,7 @@ msgid_plural "Imports"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:517
+#: src/Menu.php:411
 msgid "Import configuration"
 msgstr ""
 
@@ -1245,7 +1243,7 @@ msgstr ""
 msgid "Import file"
 msgstr ""
 
-#: src/Menu.php:370
+#: src/Menu.php:307
 msgid "Import resources"
 msgstr ""
 
@@ -1391,7 +1389,7 @@ msgid_plural "List Employments / Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:352 src/Menu.php:355 src/Menu.php:470
+#: src/Menu.php:270 src/Menu.php:364
 msgid "List Employments / Resources"
 msgstr ""
 
@@ -1399,13 +1397,13 @@ msgstr ""
 msgid "List of badges"
 msgstr ""
 
-#: src/Menu.php:458 src/ResourceHoliday.php:317 src/ResourceHoliday.php:320
+#: src/Menu.php:352 src/ResourceHoliday.php:317 src/ResourceHoliday.php:320
 #: src/ResourceHoliday.php:405
 msgid "List of forced holidays"
 msgstr ""
 
 #: src/ResourceResting.php:327 src/ResourceResting.php:330
-#: src/ResourceResting.php:437 src/ResourceResting.php:534 src/Menu.php:450
+#: src/ResourceResting.php:437 src/ResourceResting.php:534 src/Menu.php:344
 msgid "List of non contract periods"
 msgstr ""
 
@@ -1654,8 +1652,7 @@ msgid "Non contract period declaration of a resource performed"
 msgstr ""
 
 #: src/ResourceResting.php:294 src/NotificationTargetResource.php:1182
-#: src/NotificationTargetResource.php:1605 src/Profile.php:323 src/Menu.php:178
-#: src/Menu.php:184
+#: src/NotificationTargetResource.php:1605 src/Profile.php:323 src/Menu.php:161
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] ""
@@ -1712,11 +1709,11 @@ msgstr ""
 msgid "Other resource notification"
 msgstr ""
 
-#: src/Menu.php:239
+#: src/Menu.php:238
 msgid "Others actions"
 msgstr ""
 
-#: src/Menu.php:145
+#: src/Menu.php:202
 msgid "Others declarations"
 msgstr ""
 
@@ -1815,7 +1812,7 @@ msgid_plural "Public statuses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:407
+#: src/Menu.php:302
 msgid "Purge imported resources"
 msgstr ""
 
@@ -2058,7 +2055,7 @@ msgstr ""
 msgid "Sales managers selection : only these users with these profiles"
 msgstr ""
 
-#: src/Menu.php:270 src/Menu.php:273
+#: src/Menu.php:210
 msgid "Search resources"
 msgstr ""
 
@@ -2224,7 +2221,7 @@ msgstr ""
 msgid "Tasks in progress"
 msgstr ""
 
-#: src/TaskPlanning.php:69 src/Menu.php:486
+#: src/TaskPlanning.php:69 src/Menu.php:380
 msgid "Tasks list"
 msgstr ""
 
@@ -2425,7 +2422,7 @@ msgstr[1] ""
 msgid "Unlimited number of selectable habilitations "
 msgstr ""
 
-#: src/ImportResource.php:675 src/Menu.php:379
+#: src/ImportResource.php:675 src/Menu.php:284
 msgid "Update GLPI Resources"
 msgstr ""
 
@@ -2495,11 +2492,11 @@ msgstr ""
 msgid "Validate and pre-import file"
 msgstr ""
 
-#: src/Menu.php:385
+#: src/Menu.php:288
 msgid "Verify CSV file"
 msgstr ""
 
-#: src/Menu.php:391
+#: src/Menu.php:292
 msgid "Verify GLPI resources"
 msgstr ""
 
@@ -2519,7 +2516,7 @@ msgstr ""
 msgid "View leaving information"
 msgstr ""
 
-#: src/Config.php:488 src/Menu.php:259 src/Menu.php:262 src/Menu.php:511
+#: src/Config.php:488 src/Menu.php:233 src/Menu.php:405
 msgid "View my resources as a commercial"
 msgstr ""
 
