@@ -1410,7 +1410,7 @@ msgstr "Lier une tâche"
 
 #: src/Linkmetademand.php:60
 msgid "Link metademands"
-msgstr "Lier avec metademands"
+msgstr "Lier avec le plugin métademandes"
 
 #: src/Checklist.php:831 src/Checklist.php:1560
 msgid "Linked task"
