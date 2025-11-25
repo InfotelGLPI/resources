@@ -1270,7 +1270,7 @@ msgstr "Configuration des imports"
 
 #: src/Profile.php:259 src/Profile.php:357 src/Config.php:195
 msgid "Import external"
-msgstr "Import Externe"
+msgstr "Import externe"
 
 #: src/ImportResource.php:1480
 msgid "Import file"
