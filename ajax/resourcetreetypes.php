@@ -76,7 +76,7 @@ if (isset($_GET['node'])) {
                 'a_attr' => [
                     "onclick" => 'window.open("' . PLUGIN_RESOURCES_WEBDIR . '/front/' . $target .
                         '?criteria[0][field]=37&criteria[0][searchtype]=contains&criteria[0][value]=^' .
-                        rawurlencode($value) . '&itemtype=' . Resource::class . '&start=0")'
+                        rawurlencode($value) . '&itemtype=GlpiPlugin\\\Resources\\\Resource&start=0")'
                 ]
             ];
         }

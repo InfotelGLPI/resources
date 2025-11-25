@@ -4502,7 +4502,7 @@ class Resource extends CommonDBTM
         echo "<div class='left' style='width:100%'>";
         $root_doc = PLUGIN_RESOURCES_WEBDIR;
         $js = "   $(function() {
-                  $.getScript('$root_doc/lib/jstree/jstree.min.js', function(data, textStatus, jqxhr) {
+                  $.getScript('$root_doc/lib/jstree/jstree.js', function(data, textStatus, jqxhr) {
                      $('#tree_resourcetypes$rand').jstree({
                         // the `plugins` array allows you to configure the active plugins on this instance
                         'plugins' : ['search', 'qload'],
