@@ -386,17 +386,21 @@ class Resource extends CommonDBTM
      **/
     function rawSearchOptions()
     {
-        $tab = parent::rawSearchOptions();
 
-        unset($tab[1]);
+        $tab[] = [
+            'id' => 'common',
+            'name' => self::getTypeName(2)
+        ];
+
         $tab[] = [
             'id' => '1',
             'table' => $this->getTable(),
             'field' => 'name',
             'name' => __('Surname'),
             'datatype' => 'itemlink',
-            'massiveaction' => false,
+            'itemlink_type' => $this->getType(),
         ];
+
 
         $tab[] = [
             'id' => '2',
