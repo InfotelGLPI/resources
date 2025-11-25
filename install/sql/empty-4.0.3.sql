@@ -923,7 +923,6 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `id`                                           int unsigned NOT NULL auto_increment,
     `security_display`                             tinyint      NOT NULL default '0',
     `security_compliance`                          tinyint      NOT NULL default '0',
-    `import_external_datas`                        tinyint      NOT NULL DEFAULT '0',
     `resource_manager`                             varchar(255) NOT NULL DEFAULT '',
     `sales_manager`                                varchar(255) NOT NULL DEFAULT '',
     `create_ticket_departure`                      tinyint      NOT NULL default '0',

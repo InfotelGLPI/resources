@@ -249,16 +249,12 @@ class Profile extends \Profile
             'default_class' => 'tab_bg_2',
             'title' => __('Public service management', 'resources')
         ]);
-        $config = new Config();
-        $config->getFromDB(1);
-        if ($config->getField('import_external_datas') == 1) {
-            $importRights = $this->getAllRights(false, ['import']);
-            $profile->displayRightsChoiceMatrix($importRights, [
-                'canedit' => $canedit,
-                'default_class' => 'tab_bg_2',
-                'title' => __('Import external', 'resources')
-            ]);
-        }
+        $importRights = $this->getAllRights(false, ['import']);
+        $profile->displayRightsChoiceMatrix($importRights, [
+            'canedit' => $canedit,
+            'default_class' => 'tab_bg_2',
+            'title' => __('Import external', 'resources')
+        ]);
 
         if ($canedit
             && $closeform) {

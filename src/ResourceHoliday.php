@@ -332,25 +332,21 @@ class ResourceHoliday extends CommonDBTM
      */
     function showForm($ID, $options = [])
     {
-        global $CFG_GLPI;
 
         $this->initForm($ID, $options);
 
         echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Forced holiday management', 'resources');
-        Wizard::WizardHeader($title);
-
-        echo "<div class='card-body'>";
-
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceholiday.form.php\">";
 
         $title = __('Declare a forced holiday', 'resources');
         if ($ID > 0) {
             $title = __('Detail of the forced holiday', 'resources');
         }
         $img = PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png";
-        Wizard::WizardTitle($img, $title);
+        Wizard::WizardHeader($title, $img);
+
+        echo "<div class='card-body'>";
+
+        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceholiday.form.php\">";
 
         echo "<div class='row'>";
         echo "<div class='col-md-4 mb-2'>";

@@ -46,25 +46,22 @@ use UserTitle;
 
 class Wizard extends CommonDBTM
 {
-    public static function WizardHeader($title = "")
+    public static function WizardHeader($title = "", $img = "")
     {
 
         if (empty($title)) {
             $title = __('Resources management', 'resources');
         }
         echo "<h3 class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
-        echo "<i class='" . Resource::getIcon() . "'></i>";
+        echo "<span class='resources_wizard_resp_img'>";
+        if (empty($img)) {
+            echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
+        } else {
+            echo "<img src='" . $img . "'/>&nbsp;";
+        }
         echo $title;
+        echo "</span>";
         echo "</h3>";
-    }
-
-    public static function WizardTitle($img, $title)
-    {
-
-        echo "<h4 class='card-title'>";
-        echo "<img class='resources_wizard_resp_img' src='" . $img . "'/>&nbsp;";
-        echo $title;
-        echo "</h4>";
     }
 
     /**
@@ -80,15 +77,13 @@ class Wizard extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        self::WizardHeader();
+        $title = __('Welcome to the wizard resource', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+        self::WizardHeader($title, $img);
 
         echo "<div class='card-body'>";
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' method='post'>";
-
-        $title = __('Welcome to the wizard resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardTitle($img, $title);
 
         echo "<div class='card-text'>";
         echo __('This wizard lets you create new resources in GLPI', 'resources');
@@ -171,16 +166,14 @@ class Wizard extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        self::WizardHeader();
+        $title = __('Enter general information about the resource', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+        self::WizardHeader($title, $img);
 
         echo "<div class='card-body'>";
 
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' method='post'>";
-
-        $title = __('Enter general information about the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardTitle($img, $title);
 
         if (!$resource->canView()) {
             return false;
@@ -1030,16 +1023,14 @@ class Wizard extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            self::WizardHeader();
+            $title = __('Enter employer information about the resource', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+            self::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' method='post'>";
-
-            $title = __('Enter employer information about the resource', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-            self::WizardTitle($img, $title);
 
             $entity = $resource->fields["entities_id"];
 
@@ -1148,16 +1139,14 @@ class Wizard extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            self::WizardHeader();
+            $title = __('Enter the computing needs of the resource', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+            self::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' name=\"choice\" method='post'>";
-
-            $title = __('Enter the computing needs of the resource', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-            self::WizardTitle($img, $title);
 
             $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
             $choices = $dbu->getAllDataFromTable($choice->getTable(), $restrict);
@@ -1341,16 +1330,14 @@ class Wizard extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        self::WizardHeader();
+        $title = __('Add the photo of the resource', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+        self::WizardHeader($title, $img);
 
         echo "<div class='card-body'>";
 
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' enctype='multipart/form-data' method='post'>";
-
-        $title = __('Add the photo of the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardTitle($img, $title);
 
         if (!$ressource->canView()) {
             return false;
@@ -1452,16 +1439,14 @@ class Wizard extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            self::WizardHeader();
+            $title = __('Enter habilitations about the resource', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+            self::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
             echo "<form action='$target' method='post'>";
-
-            $title = __('Enter habilitations about the resource', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-            self::WizardTitle($img, $title);
 
             if (count($levels) > 0) {
                 $cpt = 1;
@@ -1628,16 +1613,14 @@ class Wizard extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        self::WizardHeader();
+        $title = __('Add documents to the resource', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
+        self::WizardHeader($title, $img);
 
         echo "<div class='card-body'>";
 
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
         echo "<form action='$target' enctype='multipart/form-data' method='post'>";
-
-        $title = __('Add documents to the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardTitle($img, $title);
 
         if (!$ressource->canView()) {
             return false;
@@ -1715,13 +1698,11 @@ class Wizard extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        self::WizardHeader();
-
-        echo "<div class='card-body'>";
-
         $title = __('Add recruiting informations to the resource', 'resources');
         $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardTitle($img, $title);
+        self::WizardHeader($title, $img);
+
+        echo "<div class='card-body'>";
 
         TemplateRenderer::getInstance()->display('@resources/recruitinginformation.html.twig', [
             'item' => $ressource,

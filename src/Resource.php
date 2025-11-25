@@ -3252,7 +3252,6 @@ class Resource extends CommonDBTM
     //Show form from heelpdesk to remove a resource
     function showResourcesToRemove()
     {
-        global $CFG_GLPI;
 
         $dbu = new DbUtils();
 
@@ -3260,15 +3259,13 @@ class Resource extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            Wizard::WizardHeader();
+            $title = __('Declare a departure', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png";
+            Wizard::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php\">";
-
-            $title = __('Declare a departure', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png";
-            Wizard::WizardTitle($img, $title);
 
             echo "<div class='row'>";
             echo "<div class='col-md-4 mb-2'>";
@@ -3385,15 +3382,13 @@ class Resource extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            Wizard::WizardHeader();
+            $title = __('Declare a change', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png";
+            Wizard::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php\">";
-
-            $title = __('Declare a change', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png";
-            Wizard::WizardTitle($img, $title);
 
             echo "<div class='row'>";
             echo "<div class='col-md-4 mb-2'>";
@@ -3479,7 +3474,9 @@ class Resource extends CommonDBTM
 
             echo "<div class='card container' style='min-width: 80%;'>";
 
-            Wizard::WizardHeader();
+            $title = __('Declare a transfer', 'resources');
+            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png";
+            Wizard::WizardHeader($title, $img);
 
             echo "<div class='card-body'>";
 
@@ -3488,10 +3485,6 @@ class Resource extends CommonDBTM
             if (isset($plugin_resources_resources_id)) {
                 $resource = new Resource();
                 if ($resource->getFromDB($plugin_resources_resources_id)) {
-
-                    $title = __('Declare a transfer', 'resources');
-                    $img = PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png";
-                    Wizard::WizardTitle($img, $title);
 
                     echo "<div class='row'>";
                     echo "<div class='col-md-4 mb-2'>";

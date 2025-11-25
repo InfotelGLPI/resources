@@ -103,7 +103,19 @@ class Config extends CommonDBTM
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        return self::createTabEntry(self::getTypeName());
+        if (!$withtemplate) {
+            switch ($item->getType()) {
+                case __CLASS__:
+                    $ong[1] = self::createTabEntry(__('Wizard', 'resources'));
+                    $ong[2] = self::createTabEntry(__('Arrival / Departure workflow', 'resources'));
+                    $ong[3] = self::createTabEntry(__('Other', 'resources'));
+                    if (Plugin::isPluginActive('metademands')) {
+                        $ong[4] = self::createTabEntry(__('Link with metademand', 'resources'));
+                    }
+
+                    return $ong;
+            }
+        }
     }
     /**
      * @param CommonGLPI $item
@@ -114,8 +126,25 @@ class Config extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+
         if ($item->getType() == __CLASS__) {
-            $item->showConfigForm();
+            switch ($tabnum) {
+                case 1:
+                    $item->showWizardForm();
+                    break;
+
+                case 2:
+                    $item->showWorkflowForm();
+                    break;
+
+                case 3:
+                    $item->showOtherForm();
+                    break;
+
+                case 4:
+                    $item->showMetademandsForm();
+                    break;
+            }
         }
         return true;
     }
@@ -133,6 +162,8 @@ class Config extends CommonDBTM
         $this->addStandardTab(__CLASS__, $ong, $options);
         $this->addStandardTab(Resource_Change::class, $ong, $options);
         $this->addStandardTab(Adconfig::class, $ong, $options);
+        $this->addStandardTab(TicketCategory::class, $ong, $options);
+        $this->addStandardTab(TransferEntity::class, $ong, $options);
         //badges
         if (Plugin::isPluginActive("badges")
             && Plugin::isPluginActive("metademands")) {
@@ -141,15 +172,11 @@ class Config extends CommonDBTM
         if (Plugin::isPluginActive("metademands")) {
             $this->addStandardTab(ConfigHabilitation::class, $ong, $options);
         }
-        $this->addStandardTab(TicketCategory::class, $ong, $options);
-        $this->addStandardTab(TransferEntity::class, $ong, $options);
+
         return $ong;
     }
 
-    /**
-     * @return bool
-     */
-    function showConfigForm()
+    function showWizardForm()
     {
         if (!$this->canView()) {
             return false;
@@ -164,8 +191,39 @@ class Config extends CommonDBTM
             $this->getFromDB(1);
             echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
 
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='2'>" . self::getTypeName() . "</th></tr>";
+            echo "<div class='center'>";
+            echo "<table class='tab_cadre_fixe'>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='3'>";
+            echo __('Wizard', 'resources');
+            echo "</th>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __("If other contract are available don't display without contract", 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("allow_without_contract", $this->fields["allow_without_contract"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Default contract template selected', 'resources');
+            echo "</td>";
+            echo "<td>";
+            $resource = new Resource();
+            $resource->dropdownTemplate(
+                "plugin_resources_resourcetemplates_id",
+                $this->fields["plugin_resources_resourcetemplates_id"],
+                false
+            );
+//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+            echo "</td>";
+            echo "</tr>";
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
@@ -174,28 +232,24 @@ class Config extends CommonDBTM
             echo "<td>";
             Dropdown::showYesNo('security_display', $this->fields['security_display']);
             echo "</td>";
+            echo "<td><span class='alert alert-warning'>" ;
+            echo __('Display of two additional security fields on a resource', 'resources')
+                . "</span>";
+            echo "</td>";
             echo "</tr>";
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
             echo __('Security compliance management', 'resources');
-            echo "<br><span class='red'>" . sprintf(
-                    __('%1$s <br> %2$s'),
-                    __('Display of four additional security fields in the clients', 'resources'),
-                    __('(If all four fields are enabled, the client is compliant with security)', 'resources')
-                ) . "</span>";
             echo "</td>";
             echo "<td>";
             Dropdown::showYesNo('security_compliance', $this->fields['security_compliance']);
             echo "</td>";
-            echo "</tr>";
-
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Import external', 'resources');
-            echo "</td>";
-            echo "<td>";
-            Dropdown::showYesNo('import_external_datas', $this->fields['import_external_datas']);
+            echo "<td><span class='alert alert-warning'>" . sprintf(
+                    __('%1$s <br> %2$s'),
+                    __('Display of four additional security fields in the clients', 'resources'),
+                    __('(If all four fields are enabled, the client is compliant with security)', 'resources')
+                ) . "</span>";
             echo "</td>";
             echo "</tr>";
 
@@ -252,166 +306,6 @@ class Config extends CommonDBTM
 
             echo "</td>";
             echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Create a ticket with departure', 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            Dropdown::showYesNo("create_ticket_departure", $this->fields["create_ticket_departure"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Category of departure ticket', 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            ITILCategory::dropdown(["name" => "categories_id", "value" => $this->fields["categories_id"]]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('All checklist done is mandatory for arrival and departure to close ticket', 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            Dropdown::showYesNo("mandatory_checklist", $this->fields["mandatory_checklist"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Create or delete user in ldap is mandatory to close ticket', 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            Dropdown::showYesNo("mandatory_adcreation", $this->fields["mandatory_adcreation"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __("If other contract are available don't display without contract", 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            Dropdown::showYesNo("allow_without_contract", $this->fields["allow_without_contract"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Default contract template selected', 'resources');
-            echo "</td>";
-            echo "<td>";
-            $resource = new Resource();
-            $resource->dropdownTemplate(
-                "plugin_resources_resourcetemplates_id",
-                $this->fields["plugin_resources_resourcetemplates_id"],
-                false
-            );
-//         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Resource state for working people', 'resources');
-            echo "</td>";
-            echo "<td>";
-            ResourceState::dropdown(
-                [
-                    'name' => 'plugin_resources_resourcestates_id_arrival',
-                    'value' => $this->fields['plugin_resources_resourcestates_id_arrival']
-                ]
-            );
-            //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Resource state for left people', 'resources');
-            echo "</td>";
-            echo "<td>";
-            ResourceState::dropdown(
-                [
-                    'name' => 'plugin_resources_resourcestates_id_departure',
-                    'value' => $this->fields['plugin_resources_resourcestates_id_departure']
-                ]
-            );
-            //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
-
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Change checklists for resources during a contract change', 'resources');
-            echo "</td>";
-            echo "<td>";
-            Dropdown::showYesNo('reaffect_checklist_change', $this->fields['reaffect_checklist_change']);
-
-            echo "</td>";
-            echo "</tr>";
-
-            if (Plugin::isPluginActive('metademands')) {
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo __('Use metademand for resources changes', 'resources');
-                echo "</td>";
-                echo "<td>";
-
-                $meta = new Metademand();
-                $options['empty_value'] = true;
-                $data = $meta->listMetademands(false, $options);
-                echo Dropdown::showFromArray(
-                    'use_meta_for_changes',
-                    $data,
-                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]
-                );
-
-                echo "</td>";
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo __('Use metademand for leaving resources', 'resources');
-                echo "</td>";
-                echo "<td>";
-
-                $meta = new Metademand();
-                $options['empty_value'] = true;
-                $data = $meta->listMetademands(false, $options);
-                echo Dropdown::showFromArray(
-                    'use_meta_for_leave',
-                    $data,
-                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']]
-                );
-
-                echo "</td>";
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo __('Remove habilitation when update resource', 'resources');
-                echo "</td>";
-                echo "<td>";
-                Dropdown::showYesNo("remove_habilitation_on_update", $this->fields["remove_habilitation_on_update"]);
-                echo "</td>";
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo __('Display habilitation resource with dropdown', 'resources');
-                echo "</td>";
-                echo "<td>";
-                Dropdown::showYesNo("display_habilitations_txt", $this->fields["display_habilitations_txt"]);
-                echo "</td>";
-                echo "</tr>";
-            }
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
@@ -433,6 +327,162 @@ class Config extends CommonDBTM
                 echo "</tr>";
             }
 
+            echo "<tr>";
+            echo "<td class='tab_bg_2 center' colspan='3'>";
+            echo Html::hidden('id', ['value' => 1]);
+            echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
+            echo "</td>";
+            echo "</tr>";
+            echo "</table></div>";
+            Html::closeForm();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    function showWorkflowForm()
+    {
+        if (!$this->canView()) {
+            return false;
+        }
+        if (!$this->canCreate()) {
+            return false;
+        }
+
+        $canedit = true;
+
+        if ($canedit) {
+            $this->getFromDB(1);
+            echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
+
+            echo "<div class='center'>";
+            echo "<table class='tab_cadre_fixe'>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='3'>";
+            echo __('Arrival / Departure workflow', 'resources');
+            echo "</th>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Create a ticket with departure', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("create_ticket_departure", $this->fields["create_ticket_departure"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Category of departure ticket', 'resources');
+            echo "</td>";
+            echo "<td>";
+            ITILCategory::dropdown(["name" => "categories_id", "value" => $this->fields["categories_id"]]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('All checklist done is mandatory for arrival and departure to close ticket', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("mandatory_checklist", $this->fields["mandatory_checklist"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Create or delete user in ldap is mandatory to close ticket', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("mandatory_adcreation", $this->fields["mandatory_adcreation"]);
+            echo "</td>";
+            echo "</tr>";
+
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Resource state for working people', 'resources');
+            echo "</td>";
+            echo "<td>";
+            ResourceState::dropdown(
+                [
+                    'name' => 'plugin_resources_resourcestates_id_arrival',
+                    'value' => $this->fields['plugin_resources_resourcestates_id_arrival']
+                ]
+            );
+            //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Resource state for left people', 'resources');
+            echo "</td>";
+            echo "<td>";
+            ResourceState::dropdown(
+                [
+                    'name' => 'plugin_resources_resourcestates_id_departure',
+                    'value' => $this->fields['plugin_resources_resourcestates_id_departure']
+                ]
+            );
+            //         Dropdown::showYesNo("plugin_resources_resourcestemplates_id",$this->fields["plugin_resources_resourcestemplates_id"]);
+
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Change checklists for resources during a contract change', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('reaffect_checklist_change', $this->fields['reaffect_checklist_change']);
+
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr>";
+            echo "<td class='tab_bg_2 center' colspan='3'>";
+            echo Html::hidden('id', ['value' => 1]);
+            echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
+            echo "</td>";
+            echo "</tr>";
+            echo "</table></div>";
+            Html::closeForm();
+        }
+    }
+
+
+    /**
+     * @return bool
+     */
+    function showOtherForm()
+    {
+        if (!$this->canView()) {
+            return false;
+        }
+        if (!$this->canCreate()) {
+            return false;
+        }
+
+        $canedit = true;
+
+        if ($canedit) {
+            $this->getFromDB(1);
+            echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
+
+            echo "<div class='center'>";
+            echo "<table class='tab_cadre_fixe'>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='3'>";
+            echo __('Other', 'resources');
+            echo "</th>";
+            echo "</tr>";
+
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
             echo __('Hide/Show elements', 'resources') . " : " . __('View my resources as a commercial', 'resources');
@@ -443,7 +493,108 @@ class Config extends CommonDBTM
             echo "</tr>";
 
             echo "<tr>";
-            echo "<td class='tab_bg_2 center' colspan='2'>";
+            echo "<td class='tab_bg_2 center' colspan='3'>";
+            echo Html::hidden('id', ['value' => 1]);
+            echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
+            echo "</td>";
+            echo "</tr>";
+            echo "</table></div>";
+            Html::closeForm();
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    function showMetademandsForm()
+    {
+        if (!$this->canView()) {
+            return false;
+        }
+        if (!$this->canCreate()) {
+            return false;
+        }
+
+        $canedit = true;
+
+        if ($canedit) {
+            $this->getFromDB(1);
+            echo "<form name='form' method='post' action='" . $this->getFormURL() . "'>";
+
+            echo "<div class='center'>";
+            echo "<table class='tab_cadre_fixe'>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='3'>";
+            echo __('Link with metademand', 'resources');
+            echo "</th>";
+            echo "</tr>";
+
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use metademand for resources changes', 'resources');
+            echo "</td>";
+            echo "<td>";
+
+            $meta = new Metademand();
+            $options['empty_value'] = true;
+            $data = $meta->listMetademands(true, $options);
+            echo Dropdown::showFromArray(
+                'use_meta_for_changes',
+                $data,
+                ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]
+            );
+
+            echo "</td>";
+            echo "<td><span class='alert alert-warning'>" ;
+            echo __('Replace change actions management', 'resources')
+                . "</span>";
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use metademand for leaving resources', 'resources');
+            echo "</td>";
+            echo "<td>";
+
+            $meta = new Metademand();
+            $options['empty_value'] = true;
+            $data = $meta->listMetademands(true, $options);
+            echo Dropdown::showFromArray(
+                'use_meta_for_leave',
+                $data,
+                ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']]
+            );
+
+            echo "</td>";
+            echo "<td><span class='alert alert-warning'>" ;
+            echo __('Replace default form for departure', 'resources')
+                . "</span>";
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Remove habilitation when update resource', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("remove_habilitation_on_update", $this->fields["remove_habilitation_on_update"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Display habilitation resource with dropdown', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo("display_habilitations_txt", $this->fields["display_habilitations_txt"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr>";
+            echo "<td class='tab_bg_2 center' colspan='3'>";
             echo Html::hidden('id', ['value' => 1]);
             echo Html::submit(_sx('button', 'Update'), ['name' => 'update_setup', 'class' => 'btn btn-primary']);
             echo "</td>";
@@ -469,13 +620,6 @@ class Config extends CommonDBTM
         return $this->fields['security_compliance'];
     }
 
-    /**
-     * @return mixed
-     */
-    function useImportExternalDatas()
-    {
-        return $this->fields['import_external_datas'];
-    }
 
     /**
      * @param $input

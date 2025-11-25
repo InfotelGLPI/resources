@@ -120,7 +120,7 @@ class ResourceBadge extends CommonDBTM
     {
         if ($item->getType() == Config::class) {
             $self = new self();
-            $self->showConfigForm();
+            $self->showFormBadge();
         }
         return true;
     }
@@ -128,18 +128,18 @@ class ResourceBadge extends CommonDBTM
     /**
      * Display of the link to configure the badge interface
      */
-    function showConfigForm()
-    {
-        echo "<br>";
-        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
-        echo "<tr class='tab_bg_1'><td class='center'>";
-        echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
-        echo "</td></tr></table></div>";
-        Html::closeForm();
-        echo "<br>";
-    }
+//    function showConfigForm()
+//    {
+//        echo "<br>";
+//        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
+//        echo "<div class='center'><table class='tab_cadre_fixe'>";
+//        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
+//        echo "<tr class='tab_bg_1'><td class='center'>";
+//        echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
+//        echo "</td></tr></table></div>";
+//        Html::closeForm();
+//        echo "<br>";
+//    }
 
     /**
      * Choose link with metademand
@@ -182,7 +182,7 @@ class ResourceBadge extends CommonDBTM
                     Toolbox::getItemTypeFormURL(ResourceBadge::class) . "'>";
 
                 echo "<div class='center'><table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th>" . Metademand_Resource::getTypeName(2) . "</th></tr>";
+                echo "<tr class='tab_bg_1'><th>" . Metademand_Resource::getTypeName(1) . "</th></tr>";
                 echo "<tr class='tab_bg_1'><td class='center'>";
                 echo Metademand::getTypeName(1) . '&nbsp;';
                 Dropdown::show(Metademand::class, [
@@ -297,29 +297,22 @@ class ResourceBadge extends CommonDBTM
      */
     function showWizardForm()
     {
-        $title = _n('Badge management', 'Badges management', 2, 'resources');
+
+        echo "<div class='card container' style='min-width: 80%;'>";
+
+        $title = __('Badge restitution', 'resources');
         Wizard::WizardHeader($title);
 
-        echo "<div class='center'>";
+        echo "<div class='card-body'>";
+
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php\">";
 
-        echo "<table class='' style='margin-top:1px;'>";
-        echo "<tr>";
-        echo "<td class='plugin_resources_wizard_left_area' valign='top'>";
-        echo "</td>";
-
-        echo "<td class='plugin_resources_wizard_right_area' style='width:500px' valign='top'>";
-
-        echo "<div class='plugin_resources_wizard_title'>";
-        echo __('Badge restitution', 'resources');
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
+        echo Resource::getTypeName(1);
         echo "</div>";
 
-        echo "<table>";
-        //choose resources
-        echo "<tr class='plugin_resources_wizard_explain'>";
-        echo "<td>" . Resource::getTypeName(1) . "</td>";
-
-        echo "<td class='left'>";
+        echo "<div class='col-md-4 mb-2'>";
         $rand = Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'display' => true,
@@ -337,6 +330,7 @@ class ResourceBadge extends CommonDBTM
             $params,
             'dropdown_plugin_resources_resources_id' . $rand
         );
+        echo ";";
         $params = ['action' => 'cleanButtonRestitution'];
         Ajax::updateItemJsCode(
             'plugin_resources_button_restitution',
@@ -347,26 +341,27 @@ class ResourceBadge extends CommonDBTM
         echo "}";
 
         echo "</script>";
-        echo "</td></tr>";
+        echo "</div>";
+        echo "</div>";
 
-        //tr for badge
-        echo "<tr class='plugin_resources_wizard_explain' id='plugin_resources_badge'>";
-        echo "</td></tr>";
+        //div for badge
+        echo "<div id='plugin_resources_badge'>";
+        echo "</div>";
 
-        echo "</table>";
-        echo "</div></td>";
-        echo "</tr>";
+        echo "<div class='row'>";
+        echo "<div class='col-md-12 mb-2'>";
 
-        echo "<tr><td class='plugin_resources_wizard_button' colspan='2'>";
         echo "<div class='preview'>";
         echo "<a href=\"" . PLUGIN_BADGES_WEBDIR . "/front/badge.php\">";
         echo __('List of badges', 'resources');
         echo "</a>";
         echo "</div>";
-        echo "<div class='next' id='plugin_resources_button_restitution'>";
 
+        echo "<div class='next' id='plugin_resources_button_restitution'>";
         echo "</div>";
-        echo "</td></tr></table>";
+
+        echo "</div></div>";
+
         Html::closeForm();
 
         echo "</div>";
@@ -379,9 +374,13 @@ class ResourceBadge extends CommonDBTM
      */
     function loadBadge($plugin_resources_resources_id)
     {
-        global $CFG_GLPI;
 
-        echo "<td>" . Badge::getTypeName(1) . "</td>";
+        echo "<div class='row'>";
+        echo "<div class='col-md-4 mb-2'>";
+
+        echo Badge::getTypeName(1);
+        echo "</div>";
+        echo "<div class='col-md-4 mb-2'>";
 
         $condition = [
             "plugin_resources_resources_id" => $plugin_resources_resources_id,
@@ -397,7 +396,6 @@ class ResourceBadge extends CommonDBTM
             }
         }
 
-        echo "<td class='left'>";
         $rand = Badge::dropdown([
             'name' => 'badges_id',
             'condition' => $crit,
@@ -417,6 +415,8 @@ class ResourceBadge extends CommonDBTM
         echo "}";
 
         echo "</script>";
+        echo "</div>";
+        echo "</div>";
     }
 
     /**

@@ -581,13 +581,6 @@ class Adconfig extends CommonDBTM
         return $this->fields['security_compliance'];
     }
 
-    /**
-     * @return mixed
-     */
-    function useImportExternalDatas()
-    {
-        return $this->fields['import_external_datas'];
-    }
 
     function getArrayAttributes()
     {

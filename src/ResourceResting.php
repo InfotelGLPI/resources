@@ -349,19 +349,16 @@ class ResourceResting extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
-        Wizard::WizardHeader($title);
-
-        echo "<div class='card-body'>";
-
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
-
         $title = __('Declare a non contract period', 'resources');
         if ($ID > 0) {
             $title = __('Detail of non contract period', 'resources');
         }
         $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
-        Wizard::WizardTitle($img, $title);
+        Wizard::WizardHeader($title, $img);
+
+        echo "<div class='card-body'>";
+
+        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
 
         echo "<div class='row'>";
         echo "<div class='col-md-4 mb-2'>";
@@ -486,16 +483,13 @@ class ResourceResting extends CommonDBTM
 
         echo "<div class='card container' style='min-width: 80%;'>";
 
-        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
-        Wizard::WizardHeader($title);
+        $title = __('Declaring the end of non contract periods', 'resources');
+        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
+        Wizard::WizardHeader($title, $img);
 
         echo "<div class='card-body'>";
 
         echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
-
-        $title = __('Declaring the end of non contract periods', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
-        Wizard::WizardTitle($img, $title);
 
         echo "<div class='row'>";
         echo "<div class='col-md-4 mb-2'>";

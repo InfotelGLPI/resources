@@ -32,7 +32,6 @@ use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Choice;
 use GlpiPlugin\Resources\Employee;
 use GlpiPlugin\Resources\Resource_Item;
-use GlpiPlugin\Resources\TicketCategory;
 use GlpiPlugin\Resources\Task;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
@@ -51,8 +50,8 @@ $checklistconfig = new Checklistconfig();
 $employee = new Employee();
 $choice = new Choice();
 $resource_item = new Resource_Item();
-$cat = new TicketCategory();
 $task = new Task();
+
 /////////////////////////////////resource from helpdesk///////////////////////////////
 
 if (isset($_POST["secondary_services"])) {

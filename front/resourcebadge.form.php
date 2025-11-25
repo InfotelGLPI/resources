@@ -56,7 +56,7 @@ if (Plugin::isPluginActive("badges")) {
         $badge->check(-1, UPDATE, $_POST);
         $badge->add($_POST);
 
-        Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php?config");
+        Html::back();
     } elseif (isset($_GET['menu'])) {
         if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
             $badge->showMenu();

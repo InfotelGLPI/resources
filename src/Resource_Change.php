@@ -1455,7 +1455,6 @@ class Resource_Change extends CommonDBTM
      */
     function showFormActions()
     {
-        global $CFG_GLPI;
 
         if (!$this->canView()) {
             return false;
@@ -1463,6 +1462,10 @@ class Resource_Change extends CommonDBTM
         if (!$this->canCreate()) {
             return false;
         }
+
+        echo "<div class='alert alert-warning'>" ;
+        echo __('Define entity & ticket category for each change action', 'resources')
+            . "</div>";
 
         echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
         echo "<div class='center'><table class='tab_cadre_fixe'>";

@@ -68,8 +68,8 @@ class Metademand extends CommonGLPI
     public static function addDropdownFieldItems()
     {
         return [Resource::getTypeName(2) => [Resource::class => Resource::getTypeName()]];
-        //		return [Resource::class,
-        //		];
+        //      return [Resource::class,
+        //      ];
     }
 
     /**
@@ -148,9 +148,9 @@ class Metademand extends CommonGLPI
             $res .= "<tr><td>";
             $res .= __('Link a checklist in', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
-                    'If the value selected equals the value to check, the checklist in will be add',
-                    'resources'
-                ) . '</span>';
+                'If the value selected equals the value to check, the checklist in will be add',
+                'resources'
+            ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
             $res .= Linkmetademand::showChecklistInDropdown(
@@ -164,9 +164,9 @@ class Metademand extends CommonGLPI
             $res .= "<tr><td>";
             $res .= __('Link a checklist out', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
-                    'If the value selected equals the value to check, the checklist out will be add',
-                    'resources'
-                ) . '</span>';
+                'If the value selected equals the value to check, the checklist out will be add',
+                'resources'
+            ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
             $res .= Linkmetademand::showChecklistOutDropdown(
@@ -181,9 +181,9 @@ class Metademand extends CommonGLPI
                 $res .= "<tr><td>";
                 $res .= __('Habilitation', 'resources');
                 $res .= '</br><span class="metademands_wizard_comments">' . __(
-                        'If the value selected equals the value to check, the habilitation will be add',
-                        'resources'
-                    ) . '</span>';
+                    'If the value selected equals the value to check, the habilitation will be add',
+                    'resources'
+                ) . '</span>';
                 $res .= '</td>';
                 $res .= "<td>";
                 $res .= Linkmetademand::showHabilitationDropdown(
@@ -199,9 +199,9 @@ class Metademand extends CommonGLPI
             $res .= "<tr><td>";
             $res .= __('Leaving resource', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
-                    'If yes, the resource will be declared as leaving',
-                    'resources'
-                ) . '</span>';
+                'If yes, the resource will be declared as leaving',
+                'resources'
+            ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
             $res .= Dropdown::showYesNo("is_leaving_resource", $p['is_leaving_resource'], -1, ['display' => false]);
@@ -274,9 +274,9 @@ class Metademand extends CommonGLPI
                     $habilitationToDel = [];
                     foreach ($line["form"] as $id => $v) {
                         if (isset($values["fields"]) && is_array($values["fields"]) && array_key_exists(
-                                $v["id"],
-                                $values["fields"]
-                            )) {
+                            $v["id"],
+                            $values["fields"]
+                        )) {
                             $Pfield = new Linkmetademand();
                             if ($Pfield->getFromDBByCrit(["plugin_metademands_fields_id" => $v["id"]])) {
                                 $checkvalues = Field::_unserialize($Pfield->fields["check_value"]);
@@ -287,20 +287,20 @@ class Metademand extends CommonGLPI
                                 if (isset($checkvalues) && is_array($checkvalues)) {
                                     foreach ($checkvalues as $k => $checkvalue) {
                                         if ((!is_array(
-                                                    $values["fields"][$v["id"]]
-                                                ) && $checkvalue == $values["fields"][$v["id"]])
+                                            $values["fields"][$v["id"]]
+                                        ) && $checkvalue == $values["fields"][$v["id"]])
                                             || (is_array($values["fields"][$v["id"]]) && in_array(
-                                                    $checkvalue,
-                                                    $values["fields"][$v["id"]]
-                                                ))
+                                                $checkvalue,
+                                                $values["fields"][$v["id"]]
+                                            ))
                                             || (isset($values["fields"][$v["id"] . "#red"]) && in_array(
-                                                    $checkvalue,
-                                                    $values["fields"][$v["id"] . "#red"]
-                                                ))
+                                                $checkvalue,
+                                                $values["fields"][$v["id"] . "#red"]
+                                            ))
                                             || (isset($values["fields"][$v["id"] . "#green"]) && in_array(
-                                                    $checkvalue,
-                                                    $values["fields"][$v["id"] . "#green"]
-                                                ))) {
+                                                $checkvalue,
+                                                $values["fields"][$v["id"] . "#green"]
+                                            ))) {
                                             if ($checklist_in[$k] != 0) {
                                                 $c = $checklist_in[$k];
                                                 $checklistConfig->addResourceChecklist(
@@ -322,25 +322,25 @@ class Metademand extends CommonGLPI
                                                 $idResource = $resource->getField('id');
                                                 if ($config_data['show_form_changes']
                                                     && ((isset($values["fields"][$v["id"] . "#red"]) && in_array(
-                                                                $checkvalue,
-                                                                $values["fields"][$v["id"] . "#red"]
-                                                            ))
+                                                        $checkvalue,
+                                                        $values["fields"][$v["id"] . "#red"]
+                                                    ))
                                                         || (isset($values["fields"][$v["id"] . "#green"]) && in_array(
-                                                                $checkvalue,
-                                                                $values["fields"][$v["id"] . "#green"]
-                                                            )))) {
-                                                    if (isset($values["fields"][$v["id"] . "#green"]) && in_array(
                                                             $checkvalue,
                                                             $values["fields"][$v["id"] . "#green"]
-                                                        )) {
+                                                        )))) {
+                                                    if (isset($values["fields"][$v["id"] . "#green"]) && in_array(
+                                                        $checkvalue,
+                                                        $values["fields"][$v["id"] . "#green"]
+                                                    )) {
                                                         $habilitationConfig->add([
                                                             'plugin_resources_resources_id' => $idResource,
                                                             'plugin_resources_habilitations_id' => $c,
                                                         ]);
                                                     } elseif (isset($values["fields"][$v["id"] . "#red"]) && in_array(
-                                                            $checkvalue,
-                                                            $values["fields"][$v["id"] . "#red"]
-                                                        )) {
+                                                        $checkvalue,
+                                                        $values["fields"][$v["id"] . "#red"]
+                                                    )) {
                                                         $sons = $habilitationResource->find(
                                                             ["ancestors_cache" => ['LIKE', "%\"$c\"%"]]
                                                         );
@@ -409,16 +409,18 @@ class Metademand extends CommonGLPI
                     }
                     if ($config->fields["remove_habilitation_on_update"] == 1) {
                         if ($habilitationToDelKeep && !$config_data['show_form_changes']) {
-                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=" . $idResource . " AND id NOT IN(" . implode(
-                                    ",",
-                                    $habilitationToDelKeep
-                                ) . ")";
+                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
+       WHERE plugin_resources_resources_id=" . $idResource . " AND id NOT IN(" . implode(
+                                ",",
+                                $habilitationToDelKeep
+                            ) . ")";
                             $DB->doQuery($query);
                         } elseif ($habilitationToDel && $config_data['show_form_changes']) {
-                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations WHERE plugin_resources_resources_id=" . $idResource . " AND id IN(" . implode(
-                                    ",",
-                                    $habilitationToDel
-                                ) . ")";
+                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
+       WHERE plugin_resources_resources_id=" . $idResource . " AND id IN(" . implode(
+                                ",",
+                                $habilitationToDel
+                            ) . ")";
                             $DB->doQuery($query);
                         }
                     }

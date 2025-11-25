@@ -128,6 +128,16 @@ class Menu extends CommonDBTM
             echo " </table>";
         }
 
+        $confighab = new ConfigHabilitation();
+        if (!$confighab->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity'], 'action' => ConfigHabilitation::ACTION_ADD])) {
+            $canhabilitation = false;
+        }
+
+        $configbadge = new ResourceBadge();
+        if (!$configbadge->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity']])) {
+            $canbadges = false;
+        }
+
         if ($canresting || $canholiday || $canbadges || $canhabilitation) {
 
             echo "<br>";

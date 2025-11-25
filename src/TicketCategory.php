@@ -135,6 +135,12 @@ class TicketCategory extends CommonDBTM
         $categories = $dbu->getAllDataFromTable($this->getTable());
 
         $target = Toolbox::getItemTypeFormURL(Config::class);
+
+        echo "<div class='alert alert-warning'>" ;
+        echo __('Define ticket category from checklist creation', 'resources')
+            . "</span>";
+        echo "</div>";
+
         if (!empty($categories)) {
             echo "<div class='center'>";
             echo "<form method='post' action='" . $target . "'>";

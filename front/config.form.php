@@ -27,12 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-use GlpiPlugin\Resources\Adconfig;
 use GlpiPlugin\Resources\Config;
-use GlpiPlugin\Resources\ConfigHabilitation;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
-use GlpiPlugin\Resources\Resource_Change;
 use GlpiPlugin\Resources\ResourceBadge;
 use GlpiPlugin\Resources\TicketCategory;
 use GlpiPlugin\Resources\TransferEntity;
