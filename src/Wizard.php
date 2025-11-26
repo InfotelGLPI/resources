@@ -46,7 +46,7 @@ use UserTitle;
 
 class Wizard extends CommonDBTM
 {
-    public static function WizardHeader($title = "", $img = "")
+    public static function WizardHeader($title = "", $img = "", $icon = "")
     {
 
         if (empty($title)) {
@@ -55,7 +55,11 @@ class Wizard extends CommonDBTM
         echo "<h3 class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
         echo "<span class='resources_wizard_resp_img'>";
         if (empty($img)) {
-            echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
+            if (empty($icon)) {
+                echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
+            } else {
+                echo "<i class='" . $icon . "'></i>&nbsp;";
+            }
         } else {
             echo "<img src='" . $img . "'/>&nbsp;";
         }

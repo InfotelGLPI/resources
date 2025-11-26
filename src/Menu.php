@@ -31,116 +31,52 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use CommonGLPI;
 use Plugin;
 use Session;
 use Toolbox;
 
-class Menu extends CommonDBTM
+class Menu extends CommonGLPI
 {
     public static $rightname = 'plugin_resources';
 
-    /**
-     * Return the localized name of the current Type
-     * Should be overloaded in each new class
-     *
-     * @return string
-     **/
-    public static function getTypeName($nb = 0)
+    private const RESOURCES_TAB = 1;
+    private const SSII_TAB = 2;
+
+    private const PUBLIC_TAB = 3;
+
+    private const IMPORT_TAB = 4;
+
+    public function defineTabs($options = []): array
     {
-        return _n('Human resource', 'Human resources', $nb, 'resources');
+        $tabs = [];
+        $this->addStandardTab(self::class, $tabs, $options);
+        $tabs['no_all_tab'] = true;
+
+        return $tabs;
     }
 
-    public static function canView(): bool
-    {
-        if (static::$rightname) {
-            return Session::haveRight(static::$rightname, READ);
-        }
-        return false;
-    }
-
-    public static function showMenuBlock($title, $actions)
-    {
-        echo "<div class='container'>";
-
-        Wizard::WizardHeader($title);
-
-        echo "<div class='row'>";
-
-        foreach ($actions as $action => $labels) {
-
-            echo "<div class='col-md-2 mb-2'>";
-
-            echo "<div class='card' style='min-height: 140px;'>";
-            echo "<div class='card-body'>";
-            echo "<div class='card-text'>";
-
-            echo "<a href='" . $labels['url'] . "'>";
-            if (isset($labels['icon']) && !empty($labels['icon'])) {
-                echo "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
-            } else if (isset($labels['pics']) && !empty($labels['pics'])) {
-                echo "<img src='" . $labels['pics'] . "'>";
-            }
-            echo "<br>" . $labels['title'] . "</a>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-
-            echo "</div>";
+    public function getTabNameForItem(
+        CommonGLPI $item,
+        $withtemplate = 0
+    ): array|string {
+        // Only available on self
+        if (!($item instanceof self)) {
+            return '';
         }
 
-        echo "</div>";
-
-        echo "</div>";
-    }
-    /**
-     * Display menu
-     */
-    public static function showMenu(CommonDBTM $item)
-    {
-
-        echo "<div class='center'>";
+        if ($item->canCreate() || $item->canView()) {
+            $name = self::getTypeName(2);
+            $tabs[self::RESOURCES_TAB] = self::createTabEntry(
+                text: $name,
+                icon: Resource::getIcon()
+            );
+        }
 
         $canresting = Session::haveright('plugin_resources_resting', UPDATE);
         $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
         $canhabilitation = Session::haveright('plugin_resources_habilitation', UPDATE);
-        $canemployment = Session::haveright('plugin_resources_employment', UPDATE);
-        $canseeemployment = Session::haveright('plugin_resources_employment', READ);
-        $canseebudget = Session::haveright('plugin_resources_budget', READ);
         $canbadges = Session::haveright('plugin_badges', READ) && Plugin::isPluginActive("badges");
-        $canImport = Session::haveright('plugin_resources_import', READ);
-
-        if ($item->canCreate()) {
-
-            $config = new Config();
-            if (!empty($config->fields["use_meta_for_changes"])
-                && Plugin::isPluginActive('metademands')) {
-                $url_change = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
-            } else {
-                $url_change = PLUGIN_RESOURCES_WEBDIR . '/front/resource.change.php';
-            }
-            if (!empty($config->fields["use_meta_for_leave"])
-                && Plugin::isPluginActive('metademands')) {
-                $url_remove = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
-            } else {
-                $url_remove = PLUGIN_RESOURCES_WEBDIR . '/front/resource.remove.php';
-            }
-
-            $actions = ['new' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
-                                'title' => __('Declare an arrival','resources'),
-                                 'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php'
-                                ],
-                        'change' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
-                            'title' => __('Declare a change','resources'),
-                            'url' => $url_change
-                        ],
-                        'remove' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/removeresource.png',
-                            'title' => __('Declare a departure','resources'),
-                            'url' => $url_remove
-                        ]
-                    ];
-
-            self::showMenuBlock("", $actions);
-        }
 
         $confighab = new ConfigHabilitation();
         if (!$confighab->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity'], 'action' => ConfigHabilitation::ACTION_ADD])) {
@@ -151,9 +87,144 @@ class Menu extends CommonDBTM
         if (!$configbadge->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity']])) {
             $canbadges = false;
         }
+        $canemployment = Session::haveright('plugin_resources_employment', UPDATE);
+        $canseeemployment = Session::haveright('plugin_resources_employment', READ);
+        $canseebudget = Session::haveright('plugin_resources_budget', READ);
+        $canImport = Session::haveright('plugin_resources_import', READ);
 
-        $actions_declare = [];
         if ($canresting || $canholiday || $canbadges || $canhabilitation) {
+            $name = __('Others declarations', 'resources');
+            $tabs[self::SSII_TAB] = self::createTabEntry(
+                text: $name,
+                icon: 'ti ti-writing'
+            );
+        }
+
+        if ($canemployment || $canseeemployment || $canseebudget) {
+            $name = __('Employments / budgets management', 'resources');
+            $tabs[self::PUBLIC_TAB] = self::createTabEntry(
+                text: $name,
+                icon:'ti ti-buildings'
+            );
+        }
+
+        if ($canImport) {
+            $name = __('Import resources', 'resources');
+            $tabs[self::IMPORT_TAB] = self::createTabEntry(
+                text: $name,
+                icon: 'ti ti-settings'
+            );
+        }
+
+        return $tabs;
+    }
+
+    public static function displayTabContentForItem(
+        CommonGLPI $item,
+        $tabnum = 1,
+        $withtemplate = 0
+    ): bool {
+        if (!($item instanceof self)) {
+            return false;
+        }
+
+        $canresting = Session::haveright('plugin_resources_resting', UPDATE);
+        $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
+        $canhabilitation = Session::haveright('plugin_resources_habilitation', UPDATE);
+        $canbadges = Session::haveright('plugin_badges', READ) && Plugin::isPluginActive("badges");
+
+        $confighab = new ConfigHabilitation();
+        if (!$confighab->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity'], 'action' => ConfigHabilitation::ACTION_ADD])) {
+            $canhabilitation = false;
+        }
+
+        $configbadge = new ResourceBadge();
+        if (!$configbadge->getFromDBByCrit(['entities_id' => $_SESSION['glpiactive_entity']])) {
+            $canbadges = false;
+        }
+        $canemployment = Session::haveright('plugin_resources_employment', UPDATE);
+        $canseeemployment = Session::haveright('plugin_resources_employment', READ);
+        $canseebudget = Session::haveright('plugin_resources_budget', READ);
+        $canImport = Session::haveright('plugin_resources_import', READ);
+
+
+        if ($tabnum == self::RESOURCES_TAB) {
+
+            if ($item->canCreate()) {
+                $config = new Config();
+                if (!empty($config->fields["use_meta_for_changes"])
+                    && Plugin::isPluginActive('metademands')) {
+                    $url_change = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_changes"];
+                } else {
+                    $url_change = PLUGIN_RESOURCES_WEBDIR . '/front/resource.change.php';
+                }
+                if (!empty($config->fields["use_meta_for_leave"])
+                    && Plugin::isPluginActive('metademands')) {
+                    $url_remove = PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?step=2&metademands_id=" . $config->fields["use_meta_for_leave"];
+                } else {
+                    $url_remove = PLUGIN_RESOURCES_WEBDIR . '/front/resource.remove.php';
+                }
+
+                $actions = [
+                    'new' => [
+                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                        'title' => __('Declare an arrival', 'resources'),
+                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php'
+                    ],
+                    'change' => [
+                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                        'title' => __('Declare a change', 'resources'),
+                        'url' => $url_change
+                    ],
+                    'remove' => [
+                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/removeresource.png',
+                        'title' => __('Declare a departure', 'resources'),
+                        'url' => $url_remove
+                    ]
+                ];
+
+                self::showMenuBlock("", "ti ti-user", $actions);
+            }
+            if ($item->canView()) {
+
+                $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
+                    'title' => __('Search resources', 'resources'),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset'
+                ],
+                    'directory' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
+                        'title' => Directory::getTypeName(1),
+                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php'
+                    ]
+                ];
+
+                $config = new Config();
+                if (!$config->fields["hide_view_commercial_resource"]) {
+
+                    $opt = [];
+                    $opt['reset'] = 'reset';
+                    $opt['criteria'][0]['field'] = 27;
+                    $opt['criteria'][0]['searchtype'] = 'equals';
+                    $opt['criteria'][0]['value'] = Session::getLoginUserID();
+                    $opt['criteria'][0]['link'] = 'AND';
+
+                    $url_commercial = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
+
+                    $actions_others['commercial'] =  ['pics' => '',
+                        'icon' => 'ti ti-tie',
+                        'title' => __('View my resources as a commercial', 'resources'),
+                        'url' => $url_commercial
+                    ];
+                }
+
+                $title = __('Others actions', 'resources');
+                self::showMenuBlock($title, "ti ti-list", $actions_others);
+
+            }
+            return true;
+
+        } else if ($tabnum == self::SSII_TAB && ($canresting || $canholiday || $canbadges || $canhabilitation)) {
+
+            $actions_declare = [];
 
             if ($canresting) {
                 $actions_declare['resting'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/deleteresting.png",
@@ -200,58 +271,19 @@ class Menu extends CommonDBTM
             }
 
             $title_declare = __('Others declarations', 'resources');
-            self::showMenuBlock($title_declare, $actions_declare);
-
-        }
-
-        if ($item->canView()) {
-
-            $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
-                'title' => __('Search resources', 'resources'),
-                'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset'
-            ],
-                'directory' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
-                    'title' => Directory::getTypeName(1),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php'
-                ]
-            ];
-
-            $config = new Config();
-            if (!$config->fields["hide_view_commercial_resource"]) {
-
-                $opt = [];
-                $opt['reset'] = 'reset';
-                $opt['criteria'][0]['field'] = 27;
-                $opt['criteria'][0]['searchtype'] = 'equals';
-                $opt['criteria'][0]['value'] = Session::getLoginUserID();
-                $opt['criteria'][0]['link'] = 'AND';
-
-                $url_commercial = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php?" . Toolbox::append_params($opt, '&amp;');
-
-                $actions_others['commercial'] =  ['pics' => '',
-                    'icon' => 'ti ti-tie',
-                    'title' => __('View my resources as a commercial', 'resources'),
-                    'url' => $url_commercial
-                ];
-            }
-
-            $title = __('Others actions', 'resources');
-            self::showMenuBlock($title, $actions_others);
-
-        }
-
-        if ($canseeemployment || $canseebudget) {
+            self::showMenuBlock($title_declare, "ti ti-writing", $actions_declare);
+        } else if ($tabnum == self::PUBLIC_TAB && ($canseeemployment || $canseebudget)) {
 
             $actions_employment = [];
 
+            if ($canemployment) {
+                //Add an employment
+                $actions_employment['new'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png",
+                    'title' =>  __('Declare an employment', 'resources'),
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php'
+                ];
+            }
             if ($canseeemployment) {
-                if ($canemployment) {
-                    //Add an employment
-                    $actions_employment['new'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png",
-                        'title' =>  __('Declare an employment', 'resources'),
-                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php'
-                    ];
-                }
                 $actions_employment['listemployment'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png",
                     'title' =>  __('Employment management', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.php'
@@ -273,12 +305,9 @@ class Menu extends CommonDBTM
             }
 
             $title_employment = __('Employments / budgets management', 'resources');
-            self::showMenuBlock($title_employment, $actions_employment);
+            self::showMenuBlock($title_employment, "ti ti-buildings", $actions_employment);
 
-        }
-
-        if ($canImport) {
-
+        } else if ($tabnum == self::IMPORT_TAB && $canImport) {
             $actions_import = ['update' => ['pics' => '',
                 'icon' => 'ti ti-user-edit',
                 'title' =>  __('Update GLPI Resources', 'resources'),
@@ -305,11 +334,66 @@ class Menu extends CommonDBTM
             ];
 
             $title_import = __('Import resources', 'resources');
-            self::showMenuBlock($title_import, $actions_import);
+            self::showMenuBlock($title_import, "ti ti-settings", $actions_import);
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the localized name of the current Type
+     * Should be overloaded in each new class
+     *
+     * @return string
+     **/
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Human resource', 'Human resources', $nb, 'resources');
+    }
+
+    public static function canView(): bool
+    {
+        if (static::$rightname) {
+            return Session::haveRight(static::$rightname, READ);
+        }
+        return false;
+    }
+
+    public static function showMenuBlock($title, $icon, $actions)
+    {
+        echo "<div class='container'>";
+
+        Wizard::WizardHeader($title, "", $icon);
+
+        echo "<div class='row'>";
+
+        foreach ($actions as $action => $labels) {
+
+            echo "<div class='col-md-2 mb-2 center'>";
+
+            echo "<div class='card' style='min-height: 140px;'>";
+            echo "<div class='card-body'>";
+            echo "<div class='card-text'>";
+
+            echo "<a href='" . $labels['url'] . "'>";
+            if (isset($labels['icon']) && !empty($labels['icon'])) {
+                echo "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
+            } else if (isset($labels['pics']) && !empty($labels['pics'])) {
+                echo "<img src='" . $labels['pics'] . "'>";
+            }
+            echo "<br>" . $labels['title'] . "</a>";
+            echo "</div>";
+            echo "</div>";
+            echo "</div>";
+
+            echo "</div>";
         }
 
         echo "</div>";
+
+        echo "</div>";
     }
+
 
     /**
      * get menu content
