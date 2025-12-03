@@ -1305,9 +1305,9 @@ function plugin_resources_addSelect($type, $ID, $num)
         default:
             switch ($table . "." . $field) {
                 case "glpi_plugin_resources_resources.name":
-                    return $DB::quoteName("$table.$field AS META_{$num}").",".
-                        $DB::quoteName("$table.$field AS ITEM_{$num}").",".
-                        $DB::quoteName("$table.id AS ITEM_{$num}_2");
+//                    return $DB::quoteName("$table.$field AS META_{$num}").",".
+//                        $DB::quoteName("$table.$field AS ITEM_{$num}").",".
+//                        $DB::quoteName("$table.id AS ITEM_{$num}_2");
 
 //                    $SELECT = [
 //                        $DB::quoteName("$table.$field AS META_{$num}"),
