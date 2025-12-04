@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -32,25 +33,19 @@ namespace GlpiPlugin\Resources;
 use CommonGLPI;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
-
 /**
  * Class Servicecatalog
  */
 class Servicecatalog extends CommonGLPI
 {
+    public static $rightname = 'plugin_resources';
 
-    static $rightname = 'plugin_resources';
-
-    var $dohistory = false;
+    public $dohistory = false;
 
     /**
      * @return bool
      */
-    static function canUse()
+    public static function canUse()
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -58,9 +53,16 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getMenuLink()
+    public static function getMenuLink()
     {
-        global $CFG_GLPI;
+        return PLUGIN_RESOURCES_WEBDIR . "/front/menu.php";
+    }
+
+    /**
+     * @return string
+     */
+    public static function getNavBarLink()
+    {
 
         return PLUGIN_RESOURCES_WEBDIR . "/front/menu.php";
     }
@@ -68,17 +70,7 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getNavBarLink()
-    {
-        global $CFG_GLPI;
-
-        return PLUGIN_RESOURCES_WEBDIR . "/front/menu.php";
-    }
-
-    /**
-     * @return string
-     */
-    static function getMenuLogo()
+    public static function getMenuLogo()
     {
         return Resource::getIcon();
     }
@@ -86,7 +78,7 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getMenuTitle()
+    public static function getMenuTitle()
     {
         return __('Manage human resources', 'resources');
     }
@@ -95,7 +87,7 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getMenuComment()
+    public static function getMenuComment()
     {
         return __('Manage human resources', 'resources');
     }
@@ -103,7 +95,7 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getLinkList()
+    public static function getLinkList()
     {
         return "";
     }
@@ -111,7 +103,7 @@ class Servicecatalog extends CommonGLPI
     /**
      * @return string
      */
-    static function getList()
+    public static function getList()
     {
         return "";
     }

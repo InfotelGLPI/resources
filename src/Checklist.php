@@ -1271,10 +1271,10 @@ class Checklist extends CommonDBTM
                             self::RESOURCES_CHECKLIST_IN
                         );
                     }
-                    $iterator = $DB->request($query_checklists);
+                    $iteratorc = $DB->request($query_checklists);
 
                     echo "<table class='tab_cadre' width='100%'>";
-                    foreach ($iterator as $data_checklists) {
+                    foreach ($iteratorc as $data_checklists) {
                         echo "<tr class='tab_bg_1'><td>";
                         if ($data_checklists["tag"]) {
                             echo "<span class='plugin_resources_date_over_color'>";

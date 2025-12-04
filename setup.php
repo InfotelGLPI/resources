@@ -51,10 +51,10 @@ use GlpiPlugin\Resources\RuleContracttype;
 use GlpiPlugin\Resources\RuleContracttypeCollection;
 use GlpiPlugin\Resources\RuleContracttypeHidden;
 use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
-use GlpiPlugin\Resources\ServiceCatalog;
+use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.2');
+define('PLUGIN_RESOURCES_VERSION', '4.0.3');
 
 global $CFG_GLPI;
 
@@ -134,7 +134,7 @@ function plugin_init_resources()
 
         if (Session::haveRight("plugin_servicecatalog", READ)
             || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
-            $PLUGIN_HOOKS['servicecatalog']['resources'] = [ServiceCatalog::class];
+            $PLUGIN_HOOKS['servicecatalog']['resources'] = [Servicecatalog::class];
         }
 
         if ((Session::haveRight("plugin_resources", READ)
@@ -195,10 +195,10 @@ function plugin_init_resources()
                 "lib/plugins/jquery.scroll.js",
             ];
 
-//            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
-//                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
-//                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
-//            }
+            //            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
+            //                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
+            //                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
+            //            }
         }
 
 
@@ -210,8 +210,8 @@ function plugin_init_resources()
             $PLUGIN_HOOKS['pre_item_purge']['resources'] = [
                 Resource::class => [
                     Notification::class,
-                    'purgeNotification'
-                ]
+                    'purgeNotification',
+                ],
             ];
             $PLUGIN_HOOKS['plugin_datainjection_populate']['resources'] = 'plugin_datainjection_populate_resources';
         }
