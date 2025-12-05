@@ -452,18 +452,17 @@ class Resource extends CommonDBTM
             'datatype' => 'text'
         ];
 
-        if (Session::getCurrentInterface() != 'central') {
-            $tab[] = [
-                'id' => '8',
-                'table' => 'glpi_plugin_resources_resources_items',
-                'field' => 'items_id',
-                'name' => _n('Associated item', 'Associated items', 2),
-                'massiveaction' => false,
-                'forcegroupby' => false,
-                'nosearch' => false,
-                'joinparams' => ['jointype' => 'child']
-            ];
-        }
+        $tab[] = [
+            'id' => '8',
+            'table' => 'glpi_plugin_resources_resources_items',
+            'field' => 'items_id',
+            'name' => _n('Associated item', 'Associated items', 2),
+            'massiveaction' => false,
+            'forcegroupby' => false,
+            'nosearch' => false,
+            'joinparams' => ['jointype' => 'child']
+        ];
+
         $tab[] = [
             'id' => '9',
             'table' => $this->getTable(),
@@ -539,23 +538,22 @@ class Resource extends CommonDBTM
             'datatype' => 'dropdown'
         ];
 
-        if (Session::getCurrentInterface() != 'central') {
-            $tab[] = [
-                'id' => '18',
-                'table' => $this->getTable(),
-                'field' => 'picture',
-                'name' => __('Photo', 'resources'),
-                'massiveaction' => false
-            ];
-            $tab[] = [
-                'id' => '19',
-                'table' => $this->getTable(),
-                'field' => 'is_recursive',
-                'name' => __('Child entities'),
-                'datatype' => 'bool',
-                'massiveaction' => false
-            ];
-        }
+        $tab[] = [
+            'id' => '18',
+            'table' => $this->getTable(),
+            'field' => 'picture',
+            'name' => __('Photo', 'resources'),
+            'massiveaction' => false
+        ];
+        $tab[] = [
+            'id' => '19',
+            'table' => $this->getTable(),
+            'field' => 'is_recursive',
+            'name' => __('Child entities'),
+            'datatype' => 'bool',
+            'massiveaction' => false
+        ];
+
         $tab[] = [
             'id' => '20',
             'table' => $this->getTable(),
@@ -723,15 +721,13 @@ class Resource extends CommonDBTM
             'datatype' => 'number'
         ];
 
-        if (Session::getCurrentInterface() != 'central') {
-            $tab[] = [
-                'id' => '80',
-                'table' => 'glpi_entities',
-                'field' => 'completename',
-                'name' => __('Entity'),
-                'datatype' => 'dropdown'
-            ];
-        }
+        $tab[] = [
+            'id' => '80',
+            'table' => 'glpi_entities',
+            'field' => 'completename',
+            'name' => __('Entity'),
+            'datatype' => 'dropdown'
+        ];
 
         $tab[] = [
             'id' => '38',
@@ -5180,5 +5176,10 @@ class Resource extends CommonDBTM
                     AND " . $DB::quoteName($alias . '.items_id') . " = " . $DB::quoteName($table . '.id') . "
                     AND " . $DB::quoteName($alias . '.language') . " = " . $DB->quote($_SESSION['glpilanguage']) . "
                     AND " . $DB::quoteName($alias . '.field') . " = " . $DB->quote($field) . ")";
+    }
+
+    public static function supportHelpdeskDisplayPreferences(): bool
+    {
+        return true;
     }
 }

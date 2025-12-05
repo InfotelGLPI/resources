@@ -46,7 +46,8 @@ if (Session::getCurrentInterface() == 'central') {
 $resource = new Resource();
 
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-    if (Session::haveRight("plugin_resources_all", READ)) {
+    if (Session::haveRight("plugin_resources_all", READ)
+    && Session::getCurrentInterface() == 'central') {
         global $CFG_GLPI;
 
         //Have right to see all resources

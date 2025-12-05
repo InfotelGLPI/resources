@@ -1369,6 +1369,7 @@ class Checklist extends CommonDBTM
                 'WHERE' => [
                     'glpi_plugin_resources_resources.is_leaving'    => $is_leaving,
                     'glpi_plugin_resources_checklists.checklist_type'    => $checklist_type,
+                    'glpi_plugin_resources_checklists.is_checked'    => 0,
                     'glpi_plugin_resources_resources.is_deleted'    => 0,
                     'glpi_plugin_resources_resources.is_template'    => 0,
                 ],

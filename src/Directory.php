@@ -1201,4 +1201,9 @@ class Directory extends CommonDBTM
 
         return true;
     }
+
+    public static function supportHelpdeskDisplayPreferences(): bool
+    {
+        return true;
+    }
 }

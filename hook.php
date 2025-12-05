@@ -86,6 +86,7 @@ use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Resources\TaskType;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\WorkProfile;
+
 use function Safe\mkdir;
 
 /**
@@ -290,9 +291,9 @@ function plugin_resources_install()
 
         //Version 1.9.1
         if ($DB->tableExists("glpi_plugin_resources_ranks") && !$DB->fieldExists(
-            "glpi_plugin_resources_ranks",
-            "begin_date"
-        )) {
+                "glpi_plugin_resources_ranks",
+                "begin_date"
+            )) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.1.sql");
         }
 
@@ -316,8 +317,8 @@ function plugin_resources_install()
 
         //Version 2.3.1
         if (!$DB->tableExists("glpi_plugin_resources_resources_changes") && !$DB->tableExists(
-            "glpi_plugin_resources_resourcebadges"
-        )) {
+                "glpi_plugin_resources_resourcebadges"
+            )) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-2.3.1.sql");
 
             // Add record notification
@@ -571,9 +572,9 @@ function plugin_resources_install()
 
         //0.83 - Drop Matricule
         if ($DB->tableExists("glpi_plugin_resources_employees") && $DB->fieldExists(
-            "glpi_plugin_resources_employees",
-            "matricule"
-        )) {
+                "glpi_plugin_resources_employees",
+                "matricule"
+            )) {
             $query = "SELECT * FROM `glpi_users`";
             $result = $DB->doQuery($query);
             $number = $DB->numrows($result);
@@ -652,6 +653,132 @@ function plugin_resources_install()
 
     //Version 4.0.3
     $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.3.sql");
+
+    //Version 4.0.4
+    $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.4.sql");
+
+    //DisplayPreferences Migration
+    $classes = ['PluginResourcesResource' => Resource::class,
+        'PluginResourcesTask' => Task::class,
+        'PluginResourcesResourceResting' => ResourceResting::class,
+        'PluginResourcesResourceHoliday' => ResourceHoliday::class,
+        'PluginResourcesChecklistconfig' => Checklistconfig::class,
+        'PluginResourcesContractType' => ContractType::class,
+        'PluginResourcesHabilitation' => Habilitation::class,
+        'PluginResourcesChecklist' => Checklist::class,
+        'PluginResourcesResignationReason' => ResignationReason::class,
+        'PluginResourcesTeam' => Team::class,
+        'PluginResourcesChoiceItem' => ChoiceItem::class,
+        'PluginResourcesEmployment' => Employment::class,
+        'PluginResourcesBudget' => Budget::class,
+        'PluginResourcesDirectory' => Directory::class,
+        'PluginResourcesRecap' => Recap::class,
+        'PluginResourcesClient' => Client::class];
+
+    foreach ($classes as $old => $new) {
+        $displayusers = $DB->request([
+            'SELECT' => [
+                'users_id'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_displaypreferences',
+            'WHERE' => [
+                'itemtype' => $old,
+            ],
+        ]);
+
+        if (count($displayusers) > 0) {
+            foreach ($displayusers as $displayuser) {
+                $iterator = $DB->request([
+                    'SELECT' => [
+                        'num',
+                        'id'
+                    ],
+                    'FROM' => 'glpi_displaypreferences',
+                    'WHERE' => [
+                        'itemtype' => $old,
+                        'users_id' => $displayuser['users_id'],
+                        'interface' => 'central'
+                    ],
+                ]);
+
+                if (count($iterator) > 0) {
+                    foreach ($iterator as $data) {
+                        $iterator2 = $DB->request([
+                            'SELECT' => [
+                                'id'
+                            ],
+                            'FROM' => 'glpi_displaypreferences',
+                            'WHERE' => [
+                                'itemtype' => $new,
+                                'users_id' => $displayuser['users_id'],
+                                'num' => $data['num'],
+                                'interface' => 'central'
+                            ],
+                        ]);
+                        if (count($iterator2) > 0) {
+                            foreach ($iterator2 as $dataid) {
+                                $query = $DB->buildDelete(
+                                    'glpi_displaypreferences',
+                                    [
+                                        'id' => $dataid['id'],
+                                    ]
+                                );
+                                $DB->doQuery($query);
+                            }
+                        } else {
+                            $query = $DB->buildUpdate(
+                                'glpi_displaypreferences',
+                                [
+                                    'itemtype' => $new,
+                                ],
+                                [
+                                    'id' => $data['id'],
+                                ]
+                            );
+                            $DB->doQuery($query);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //DisplayPreferences Migration for helpdesk
+    $classes = ['PluginResourcesResource' => Resource::class,
+        'PluginResourcesDirectory' => Directory::class,];
+
+    foreach ($classes as $old => $new) {
+        $iterator = $DB->request([
+            'SELECT' => [
+                'num',
+                'rank'
+            ],
+            'FROM' => 'glpi_displaypreferences',
+            'WHERE' => [
+                'itemtype' => $new,
+                'users_id' => 0,
+                'interface' => 'central'
+            ],
+        ]);
+
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
+
+                $fields = [
+                    'num' => $data['num'],
+                    'rank' => $data['rank'],
+                    'itemtype' => $new,
+                    'users_id' => 0,
+                    'interface' => 'helpdesk'
+                ];
+                $DB->insert(
+                    "glpi_displaypreferences",
+                    $fields
+                );
+            }
+        }
+    }
 
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     if (!is_dir($rep_files_resources)) {
@@ -811,7 +938,8 @@ function plugin_resources_uninstall()
         $DB->dropTable($table, true);
     }
 
-    $itemtypes = ['Alert',
+    $itemtypes = [
+        'Alert',
         'DisplayPreference',
         'Document_Item',
         'ImpactItem',
@@ -821,7 +949,8 @@ function plugin_resources_uninstall()
         'SavedSearch',
         'DropdownTranslation',
         'NotificationTemplate',
-        'Notification'];
+        'Notification'
+    ];
     foreach ($itemtypes as $itemtype) {
         $item = new $itemtype();
         $item->deleteByCriteria(['itemtype' => Checklistconfig::class]);
@@ -904,10 +1033,11 @@ function plugin_resources_uninstall()
     $options = [
         'itemtype' => Resource::class,
     ];
-    foreach ($DB->request([
-        'FROM' => 'glpi_notifications',
-        'WHERE' => $options,
-    ]) as $data
+    foreach (
+        $DB->request([
+            'FROM' => 'glpi_notifications',
+            'WHERE' => $options,
+        ]) as $data
     ) {
         $notif->delete($data);
     }
@@ -919,28 +1049,31 @@ function plugin_resources_uninstall()
     $options = [
         'itemtype' => Resource::class,
     ];
-    foreach ($DB->request([
-        'FROM' => 'glpi_notificationtemplates',
-        'WHERE' => $options,
-    ]) as $data
+    foreach (
+        $DB->request([
+            'FROM' => 'glpi_notificationtemplates',
+            'WHERE' => $options,
+        ]) as $data
     ) {
         $options_template = [
             'notificationtemplates_id' => $data['id'],
         ];
 
-        foreach ($DB->request([
-            'FROM' => 'glpi_notificationtemplatetranslations',
-            'WHERE' => $options_template,
-        ]) as $data_template
+        foreach (
+            $DB->request([
+                'FROM' => 'glpi_notificationtemplatetranslations',
+                'WHERE' => $options_template,
+            ]) as $data_template
         ) {
             $translation->delete($data_template);
         }
         $template->delete($data);
 
-        foreach ($DB->request([
-            'FROM' => 'glpi_notifications_notificationtemplates',
-            'WHERE' => $options_template,
-        ]) as $data_template
+        foreach (
+            $DB->request([
+                'FROM' => 'glpi_notifications_notificationtemplates',
+                'WHERE' => $options_template,
+            ]) as $data_template
         ) {
             $notif_template->delete($data_template);
         }
@@ -1117,15 +1250,15 @@ function plugin_resources_getDropdown()
             ContractType::class => ContractType::getTypeName(2),
             TaskType::class => TaskType::getTypeName(2),
             ResourceState::class => Resource::getTypeName(
-                2
-            ) . " - " . ResourceSituation::getTypeName(2),
+                    2
+                ) . " - " . ResourceSituation::getTypeName(2),
             Department::class => Department::getTypeName(2),
             Employer::class => Employer::getTypeName(2),
             Client::class => Client::getTypeName(2),
             ChoiceItem::class => ChoiceItem::getTypeName(2),
             ResourceSituation::class => Employer::getTypeName(
-                2
-            ) . " - " . ResourceSituation::getTypeName(2),
+                    2
+                ) . " - " . ResourceSituation::getTypeName(2),
             ContractNature::class => ContractNature::getTypeName(2),
             Rank::class => Rank::getTypeName(2),
             ResourceSpeciality::class => ResourceSpeciality::getTypeName(2),
@@ -1172,8 +1305,8 @@ function plugin_resources_getAddSearchOptions($itemtype)
             $sopt[4311]['table'] = 'glpi_plugin_resources_contracttypes';
             $sopt[4311]['field'] = 'name';
             $sopt[4311]['name'] = Resource::getTypeName(
-                2
-            ) . " - " . ContractType::getTypeName(1);
+                    2
+                ) . " - " . ContractType::getTypeName(1);
 
             $sopt[4313]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4313]['field'] = 'date_begin';
@@ -1188,8 +1321,8 @@ function plugin_resources_getAddSearchOptions($itemtype)
             $sopt[4315]['table'] = 'glpi_plugin_resources_departments';
             $sopt[4315]['field'] = 'name';
             $sopt[4315]['name'] = Resource::getTypeName(
-                2
-            ) . " - " . Department::getTypeName(1);
+                    2
+                ) . " - " . Department::getTypeName(1);
 
             $sopt[4316]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4316]['field'] = 'date_declaration';
@@ -1205,9 +1338,9 @@ function plugin_resources_getAddSearchOptions($itemtype)
             $sopt[4318]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4318]['field'] = 'is_leaving';
             $sopt[4318]['name'] = Resource::getTypeName(2) . " - " . __(
-                'Declared as leaving',
-                'resources'
-            );
+                    'Declared as leaving',
+                    'resources'
+                );
             $sopt[4318]['datatype'] = 'bool';
 
             $sopt[4320]['table'] = 'glpi_plugin_resources_employers';
@@ -1234,9 +1367,9 @@ function plugin_resources_getAddSearchOptions($itemtype)
             $sopt[4324]['field'] = 'name';
             $sopt[4324]['linkfield'] = 'users_id_recipient_leaving';
             $sopt[4324]['name'] = Resource::getTypeName(2) . " - " . __(
-                'Informant of leaving',
-                'resources'
-            );
+                    'Informant of leaving',
+                    'resources'
+                );
             $sopt[4324]['massiveaction'] = false;
 
             $sopt[4325]['table'] = 'glpi_plugin_resources_salemanagers';
@@ -1267,8 +1400,8 @@ function plugin_resources_getAddSearchOptions($itemtype)
             //            ]
             //         ];
             $sopt[4331]['name'] = Resource::getTypeName(
-                2
-            ) . " - " . Resource::getTypeName(1);
+                    2
+                ) . " - " . Resource::getTypeName(1);
         }
     }
     return $sopt;
@@ -1289,7 +1422,7 @@ function plugin_resources_addSelect($type, $ID, $num)
     $table = $searchopt[$ID]["table"];
     $field = $searchopt[$ID]["field"];
 
-    $NAME        = "ITEM_{$type}_{$ID}";
+    $NAME = "ITEM_{$type}_{$ID}";
     // Example of standard Select clause but use it ONLY for specific Select
     // No need of the function if you do not have specific cases
     switch ($type) {
@@ -1331,10 +1464,10 @@ function plugin_resources_addSelect($type, $ID, $num)
 
 //                return $SELECT;
 
-                return $DB::quoteName("$table.$field AS ITEM_{$num}").",".
-                    $DB::quoteName("$table.id AS ITEM_{$num}_2").",".
-                    $DB::quoteName("$table.firstname AS ITEM_{$num}_3").",".
-                    $DB::quoteName("$table.realname AS ITEM_{$num}_4");
+                    return $DB::quoteName("$table.$field AS ITEM_{$num}") . "," .
+                        $DB::quoteName("$table.id AS ITEM_{$num}_2") . "," .
+                        $DB::quoteName("$table.firstname AS ITEM_{$num}_3") . "," .
+                        $DB::quoteName("$table.realname AS ITEM_{$num}_4");
 
                     break;
             }
@@ -1393,18 +1526,21 @@ function plugin_resources_addDefaultWhere($type)
         case Directory::class:
         case Recap::class:
 
-            $criteria = ['glpi_plugin_resources_resources.is_leaving' => 0,
-                    'glpi_users.is_active' => 1];
+            $criteria = [
+                'glpi_plugin_resources_resources.is_leaving' => 0,
+                'glpi_users.is_active' => 1
+            ];
 
             return $criteria;
 
         case Resource::class:
             $who = Session::getLoginUserID();
             if (!Session::haveRight("plugin_resources_all", READ)) {
-
                 $criteria = [
-                    'OR' => ['glpi_plugin_resources_resources.users_id_recipient' => $who,
-                        'glpi_plugin_resources_resources.users_id' => $who],
+                    'OR' => [
+                        'glpi_plugin_resources_resources.users_id_recipient' => $who,
+                        'glpi_plugin_resources_resources.users_id' => $who
+                    ],
                 ];
 
                 return $criteria;
@@ -1480,8 +1616,9 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resources_items' => [
                         'ON' => [
-                            $ref_table   => 'id',
-                            'glpi_plugin_resources_resources_items'                  => 'items_id', [
+                            $ref_table => 'id',
+                            'glpi_plugin_resources_resources_items' => 'items_id',
+                            [
                                 'AND' => [
                                     'glpi_plugin_resources_resources_items.itemtype' => $type,
                                 ],
@@ -1497,8 +1634,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_taskplannings' => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        'glpi_plugin_resources_taskplannings'                  => 'plugin_resources_tasks_id'
+                        $ref_table => 'id',
+                        'glpi_plugin_resources_taskplannings' => 'plugin_resources_tasks_id'
                     ],
                 ],
             ];
@@ -1509,8 +1646,9 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_tasks_items' => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        'glpi_plugin_resources_tasks_items'                  => 'items_id', [
+                        $ref_table => 'id',
+                        'glpi_plugin_resources_tasks_items' => 'items_id',
+                        [
                             'AND' => [
                                 'glpi_plugin_resources_tasks_items.itemtype' => $type,
                             ],
@@ -1539,8 +1677,9 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $left = [
                         'glpi_plugin_resources_resources' => [
                             'ON' => [
-                                'glpi_plugin_resources_resources'    => 'id',
-                                'glpi_plugin_resources_resources_items'                  => 'plugin_resources_resources_id', [
+                                'glpi_plugin_resources_resources' => 'id',
+                                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                                [
                                     'AND' => [
                                         'glpi_plugin_resources_resources_items.itemtype' => $type,
                                     ],
@@ -1557,8 +1696,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_resources' => [
                             'ON' => [
-                                $ref_table   => 'plugin_resources_resources_id',
-                                'glpi_plugin_resources_resources'                  => 'id'
+                                $ref_table => 'plugin_resources_resources_id',
+                                'glpi_plugin_resources_resources' => 'id'
                             ],
                         ],
                     ];
@@ -1581,8 +1720,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_contracttypes' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'   => 'plugin_resources_contracttypes_id',
-                            'glpi_plugin_resources_contracttypes'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_contracttypes_id',
+                            'glpi_plugin_resources_contracttypes' => 'id'
                         ],
                     ],
                 ];
@@ -1595,46 +1734,47 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_contracttypes' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'   => 'plugin_resources_contracttypes_id',
-                            'glpi_plugin_resources_contracttypes'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_contracttypes_id',
+                            'glpi_plugin_resources_contracttypes' => 'id'
                         ],
                     ],
                 ];
             }
             return $out;
         case "glpi_plugin_resources_managers": // From items
-          if ($type == Directory::class) {
+            if ($type == Directory::class) {
                 $out['LEFT JOIN'] = [
-                    'glpi_plugin_resources_resources_items'.$AS_device => [
+                    'glpi_plugin_resources_resources_items' . $AS_device => [
                         'ON' => [
-                            $ref_table   => 'id',
-                            $nt_device                  => 'items_id'
+                            $ref_table => 'id',
+                            $nt_device => 'items_id'
                         ],
                     ],
-                    'glpi_plugin_resources_resources'.$AS => [
+                    'glpi_plugin_resources_resources' . $AS => [
                         'ON' => [
-                            $nt   => 'id',
-                            $nt_device                  => 'plugin_resources_resources_id', [
+                            $nt => 'id',
+                            $nt_device => 'plugin_resources_resources_id',
+                            [
                                 'AND' => [
-                                    $nt_device.'.itemtype' => $type,
+                                    $nt_device . '.itemtype' => $type,
                                 ],
                             ],
                         ],
                     ],
                     'glpi_users  AS glpi_plugin_resources_managers' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'   => 'users_id',
-                            'glpi_plugin_resources_managers'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'users_id',
+                            'glpi_plugin_resources_managers' => 'id'
                         ],
                     ],
                 ];
-
             } else {
                 $out['LEFT JOIN'] = [
-                    'glpi_plugin_resources_resources_items'.$AS_device => [
+                    'glpi_plugin_resources_resources_items' . $AS_device => [
                         'ON' => [
-                            $ref_table   => 'id',
-                            $nt_device                  => 'items_id', [
+                            $ref_table => 'id',
+                            $nt_device => 'items_id',
+                            [
                                 'AND' => [
                                     'glpi_plugin_resources_resources_items.itemtype' => $type,
                                 ],
@@ -1642,57 +1782,58 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         ],
                     ],
                 ];
-
             }
             return $out;
         case "glpi_plugin_resources_salemanagers": // From items
             $out['LEFT JOIN'] = [
-                'glpi_plugin_resources_resources_items'.$AS_device => [
+                'glpi_plugin_resources_resources_items' . $AS_device => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        $nt_device                  => 'items_id'
+                        $ref_table => 'id',
+                        $nt_device => 'items_id'
                     ],
                 ],
-                'glpi_plugin_resources_resources'.$AS => [
+                'glpi_plugin_resources_resources' . $AS => [
                     'ON' => [
-                        $nt   => 'id',
-                        $nt_device                  => 'plugin_resources_resources_id', [
+                        $nt => 'id',
+                        $nt_device => 'plugin_resources_resources_id',
+                        [
                             'AND' => [
-                                $nt_device.'.itemtype' => $type,
+                                $nt_device . '.itemtype' => $type,
                             ],
                         ],
                     ],
                 ],
                 'glpi_users AS glpi_plugin_resources_salemanagers' => [
                     'ON' => [
-                        $nt   => 'users_id_sales',
-                        'glpi_plugin_resources_salemanagers'                  => 'id'
+                        $nt => 'users_id_sales',
+                        'glpi_plugin_resources_salemanagers' => 'id'
                     ],
                 ],
             ];
             return $out;
         case "glpi_plugin_resources_recipients": // From items
             $out['LEFT JOIN'] = [
-                'glpi_plugin_resources_resources_items'.$AS_device => [
+                'glpi_plugin_resources_resources_items' . $AS_device => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        $nt_device                  => 'items_id'
+                        $ref_table => 'id',
+                        $nt_device => 'items_id'
                     ],
                 ],
-                'glpi_plugin_resources_resources'.$AS => [
+                'glpi_plugin_resources_resources' . $AS => [
                     'ON' => [
-                        $nt   => 'id',
-                        $nt_device                  => 'plugin_resources_resources_id', [
+                        $nt => 'id',
+                        $nt_device => 'plugin_resources_resources_id',
+                        [
                             'AND' => [
-                                $nt_device.'.itemtype' => $type,
+                                $nt_device . '.itemtype' => $type,
                             ],
                         ],
                     ],
                 ],
                 'glpi_users AS glpi_plugin_resources_recipients' => [
                     'ON' => [
-                        $nt   => 'users_id_recipient',
-                        'glpi_plugin_resources_recipients'                  => 'id'
+                        $nt => 'users_id_recipient',
+                        'glpi_plugin_resources_recipients' => 'id'
                     ],
                 ],
             ];
@@ -1700,26 +1841,27 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             return $out;
         case "glpi_plugin_resources_recipients_leaving": // From items
             $out['LEFT JOIN'] = [
-                'glpi_plugin_resources_resources_items'.$AS_device => [
+                'glpi_plugin_resources_resources_items' . $AS_device => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        $nt_device                  => 'items_id'
+                        $ref_table => 'id',
+                        $nt_device => 'items_id'
                     ],
                 ],
-                'glpi_plugin_resources_resources'.$AS => [
+                'glpi_plugin_resources_resources' . $AS => [
                     'ON' => [
-                        $nt   => 'id',
-                        $nt_device                  => 'plugin_resources_resources_id', [
+                        $nt => 'id',
+                        $nt_device => 'plugin_resources_resources_id',
+                        [
                             'AND' => [
-                                $nt_device.'.itemtype' => $type,
+                                $nt_device . '.itemtype' => $type,
                             ],
                         ],
                     ],
                 ],
                 'glpi_users AS glpi_plugin_resources_recipients_leaving' => [
                     'ON' => [
-                        $nt   => 'users_id_recipient_leaving',
-                        'glpi_plugin_resources_recipients_leaving'                  => 'id'
+                        $nt => 'users_id_recipient_leaving',
+                        'glpi_plugin_resources_recipients_leaving' => 'id'
                     ],
                 ],
             ];
@@ -1727,26 +1869,27 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             return $out;
         case "glpi_plugin_resources_locations": // From items
             $out['LEFT JOIN'] = [
-                'glpi_plugin_resources_resources_items'.$AS_device => [
+                'glpi_plugin_resources_resources_items' . $AS_device => [
                     'ON' => [
-                        $ref_table   => 'id',
-                        $nt_device                  => 'items_id'
+                        $ref_table => 'id',
+                        $nt_device => 'items_id'
                     ],
                 ],
-                'glpi_plugin_resources_resources'.$AS => [
+                'glpi_plugin_resources_resources' . $AS => [
                     'ON' => [
-                        $nt   => 'id',
-                        $nt_device                  => 'plugin_resources_resources_id', [
+                        $nt => 'id',
+                        $nt_device => 'plugin_resources_resources_id',
+                        [
                             'AND' => [
-                                $nt_device.'.itemtype' => $type,
+                                $nt_device . '.itemtype' => $type,
                             ],
                         ],
                     ],
                 ],
                 'glpi_locations AS glpi_plugin_resources_locations' => [
                     'ON' => [
-                        $nt   => 'locations_id',
-                        'glpi_plugin_resources_locations'                  => 'id'
+                        $nt => 'locations_id',
+                        'glpi_plugin_resources_locations' => 'id'
                     ],
                 ],
             ];
@@ -1764,8 +1907,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_departments' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_departments_id',
-                            'glpi_plugin_resources_departments'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_departments_id',
+                            'glpi_plugin_resources_departments' => 'id'
                         ],
                     ],
                 ];
@@ -1778,8 +1921,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_departments' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_departments_id',
-                            'glpi_plugin_resources_departments'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_departments_id',
+                            'glpi_plugin_resources_departments' => 'id'
                         ],
                     ],
                 ];
@@ -1797,8 +1940,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_teams' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_teams_id',
-                            'glpi_plugin_resources_teams'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_teams_id',
+                            'glpi_plugin_resources_teams' => 'id'
                         ],
                     ],
                 ];
@@ -1811,8 +1954,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_teams' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_teams_id',
-                            'glpi_plugin_resources_teams'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_teams_id',
+                            'glpi_plugin_resources_teams' => 'id'
                         ],
                     ],
                 ];
@@ -1830,8 +1973,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_resourcestates' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcestates_id',
-                            'glpi_plugin_resources_resourcestates'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcestates_id',
+                            'glpi_plugin_resources_resourcestates' => 'id'
                         ],
                     ],
                 ];
@@ -1844,8 +1987,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcestates' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcestates_id',
-                            'glpi_plugin_resources_resourcestates'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcestates_id',
+                            'glpi_plugin_resources_resourcestates' => 'id'
                         ],
                     ],
                 ];
@@ -1863,8 +2006,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_employees' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'id',
-                            'glpi_plugin_resources_employees'                  => 'plugin_resources_resources_id'
+                            'glpi_plugin_resources_resources' => 'id',
+                            'glpi_plugin_resources_employees' => 'plugin_resources_resources_id'
                         ],
                     ],
                 ];
@@ -1877,8 +2020,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employees' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'id',
-                            'glpi_plugin_resources_employees'                  => 'plugin_resources_resources_id'
+                            'glpi_plugin_resources_resources' => 'id',
+                            'glpi_plugin_resources_employees' => 'plugin_resources_resources_id'
                         ],
                     ],
                 ];
@@ -1896,8 +2039,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_resourcesituations' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcesituations_id',
-                            'glpi_plugin_resources_resourcesituations'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcesituations_id',
+                            'glpi_plugin_resources_resourcesituations' => 'id'
                         ],
                     ],
                 ];
@@ -1910,8 +2053,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcesituations' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcesituations_id',
-                            'glpi_plugin_resources_resourcesituations'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcesituations_id',
+                            'glpi_plugin_resources_resourcesituations' => 'id'
                         ],
                     ],
                 ];
@@ -1929,8 +2072,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_contractnatures' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_contractnatures_id',
-                            'glpi_plugin_resources_contractnatures'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_contractnatures_id',
+                            'glpi_plugin_resources_contractnatures' => 'id'
                         ],
                     ],
                 ];
@@ -1943,8 +2086,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_contractnatures' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_contractnatures_id',
-                            'glpi_plugin_resources_contractnatures'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_contractnatures_id',
+                            'glpi_plugin_resources_contractnatures' => 'id'
                         ],
                     ],
                 ];
@@ -1962,8 +2105,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_resourcespecialities' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcespecialities_id',
-                            'glpi_plugin_resources_resourcespecialities'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcespecialities_id',
+                            'glpi_plugin_resources_resourcespecialities' => 'id'
                         ],
                     ],
                 ];
@@ -1976,8 +2119,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_resourcespecialities' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_resourcespecialities_id',
-                            'glpi_plugin_resources_resourcespecialities'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_resourcespecialities_id',
+                            'glpi_plugin_resources_resourcespecialities' => 'id'
                         ],
                     ],
                 ];
@@ -1995,8 +2138,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_employments' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'id',
-                            'glpi_plugin_resources_employments'                  => 'plugin_resources_resources_id'
+                            'glpi_plugin_resources_resources' => 'id',
+                            'glpi_plugin_resources_employments' => 'plugin_resources_resources_id'
                         ],
                     ],
                 ];
@@ -2009,8 +2152,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employments' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'id',
-                            'glpi_plugin_resources_employments'                  => 'plugin_resources_resources_id'
+                            'glpi_plugin_resources_resources' => 'id',
+                            'glpi_plugin_resources_employments' => 'plugin_resources_resources_id'
                         ],
                     ],
                 ];
@@ -2029,8 +2172,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $left = [
                         'glpi_plugin_resources_ranks' => [
                             'ON' => [
-                                'glpi_plugin_resources_resources'    => 'plugin_resources_ranks_id',
-                                'glpi_plugin_resources_ranks'                  => 'id'
+                                'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                                'glpi_plugin_resources_ranks' => 'id'
                             ],
                         ],
                     ];
@@ -2043,8 +2186,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_ranks' => [
                             'ON' => [
-                                'glpi_plugin_resources_employments'    => 'plugin_resources_ranks_id',
-                                'glpi_plugin_resources_ranks'                  => 'id'
+                                'glpi_plugin_resources_employments' => 'plugin_resources_ranks_id',
+                                'glpi_plugin_resources_ranks' => 'id'
                             ],
                         ],
                     ];
@@ -2052,8 +2195,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_ranks' => [
                             'ON' => [
-                                'glpi_plugin_resources_budgets'    => 'plugin_resources_ranks_id',
-                                'glpi_plugin_resources_ranks'                  => 'id'
+                                'glpi_plugin_resources_budgets' => 'plugin_resources_ranks_id',
+                                'glpi_plugin_resources_ranks' => 'id'
                             ],
                         ],
                     ];
@@ -2061,8 +2204,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_ranks' => [
                             'ON' => [
-                                'glpi_plugin_resources_costs'    => 'plugin_resources_ranks_id',
-                                'glpi_plugin_resources_ranks'                  => 'id'
+                                'glpi_plugin_resources_costs' => 'plugin_resources_ranks_id',
+                                'glpi_plugin_resources_ranks' => 'id'
                             ],
                         ],
                     ];
@@ -2070,8 +2213,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_ranks' => [
                             'ON' => [
-                                'glpi_plugin_resources_resourcespecialities'    => 'plugin_resources_ranks_id',
-                                'glpi_plugin_resources_ranks'                  => 'id'
+                                'glpi_plugin_resources_resourcespecialities' => 'plugin_resources_ranks_id',
+                                'glpi_plugin_resources_ranks' => 'id'
                             ],
                         ],
                     ];
@@ -2080,8 +2223,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_ranks' => [
                         'ON' => [
-                            'glpi_plugin_resources_resources'    => 'plugin_resources_ranks_id',
-                            'glpi_plugin_resources_ranks'                  => 'id'
+                            'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                            'glpi_plugin_resources_ranks' => 'id'
                         ],
                     ],
                 ];
@@ -2093,8 +2236,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions' => [
                         'ON' => [
-                            'glpi_plugin_resources_employments'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_professions'                  => 'id'
+                            'glpi_plugin_resources_employments' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id'
                         ],
                     ],
                 ];
@@ -2102,8 +2245,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions' => [
                         'ON' => [
-                            'glpi_plugin_resources_budgets'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_professions'                  => 'id'
+                            'glpi_plugin_resources_budgets' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id'
                         ],
                     ],
                 ];
@@ -2111,8 +2254,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions' => [
                         'ON' => [
-                            'glpi_plugin_resources_costs'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_professions'                  => 'id'
+                            'glpi_plugin_resources_costs' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id'
                         ],
                     ],
                 ];
@@ -2120,17 +2263,17 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions' => [
                         'ON' => [
-                            'glpi_plugin_resources_ranks'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_professions'                  => 'id'
+                            'glpi_plugin_resources_ranks' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id'
                         ],
                     ],
                 ];
-            } else if ($type == Recap::class) {
+            } elseif ($type == Recap::class) {
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions' => [
                         'ON' => [
-                            'glpi_plugin_resources_ranks'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_professions'                  => 'id'
+                            'glpi_plugin_resources_ranks' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id'
                         ],
                     ],
                 ];
@@ -2140,8 +2283,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_professionlines' => [
                     'ON' => [
-                        'glpi_plugin_resources_professions'    => 'plugin_resources_professionlines_id',
-                        'glpi_plugin_resources_professionlines'                  => 'id'
+                        'glpi_plugin_resources_professions' => 'plugin_resources_professionlines_id',
+                        'glpi_plugin_resources_professionlines' => 'id'
                     ],
                 ],
             ];
@@ -2150,8 +2293,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_professioncategories' => [
                     'ON' => [
-                        'glpi_plugin_resources_professions'    => 'plugin_resources_professioncategories_id',
-                        'glpi_plugin_resources_professioncategories'                  => 'id'
+                        'glpi_plugin_resources_professions' => 'plugin_resources_professioncategories_id',
+                        'glpi_plugin_resources_professioncategories' => 'id'
                     ],
                 ],
             ];
@@ -2160,8 +2303,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_ranks AS glpi_plugin_resources_employmentranks' => [
                     'ON' => [
-                        'glpi_plugin_resources_employments'    => 'plugin_resources_ranks_id',
-                        'glpi_plugin_resources_employmentranks'                  => 'id'
+                        'glpi_plugin_resources_employments' => 'plugin_resources_ranks_id',
+                        'glpi_plugin_resources_employmentranks' => 'id'
                     ],
                 ],
             ];
@@ -2184,8 +2327,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_professions AS glpi_plugin_resources_employmentprofessions' => [
                         'ON' => [
-                            'glpi_plugin_resources_employments'    => 'plugin_resources_professions_id',
-                            'glpi_plugin_resources_employmentprofessions'                  => 'id'
+                            'glpi_plugin_resources_employments' => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_employmentprofessions' => 'id'
                         ],
                     ],
                     'glpi_plugin_resources_professionlines AS glpi_plugin_resources_employmentprofessionlines' => [
@@ -2203,8 +2346,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_professioncategories AS glpi_plugin_resources_employmentprofessioncategories' => [
                     'ON' => [
-                        'glpi_plugin_resources_employmentprofessions'    => 'plugin_resources_professioncategories_id',
-                        'glpi_plugin_resources_employmentprofessioncategories'                  => 'id'
+                        'glpi_plugin_resources_employmentprofessions' => 'plugin_resources_professioncategories_id',
+                        'glpi_plugin_resources_employmentprofessioncategories' => 'id'
                     ],
                 ],
             ];
@@ -2221,8 +2364,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_employers' => [
                         'ON' => [
-                            'glpi_plugin_resources_employees'    => 'plugin_resources_employers_id',
-                            'glpi_plugin_resources_employers'                  => 'id'
+                            'glpi_plugin_resources_employees' => 'plugin_resources_employers_id',
+                            'glpi_plugin_resources_employers' => 'id'
                         ],
                     ],
                 ];
@@ -2235,8 +2378,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employers' => [
                         'ON' => [
-                            'glpi_plugin_resources_employments'    => 'plugin_resources_employers_id',
-                            'glpi_plugin_resources_employers'                  => 'id'
+                            'glpi_plugin_resources_employments' => 'plugin_resources_employers_id',
+                            'glpi_plugin_resources_employers' => 'id'
                         ],
                     ],
                 ];
@@ -2254,8 +2397,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             $left = [
                 'glpi_plugin_resources_clients' => [
                     'ON' => [
-                        'glpi_plugin_resources_employees'    => 'plugin_resources_clients_id',
-                        'glpi_plugin_resources_clients'                  => 'id'
+                        'glpi_plugin_resources_employees' => 'plugin_resources_clients_id',
+                        'glpi_plugin_resources_clients' => 'id'
                     ],
                 ],
             ];
@@ -2279,8 +2422,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $left = [
                     'glpi_plugin_resources_employmentstates' => [
                         'ON' => [
-                            'glpi_plugin_resources_employments'    => 'plugin_resources_employmentstates_id',
-                            'glpi_plugin_resources_employmentstates'                  => 'id'
+                            'glpi_plugin_resources_employments' => 'plugin_resources_employmentstates_id',
+                            'glpi_plugin_resources_employmentstates' => 'id'
                         ],
                     ],
                 ];
@@ -2293,8 +2436,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_plugin_resources_employmentstates' => [
                         'ON' => [
-                            'glpi_plugin_resources_employments'    => 'plugin_resources_employmentstates_id',
-                            'glpi_plugin_resources_employmentstates'                  => 'id'
+                            'glpi_plugin_resources_employments' => 'plugin_resources_employmentstates_id',
+                            'glpi_plugin_resources_employmentstates' => 'id'
                         ],
                     ],
                 ];
@@ -2313,8 +2456,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                 $out['LEFT JOIN'] = [
                     'glpi_locations' => [
                         'ON' => [
-                            'glpi_plugin_resources_employers'    => 'locations_id',
-                            'glpi_locations'                  => 'id'
+                            'glpi_plugin_resources_employers' => 'locations_id',
+                            'glpi_locations' => 'id'
                         ],
                     ],
                 ];
@@ -2396,8 +2539,8 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_resources.date_end":
                     if ($data['raw']["ITEM_$num"] <= date('Y-m-d') && !empty($data['raw']["ITEM_$num"])) {
                         $out = "<span class='plugin_resources_date_color'>" . Html::convDate(
-                            $data['raw']["ITEM_$num"]
-                        ) . "</span>";
+                                $data['raw']["ITEM_$num"]
+                            ) . "</span>";
                     } elseif (empty($data['raw']["ITEM_$num"])) {
                         $out = __('Not defined', 'resources');
                     } else {
@@ -2406,8 +2549,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     return $out;
                 case "glpi_plugin_resources_resources_items.items_id":
                     $restrict = ["plugin_resources_resources_id" => $data['id']]
-                        + ["ORDER" => "`itemtype`, `items_id`"]
-                    ;
+                        + ["ORDER" => "`itemtype`, `items_id`"];
                     $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                     $out = '';
                     if (!empty($items)) {
@@ -2675,9 +2817,10 @@ function plugin_pre_item_add_solutions($item)
                     "itemtype" => Resource::getType(),
                 ])) {
                     if ($conf->fields["mandatory_adcreation"] == 1) {
-                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(
-                            ['plugin_resources_resources_id' => $items->getField('items_id')]
-                        ) && $linkad->getField('action_done') == 0)) {
+                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]
+                            ) || ($linkad->getFromDBByCrit(
+                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
+                                ) && $linkad->getField('action_done') == 0)) {
                             $item->input = null;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),
@@ -2721,9 +2864,10 @@ function plugin_pre_item_add_solutions($item)
                     ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
                 )) {
                     if ($conf->fields["mandatory_adcreation"] == 1) {
-                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(
-                            ['plugin_resources_resources_id' => $items->getField('items_id')]
-                        ) && $linkad->getField('action_done') == 0)) {
+                        if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]
+                            ) || ($linkad->getFromDBByCrit(
+                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
+                                ) && $linkad->getField('action_done') == 0)) {
                             $item->input = null;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),

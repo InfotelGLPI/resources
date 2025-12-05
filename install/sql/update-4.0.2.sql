@@ -1,4 +1,4 @@
-UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Resources' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResource';
+UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Resource' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResource';
 UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Task' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesTask';
 UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ResourceResting' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResourceResting';
 UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\ResourceHoliday' WHERE `glpi_displaypreferences`.`itemtype` = 'PluginResourcesResourceHoliday';
