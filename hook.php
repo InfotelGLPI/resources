@@ -654,6 +654,10 @@ function plugin_resources_install()
     //Version 4.0.3
     $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.3.sql");
 
+    if ($DB->fieldExists("glpi_plugin_resources_configs", "import_external_datas")) {
+        $query = "ALTER TABLE `glpi_plugin_resources_configs` DROP `import_external_datas`;";
+        $DB->doQuery($query);
+    }
     //Version 4.0.4
     $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.4.sql");
 
@@ -746,7 +750,7 @@ function plugin_resources_install()
 
     //DisplayPreferences Migration for helpdesk
     $classes = ['PluginResourcesResource' => Resource::class,
-        'PluginResourcesDirectory' => Directory::class,];
+        'PluginResourcesDirectory' => Directory::class];
 
     foreach ($classes as $old => $new) {
         $iterator = $DB->request([
@@ -772,10 +776,25 @@ function plugin_resources_install()
                     'users_id' => 0,
                     'interface' => 'helpdesk'
                 ];
-                $DB->insert(
-                    "glpi_displaypreferences",
-                    $fields
-                );
+                $check = $DB->request([
+                    'SELECT' => [
+                        'id',
+                    ],
+                    'FROM' => 'glpi_displaypreferences',
+                    'WHERE' => [
+                        'num' => $data['num'],
+                        'itemtype' => $new,
+                        'users_id' => 0,
+                        'interface' => 'helpdesk'
+                    ],
+                ]);
+                if ($check->count() == 0) {
+                    $DB->insert(
+                        "glpi_displaypreferences",
+                        $fields
+                    );
+                }
+
             }
         }
     }
