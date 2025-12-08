@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 12:24+0000\n"
+"POT-Creation-Date: 2025-12-08 17:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,7 +211,7 @@ msgstr ""
 msgid "Additional informations"
 msgstr ""
 
-#: hook.php:1374 src/Client.php:52
+#: hook.php:1376 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -237,7 +237,7 @@ msgstr ""
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:73
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:71
 #: report/resourcewithoutuser/resourcewithoutuser.php:68
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:260
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:262
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
 #: src/RuleContracttype.php:263 src/NotificationTargetResource.php:473
 #: src/NotificationTargetResource.php:573
@@ -572,10 +572,10 @@ msgstr ""
 msgid "Client Sensitized to security"
 msgstr ""
 
-#: report/professionwithoutcost/professionwithoutcost.php:298
-#: report/professionwithoutcost/professionwithoutcost.php:303
-#: report/lapserankprofession/lapserankprofession.php:49
-#: report/lapserankprofession/lapserankprofession.php:65
+#: report/professionwithoutcost/professionwithoutcost.php:299
+#: report/professionwithoutcost/professionwithoutcost.php:304
+#: report/lapserankprofession/lapserankprofession.php:50
+#: report/lapserankprofession/lapserankprofession.php:66
 #: report/professionwithoutvolume/professionwithoutvolume.php:305
 #: report/professionwithoutvolume/professionwithoutvolume.php:310
 #: src/ResourceSituation.php:99 src/ResourceSituation.php:163
@@ -812,7 +812,7 @@ msgstr ""
 msgid "Declare an employment"
 msgstr ""
 
-#: hook.php:1363 src/NotificationTargetResource.php:481
+#: hook.php:1365 src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:819
@@ -865,15 +865,15 @@ msgid_plural "Departments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: report/checkmissingN1group/checkmissingN1group.php:214
+#: report/checkmissingN1group/checkmissingN1group.php:216
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:77
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:75
 #: report/resourcewithoutuser/resourcewithoutuser.php:72
-#: report/checkhabilitation/checkhabilitation.php:217
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:261
-#: report/checkgroup/checkgroup.php:271
+#: report/checkhabilitation/checkhabilitation.php:218
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:263
+#: report/checkgroup/checkgroup.php:273
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:260
-#: report/checkmissingN0group/checkmissingN0group.php:214
+#: report/checkmissingN0group/checkmissingN0group.php:216
 #: ajax/leavingform.php:104 src/RuleContracttype.php:267
 #: src/NotificationTargetResource.php:474
 #: src/NotificationTargetResource.php:574
@@ -983,7 +983,7 @@ msgid_plural "Employees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1370
+#: hook.php:1372
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
 #: src/Employment.php:230 src/Employment.php:312 src/Department.php:92
 #: src/Department.php:125 src/Employer.php:56
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "Imported values"
 msgstr ""
 
-#: hook.php:1392 src/NotificationTargetResource.php:114
+#: hook.php:1394 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
@@ -1474,11 +1474,11 @@ msgstr ""
 msgid "Meta-demands linked"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:221
+#: report/checkhabilitation/checkhabilitation.php:222
 msgid "Missing group"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:275
+#: report/checkgroup/checkgroup.php:277
 msgid "Missing habilitation"
 msgstr ""
 
@@ -1492,7 +1492,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2809
+#: hook.php:2811
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1658,7 +1658,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2568 src/Resource_Item.php:971
+#: hook.php:2570 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
@@ -1816,7 +1816,7 @@ msgstr[1] ""
 msgid "Purge imported resources"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:61
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:63
 #: src/RuleContracttype.php:271 src/NotificationTargetResource.php:694
 #: src/NotificationTargetResource.php:805
 #: src/NotificationTargetResource.php:959
@@ -1836,7 +1836,7 @@ msgid_plural "Ranks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:85
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:87
 #: src/Recap.php:249 src/Employment.php:237 src/Employment.php:360
 msgid "Ratio Employment / Budget"
 msgstr ""
@@ -1927,10 +1927,10 @@ msgstr[1] ""
 msgid "Resignation date"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:65
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:69
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:73
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:77
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:67
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:71
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:75
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:79
 #: src/ImportResource.php:885
 msgid "Resource"
 msgstr ""
@@ -1951,7 +1951,7 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1379 src/RuleContracttype.php:251
+#: hook.php:1381 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -2032,7 +2032,7 @@ msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1400 src/RuleContracttype.php:255
+#: hook.php:1402 src/RuleContracttype.php:255
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
@@ -2554,15 +2554,15 @@ msgid_plural "Work Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2867 src/LinkAd.php:852
+#: hook.php:2869 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2914
+#: hook.php:2916
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2849 hook.php:2896 src/LinkAd.php:850
+#: hook.php:2851 hook.php:2898 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
@@ -2580,19 +2580,19 @@ msgstr ""
 msgid "budgetsummary_report_title"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:41
+#: report/checkgroup/checkgroup.php:43
 msgid "checkgroup_report_title"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:42
+#: report/checkhabilitation/checkhabilitation.php:43
 msgid "checkhabilitation_report_title"
 msgstr ""
 
-#: report/checkmissingN0group/checkmissingN0group.php:42
+#: report/checkmissingN0group/checkmissingN0group.php:44
 msgid "checkmissingN0group_report_title"
 msgstr ""
 
-#: report/checkmissingN1group/checkmissingN1group.php:42
+#: report/checkmissingN1group/checkmissingN1group.php:44
 msgid "checkmissingN1group_report_title"
 msgstr ""
 
@@ -2616,7 +2616,7 @@ msgstr ""
 msgid "given name.name"
 msgstr ""
 
-#: report/lapserankprofession/lapserankprofession.php:40
+#: report/lapserankprofession/lapserankprofession.php:41
 msgid "lapserankprofession_report_title"
 msgstr ""
 
@@ -2628,7 +2628,7 @@ msgstr ""
 msgid "no file to compare"
 msgstr ""
 
-#: report/professionwithoutcost/professionwithoutcost.php:42
+#: report/professionwithoutcost/professionwithoutcost.php:43
 msgid "professionwithoutcost_report_title"
 msgstr ""
 
@@ -2636,11 +2636,11 @@ msgstr ""
 msgid "professionwithoutvolume_report_title"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:44
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:46
 msgid "resourceemploymentdiff_report_title"
 msgstr ""
 
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:41
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:43
 msgid "resourceemploymentwithlapseprofession_report_title"
 msgstr ""
 
