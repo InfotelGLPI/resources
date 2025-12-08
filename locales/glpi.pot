@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 12:08+0000\n"
+"POT-Creation-Date: 2025-12-08 12:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,7 +211,7 @@ msgstr ""
 msgid "Additional informations"
 msgstr ""
 
-#: hook.php:1372 src/Client.php:52
+#: hook.php:1374 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -812,7 +812,7 @@ msgstr ""
 msgid "Declare an employment"
 msgstr ""
 
-#: hook.php:1361 src/NotificationTargetResource.php:481
+#: hook.php:1363 src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:819
@@ -983,7 +983,7 @@ msgid_plural "Employees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1368
+#: hook.php:1370
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
 #: src/Employment.php:230 src/Employment.php:312 src/Department.php:92
 #: src/Department.php:125 src/Employer.php:56
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "Imported values"
 msgstr ""
 
-#: hook.php:1390 src/NotificationTargetResource.php:114
+#: hook.php:1392 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
@@ -1492,7 +1492,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2807
+#: hook.php:2809
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1658,7 +1658,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2566 src/Resource_Item.php:971
+#: hook.php:2568 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
@@ -1951,7 +1951,7 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1377 src/RuleContracttype.php:251
+#: hook.php:1379 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -2032,7 +2032,7 @@ msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1398 src/RuleContracttype.php:255
+#: hook.php:1400 src/RuleContracttype.php:255
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
@@ -2554,15 +2554,15 @@ msgid_plural "Work Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2865 src/LinkAd.php:852
+#: hook.php:2867 src/LinkAd.php:852
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2912
+#: hook.php:2914
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2847 hook.php:2894 src/LinkAd.php:850
+#: hook.php:2849 hook.php:2896 src/LinkAd.php:850
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
