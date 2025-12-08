@@ -33,7 +33,9 @@ use GlpiPlugin\Resources\Resource;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
-include("../../../../inc/includes.php");
+//include("../../../../inc/includes.php");
+
+global $HEADER_LOADED, $DB;
 
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";

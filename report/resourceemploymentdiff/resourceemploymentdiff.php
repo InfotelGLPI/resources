@@ -40,6 +40,8 @@ use GlpiPlugin\Resources\Resource;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
 
+global $HEADER_LOADED, $DB;
+
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("resourceemploymentdiff_report_title", "resources"));
 

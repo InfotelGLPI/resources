@@ -35,6 +35,7 @@ $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
 
 include("../../../../inc/includes.php");
+global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("lapserankprofession_report_title", "resources"));

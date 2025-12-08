@@ -32,7 +32,7 @@ $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
 include("../../../../inc/includes.php");
-
+global $HEADER_LOADED, $DB;
 //"Rapport listant les utilisateurs sans ressources";
 //"Report listing user without resource";
 // Instantiate Report with Name

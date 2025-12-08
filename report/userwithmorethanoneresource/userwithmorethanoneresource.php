@@ -30,7 +30,7 @@
 //Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
-
+global $HEADER_LOADED, $DB;
 include("../../../../inc/includes.php");
 
 //"Rapport listant les ressources sans utilisateurs";

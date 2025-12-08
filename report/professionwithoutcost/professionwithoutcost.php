@@ -37,6 +37,7 @@ use GlpiPlugin\Resources\Rank;
 
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
+global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport(__("professionwithoutcost_report_title", "resources"));

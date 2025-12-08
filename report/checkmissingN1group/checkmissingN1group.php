@@ -36,6 +36,8 @@ $DBCONNECTION_REQUIRED = 0;
 
 include("../../../../inc/includes.php");
 
+global $HEADER_LOADED, $DB;
+
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name

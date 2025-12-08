@@ -35,6 +35,8 @@ use GlpiPlugin\Resources\Resource;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
+global $HEADER_LOADED, $DB;
+
 include("../../../../inc/includes.php");
 
 // Instantiate Report with Name

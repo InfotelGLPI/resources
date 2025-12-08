@@ -36,7 +36,7 @@ use GlpiPlugin\Resources\ResourceState;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
-
+global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
