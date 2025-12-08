@@ -800,6 +800,8 @@ function plugin_resources_install()
         }
     }
 
+    $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.7.sql");
+
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     if (!is_dir($rep_files_resources)) {
         mkdir($rep_files_resources);
