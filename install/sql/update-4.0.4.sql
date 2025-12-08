@@ -1,4 +1,3 @@
-UPDATE `glpi_displaypreferences` SET `itemtype` = 'GlpiPlugin\\Resources\\Resource' WHERE `itemtype` = 'GlpiPlugin\\Resources\\Resources';
 UPDATE `glpi_crontasks` SET `itemtype` = 'GlpiPlugin\\Resources\\Resource' WHERE `itemtype` = 'PluginResourcesResource';
 UPDATE `glpi_crontasks` SET `itemtype` = 'GlpiPlugin\\Resources\\ResourceImport' WHERE `itemtype` = 'PluginResourcesImportResource';
 UPDATE `glpi_crontasks` SET `itemtype` = 'GlpiPlugin\\Resources\\Task' WHERE `itemtype` = 'PluginResourcesTask';

@@ -2382,7 +2382,7 @@ class Resource extends CommonDBTM
             echo "&nbsp;" . __('By') . "&nbsp;";
             $users_id_recipient_leaving = new User();
             if ($users_id_recipient_leaving->getFromDB($this->fields["users_id_recipient_leaving"])) {
-                echo $users_id_recipient_leaving->getName();
+                echo getUserName($this->fields["users_id_recipient_leaving"]);
             }
 
             if (isset($this->fields["date_declaration_leaving"])
@@ -2672,19 +2672,37 @@ class Resource extends CommonDBTM
         }
 
         if ($ID) {
-            $query = "SELECT `glpi_plugin_resources_resources`.*,
-                          `glpi_users`.`registration_number`,
-                          `glpi_users`.`name` AS username
-                   FROM `glpi_plugin_resources_resources`
-                      LEFT JOIN `glpi_plugin_resources_resources_items`
-                        ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`)
-                      LEFT JOIN `glpi_users`
-                        ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                            AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
-                   WHERE `glpi_plugin_resources_resources`.`id` = '$ID'
-                   GROUP BY `glpi_plugin_resources_resources`.`id`";
-            $result = $DB->doQuery($query);
+
+            $criteria = [
+                'SELECT' => ['glpi_plugin_resources_resources.*',
+                    'glpi_users.registration_number',
+                    'glpi_users.name AS username'],
+                'FROM' => 'glpi_plugin_resources_resources',
+                'LEFT JOIN'       => [
+                    'glpi_plugin_resources_resources_items' => [
+                        'ON' => [
+                            'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                            'glpi_plugin_resources_resources'          => 'id'
+                        ]
+                    ],
+                    'glpi_users' => [
+                        'ON' => [
+                            'glpi_users' => 'id',
+                            'glpi_plugin_resources_resources_items'                  => 'items_id', [
+                                'AND' => [
+                                    'glpi_plugin_resources_resources_items.itemtype' => 'User',
+                                ],
+                            ],
+                        ]
+                    ]
+                ],
+                'WHERE' => [
+                    'glpi_plugin_resources_resources.id' => $ID,
+                ],
+                'GROUPBY'   => 'glpi_plugin_resources_resources.id',
+            ];
+
+            $result = $DB->request($criteria);
 
             if ($link == 2) {
                 $user = [
