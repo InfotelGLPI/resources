@@ -116,7 +116,7 @@ function plugin_resources_install()
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
         $install = true;
-        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-4.0.3.sql");
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-4.0.10.sql");
 
         $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
          VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
