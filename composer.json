@@ -5,7 +5,7 @@
         "glpi-project/tools": "^0.7"
     },
     "require": {
-        "php": "^8.3",
+        "php": ">=8.2",
         "adldap2/adldap2": "^10.3"
     }
 }
