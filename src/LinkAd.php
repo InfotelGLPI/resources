@@ -112,36 +112,36 @@ class LinkAd extends CommonDBTM
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (!$withtemplate) {
-            if ($item->getID() && $this->canView()) {
-                if ($item->getType() == Ticket::getType()) {
-                    $items = new Item_Ticket();
-                    if ($items->getFromDBByCrit([
-                        "tickets_id" => $item->getID(),
-                        "itemtype" => Resource::getType()
-                    ])) {
-                        $adConfig = new Adconfig();
-                        $adConfig->getFromDB(1);
-                        $adConfig->fields = $adConfig->prepareFields($adConfig->fields);
-                        if ((is_array($adConfig->fields["creation_categories_id"])
-                                && in_array(
-                                    $item->getField('itilcategories_id'),
-                                    $adConfig->getField("creation_categories_id")
-                                ))
-                            || (is_array($adConfig->fields["modification_categories_id"])
-                                && in_array(
-                                    $item->getField('itilcategories_id'),
-                                    $adConfig->getField("modification_categories_id")
-                                ))
-                            || (is_array($adConfig->fields["deletion_categories_id"])
-                                && in_array(
-                                    $item->getField('itilcategories_id'),
-                                    $adConfig->getField("deletion_categories_id")
-                                ))) {
-                            if ($_SESSION['glpishow_count_on_tabs']) {
-                                return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-                            }
-                            return self::createTabEntry(self::getTypeName(2));
+            if ($item->getType() == 'Ticket'
+                && $item->getID()
+                && $this->canView()) {
+                $items = new Item_Ticket();
+                if ($items->getFromDBByCrit([
+                    "tickets_id" => $item->getID(),
+                    "itemtype" => Resource::getType()
+                ])) {
+                    $adConfig = new Adconfig();
+                    $adConfig->getFromDB(1);
+                    $adConfig->fields = $adConfig->prepareFields($adConfig->fields);
+                    if ((is_array($adConfig->fields["creation_categories_id"])
+                            && in_array(
+                                $item->getField('itilcategories_id'),
+                                $adConfig->getField("creation_categories_id")
+                            ))
+                        || (is_array($adConfig->fields["modification_categories_id"])
+                            && in_array(
+                                $item->getField('itilcategories_id'),
+                                $adConfig->getField("modification_categories_id")
+                            ))
+                        || (is_array($adConfig->fields["deletion_categories_id"])
+                            && in_array(
+                                $item->getField('itilcategories_id'),
+                                $adConfig->getField("deletion_categories_id")
+                            ))) {
+                        if ($_SESSION['glpishow_count_on_tabs']) {
+                            return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
                         }
+                        return self::createTabEntry(self::getTypeName(2));
                     }
                 }
             }
