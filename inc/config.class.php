@@ -79,6 +79,50 @@ class PluginResourcesConfig extends CommonDBTM {
       }
    }
 
+   public static function getAvailablevariable() {
+       return [
+           '##resource_gender##' => __('Gender', 'resources'),
+           '##resource_name##' => __('Surname'),
+           '##resource_firstname##' => __('First name'),
+           '##resource_phone##' => __('Phone'),
+           '##resource_cellphone##' => __('Mobile phone'),
+           '##resource_locations_id##' => __('Location'),
+           '##resource_users_id##' => __('Resource manager', 'resources'),
+           '##resource_users_id_sales##' => __('Sales manager', 'resources'),
+           '##resource_plugin_resources_departments_id##' => PluginResourcesDepartment::getTypeName(1),
+           '##resource_plugin_resources_services_id##' => PluginResourcesService::getTypeName(1),
+           '##resource_plugin_resources_functions_id##' => PluginResourcesFunction::getTypeName(1),
+           '##resource_plugin_resources_teams_id##' => PluginResourcesTeam::getTypeName(1),
+           '##resource_date_begin##' => __('Arrival date', 'resources'),
+           '##resource_date_end##' => __('Departure date', 'resources'),
+           '##resource_comment##' => __('Description', 'resources'),
+           '##resource_quota##' => __('Quota', 'resources'),
+           '##resource_plugin_resources_resourcesituations_id##' => PluginResourcesResourceSituation::getTypeName(1),
+           '##resource_plugin_resources_contractnatures_id##' => PluginResourcesContractNature::getTypeName(1),
+           '##resource_plugin_resources_ranks_id##' => PluginResourcesRank::getTypeName(1),
+           '##resource_plugin_resources_resourcespecialities_id##' => PluginResourcesResourceSpeciality::getTypeName(1),
+           '##resource_sensitize_security##' => __('Sensitized to security', 'resources'),
+           '##resource_read_chart##' => __('Reading the security charter', 'resources'),
+           '##resource_plugin_resources_roles_id##' => PluginResourcesRole::getTypeName(1),
+           '##resource_matricule##' => __('Matricule', 'resources'),
+           '##resource_matricule_second##' => __('Second matricule', 'resources'),
+       ];
+   }
+
+   public function getVariableToHide(){
+       return [
+           'gender' => __('Gender', 'resources'),
+           'name' => __('Surname'),
+           'firstname' => __('First name'),
+           'matricule' => __('Matricule', 'resources'),
+           'phone' => __('Phone'),
+           'matricule_second' => __('Second matricule', 'resources'),
+           'cellphone' => __('Mobile phone'),
+           'locations_id' => __('Location'),
+           'quota' => __('Quota', 'resources'),
+       ];
+   }
+
    /**
     * @return bool
     */
@@ -184,6 +228,16 @@ class PluginResourcesConfig extends CommonDBTM {
 
          echo "</td>";
          echo "</tr>";
+          echo "<tr class='tab_bg_1'>";
+          echo "<td>";
+          echo __('Create a ticket with departure and instructions', 'resources');
+          echo "</td>";
+          echo "<td>";
+
+          Dropdown::showYesNo("create_ticket_departure_instructions",$this->fields["create_ticket_departure_instructions"]);
+
+          echo "</td>";
+          echo "</tr>";
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
          echo __('Category of departure ticket', 'resources');
@@ -343,6 +397,64 @@ class PluginResourcesConfig extends CommonDBTM {
          Dropdown::showYesNo('hide_view_commercial_resource',$this->fields['hide_view_commercial_resource']);
          echo "</td>";
          echo "</tr>";
+
+          echo "<tr class='tab_bg_1'>";
+          echo "<td>";
+          echo __('Send an automatique notification on the "declare an arrival" form', 'resources');
+          echo "</td>";
+          echo "<td>";
+          Dropdown::showYesNo('automatique_notification_declare_arrival_form',$this->fields['automatique_notification_declare_arrival_form']);
+          echo "</td>";
+          echo "</tr>";
+
+          echo "<tr class='tab_bg_1'>";
+          echo "<td>";
+          echo __('Default assignment group', 'resources');
+          echo "</td>";
+          echo "<td>";
+          Group::dropdown(['name' => 'default_assignment_group','value' => $this->fields['default_assignment_group']]);
+          echo "</td>";
+          echo "</tr>";
+
+
+          echo Ajax::createModalWindow(
+              'popupAvailablevariable',
+              PLUGIN_RESOURCES_WEBDIR . '/front/modalavailablevariable.php',
+              [
+                  'title' => __('Are you sure?', 'resources'),
+                  'reloadonclose' => false,
+                  'width' => 1180,
+                  'height' => 500,
+              ]
+          );
+          echo "<tr class='tab_bg_1'>";
+          echo "<td>";
+          echo __('Text in the resource creation ticket after validation', 'resources') . '<br>';
+          Html::requireJs('tinymce');
+          echo "<a class='' href='#' onclick='popupAvailablevariable.show()' title='" . __("See variable available", "resources") . "'>" . __("See variable available", "resources") . "</a>";
+          echo "</td>";
+          echo "<td>";
+          Html::textarea(['name' => 'text_ticket_validation','value' => $this->fields['text_ticket_validation']]);
+          echo "</td>";
+          echo "</tr>";
+
+          echo "<tr class='tab_bg_1'>";
+          echo "<td>";
+          echo __('Hide the following fields in the "Report an Arrival" form', 'resources');
+          echo "</td>";
+          echo "<td>";
+          $values_used = [];
+          if (!empty($this->fields['hide_fieds_arrival_form'])) {
+              $values_used = json_decode($this->fields['hide_fieds_arrival_form']);
+          }
+          Dropdown::showFromArray('hide_fieds_arrival_form',$this->getVariableToHide(),[
+              'values' => $values_used,
+              'width' => '250px',
+              'multiple' => true,
+              'entity' => $_SESSION['glpiactiveentities']
+          ]);
+          echo "</td>";
+          echo "</tr>";
 
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='2'>";

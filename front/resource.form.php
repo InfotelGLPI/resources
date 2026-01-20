@@ -349,6 +349,233 @@ else if (isset($_POST["add_checklist"])) {
    }
    Html::back();
 
+} else if (isset($_POST["synchActiveDirectory"])) {
+    $resource->getFromDB($_POST["plugin_resources_resources_id"] );
+
+    $config          = new PluginResourcesConfig();
+    $configAD        = new PluginResourcesAdconfig();
+    $config->getFromDB(1);
+    $configAD->getFromDB(1);
+    $configAD->fields = $configAD->prepareFields($configAD->fields);
+    $canedit                           = $resource->can($resource->fields['id'], UPDATE);
+    $entities_id                       = $resource->fields["entities_id"];
+    $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
+    $rand                              = mt_rand();
+    $enddate                           = $resource->getField("date_end");
+
+    $linkAD                            = new PluginResourcesLinkAd();
+    $linkAD->getEmpty();
+    $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
+
+    if (!$islink) {
+        $ret                     = PluginResourcesLinkAd::processLogin($resource);
+        $linkAD->fields["login"] = $ret[0];
+        $logAvailable            = $ret[1];
+
+        $mail                       = PluginResourcesLinkAd::processMail($resource, $linkAD->fields["login"]);
+        $linkAD->fields["mail"]     = $mail;
+        $role                       = Dropdown::getDropdownName(PluginResourcesRole::getTable(), $resource->fields['plugin_resources_roles_id']);
+        $linkAD->fields["role"]     = $role;
+        $service                    = Dropdown::getDropdownName(PluginResourcesService::getTable(), $resource->fields['plugin_resources_services_id']);
+        $linkAD->fields["service"]  = $service;
+        $location                   = Dropdown::getDropdownName(Location::getTable(), $resource->fields['locations_id']);
+        $linkAD->fields["location"] = $location;
+    }
+
+
+    $ID = $linkAD->getID();
+    $value = [
+        'plugin_resources_resources_id' => $resource->fields['id'],
+        'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
+        'entities_id' => $entities_id,
+        'enddate' => $enddate,
+        'id' => $ID,
+        'login' => $linkAD->fields["login"],
+        'department' => Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id")),
+        'glpi_plugin_resources_departments' => $resource->getField("plugin_resources_departments_id"),
+        'name' => $resource->getField("name"),
+        'firstname' => $resource->getField("firstname"),
+        'phone' => $resource->getField('phone'),
+        'mail' => $linkAD->fields["mail"],
+        'contract' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")),
+        'glpi_plugin_resources_contracttypes' => $resource->getField("plugin_resources_contracttypes_id"),
+        'cellphone' => $resource->getField("cellphone"),
+        'role' => $resource->getField('plugin_resources_roles_id'),
+        'service' => $resource->getField('plugin_resources_services_id'),
+        'location' => $resource->getField('locations_id'),
+    ];
+
+    $linkad = new PluginResourcesLinkAd();
+
+    if (!$islink) {
+        $message = __('the user has not been updated to the LDAP directory','resources');
+        Session::addMessageAfterRedirect($message, false, ERROR);
+    }
+    else {
+
+        //update
+        $ldap = new PluginResourcesLDAP();
+        $linkad->getFromDB($value['id']);
+        $value["login"] = $linkad->getField("login");
+        $res = $ldap->updateUserAD($value);
+        if($res[0]){
+
+            $value["action_done"] = 1;
+            $linkad->update($value);
+
+            $message = __('the user has been updated to the LDAP directory','resources');
+            Session::addMessageAfterRedirect($message, false, INFO);
+        }else{
+            $message = __('the user has not been updated to the LDAP directory','resources');
+            Session::addMessageAfterRedirect($message, false, ERROR);
+        }
+    }
+
+} else if (isset($_POST["validOrderLeaving"])) {
+    $_POST["id"]       = $_POST["plugin_resources_resources_id"];
+    unset($_POST["plugin_resources_resources_id"]);
+    unset($_POST["date_declaration_leaving"]);
+    $resource->update($_POST);
+
+    $config = new PluginResourcesConfig();
+    $config->getFromDB(1);
+    if ($config->fields["create_ticket_departure_instructions"]) {
+        $resource->getFromDB($_POST["id"]);
+        $ticket = new Ticket();
+
+        $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
+        if (isset($tt->predefined) && count($tt->predefined)) {
+            foreach ($tt->predefined as $predeffield => $predefvalue) {
+                // Load template data
+                $ticket->fields[$predeffield] = Toolbox::addslashes_deep($predefvalue);
+            }
+        }
+        $resource->getFromDB($_POST["id"]);
+        $ticket->fields["name"] = Toolbox::addslashes_deep(__("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname']);
+        $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
+
+        $dateend = new DateTime($resource->fields['date_end']);
+        $ticket->fields["content"] = $resource->fields['name'] . " " . $resource->fields['firstname'] . " " . __("leave on", "resources") . " " . Html::convDate($dateend->format('Y-m-d'));
+        if (isset($resource->fields['plugin_resources_leavingreasons_id']) && !empty($resource->fields['plugin_resources_leavingreasons_id'])) {
+            $ticket->fields["content"] .= "<br>" . PluginResourcesLeavingReason::getTypeName(0) . " : " . Dropdown::getDropdownName(PluginResourcesLeavingReason::getTable(), $resource->fields["plugin_resources_leavingreasons_id"]);
+        }
+        if (($resource->fields['plugin_resources_contracttypes_id']) != 0) {
+            $ticket->fields["content"] .= "<br>" . PluginResourcesContractType::getTypeName(0) . " : " . Dropdown::getDropdownName(PluginResourcesContractType::getTable(), $resource->fields['plugin_resources_contracttypes_id']);
+        } else {
+            $ticket->fields["content"] .= "<br>" . PluginResourcesContractType::getTypeName(0) . " : " . __("Without contract", 'resources');
+        }
+        $ticket->fields["content"] .= "<br>" . __("Order", 'resources') . " : " . $resource->fields['remove_order'];
+        $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
+        $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
+        $ticket->fields["type"] = Ticket::DEMAND_TYPE;
+        $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+        $ticket->fields['items_id'] = ['PluginResourcesResource' => [$_POST['id']]];
+        unset($ticket->fields["id"]);
+        $ticket_id = $ticket->add($ticket->fields);
+
+
+        //Update AD
+
+        $authldap = new AuthLDAP();
+        $auth = $authldap->find();
+        if (count($auth) > 0) {
+            $config = new PluginResourcesConfig();
+            $configAD = new PluginResourcesAdconfig();
+            $config->getFromDB(1);
+            $configAD->getFromDB(1);
+            $configAD->fields = $configAD->prepareFields($configAD->fields);
+            $canedit = $resource->can($resource->fields['id'], UPDATE);
+            $entities_id = $resource->fields["entities_id"];
+            $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
+            $rand = mt_rand();
+            $enddate = $resource->getField("date_end");
+
+            $linkAD = new PluginResourcesLinkAd();
+            $linkAD->getEmpty();
+            $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
+
+            $ID = $linkAD->getID();
+            $value = [
+                'plugin_resources_resources_id' => $resource->fields['id'],
+                'tickets_id' => $ticket_id,
+                'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
+                'entities_id' => $entities_id,
+                'enddate' => $enddate,
+                'id' => $ID,
+                'login' => $linkAD->fields["login"],
+                'department' => Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id")),
+                'glpi_plugin_resources_departments' => $resource->getField("plugin_resources_departments_id"),
+                'name' => $resource->getField("name"),
+                'firstname' => $resource->getField("firstname"),
+                'phone' => $resource->getField('phone'),
+                'mail' => $linkAD->fields["mail"],
+                'contract' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")),
+                'glpi_plugin_resources_contracttypes' => $resource->getField("plugin_resources_contracttypes_id"),
+                'cellphone' => $resource->getField("cellphone"),
+                'role' => $resource->getField('plugin_resources_roles_id'),
+                'service' => $resource->getField('plugin_resources_services_id'),
+                'location' => $resource->getField('locations_id'),
+            ];
+
+            $linkad = new PluginResourcesLinkAd();
+
+            if (!$islink) {
+                $message = __('the user has not been updated to the LDAP directory', 'resources');
+                Session::addMessageAfterRedirect($message, false, ERROR);
+            } else {
+
+                //update
+                $ldap = new PluginResourcesLDAP();
+                $linkad->getFromDB($value['id']);
+                $value["login"] = $linkad->getField("login");
+                $res = $ldap->updateUserAD($value);
+                if ($res[0]) {
+
+                    $value["action_done"] = 1;
+                    $linkad->update($value);
+                    $fup = new ITILFollowup();
+
+                    $toadd = ['type' => "new",
+                        'items_id' => $value["ticket_id"],
+                        'itemtype' => 'Ticket',
+                        'is_private' => 1];
+
+                    $content = Toolbox::addslashes_deep(sprintf(__('%1$s %2$s have been updated in the LDAP directory', 'resources'), $value["firstname"], $value["name"]));
+                    $content .= __("Data changed", 'resources') . " <br />";
+                    foreach ($res[1] as $key => $oldData) {
+                        $i = 1;
+                        $nb = count($oldData);
+                        $content .= $key . " : ";
+                        foreach ($oldData as $data) {
+                            if ($key == "accountexpires") {
+                                $time = $ldap->ldapTimeToUnixTime($data);
+                                $data = date('Y-m-d', $time);
+                                $data = Html::convDate($data);
+
+                            }
+                            $content .= $data;
+                            if ($i < $nb) {
+                                $content .= ", ";
+                            }
+                            $i++;
+                        }
+                        $content .= "<br />";
+
+                    }
+                    $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
+
+                    $fup->add($toadd);
+                    $message = __('the user has been updated to the LDAP directory', 'resources');
+                    Session::addMessageAfterRedirect($message, false, INFO);
+                } else {
+                    $message = __('the user has not been updated to the LDAP directory', 'resources');
+                    Session::addMessageAfterRedirect($message, false, ERROR);
+                }
+            }
+        }
+    }
+
+    Html::back();
 } else {
    $resource->checkGlobal(READ);
    if (Session::getCurrentInterface() == 'central') {

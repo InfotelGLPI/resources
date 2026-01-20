@@ -571,6 +571,11 @@ function plugin_resources_install()
             }
         }
     }
+
+    if (!$DB->fieldExists("glpi_plugin_resources_adconfigs", "fonctionAD")) {
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.8.sql");
+    }
+
     $rep_files_resources = GLPI_PLUGIN_DOC_DIR . "/resources";
     if (!is_dir($rep_files_resources)) {
         mkdir($rep_files_resources);

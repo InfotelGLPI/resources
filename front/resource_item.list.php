@@ -60,16 +60,21 @@ else if (isset($_POST["deletehelpdeskitem"])) {
    $resource->redirectToList();
 
 } else if (isset($_POST["updateneedcomment"])) {
-   if ($resource->canCreate()) {
-      foreach ($_POST["updateneedcomment"] as $key => $val) {
-         $varcomment = "commentneed".$key;
-         $values['id'] = $key;
-         $values['commentneed'] = $_POST[$varcomment];
-         $choice->addNeedComment($values);
-      }
-   }
-   Html::back();
-
+    if ($resource->canCreate()) {
+        foreach ($_POST["updateneedcomment"] as $key => $val) {
+            $varcomment = "commentneed" . $key;
+            $values['id'] = $key;
+            $values['commentneed'] = $_POST[$varcomment];
+            $choice->addNeedComment($values);
+        }
+    }
+    Html::back();
+} elseif (isset($_POST['updateSpecialRequirement'])) {
+    if ($resource->canCreate()) {
+        $_POST['id'] = $_POST['plugin_resources_resources_id'];
+        $resource->update($_POST);
+    }
+    Html::back();
 } else {
    //show form items needs from helpdesk
    if ($resource->canView() || Session::haveRight("config", UPDATE)) {

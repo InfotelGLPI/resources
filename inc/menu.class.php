@@ -47,6 +47,7 @@ class PluginResourcesMenu extends CommonDBTM {
       $canseebudget     = Session::haveright('plugin_resources_budget', READ);
       $canbadges        = Session::haveright('plugin_badges', READ) && Plugin::isPluginActive("badges");
       $canImport        = Session::haveright('plugin_resources_import', READ);
+      $canOtheraction   = Session::haveright('plugin_resources_otheraction', READ);
 
       if ($item->canCreate()) {
 
@@ -169,7 +170,7 @@ class PluginResourcesMenu extends CommonDBTM {
          echo " </table>";
       }
 
-      if ($item->canView()) {
+      if ($canOtheraction) {
 
          echo "<br><h3><div class='alert alert-secondary' role='alert'>";
          echo "<i class='fas fa-user-friends'></i>&nbsp;";

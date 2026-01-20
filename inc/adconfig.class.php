@@ -366,8 +366,12 @@ class PluginResourcesAdconfig extends CommonDBTM {
          echo "</td>";
 
          echo "<td>";
+          echo __('Function', 'resources');
          echo "</td>";
          echo "<td>";
+          $option = ['value' => $this->fields['fonctionAD'],
+              'entity' => -1];
+          echo Html::input('fonctionAD', $option);
          echo "</td>";
 
          echo "</tr>";
@@ -498,7 +502,7 @@ class PluginResourcesAdconfig extends CommonDBTM {
 
    function getArrayAttributes(){
 
-      $array = ["logAD","nameAD","phoneAD","companyAD","departmentAD","firstnameAD","mailAD","contractEndAD","contractTypeAD","cellPhoneAD","roleAD","serviceAD","locationAD"];
+      $array = ["logAD","nameAD","phoneAD","companyAD","departmentAD","firstnameAD","mailAD","contractEndAD","contractTypeAD","cellPhoneAD","roleAD","serviceAD","locationAD","fonctionAD"];
       return $array;
    }
    function prepareFields($fields){

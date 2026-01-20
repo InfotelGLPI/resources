@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RESOURCES_VERSION', '3.0.7');
+define('PLUGIN_RESOURCES_VERSION', '3.0.8');
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
    define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
@@ -93,6 +93,10 @@ function plugin_init_resources() {
          'rulecollections_types' => true
 
       ]);
+      Plugin::registerClass(PluginResourcesRuleContracttypeReadonlyCollection::class, [
+          'rulecollections_types' => true
+
+      ]);
 
       Plugin::registerClass(PluginResourcesProfile::class,
                             ['addtabon' => 'Profile']);
@@ -127,6 +131,7 @@ function plugin_init_resources() {
          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleChecklist::class, 'PluginBehaviorsRule');
          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttype::class, 'PluginBehaviorsRule');
          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttypeHidden::class, 'PluginBehaviorsRule'); // TODO Confirm usefull
+          PluginBehaviorsCommon::addCloneType(PluginResourcesRuleContracttypeReadonly::class, 'PluginBehaviorsRule');
       }
 
       if (class_exists('PluginTreeviewConfig')) {
@@ -173,6 +178,11 @@ function plugin_init_resources() {
 
       //TODO : Check
       $PLUGIN_HOOKS['plugin_pdf']['PluginResourcesResource'] = 'PluginResourcesResourcePDF';
+
+       $PLUGIN_HOOKS['item_add']['resources'] =
+           [
+               'Item_Ticket' => [new PluginResourcesResource(), 'afterInsert'],
+           ];
 
       //Clean Plugin on Profile delete
       if (class_exists('PluginResourcesResource_Item')) { // only if plugin activated
