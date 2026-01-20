@@ -279,6 +279,14 @@ class RuleContracttypeHidden extends Rule
         $actions['hiddenfields_matricule']['type'] = "yesonly";
         $actions['hiddenfields_matricule']['force_actions'] = ['assign'];
 
+        $actions['hiddenfields_phone']['name']  = __('Phone');
+        $actions['hiddenfields_phone']['type']  = "yesonly";
+        $actions['hiddenfields_phone']['force_actions'] = ['assign'];
+
+        $actions['hiddenfields_mobilephone']['name']  = __('Mobile phone');
+        $actions['hiddenfields_mobilephone']['type']  = "yesonly";
+        $actions['hiddenfields_mobilephone']['force_actions'] = ['assign'];
+
         $actions['hiddenfields_matricule_second']['name'] = __('Second matricule', 'resources');
         $actions['hiddenfields_matricule_second']['type'] = "yesonly";
         $actions['hiddenfields_matricule_second']['force_actions'] = ['assign'];

@@ -234,6 +234,8 @@ class LeavingInformation extends CommonDBTM
         $mandatory = array_flip($mandatory);
         $hidden = $this->getHiddenFields($input);
         $hidden = array_flip($hidden);
+        $readonly = $this->getReadonlyFields($input);
+        $readonly = array_flip($readonly);
         $config = new Config();
         if (($config->getField('sales_manager') != "")) {
             $tableProfileUser = Profile_User::getTable();
@@ -265,6 +267,7 @@ class LeavingInformation extends CommonDBTM
                 'params' => [
                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
                     'hidden_fields' => $hidden,
+                    'readonly_fields'    => $readonly,
                     'mandatory_fields' => $mandatory,
                     'element_sales' => $used,
                 ],
@@ -275,6 +278,7 @@ class LeavingInformation extends CommonDBTM
                 'params' => [
                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
                     'hidden_fields' => $hidden,
+                    'readonly_fields'    => $readonly,
                     'mandatory_fields' => $mandatory,
                     'right_sales' => true,
                 ],
@@ -592,6 +596,32 @@ class LeavingInformation extends CommonDBTM
         $field = [];
         foreach ($fields as $key => $val) {
             $hidden = explode("hiddenfields_", $key);
+            if (isset($hidden[1])) {
+                $field[] = $hidden[1];
+            }
+        }
+
+
+        return $field;
+    }
+
+    /**
+     * @param $input
+     *
+     * @return array
+     */
+    function getReadonlyFields($input) {
+
+        $need           = [];
+        $rulecollection = new RuleContracttypeReadonlyCollection($input['entities_id']);
+
+        $fields = [];
+        $fields = $rulecollection->processAllRules($input, $fields, []);
+
+
+        $field = [];
+        foreach ($fields as $key => $val) {
+            $hidden = explode("readonlyfields_", $key);
             if (isset($hidden[1])) {
                 $field[] = $hidden[1];
             }

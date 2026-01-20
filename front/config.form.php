@@ -42,6 +42,10 @@ if (Plugin::isPluginActive("resources")) {
     $resourceBadge = new ResourceBadge();
     $config = new Config();
 
+    if (!empty($_POST['hide_fieds_arrival_form'])) {
+        $_POST['hide_fieds_arrival_form'] = json_encode($_POST['hide_fieds_arrival_form']);
+    }
+
     if (isset($_POST["add_ticket"])) {
         $cat->addTicketCategory($_POST['ticketcategories_id']);
         Html::back();

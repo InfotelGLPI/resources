@@ -51,10 +51,12 @@ use GlpiPlugin\Resources\RuleContracttype;
 use GlpiPlugin\Resources\RuleContracttypeCollection;
 use GlpiPlugin\Resources\RuleContracttypeHidden;
 use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
+use GlpiPlugin\Resources\RuleContracttypeReadonly;
+use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.10');
+define('PLUGIN_RESOURCES_VERSION', '4.0.11');
 
 global $CFG_GLPI;
 
@@ -123,6 +125,11 @@ function plugin_init_resources()
 
         ]);
 
+        Plugin::registerClass(RuleContracttypeReadonlyCollection::class, [
+            'rulecollections_types' => true
+
+        ]);
+
         Plugin::registerClass(
             Profile::class,
             ['addtabon' => 'Profile']
@@ -157,6 +164,7 @@ function plugin_init_resources()
             Common::addCloneType(RuleChecklist::class, Rule::class);
             Common::addCloneType(RuleContracttype::class, Rule::class);
             Common::addCloneType(RuleContracttypeHidden::class, Rule::class); // TODO Confirm usefull
+            Common::addCloneType(RuleContracttypeReadonly::class, Rule::class);
         }
 
         if (class_exists('PluginTreeviewConfig')) {
@@ -204,6 +212,11 @@ function plugin_init_resources()
 
         //TODO : Check
         $PLUGIN_HOOKS['plugin_pdf'][Resource::class] = ResourcePDF::class;
+
+        $PLUGIN_HOOKS['item_add']['resources'] =
+            [
+                'Item_Ticket' => [new Resource(), 'afterInsert'],
+            ];
 
         //Clean Plugin on Profile delete
         if (class_exists(Resource_Item::class)) { // only if plugin activated

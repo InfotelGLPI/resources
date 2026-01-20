@@ -32,11 +32,13 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use CommonITILActor;
 use DbUtils;
 use Dropdown;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Metademand_Resource;
+use Group_Ticket;
 use Html;
 use ITILCategory;
 use Log;
@@ -528,6 +530,16 @@ class ResourceBadge extends CommonDBTM
             $msg = __('Failed operation'); // Failure
         }
         if ($tid) {
+            $config = new Config();
+            $config->getFromDB(1);
+            if ($config->fields["default_assignment_group"]) {
+                $groupticket = new Group_Ticket();
+                $groupticket->fields['tickets_id'] = $tid;
+                $groupticket->fields['groups_id'] = $config->fields["default_assignment_group"];
+                $groupticket->fields['type'] = CommonITILActor::ASSIGN;
+                unset($groupticket->fields["id"]);
+                $groupticket->add($groupticket->fields);
+            }
             $changes[0] = 0;
             $changes[1] = '';
             $changes[2] = addslashes($msg);

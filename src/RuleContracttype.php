@@ -276,6 +276,14 @@ class RuleContracttype extends Rule
         $actions['requiredfields_matricule']['type'] = "yesonly";
         $actions['requiredfields_matricule']['force_actions'] = ['assign'];
 
+        $actions['requiredfields_phone']['name']  = __('Phone');
+        $actions['requiredfields_phone']['type']  = "yesonly";
+        $actions['requiredfields_phone']['force_actions'] = ['assign'];
+
+        $actions['requiredfields_mobilephone']['name']  = __('Mobile phone');
+        $actions['requiredfields_mobilephone']['type']  = "yesonly";
+        $actions['requiredfields_mobilephone']['force_actions'] = ['assign'];
+
         $actions['requiredfields_matricule_second']['name'] = __('Second matricule', 'resources');
         $actions['requiredfields_matricule_second']['type'] = "yesonly";
         $actions['requiredfields_matricule_second']['force_actions'] = ['assign'];

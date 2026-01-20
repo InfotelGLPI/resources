@@ -107,6 +107,16 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
         Html::showDateField("date_end", ['value' => date("Y-m-d")]);
         echo "</div>";
         echo "</div>";
+
+        echo "<div class=\"form-row\">";
+
+        echo "<div class=\"bt-feature col-md-4 \">";
+        echo __('Manager', 'resources');
+        echo "</div>";
+        echo "<div class=\"bt-feature col-md-4 \">";
+        User::dropdown(['name' => 'remove_manager', 'right' => 'all']);
+        echo "</div>";
+        echo "</div>";
     }
 }
 

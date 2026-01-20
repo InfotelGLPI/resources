@@ -693,6 +693,7 @@ class LinkAd extends CommonDBTM
         $mapping["departmentAD"] = "department";
         $mapping["contractTypeAD"] = "contract";
         $mapping["contractEndAD"] = "enddate";
+        $mapping["fonctionAD"]     = "function";
 
         if (isset($mapping[$val])) {
             return $mapping[$val];

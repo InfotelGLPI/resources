@@ -446,8 +446,12 @@ class Adconfig extends CommonDBTM
             echo "</td>";
 
             echo "<td>";
+            echo __('Function', 'resources');
             echo "</td>";
             echo "<td>";
+            $option = ['value' => $this->fields['fonctionAD'],
+                'entity' => -1];
+            echo Html::input('fonctionAD', $option);
             echo "</td>";
 
             echo "</tr>";
@@ -597,7 +601,8 @@ class Adconfig extends CommonDBTM
             "cellPhoneAD",
             "roleAD",
             "serviceAD",
-            "locationAD"
+            "locationAD",
+            "fonctionAD"
         ];
         return $array;
     }
