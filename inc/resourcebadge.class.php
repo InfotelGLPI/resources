@@ -450,6 +450,16 @@ class PluginResourcesResourceBadge extends CommonDBTM {
          $msg = __('Failed operation'); // Failure
       }
       if ($tid) {
+          $config = new PluginResourcesConfig();
+          $config->getFromDB(1);
+          if ($config->fields["default_assignment_group"]) {
+              $groupticket = new Group_Ticket();
+              $groupticket->fields['tickets_id'] = $tid;
+              $groupticket->fields['groups_id'] = $config->fields["default_assignment_group"];
+              $groupticket->fields['type'] = CommonITILActor::ASSIGN;
+              unset($groupticket->fields["id"]);
+              $groupticket->add($groupticket->fields);
+          }
          $changes[0] = 0;
          $changes[1] = '';
          $changes[2] = addslashes($msg);

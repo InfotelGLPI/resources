@@ -13,6 +13,7 @@
     {% set withtemplate = params['withtemplate'] ?? "" %}
     {% set item_type = item.getType() %}
     {% set hidden = params['hidden_fields'] ?? [] %}
+    {% set readonly = params['readonly_fields'] ?? [] %}
     {% set mandatory = params['mandatory_fields'] ?? [] %}
     {% set default_button = params['default_button'] ?? false %}
     {% set right_sales = params['right_sales'] ?? false %}

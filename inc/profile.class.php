@@ -78,6 +78,7 @@ class PluginResourcesProfile extends Profile
                'plugin_resources_budget' => 0,
                'plugin_resources_dropdown_public' => 0,
                'plugin_resources_import' => 0,
+               'plugin_resources_otheraction' => 0,
                'plugin_resources_open_ticket' => 0,
                'plugin_resources_all' => 0,
                'plugin_resources_leavinginformation' => 0,
@@ -107,6 +108,7 @@ class PluginResourcesProfile extends Profile
            'plugin_resources_budget' => ALLSTANDARDRIGHT,
            'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
            'plugin_resources_import' => ALLSTANDARDRIGHT,
+           'plugin_resources_otheraction' => ALLSTANDARDRIGHT,
            'plugin_resources_open_ticket' => 1,
            'plugin_resources_all' => 1,
            'plugin_resources_leavinginformation' => 1,
@@ -312,7 +314,18 @@ class PluginResourcesProfile extends Profile
                  CREATE => __('Create'),
                  PURGE => __('Purge')
               ]
-           ]
+           ],
+            ['itemtype' => 'PluginResourcesOtherAction',
+                'label' => __('Other actions', 'resources'),
+                'field' => 'plugin_resources_otheraction',
+                'type' => 'general',
+                'rights' => [
+                    READ => __('Read'),
+                    UPDATE => __('Update'),
+                    CREATE => __('Create'),
+                    PURGE => __('Purge')
+                ]
+            ]
         ];
 
         if ($all) {

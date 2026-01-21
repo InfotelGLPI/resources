@@ -75,7 +75,8 @@ class PluginResourcesNotificationTargetResource extends NotificationTarget {
               'deleteholiday'          => __('A forced holiday has been removed', 'resources'),
               'other'                  => __('Other resource notification', 'resources'),
               'transfer'               => __('Transfer resource notification', 'resources'),
-              'AlertCommercialManager' => __('Resources list of commercial manager', 'resources')
+              'AlertCommercialManager' => __('Resources list of commercial manager', 'resources'),
+              'AlertLeavingRessourceManager' => __('Alert manager in charge to complete the departure form started by others', 'resources'),
       ];
    }
 

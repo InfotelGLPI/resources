@@ -1,0 +1,422 @@
+<?php
+/*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ resources plugin for GLPI
+ Copyright (C) 2009-2026 by the resources Development Team.
+
+ https://github.com/InfotelGLPI/resources
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of resources.
+
+ resources is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ resources is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+
+if (!defined('GLPI_ROOT')) {
+    die("Sorry. You can't access directly to this file");
+}
+
+
+/**
+ * Rule class store all informations about a GLPI rule :
+ *   - description
+ *   - criterias
+ *   - actions
+ *
+ **/
+class PluginResourcesRuleContracttypeReadonly extends Rule {
+
+    public static $rightname = 'plugin_resources';
+
+    public $can_sort=true;
+
+    /**
+     * Get title used in rule
+     *
+     * @return Title of the rule
+     **/
+    function getTitle() {
+
+        return PluginResourcesResource::getTypeName(2)." ".__('Read only Fields', 'resources');
+    }
+
+    /**
+     * Have I the global right to "view" the Object
+     *
+     * Default is true and check entity if the objet is entity assign
+     *
+     * May be overloaded if needed
+     *
+     * @return booleen
+     **/
+    static function canView() {
+        return Session::haveRight(self::$rightname, READ);
+    }
+
+    /**
+     * Have I the global right to "create" the Object
+     * May be overloaded if needed (ex KnowbaseItem)
+     *
+     * @return booleen
+     **/
+    static function canCreate() {
+        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
+    }
+
+    /**
+     * @return bool
+     */
+    function maybeRecursive() {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    function isEntityassign() {
+        return true;
+    }
+
+    /**
+     * Can I change recursive flag to false
+     * check if there is "linked" object in another entity
+     *
+     * May be overloaded if needed
+     *
+     * @return booleen
+     **/
+    function canUnrecurs() {
+        return true;
+    }
+
+    /**
+     * @return int
+     */
+    function maxCriteriasCount() {
+        return 1;
+    }
+
+    /**
+     * Get maximum number of Actions of the Rule (0 = unlimited)
+     *
+     * @return the maximum number of actions
+     **/
+    function maxActionsCount() {
+        return count($this->getActions());
+    }
+
+    /**
+     * Function used to add specific params before rule processing
+     *
+     * @param $params parameters
+     **/
+    function addSpecificParamsForPreview($params) {
+
+        if (!isset($params["entities_id"])) {
+            $params["entities_id"] = $_SESSION["glpiactive_entity"];
+        }
+        return $params;
+    }
+
+    /**
+     * Function used to display type specific criterias during rule's preview
+     *
+     * @param $fields fields values
+     **/
+    function showSpecificCriteriasForPreview($fields) {
+
+        $entity_as_criteria = false;
+        foreach ($this->criterias as $criteria) {
+            if ($criteria->fields['criteria'] == 'entities_id') {
+                $entity_as_criteria = true;
+                break;
+            }
+        }
+        if (!$entity_as_criteria) {
+            echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    function getCriterias() {
+
+        $criterias = [];
+
+        $criterias['plugin_resources_contracttypes_id']['name']  = PluginResourcesContractType::getTypeName(1);
+        $criterias['plugin_resources_contracttypes_id']['type']  = 'dropdownContractType';
+        $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
+        $criterias['plugin_resources_profiltypes_id']['name']  = Profile::getTypeName(1);
+        $criterias['plugin_resources_profiltypes_id']['type']  = 'dropdownProfilType';
+        $criterias['plugin_resources_profiltypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
+        $criterias['plugin_resources_grouptypes_id']['name']  = Group::getTypeName(1);
+        $criterias['plugin_resources_grouptypes_id']['type']  = 'dropdownGroupType';
+        $criterias['plugin_resources_grouptypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+        return $criterias;
+    }
+
+    /**
+     * Display item used to select a pattern for a criteria
+     *
+     * @param $name      criteria name
+     * @param $ID        the given criteria
+     * @param $condition condition used
+     * @param $value     the pattern (default '')
+     * @param $test      Is to test rule ? (false by default)
+     **/
+    function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false) {
+
+        $PluginResourcesContractType = new PluginResourcesContractType();
+        $Profile = new Profile();
+        $Group = new Group();
+
+        $crit    = $this->getCriteria($ID);
+        $display = false;
+        if (isset($crit['type'])
+            && ($test||$condition==Rule::PATTERN_IS || $condition==Rule::PATTERN_IS_NOT)) {
+
+            switch ($crit['type']) {
+                case "dropdownContractType" :
+                    $PluginResourcesContractType->dropdownContractType($name);
+                    $display = true;
+                    break;
+                case "dropdownProfilType" :
+                    Profile::dropdown(['name'=>$name, 'value'=>$value]);
+                    $display = true;
+                    break;
+                case "dropdownGroupType" :
+                    Group::dropdown(['name'=>$name, 'value'=>$value]);
+                    $display = true;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Return a value associated with a pattern associated to a criteria to display it
+     *
+     * @param $ID the given criteria
+     * @param $condition condition used
+     * @param $pattern the pattern
+     **/
+    function getCriteriaDisplayPattern($ID, $condition, $pattern) {
+
+        if (($condition==Rule::PATTERN_IS || $condition==Rule::PATTERN_IS_NOT)) {
+            $crit = $this->getCriteria($ID);
+            if (isset($crit['type'])) {
+
+                switch ($crit['type']) {
+                    case "dropdownContractType" :
+                        $PluginResourcesContractType = new PluginResourcesContractType();
+                        return $PluginResourcesContractType->getContractTypeName($pattern);
+                    case "dropdownProfilType" :
+                        return Profile::getFriendlyNameById($pattern);
+                    case "dropdownGroupType" :
+                        return Group::getFriendlyNameById($pattern);
+                }
+            }
+        }
+        return $pattern;
+    }
+
+    /**
+     * @return array
+     */
+    function getActions() {
+
+        $actions = [];
+
+        $actions['readonlyfields_name']['name']  = __('Surname');
+        $actions['readonlyfields_name']['type']  = "yesonly";
+        $actions['readonlyfields_name']['force_actions'] = ['assign'];
+        $actions['readonlyfields_name']['type']  = "yesonly";
+
+        $actions['readonlyfields_firstname']['name']  = __('First name');
+        $actions['readonlyfields_firstname']['type']  = "yesonly";
+        $actions['readonlyfields_firstname']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_locations_id']['name']  = __('Location');
+        $actions['readonlyfields_locations_id']['type']  = "yesonly";
+        $actions['readonlyfields_locations_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_users_id']['name']  = __('Resource manager', 'resources');
+        $actions['readonlyfields_users_id']['type']  = "yesonly";
+        $actions['readonlyfields_users_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_users_id_sales']['name']  = __('Sales manager', 'resources');
+        $actions['readonlyfields_users_id_sales']['type']  = "yesonly";
+        $actions['readonlyfields_users_id_sales']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_departments_id']['name']  = PluginResourcesDepartment::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_departments_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_departments_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_date_begin']['name']  =  __('Arrival date', 'resources');
+        $actions['readonlyfields_date_begin']['type']  = "yesonly";
+        $actions['readonlyfields_date_begin']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_date_end']['name']  = __('Departure date', 'resources');
+        $actions['readonlyfields_date_end']['type']  = "yesonly";
+        $actions['readonlyfields_date_end']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_quota']['name']  = __('Quota', 'resources');
+        $actions['readonlyfields_quota']['type']  = "yesonly";
+        $actions['readonlyfields_quota']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_comment']['name']  = __('Description');
+        $actions['readonlyfields_comment']['type']  = "yesonly";
+        $actions['readonlyfields_comment']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_matricule']['name']  = __('Matricule','resources');
+        $actions['readonlyfields_matricule']['type']  = "yesonly";
+        $actions['readonlyfields_matricule']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_phone']['name']  = __('Phone');
+        $actions['readonlyfields_phone']['type']  = "yesonly";
+        $actions['readonlyfields_phone']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_mobilephone']['name']  = __('Mobile phone');
+        $actions['readonlyfields_mobilephone']['type']  = "yesonly";
+        $actions['readonlyfields_mobilephone']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_matricule_second']['name']  = __('Second matricule','resources');
+        $actions['readonlyfields_matricule_second']['type']  = "yesonly";
+        $actions['readonlyfields_matricule_second']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_roles_id']['name']  = __('Role','resources');
+        $actions['readonlyfields_plugin_resources_roles_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_roles_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_employers_id']['name']  = PluginResourcesEmployer::getTypeName();
+        $actions['readonlyfields_plugin_resources_employers_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_employers_id']['force_actions'] = ['assign'];
+
+        if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
+
+            $actions['readonlyfields_plugin_resources_resourcesituations_id']['name']  = PluginResourcesResourceSituation::getTypeName(1);
+            $actions['readonlyfields_plugin_resources_resourcesituations_id']['type']  = "yesonly";
+            $actions['readonlyfields_plugin_resources_resourcesituations_id']['force_actions'] = ['assign'];
+
+            $actions['readonlyfields_plugin_resources_ranks_id']['name']  = PluginResourcesRank::getTypeName(1);
+            $actions['readonlyfields_plugin_resources_ranks_id']['type']  = "yesonly";
+            $actions['readonlyfields_plugin_resources_ranks_id']['force_actions'] = ['assign'];
+        }
+
+        $actions['readonlyfields_plugin_resources_contractnatures_id']['name']  =  PluginResourcesContractNature::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_contractnatures_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_contractnatures_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_ranks_id']['name']  = PluginResourcesRank::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_ranks_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_ranks_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_resourcespecialities_id']['name']  = PluginResourcesResourceSpeciality::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_resourcespecialities_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_resourcespecialities_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_charter']['name']  = __('Sensitized to security', 'resources');
+        $actions['readonlyfields_charter']['type']  = "yesonly";
+        $actions['readonlyfields_charter']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_security']['name']  =  __('Reading the security charter', 'resources');
+        $actions['readonlyfields_security']['type']  = "yesonly";
+        $actions['readonlyfields_security']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_services_id']['name']  = PluginResourcesService::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_services_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_services_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_teams_id']['name']  = PluginResourcesTeam::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_teams_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_teams_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_functions_id']['name']  = PluginResourcesFunction::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_functions_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_functions_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_date_agreement_candidate']['name']  = __('Date agreement candidate', 'resources');
+        $actions['readonlyfields_date_agreement_candidate']['type']  = "yesonly";
+        $actions['readonlyfields_date_agreement_candidate']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_degreegroups_id']['name']  = PluginResourcesDegreeGroup::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_degreegroups_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_degreegroups_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_recruitingsources_id']['name']  = PluginResourcesRecruitingSource::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_yearsexperience']['name']  = __('Number of years experience','resources');
+        $actions['readonlyfields_yearsexperience']['type']  = "yesonly";
+        $actions['readonlyfields_yearsexperience']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_reconversion']['name']  = __('Reconversion','resources');
+        $actions['readonlyfields_reconversion']['type']  = "yesonly";
+        $actions['readonlyfields_reconversion']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_interview_date']['name']  = __('Interview date', 'resources');
+        $actions['readonlyfields_interview_date']['type']  = "yesonly";
+        $actions['readonlyfields_interview_date']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_workprofiles_id']['name']  = PluginResourcesWorkProfile::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_workprofiles_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_workprofiles_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_clients_id']['name']  = PluginResourcesClient::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_clients_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_clients_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_resignation_date']['name']  = __('Resignation date', 'resources');
+        $actions['readonlyfields_resignation_date']['type']  = "yesonly";
+        $actions['readonlyfields_resignation_date']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_wished_leaving_date']['name']  = __('Wished leaving date', 'resources');
+        $actions['readonlyfields_wished_leaving_date']['type']  = "yesonly";
+        $actions['readonlyfields_wished_leaving_date']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_effective_leaving_date']['name']  = __('Effective leaving date', 'resources');
+        $actions['readonlyfields_effective_leaving_date']['type']  = "yesonly";
+        $actions['readonlyfields_effective_leaving_date']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_destinations_id']['name']  = PluginResourcesDestination::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_destinations_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_destinations_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_leavingreasons_id']['name']  = PluginResourcesLeavingReason::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_leavingreasons_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_leavingreasons_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_company_name']['name']  = __('Company name', 'resources');
+        $actions['readonlyfields_company_name']['type']  = "yesonly";
+        $actions['readonlyfields_company_name']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_pay_gap']['name']  = __('Pay gap','resources');
+        $actions['readonlyfields_plugin_resources_pay_gap']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_pay_gap']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_mission_lost']['name']  = __('Mission lost','resources');
+        $actions['readonlyfields_plugin_resources_mission_lost']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_mission_lost']['force_actions'] = ['assign'];
+
+        return $actions;
+    }
+}
+

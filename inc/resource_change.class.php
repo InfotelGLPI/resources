@@ -457,7 +457,7 @@ class PluginResourcesResource_Change extends CommonDBTM {
             $option = ['rand'     => $rand,
                        'value'    => $resource->fields["name"],
                        'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
-            $rand1  = Html::input('name', $option);
+            echo Html::input('name', $option);
             echo "</div>";
             echo "</div>";
 
@@ -488,11 +488,14 @@ class PluginResourcesResource_Change extends CommonDBTM {
             echo "<script type='text/javascript'>";
             echo "$('input[name=\"date_end\"]').change(function() {
                   plugin_resources_load_button_changeresources_information();
+            });
+            $('input[name=\"name\"]').change(function() {
+                  plugin_resources_load_button_changeresources_information();
             });";
             echo "function plugin_resources_load_button_changeresources_information(){";
-            $root_doc = PLUGIN_RESOURCES_NOTFULL_WEBDIR;
+            $root_doc = PLUGIN_RESOURCES_WEBDIR;
             echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
-               ,{load_button_changeresources:true,action:8,name:$('#textfield_name" . $rand . "').val(),firstname:$('#textfield_firstname" . $rand . "').val(),date_end:$('input[name=\"date_end\"]').val()}
+               ,{load_button_changeresources:true,action:8,name:$('input[name=\"name\"]').val(),firstname:'" . $resource->fields["firstname"] . "',date_end:$('input[name=\"date_end\"]').val()}
                )";
 
             echo "}";
@@ -1062,17 +1065,20 @@ class PluginResourcesResource_Change extends CommonDBTM {
                                 $resource->getField('name') . "\n";
             $data['content'] .= __("New resource name", 'resources') . "&nbsp;:&nbsp;" .
                                 $options['name'] . "\n";
-            $data['content'] .= __("Current firstname of the resource", 'resources') . "&nbsp;:&nbsp;" .
-                                $resource->getField('firstname') . "\n";
-            $data['content'] .= __("New resource firstname", 'resources') . "&nbsp;:&nbsp;" .
-                                $options['firstname'] . "\n";
+            if (isset($options['firstname'])) {
+                $data['content'] .= __("Current firstname of the resource", 'resources') . "&nbsp;:&nbsp;" .
+                    $resource->getField('firstname') . "\n";
+                $data['content'] .= __("New resource firstname", 'resources') . "&nbsp;:&nbsp;" .
+                    $options['firstname'] . "\n";
+            }
+
             $data['content'] .= __("Current departure date of the resource", 'resources') . "&nbsp;:&nbsp;" .
                                 $resource->getField('date_end') . "\n";
             $data['content'] .= __("New resource departure date", 'resources') . "&nbsp;:&nbsp;" .
                                 $options['date_end'] . "\n";
 
             $input['name']      = $options['name'];
-            $input['firstname'] = $options['firstname'];
+            $input['firstname'] = isset($options['firstname']) ? $options['firstname'] : $resource->getField('firstname');
             $input['date_end']  = $options['date_end'];
             break;
          case self::CHANGE_RESOURCECOMPANY :
@@ -1486,6 +1492,16 @@ class PluginResourcesResource_Change extends CommonDBTM {
          $msg = __('Failed operation'); // Failure
       }
       if ($tid) {
+          $config = new PluginResourcesConfig();
+          $config->getFromDB(1);
+          if ($config->fields["default_assignment_group"]) {
+              $groupticket = new Group_Ticket();
+              $groupticket->fields['tickets_id'] = $tid;
+              $groupticket->fields['groups_id'] = $config->fields["default_assignment_group"];
+              $groupticket->fields['type'] = CommonITILActor::ASSIGN;
+              unset($groupticket->fields["id"]);
+              $groupticket->add($groupticket->fields);
+          }
          $changes[0] = 0;
          $changes[1] = '';
          $changes[2] = addslashes($msg);
