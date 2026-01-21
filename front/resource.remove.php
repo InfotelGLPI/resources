@@ -26,7 +26,7 @@
  along with resources. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
+global $CFG_GLPI;
 use GlpiPlugin\Resources\Checklist;
 use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Config;
@@ -72,6 +72,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
     $input["id"] = $_POST["plugin_resources_resources_id"];
     $input["date_end"] = $_POST["date_end"];
+    $input["remove_manager"] = $_POST["remove_manager"];
     if (($_POST["date_end"] < $date)
         || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
         $input["is_leaving"] = "1";
@@ -159,6 +160,16 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
             $input2['action_done'] = 0;
             $input2['id'] = $linkad->getID();
             $linkad->update($input2);
+        }
+    }
+
+    if ($config->fields["create_ticket_departure_instructions"]) {
+        if (isset($resource->input['send_notification'])
+            && $resource->input['send_notification'] == 1
+        ) {
+            if ($CFG_GLPI["notifications_mailing"]) {
+                NotificationEvent::raiseEvent("AlertLeavingRessourceManager", $resource);
+            }
         }
     }
 

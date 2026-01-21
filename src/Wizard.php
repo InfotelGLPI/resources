@@ -201,8 +201,17 @@ class Wizard extends CommonDBTM
                 }
             }
         }
+        $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+        $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
         $required = $resource->checkRequiredFields($input);
         $hidden = $resource->getHiddenFields($input);
+        $readonly = $resource->getReadonlyFields($input);
+
+        $config = new Config();
+        $config->getFromDB(1);
+        if (!empty($config->fields['hide_fieds_arrival_form'])) {
+            $hidden = array_merge($hidden,json_decode($config->fields['hide_fieds_arrival_form']));
+        }
         $tohide = [];
         foreach ($resource->fields as $k => $f) {
             $tohide[$k] = "";
@@ -270,6 +279,9 @@ class Wizard extends CommonDBTM
         echo "<div " . $tohide['gender'] . " class='col-md-3 mb-2'>";
         $genders = Resource::getGenders();
         $option = ['value' => $options["gender"]];
+        if (in_array("gender", $readonly)) {
+            $option['readonly'] = true;
+        }
         Dropdown::showFromArray('gender', $genders, $option);
         echo "</div>";
 
@@ -288,9 +300,12 @@ class Wizard extends CommonDBTM
         echo "<div " . $tohide['name'] . " class='col-md-3 mb-2'>";
         $option = [
             'value' => $options["name"],
-            'size' => 30,
             'onchange' => "javascript:this.value=this.value.toUpperCase();",
         ];
+
+        if (in_array("name", $readonly)) {
+            $option['readonly'] = true;
+        }
         echo Html::input('name', $option);
         echo "<br><span class='plugin_resources_wizard_comment' style='color:red;'>";
         echo __(
@@ -311,9 +326,12 @@ class Wizard extends CommonDBTM
         echo "<div " . $tohide['firstname'] . " class='col-md-3 mb-2'>";
         $option = [
             'value' => $options["firstname"],
-            'size' => 30,
             'onChange' => "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'",
         ];
+
+        if (in_array("firstname", $readonly)) {
+            $option['readonly'] = true;
+        }
         echo Html::input('firstname', $option);
         echo "</div>";
 
@@ -331,7 +349,45 @@ class Wizard extends CommonDBTM
 
         echo "<div " . $tohide['matricule'] . " class='col-md-3 mb-2'>";
         $option = ['value' => $options['matricule']];
+        if (in_array("matricule", $readonly)) {
+            $option['readonly'] = true;
+        }
         echo Html::input('matricule', $option);
+        echo "</div>";
+        echo "</div>";
+
+        echo "<div class='row'>";
+
+        echo "<div  " . $tohide['phone'] . " class='col-md-3 mb-2'";
+        if (in_array("phone", $required)) {
+            echo " style='color:red;'";
+        }
+        echo ">";
+        echo __('Phone') . "</td>";
+        echo "</div>";
+        echo "<div  " . $tohide['phone'] . " class='col-md-3 mb-2'>";
+        $option = ['value' => $this->fields['phone']];
+        if (in_array("phone", $readonly)) {
+            $option['readonly'] = true;
+        }
+        echo Html::input('phone', $option);
+        echo "</div>";
+
+        echo "<div " . $tohide['cellphone'] . " class='col-md-3 mb-2'";
+        if (in_array("cellphone", $required)) {
+            echo " style='color:red;'";
+        }
+        echo ">";
+        echo __('Mobile phone') . "</td>";
+        echo "</div>";
+        echo "<div " . $tohide['cellphone'] . " class='col-md-3 mb-2'>";
+        $option = ['value' => $this->fields['cellphone']];
+        if (in_array("cellphone", $readonly)) {
+            $option['readonly'] = true;
+        }
+        echo Html::input('cellphone', $option);
+        echo "</div>";
+
         echo "</div>";
 
         $contractType = new ContractType();
@@ -351,6 +407,9 @@ class Wizard extends CommonDBTM
             echo "</div>";
             echo "<div " . $tohide['matricule_second'] . " class='col-md-3 mb-2'>";
             $option = ['value' => $options['matricule_second']];
+            if (in_array("matricule_second", $readonly)) {
+                $option['readonly'] = true;
+            }
             echo Html::input('matricule_second', $option);
             echo "</div>";
         }
@@ -367,7 +426,11 @@ class Wizard extends CommonDBTM
         echo __('Location');
         echo "</div>";
         echo "<div " . $tohide['locations_id'] . " class='col-md-3 mb-2'>";
-        Dropdown::show('Location', ['name' => "locations_id", 'value' => $options["locations_id"]]);
+        $option = ['name' => "locations_id", 'value' => $options["locations_id"]];
+        if (in_array("locations_id", $readonly)) {
+            $option['readonly'] = true;
+        }
+        Dropdown::show('Location',$option);
         echo "</div>";
 
         echo "<div " . $tohide['quota'] . " class='col-md-3 mb-2'>";
@@ -377,7 +440,11 @@ class Wizard extends CommonDBTM
         echo __('Quota', 'resources');
         echo "</div>";
         echo "<div " . $tohide['quota'] . " class='col-md-3 mb-2'>";
-        echo Html::input('quota', ['value' => Html::formatNumber($options["quota"], true, 4), 'size' => 14]);
+        $option = ['value' => Html::formatNumber($options["quota"], true, 4), 'size' => 14];
+        if (in_array("quota", $readonly)) {
+            $option['readonly'] = true;
+        }
+        echo Html::input('quota', $option);
         echo "</div>";
 
         echo "</div>";
@@ -404,6 +471,9 @@ class Wizard extends CommonDBTM
                 'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownContractnature.php",
                 'span' => 'span_contractnature',
             ];
+            if (in_array("plugin_resources_resourcesituations_id", $readonly)) {
+                $params['readonly'] = true;
+            }
             Resource::showGenericDropdown(ResourceSituation::class, $params);
             echo "</div>";
 
@@ -447,6 +517,9 @@ class Wizard extends CommonDBTM
                 'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownSpeciality.php",
                 'span' => 'span_speciality',
             ];
+            if (in_array("plugin_resources_ranks_id", $readonly)) {
+                $params['readonly'] = true;
+            }
             Resource::showGenericDropdown(Rank::class, $params);
             echo "</div>";
 
@@ -519,24 +592,29 @@ class Wizard extends CommonDBTM
                 $user->getFromDB($profileUser["users_id"]);
                 $used[$profileUser["users_id"]] = $user->getFriendlyName();
             }
-
-
+            $option = ['value' => $options["users_id"], 'display_emptychoice' => true];
+            if (in_array("users_id", $readonly)) {
+                $option['readonly'] = true;
+            }
             Dropdown::showFromArray(
                 "users_id",
                 $used,
-                ['value' => $options["users_id"], 'display_emptychoice' => true]
+                $option
             );
             echo "</div>";
         } else {
             echo "<div " . $tohide['users_id'] . " class='col-md-3 mb-2'>";
-
-            User::dropdown([
+            $option = [
                 'value' => $options["users_id"],
                 'name' => "users_id",
                 'entity' => $input['entities_id'],
                 'entity_sons' => true,
                 'right' => 'all',
-            ]);
+            ];
+            if (in_array("users_id", $readonly)) {
+                $option['readonly'] = true;
+            }
+            User::dropdown($option);
             echo "</div>";
         }
 
@@ -569,11 +647,14 @@ class Wizard extends CommonDBTM
                 $user->getFromDB($profileUser["users_id"]);
                 $used[$profileUser["users_id"]] = $user->getFriendlyName();
             }
-
+            $option = ['value' => $options["users_id_sales"], 'display_emptychoice' => true];
+            if (in_array("users_id_sales", $readonly)) {
+                $option['readonly'] = true;
+            }
             Dropdown::showFromArray(
                 "users_id_sales",
                 $used,
-                ['value' => $options["users_id_sales"], 'display_emptychoice' => true]
+                $option
             );
             //         Dropdown::show(User::getType(), ['value' => $options["users_id_sales"],
             //            'name' => "users_id_sales",
@@ -583,13 +664,17 @@ class Wizard extends CommonDBTM
             echo "</div>";
         } else {
             echo "<div " . $tohide['users_id_sales'] . " class='col-md-3 mb-2'>";
-            User::dropdown([
+            $option = [
                 'value' => $options["users_id_sales"],
                 'name' => "users_id_sales",
                 'entity' => $input['entities_id'],
                 'entity_sons' => true,
                 'right' => 'all',
-            ]);
+            ];
+            if (in_array("users_id_sales", $readonly)) {
+                $option['readonly'] = true;
+            }
+            User::dropdown($option);
             echo "</div>";
         }
         echo "</div>";
@@ -622,15 +707,18 @@ class Wizard extends CommonDBTM
             echo "</div>";
 
             echo "<div " . $tohide['plugin_resources_employers_id'] . " class='col-md-3 mb-2'>";
-
+            $option = [
+                'name' => "plugin_resources_employers_id",
+                'value' => $options["plugin_resources_employers_id"],
+                'entity' => $_SESSION['glpiactiveentities'],
+                'condition' => $condition_emp,
+            ];
+            if (in_array("plugin_resources_employers_id", $readonly)) {
+                $option['readonly'] = true;
+            }
             Dropdown::show(
                 Employer::class,
-                [
-                    'name' => "plugin_resources_employers_id",
-                    'value' => $options["plugin_resources_employers_id"],
-                    'entity' => $_SESSION['glpiactiveentities'],
-                    'condition' => $condition_emp,
-                ]
+                $option
             );
             echo "</div>";
 
@@ -655,22 +743,30 @@ class Wizard extends CommonDBTM
         $rand = mt_rand();
         echo "<div " . $tohide['plugin_resources_departments_id'] . " class='col-md-3 mb-2'>";
         if ($config->useServiceDepartmentAD()) {
+            $option = [
+                'name' => "plugin_resources_departments_id",
+                'value' => $resource->fields["plugin_resources_departments_id"],
+                'rand' => $rand,
+            ];
+            if (in_array("plugin_resources_departments_id", $readonly)) {
+                $option['readonly'] = true;
+            }
             UserTitle::dropdown(
-                [
-                    'name' => "plugin_resources_departments_id",
-                    'value' => $resource->fields["plugin_resources_departments_id"],
-                    'rand' => $rand,
-                ]
+                $option
             );
         } else {
+            $option = [
+                'name' => "plugin_resources_departments_id",
+                'value' => $options["plugin_resources_departments_id"],
+                'entity' => $_SESSION['glpiactiveentities'],
+                'rand' => $rand,
+            ];
+            if (in_array("plugin_resources_departments_id", $readonly)) {
+                $option['readonly'] = true;
+            }
             Dropdown::show(
                 Department::class,
-                [
-                    'name' => "plugin_resources_departments_id",
-                    'value' => $options["plugin_resources_departments_id"],
-                    'entity' => $_SESSION['glpiactiveentities'],
-                    'rand' => $rand,
-                ]
+                $option
             );
         }
         echo "</div>";
@@ -685,24 +781,30 @@ class Wizard extends CommonDBTM
 
         echo "<div " . $tohide['plugin_resources_services_id'] . " class='col-md-3 mb-2' id='show_services'>";
         if ($config->useServiceDepartmentAD()) {
+            $option = ['name' => "plugin_resources_services_id",
+                'value' => $resource->fields["plugin_resources_services_id"],
+                'rand' => $rand,];
+            if (in_array("plugin_resources_services_id", $readonly)) {
+                $option['readonly'] = true;
+            }
             UserCategory::dropdown(
-                [
-                    'name' => "plugin_resources_services_id",
-                    'value' => $resource->fields["plugin_resources_services_id"],
-                    'rand' => $rand,
-                ]
+                $option
             );
         } else {
             //      Dropdown::show(Service::class,
             //                     ['name'   => "plugin_resources_services_id",
             //                      'value'  => $options["plugin_resources_services_id"],
             //                      'entity' => $_SESSION['glpiactiveentities']]);
-            Service::dropdownFromDepart($options["plugin_resources_departments_id"], [
+            $option = [
                 'name' => "plugin_resources_services_id",
                 'value' => $options["plugin_resources_services_id"],
                 'entity' => $_SESSION['glpiactiveentities'],
                 'rand' => $rand,
-            ]);
+            ];
+            if (in_array("plugin_resources_services_id", $readonly)) {
+                $option['readonly'] = true;
+            }
+            Service::dropdownFromDepart($options["plugin_resources_departments_id"], $option);
             $params = [
                 'plugin_resources_services_id' => '__VALUE__',
                 'rand' => $rand,
@@ -733,13 +835,16 @@ class Wizard extends CommonDBTM
         echo Role::getTypeName(1);
         echo "</div>";
         echo "<div " . $tohide['plugin_resources_roles_id'] . " class='col-md-3 mb-2' id='show_roles'>";
-
-        Role::dropdownFromService($options['plugin_resources_services_id'], [
+        $option = [
             'name' => "plugin_resources_roles_id",
             'value' => $options["plugin_resources_roles_id"],
             'entity' => $_SESSION['glpiactiveentities'],
             'rand' => $rand,
-        ]);
+        ];
+        if (in_array("plugin_resources_roles_id", $readonly)) {
+            $option['readonly'] = true;
+        }
+        Role::dropdownFromService($options['plugin_resources_services_id'], $option);
 
         echo "</div>";
 
@@ -778,14 +883,17 @@ class Wizard extends CommonDBTM
         echo ResourceFunction::getTypeName(1);
         echo "</div>";
         echo "<div " . $tohide['plugin_resources_functions_id'] . " class='col-md-3 mb-2' id='show_roles'>";
-
+        $option = [
+            'name' => "plugin_resources_functions_id",
+            'value' => $options["plugin_resources_functions_id"],
+            'entity' => $_SESSION['glpiactiveentities'],
+        ];
+        if (in_array("plugin_resources_functions_id", $readonly)) {
+            $option['readonly'] = true;
+        }
         Dropdown::show(
             ResourceFunction::class,
-            [
-                'name' => "plugin_resources_functions_id",
-                'value' => $options["plugin_resources_functions_id"],
-                'entity' => $_SESSION['glpiactiveentities'],
-            ]
+            $option
         );
 
         echo "</div>";
@@ -797,14 +905,17 @@ class Wizard extends CommonDBTM
         echo Team::getTypeName(1);
         echo "</div>";
         echo "<div " . $tohide['plugin_resources_teams_id'] . " class='col-md-3 mb-2' id='show_roles'>";
-
+        $option = [
+            'name' => "plugin_resources_teams_id",
+            'value' => $options["plugin_resources_teams_id"],
+            'entity' => $_SESSION['glpiactiveentities'],
+        ];
+        if (in_array("plugin_resources_teams_id", $readonly)) {
+            $option['readonly'] = true;
+        }
         Dropdown::show(
             Team::class,
-            [
-                'name' => "plugin_resources_teams_id",
-                'value' => $options["plugin_resources_teams_id"],
-                'entity' => $_SESSION['glpiactiveentities'],
-            ]
+            $option
         );
 
         echo "</div>";
@@ -821,7 +932,11 @@ class Wizard extends CommonDBTM
         echo __('Arrival date', 'resources');
         echo "</div>";
         echo "<div " . $tohide['date_begin'] . " class='col-md-3 mb-2'>";
-        Html::showDateField("date_begin", ['value' => $options["date_begin"]]);
+        $option = ['value' => $options["date_begin"]];
+        if (in_array("date_begin", $readonly)) {
+            $option['readonly'] = true;
+        }
+        Html::showDateField("date_begin", $option);
         echo "</div>";
 
         echo "<div " . $tohide['date_end'] . " class='col-md-3 mb-2'";
@@ -835,7 +950,11 @@ class Wizard extends CommonDBTM
         }
         echo "</div>";
         echo "<div " . $tohide['date_end'] . " class='col-md-3 mb-2'>";
-        Html::showDateField("date_end", ['value' => $options["date_end"]]);
+        $option = ['value' => $options["date_end"]];
+        if (in_array("date_end", $readonly)) {
+            $option['readonly'] = true;
+        }
+        Html::showDateField("date_end", $option);
         echo "</div>";
 
         echo "</div>";
@@ -899,7 +1018,11 @@ class Wizard extends CommonDBTM
 
 
         echo "<div class='row'>";
-        echo "<div>";
+        echo "<div ";
+        if ($config->fields['automatique_notification_declare_arrival_form']) {
+            echo "hidden ";
+        }
+        echo ">";
         echo __('Send a notification');
         echo "&nbsp;<input type='checkbox' name='send_notification' checked = true";
         if (Session::getCurrentInterface() != 'central') {
@@ -1694,6 +1817,8 @@ class Wizard extends CommonDBTM
         $mandatory = array_flip($mandatory);
         $hidden = $ressource->getHiddenFields($input);
         $hidden = array_flip($hidden);
+        $readonly = $ressource->getReadonlyFields($input);
+        $readonly = array_flip($readonly);
         if (isset($options['target']) && $options['target'] == 'item') {
             $target = null;
         } else {
@@ -1714,6 +1839,7 @@ class Wizard extends CommonDBTM
                 'plugin_resources_resources_id' => $ID,
                 'hidden_fields' => $hidden,
                 'mandatory_fields' => $mandatory,
+                'readonly_fields' => $readonly,
                 'target' => $target,
                 'default_button' => $options['default_button'] ?? false,
                 'candel' => false,

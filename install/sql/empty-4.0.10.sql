@@ -56,6 +56,15 @@ CREATE TABLE `glpi_plugin_resources_resources`
                                                 varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
     `secondary_services`                        varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
     `gender`                                    varchar(3) COLLATE utf8mb4_unicode_ci   default NULL,
+    `phone`                                     varchar(20) COLLATE utf8mb4_unicode_ci  default NULL,
+    `cellphone`                                 varchar(20) COLLATE utf8mb4_unicode_ci  default NULL,
+    `remove_manager`                            int unsigned NOT NULL default '0',
+    `remove_order`                              TEXT COLLATE utf8mb4_unicode_ci,
+    `computer_phone_equipment`                  TEXT COLLATE utf8mb4_unicode_ci,
+    `softwares_requirements`                    TEXT COLLATE utf8mb4_unicode_ci,
+    `furnitures_needs`                          TEXT COLLATE utf8mb4_unicode_ci,
+    `other_needs`                               TEXT COLLATE utf8mb4_unicode_ci,
+    `valid_resource_information`                tinyint NOT NULL default '0',
     PRIMARY KEY (`id`),
     KEY `name` (`name`),
     KEY `entities_id` (`entities_id`),
@@ -941,6 +950,11 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `remove_habilitation_on_update`                int unsigned NOT NULL default '0',
     `display_habilitations_txt`                    int unsigned NOT NULL default '0',
     `hide_view_commercial_resource`                tinyint      NOT NULL default '0',
+    `automatique_notification_declare_arrival_form` tinyint NOT NULL default '0',
+    `create_ticket_departure_instructions`         tinyint NOT NULL default '0',
+    `default_assignment_group`                     int unsigned NOT NULL default '0',
+    `text_ticket_validation`                       TEXT COLLATE utf8mb4_unicode_ci,
+    `hide_fieds_arrival_form`                      TEXT COLLATE utf8mb4_unicode_ci,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -948,7 +962,7 @@ CREATE TABLE `glpi_plugin_resources_configs`
   ROW_FORMAT = DYNAMIC;
 
 INSERT INTO `glpi_plugin_resources_configs`
-VALUES (1, 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+VALUES (1, 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,0,0,0,'','');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports`
@@ -1093,13 +1107,14 @@ CREATE TABLE `glpi_plugin_resources_adconfigs`
     `second_form`                int unsigned NOT NULL                   default '0',
     `mail_prefix`                int unsigned NOT NULL                   default '0',
     `mail_suffix`                varchar(255) NOT NULL                   default '',
+    `fonctionAD`                 varchar(255) COLLATE utf8mb4_unicode_ci default '',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci
   ROW_FORMAT = DYNAMIC;
 INSERT INTO `glpi_plugin_resources_adconfigs`
-VALUES (1, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '');
+VALUES (1, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '','');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_roles`;
 CREATE TABLE `glpi_plugin_resources_roles`

@@ -644,6 +644,11 @@ function plugin_resources_install()
             }
         }
     }
+
+    if (!$DB->fieldExists("glpi_plugin_resources_adconfigs", "fonctionAD")) {
+        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.8.sql");
+    }
+
     //Version 4.0.0
     if (!$DB->tableExists("glpi_plugin_resources_resourcefunctions")) {
         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.0.sql");

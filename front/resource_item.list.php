@@ -71,6 +71,12 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
         }
     }
     Html::back();
+} elseif (isset($_POST['updateSpecialRequirement'])) {
+    if ($resource->canCreate()) {
+        $_POST['id'] = $_POST['plugin_resources_resources_id'];
+        $resource->update($_POST);
+    }
+    Html::back();
 } else {
     //show form items needs from helpdesk
     if ($resource->canView() || Session::haveRight("config", UPDATE)) {

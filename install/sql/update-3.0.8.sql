@@ -1,0 +1,15 @@
+ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `fonctionAD` varchar(255) COLLATE utf8mb4_unicode_ci default '';
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `automatique_notification_declare_arrival_form` tinyint NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `phone` varchar(20) COLLATE utf8mb4_unicode_ci   default NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `cellphone` varchar(20) COLLATE utf8mb4_unicode_ci   default NULL;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `remove_manager` int unsigned NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `remove_order` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `computer_phone_equipment` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `softwares_requirements` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `furnitures_needs` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `other_needs` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `create_ticket_departure_instructions` tinyint NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `default_assignment_group` int unsigned NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `valid_resource_information` tinyint NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `text_ticket_validation` TEXT COLLATE utf8mb4_unicode_ci;
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `hide_fieds_arrival_form` TEXT COLLATE utf8mb4_unicode_ci;

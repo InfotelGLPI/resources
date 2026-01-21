@@ -485,6 +485,54 @@ class Choice extends CommonDBTM
         echo "</table></div>";
         Html::closeForm();
         echo "<br>";
+
+        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource_item.list.php\">";
+
+        echo "<div align='center'><table class='tab_cadre_fixe'>";
+        echo "<tr>";
+        echo "<th colspan='4'>" . __('Specials requirements', 'resources') . "</th>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
+        echo __('Computer and telephone equipment needs', 'resources');
+        echo "</td>";
+        echo "<td>";
+        Html::textarea(['name' => 'computer_phone_equipment', 'value' => $resource->fields['computer_phone_equipment']]);
+        echo "</td>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
+        echo __('Softwares requirements', 'resources');;
+        echo "</td>";
+        echo "<td>";
+        Html::textarea(['name' => 'softwares_requirements', 'value' => $resource->fields['softwares_requirements']]);
+        echo "</td>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
+        echo __('Furnitures needs', 'resources');;
+        echo "</td>";
+        echo "<td>";
+        Html::textarea(['name' => 'furnitures_needs', 'value' => $resource->fields['furnitures_needs']]);
+        echo "</td>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
+        echo __('Other needs', 'resources');;
+        echo "</td>";
+        echo "<td>";
+        Html::textarea(['name' => 'other_needs', 'value' => $resource->fields['other_needs']]);
+        echo "</td>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td class='center' colspan='2'>";
+        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+        echo Html::submit(_sx('button', 'Save'), ['name' => 'updateSpecialRequirement', 'class' => 'btn btn-primary']);
+        echo "</td>";
+        echo "</tr>";
+        echo "</table></div>";
+
+        Html::closeForm();
     }
 }
 
