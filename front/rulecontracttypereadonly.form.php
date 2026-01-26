@@ -29,7 +29,6 @@
 
 use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 
-include ('../../../inc/includes.php');
 
 $rulecollection = new RuleContracttypeReadonlyCollection($_SESSION['glpiactive_entity']);
 

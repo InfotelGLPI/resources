@@ -160,7 +160,7 @@ class Resource_Leaving extends CommonDBTM
             echo "<div align='center'><table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Give a leaving order', 'resources') . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='tab_bg_2'>";
-            echo __('Date of departure', 'resources');
+            echo __('Departure date', 'resources');
             echo "</td><td class='tab_bg_2'>";
             echo Html::input('date_declaration_leaving', ['value' => $resources->fields['date_declaration_leaving'], 'readonly' => true]);
             echo "</td></tr>";

@@ -494,7 +494,7 @@ class Choice extends CommonDBTM
         echo "</tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td>";
-        echo __('Computer and telephone equipment needs', 'resources');
+        echo __('Computer and phone equipment needs', 'resources');
         echo "</td>";
         echo "<td>";
         Html::textarea(['name' => 'computer_phone_equipment', 'value' => $resource->fields['computer_phone_equipment']]);
