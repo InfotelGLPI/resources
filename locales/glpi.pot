@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-21 14:35+0000\n"
+"POT-Creation-Date: 2026-01-26 16:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -641,7 +641,7 @@ msgid "Compare GLPI Resources with File"
 msgstr ""
 
 #: src/Choice.php:497
-msgid "Computer and telephone equipment needs"
+msgid "Computer and phone equipment needs"
 msgstr ""
 
 #: src/Menu.php:326
@@ -779,10 +779,6 @@ msgstr ""
 
 #: src/Resource_Change.php:449
 msgid "Date of contract type change"
-msgstr ""
-
-#: src/Resource_Leaving.php:163
-msgid "Date of departure"
 msgstr ""
 
 #: src/Resource.php:842
@@ -931,8 +927,8 @@ msgstr[1] ""
 #: src/ResourcePDF.php:109 src/RuleContracttypeReadonly.php:286
 #: src/Resource.php:139 src/Resource.php:450 src/Resource.php:2546
 #: src/Resource.php:3457 src/Config.php:138 src/Adconfig.php:377
-#: src/Resource_Item.php:903 src/Resource_Item.php:1175
-#: src/Resource_Item.php:1185 src/Recap.php:233
+#: src/Resource_Leaving.php:163 src/Resource_Item.php:903
+#: src/Resource_Item.php:1175 src/Resource_Item.php:1185 src/Recap.php:233
 #: src/RuleContracttypeHidden.php:266 src/Resource_Change.php:598
 #: src/LinkAd.php:720
 msgid "Departure date"
@@ -1511,10 +1507,6 @@ msgstr ""
 msgid "Manage human resources"
 msgstr ""
 
-#: ajax/leavingform.php:114 src/Resource.php:3467
-msgid "Manager"
-msgstr ""
-
 #: src/Resource_Change.php:233 src/Resource_Change.php:1148
 msgid "Manager for the current resource"
 msgstr ""
@@ -2044,7 +2036,7 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1386 src/RuleContracttype.php:251
+#: hook.php:1386 ajax/leavingform.php:114 src/RuleContracttype.php:251
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:470
 #: src/NotificationTargetResource.php:570
@@ -2056,7 +2048,8 @@ msgstr ""
 #: src/Directory.php:215 src/ResourcePDF.php:100
 #: src/RuleContracttypeReadonly.php:270 src/Task.php:850 src/Task.php:1275
 #: src/Resource.php:136 src/Resource.php:430 src/Resource.php:2310
-#: src/Resource.php:3028 src/Config.php:131 src/RuleContracttypeHidden.php:250
+#: src/Resource.php:3028 src/Resource.php:3467 src/Config.php:131
+#: src/RuleContracttypeHidden.php:250
 msgid "Resource manager"
 msgstr ""
 
