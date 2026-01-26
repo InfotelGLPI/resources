@@ -1,5 +1,5 @@
 ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `fonctionAD` varchar(255) COLLATE utf8mb4_unicode_ci default '';
-ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `automatique_notification_declare_arrival_form` tinyint NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `automatic_notification_declare_arrival_form` tinyint NOT NULL default '0';
 ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `phone` varchar(20) COLLATE utf8mb4_unicode_ci   default NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `cellphone` varchar(20) COLLATE utf8mb4_unicode_ci   default NULL;
 ALTER TABLE glpi_plugin_resources_resources ADD COLUMN `remove_manager` int unsigned NOT NULL default '0';

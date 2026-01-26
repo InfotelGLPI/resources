@@ -1019,7 +1019,7 @@ class Wizard extends CommonDBTM
 
         echo "<div class='row'>";
         echo "<div ";
-        if ($config->fields['automatique_notification_declare_arrival_form']) {
+        if ($config->fields['automatic_notification_declare_arrival_form']) {
             echo "hidden ";
         }
         echo ">";

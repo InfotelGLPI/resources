@@ -3461,12 +3461,12 @@ class Resource extends CommonDBTM
             echo "</div>";
             echo "</div>";
 
-            echo "<div class=\"form-row\">";
+            echo "<div class='row'>";
 
-            echo "<div class=\"bt-feature col-md-4 \">";
-            echo __('Manager', 'resources');
+            echo "<div class='col-md-4 mb-2'>";
+            echo __('Resource manager', 'resources');
             echo "</div>";
-            echo "<div class=\"bt-feature col-md-4 \">";
+            echo "<div class='col-md-4 mb-2'>";
             User::dropdown(['name' => 'remove_manager', 'right' => 'all']);
             echo "</div>";
             echo "</div>";

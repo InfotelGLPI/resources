@@ -504,7 +504,7 @@ class Config extends CommonDBTM
             echo __('Send an automatique notification on the "declare an arrival" form', 'resources');
             echo "</td>";
             echo "<td>";
-            Dropdown::showYesNo('automatique_notification_declare_arrival_form',$this->fields['automatique_notification_declare_arrival_form']);
+            Dropdown::showYesNo('automatic_notification_declare_arrival_form',$this->fields['automatic_notification_declare_arrival_form']);
             echo "</td>";
             echo "</tr>";
 
