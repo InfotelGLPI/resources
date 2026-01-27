@@ -2814,7 +2814,7 @@ msgstr[2] "Profils de travail"
 
 #: src/Resource_Leaving.php:151
 msgid "You are not the manager of this resource departure"
-msgstr "Vous n'êtes pas le manager désigner pour cette ressource partante"
+msgstr "Vous n'êtes pas le manager désigné pour cette ressource partante"
 
 #: hook.php:2874 src/LinkAd.php:853
 msgid "You have to do all checklist in action before"
