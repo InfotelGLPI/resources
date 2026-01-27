@@ -821,11 +821,11 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `remove_habilitation_on_update`                int unsigned NOT NULL default '0',
     `display_habilitations_txt`                    int unsigned NOT NULL default '0',
     `hide_view_commercial_resource`                tinyint      NOT NULL default '0',
-    `automatique_notification_declare_arrival_form` tinyint      NOT NULL default '0',
+    `automatic_notification_declare_arrival_form`  tinyint      NOT NULL default '0',
     `create_ticket_departure_instructions`         tinyint NOT NULL default '0',
     `default_assignment_group`                     int unsigned NOT NULL default '0',
     `text_ticket_validation`                       TEXT COLLATE utf8mb4_unicode_ci,
-    `hide_fieds_arrival_form`                       TEXT COLLATE utf8mb4_unicode_ci,
+    `hide_fieds_arrival_form`                      TEXT COLLATE utf8mb4_unicode_ci,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
