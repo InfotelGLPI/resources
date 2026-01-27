@@ -3408,7 +3408,7 @@ class PluginResourcesResource extends CommonDBTM {
 
         echo "<div class=\"form-row\">";
         echo "<div class=\"bt-feature col-md-12\" ";
-        if ($config->fields['automatique_notification_declare_arrival_form']) {
+        if ($config->fields['automatic_notification_declare_arrival_form']) {
             echo "hidden ";
         }
         echo ">";
