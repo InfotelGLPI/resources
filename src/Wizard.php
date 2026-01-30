@@ -366,7 +366,7 @@ class Wizard extends CommonDBTM
         echo __('Phone') . "</td>";
         echo "</div>";
         echo "<div  " . $tohide['phone'] . " class='col-md-3 mb-2'>";
-        $option = ['value' => $this->fields['phone']];
+        $option = ['value' => $this->fields['phone'] ?? ""];
         if (in_array("phone", $readonly)) {
             $option['readonly'] = true;
         }
@@ -381,7 +381,7 @@ class Wizard extends CommonDBTM
         echo __('Mobile phone') . "</td>";
         echo "</div>";
         echo "<div " . $tohide['cellphone'] . " class='col-md-3 mb-2'>";
-        $option = ['value' => $this->fields['cellphone']];
+        $option = ['value' => $this->fields['cellphone'] ?? ""];
         if (in_array("cellphone", $readonly)) {
             $option['readonly'] = true;
         }
@@ -797,7 +797,7 @@ class Wizard extends CommonDBTM
             //                      'entity' => $_SESSION['glpiactiveentities']]);
             $option = [
                 'name' => "plugin_resources_services_id",
-                'value' => $options["plugin_resources_services_id"],
+                'value' => $options["plugin_resources_services_id"] ?? 0,
                 'entity' => $_SESSION['glpiactiveentities'],
                 'rand' => $rand,
             ];
@@ -844,7 +844,7 @@ class Wizard extends CommonDBTM
         if (in_array("plugin_resources_roles_id", $readonly)) {
             $option['readonly'] = true;
         }
-        Role::dropdownFromService($options['plugin_resources_services_id'], $option);
+        Role::dropdownFromService($options['plugin_resources_services_id'] ?? 0, $option);
 
         echo "</div>";
 

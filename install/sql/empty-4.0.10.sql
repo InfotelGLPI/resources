@@ -52,8 +52,7 @@ CREATE TABLE `glpi_plugin_resources_resources`
     `yearsexperience`                           int unsigned   NOT NULL                 default '0',
     `plugin_resources_candidateorigins_id`      int unsigned   NOT NULL                 default '0',
     `plugin_resources_workprofiles_id_entrance` int unsigned   NOT NULL                 default '0',
-    `matricule_second`
-                                                varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+    `matricule_second`                          varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
     `secondary_services`                        varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
     `gender`                                    varchar(3) COLLATE utf8mb4_unicode_ci   default NULL,
     `phone`                                     varchar(20) COLLATE utf8mb4_unicode_ci  default NULL,

@@ -1566,13 +1566,35 @@ class Resource extends CommonDBTM
                 $Employment = new Employment();
                 $default = EmploymentState::getDefault();
                 // only current employment
-                $restrict = "`plugin_resources_resources_id` = '" . $this->input["id"] . "'
-                        AND ((`begin_date` < '" . $this->input['date_end'] . "'
-                              OR `begin_date` IS NULL)
-                              AND (`end_date` > '" . $this->input['date_end'] . "'
-                                    OR `end_date` IS NULL)) ";
+//                $restrict = "`plugin_resources_resources_id` = '" . $this->input["id"] . "'
+//                        AND ((`begin_date` < '" . $this->input['date_end'] . "'
+//                              OR `begin_date` IS NULL)
+//                              AND (`end_date` > '" . $this->input['date_end'] . "'
+//                                    OR `end_date` IS NULL)) ";
+//
 
-                $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
+                $criteria = [
+                    'SELECT' => ['glpi_plugin_resources_employments.*'],
+                    'FROM' => 'glpi_plugin_resources_employments',
+                    'WHERE' => [
+                        'plugin_resources_resources_id.id' => $this->input["id"],
+                        'begin_date' => ['<', $this->input['date_end']],
+                        [
+                            "OR" => [
+                                ['begin_date' => null],
+                            ],
+                        ],
+                        'end_date' => ['>', $this->input['date_end']],
+                        [
+                            "OR" => [
+                                ['end_date' => null],
+                            ],
+                        ]
+                    ],
+                ];
+
+                $iterator = $DB->request($criteria);
+
                 foreach ($iterator as $employment) {
                     $values = [
                         'plugin_resources_employmentstates_id' => $default,
@@ -2196,15 +2218,19 @@ class Resource extends CommonDBTM
             foreach ($usersCat as $res) {
                 $services[$res['id']] = $res['name'];
             }
+            $second = [];
+            if (!empty($this->fields['secondary_services'])) {
+                $second =  json_decode($this->fields['secondary_services'], true);
+            }
+            if (!is_array($second)) {
+                $second = [];
+            }
 
             Dropdown::showFromArray(
                 "secondary_services",
                 $services,
                 [
-                    'values' => !empty($this->fields['secondary_services']) ? json_decode(
-                        $this->fields['secondary_services'],
-                        true
-                    ) : [],
+                    'values' => $second,
                     'multiple' => true
                 ]
             );
@@ -2828,7 +2854,7 @@ class Resource extends CommonDBTM
                 'GROUPBY'   => 'glpi_plugin_resources_resources.id',
             ];
 
-            $result = $DB->request($criteria);
+            $iterator = $DB->request($criteria);
 
             if ($link == 2) {
                 $user = [
@@ -2840,58 +2866,60 @@ class Resource extends CommonDBTM
 
             $dbu = new DbUtils();
 
-            if ($DB->numrows($result) == 1) {
-                $data = $DB->fetchAssoc($result);
-                $username = $dbu->formatUserName(
-                    $data["id"],
-                    $data["username"],
-                    $data["name"],
-                    $data["firstname"]
-                );
+            if (count($iterator) == 1) {
+                foreach ($iterator as $data) {
 
-                if ($link == 2) {
-                    $user["name"] = $username;
-                    $user["link"] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $ID;
-                    $user["comment"] = "";
+                    $username = $dbu->formatUserName(
+                        $data["id"],
+                        $data["username"],
+                        $data["name"],
+                        $data["firstname"]
+                    );
 
-                    if (isset($data["picture"]) && !empty($data["picture"])) {
-                        $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
-                        if (file_exists($path)) {
-                            $user["comment"] .= "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $data["picture"] . "'>
+                    if ($link == 2) {
+                        $user["name"] = $username;
+                        $user["link"] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $ID;
+                        $user["comment"] = "";
+
+                        if (isset($data["picture"]) && !empty($data["picture"])) {
+                            $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
+                            if (file_exists($path)) {
+                                $user["comment"] .= "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $data["picture"] . "'>
                       <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR .
-                                "/front/picture.send.php?file=" . $data["picture"] . "'>
+                                    "/front/picture.send.php?file=" . $data["picture"] . "'>
                      </object><br> ";
+                            } else {
+                                $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
+                            }
                         } else {
                             $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
                         }
+
+                        $user["comment"] .= __('Name') . "&nbsp;: " . $username . "<br>";
+
+                        if ($data["plugin_resources_ranks_id"] > 0) {
+                            $user["comment"] .= Rank::getTypeName(1) . "&nbsp;: " .
+                                Dropdown::getDropdownName(
+                                    "glpi_plugin_resources_ranks",
+                                    $data["plugin_resources_ranks_id"]
+                                ) . "<br>";
+                        }
+
+                        if ($data["locations_id"] > 0) {
+                            $user["comment"] .= __('Location') . "&nbsp;: " .
+                                Dropdown::getDropdownName(
+                                    "glpi_locations",
+                                    $data["locations_id"]
+                                ) . "<br>";
+                        }
+
+                        if ($data["registration_number"] > 0) {
+                            $user["comment"] .= _x('user', 'Administrative number') . "&nbsp;: " .
+                                $data["registration_number"] . "<br>";
+                        }
                     } else {
-                        $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
+                        $user = $username;
                     }
-
-                    $user["comment"] .= __('Name') . "&nbsp;: " . $username . "<br>";
-
-                    if ($data["plugin_resources_ranks_id"] > 0) {
-                        $user["comment"] .= Rank::getTypeName(1) . "&nbsp;: " .
-                            Dropdown::getDropdownName(
-                                "glpi_plugin_resources_ranks",
-                                $data["plugin_resources_ranks_id"]
-                            ) . "<br>";
-                    }
-
-                    if ($data["locations_id"] > 0) {
-                        $user["comment"] .= __('Location') . "&nbsp;: " .
-                            Dropdown::getDropdownName(
-                                "glpi_locations",
-                                $data["locations_id"]
-                            ) . "<br>";
-                    }
-
-                    if ($data["registration_number"] > 0) {
-                        $user["comment"] .= _x('user', 'Administrative number') . "&nbsp;: " .
-                            $data["registration_number"] . "<br>";
-                    }
-                } else {
-                    $user = $username;
                 }
             }
         }
@@ -4915,7 +4943,7 @@ class Resource extends CommonDBTM
         $iterator = $DB->request($criteria);
 
         if (count($iterator) > 0) {
-            echo __('No item to display');
+            echo __('No results found');
         } else {
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='5'>" . __('Resources list', 'resources') . "</th></tr>";
