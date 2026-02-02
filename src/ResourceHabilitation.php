@@ -216,8 +216,8 @@ class ResourceHabilitation extends CommonDBTM
             $rand = mt_rand();
             echo "<div class='left'>";
             if ($canedit) {
-                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
+                Html::openMassiveActionsForm('masshabil' .  $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masshabil'  . $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
             echo "<table class='tab_cadre_fixe'>";
@@ -226,7 +226,7 @@ class ResourceHabilitation extends CommonDBTM
             echo "</tr>";
             echo "<tr>";
             if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('masshabil' .  $rand) . "</th>";
             }
             echo "<th>" . __('Name') . "</th>";
             foreach ($fields as $field) {

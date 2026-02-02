@@ -2490,7 +2490,7 @@ class Resource extends CommonDBTM
                     'right' => 'all'
                 ]);
             } else {
-                echo $users_id_recipient->getName();
+                echo getUserName($this->fields["users_id_recipient"]);
             }
         } else {
             echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);

@@ -1518,6 +1518,7 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
     switch ($type) {
         case Directory::class:
         case Recap::class:
+        case User::class:
             $out['LEFT JOIN'] = [
                 'glpi_plugin_resources_resources_items' => [
                     'ON' => [
@@ -1554,7 +1555,7 @@ function plugin_resources_addDefaultWhere($type)
     switch ($type) {
         case Directory::class:
         case Recap::class:
-
+        case User::class:
             $criteria = [
                 'glpi_plugin_resources_resources.is_leaving' => 0,
                 'glpi_users.is_active' => 1
@@ -1689,50 +1690,50 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
             return $out;
 
         case "glpi_plugin_resources_resources": // From items
-//            $out['LEFT JOIN'] = [];
-//            if ($type != Directory::class && $type != Recap::class) {
-//                if ($ref_table != 'glpi_plugin_resources_tasks'
-//                    && $ref_table != 'glpi_plugin_resources_resourcerestings'
-//                    && $ref_table != 'glpi_plugin_resources_resourceholidays'
-//                    && $ref_table != 'glpi_plugin_resources_employments'
-//                    && $type != Resource_Item::class) {
-//                    $out = SQLProvider::getLeftJoinCriteria(
-//                        $type,
-//                        $ref_table,
-//                        $already_link_tables,
-//                        "glpi_plugin_resources_resources_items",
-//                        "plugin_resources_resources_id"
-//                    );
-//                    $left = [
-//                        'glpi_plugin_resources_resources' => [
-//                            'ON' => [
-//                                'glpi_plugin_resources_resources' => 'id',
-//                                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
-//                                [
-//                                    'AND' => [
-//                                        'glpi_plugin_resources_resources_items.itemtype' => $type,
-//                                    ],
-//                                ],
-//                            ],
-//                        ],
-//                    ];
-//                    if (isset($out['LEFT JOIN'])) {
-//                        $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
-//                    } else {
-//                        $out['LEFT JOIN'] = $left;
-//                    }
-//                } else {
-//                    $out['LEFT JOIN'] = [
-//                        'glpi_plugin_resources_resources' => [
-//                            'ON' => [
-//                                $ref_table => 'plugin_resources_resources_id',
-//                                'glpi_plugin_resources_resources' => 'id'
-//                            ],
-//                        ],
-//                    ];
-//                }
-//            }
-//            return $out;
+            $out['LEFT JOIN'] = [];
+            if ($type == User::class) {
+                if ($ref_table != 'glpi_plugin_resources_tasks'
+                    && $ref_table != 'glpi_plugin_resources_resourcerestings'
+                    && $ref_table != 'glpi_plugin_resources_resourceholidays'
+                    && $ref_table != 'glpi_plugin_resources_employments'
+                    && $type != Resource_Item::class) {
+                    $out = SQLProvider::getLeftJoinCriteria(
+                        $type,
+                        $ref_table,
+                        $already_link_tables,
+                        "glpi_plugin_resources_resources_items",
+                        "plugin_resources_resources_id"
+                    );
+                    $left = [
+                        'glpi_plugin_resources_resources' => [
+                            'ON' => [
+                                'glpi_plugin_resources_resources' => 'id',
+                                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                                [
+                                    'AND' => [
+                                        'glpi_plugin_resources_resources_items.itemtype' => $type,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+                    if (isset($out['LEFT JOIN'])) {
+                        $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
+                    } else {
+                        $out['LEFT JOIN'] = $left;
+                    }
+                } else {
+                    $out['LEFT JOIN'] = [
+                        'glpi_plugin_resources_resources' => [
+                            'ON' => [
+                                $ref_table => 'plugin_resources_resources_id',
+                                'glpi_plugin_resources_resources' => 'id'
+                            ],
+                        ],
+                    ];
+                }
+            }
+            return $out;
         case "glpi_plugin_resources_contracttypes": // From items
             if ($type != Recap::class) {
                 if ($linkfield == "last_contract_type") {

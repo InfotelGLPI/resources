@@ -734,8 +734,8 @@ class Checklist extends CommonDBTM
         $numrows = $dbu->countElementsInTable("glpi_plugin_resources_checklists", $restrict);
         if (!empty($checklists)) {
             if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
+                Html::openMassiveActionsForm('masschecklist'  . $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masschecklist'  . $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
 
@@ -821,7 +821,7 @@ class Checklist extends CommonDBTM
             if (!$isfinished) {
                 echo "<th width='10'>";
                 if (self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                    echo Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
+                    echo Html::getCheckAllAsCheckbox('masschecklist' . $rand);
                 }
                 echo "</th>";
             }
