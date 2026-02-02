@@ -99,7 +99,7 @@ class Resource extends CommonDBTM
         PhoneType::class
     ];
 
-    static $itemtype = 'PluginResourcesResource';
+    static $itemtype = Resource::class;
 
     protected $usenotepad = true;
 
@@ -1577,7 +1577,7 @@ class Resource extends CommonDBTM
                     'SELECT' => ['glpi_plugin_resources_employments.*'],
                     'FROM' => 'glpi_plugin_resources_employments',
                     'WHERE' => [
-                        'plugin_resources_resources_id.id' => $this->input["id"],
+                        'plugin_resources_resources_id' => $this->input["id"],
                         'begin_date' => ['<', $this->input['date_end']],
                         [
                             "OR" => [
