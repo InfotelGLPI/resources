@@ -77,7 +77,6 @@ function plugin_init_resources()
     $PLUGIN_HOOKS['csrf_compliant']['resources'] = true;
     $PLUGIN_HOOKS['change_profile']['resources'] = [Profile::class, 'initProfile'];
     $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
-//    Toolbox::logInfo($_SESSION["glpiactiveprofile"]["helpdesk_item_type"]);
 
     if (Session::getLoginUserID()) {
         $PLUGIN_HOOKS['pre_item_form']['resources'] = [LinkAd::class, 'messageSolution'];
