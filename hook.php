@@ -2737,7 +2737,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                                 if ($i != 0) {
                                     $result .= "\n";
                                 }
-                                $result .= Resource::getResourceName($data["Computer_4331"][$i]["name"]);
+                                $result .= Resource::getResourceName($data["Computer_4331"][$i]["id"]);
                             }
                         }
                     }

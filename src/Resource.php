@@ -2532,10 +2532,7 @@ class Resource extends CommonDBTM
             && isset($this->fields["users_id_recipient_leaving"])
         ) {
             echo "&nbsp;" . __('By') . "&nbsp;";
-            $users_id_recipient_leaving = new User();
-            if ($users_id_recipient_leaving->getFromDB($this->fields["users_id_recipient_leaving"])) {
-                echo getUserName($this->fields["users_id_recipient_leaving"]);
-            }
+            echo getUserName($this->fields["users_id_recipient_leaving"]);
 
             if (isset($this->fields["date_declaration_leaving"])
                 && $this->fields["date_declaration_leaving"] != null

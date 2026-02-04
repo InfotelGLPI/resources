@@ -72,7 +72,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
 
     $input["id"] = $_POST["plugin_resources_resources_id"];
     $input["date_end"] = $_POST["date_end"];
-    $input["remove_manager"] = $_POST["remove_manager"];
+    $input["remove_manager"] = $_POST["remove_manager"] ?? 0;
     if (($_POST["date_end"] < $date)
         || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
         $input["is_leaving"] = "1";
