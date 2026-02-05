@@ -1773,47 +1773,44 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 
             return $out;
         case "glpi_plugin_resources_managers": // From items
-            if ($type == Directory::class) {
-                $out['LEFT JOIN'] = [
-                    'glpi_plugin_resources_resources_items' . $AS_device => [
-                        'ON' => [
-                            $ref_table => 'id',
-                            $nt_device => 'items_id'
-                        ],
-                    ],
-                    'glpi_plugin_resources_resources' . $AS => [
-                        'ON' => [
-                            $nt => 'id',
-                            $nt_device => 'plugin_resources_resources_id',
-                            [
-                                'AND' => [
-                                    $nt_device . '.itemtype' => $type,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'glpi_users  AS glpi_plugin_resources_managers' => [
+//            if ($type == Directory::class) {
+
+                $out = SQLProvider::getLeftJoinCriteria(
+                    $type,
+                    $ref_table,
+                    $already_link_tables,
+                    "glpi_plugin_resources_resources",
+                    "plugin_resources_resources_id"
+                );
+                $left = [
+                    'glpi_users AS glpi_plugin_resources_managers' => [
                         'ON' => [
                             'glpi_plugin_resources_resources' => 'users_id',
                             'glpi_plugin_resources_managers' => 'id'
                         ],
                     ],
                 ];
-            } else {
-                $out['LEFT JOIN'] = [
-                    'glpi_plugin_resources_resources_items' . $AS_device => [
-                        'ON' => [
-                            $ref_table => 'id',
-                            $nt_device => 'items_id',
-                            [
-                                'AND' => [
-                                    'glpi_plugin_resources_resources_items.itemtype' => $type,
-                                ],
-                            ],
-                        ],
-                    ],
-                ];
-            }
+                if (isset($out['LEFT JOIN'])) {
+                    $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
+                } else {
+                    $out['LEFT JOIN'] = $left;
+                }
+
+//            } else {
+//                $out['LEFT JOIN'] = [
+//                    'glpi_plugin_resources_resources_items' . $AS_device => [
+//                        'ON' => [
+//                            $ref_table => 'id',
+//                            $nt_device => 'items_id',
+//                            [
+//                                'AND' => [
+//                                    'glpi_plugin_resources_resources_items.itemtype' => $type,
+//                                ],
+//                            ],
+//                        ],
+//                    ],
+//                ];
+//            }
             return $out;
         case "glpi_plugin_resources_salemanagers": // From items
             $out['LEFT JOIN'] = [
@@ -1871,31 +1868,27 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 
             return $out;
         case "glpi_plugin_resources_recipients_leaving": // From items
-            $out['LEFT JOIN'] = [
-                'glpi_plugin_resources_resources_items' . $AS_device => [
-                    'ON' => [
-                        $ref_table => 'id',
-                        $nt_device => 'items_id'
-                    ],
-                ],
-                'glpi_plugin_resources_resources' . $AS => [
-                    'ON' => [
-                        $nt => 'id',
-                        $nt_device => 'plugin_resources_resources_id',
-                        [
-                            'AND' => [
-                                $nt_device . '.itemtype' => $type,
-                            ],
-                        ],
-                    ],
-                ],
+
+            $out = SQLProvider::getLeftJoinCriteria(
+                $type,
+                $ref_table,
+                $already_link_tables,
+                "glpi_plugin_resources_resources",
+                "plugin_resources_resources_id"
+            );
+            $left = [
                 'glpi_users AS glpi_plugin_resources_recipients_leaving' => [
                     'ON' => [
-                        $nt => 'users_id_recipient_leaving',
+                        'glpi_plugin_resources_resources' => 'users_id_recipient_leaving',
                         'glpi_plugin_resources_recipients_leaving' => 'id'
                     ],
                 ],
             ];
+            if (isset($out['LEFT JOIN'])) {
+                $out['LEFT JOIN'] = array_merge($out['LEFT JOIN'], $left);
+            } else {
+                $out['LEFT JOIN'] = $left;
+            }
 
             return $out;
         case "glpi_plugin_resources_locations": // From items

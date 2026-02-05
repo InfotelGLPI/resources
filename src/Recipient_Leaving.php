@@ -33,8 +33,8 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class Recipient_Leaving
  */
-class Recipient_Leaving extends CommonDBTM {
-
-
-}
+//class Recipient_Leaving extends CommonDBTM {
+//
+//
+//}
 
