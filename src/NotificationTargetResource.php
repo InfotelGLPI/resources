@@ -1010,7 +1010,9 @@ class NotificationTargetResource extends NotificationTarget
 
             $this->data['##lang.resource.comment##'] = __('Description');
 
-            $this->data['##resource.comment##'] = RichText::getTextFromHtml($this->obj->getField("comment"));
+            if ($this->obj->getField("comment")) {
+                $this->data['##resource.comment##'] = RichText::getTextFromHtml($this->obj->getField("comment"));
+            }
 
             if ($this->obj->getField('users_id_recipient_leaving')) {
                 $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');

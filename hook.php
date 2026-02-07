@@ -1691,7 +1691,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 
         case "glpi_plugin_resources_resources": // From items
             $out['LEFT JOIN'] = [];
-            if ($type == User::class || $type == Computer::class) {
+            if ($type != Directory::class && $type != Recap::class) {
                 if ($ref_table != 'glpi_plugin_resources_tasks'
                     && $ref_table != 'glpi_plugin_resources_resourcerestings'
                     && $ref_table != 'glpi_plugin_resources_resourceholidays'

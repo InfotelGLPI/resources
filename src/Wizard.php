@@ -140,7 +140,9 @@ class Wizard extends CommonDBTM
         if (!isset($options["requiredfields"])) {
             $options["requiredfields"] = 0;
         }
-        if (($options['withtemplate'] == 2 || $options["new"] != 1) && $options["requiredfields"] != 1) {
+        if (((isset($options['withtemplate']) && $options['withtemplate'] == 2)
+                || (isset($options['new']) && $options["new"] != 1))
+            && $options["requiredfields"] != 1) {
             $options["gender"] = $resource->fields["gender"];
             $options["name"] = $resource->fields["name"];
             $options["firstname"] = $resource->fields["firstname"];
