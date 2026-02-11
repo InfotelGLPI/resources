@@ -391,18 +391,30 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     $resources_id = $_POST["plugin_resources_resources_id"];
 
-    $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
-    $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+    if ($resourcehabilitation->checkRequiredFields($_POST)) {
+        $resourcehabilitation->addResourceHabilitation($_POST);
 
-    if ($wizard_documents) {
-        $wizard->wizardSevenStep($resources_id);
-    } elseif ($wizard_entrance_information) {
-        $wizard->wizardEightStep($resources_id);
+        $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
+        $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
+
+        if ($wizard_documents) {
+            $wizard->wizardSevenStep($resources_id);
+        } elseif ($wizard_entrance_information) {
+            $wizard->wizardEightStep($resources_id);
+        } else {
+            $resource->fields['plugin_resources_resources_id'] = $resources_id;
+            $resource->fields['resources_step'] = 'six_step';
+            Plugin::doHook('item_show', $resource);
+            $resource->redirectToList();
+        }
+
     } else {
-        $resource->fields['plugin_resources_resources_id'] = $resources_id;
-        $resource->fields['resources_step'] = 'six_step';
-        Plugin::doHook('item_show', $resource);
-        $resource->redirectToList();
+        Session::addMessageAfterRedirect(
+            __('Required fields are not filled. Please try again.', 'resources'),
+            false,
+            ERROR
+        );
+        $wizard->wizardSixStep($_POST["plugin_resources_resources_id"]);
     }
 
 } elseif (isset($_POST["add_doc_seven_step"])) {

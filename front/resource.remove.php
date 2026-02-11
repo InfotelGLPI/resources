@@ -109,6 +109,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
     $config = new Config();
     $config->getFromDB(1);
     Session::addMessageAfterRedirect(__('Declaration of resource leaving OK', 'resources'));
+
     if ($config->fields["create_ticket_departure"]) {
         $ticket = new Ticket();
 

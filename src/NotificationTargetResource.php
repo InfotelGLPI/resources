@@ -635,7 +635,7 @@ class NotificationTargetResource extends NotificationTarget
                 //                                                   $checklist['plugin_resources_leavingreasons_id']);
                 $tmp['##checklist.helpdesk##'] = Dropdown::getYesNo($checklist['is_helpdesk_visible']);
                 $tmp['##checklist.url##'] = urldecode(
-                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Ressource::class . "_"
+                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
                     . $checklist['plugin_resources_resources_id']
                 );
 
@@ -777,12 +777,14 @@ class NotificationTargetResource extends NotificationTarget
             );
 
             $this->data['##lang.resource.comment##'] = __('Description');
-            $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
-            $this->data['##resource.comment##'] = RichText::getTextFromHtml($comment);
+            if ($this->obj->getField("comment")) {
+                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
+                $this->data['##resource.comment##'] = RichText::getTextFromHtml($comment);
+            }
 
             $this->data['##lang.resource.url##'] = "URL";
             $this->data['##resource.url##'] = urldecode(
-                $CFG_GLPI["url_base"] . "/index.php?redirect=" . Ressource::class . "_"
+                $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
                 . $this->obj->getField("id")
             );
 
@@ -914,7 +916,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##resource.comment##'] = RichText::getTextFromHtml($comment);
 
                 $tmp['##resource.url##'] = urldecode(
-                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Ressource::class . "_"
+                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
                     . $resource["id"]
                 );
 
@@ -1066,7 +1068,7 @@ class NotificationTargetResource extends NotificationTarget
 
             $this->data['##lang.resource.url##'] = "URL";
             $this->data['##resource.url##'] = urldecode(
-                $CFG_GLPI["url_base"] . "/index.php?redirect=" . Ressource::class . "_"
+                $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
                 . $this->obj->getField("id")
             );
 
@@ -1087,9 +1089,10 @@ class NotificationTargetResource extends NotificationTarget
                 if (!empty($items)) {
                     foreach ($items as $item) {
                         $user = new User();
-                        $user->getFromDB($item["items_id"]);
-                        $this->data['##resource.login##'] = $user->fields["name"];
-                        $this->data['##resource.email##'] = $user->getDefaultEmail();
+                        if ($user->getFromDB($item["items_id"])) {
+                            $this->data['##resource.login##'] = $user->fields["name"];
+                            $this->data['##resource.email##'] = $user->getDefaultEmail();
+                        }
                     }
                 }
 

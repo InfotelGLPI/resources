@@ -56,7 +56,7 @@ use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.11');
+define('PLUGIN_RESOURCES_VERSION', '4.0.12');
 
 global $CFG_GLPI;
 
