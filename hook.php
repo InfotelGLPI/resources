@@ -87,7 +87,7 @@ use GlpiPlugin\Resources\TaskType;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\WorkProfile;
 
-use function Safe\mkdir;
+//use function Safe\mkdir;
 
 /**
  * @return bool

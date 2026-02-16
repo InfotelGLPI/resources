@@ -369,7 +369,7 @@ class Resource_Item extends CommonDBTM
             $id = $values["id"];
         }
         if (isset($id) && $id > 0 && isset($values["locations_id"]) && $values["locations_id"] > 0) {
-            $item = new User();
+            $item = new \User();
             $update["id"] = $id;
             $update["locations_id"] = $values["locations_id"];
             if ($itemtype == Resource::class) {

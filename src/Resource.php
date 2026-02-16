@@ -2280,7 +2280,8 @@ class Resource extends CommonDBTM
             $option['readonly'] = true;
         }
         Dropdown::show(
-            'PluginResourcesTeam',
+
+            Team::class,
             $option
         );
 
