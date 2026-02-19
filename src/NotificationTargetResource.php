@@ -1090,7 +1090,9 @@ class NotificationTargetResource extends NotificationTarget
                     foreach ($items as $item) {
                         $user = new User();
                         if ($user->getFromDB($item["items_id"])) {
-                            $this->data['##resource.login##'] = $user->fields["name"];
+                            if (isset($user->fields["name"])) {
+                                $this->data['##resource.login##'] = $user->fields["name"];
+                            }
                             $this->data['##resource.email##'] = $user->getDefaultEmail();
                         }
                     }
