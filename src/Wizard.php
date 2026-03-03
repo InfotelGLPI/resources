@@ -77,41 +77,18 @@ class Wizard extends CommonDBTM
      */
     public function wizardFirstStep()
     {
-        $resource = new Resource();
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Welcome to the wizard resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardHeader($title, $img);
-
-        echo "<div class='card-body'>";
-        $target = Toolbox::getItemTypeFormURL(Wizard::class);
-        echo "<form action='$target' method='post'>";
-
-        echo "<div class='card-text'>";
-        echo __('This wizard lets you create new resources in GLPI', 'resources');
-        echo "<br /><br />";
-        echo __('To begin, select type of contract', 'resources');
-        echo "<br /><br />";
-
-        $resource->dropdownTemplate("template");
-
-        echo "</div>";
-
-        echo "<div class='card-text'>";
-        echo "<div class='next'>";
-        echo Html::hidden('withtemplate', ['value' => 2]);
-        echo Html::submit(_sx('button', 'Next', 'resources') . " >", [
-            'name' => 'second_step',
-            'class' => 'btn btn-success',
+        TemplateRenderer::getInstance()->display('@resources/wizard_firststep_contractype.html.twig', [
+            'can_edit' => Session::haveRight("plugin_resources", CREATE),
+            'params' => [
+                'title' => __('Welcome to the wizard resource', 'resources'),
+                'target' => Toolbox::getItemTypeFormURL(Wizard::class),
+                'icon' => '',
+                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+            ],
         ]);
-        echo "</div></div>";
 
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
+        return true;
     }
 
     /**
@@ -128,6 +105,7 @@ class Wizard extends CommonDBTM
         $empty = 0;
         if ($ID > 0) {
             $resource->check($ID, READ);
+            $options['new'] = $ID;
         } else {
             // Create item
             $resource->check(-1, UPDATE);
@@ -139,7 +117,34 @@ class Wizard extends CommonDBTM
 
         if (!isset($options["requiredfields"])) {
             $options["requiredfields"] = 0;
+            $options["gender"] = 0;
+            $options["name"] = "";
+            $options["firstname"] = "";
+            $options["locations_id"] = 0;
+            $options["users_id"] = 0;
+            $options["users_id_sales"] = 0;
+            $options["plugin_resources_departments_id"]= 0;
+            $options["plugin_resources_services_id"] = 0;
+            $options["plugin_resources_functions_id"] = 0;
+            $options["plugin_resources_teams_id"] = 0;
+            $options["date_begin"] = NULL;
+            $options["date_end"] = NULL;
+            $options["comment"] = "";
+            $options["quota"] = 0;
+            $options["plugin_resources_resourcesituations_id"]  = 0;
+            $options["plugin_resources_contractnatures_id"]  = 0;
+            $options["plugin_resources_ranks_id"]  = 0;
+            $options["plugin_resources_resourcespecialities_id"]  = 0;
+            $options["plugin_resources_leavingreasons_id"]  = 0;
+            $options["sensitize_security"]  = 0;
+            $options["read_chart"]  = 0;
+            $options["plugin_resources_roles_id"]  = 0;
+            $options["matricule"]  = "";
+            $options["matricule_second"] = "";
+            $options["withtemplate"] = 0;
         }
+
+
         if (((isset($options['withtemplate']) && $options['withtemplate'] == 2)
                 || (isset($options['new']) && $options["new"] != 1))
             && $options["requiredfields"] != 1) {
@@ -188,7 +193,13 @@ class Wizard extends CommonDBTM
         $input = [];
         if (isset($resource->fields["entities_id"]) || $empty == 1) {
             if ($empty == 1) {
+
                 $input['plugin_resources_contracttypes_id'] = 0;
+                $resourceTemplate = new Resource();
+                if ($resourceTemplate->getFromDB($options['template'])) {
+                    $input['plugin_resources_contracttypes_id'] = $resourceTemplate->fields['plugin_resources_contracttypes_id'];
+                }
+
                 $input['entities_id'] = $_SESSION['glpiactive_entity'];
                 echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
             } else {
@@ -205,6 +216,8 @@ class Wizard extends CommonDBTM
         }
         $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
+
+
         $required = $resource->checkRequiredFields($input);
         $hidden = $resource->getHiddenFields($input);
         $readonly = $resource->getReadonlyFields($input);
@@ -1053,11 +1066,15 @@ class Wizard extends CommonDBTM
             $contract = $input['plugin_resources_contracttypes_id'];
         }
         echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $contract]);
+        if ($ID > 0) {
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $ID]);
+        }
         echo Html::hidden(
             'plugin_resources_resourcestates_id',
             ['value' => $resource->fields["plugin_resources_resourcestates_id"]]
         );
         echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
+        echo Html::hidden('template', ['value' => $options['template'] ?? 0]);
         echo Html::hidden('date_declaration', ['value' => date('Y-m-d')]);
         echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
 
@@ -1116,7 +1133,6 @@ class Wizard extends CommonDBTM
      */
     public function wizardThirdStep($plugin_resources_resources_id)
     {
-        global $CFG_GLPI;
 
         $employee = new Employee();
         if (!$employee->canView()) {
@@ -1150,76 +1166,24 @@ class Wizard extends CommonDBTM
 
         if ($employee_spotted && $plugin_resources_resources_id) {
 
-            echo "<div class='card container' style='min-width: 80%;'>";
-
-            $title = __('Enter employer information about the resource', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-            self::WizardHeader($title, $img);
-
-            echo "<div class='card-body'>";
-
-            $target = Toolbox::getItemTypeFormURL(Wizard::class);
-            echo "<form action='$target' method='post'>";
-
             $entity = $resource->fields["entities_id"];
 
-            echo "<div class='row'>";
-            echo "<div class='col-md-3 mb-2'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo Employer::getTypeName(1);
-            echo "</div>";
-            echo "<div class='col-md-3 mb-2'>";
-            Dropdown::show(Employer::class, [
-                'name' => "plugin_resources_employers_id",
-                'value' => $employee->fields["plugin_resources_employers_id"],
-                'entity' => $entity,
+            TemplateRenderer::getInstance()->display('@resources/wizard_thirdstep_employee.html.twig', [
+                'can_edit' => Session::haveRight("plugin_resources", CREATE),
+                'can_purge' => Session::haveRight("plugin_resources", PURGE),
+                'item' => $employee,
+                'root_resources' => PLUGIN_RESOURCES_WEBDIR,
+                'params' => [
+                    'title' => __('Enter employer information about the resource', 'resources'),
+                    'target' => Toolbox::getItemTypeFormURL(Wizard::class),
+                    'icon' => '',
+                    'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                    'id' => $ID,
+                    'entities_id' => $entity,
+                    'compliant' => Client::isSecurityCompliance($employee->fields["plugin_resources_clients_id"])
+                ],
             ]);
-            echo "</div>";
-            echo "<div class='col-md-3 mb-2'>";
-            echo Client::getTypeName(1);
-            echo "</div>";
-            echo "<div class='col-md-3 mb-2'>";
-            Dropdown::show(Client::class, [
-                'name' => "plugin_resources_clients_id",
-                'value' => $employee->fields["plugin_resources_clients_id"],
-                'entity' => $entity,
-                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);",
-            ]);
-
-            echo "<div style='color: green;' id='security_compliance'>";
-            if (Client::isSecurityCompliance($employee->fields["plugin_resources_clients_id"])) {
-                echo __('Security compliance', 'resources') . "&nbsp;";
-                echo "<i style='color:green' class='ti ti-circle-check'></i>";
-            }
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-            if ($employee->canCreate()) {
-                echo "<div class='row'>";
-                echo "<div>";
-                echo "<div class='preview'>";
-                echo Html::hidden('id', ['value' => $ID]);
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                echo Html::hidden('withtemplate', ['value' => 0]);
-                echo Html::submit(
-                    "< " . _sx('button', 'Previous', 'resources'),
-                    ['name' => 'undo_third_step', 'class' => 'btn btn-primary']
-                );
-                echo "</div>";
-                echo "<div class='next'>";
-                echo Html::submit(
-                    _sx('button', 'Next', 'resources') . " >",
-                    ['name' => 'four_step', 'class' => 'btn btn-success']
-                );
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-            }
-
-            Html::closeForm();
-
-            echo "</div>";
-            echo "</div>";
         }
         return true;
     }
@@ -1450,84 +1414,35 @@ class Wizard extends CommonDBTM
      *
      * @return bool
      */
-    public function wizardFiveStep($ID, $options = [])
+    public function wizardFiveStep($plugin_resources_resources_id)
     {
-        $ressource = new Resource();
-        if ($ID > 0) {
-            $ressource->check($ID, READ);
+
+        $resource = new Resource();
+        $resource->getFromDB($plugin_resources_resources_id);
+        $path = "";
+        $path_send = "";
+        $empty_picture = PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png";
+
+        if (isset($resource->fields["picture"])) {
+            $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $resource->fields["picture"];
+            $path_send = PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $resource->fields["picture"];
         }
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Add the photo of the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardHeader($title, $img);
-
-        echo "<div class='card-body'>";
-
-        $target = Toolbox::getItemTypeFormURL(Wizard::class);
-        echo "<form action='$target' enctype='multipart/form-data' method='post'>";
-
-        if (!$ressource->canView()) {
-            return false;
-        }
-
-        echo "<div class='row'>";
-        echo "<div>";
-
-        if (isset($ressource->fields["picture"])) {
-            $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $ressource->fields["picture"];
-            if (file_exists($path)) {
-                echo "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $ressource->fields["picture"] . "'>
-            </object> ";
-            } else {
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'>";
-            }
-        } else {
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'>";
-        }
-        echo "</div></div>";
-
-        echo "<div class='row'>";
-        echo "<div style='margin-bottom: 5px;'>";
-
-        echo __('Photo format : JPG', 'resources') . "<br>";
-        //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $ressource->fields["picture"],
-        echo "<input class='form-control' type='file' name='picture'>";
-        echo "&nbsp;";
-        echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
-
-        echo "</div></div>";
-
-        echo "<div class='row'>";
-        echo "<div>";
-        echo Html::submit(_sx('button', 'Add'), ['name' => 'upload_five_step', 'class' => 'btn btn-success']);
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $ressource->fields["id"]]);
-        echo "</div></div>";
-
-        if ($ressource->canCreate() && (!empty($ID))) {
-            echo "<div class='row'>";
-            echo "<div>";
-            echo "<div class='preview'>";
-            echo Html::submit(
-                "< " . _sx('button', 'Previous', 'resources'),
-                ['name' => 'undo_five_step', 'class' => 'btn btn-primary']
-            );
-            echo "</div>";
-            echo "<div class='next'>";
-            echo Html::submit(
-                _sx('button', 'Next', 'resources') . " >",
-                ['name' => 'six_step', 'class' => 'btn btn-success']
-            );
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $ressource->fields["id"]]);
-            echo "</div>";
-            echo "</div></div>";
-        }
-
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/wizard_fivestep_photo.html.twig', [
+            'can_edit' => Session::haveRight("plugin_resources", CREATE),
+            'can_purge' => Session::haveRight("plugin_resources", PURGE),
+            'root_resources' => PLUGIN_RESOURCES_WEBDIR,
+            'params' => [
+                'title' => __('Add the photo of the resource', 'resources'),
+                'target' => Toolbox::getItemTypeFormURL(Wizard::class),
+                'icon' => '',
+                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                'empty_picture' => $empty_picture,
+                'path' => $path,
+                'path_send' => $path_send,
+            ],
+        ]);
 
         return true;
     }
@@ -1807,49 +1722,46 @@ class Wizard extends CommonDBTM
      */
     public function wizardEightStep($ID, $options = [])
     {
-        $tt = [];
-        $mandatory = [];
+
         $ressource = new Resource();
         $ressource->initForm($ID, $options);
         $ressource->getFromDB($ID);
+
         $input['plugin_resources_contracttypes_id'] = $ressource->fields['plugin_resources_contracttypes_id'];
         $input['entities_id'] = $ressource->fields['entities_id'];
         $input['more_information'] = 1;
+
         $mandatory = $ressource->checkRequiredFields($input);
         $mandatory = array_flip($mandatory);
         $hidden = $ressource->getHiddenFields($input);
         $hidden = array_flip($hidden);
         $readonly = $ressource->getReadonlyFields($input);
         $readonly = array_flip($readonly);
+
         if (isset($options['target']) && $options['target'] == 'item') {
             $target = null;
         } else {
-            $target = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
+            $target = Toolbox::getItemTypeFormURL(Wizard::class);
         }
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Add recruiting informations to the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardHeader($title, $img);
-
-        echo "<div class='card-body'>";
-
-        TemplateRenderer::getInstance()->display('@resources/recruitinginformation.html.twig', [
+        TemplateRenderer::getInstance()->display('@resources/wizard_eightstep_recruitinginformation.html.twig', [
+            'can_edit' => Session::haveRight("plugin_resources", CREATE),
+            'can_purge' => Session::haveRight("plugin_resources", PURGE),
             'item' => $ressource,
+            'root_resources' => PLUGIN_RESOURCES_WEBDIR,
             'params' => [
+                'title' => __('Add recruiting informations to the resource', 'resources'),
+                'target' => $target,
+                'icon' => '',
+                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                 'plugin_resources_resources_id' => $ID,
                 'hidden_fields' => $hidden,
                 'mandatory_fields' => $mandatory,
                 'readonly_fields' => $readonly,
-                'target' => $target,
                 'default_button' => $options['default_button'] ?? false,
                 'candel' => false,
             ],
         ]);
-
-        echo "</div>";
-        echo "</div>";
 
         return true;
     }

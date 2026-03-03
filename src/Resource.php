@@ -1319,7 +1319,7 @@ class Resource extends CommonDBTM
      */
     public function addPhoto($class)
     {
-        $uploadedfile = $_FILES['picture']['tmp_name'];
+        $uploadedfile = $_FILES['_uploader_picture']['tmp_name'][0];
         $src = imagecreatefromjpeg($uploadedfile);
 
         [$width, $height] = getimagesize($uploadedfile);
@@ -1329,7 +1329,7 @@ class Resource extends CommonDBTM
         $tmp = imagecreatetruecolor($newwidth, $newheight);
 
         imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-        $ext = strtolower(substr(strrchr($_FILES['picture']['name'], '.'), 1));
+        $ext = strtolower(substr(strrchr($_FILES['_uploader_picture']['name'][0], '.'), 1));
         $resources_name = str_replace(" ", "", strtolower($class->fields["name"]));
         $resources_firstname = str_replace(" ", "", strtolower($class->fields["firstname"]));
         $name = $resources_name . "_" . $resources_firstname . "." . $ext;
@@ -1656,17 +1656,17 @@ class Resource extends CommonDBTM
      *
      * @return int|string
      */
-    public function dropdownTemplate($name, $value = 0, $skip_profiles = false)
+    public static function dropdownTemplate($name, $value = 0, $skip_profiles = false)
     {
         $dbu = new DbUtils();
-
+        $self = new self();
         $restrict = ["is_template" => 1]
-            + $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive())
+            + $dbu->getEntitiesRestrictCriteria($self->getTable(), '', '', $self->maybeRecursive())
             + ["ORDER" => "template_name"]
             + ["GROUPBY" => "template_name"];
 
         $dbu = new DbUtils();
-        $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
+        $templates = $dbu->getAllDataFromTable($self->getTable(), $restrict);
 
         $config = new Config();
         $config->getFromDB(1);
@@ -1701,7 +1701,7 @@ class Resource extends CommonDBTM
                 $option[$template["id"]] = $template["template_name"] . $id_display;
             }
         }
-        return Dropdown::showFromArray($name, $option, ['value' => $value]);
+        Dropdown::showFromArray($name, $option, ['value' => $value]);
     }
 
     /**
@@ -2489,7 +2489,7 @@ class Resource extends CommonDBTM
             echo __('Request date') . " : ";
             echo Html::convDate($this->fields["date_declaration"]);
             echo "&nbsp;" . __('By') . "&nbsp;";
-            $users_id_recipient = new User();
+            $users_id_recipient = new \User();
             $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
             if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
                 User::dropdown([
@@ -3062,7 +3062,7 @@ class Resource extends CommonDBTM
         echo "<td>";
         echo __('Resource manager', 'resources') . "</td>";
         echo "<td width='70%'>";
-        User::dropdown([
+        \User::dropdown([
             'name' => "users_id_recipient",
             'entity' => $_SESSION['glpiactive_entity'],
             'entity_sons' => true,
@@ -4648,7 +4648,7 @@ class Resource extends CommonDBTM
         echo Html::css("lib/base.css");
         echo Html::script("lib/base.js");
         echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/themes/default/style.min.css");
-
+        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/jstree-glpi.css");
         echo "<div class='alert alert-important alert-info d-flex'>" . __(
             'Select the contract type',
             'resources'

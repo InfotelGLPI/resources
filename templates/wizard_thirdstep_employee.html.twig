@@ -1,0 +1,128 @@
+{#
+# -------------------------------------------------------------------------
+# Resources plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Resources.
+#
+# Resources is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Resources is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Resources. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Resources plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Resources
+# -------------------------------------------------------------------------
+#}
+
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% set rand = random() %}
+{% set field_options = {
+    'field_class': 'col-4',
+} %}
+{% if can_edit %}
+    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data"
+          data-submit-once>
+        <div class="card">
+            {#            <div class="card-header"> #}
+            <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">
+                    <span class="resources_wizard_resp_img">
+                        <i class=" {{ params["icon"] }} "></i>&nbsp;
+                        <img src=" {{ params["img"] }} ">&nbsp;
+                        {{ params["title"] }}
+                    </span>
+            </h3>
+            {#            </div> #}
+
+            <div class="card-body">
+                <div class='card-text'>
+                    {{ fields.dropdownField(
+                        "GlpiPlugin\\Resources\\Employer",
+                        "plugin_resources_employers_id",
+                        item.fields['plugin_resources_employers_id'],
+                        "GlpiPlugin\\Resources\\Employer"|itemtype_name,
+                        {
+                            'entity': params['entities_id'],
+                        }
+                    ) }}
+
+                    {{ fields.dropdownField(
+                        "GlpiPlugin\\Resources\\Client",
+                        "plugin_resources_clients_id",
+                        item.fields['plugin_resources_clients_id'],
+                        "GlpiPlugin\\Resources\\Client"|itemtype_name,
+                        {
+                            'entity': params['entities_id'],
+                            'on_change' : 'security_compliance(this.value);'
+                        }
+                    ) }}
+                    <script type='text/javascript'>
+                        function security_compliance(id) {
+                            var root_resources = '{{ root_resources }}';
+                            $.ajax({
+                                url: root_resources + '/ajax/employee.php',
+                                type: 'POST',
+                                data: '&plugin_resources_clients_id=' + id,
+                                dataType: 'html',
+                                success: function (code_html, statut) {
+                                    $('#security_compliance').html(code_html);
+                                },
+
+                            });
+                        }
+                    </script>
+                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2" style='color: green;'
+                         id='security_compliance'>
+                        {% if params["compliant"] is defined and params["compliant"] == true %}
+                            <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                {{ __('Security compliance', 'resources') }} &nbsp;
+                                <i style='color:green' class='ti ti-circle-check'></i>
+                            </label>
+                        {% endif %}
+                    </div>
+                    <div class="hr mt-3 mb-3"></div>
+                    <div class="hstack gap-1">
+                        <div class="pe-5 ms-auto">
+                            {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
+                            {{ inputs.hidden('id', params["id"]) }}
+                            {{ inputs.hidden('withtemplate', 0) }}
+                            {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+
+                            {% if can_purge %}
+                                {{ inputs.submit('cancel_request',
+                                    _x('button', 'Cancel the request', 'resources'),
+                                    1,
+                                    {class: 'btn btn-danger ms-1',
+                                        icon: 'ti ti-x'}) }}
+                            {% endif %}
+                            {{ inputs.submit('undo_third_step',
+                                _x('button', 'Previous', 'resources'),
+                                1,
+                                {class: 'btn btn-primary ms-1',
+                                    icon: 'ti ti-chevron-left'}) }}
+
+                            {{ inputs.submit('four_step',
+                                _x('button', 'Next', 'resources'),
+                                1,
+                                {class: 'btn btn-success ms-1',
+                                    icon: 'ti ti-chevron-right'}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endif %}

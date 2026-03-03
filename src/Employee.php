@@ -335,7 +335,7 @@ class Employee extends CommonDBTM
                             echo "</div>";
                         } else {
                             echo "<div class='center'>";
-                            $resource->dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]);
+                            Resource::dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]);
                             echo Html::hidden('users_id', ['value' => $users_id]);
                             echo "&nbsp;";
                             echo Html::submit(

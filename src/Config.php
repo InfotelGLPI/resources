@@ -260,8 +260,7 @@ class Config extends CommonDBTM
             echo __('Default contract template selected', 'resources');
             echo "</td>";
             echo "<td>";
-            $resource = new Resource();
-            $resource->dropdownTemplate(
+            Resource::dropdownTemplate(
                 "plugin_resources_resourcetemplates_id",
                 $this->fields["plugin_resources_resourcetemplates_id"],
                 false

@@ -66,6 +66,11 @@ if (isset($_POST["secondary_services"])) {
     $_POST["secondary_services"] = "";
 }
 
+if (isset($_POST["cancel_request"]) && $resource->canPurge()) {
+    $resource->delete(['id' => $_POST['plugin_resources_resources_id']], 1);
+    Html::back();
+}
+
 if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     if (!isset($_POST["template"])) {
         $_POST["template"] = $_GET["template"];
@@ -101,9 +106,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     $values['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
     $values['withtemplate'] = $_POST["withtemplate"];
+    $values['template'] = $_POST["template"];
     $values['new'] = 1;
+
     //OK
-    $wizard->wizardSecondStep($_POST["template"], $values);
+    $wizard->wizardSecondStep(0, $values);
 
 } else if (isset($_POST["third_step"])) {
 
@@ -114,6 +121,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         foreach ($_POST as $key => $val) {
             $values[$key] = $val;
         }
+
 
         // Clean text fields
         $values['name'] = stripslashes($values['name']);
@@ -126,7 +134,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             ERROR
         );
         //OK
-        $wizard->wizardSecondStep($_POST['id_template'], $values);
+        $wizard->wizardSecondStep(0, $values);
 
     } elseif (isset($_POST['date_begin'])
         && !empty($_POST['date_begin'])
@@ -149,13 +157,22 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             ERROR
         );
         //OK
-        $wizard->wizardSecondStep($_POST['id_template'], $values);
+//        $values['template'] = $_POST['id_template'] ?? 0;
+        $wizard->wizardSecondStep(0, $values);
 
     } else {
         $newresource = 0;
         if ($resource->canCreate() && isset($_POST["third_step"])) {
-            unset($_POST['id']);
-            $newresource = $resource->add($_POST);
+
+            if (isset($_POST["plugin_resources_resources_id"])) {
+                $_POST['id'] = $_POST["plugin_resources_resources_id"];
+                $resource->update($_POST);
+                $newresource = $_POST['plugin_resources_resources_id'];
+            } else {
+                unset($_POST['id']);
+                $newresource = $resource->add($_POST);
+            }
+
             if (isset($_POST['plugin_resources_employers_id']) && $newresource > 0) {
                 $employee = new Employee();
                 $employee->add([
@@ -180,7 +197,8 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 ERROR
             );
             //OK
-            $wizard->wizardSecondStep($_POST['id_template'], $values);
+//            $values['template'] = $_POST['id_template'] ?? 0;
+            $wizard->wizardSecondStep(0, $values);
         }
 //        elseif ($resource->canCreate() && isset($_POST["second_step_update"])) {
 //            $resource->update($_POST);
@@ -238,6 +256,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         }
     }
 } elseif (isset($_POST["four_step"])) {
+
     if (isset($_POST['id']) && $_POST['id'] > 0) {
         $employee->update($_POST);
     } else {
@@ -356,36 +375,43 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     }
 } elseif (isset($_POST["upload_five_step"])) {
 
-    if (isset($_FILES) && isset($_FILES['picture'])) {
+    if (isset($_FILES) && isset($_FILES['_uploader_picture'])) {
 
         $resources_id = $_POST["plugin_resources_resources_id"];
 
-        if ($_FILES['picture']['type'] == "image/jpeg" || $_FILES['picture']['type'] == "image/pjpeg") {
-            $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-            if ($_FILES['picture']['size'] <= $max_size) {
-                $resource->getFromDB($resources_id);
-                $_POST['picture'] = $resource->addPhoto($resource);
+        if ($_FILES['_uploader_picture']['type'][0] == "image/jpeg"
+            || $_FILES['_uploader_picture']['type'][0] == "image/pjpeg") {
 
-                $_POST["id"] = $resources_id;
-                $resource->update($_POST);
+            $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
+            if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
+                $resource->getFromDB($resources_id);
+                $input['picture'] = $resource->addPhoto($resource);
+                $input["id"] = $resources_id;
+                $resource->update($input);
 
             } else {
                 Session::addMessageAfterRedirect(
-                    __('Failed to send the file (probably too large)'),
+                    __('Failed to send the file (probably too large)', 'resources'),
                     false,
                     ERROR
                 );
             }
         } else {
             Session::addMessageAfterRedirect(
-                __('Invalid filename') . " : " . $_FILES['picture']['type'],
+                __('Invalid filename'),
                 false,
                 ERROR
             );
         }
+    }  else {
+        Session::addMessageAfterRedirect(
+            __('Failed to send the file', 'resources'),
+            false,
+            ERROR
+        );
     }
 
-    $wizard->wizardFiveStep($_POST["plugin_resources_resources_id"]);
+    $wizard->wizardFiveStep($resources_id);
 
 } elseif (isset($_POST["seven_step"])) {
 

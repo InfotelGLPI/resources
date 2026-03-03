@@ -45,8 +45,10 @@ if (isset($_POST['plugin_resources_clients_id'])) {
         $img = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
         $color = "color: red;";
     }
+    echo "<label class='col-form-label col-xxl-5 text-xxl-end'>";
     echo "<span style='$color'>";
     echo __('Security compliance', 'resources') . "&nbsp;";
     echo $img;
     echo "</span>";
+    echo "</label>";
 }
