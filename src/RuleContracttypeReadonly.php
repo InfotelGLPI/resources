@@ -173,9 +173,9 @@ class RuleContracttypeReadonly extends Rule {
         $criterias['plugin_resources_contracttypes_id']['type']  = 'dropdownContractType';
         $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
-        $criterias['plugin_resources_profiltypes_id']['name']  = \Profile::getTypeName(1);
-        $criterias['plugin_resources_profiltypes_id']['type']  = 'dropdownProfilType';
-        $criterias['plugin_resources_profiltypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+        $criterias['plugin_resources_profiletypes_id']['name']  = \Profile::getTypeName(1);
+        $criterias['plugin_resources_profiletypes_id']['type']  = 'dropdownProfilType';
+        $criterias['plugin_resources_profiletypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
         $criterias['plugin_resources_grouptypes_id']['name']  = Group::getTypeName(1);
         $criterias['plugin_resources_grouptypes_id']['type']  = 'dropdownGroupType';

@@ -118,33 +118,37 @@
                         {% endif %}
                     {% endif %}
                     <div class="hr mt-3 mb-3"></div>
-                    <div class="hstack gap-1">
-                        <div class="pe-5 ms-auto">
-                            {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
-                            {{ inputs.hidden('id', params["id"]) }}
-                            {{ inputs.hidden('withtemplate', 0) }}
-                            {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+                    {% if params["default_button"] is defined and params["default_button"] ==1 %}
+                        {{ include('components/form/buttons.html.twig') }}
+                    {% else %}
+                        <div class="hstack gap-1">
+                            <div class="pe-5 ms-auto">
+                                {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
+                                {{ inputs.hidden('id', params["id"]) }}
+                                {{ inputs.hidden('withtemplate', 0) }}
+                                {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
 
-                            {% if can_purge %}
-                                {{ inputs.submit('cancel_request',
-                                    _x('button', 'Cancel the request', 'resources'),
+                                {% if can_purge %}
+                                    {{ inputs.submit('cancel_request',
+                                        _x('button', 'Cancel the request', 'resources'),
+                                        1,
+                                        {class: 'btn btn-danger ms-1',
+                                            icon: 'ti ti-x'}) }}
+                                {% endif %}
+                                {{ inputs.submit('undo_eight_step',
+                                    _x('button', 'Previous', 'resources'),
                                     1,
-                                    {class: 'btn btn-danger ms-1',
-                                        icon: 'ti ti-x'}) }}
-                            {% endif %}
-                            {{ inputs.submit('undo_eight_step',
-                                _x('button', 'Previous', 'resources'),
-                                1,
-                                {class: 'btn btn-primary ms-1',
-                                    icon: 'ti ti-chevron-left'}) }}
+                                    {class: 'btn btn-primary ms-1',
+                                        icon: 'ti ti-chevron-left'}) }}
 
-                            {{ inputs.submit('nine_step',
-                                _x('button', 'Next', 'resources'),
-                                1,
-                                {class: 'btn btn-success ms-1',
-                                    icon: 'ti ti-chevron-right'}) }}
+                                {{ inputs.submit('nine_step',
+                                    _x('button', 'Next', 'resources'),
+                                    1,
+                                    {class: 'btn btn-success ms-1',
+                                        icon: 'ti ti-chevron-right'}) }}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

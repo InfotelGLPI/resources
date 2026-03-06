@@ -83,7 +83,7 @@ class ContractNature extends CommonDropdown
      **/
     static function canView(): bool
     {
-        if (Session::haveRight('dropdown_public', READ)) {
+        if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
             return true;
         }
         return false;

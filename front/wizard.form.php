@@ -60,11 +60,11 @@ if (empty($_POST)) {
     $_POST = $_GET;
 }
 
-if (isset($_POST["secondary_services"])) {
-    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
-} else {
-    $_POST["secondary_services"] = "";
-}
+//if (isset($_POST["secondary_services"])) {
+//    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
+//} else {
+//    $_POST["secondary_services"] = "";
+//}
 
 if (isset($_POST["cancel_request"]) && $resource->canPurge()) {
     $resource->delete(['id' => $_POST['plugin_resources_resources_id']], 1);
@@ -79,37 +79,10 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $_POST["withtemplate"] = $_GET["withtemplate"];
     }
 
-    // Set default value...
-    $values = [
-        'name' => '',
-        'firstname' => '',
-        'comment' => '',
-        'locations_id' => 0,
-        'users_id' => 0,
-        'users_id_sales' => 0,
-        'plugin_resources_departments_id' => 0,
-        'date_begin' => 'NULL',
-        'date_end' => 'NULL',
-        'quota' => 1.0000,
-        'plugin_resources_resourcesituations_id' => 0,
-        'plugin_resources_contractnatures_id' => 0,
-        'plugin_resources_ranks_id' => 0,
-        'plugin_resources_resourcespecialities_id' => 0,
-        'plugin_resources_leavingreasons_id' => 0,
-        'plugin_resources_habilitations_id' => 0,
-        'sensitize_security' => 0,
-        'read_chart' => 0,
-    ];
-
-    // Clean text fields
-    $values['name'] = stripslashes($values['name']);
-
-    $values['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/wizard.form.php";
     $values['withtemplate'] = $_POST["withtemplate"];
     $values['template'] = $_POST["template"];
     $values['new'] = 1;
 
-    //OK
     $wizard->wizardSecondStep(0, $values);
 
 } else if (isset($_POST["third_step"])) {
@@ -122,17 +95,24 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             $values[$key] = $val;
         }
 
-
         // Clean text fields
         $values['name'] = stripslashes($values['name']);
         $values['withtemplate'] = $_POST["withtemplate"];
+        $values['template'] = $_POST["template"];
         $values["requiredfields"] = 1;
 
+
         Session::addMessageAfterRedirect(
-            __('Required fields are not filled. Please try again.', 'resources'),
+            htmlescape(
+                sprintf(
+                    __('Mandatory fields are not filled. Please correct: %s'),
+                    implode(', ', $required)
+                )
+            ),
             false,
             ERROR
         );
+
         //OK
         $wizard->wizardSecondStep(0, $values);
 
@@ -164,7 +144,8 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $newresource = 0;
         if ($resource->canCreate() && isset($_POST["third_step"])) {
 
-            if (isset($_POST["plugin_resources_resources_id"])) {
+            if (isset($_POST["plugin_resources_resources_id"])
+                && $_POST["plugin_resources_resources_id"] > 0) {
                 $_POST['id'] = $_POST["plugin_resources_resources_id"];
                 $resource->update($_POST);
                 $newresource = $_POST['plugin_resources_resources_id'];
@@ -196,31 +177,9 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 false,
                 ERROR
             );
-            //OK
-//            $values['template'] = $_POST['id_template'] ?? 0;
+
             $wizard->wizardSecondStep(0, $values);
         }
-//        elseif ($resource->canCreate() && isset($_POST["second_step_update"])) {
-//            $resource->update($_POST);
-//            $newresource = $_POST["id"];
-//            if (isset($_POST['plugin_resources_employers_id'])) {
-//                $employee = new Employee();
-//                if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $newresource])) {
-//                    $employee->update([
-//                        'id' => $employee->getID(),
-//                        'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-//                        'plugin_resources_resources_id' => $newresource,
-//                        'plugin_resources_clients_id' => 0,
-//                    ]);
-//                } else {
-//                    $employee->add([
-//                        'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-//                        'plugin_resources_resources_id' => $newresource,
-//                        'plugin_resources_clients_id' => 0,
-//                    ]);
-//                }
-//            }
-//        }
 
         //if employee right : next step
         if ($newresource > 0) {
@@ -252,6 +211,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 $resource->redirectToList();
             }
         } else {
+            Session::addMessageAfterRedirect(
+                __('There is a problem with resource creation', 'resources'),
+                false,
+                ERROR
+            );
             Html::back();
         }
     }
@@ -440,7 +404,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             false,
             ERROR
         );
-        $wizard->wizardSixStep($_POST["plugin_resources_resources_id"]);
+        $wizard->wizardSixStep($resources_id);
     }
 
 } elseif (isset($_POST["add_doc_seven_step"])) {

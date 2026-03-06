@@ -1734,7 +1734,7 @@ class Resource extends CommonDBTM
             $input['entities_id'] = $_SESSION['glpiactive_entity'];
         }
         $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
-        $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+        $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
         $hidden = $this->getHiddenFields($input);
         $readonly = $this->getReadonlyFields($input);
@@ -2732,7 +2732,7 @@ class Resource extends CommonDBTM
 
     public static function showAddFormForItem(CommonDBTM $item, $withtemplate = 0, $options = [])
     {
-        global $CFG_GLPI, $DB;
+        global $DB;
 
         //default options
         $params['rand'] = mt_rand();
@@ -4809,6 +4809,7 @@ class Resource extends CommonDBTM
      */
     public static function showGenericDropdown($itemtype, $options = [])
     {
+
         if (isset($options['name'])) {
             // Set dropdown
             $options['on_change'] = "update" . $options['name'] . "();";

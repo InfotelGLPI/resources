@@ -1,0 +1,80 @@
+{#
+# -------------------------------------------------------------------------
+# Resources plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Resources.
+#
+# Resources is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Resources is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Resources. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Resources plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Resources
+# -------------------------------------------------------------------------
+#}
+
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% set rand = random() %}
+{% set field_options = {
+    'field_class': 'col-4',
+} %}
+{% if can_edit %}
+    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data"
+          data-submit-once>
+        <div class="card">
+{#            <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">#}
+{#                    <span class="resources_wizard_resp_img">#}
+{#                        <i class=" {{ params["icon"] }} "></i>&nbsp;#}
+{#                        <img src=" {{ params["img"] }} ">&nbsp;#}
+{#                        {{ params["title"] }}#}
+{#                    </span>#}
+{#            </h3>#}
+
+            <div class="card-body">
+                <div class="hr mt-3 mb-3"></div>
+                <div class="hstack gap-1">
+                    <div class="pe-5 ms-auto">
+                        {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
+                        {{ inputs.hidden('id', params["id"]) }}
+                        {{ inputs.hidden('withtemplate', 0) }}
+                        {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+
+                        {% if can_purge %}
+                            {{ inputs.submit('cancel_request',
+                                _x('button', 'Cancel the request', 'resources'),
+                                1,
+                                {class: 'btn btn-danger ms-1',
+                                    icon: 'ti ti-x'}) }}
+                        {% endif %}
+                        {{ inputs.submit('undo_seven_step',
+                            _x('button', 'Previous', 'resources'),
+                            1,
+                            {class: 'btn btn-primary ms-1',
+                                icon: 'ti ti-chevron-left'}) }}
+
+                        {{ inputs.submit('eight_step',
+                            _x('button', 'Next', 'resources'),
+                            1,
+                            {class: 'btn btn-success ms-1',
+                                icon: 'ti ti-chevron-right'}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endif %}

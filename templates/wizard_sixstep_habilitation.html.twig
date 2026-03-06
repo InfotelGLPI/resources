@@ -49,52 +49,38 @@
 
             <div class="card-body">
                 <div class='card-text'>
-                    {{ fields.dropdownField(
-                        "GlpiPlugin\\Resources\\Employer",
-                        "plugin_resources_employers_id",
-                        item.fields['plugin_resources_employers_id'],
-                        "GlpiPlugin\\Resources\\Employer"|itemtype_name,
-                        {
-                            'entity': params['entities_id'],
-                        }
-                    ) }}
 
-                    {{ fields.dropdownField(
-                        "GlpiPlugin\\Resources\\Client",
-                        "plugin_resources_clients_id",
-                        item.fields['plugin_resources_clients_id'],
-                        "GlpiPlugin\\Resources\\Client"|itemtype_name,
-                        {
-                            'entity': params['entities_id'],
-                            'on_change' : 'security_compliance(this.value);'
-                        }
-                    ) }}
-                    <script type='text/javascript'>
-                        function security_compliance(id) {
-                            var root_resources = '{{ root_resources }}';
-                            $.ajax({
-                                url: root_resources + '/ajax/employee.php',
-                                type: 'POST',
-                                data: '&plugin_resources_clients_id=' + id,
-                                dataType: 'html',
-                                success: function (code_html, statut) {
-                                    $('#security_compliance').html(code_html);
-                                },
+                    {% for habilitation_level in habilitation_levels %}
 
-                            });
-                        }
-                    </script>
-                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2" style='color: green;'
-                         id='security_compliance'>
-                        {% if params["compliant"] is defined and params["compliant"] == true %}
+                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
                             <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                {{ __('Security compliance', 'resources') }} &nbsp;
-                                <i style='color:green' class='ti ti-circle-check'></i>
+                                {{ habilitation_level.name }}
+                                {% if habilitation_level.mandatory %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
                             </label>
-                        {% endif %}
-                    </div>
+                            <div class="col-xxl-7 field-container">
+
+                                    {% do call('Dropdown::showFromArray', [
+                                        'habilitation_' ~ habilitation_level.id,
+                                        habilitation_level.values,
+                                        {
+                                            'label'    : habilitation_level.name,
+                                            'multiple' : habilitation_level.number,
+                                            'values'    : existing_habilitations[habilitation_level.id]|default([]),
+                                            'required' : habilitation_level.mandatory,
+                                        }
+                                    ]) %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ __('No habilitation level, you cannot add habilitation for this resource.', 'resources') }}
+                        </div>
+                    {% endfor %}
+
                     {% if params["default_button"] is defined and params["default_button"] ==1 %}
-                    {{ include('components/form/buttons.html.twig') }}
+                        {{ include('components/form/buttons.html.twig') }}
                     {% else %}
                         <div class="hr mt-3 mb-3"></div>
                         <div class="hstack gap-1">
@@ -111,13 +97,13 @@
                                         {class: 'btn btn-danger ms-1',
                                             icon: 'ti ti-x'}) }}
                                 {% endif %}
-                                {{ inputs.submit('undo_third_step',
+                                {{ inputs.submit('undo_six_step',
                                     _x('button', 'Previous', 'resources'),
                                     1,
                                     {class: 'btn btn-primary ms-1',
                                         icon: 'ti ti-chevron-left'}) }}
 
-                                {{ inputs.submit('four_step',
+                                {{ inputs.submit('seven_step',
                                     _x('button', 'Next', 'resources'),
                                     1,
                                     {class: 'btn btn-success ms-1',

@@ -408,13 +408,15 @@ class Choice extends CommonDBTM
                 $items = Dropdown::getDropdownName(
                     "glpi_plugin_resources_choiceitems",
                     $choice["plugin_resources_choiceitems_id"],
-                    1
                 );
+                $items_comments = Dropdown::getDropdownComments(
+                    "glpi_plugin_resources_choiceitems",
+                    $choice["plugin_resources_choiceitems_id"]);
                 echo "<td class='left'>";
-                echo $items['name'];
+                echo $items;
                 echo "</td>";
                 echo "<td class='left'>";
-                echo nl2br($items["comment"]);
+                echo nl2br($items_comments);
                 echo "</td>";
                 echo "<td class='center'>";
 

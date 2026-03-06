@@ -139,6 +139,10 @@ class ResourceHabilitation extends CommonDBTM
             $self = new self();
             $self->showItem($item);
         }
+//        if ($item->getType() == Resource::class) {
+//            $wizard = new Wizard();
+//            $wizard->wizardSixStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
+//        }
         return true;
     }
 
@@ -344,9 +348,12 @@ class ResourceHabilitation extends CommonDBTM
     {
         $habilitation_level = new HabilitationLevel();
 
+        $ressourcehabilitation = new ResourceHabilitation();
+        $ressourcehabilitation->deleteByCriteria(["plugin_resources_resources_id" => $params['plugin_resources_resources_id']]);
+
         foreach ($params as $key => $val) {
-            if (strpos($key, '__') > 0) {
-                list($name, $id) = explode('__', $key);
+            if (strpos($key, '_') > 0) {
+                list($name, $id) = explode('_', $key);
                 if (is_array($val)
                     && ($habilitation_level->getFromDB($id))) {
                     foreach ($val as $v) {
@@ -369,8 +376,9 @@ class ResourceHabilitation extends CommonDBTM
         $habilitation = new Habilitation();
 
         if ($habilitation->getFromDB($id)) {
-            $params["plugin_resources_habilitations_id"] = $id;
-            $resourceHabilitation->add($params);
+            $input["plugin_resources_habilitations_id"] = $id;
+            $input["plugin_resources_resources_id"] = $params["plugin_resources_resources_id"];
+            $resourceHabilitation->add($input);
         }
     }
 
@@ -385,6 +393,7 @@ class ResourceHabilitation extends CommonDBTM
      */
     function checkRequiredFields($params = [])
     {
+
         $resource = new Resource();
         $resource->getFromDB($params['plugin_resources_resources_id']);
         $dbu = new DbUtils();
@@ -399,9 +408,9 @@ class ResourceHabilitation extends CommonDBTM
         $levels = $habilitation_level->find($condition, "name");
 
         foreach ($levels as $level) {
-            if (!isset($params[str_replace(" ", "_", $level['name']) . '__' . $level['id']])
-                || (isset($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])])
-                    && empty($params[str_replace(" ", "_", $level['name'] . '__' . $level['id'])]))) {
+            if (!isset($params['habilitation_' . $level['id']])
+                || (isset($params['habilitation_' . $level['id']])
+                    && (empty($params['habilitation_' . $level['id']])))) {
                 return false;
             }
         }

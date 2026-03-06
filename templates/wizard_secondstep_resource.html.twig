@@ -1,0 +1,711 @@
+{#
+# -------------------------------------------------------------------------
+# Resources plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Resources.
+#
+# Resources is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Resources is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Resources. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Resources plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Resources
+# -------------------------------------------------------------------------
+#}
+
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% set rand = random() %}
+{% set field_options = {
+    'field_class': 'col-6',
+} %}
+
+{% set hidden = params['hidden_fields'] ?? [] %}
+    {% set readonly = params['readonly_fields'] ?? [] %}
+    {% set mandatory = params['mandatory_fields'] ?? [] %}
+{% if can_edit %}
+    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data"
+          data-submit-once>
+        <div class="card">
+
+            <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">
+                    <span class="resources_wizard_resp_img">
+                        <i class=" {{ params["icon"] }} "></i>&nbsp;
+                        <img src=" {{ params["img"] }} ">&nbsp;
+                        {{ params["title"] }}
+                    </span>
+            </h3>
+
+            <div class="card-body">
+                <div class='card-text'>
+
+                    <div class='row'>
+                        <div class='col-md-4 mb-2'>
+                            <span class='b'>
+                                {{ "Glpiplugin\\Resources\\ContractType"|itemtype_name }}
+                        </span>:&nbsp;
+                            {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contracttypes", inputs['plugin_resources_contracttypes_id']]) }}
+                        </div>
+                        <div class='col-md-4 mb-2'>
+                            <span class='b'>
+                                {{ "Entity"|itemtype_name }}
+                            </span>:&nbsp;
+                            {{ call('Dropdown::getDropdownName', ["glpi_entities", inputs['entities_id']]) }}
+                        </div>
+                        <div class='col-md-4 mb-2'>
+                            <span class='b'>
+                                {{ "Glpiplugin\\Resources\\ResourceState"|itemtype_name }}
+                            </span>:&nbsp;
+                            {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcestates", inputs['plugin_resources_resourcestates_id']]) }}
+                        </div>
+                    </div>
+
+                    <div class="hr mt-3 mb-3"></div>
+
+                    {% if hidden.gender is not defined %}
+                        {% if item.isField('gender') %}
+                            <div class='row'>
+                                <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                    <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                        {{ __('Gender', 'resources') }}
+                                        {% if mandatory.gender is defined %}
+                                            <span class="text-danger">*</span>
+                                        {% endif %}
+                                    </label>
+                                    <div class="col-xxl-7 field-container">
+                                        {% do call('Dropdown::showFromArray', [
+                                            'gender',
+                                            genders,
+                                            {
+                                                width: "100%",
+                                                'aria_label': __('Gender', 'resources'),
+                                                'value'    : options['gender'],
+                                                'required': mandatory.gender is defined,
+                                                'readonly': readonly.gender is defined,
+                                            }
+                                        ]) %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class='row'>
+                        <div class="alert alert-warning">
+                            {{ __("Thank you for paying attention to the spelling of the name and the firstname of the resource. For compound firstnames, separate them with a dash \"-\".","resources") }}
+                        </div>
+                        {% if hidden.name is not defined %}
+                            {% if item.isField('name') %}
+                                {{ fields.textField(
+                                    'name',
+                                    options['name'],
+                                    __('Surname'),
+                                    {
+                                        'required': mandatory.name is defined,
+                                        'readonly': readonly.name is defined,
+                                        'additional_attributes': {
+                                        'onchange': "javascript:this.value=this.value.toUpperCase();",
+                                    }
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.firstname is not defined %}
+                            {% if item.isField('firstname') %}
+                                {{ fields.textField(
+                                    'firstname',
+                                    options['firstname'],
+                                    __('First name'),
+                                    {
+                                        'required': mandatory.firstname is defined,
+                                        'readonly': readonly.name is defined,
+                                        'additional_attributes': {
+                                        'onchange': "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'",
+                                    }
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class='row'>
+                        {% if hidden.matricule is not defined %}
+                            {% if item.isField('matricule') %}
+                                {{ fields.textField(
+                                    'matricule',
+                                    options['matricule'],
+                                    __('Matricule', 'resources'),
+                                    {
+                                        'required': mandatory.matricule is defined,
+                                        'readonly': readonly.matricule is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.phone is not defined %}
+                            {% if item.isField('phone') %}
+                                {{ fields.textField(
+                                    'phone',
+                                    options['phone'],
+                                    __('Phone'),
+                                    {
+                                        'required': mandatory.phone is defined,
+                                        'readonly': readonly.phone is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.cellphone is not defined %}
+                            {% if item.isField('cellphone') %}
+                                {{ fields.textField(
+                                    'cellphone',
+                                    options['cellphone'],
+                                    __('Mobile phone'),
+                                    {
+                                        'required': mandatory.cellphone is defined,
+                                        'readonly': readonly.cellphone is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if params['second_matricule'] is defined and params['second_matricule'] == 1 %}
+                            {% if hidden.matricule_second is not defined %}
+                                {% if item.isField('matricule_second') %}
+                                    {{ fields.textField(
+                                        'matricule_second',
+                                        options['matricule_second'],
+                                        __('Second matricule', 'resources'),
+                                        {
+                                            'required': mandatory.matricule_second is defined,
+                                            'readonly': readonly.matricule_second is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="hr mt-3 mb-3"></div>
+
+                    <div class='row'>
+
+                        {% if hidden.locations_id is not defined %}
+                            {% if item.isField('locations_id') %}
+                                {{ fields.dropdownField(
+                                    "Location",
+                                    "locations_id",
+                                    options['locations_id'],
+                                    "Location"|itemtype_name,
+                                    {
+                                        'entity': params['entities_id'],
+                                        'required': mandatory.locations_id is defined,
+                                        'readonly': readonly.locations_id is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if hidden.quota is not defined %}
+                            {% if item.isField('quota') %}
+                                {{ fields.textField(
+                                    'quota',
+                                    options['quota'],
+                                    __('Quota', 'resources'),
+                                    {
+                                        'required': mandatory.quota is defined,
+                                        'readonly': readonly.quota is defined,
+                                    }
+                                ) }}
+                            {% endif %}
+                        {% endif %}
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class='row'>
+
+                            {% if can_view_rank %}
+                                {% if hidden.plugin_resources_resourcesituations_id is not defined %}
+                                    {% if item.isField('plugin_resources_resourcesituations_id') %}
+                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                {{ "Glpiplugin\\Resources\\ResourceSituation"|itemtype_name }}
+                                                {% if mandatory.plugin_resources_resourcesituations_id is defined %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <div class="col-xxl-7 field-container">
+                                                {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
+                                                    "Glpiplugin\\Resources\\ResourceSituation",
+                                                    {
+                                                        'name': 'plugin_resources_resourcesituations_id',
+                                                        'value': options['plugin_resources_resourcesituations_id'],
+                                                        'entity': params['entities_id'],
+                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownContractnature.php',
+                                                        'span': 'span_contractnature',
+                                                    }
+                                                ]) %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if item.isField('plugin_resources_contractnatures_id') %}
+                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                {{ "Glpiplugin\\Resources\\ContractNature"|itemtype_name }}
+                                            </label>
+                                            <div class="col-xxl-7 field-container">
+                                        <span id='span_contractnature' name='span_contractnature'>
+                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contractnatures", options['plugin_resources_contractnatures_id']]) }}
+                                           </span>
+                                                {{ inputs.hidden('plugin_resources_contractnatures_id', 0) }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if hidden.plugin_resources_ranks_id is not defined %}
+                                    {% if item.isField('plugin_resources_ranks_id') %}
+                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                {{ "Glpiplugin\\Resources\\Rank"|itemtype_name }}
+                                                {% if mandatory.plugin_resources_ranks_id is defined %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <div class="col-xxl-7 field-container">
+                                                {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
+                                                    "Glpiplugin\\Resources\\Rank",
+                                                    {
+                                                        'name': 'plugin_resources_ranks_id',
+                                                        'value': options['plugin_resources_ranks_id'],
+                                                        'entity': params['entities_id'],
+                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownSpeciality.php',
+                                                        'span': 'span_speciality',
+                                                    }
+                                                ]) %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if item.isField('plugin_resources_resourcespecialities_id') %}
+                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                {{ "Glpiplugin\\Resources\\ResourceSpeciality"|itemtype_name }}
+                                            </label>
+                                            <div class="col-xxl-7 field-container">
+                                        <span id='span_speciality' name='span_speciality'>
+                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcespecialities", options['plugin_resources_resourcespecialities_id']]) }}
+                                           </span>
+                                                {{ inputs.hidden('plugin_resources_resourcespecialities_id', 0) }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class='row'>
+
+                            {% if hidden.users_id is not defined %}
+                                {% if item.isField('users_id') %}
+                                    {{ fields.dropdownField(
+                                        'User',
+                                        'users_id',
+                                        options['users_id'],
+                                        __('Resource manager', 'resources'),
+                                        field_options|merge({
+                                            'entity': item.fields['entities_id'],
+                                            'right': 'all',
+                                            'required': mandatory.users_id is defined,
+                                            'readonly': readonly.users_id is defined,
+                                        })
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if hidden.users_id_sales is not defined %}
+                                {% if item.isField('users_id_sales') %}
+                                    {% if item.isField('users_id_sales') %}
+                                        {{ fields.dropdownField(
+                                            'User',
+                                            'users_id_sales',
+                                            options['users_id_sales'],
+                                            __('Sales manager', 'resources'),
+                                            field_options|merge({
+                                                'entity': item.fields['entities_id'],
+                                                'right': 'all',
+                                                'required': mandatory.users_id_sales is defined,
+                                                'readonly': readonly.users_id_sales is defined,
+                                            })
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class='row'>
+
+                            {% if can_read_employee and params['display_employee'] is defined and params['display_employee'] == 0 %}
+                                {% if hidden.plugin_resources_employers_id is not defined %}
+                                    {{ fields.dropdownField(
+                                        "Glpiplugin\\Resources\\Employer",
+                                        "plugin_resources_employers_id",
+                                        options['plugin_resources_employers_id'],
+                                        "Glpiplugin\\Resources\\Employer"|itemtype_name,
+                                        {
+                                            'entity': params['entities_id'],
+                                            'required': mandatory.plugin_resources_employers_id is defined,
+                                            'readonly': readonly.plugin_resources_employers_id is defined,
+                                            'condition': params['condition_emp'],
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+
+                            {% if params['use_services_deparments_ad'] is defined and params['use_services_deparments_ad'] == 1 %}
+                                {% if hidden.plugin_resources_departments_id is not defined %}
+                                    {% if item.isField('plugin_resources_departments_id') %}
+                                        {{ fields.dropdownField(
+                                            "UserTitle",
+                                            "plugin_resources_departments_id",
+                                            options['plugin_resources_departments_id'],
+                                            "Glpiplugin\\Resources\\Department"|itemtype_name,
+                                            {
+                                                'entity': params['entities_id'],
+                                                'required': mandatory.plugin_resources_departments_id is defined,
+                                                'readonly': readonly.plugin_resources_departments_id is defined,
+                                            }
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                {% if hidden.plugin_resources_departments_id is not defined %}
+                                    {% if item.isField('plugin_resources_departments_id') %}
+                                        {{ fields.dropdownField(
+                                            "Glpiplugin\\Resources\\Department",
+                                            "plugin_resources_departments_id",
+                                            options['plugin_resources_departments_id'],
+                                            "Glpiplugin\\Resources\\Department"|itemtype_name,
+                                            {
+                                                'entity': params['entities_id'],
+                                                'required': mandatory.plugin_resources_departments_id is defined,
+                                                'readonly': readonly.plugin_resources_departments_id is defined,
+                                            }
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if params['use_services_deparments_ad'] is defined and params['use_services_deparments_ad'] == 1 %}
+                                {% if hidden.plugin_resources_services_id is not defined %}
+                                    {% if item.isField('plugin_resources_services_id') %}
+                                        {{ fields.dropdownField(
+                                            "UserCategory",
+                                            "plugin_resources_services_id",
+                                            options['plugin_resources_services_id'],
+                                            "Glpiplugin\\Resources\\Service"|itemtype_name,
+                                            {
+                                                'entity': params['entities_id'],
+                                                'required': mandatory.plugin_resources_services_id is defined,
+                                                'readonly': readonly.plugin_resources_services_id is defined,
+                                            }
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                {% if hidden.plugin_resources_services_id is not defined %}
+
+                                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                        <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                            {{ "Glpiplugin\\Resources\\Service"|itemtype_name }}
+                                            {% if mandatory.plugin_resources_departments_id is defined %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </label>
+                                        <div class="col-xxl-7 field-container">
+                                            {% do call('Glpiplugin\\Resources\\Service::dropdownFromDepart', [
+                                                options['plugin_resources_departments_id'],
+                                                {
+                                                    'name': 'plugin_resources_services_id',
+                                                    'value': options['plugin_resources_services_id'],
+                                                    'entity': params['entities_id'],
+                                                    'readonly': readonly.plugin_resources_services_id is defined,
+                                                    'rand': rand
+                                                }
+                                            ]) %}
+
+                                            {% do call('Ajax::updateItemOnSelectEvent', [
+                                                'dropdown_plugin_resources_services_id' ~ rand,
+                                                'show_roles',
+                                                config('root_doc') ~ '/plugins/resources/ajax/dropdownRole.php',
+                                                {
+                                                    'plugin_resources_services_id': '__VALUE__',
+                                                    'rand': rand
+                                                }
+                                            ]) %}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                        <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                            {{ "Glpiplugin\\Resources\\Role"|itemtype_name }}
+                                            {% if mandatory.plugin_resources_roles_id is defined %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </label>
+                                        <div class="col-xxl-7 field-container">
+                                            {% do call('Ajax::updateItemOnSelectEvent', [
+                                                'dropdown_plugin_resources_departments_id' ~ rand,
+                                                'show_services',
+                                                config('root_doc') ~ '/plugins/resources/ajax/dropdownService.php',
+                                                {
+                                                    'plugin_resources_departments_id': '__VALUE__',
+                                                    'rand': rand
+                                                }
+                                            ]) %}
+
+                                            {% do call('Glpiplugin\\Resources\\Role::dropdownFromService', [
+                                                options['plugin_resources_services_id'],
+                                                {
+                                                    'name': 'plugin_resources_roles_id',
+                                                    'value': options['plugin_resources_roles_id'],
+                                                    'entity': params['entities_id'],
+                                                    'readonly': readonly.plugin_resources_roles_id is defined,
+                                                    'rand': rand
+                                                }
+                                            ]) %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+
+                            {% if params['use_secondary_services'] is defined and params['use_secondary_services'] == 1 %}
+                                {#                    {% if hidden.secondary_services is not defined %} #}
+                                {#                        {% if item.isField('secondary_services') %} #}
+                                <div class='row'>
+                                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                        <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                            {{ __('Secondaries services', 'resources') }}
+                                            {% if mandatory.secondary_services is defined %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </label>
+                                        <div class="col-xxl-7 field-container">
+                                            {% do call('Dropdown::showFromArray', [
+                                                'secondary_services',
+                                                services,
+                                                {
+                                                    width: "100%",
+                                                    'multiple': true,
+                                                    'aria_label': __('Secondaries services', 'resources'),
+                                                    'values'    : options['secondary_services']|default([]),
+                                                    'required': mandatory.secondary_services is defined,
+                                                    'readonly': readonly.secondary_services is defined,
+                                                }
+                                            ]) %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {#                        {% endif %} #}
+                                {#                    {% endif %} #}
+                            {% endif %}
+
+                            {% if hidden.plugin_resources_functions_id is not defined %}
+                                {% if item.isField('plugin_resources_functions_id') %}
+                                    {{ fields.dropdownField(
+                                        "Glpiplugin\\Resources\\ResourceFunction",
+                                        "plugin_resources_functions_id",
+                                        options['plugin_resources_functions_id'],
+                                        "Glpiplugin\\Resources\\ResourceFunction"|itemtype_name,
+                                        {
+                                            'entity': params['entities_id'],
+                                            'required': mandatory.plugin_resources_functions_id is defined,
+                                            'readonly': readonly.plugin_resources_functions_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+
+                            {% if hidden.plugin_resources_teams_id is not defined %}
+                                {% if item.isField('plugin_resources_teams_id') %}
+                                    {{ fields.dropdownField(
+                                        "Glpiplugin\\Resources\\Team",
+                                        "plugin_resources_teams_id",
+                                        options['plugin_resources_teams_id'],
+                                        "Glpiplugin\\Resources\\Team"|itemtype_name,
+                                        {
+                                            'entity': params['entities_id'],
+                                            'required': mandatory.plugin_resources_teams_id is defined,
+                                            'readonly': readonly.plugin_resources_teams_id is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if hidden.date_begin is not defined %}
+                                {% if item.isField('date_begin') %}
+                                    {{ fields.dateField(
+                                        'date_begin',
+                                        options['date_begin'],
+                                        __('Arrival date', 'resources'),
+                                        {
+                                            'required': mandatory.date_begin is defined,
+                                            'readonly': readonly.date_begin is defined,
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if hidden.date_begin is not defined %}
+                                {% if item.isField('date_end') %}
+                                    {{ fields.dateField(
+                                        'date_end',
+                                        options['date_end'],
+                                        __('Departure date', 'resources'),
+                                        {
+                                            'required': mandatory.date_end is defined,
+                                            'readonly': readonly.date_end is defined,
+                                            'helper': __('Empty for non defined', 'resources')
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class='row'>
+
+                            {% if params['use_security'] is defined and params['use_security'] == 1 %}
+                                {% if hidden.sensitize_security is not defined %}
+                                    {% if item.isField('sensitize_security') %}
+                                        {{ fields.checkboxField(
+                                            'sensitize_security',
+                                            options['sensitize_security'],
+                                            __('Sensitized to security', 'resources'),
+                                            {
+                                                'required': mandatory.sensitize_security is defined,
+                                                'readonly': readonly.sensitize_security is defined,
+                                            }
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if hidden.sensitize_security is not defined %}
+                                    {% if item.isField('read_chart') %}
+                                        {{ fields.checkboxField(
+                                            'read_chart',
+                                            options['read_chart'],
+                                            __('Reading the security charter', 'resources'),
+                                            {
+                                                'required': mandatory.read_chart is defined,
+                                                'readonly': readonly.read_chart is defined,
+                                            }
+                                        ) }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class='row'>
+
+                            {% if hidden.comment is not defined %}
+                                {% if item.isField('comment') %}
+                                    {{ fields.textareaField(
+                                        "comment",
+                                        options['comment'],
+                                        __('Description'),
+                                        {
+                                            'required': mandatory.comment is defined,
+                                            'readonly': readonly.comment is defined,
+                                            'full_width': true
+                                        }
+                                    ) }}
+                                {% endif %}
+                            {% endif %}
+
+
+                            {% if params['use_notification'] is defined and params['use_notification'] == 1 %}
+                                {% if get_current_interface() == 'central' %}
+                                    {{ fields.checkboxField(
+                                        'send_notification',
+                                        options['send_notification'],
+                                        __('Send a notification'),
+                                        {
+                                            'required': mandatory.send_notification is defined,
+                                            'readonly': readonly.send_notification is defined,
+                                        }
+                                    ) }}
+                                {% else %}
+                                    {{ inputs.hidden('send_notification', 1) }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <div class="hr mt-3 mb-3"></div>
+
+                        <div class="hstack gap-1">
+                            <div class="pe-5 ms-auto">
+                                {{ inputs.hidden('plugin_resources_resources_id', inputs["plugin_resources_resources_id"]) }}
+                                {{ inputs.hidden('plugin_resources_contracttypes_id', inputs["plugin_resources_contracttypes_id"]) }}
+                                {{ inputs.hidden('id', params["id"]) }}
+                                {{ inputs.hidden('template', inputs["template"]) }}
+                                {{ inputs.hidden('withtemplate', 0) }}
+                                {{ inputs.hidden('entities_id', inputs["entities_id"]) }}
+                                {{ inputs.hidden('date_declaration', params["date_declaration"]) }}
+                                {{ inputs.hidden('users_id_recipient', params["users_id_recipient"]) }}
+
+                                {{ inputs.hidden('plugin_resources_resourcestates_id', inputs["plugin_resources_resourcestates_id"]) }}
+                                {{ inputs.hidden('plugin_resources_leavingreasons_id', 0) }}
+                                {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+
+                                {{ inputs.submit('undo_second_step',
+                                    _x('button', 'Previous', 'resources'),
+                                    1,
+                                    {class: 'btn btn-primary ms-1',
+                                        icon: 'ti ti-chevron-left'}) }}
+
+                                {{ inputs.submit('third_step',
+                                    _x('button', 'Next', 'resources'),
+                                    1,
+                                    {class: 'btn btn-success ms-1',
+                                        icon: 'ti ti-chevron-right'}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endif %}

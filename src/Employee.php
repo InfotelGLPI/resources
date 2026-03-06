@@ -134,12 +134,15 @@ class Employee extends CommonDBTM
      */
     static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        global $CFG_GLPI;
 
         if ($item->getType() == Resource::class) {
             $self = new self();
             $self->showEmployeeForm($item->getField('id'), 0, $withtemplate);
         }
+//        if ($item->getType() == Resource::class) {
+//            $wizard = new Wizard();
+//            $wizard->wizardThirdStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
+//        }
         return true;
     }
 
