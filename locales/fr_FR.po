@@ -2777,7 +2777,7 @@ msgstr "Vue par type de contrat"
 
 #: src/Profile.php:229
 msgid "View employer in core form "
-msgstr "Voir l'employeur dans le formulaire principal."
+msgstr "Voir l'employeur dans le formulaire principal"
 
 #: src/Profile.php:220
 msgid "View leaving information"
