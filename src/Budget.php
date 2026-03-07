@@ -339,7 +339,7 @@ class Budget extends CommonDBTM
     static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/budget.php';
-        $itemtype = strtolower(self::getType());
+        $itemtype = self::getType();
 
         //Menu entry in admin
         $menu['options'][$itemtype]['title'] = self::getTypeName();

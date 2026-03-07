@@ -1112,7 +1112,6 @@ class Resource extends CommonDBTM
                                 )) || in_array(
                                     $val,
                                     [
-
                                         'date_agreement_candidate',
                                         'plugin_resources_degreegroups_id',
                                         'plugin_resources_recruitingsources_id',

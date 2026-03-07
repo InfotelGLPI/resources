@@ -34,7 +34,7 @@ use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface() == 'central') {
     //from central
-    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+    Html::header(Resource::getTypeName(2), '', "admin", Menu::class, ResourceResting::class);
 } else {
     //from helpdesk
     if (Plugin::isPluginActive('servicecatalog')) {

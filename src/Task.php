@@ -563,7 +563,7 @@ class Task extends CommonDBTM
         if (isset($options['plugin_resources_resources_id'])) {
             $plugin_resources_resources_id = $options['plugin_resources_resources_id'];
         }
-
+        $entities_id = $_SESSION['glpiactive_entity'];
         $item = new Resource();
         if ($item->getFromDB($plugin_resources_resources_id)) {
             $entities_id = $item->fields["entities_id"];

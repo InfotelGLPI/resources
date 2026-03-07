@@ -252,29 +252,22 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $resource->redirectToList();
     }
 } elseif (isset($_POST["updateneedcomment"])) {
-    $resources_id = $_POST["plugin_resources_resources_id"];
-    if ($resource->canCreate()) {
-        foreach ($_POST["updateneedcomment"] as $key => $val) {
-            $varcomment = "commentneed" . $key;
-            $values['id'] = $key;
-            $values['commentneed'] = $_POST[$varcomment];
-            $choice->addNeedComment($values);
-        }
-    }
-
-    $wizard->wizardFourStep($resources_id);
+//    $resources_id = $_POST["plugin_resources_resources_id"];
+//    if ($resource->canCreate()) {
+//        foreach ($_POST["updateneedcomment"] as $key => $val) {
+//            $varcomment = "commentneed" . $key;
+//            $values['id'] = $key;
+//            $values['commentneed'] = $_POST[$varcomment];
+//            $choice->addNeedComment($values);
+//        }
+//    }
+//
+//    $wizard->wizardFourStep($resources_id);
 
 } elseif (isset($_POST["addcomment"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
     if ($resource->canCreate()) {
         $choice->addComment($_POST);
-    }
-
-    $wizard->wizardFourStep($resources_id);
-} elseif (isset($_POST["updatecomment"])) {
-    $resources_id = $_POST["plugin_resources_resources_id"];
-    if ($resource->canCreate()) {
-        $choice->updateComment($_POST);
     }
 
     $wizard->wizardFourStep($resources_id);
@@ -301,7 +294,6 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
     $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
     $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
-
 
     if ($wizard_picture) {
         $wizard->wizardFiveStep($resources_id);

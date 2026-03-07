@@ -30,18 +30,15 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use DbUtils;
 use Document_Item;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Html;
-use Profile_User;
 use Session;
 use Toolbox;
 use UserCategory;
-use UserTitle;
 
 class Wizard extends CommonDBTM
 {
@@ -104,7 +101,7 @@ class Wizard extends CommonDBTM
         if ($ID > 0) {
             $resource->check($ID, READ);
             $options['new'] = $ID;
-            $input['plugin_resources_resources_id'] =  $ID;
+            $input['plugin_resources_resources_id'] = $ID;
         } else {
             // Create item
             $resource->check(-1, UPDATE);
@@ -118,6 +115,8 @@ class Wizard extends CommonDBTM
             $options["name"] = "";
             $options["firstname"] = "";
             $options["locations_id"] = 0;
+            $options["phone"] = "";
+            $options["cellphone"] = "";
             $options["users_id"] = 0;
             $options["users_id_sales"] = 0;
             $options["plugin_resources_departments_id"] = 0;
@@ -125,8 +124,8 @@ class Wizard extends CommonDBTM
             $options["secondary_services"] = [];
             $options["plugin_resources_functions_id"] = 0;
             $options["plugin_resources_teams_id"] = 0;
-            $options["date_begin"] = NULL;
-            $options["date_end"] = NULL;
+            $options["date_begin"] = null;
+            $options["date_end"] = null;
             $options["comment"] = "";
             $options["quota"] = 0;
             $options["plugin_resources_resourcesituations_id"] = 0;
@@ -146,16 +145,17 @@ class Wizard extends CommonDBTM
         if (((isset($options['withtemplate']) && $options['withtemplate'] == 2)
                 || (isset($options['new']) && $options["new"] != 1))
             && $options["requiredfields"] != 1) {
-
             $options["gender"] = $resource->fields["gender"];
             $options["name"] = $resource->fields["name"];
             $options["firstname"] = $resource->fields["firstname"];
+            $options["phone"] = $resource->fields["phone"];
+            $options["cellphone"] = $resource->fields["cellphone"];
             $options["locations_id"] = $resource->fields["locations_id"];
             $options["users_id"] = $resource->fields["users_id"];
             $options["users_id_sales"] = $resource->fields["users_id_sales"];
             $options["plugin_resources_departments_id"] = $resource->fields["plugin_resources_departments_id"];
             $options["plugin_resources_services_id"] = $resource->fields["plugin_resources_services_id"];
-            $options["secondary_services"] =  json_decode($resource->fields['secondary_services'],true);
+            $options["secondary_services"] = json_decode($resource->fields['secondary_services'], true);
             $options["plugin_resources_functions_id"] = $resource->fields["plugin_resources_functions_id"];
             $options["plugin_resources_teams_id"] = $resource->fields["plugin_resources_teams_id"];
             $options["date_begin"] = $resource->fields["date_begin"];
@@ -175,11 +175,11 @@ class Wizard extends CommonDBTM
         }
         $options["plugin_resources_employers_id"] = 0;
 
-//        if (isset($options['target']) && $options['target'] == 'item') {
-//            $target = null;
-//        } else {
-//            $target = Toolbox::getItemTypeFormURL(Wizard::class);
-//        }
+        //        if (isset($options['target']) && $options['target'] == 'item') {
+        //            $target = null;
+        //        } else {
+        //            $target = Toolbox::getItemTypeFormURL(Wizard::class);
+        //        }
 
         $target = Toolbox::getItemTypeFormURL(Wizard::class);
 
@@ -188,7 +188,7 @@ class Wizard extends CommonDBTM
                 $input['plugin_resources_contracttypes_id'] = 0;
                 $resourceTemplate = new Resource();
                 if (isset($options['template'])
-                        && $resourceTemplate->getFromDB($options['template'])) {
+                    && $resourceTemplate->getFromDB($options['template'])) {
                     $input['plugin_resources_contracttypes_id'] = $resourceTemplate->fields['plugin_resources_contracttypes_id'];
                     $input['plugin_resources_resourcestates_id'] = $resourceTemplate->fields['plugin_resources_resourcestates_id'];
                     $input['template'] = $options['template'];
@@ -279,7 +279,7 @@ class Wizard extends CommonDBTM
                 'use_services_deparments_ad' => $config->useServiceDepartmentAD(),
                 'use_secondary_services' => $config->useSecondaryService() && $config->useServiceDepartmentAD(),
                 'use_security' => $config->useSecurity(),
-                'use_notification' => ($config->fields['automatic_notification_declare_arrival_form'] == 0)? 1 : 0,
+                'use_notification' => ($config->fields['automatic_notification_declare_arrival_form'] == 0) ? 1 : 0,
                 'display_employee' => $display_employee,
                 'condition_emp' => $condition_emp,
                 'date_declaration' => date('Y-m-d'),
@@ -360,13 +360,13 @@ class Wizard extends CommonDBTM
     }
 
     /**
-     * Wizard for Choice association with the resource
+     * Wizard for Choice needs association with the resource
      *
      * @param $plugin_resources_resources_id
      *
      * @return bool
      */
-    public function wizardFourStep($plugin_resources_resources_id)
+    public function wizardFourStep($plugin_resources_resources_id, $options = [])
     {
         $choice = new Choice();
         if (!$choice->canView()) {
@@ -399,182 +399,101 @@ class Wizard extends CommonDBTM
             }
         }
 
-        if ($spotted && $plugin_resources_resources_id) {
-            echo "<div class='card container' style='min-width: 80%;'>";
-
-            $title = __('Enter the computing needs of the resource', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-            self::WizardHeader($title, $img);
-
-            echo "<div class='card-body'>";
-
+        if (isset($options['target']) && $options['target'] == 'item') {
+            $target = null;
+        } else {
             $target = Toolbox::getItemTypeFormURL(Wizard::class);
-            echo "<form action='$target' name=\"choice\" method='post'>";
+        }
 
-            $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
-            $choices = $dbu->getAllDataFromTable($choice->getTable(), $restrict);
+        $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
+        $choices = $dbu->getAllDataFromTable($choice->getTable(), $restrict);
+        $used = [];
 
-            echo "<div class='row'>";
-            echo "<div>";
-            echo "<h5 class=\"bt-title-divider\">";
-            echo __('Add a need', 'resources');
-            echo "</h5>";
-            $used = [];
+        $entries = [];
 
-            if ($choice->canCreate()) {
-                if (!empty($choices)) {
-                    foreach ($choices as $choice_item) {
-                        $used[] = $choice_item["plugin_resources_choiceitems_id"];
-                    }
-                }
+        if (!empty($choices)) {
+            foreach ($choices as $choice_item) {
+                $used[] = $choice_item["plugin_resources_choiceitems_id"];
 
-                echo "&nbsp;";
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                Dropdown::show(
-                    ChoiceItem::class,
-                    [
-                        'name' => 'plugin_resources_choiceitems_id',
-                        'entity' => $_SESSION['glpiactive_entity'],
-                        'condition' => ['is_helpdesk_visible' => 1],
-                        'used' => $used,
-                    ]
-                );
-                echo "&nbsp;";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'addchoice', 'class' => 'btn btn-primary']);
-                echo "<br><br>";
-            }
-            echo "</div>";
-            echo "</div>";
+//                if (!empty($choice_item["comment"])) {
+//                    Choice::showModifyCommentFrom($choice_item, $rand);
+//                } else {
+//                    Choice::showAddCommentForm($choice_item, $rand);
+//                }
 
-            echo "<div class='row'>";
-            echo "<div>";
-            echo "<h5 class=\"bt-title-divider\">";
-            echo __('IT needs identified', 'resources');
-            echo "</h5>";
-
-            if (!empty($choices)) {
-                foreach ($choices as $choice_item) {
-                    $used[] = $choice_item["plugin_resources_choiceitems_id"];
-
-                    echo "<div class='row' style='border:#CCC;border-style: dashed;'>";
-
-                    $items = Dropdown::getDropdownName(
+                $entries[] = [
+                    'itemtype' => Choice::class,
+                    'id' => $choice_item['id'],
+                    'row_class' => (isset($data['is_deleted']) && $data['is_deleted']) ? 'table-deleted' : '',
+                    'name' => Dropdown::getDropdownName(
                         "glpi_plugin_resources_choiceitems",
                         $choice_item["plugin_resources_choiceitems_id"]
-                    );
-                    $items_comments = Dropdown::getDropdownComments(
+                    ),
+                    'comment' => Dropdown::getDropdownComments(
                         "glpi_plugin_resources_choiceitems",
-                        $choice_item["plugin_resources_choiceitems_id"]);
-
-                    echo "<br><div class='col-md-3 mb-2'>";
-                    echo $items;
-                    echo "</div>";
-                    echo "<div class='col-md-3 mb-2'>";
-                    echo nl2br($items_comments);
-                    echo "</div>";
-                    echo "<div class='col-md-4 center'>";
-                    $items_id = $choice_item["id"];
-                    $rand = mt_rand();
-                    if (!empty($choice_item["comment"])) {
-                        Choice::showModifyCommentFrom($choice_item, $rand);
-                    } else {
-                        Choice::showAddCommentForm($choice_item, $rand);
-                    }
-                    echo "</div>";
-                    if ($choice->canCreate()) {
-                        echo "<div class='col-md-2'>";
-                        Html::showSimpleForm(
-                            PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php',
-                            'deletechoice',
-                            _x('button', 'Delete permanently'),
-                            ['id' => $choice_item["id"], 'plugin_resources_resources_id' => $plugin_resources_resources_id]
-                        );
-
-                        echo "</div>";
-                    }
-                    echo "</div><br><br>";
-                }
-            } else {
-                echo "<div class='row'>";
-                echo "<div>";
-                echo __('None');
-                echo "</div>";
-                echo "</div>";
+                        $choice_item["plugin_resources_choiceitems_id"]
+                    ),
+                    'delete_choice' => [
+                        'content' => _x('button', 'Delete permanently'),
+                        'button-name' => 'delete_choice',
+                        'id' => $choice_item["id"],
+                        'plugin_resources_resources_id' => $choice_item["plugin_resources_resources_id"],
+                        'button-onclick' => "",
+                    ],
+                ];
             }
+        }
 
-            if ($choice->canCreate()) {
-                $rand = mt_rand();
-                echo "<div class='row'>";
-                echo "<div  style='border-top: #CCC;border-top-style: dashed;'>";
-                //            echo "<a href=\"javascript:showHideDiv('view_comment','commentimg$rand','" .
-                //                 $CFG_GLPI["root_doc"] . "/pics/deplier_down.png','" .
-                //                 $CFG_GLPI["root_doc"] . "/pics/deplier_up.png');\">";
-                //            echo "<img alt='' name='commentimg$rand' src=\"" .
-                //                 $CFG_GLPI["root_doc"] . "/pics/deplier_down.png\">&nbsp;";
-                echo "<h5 class=\"bt-title-divider\">";
-                echo __('Others needs', 'resources') . "&nbsp;";
-                Html::showToolTip(__('Will be added to the resource comment area', 'resources'), []);
-                echo "</h5>";
-                echo "</div>";
-                echo "</div>";
+        $columns = [
+            'name' => __('Name'),
+            'comment' => __('Comment'),
+            "delete_choice" => __('Action'),
+        ];
+        $formatters = [
+            'name' => 'raw_html',
+            'comment' => 'raw_html',
+            'delete_choice' => 'button',
+        ];
+        $footers = [];
+        $rand = mt_rand();
 
-                //            echo "<div class='center' style='display:none;' id='view_comment'>";
-                echo "<div class='row'>";
-                echo "<div style='margin-bottom: 5px;'>";
-                $comment = "";
-                //            if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
+        if ($spotted && $plugin_resources_resources_id) {
+            $entity = $resource->fields["entities_id"];
 
-                if (!empty($resource->fields['comment'])) {
-                    $comment = $resource->fields['comment'];
-                }
-                $comment = (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) ? $_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'] : $comment;
-
-                echo "<br>";
-                echo Html::textarea([
-                    'name' => 'comment',
-                    'value' => $comment,
-                    'cols' => '80',
-                    'rows' => '6',
-                    'display' => false,
-                ]);
-                echo "<br>";
-                if (isset($_SESSION['plugin_ressources_' . $plugin_resources_resources_id . '_comment'])) {
-                    echo Html::submit(
-                        _sx('button', 'Update'),
-                        ['name' => 'updatecomment', 'class' => 'btn btn-primary']
-                    );
-                } else {
-                    echo Html::submit(_sx('button', 'Add'), ['name' => 'addcomment', 'class' => 'btn btn-primary']);
-                }
-                //            }
-                //            echo "</div>";
-                echo "</div>";
-                echo "</div>";
-            }
-
-            if ($choice->canCreate()) {
-                echo "<div class='row'>";
-                echo "<div>";
-                echo "<div class='preview'>";
-                echo Html::submit(
-                    "< " . _sx('button', 'Previous', 'resources'),
-                    ['name' => 'undo_four_step', 'class' => 'btn btn-primary']
-                );
-                echo "</div>";
-                echo "<div class='next'>";
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                echo Html::submit(
-                    _sx('button', 'Next', 'resources') . " >",
-                    ['name' => 'five_step', 'class' => 'btn btn-success']
-                );
-                echo "</div>";
-                echo "</div></div>";
-            }
-
-            Html::closeForm();
-
-            echo "</div>";
-            echo "</div>";
+            TemplateRenderer::getInstance()->display('@resources/wizard_fourstep_choice.html.twig', [
+                    'can_edit' => Session::haveRight("plugin_resources", CREATE),
+                    'can_purge' => Session::haveRight("plugin_resources", PURGE),
+                    'item' => $resource,
+                    'comment' => $resource->fields['comment'],
+                    'used' => $used,
+                    'root_resources' => PLUGIN_RESOURCES_WEBDIR,
+                    'params' => [
+                        'title' => __('Enter the computing needs of the resource', 'resources'),
+                        'target' => $target,
+                        'icon' => '',
+                        'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                        'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                        'entities_id' => $entity,
+                        'default_button' => $options['default_button'] ?? false,
+                    ],
+                    'datatable_params' => [
+                        'is_tab' => true,
+                        'nofilter' => true,
+                        'nosort' => true,
+                        'columns' => $columns,
+                        'formatters' => $formatters,
+                        'entries' => $entries,
+                        'footers' => $footers,
+                        'total_number' => count($entries),
+                        'filtered_number' => count($entries),
+//                        'showmassiveactions' => Session::haveRight("plugin_resources", CREATE),
+//                        'massiveactionparams' => [
+//                            'container' => 'massiveactioncontainer' . $rand,
+//                            'itemtype' => Choice::class,
+//                        ],
+                    ],
+                ]
+            );
         }
         return true;
     }
@@ -653,7 +572,9 @@ class Wizard extends CommonDBTM
 
         $habilitation_levels = [];
 
-        $resource_habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $plugin_resources_resources_id]);
+        $resource_habilitations = $resourcehabilitation->find(
+            ['plugin_resources_resources_id' => $plugin_resources_resources_id]
+        );
         foreach ($resource_habilitations as $k => $resource_habilitation) {
             if ($habilitation->getFromDB($resource_habilitation['plugin_resources_habilitations_id'])) {
                 $existing_habilitations[$habilitation->fields['plugin_resources_habilitationlevels_id']][] = $resource_habilitation['plugin_resources_habilitations_id'];
@@ -760,8 +681,11 @@ class Wizard extends CommonDBTM
             if ($resource->canPurge()) {
                 echo Html::submit(
                     _sx('button', 'Cancel the request', 'resources'),
-                    ['name' => 'cancel_request', 'class' => 'btn btn-danger ms-1',
-                        'icon' => 'ti ti-x' ]
+                    [
+                        'name' => 'cancel_request',
+                        'class' => 'btn btn-danger ms-1',
+                        'icon' => 'ti ti-x'
+                    ]
                 );
             }
             echo "&nbsp;";

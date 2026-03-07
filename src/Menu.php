@@ -411,6 +411,7 @@ class Menu extends CommonGLPI
         $menu['links']['search'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
         $menu['links']['lists'] = "";
         $menu['lists_itemtype'] = Resource::getType();
+
         if (Session::haveright("plugin_resources", CREATE)) {
             $menu['links']['add'] = PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php';
             $menu['links']['template'] = PLUGIN_RESOURCES_WEBDIR . '/front/setup.templates.php?add=0';
@@ -502,6 +503,8 @@ class Menu extends CommonGLPI
         }
 
         // Add menu to class
+        $menu = ResourceHoliday::getMenuOptions($menu);
+        $menu = ResourceResting::getMenuOptions($menu);
         $menu = Budget::getMenuOptions($menu);
         $menu = Checklist::getMenuOptions($menu);
         $menu = Employment::getMenuOptions($menu);

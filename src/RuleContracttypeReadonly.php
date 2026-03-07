@@ -174,7 +174,7 @@ class RuleContracttypeReadonly extends Rule {
         $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
         $criterias['plugin_resources_profiletypes_id']['name']  = \Profile::getTypeName(1);
-        $criterias['plugin_resources_profiletypes_id']['type']  = 'dropdownProfilType';
+        $criterias['plugin_resources_profiletypes_id']['type']  = 'dropdownProfileType';
         $criterias['plugin_resources_profiletypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
         $criterias['plugin_resources_grouptypes_id']['name']  = Group::getTypeName(1);
@@ -208,7 +208,7 @@ class RuleContracttypeReadonly extends Rule {
                     $PluginResourcesContractType->dropdownContractType($name);
                     $display = true;
                     break;
-                case "dropdownProfilType" :
+                case "dropdownProfileType" :
                     \Profile::dropdown(['name'=>$name, 'value'=>$value]);
                     $display = true;
                     break;
@@ -237,7 +237,7 @@ class RuleContracttypeReadonly extends Rule {
                     case "dropdownContractType" :
                         $ContractType = new ContractType();
                         return $ContractType->getContractTypeName($pattern);
-                    case "dropdownProfilType" :
+                    case "dropdownProfileType" :
                         return \Profile::getFriendlyNameById($pattern);
                     case "dropdownGroupType" :
                         return Group::getFriendlyNameById($pattern);

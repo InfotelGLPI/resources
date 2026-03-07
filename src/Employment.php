@@ -652,8 +652,7 @@ class Employment extends CommonDBTM
     static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/employment.php';
-        $itemtype = strtolower(self::getType());
-
+        $itemtype = self::getType();
         //Menu entry in admin
         $menu['options'][$itemtype]['title'] = self::getTypeName();
         $menu['options'][$itemtype]['page'] = $plugin_page;

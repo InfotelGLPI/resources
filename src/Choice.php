@@ -35,6 +35,7 @@ use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use Html;
+use MassiveAction;
 use Session;
 use Toolbox;
 
@@ -187,25 +188,6 @@ class Choice extends CommonDBTM
             'comment' => addslashes($comment)
         ]);
 
-        $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
-    }
-
-    /**
-     * @param $values
-     */
-    function updateComment($values)
-    {
-        $resource = new Resource();
-        $resource->getFromDB($values['plugin_resources_resources_id']);
-
-        $comment = $values['comment'];
-
-        $resource->update([
-            'id' => $values['plugin_resources_resources_id'],
-            'comment' => addslashes($comment)
-        ]);
-
-        $_SESSION['plugin_ressources_' . $values['plugin_resources_resources_id'] . '_comment'] = $comment;
     }
 
     /**
@@ -285,7 +267,6 @@ class Choice extends CommonDBTM
      */
     static function showAddCommentForm($item, $rand)
     {
-        global $CFG_GLPI;
 
         $items_id = $item['id'];
         echo "<div class='center' id='addneedcomment" . "$items_id$rand'></div>\n";
@@ -321,7 +302,6 @@ class Choice extends CommonDBTM
      */
     static function showModifyCommentFrom($item, $rand)
     {
-        global $CFG_GLPI;
 
         $items_id = $item['id'];
         echo "<script type='text/javascript' >\n";
@@ -368,7 +348,6 @@ class Choice extends CommonDBTM
      */
     function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '')
     {
-        global $CFG_GLPI;
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
         $dbu = new DbUtils();
@@ -536,5 +515,6 @@ class Choice extends CommonDBTM
 
         Html::closeForm();
     }
+
 }
 

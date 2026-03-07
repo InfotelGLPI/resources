@@ -34,62 +34,85 @@
     'field_class': 'col-4',
 } %}
 {% if can_edit %}
-    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data" data-submit-once>
+    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data"
+          data-submit-once>
         <div class="card">
-{#            <div class="card-header">#}
-                <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">
+            {#            <div class="card-header"> #}
+            <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">
                     <span class="resources_wizard_resp_img">
                         <i class=" {{ params["icon"] }} "></i>&nbsp;
                         <img src=" {{ params["img"] }} ">&nbsp;
                         {{ params["title"] }}
                     </span>
-                </h3>
-{#            </div>#}
+            </h3>
+            {#            </div> #}
             <div class="card-body">
                 <div class='card-text'>
-                    {{ fields.dropdownField(
-                        "GlpiPlugin\\Resources\\Employer",
-                        "plugin_resources_employers_id",
-                        item.fields['plugin_resources_employers_id'],
-                        "GlpiPlugin\\Resources\\Employer"|itemtype_name,
-                        {
-                            'entity': params['entities_id'],
-                        }
-                    ) }}
 
-                    {{ fields.dropdownField(
-                        "GlpiPlugin\\Resources\\Client",
-                        "plugin_resources_clients_id",
-                        item.fields['plugin_resources_clients_id'],
-                        "GlpiPlugin\\Resources\\Client"|itemtype_name,
-                        {
-                            'entity': params['entities_id'],
-                            'on_change' : 'security_compliance(this.value);'
-                        }
-                    ) }}
-                    <script type='text/javascript'>
-                        function security_compliance(id) {
-                            var root_resources = '{{ root_resources }}';
-                            $.ajax({
-                                url: root_resources + '/ajax/employee.php',
-                                type: 'POST',
-                                data: '&plugin_resources_clients_id=' + id,
-                                dataType: 'html',
-                                success: function (code_html, statut) {
-                                    $('#security_compliance').html(code_html);
-                                },
+                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2">
+                        <label class="col-form-label col-xxl-5 text-xxl-end ">
 
-                            });
-                        }
-                    </script>
-                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2" style='color: green;' id='security_compliance'>
-                        {% if compliant is defined and compliant == true %}
-                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                {{__('Security compliance', 'resources')}} &nbsp;
-                                <i style='color:green' class='ti ti-circle-check'></i>
-                            </label>
-                        {% endif %}
+                        </label>
+                        <div class="col-xxl-7 field-container">
+
+                            {{ fields.dropdownField(
+                                "GlpiPlugin\\Resources\\ChoiceItem",
+                                "plugin_resources_choiceitems_id",
+                                null,
+                                __('Add a need', 'resources'),
+                                {
+                                    'entity': params['entities_id'],
+                                    'used': used,
+                                    'condition': {
+                                    is_helpdesk_visible: 1
+                                }
+                                }
+                            ) }}
+
+                            <div class="text-end">
+                                {{ inputs.submit('addchoice', _x('button', 'Add'), 1) }}
+                            </div>
+
+                            {{ inputs.hidden('plugin_resources_resources_id', params['plugin_resources_resources_id']) }}
+                            {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+                        </div>
                     </div>
+
+                    <div class="hr mt-3 mb-3"></div>
+
+                    <h5 class="card-title" style="margin-top: 10px;">
+                        {{ __('IT needs identified', 'resources') }}
+                    </h5>
+
+
+                    {{ include('@resources/datatable.html.twig', datatable_params, with_context = false) }}
+
+                    <div class="hr mt-3 mb-3"></div>
+
+                    <h5 class="card-title" style="margin-top: 10px;">
+                        {{ __('Others needs', 'resources') }}
+                        {% do call('Html::showToolTip', [__('Will be added to the resource comment area', 'resources'), {}]) %}
+                    </h5>
+
+                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2">
+                        <div class="col-xxl-12 field-container">
+                            {{ fields.textareaField(
+                                "comment",
+                                comment,
+                                null,
+                                {
+                                    'full_width': true
+                                }
+                            ) }}
+                            <div class="text-end">
+                                {{ inputs.submit('addcomment', _x('button', 'Add'), 1) }}
+                            </div>
+
+                            {{ inputs.hidden('plugin_resources_resources_id', params['plugin_resources_resources_id']) }}
+                            {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+                        </div>
+                    </div>
+
                     <div class="hr mt-3 mb-3"></div>
                     <div class="hstack gap-1">
                         <div class="pe-5 ms-auto">
@@ -105,13 +128,13 @@
                                     {class: 'btn btn-danger ms-1',
                                         icon: 'ti ti-x'}) }}
                             {% endif %}
-                            {{ inputs.submit('undo_third_step',
+                            {{ inputs.submit('undo_four_step',
                                 _x('button', 'Previous', 'resources'),
                                 1,
                                 {class: 'btn btn-primary ms-1',
                                     icon: 'ti ti-chevron-left'}) }}
 
-                            {{ inputs.submit('four_step',
+                            {{ inputs.submit('five_step',
                                 _x('button', 'Next', 'resources'),
                                 1,
                                 {class: 'btn btn-success ms-1',

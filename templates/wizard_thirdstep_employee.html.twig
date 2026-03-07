@@ -49,15 +49,39 @@
 
             <div class="card-body">
                 <div class='card-text'>
-                    {{ fields.dropdownField(
-                        "GlpiPlugin\\Resources\\Employer",
-                        "plugin_resources_employers_id",
-                        item.fields['plugin_resources_employers_id'],
-                        "GlpiPlugin\\Resources\\Employer"|itemtype_name,
-                        {
-                            'entity': params['entities_id'],
-                        }
-                    ) }}
+
+                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                        <label class="col-form-label col-xxl-5 text-xxl-end ">
+                            {{ "Glpiplugin\\Resources\\Employer"|itemtype_name }}
+                            {% if mandatory.plugin_resources_employers_id is defined %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        <div class="col-xxl-7 field-container">
+                            {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
+                                "Glpiplugin\\Resources\\Employer",
+                                {
+                                    'name': 'plugin_resources_employers_id',
+                                    'value': item.fields['plugin_resources_employers_id'],
+                                    'entity': params['entities_id'],
+                                    'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownLocation.php',
+                                    'span': 'span_location',
+                                }
+                            ]) %}
+                        </div>
+                    </div>
+
+                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                        <label class="col-form-label col-xxl-5 text-xxl-end ">
+                            {{ __('Address') }}
+                        </label>
+                        <div class="col-xxl-7 field-container">
+                            <span id='span_location' name='span_location'>
+                                 {{ call('Dropdown::getDropdownName', ["glpi_locations", params['glpi_locations']]) }}
+                               </span>
+                        </div>
+                    </div>
+
 
                     {{ fields.dropdownField(
                         "GlpiPlugin\\Resources\\Client",
@@ -94,7 +118,7 @@
                         {% endif %}
                     </div>
                     {% if params["default_button"] is defined and params["default_button"] ==1 %}
-                    {{ include('components/form/buttons.html.twig') }}
+                        {{ include('components/form/buttons.html.twig') }}
                     {% else %}
                         <div class="hr mt-3 mb-3"></div>
                         <div class="hstack gap-1">
