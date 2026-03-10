@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-07 11:05+0000\n"
+"POT-Creation-Date: 2026-03-10 16:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: hook.php:1383 src/Client.php:52
+#: hook.php:1379 src/Client.php:52
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -374,7 +374,7 @@ msgstr ""
 msgid "Be careful, new resources will be created in the entity"
 msgstr ""
 
-#: src/Cost.php:56 src/Cost.php:167 src/Cost.php:217 src/Cost.php:298
+#: src/Cost.php:57 src/Cost.php:169 src/Cost.php:219 src/Cost.php:300
 msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] ""
@@ -631,11 +631,12 @@ msgstr ""
 #: report/lapserankprofession/lapserankprofession.php:66
 #: src/ContractType.php:72 src/ContractType.php:152 src/BudgetType.php:92
 #: src/BudgetType.php:144 src/BudgetVolume.php:92 src/BudgetVolume.php:144
-#: src/ContractNature.php:102 src/ContractNature.php:187
-#: src/ResourceSituation.php:99 src/ResourceSituation.php:163
+#: src/ContractNature.php:97 src/ContractNature.php:182
+#: src/ResourceSituation.php:100 src/ResourceSituation.php:164
 #: src/ProfessionLine.php:99 src/ProfessionLine.php:151
-#: src/ProfessionCategory.php:99 src/ProfessionCategory.php:151 src/Rank.php:98
-#: src/Rank.php:146 src/Profession.php:97 src/Profession.php:216
+#: src/ProfessionCategory.php:100 src/ProfessionCategory.php:152
+#: src/Rank.php:101 src/Rank.php:149 src/Profession.php:99
+#: src/Profession.php:218
 msgid "Code"
 msgstr ""
 
@@ -873,7 +874,7 @@ msgstr ""
 msgid "Declare an employment"
 msgstr ""
 
-#: hook.php:1372 src/Resource.php:507 src/Resource.php:2537
+#: hook.php:1368 src/Resource.php:507 src/Resource.php:2537
 #: src/NotificationTargetResource.php:482
 #: src/NotificationTargetResource.php:582
 #: src/NotificationTargetResource.php:762
@@ -1058,9 +1059,9 @@ msgid_plural "Employees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1379
+#: hook.php:1375
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
-#: src/Employer.php:56 src/Department.php:92 src/Department.php:125
+#: src/Employer.php:56 src/Department.php:83 src/Department.php:116
 #: src/Employment.php:230 src/Employment.php:312
 msgid "Employer"
 msgid_plural "Employers"
@@ -1367,7 +1368,7 @@ msgstr ""
 msgid "Imported values"
 msgstr ""
 
-#: hook.php:1401 src/Resource.php:515 src/NotificationTargetResource.php:115
+#: hook.php:1397 src/Resource.php:515 src/NotificationTargetResource.php:115
 #: src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:771
@@ -1405,7 +1406,7 @@ msgstr ""
 msgid "Inventory"
 msgstr ""
 
-#: src/ResourceSituation.php:111
+#: src/ResourceSituation.php:112
 msgid "Is linked to a contract"
 msgstr ""
 
@@ -1559,7 +1560,7 @@ msgstr ""
 msgid "Manager for the current resource"
 msgstr ""
 
-#: src/Team.php:83
+#: src/Team.php:84
 msgid "Manager of the team"
 msgstr ""
 
@@ -1614,7 +1615,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2812
+#: hook.php:2808
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1789,7 +1790,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2571 src/Resource_Item.php:971
+#: hook.php:2567 src/Resource_Item.php:971
 msgid "Not defined"
 msgstr ""
 
@@ -1927,21 +1928,21 @@ msgid "Previous"
 msgstr ""
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:86
-#: src/Cost.php:143 src/Cost.php:185 src/Cost.php:258 src/Budget.php:178
-#: src/Budget.php:275 src/Rank.php:110 src/Rank.php:158 src/Profession.php:52
+#: src/Cost.php:145 src/Cost.php:187 src/Cost.php:260 src/Budget.php:178
+#: src/Budget.php:275 src/Rank.php:113 src/Rank.php:161 src/Profession.php:53
 #: src/Employment.php:201 src/Employment.php:325
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ProfessionCategory.php:54 src/Profession.php:115 src/Profession.php:235
+#: src/ProfessionCategory.php:54 src/Profession.php:117 src/Profession.php:237
 msgid "Profession category"
 msgid_plural "Profession categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ProfessionLine.php:54 src/Profession.php:109 src/Profession.php:228
+#: src/ProfessionLine.php:54 src/Profession.php:111 src/Profession.php:230
 msgid "Profession line"
 msgid_plural "Profession lines"
 msgstr[0] ""
@@ -1973,9 +1974,9 @@ msgstr ""
 msgid "Quota"
 msgstr ""
 
-#: src/ResourceSpeciality.php:101 src/ResourceSpeciality.php:179
-#: src/Cost.php:149 src/Cost.php:193 src/Cost.php:272 src/Budget.php:169
-#: src/Budget.php:288 src/Rank.php:53 src/Employment.php:193
+#: src/ResourceSpeciality.php:102 src/ResourceSpeciality.php:180
+#: src/Cost.php:151 src/Cost.php:195 src/Cost.php:274 src/Budget.php:169
+#: src/Budget.php:288 src/Rank.php:54 src/Employment.php:193
 #: src/Employment.php:337
 msgid "Rank"
 msgid_plural "Ranks"
@@ -2102,7 +2103,7 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1388 ajax/leavingform.php:114 src/RuleContracttype.php:251
+#: hook.php:1384 ajax/leavingform.php:114 src/RuleContracttype.php:251
 #: src/ResourcePDF.php:100 src/Directory.php:215 src/Config.php:131
 #: src/RuleContracttypeReadonly.php:270 src/Resource.php:137
 #: src/Resource.php:431 src/Resource.php:2345 src/Resource.php:3062
@@ -2184,7 +2185,7 @@ msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:1409 src/RuleContracttype.php:255 src/LeavingInformation.php:344
+#: hook.php:1405 src/RuleContracttype.php:255 src/LeavingInformation.php:344
 #: src/LeavingInformation.php:491 src/Config.php:132
 #: src/RuleContracttypeReadonly.php:274 src/Resource.php:141
 #: src/Resource.php:620 src/Resource.php:2418
@@ -2299,10 +2300,10 @@ msgstr ""
 msgid "Setup LDAP directory"
 msgstr ""
 
-#: src/ResourceSituation.php:105 src/ResourceSituation.php:169
-#: src/ResourceSituation.php:175 src/Employer.php:98 src/Employer.php:137
-#: src/EmploymentState.php:92 src/EmploymentState.php:154 src/Rank.php:104
-#: src/Rank.php:152 src/Profession.php:103 src/Profession.php:222
+#: src/ResourceSituation.php:106 src/ResourceSituation.php:170
+#: src/ResourceSituation.php:176 src/Employer.php:98 src/Employer.php:137
+#: src/EmploymentState.php:92 src/EmploymentState.php:154 src/Rank.php:107
+#: src/Rank.php:155 src/Profession.php:105 src/Profession.php:224
 msgid "Short name"
 msgstr ""
 
@@ -2353,7 +2354,7 @@ msgstr ""
 msgid "String"
 msgstr ""
 
-#: src/Team.php:89
+#: src/Team.php:90
 msgid "Substitute manager of the team"
 msgstr ""
 
@@ -2421,7 +2422,7 @@ msgid_plural "Teams"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Team.php:95
+#: src/Team.php:96
 msgid "Team code"
 msgstr ""
 
@@ -2496,7 +2497,7 @@ msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
 
-#: src/Cost.php:102 src/Cost.php:123 src/Budget.php:118 src/Budget.php:139
+#: src/Cost.php:104 src/Cost.php:125 src/Budget.php:118 src/Budget.php:139
 msgid "The profession for the budget must be filled"
 msgstr ""
 
@@ -2779,15 +2780,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:2870 src/LinkAd.php:853
+#: hook.php:2866 src/LinkAd.php:853
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2917
+#: hook.php:2913
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2852 hook.php:2899 src/LinkAd.php:851
+#: hook.php:2848 hook.php:2895 src/LinkAd.php:851
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
