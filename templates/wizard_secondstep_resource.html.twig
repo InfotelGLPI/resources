@@ -56,7 +56,7 @@
                     <div class='row'>
                         <div class='col-md-4 mb-2'>
                             <span class='b'>
-                                {{ "Glpiplugin\\Resources\\ContractType"|itemtype_name }}
+                                {{ "GlpiPlugin\\Resources\\ContractType"|itemtype_name }}
                         </span>:&nbsp;
                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contracttypes", inputs['plugin_resources_contracttypes_id']]) }}
                         </div>
@@ -68,7 +68,7 @@
                         </div>
                         <div class='col-md-4 mb-2'>
                             <span class='b'>
-                                {{ "Glpiplugin\\Resources\\ResourceState"|itemtype_name }}
+                                {{ "GlpiPlugin\\Resources\\ResourceState"|itemtype_name }}
                             </span>:&nbsp;
                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcestates", inputs['plugin_resources_resourcestates_id']]) }}
                         </div>
@@ -216,7 +216,7 @@
                                     options['locations_id'],
                                     "Location"|itemtype_name,
                                     {
-                                        'entity': params['entities_id'],
+                                        'entity': inputs['entities_id'],
                                         'required': mandatory.locations_id is defined,
                                         'readonly': readonly.locations_id is defined,
                                     }
@@ -242,83 +242,83 @@
 
                         <div class='row'>
 
-                            {% if can_view_rank %}
-                                {% if hidden.plugin_resources_resourcesituations_id is not defined %}
-                                    {% if item.isField('plugin_resources_resourcesituations_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "Glpiplugin\\Resources\\ResourceSituation"|itemtype_name }}
-                                                {% if mandatory.plugin_resources_resourcesituations_id is defined %}
-                                                    <span class="text-danger">*</span>
-                                                {% endif %}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                                {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
-                                                    "Glpiplugin\\Resources\\ResourceSituation",
-                                                    {
-                                                        'name': 'plugin_resources_resourcesituations_id',
-                                                        'value': options['plugin_resources_resourcesituations_id'],
-                                                        'entity': params['entities_id'],
-                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownContractnature.php',
-                                                        'span': 'span_contractnature',
-                                                    }
-                                                ]) %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                    {% if item.isField('plugin_resources_contractnatures_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "Glpiplugin\\Resources\\ContractNature"|itemtype_name }}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                        <span id='span_contractnature' name='span_contractnature'>
-                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contractnatures", options['plugin_resources_contractnatures_id']]) }}
-                                           </span>
-                                                {{ inputs.hidden('plugin_resources_contractnatures_id', 0) }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
+{#                            {% if can_view_rank %}#}
+{#                                {% if hidden.plugin_resources_resourcesituations_id is not defined %}#}
+{#                                    {% if item.isField('plugin_resources_resourcesituations_id') %}#}
+{#                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">#}
+{#                                            <label class="col-form-label col-xxl-5 text-xxl-end ">#}
+{#                                                {{ "GlpiPlugin\\Resources\\ResourceSituation"|itemtype_name }}#}
+{#                                                {% if mandatory.plugin_resources_resourcesituations_id is defined %}#}
+{#                                                    <span class="text-danger">*</span>#}
+{#                                                {% endif %}#}
+{#                                            </label>#}
+{#                                            <div class="col-xxl-7 field-container">#}
+{#                                                {% do call('GlpiPlugin\\Resources\\Resource::showGenericDropdown', [#}
+{#                                                    "GlpiPlugin\\Resources\\ResourceSituation",#}
+{#                                                    {#}
+{#                                                        'name': 'plugin_resources_resourcesituations_id',#}
+{#                                                        'value': options['plugin_resources_resourcesituations_id'],#}
+{#                                                        'entity': inputs['entities_id'],#}
+{#                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownContractnature.php',#}
+{#                                                        'span': 'span_contractnature',#}
+{#                                                    }#}
+{#                                                ]) %}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                    {% if item.isField('plugin_resources_contractnatures_id') %}#}
+{#                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">#}
+{#                                            <label class="col-form-label col-xxl-5 text-xxl-end ">#}
+{#                                                {{ "GlpiPlugin\\Resources\\ContractNature"|itemtype_name }}#}
+{#                                            </label>#}
+{#                                            <div class="col-xxl-7 field-container">#}
+{#                                        <span id='span_contractnature' name='span_contractnature'>#}
+{#                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contractnatures", options['plugin_resources_contractnatures_id']]) }}#}
+{#                                           </span>#}
+{#                                                {{ inputs.hidden('plugin_resources_contractnatures_id', 0) }}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                {% endif %}#}
 
-                                {% if hidden.plugin_resources_ranks_id is not defined %}
-                                    {% if item.isField('plugin_resources_ranks_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "Glpiplugin\\Resources\\Rank"|itemtype_name }}
-                                                {% if mandatory.plugin_resources_ranks_id is defined %}
-                                                    <span class="text-danger">*</span>
-                                                {% endif %}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                                {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
-                                                    "Glpiplugin\\Resources\\Rank",
-                                                    {
-                                                        'name': 'plugin_resources_ranks_id',
-                                                        'value': options['plugin_resources_ranks_id'],
-                                                        'entity': params['entities_id'],
-                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownSpeciality.php',
-                                                        'span': 'span_speciality',
-                                                    }
-                                                ]) %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                    {% if item.isField('plugin_resources_resourcespecialities_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "Glpiplugin\\Resources\\ResourceSpeciality"|itemtype_name }}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                        <span id='span_speciality' name='span_speciality'>
-                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcespecialities", options['plugin_resources_resourcespecialities_id']]) }}
-                                           </span>
-                                                {{ inputs.hidden('plugin_resources_resourcespecialities_id', 0) }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
+{#                                {% if hidden.plugin_resources_ranks_id is not defined %}#}
+{#                                    {% if item.isField('plugin_resources_ranks_id') %}#}
+{#                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">#}
+{#                                            <label class="col-form-label col-xxl-5 text-xxl-end ">#}
+{#                                                {{ "GlpiPlugin\\Resources\\Rank"|itemtype_name }}#}
+{#                                                {% if mandatory.plugin_resources_ranks_id is defined %}#}
+{#                                                    <span class="text-danger">*</span>#}
+{#                                                {% endif %}#}
+{#                                            </label>#}
+{#                                            <div class="col-xxl-7 field-container">#}
+{#                                                {% do call('GlpiPlugin\\Resources\\Resource::showGenericDropdown', [#}
+{#                                                    "GlpiPlugin\\Resources\\Rank",#}
+{#                                                    {#}
+{#                                                        'name': 'plugin_resources_ranks_id',#}
+{#                                                        'value': options['plugin_resources_ranks_id'],#}
+{#                                                        'entity': inputs['entities_id'],#}
+{#                                                        'action': config('root_doc') ~ '/plugins/resources/ajax/dropdownSpeciality.php',#}
+{#                                                        'span': 'span_speciality',#}
+{#                                                    }#}
+{#                                                ]) %}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                    {% if item.isField('plugin_resources_resourcespecialities_id') %}#}
+{#                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">#}
+{#                                            <label class="col-form-label col-xxl-5 text-xxl-end ">#}
+{#                                                {{ "GlpiPlugin\\Resources\\ResourceSpeciality"|itemtype_name }}#}
+{#                                            </label>#}
+{#                                            <div class="col-xxl-7 field-container">#}
+{#                                        <span id='span_speciality' name='span_speciality'>#}
+{#                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcespecialities", options['plugin_resources_resourcespecialities_id']]) }}#}
+{#                                           </span>#}
+{#                                                {{ inputs.hidden('plugin_resources_resourcespecialities_id', 0) }}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
 
                         </div>
 
@@ -371,12 +371,12 @@
                             {% if can_read_employee and params['display_employee'] is defined and params['display_employee'] == 0 %}
                                 {% if hidden.plugin_resources_employers_id is not defined %}
                                     {{ fields.dropdownField(
-                                        "Glpiplugin\\Resources\\Employer",
+                                        "GlpiPlugin\\Resources\\Employer",
                                         "plugin_resources_employers_id",
                                         options['plugin_resources_employers_id'],
-                                        "Glpiplugin\\Resources\\Employer"|itemtype_name,
+                                        "GlpiPlugin\\Resources\\Employer"|itemtype_name,
                                         {
-                                            'entity': params['entities_id'],
+                                            'entity': inputs['entities_id'],
                                             'required': mandatory.plugin_resources_employers_id is defined,
                                             'readonly': readonly.plugin_resources_employers_id is defined,
                                             'condition': params['condition_emp'],
@@ -393,9 +393,9 @@
                                             "UserTitle",
                                             "plugin_resources_departments_id",
                                             options['plugin_resources_departments_id'],
-                                            "Glpiplugin\\Resources\\Department"|itemtype_name,
+                                            "GlpiPlugin\\Resources\\Department"|itemtype_name,
                                             {
-                                                'entity': params['entities_id'],
+                                                'entity': inputs['entities_id'],
                                                 'required': mandatory.plugin_resources_departments_id is defined,
                                                 'readonly': readonly.plugin_resources_departments_id is defined,
                                             }
@@ -406,12 +406,12 @@
                                 {% if hidden.plugin_resources_departments_id is not defined %}
                                     {% if item.isField('plugin_resources_departments_id') %}
                                         {{ fields.dropdownField(
-                                            "Glpiplugin\\Resources\\Department",
+                                            "GlpiPlugin\\Resources\\Department",
                                             "plugin_resources_departments_id",
                                             options['plugin_resources_departments_id'],
-                                            "Glpiplugin\\Resources\\Department"|itemtype_name,
+                                            "GlpiPlugin\\Resources\\Department"|itemtype_name,
                                             {
-                                                'entity': params['entities_id'],
+                                                'entity': inputs['entities_id'],
                                                 'required': mandatory.plugin_resources_departments_id is defined,
                                                 'readonly': readonly.plugin_resources_departments_id is defined,
                                             }
@@ -427,9 +427,9 @@
                                             "UserCategory",
                                             "plugin_resources_services_id",
                                             options['plugin_resources_services_id'],
-                                            "Glpiplugin\\Resources\\Service"|itemtype_name,
+                                            "GlpiPlugin\\Resources\\Service"|itemtype_name,
                                             {
-                                                'entity': params['entities_id'],
+                                                'entity': inputs['entities_id'],
                                                 'required': mandatory.plugin_resources_services_id is defined,
                                                 'readonly': readonly.plugin_resources_services_id is defined,
                                             }
@@ -441,18 +441,18 @@
 
                                     <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
                                         <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                            {{ "Glpiplugin\\Resources\\Service"|itemtype_name }}
+                                            {{ "GlpiPlugin\\Resources\\Service"|itemtype_name }}
                                             {% if mandatory.plugin_resources_departments_id is defined %}
                                                 <span class="text-danger">*</span>
                                             {% endif %}
                                         </label>
                                         <div class="col-xxl-7 field-container">
-                                            {% do call('Glpiplugin\\Resources\\Service::dropdownFromDepart', [
+                                            {% do call('GlpiPlugin\\Resources\\Service::dropdownFromDepart', [
                                                 options['plugin_resources_departments_id'],
                                                 {
                                                     'name': 'plugin_resources_services_id',
                                                     'value': options['plugin_resources_services_id'],
-                                                    'entity': params['entities_id'],
+                                                    'entity': inputs['entities_id'],
                                                     'readonly': readonly.plugin_resources_services_id is defined,
                                                     'rand': rand
                                                 }
@@ -473,7 +473,7 @@
 
                                     <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
                                         <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                            {{ "Glpiplugin\\Resources\\Role"|itemtype_name }}
+                                            {{ "GlpiPlugin\\Resources\\Role"|itemtype_name }}
                                             {% if mandatory.plugin_resources_roles_id is defined %}
                                                 <span class="text-danger">*</span>
                                             {% endif %}
@@ -489,12 +489,12 @@
                                                 }
                                             ]) %}
 
-                                            {% do call('Glpiplugin\\Resources\\Role::dropdownFromService', [
+                                            {% do call('GlpiPlugin\\Resources\\Role::dropdownFromService', [
                                                 options['plugin_resources_services_id'],
                                                 {
                                                     'name': 'plugin_resources_roles_id',
                                                     'value': options['plugin_resources_roles_id'],
-                                                    'entity': params['entities_id'],
+                                                    'entity': inputs['entities_id'],
                                                     'readonly': readonly.plugin_resources_roles_id is defined,
                                                     'rand': rand
                                                 }
@@ -506,45 +506,45 @@
 
 
                             {% if params['use_secondary_services'] is defined and params['use_secondary_services'] == 1 %}
-                                {#                    {% if hidden.secondary_services is not defined %} #}
-                                {#                        {% if item.isField('secondary_services') %} #}
-                                <div class='row'>
-                                    <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                        <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                            {{ __('Secondaries services', 'resources') }}
-                                            {% if mandatory.secondary_services is defined %}
-                                                <span class="text-danger">*</span>
-                                            {% endif %}
-                                        </label>
-                                        <div class="col-xxl-7 field-container">
-                                            {% do call('Dropdown::showFromArray', [
-                                                'secondary_services',
-                                                services,
-                                                {
-                                                    width: "100%",
-                                                    'multiple': true,
-                                                    'aria_label': __('Secondaries services', 'resources'),
-                                                    'values'    : options['secondary_services']|default([]),
-                                                    'required': mandatory.secondary_services is defined,
-                                                    'readonly': readonly.secondary_services is defined,
-                                                }
-                                            ]) %}
+                                {% if hidden.secondary_services is not defined %}
+                                    {% if item.isField('secondary_services') %}
+                                        <div class='row'>
+                                            <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                                <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                    {{ __('Secondaries services', 'resources') }}
+                                                    {% if mandatory.secondary_services is defined %}
+                                                        <span class="text-danger">*</span>
+                                                    {% endif %}
+                                                </label>
+                                                <div class="col-xxl-7 field-container">
+                                                    {% do call('Dropdown::showFromArray', [
+                                                        'secondary_services',
+                                                        services,
+                                                        {
+                                                            width: "100%",
+                                                            'multiple': true,
+                                                            'aria_label': __('Secondaries services', 'resources'),
+                                                            'values'    : options['secondary_services']|default([]),
+                                                            'required': mandatory.secondary_services is defined,
+                                                            'readonly': readonly.secondary_services is defined,
+                                                        }
+                                                    ]) %}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                {#                        {% endif %} #}
-                                {#                    {% endif %} #}
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
 
                             {% if hidden.plugin_resources_functions_id is not defined %}
                                 {% if item.isField('plugin_resources_functions_id') %}
                                     {{ fields.dropdownField(
-                                        "Glpiplugin\\Resources\\ResourceFunction",
+                                        "GlpiPlugin\\Resources\\ResourceFunction",
                                         "plugin_resources_functions_id",
                                         options['plugin_resources_functions_id'],
-                                        "Glpiplugin\\Resources\\ResourceFunction"|itemtype_name,
+                                        "GlpiPlugin\\Resources\\ResourceFunction"|itemtype_name,
                                         {
-                                            'entity': params['entities_id'],
+                                            'entity': inputs['entities_id'],
                                             'required': mandatory.plugin_resources_functions_id is defined,
                                             'readonly': readonly.plugin_resources_functions_id is defined,
                                         }
@@ -556,12 +556,12 @@
                             {% if hidden.plugin_resources_teams_id is not defined %}
                                 {% if item.isField('plugin_resources_teams_id') %}
                                     {{ fields.dropdownField(
-                                        "Glpiplugin\\Resources\\Team",
+                                        "GlpiPlugin\\Resources\\Team",
                                         "plugin_resources_teams_id",
                                         options['plugin_resources_teams_id'],
-                                        "Glpiplugin\\Resources\\Team"|itemtype_name,
+                                        "GlpiPlugin\\Resources\\Team"|itemtype_name,
                                         {
-                                            'entity': params['entities_id'],
+                                            'entity': inputs['entities_id'],
                                             'required': mandatory.plugin_resources_teams_id is defined,
                                             'readonly': readonly.plugin_resources_teams_id is defined,
                                         }

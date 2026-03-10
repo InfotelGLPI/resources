@@ -44,7 +44,8 @@ if (!defined('GLPI_ROOT')) {
  */
 class Cost extends CommonDropdown
 {
-    public $can_be_translated = true;
+    static $rightname = 'plugin_resources';
+    var $can_be_translated = true;
 
     /**
      * @param $nb
@@ -62,9 +63,9 @@ class Cost extends CommonDropdown
      *
      * @return
      **/
-    public static function canCreate(): bool
+    static function canCreate(): bool
     {
-        if (Session::haveRight('dropdown', UPDATE)
+        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
             && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
             return true;
         }
@@ -80,9 +81,10 @@ class Cost extends CommonDropdown
      *
      * @return
      **/
-    public static function canView(): bool
+    static function canView(): bool
     {
-        if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
+        if (Session::haveRight(self::$rightname, READ)
+            && Session::haveRight('plugin_resources_dropdown_public', READ)) {
             return true;
         }
         return false;

@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
 class Team extends CommonDropdown
 {
 
-    static $rightname = 'plugin_resources_role';
+    static $rightname = 'plugin_resources';
 
     /**
      * @param $nb
@@ -69,6 +69,7 @@ class Team extends CommonDropdown
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
+
 
     /**
      * Return Additional Fields for this type

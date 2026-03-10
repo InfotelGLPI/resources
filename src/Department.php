@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -41,46 +42,36 @@ if (!defined('GLPI_ROOT')) {
  */
 class Department extends CommonDropdown
 {
-
-    var $can_be_translated = true;
-
+    public $can_be_translated = true;
+    static $rightname = 'plugin_resources';
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Department', 'Departments', $nb, 'resources');
     }
 
     /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
      * @return
-     **/
+     */
     static function canView(): bool
     {
-        return Session::haveRight('plugin_resources', READ);
+        return Session::haveRight(self::$rightname, READ);
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
      * @return
-     **/
+     */
     static function canCreate(): bool
     {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
+        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             //         ['name'  => 'plugin_release_typerollbacks_id',
@@ -100,22 +91,22 @@ class Department extends CommonDropdown
     /**
      * @see CommonDropdown::displaySpecificTypeField()
      **/
-    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    public function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            case 'dropdownEmployers' :
+            case 'dropdownEmployers':
                 $this->getFromDB($ID);
                 Employer::dropdown(
                     [
                         "name" => "plugin_resources_employers_id",
-                        "value" => $this->fields["plugin_resources_employers_id"]
+                        "value" => $this->fields["plugin_resources_employers_id"],
                     ]
                 );
                 break;
         }
     }
 
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -125,7 +116,7 @@ class Department extends CommonDropdown
             'name' => _n('Employer', 'Employers', 1, 'resources'),
             'field' => 'name',
             'table' => getTableForItemType(Employer::class),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
@@ -137,7 +128,7 @@ class Department extends CommonDropdown
      *
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -145,7 +136,7 @@ class Department extends CommonDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {
@@ -163,4 +154,3 @@ class Department extends CommonDropdown
         return 0;
     }
 }
-

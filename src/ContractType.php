@@ -297,5 +297,4 @@ class ContractType extends CommonDropdown
                 }
         }
     }
-
 }

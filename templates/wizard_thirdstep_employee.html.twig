@@ -52,14 +52,14 @@
 
                     <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
                         <label class="col-form-label col-xxl-5 text-xxl-end ">
-                            {{ "Glpiplugin\\Resources\\Employer"|itemtype_name }}
+                            {{ "GlpiPlugin\\Resources\\Employer"|itemtype_name }}
                             {% if mandatory.plugin_resources_employers_id is defined %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
                         <div class="col-xxl-7 field-container">
-                            {% do call('Glpiplugin\\Resources\\Resource::showGenericDropdown', [
-                                "Glpiplugin\\Resources\\Employer",
+                            {% do call('GlpiPlugin\\Resources\\Resource::showGenericDropdown', [
+                                "GlpiPlugin\\Resources\\Employer",
                                 {
                                     'name': 'plugin_resources_employers_id',
                                     'value': item.fields['plugin_resources_employers_id'],

@@ -101,7 +101,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $values['template'] = $_POST["template"];
         $values["requiredfields"] = 1;
 
-
+        $required = [];
         Session::addMessageAfterRedirect(
             htmlescape(
                 sprintf(

@@ -44,7 +44,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ContractNature extends CommonDropdown
 {
-
+    static $rightname = 'plugin_resources';
     var $can_be_translated = true;
 
     /**
@@ -57,15 +57,9 @@ class ContractNature extends CommonDropdown
         return _n('Contract nature', 'Contract natures', $nb, 'resources');
     }
 
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
     static function canCreate(): bool
     {
-        if (Session::haveRight('dropdown', UPDATE)
+        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
             && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
             return true;
         }
@@ -83,7 +77,8 @@ class ContractNature extends CommonDropdown
      **/
     static function canView(): bool
     {
-        if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
+        if (Session::haveRight(self::$rightname, READ)
+            && Session::haveRight('plugin_resources_dropdown_public', READ)) {
             return true;
         }
         return false;

@@ -41,7 +41,8 @@ if (!defined('GLPI_ROOT')) {
  */
 class Profession extends CommonDropdown
 {
-
+    static $rightname = 'plugin_resources';
+    var $can_be_translated = true;
     /**
      * @param $nb
      **@since 0.85
@@ -60,7 +61,7 @@ class Profession extends CommonDropdown
      **/
     static function canCreate(): bool
     {
-        if (Session::haveRight('dropdown', UPDATE)
+        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
             && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
             return true;
         }
@@ -78,7 +79,8 @@ class Profession extends CommonDropdown
      **/
     static function canView(): bool
     {
-        if (Session::haveRight('plugin_resources_dropdown_public', READ)) {
+        if (Session::haveRight(self::$rightname, READ)
+            && Session::haveRight('plugin_resources_dropdown_public', READ)) {
             return true;
         }
         return false;

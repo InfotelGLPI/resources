@@ -41,8 +41,8 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceState extends CommonDropdown
 {
-
-    var $can_be_translated = true;
+    static $rightname = 'plugin_resources';
+//    var $can_be_translated = true;
 
     /**
      * @param $nb
@@ -55,29 +55,21 @@ class ResourceState extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
      * @return
-     **/
-    static function canCreate(): bool
+     */
+    static function canView(): bool
     {
-        return Session::haveRight('dropdown', UPDATE);
+        return Session::haveRight(self::$rightname, READ);
     }
 
     /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
      * @return
-     **/
-    static function canView(): bool
+     */
+    static function canCreate(): bool
     {
-        return Session::haveRight('plugin_resources', READ);
+        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
+
 
     /**
      * @param $ID
