@@ -1742,7 +1742,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $type,
                     $ref_table,
                     $already_link_tables,
-                    "glpi_plugin_resources_contracttypes",
+                    "glpi_plugin_resources_resources",
                     "plugin_resources_resources_id"
                 );
                 $left = [

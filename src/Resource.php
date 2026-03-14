@@ -924,12 +924,14 @@ class Resource extends CommonDBTM
 
         $this->addDefaultFormTab($ong);
         $this->addStandardTab(Resource::class, $ong, $options);
-        $this->addStandardTab(Resource_Item::class, $ong, $options);
-        $resourceItem = new Resource_Item();
-        $resourceUsers = $resourceItem->find([
-            'plugin_resources_resources_id' => $this->getID(),
-            'itemtype' => 'User',
-        ]);
+        if (Session::getCurrentInterface() == 'central') {
+            $this->addStandardTab(Resource_Item::class, $ong, $options);
+            $resourceItem = new Resource_Item();
+            $resourceUsers = $resourceItem->find([
+                'plugin_resources_resources_id' => $this->getID(),
+                'itemtype' => 'User',
+            ]);
+        }
         if (count($resourceUsers) > 0 && Session::getCurrentInterface() == 'central') {
             $this->addStandardTab(User::class, $ong, $options);
         }

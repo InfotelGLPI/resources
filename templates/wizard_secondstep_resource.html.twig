@@ -118,7 +118,7 @@
                                         'required': mandatory.name is defined,
                                         'readonly': readonly.name is defined,
                                         'additional_attributes': {
-                                        'onchange': "javascript:this.value=this.value.toUpperCase();",
+                                        'onchange': "javascript:this.value=this.value.toUpperCase();checkResource('"~ root_resources ~"');",
                                     }
                                     }
                                 ) }}
@@ -135,14 +135,49 @@
                                         'required': mandatory.firstname is defined,
                                         'readonly': readonly.name is defined,
                                         'additional_attributes': {
-                                        'onchange': "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize;'",
+                                        'onchange': "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize';checkResource('"~ root_resources ~"');",
                                     }
                                     }
                                 ) }}
                             {% endif %}
                         {% endif %}
                     </div>
+                    <script>
+                        function checkResource(root_doc) {
 
+                            let name = document.querySelector("[name='name']").value;
+                            let firstname = document.querySelector("[name='firstname']").value;
+
+                            console.log(name);
+                            console.log(firstname);
+                            if(name === "" || firstname === ""){
+                                return;
+                            }
+                            $.ajax({
+                                url: root_doc + '/ajax/checkResource.php',
+                                method: 'POST',
+                                data: {
+                                    name: name,
+                                    firstname: firstname
+                                },
+                                success: function (res) {
+                                    let error = document.getElementById("resource-exists-error");
+                                    let button = document.querySelector("button[name='third_step']");
+
+                                    if(res == 1){
+                                        error.style.display = "block";
+                                        button.style.display = "none";
+                                    } else {
+                                        error.style.display = "none";
+                                        button.style.display = "inline-block";
+                                    }
+                                },
+                            });
+                        }
+                    </script>
+                    <div id="resource-exists-error" class="alert alert-danger center" style="color:darkred;display:none;">
+                       <i class="ti ti-alert-triangle"></i> {{ __('This resource already exists', 'resources') }}
+                    </div>
                     <div class='row'>
                         {% if hidden.matricule is not defined %}
                             {% if item.isField('matricule') %}
