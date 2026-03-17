@@ -961,7 +961,7 @@ CREATE TABLE `glpi_plugin_resources_configs`
   ROW_FORMAT = DYNAMIC;
 
 INSERT INTO `glpi_plugin_resources_configs`
-VALUES (1, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,0,0,0,'','');
+VALUES (1, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,'', '');
 
 DROP TABLE IF EXISTS `glpi_plugin_resources_imports`;
 CREATE TABLE `glpi_plugin_resources_imports`
