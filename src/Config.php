@@ -836,7 +836,7 @@ class Config extends CommonDBTM
                 $table,
                 ['id' => 1,
                     'security_display' => 0,
-                    'security_compliance' => '',
+                    'security_compliance' => 0,
                     'resource_manager' => '',
                     'sales_manager' => '',
                     'create_ticket_departure' => 0,
