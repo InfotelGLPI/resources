@@ -30,8 +30,10 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use DBConnection;
 use Dropdown;
 use Html;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -178,5 +180,30 @@ class Import extends CommonDBTM
         $this->showFormButtons($options);
         Html::closeForm();
         return true;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `name`          varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `comment`       TEXT COLLATE utf8mb4_unicode_ci,
+                        `is_active`     tinyint      NOT NULL                   DEFAULT '0',
+                        `is_deleted`    tinyint      NOT NULL                   DEFAULT '0',
+                        `date_creation` timestamp    NULL                       DEFAULT NULL,
+                        `date_mod`      timestamp    NULL                       DEFAULT NULL,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

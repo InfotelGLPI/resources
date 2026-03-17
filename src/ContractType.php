@@ -31,8 +31,10 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
+use DBConnection;
 use DbUtils;
 use Dropdown;
+use Migration;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -295,6 +297,63 @@ class ContractType extends CommonDropdown
                     }
                     return $name;
                 }
+        }
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`              int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `is_recursive`             tinyint      NOT NULL                   DEFAULT '0',
+                        `name`                     varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `code`                     varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `use_employee_wizard`      tinyint      NOT NULL                   DEFAULT '1',
+                        `use_need_wizard`          tinyint      NOT NULL                   DEFAULT '1',
+                        `use_picture_wizard`       tinyint      NOT NULL                   DEFAULT '1',
+                        `use_habilitation_wizard`  tinyint      NOT NULL                   DEFAULT '0',
+                        `comment`                  TEXT COLLATE utf8mb4_unicode_ci,
+                        `use_second_matricule`     tinyint      NOT NULL                   DEFAULT '0',
+                        `use_second_list_employer` tinyint      NOT NULL                   DEFAULT '0',
+                        `use_resignation_form`     tinyint      NOT NULL                   DEFAULT '0',
+                        `use_entrance_information` tinyint      NOT NULL                   DEFAULT '0',
+                        `use_documents_wizard`     tinyint      NOT NULL                   DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                $table,
+                ['name' => __('Long term contract', 'resources'),
+                    'entities_id' => 0,
+                    'is_recursive' => 1]
+            );
+
+            $DB->insert(
+                $table,
+                ['name' => __('Fixed term contract', 'resources'),
+                    'entities_id' => 0,
+                    'is_recursive' => 1]
+            );
+
+            $DB->insert(
+                $table,
+                ['name' => __('Trainee', 'resources'),
+                    'entities_id' => 0,
+                    'is_recursive' => 1]
+            );
         }
     }
 }

@@ -32,11 +32,13 @@ namespace GlpiPlugin\Resources;
 use AuthLDAP;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use Dropdown;
 use GLPIKey;
 use Html;
 use ITILCategory;
 use Location;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -618,5 +620,81 @@ class Adconfig extends CommonDBTM
         $fields['deletion_categories_id'] = json_decode($fields['deletion_categories_id']);
 
         return $fields;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `auth_id`                    int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `login`                      varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `password`                   varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `creation_categories_id`     TEXT         NOT NULL,
+                        `modification_categories_id` TEXT         NOT NULL,
+                        `deletion_categories_id`     TEXT         NOT NULL,
+                        `logAD`                      varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `nameAD`                     varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `phoneAD`                    varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `companyAD`                  varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `departmentAD`               varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `firstnameAD`                varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `mailAD`                     varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `contractEndAD`              varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `contractTypeAD`             varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `ouDesactivateUserAD`        varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `ouUser`                     varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `cellPhoneAD`                varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `roleAD`                     varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `serviceAD`                  varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `locationAD`                 varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `first_form`                 int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `second_form`                int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `mail_prefix`                int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `mail_suffix`                varchar(255) NOT NULL                   DEFAULT '',
+                        `fonctionAD`                 varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                $table,
+                ['id' => 1,
+                    'auth_id' => 0,
+                    'login' => '',
+                    'password' => '',
+                    'creation_categories_id' => '',
+                    'modification_categories_id' => '',
+                    'deletion_categories_id' => '',
+                    'logAD' => '',
+                    'nameAD' => '',
+                    'phoneAD' => '',
+                    'companyAD' => '',
+                    'departmentAD' => '',
+                    'firstnameAD' => '',
+                    'mailAD' => '',
+                    'contractEndAD' => '',
+                    'contractTypeAD' => '',
+                    'ouDesactivateUserAD' => '',
+                    'ouUser' => '',
+                    'cellPhoneAD' => '',
+                    'roleAD' => '',
+                    'serviceAD' => '',
+                    'locationAD' => '',
+                    'first_form' => 0,
+                    'second_form' => 0,
+                    'mail_prefix' => 0,
+                    'mail_suffix' => '',
+                    'fonctionAD' => '']
+            );
+        }
     }
 }

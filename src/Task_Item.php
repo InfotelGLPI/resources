@@ -31,8 +31,10 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Html;
+use Migration;
 use Session;
 use Toolbox;
 
@@ -292,6 +294,31 @@ class Task_Item extends CommonDBTM
             }
             Html::closeForm();
             echo "<br>";
+        }
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_tasks_id` int {$default_key_sign}                            NOT NULL DEFAULT '0',
+                        `items_id`                  int {$default_key_sign}                            NOT NULL DEFAULT '0' COMMENT 'RELATION to various table, according to itemtype (id)',
+                        `itemtype`                  varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'see .class.php file',
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `unicity` (`plugin_resources_tasks_id`, `itemtype`, `items_id`),
+                        KEY `FK_device` (`items_id`, `itemtype`),
+                        KEY `item` (`itemtype`, `items_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
         }
     }
 }

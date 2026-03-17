@@ -32,9 +32,11 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBChild;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
+use Migration;
 use Session;
 use Toolbox;
 
@@ -422,5 +424,29 @@ class ImportColumn extends CommonDBChild
         Ajax::updateItemJsCode($viewDomElementName, $url, $params);
         echo "};";
         echo "</script>\n";
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `name`                        varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                        `type`                        varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                        `resource_column`             int {$default_key_sign}                            NOT NULL,
+                        `is_identifier`               tinyint                                 NOT NULL DEFAULT '0',
+                        `plugin_resources_imports_id` int {$default_key_sign}                            NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

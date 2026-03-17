@@ -44,7 +44,7 @@ class DateCriteria extends PluginReportsAutoCriteria
      * @param report              the report in which the criteria is added
      * @param $name               the criteria's name
      * @param $sql_field          the sql field associated with the criteria
-     *                            (can be set later with setSqlField).(default '')
+     *                            (can be set later with setSqlField).(DEFAULT '')
      *          - Sql_field can be prefixed with table name
      *          - if sql_field=='' then sql_field=name
      * @param $label     string   (default NULL)

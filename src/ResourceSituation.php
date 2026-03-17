@@ -30,6 +30,8 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
+use DBConnection;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -178,5 +180,35 @@ class ResourceSituation extends CommonDropdown
         ];
 
         return $tab;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`        int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `is_recursive`       tinyint      NOT NULL                   DEFAULT '0',
+                        `name`               varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `code`               varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `short_name`         varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `is_contract_linked` tinyint      NOT NULL                   DEFAULT '0',
+                        `comment`            TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `is_recursive` (`is_recursive`),
+                        KEY `is_contract_linked` (`is_contract_linked`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

@@ -40,6 +40,7 @@ use Computer;
 use ComputerType;
 use ConsumableItem;
 use DateTime;
+use DBConnection;
 use DbUtils;
 use Document;
 use Document_Item;
@@ -56,6 +57,7 @@ use Item_Ticket;
 use Location;
 use Log;
 use MassiveAction;
+use Migration;
 use Monitor;
 use NetworkEquipment;
 use Notepad;
@@ -5308,8 +5310,8 @@ class Resource extends CommonDBTM
 
     /**
      * @param $field
-     * @param $name (default '')
-     * @param $values (default '')
+     * @param $name (DEFAULT '')
+     * @param $values (DEFAULT '')
      * @param $options   array
      *
      * @return string
@@ -5390,5 +5392,162 @@ class Resource extends CommonDBTM
     public static function supportHelpdeskDisplayPreferences(): bool
     {
         return true;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`                                        int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                               int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `is_recursive`                              tinyint        NOT NULL                 DEFAULT '0',
+                        `name`                                      varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `firstname`                                 varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `plugin_resources_contracttypes_id`         int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
+                        `users_id`                                  int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_users (id)',
+                        `users_id_sales`                            int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_users (id)',
+                        `users_id_recipient`                        int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_users (id)',
+                        `date_declaration`                          timestamp      NULL                     DEFAULT NULL,
+                        `date_begin`                                timestamp      NULL                     DEFAULT NULL,
+                        `date_end`                                  timestamp      NULL                     DEFAULT NULL,
+                        `quota`                                     decimal(10, 4) NOT NULL                 DEFAULT '1.0000',
+                        `plugin_resources_departments_id`           int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_departments (id)',
+                        `plugin_resources_resourcestates_id`        int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resourcestates (id)',
+                        `plugin_resources_resourcesituations_id`    int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_contractnatures_id`       int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_ranks_id`                 int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_resourcespecialities_id`  int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `locations_id`                              int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_locations (id)',
+                        `is_leaving`                                int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_workprofiles_id`          int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_leavingreasons_id`        int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `date_declaration_leaving`                  timestamp      NULL                     DEFAULT NULL,
+                        `date_agreement_candidate`                  timestamp      NULL                     DEFAULT NULL,
+                        `date_of_last_contract_type`                timestamp      NULL                     DEFAULT NULL,
+                        `date_of_last_location`                     timestamp      NULL                     DEFAULT NULL,
+                        `users_id_recipient_leaving`                int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_users (id)',
+                        `picture`                                   varchar(100) COLLATE utf8mb4_unicode_ci default NULL,
+                        `is_helpdesk_visible`                       int {$default_key_sign}   NOT NULL                 DEFAULT '1',
+                        `date_mod`                                  timestamp      NULL                     DEFAULT NULL,
+                        `comment`                                   TEXT COLLATE utf8mb4_unicode_ci,
+                        `is_template`                               tinyint        NOT NULL                 DEFAULT '0',
+                        `template_name`                             varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `is_deleted`                                tinyint        NOT NULL                 DEFAULT '0',
+                        `sensitize_security`                        tinyint        NOT NULL                 DEFAULT '0',
+                        `read_chart`                                tinyint        NOT NULL                 DEFAULT '0',
+                        `contract_type_change`                      tinyint        NOT NULL                 DEFAULT '0',
+                        `reconversion`                              tinyint        NOT NULL                 DEFAULT '0',
+                        `plugin_resources_roles_id`                 int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_roles (id)',
+                        `matricule`                                 varchar(255)   NOT NULL                 DEFAULT '',
+                        `plugin_resources_functions_id`             int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_teams_id`                 int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_services_id`              int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_degreegroups_id`          int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_recruitingsources_id`     int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `last_contract_type`                        int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `last_location`                             int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `yearsexperience`                           int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_candidateorigins_id`      int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `plugin_resources_workprofiles_id_entrance` int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `matricule_second`                          varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `secondary_services`                        varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `gender`                                    varchar(3) COLLATE utf8mb4_unicode_ci   DEFAULT NULL,
+                        `phone`                                     varchar(20) COLLATE utf8mb4_unicode_ci  DEFAULT NULL,
+                        `cellphone`                                 varchar(20) COLLATE utf8mb4_unicode_ci  DEFAULT NULL,
+                        `remove_manager`                            int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `remove_order`                              TEXT COLLATE utf8mb4_unicode_ci,
+                        `computer_phone_equipment`                  TEXT COLLATE utf8mb4_unicode_ci,
+                        `softwares_requirements`                    TEXT COLLATE utf8mb4_unicode_ci,
+                        `furnitures_needs`                          TEXT COLLATE utf8mb4_unicode_ci,
+                        `other_needs`                               TEXT COLLATE utf8mb4_unicode_ci,
+                        `valid_resource_information`                tinyint NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `is_recursive` (`is_recursive`),
+                        KEY `users_id` (`users_id`),
+                        KEY `users_id_sales` (`users_id_sales`),
+                        KEY `users_id_recipient` (`users_id_recipient`),
+                        KEY `locations_id` (`locations_id`),
+                        KEY `is_leaving` (`is_leaving`),
+                        KEY `users_id_recipient_leaving` (`users_id_recipient_leaving`),
+                        KEY `date_mod` (`date_mod`),
+                        KEY `is_helpdesk_visible` (`is_helpdesk_visible`),
+                        KEY `is_deleted` (`is_deleted`),
+                        KEY `is_template` (`is_template`),
+                        KEY `plugin_resources_contracttypes_id` (`plugin_resources_contracttypes_id`),
+                        KEY `plugin_resources_departments_id` (`plugin_resources_departments_id`),
+                        KEY `plugin_resources_resourcestates_id` (`plugin_resources_resourcestates_id`),
+                        KEY `plugin_resources_resourcesituations_id` (`plugin_resources_resourcesituations_id`),
+                        KEY `plugin_resources_contractnatures_id` (`plugin_resources_contractnatures_id`),
+                        KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
+                        KEY `plugin_resources_resourcespecialities_id` (`plugin_resources_resourcespecialities_id`),
+                        KEY `plugin_resources_leavingreasons_id` (`plugin_resources_leavingreasons_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 2,
+                    'rank' => 1,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 3,
+                    'rank' => 2,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 4,
+                    'rank' => 3,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 5,
+                    'rank' => 4,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 6,
+                    'rank' => 5,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 8,
+                    'rank' => 6,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+        }
     }
 }

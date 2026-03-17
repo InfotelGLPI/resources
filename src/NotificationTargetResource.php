@@ -2797,6 +2797,98 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
     public static function install()
     {
+        Global $DB;
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resources',
+                'itemtype' => Resource::class,
+            ]
+        );
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Alert Resources Tasks',
+                'itemtype' => Resource::class,
+            ]
+        );
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Alert Leaving Resources',
+                'itemtype' => Resource::class,
+            ]
+        );
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Alert Resources Checklists',
+                'itemtype' => Resource::class,
+            ]
+        );
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Leaving Resource',
+                'itemtype' => Resource::class,
+            ]
+        );
+
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resource Report Creation',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resource Resting',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resource Holiday',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resources list of commercial manager',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Send other resource notification',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Resource Transfer',
+                'itemtype' => Resource::class,
+            ]
+        );
+        $DB->insert(
+            'glpi_notificationtemplates',
+            [
+                'name' => 'Alert for sales people',
+                'itemtype' => Resource::class,
+            ]
+        );
+
         self::update_notif();
         self::update78();
         self::update80();

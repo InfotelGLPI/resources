@@ -36,8 +36,10 @@ if (!defined('GLPI_ROOT')) {
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
+use Migration;
 use Profile_User;
 use Session;
 use User;
@@ -172,7 +174,7 @@ class LeavingInformation extends CommonDBTM
      * @param $itemtype     itemtype of the item
      * @param $oldid        ID of the item to clone
      * @param $newid        ID of the item cloned
-     * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (default '')
+     * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (DEFAULT '')
      **@since version 0.84
      *
      */
@@ -690,5 +692,36 @@ class LeavingInformation extends CommonDBTM
         return $need;
     }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
 
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id`          int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_clients_id`            int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_destinations_id`       int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_workprofiles_id`       int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_resignationreasons_id` int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `users_id`                               int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `interview_date`                         timestamp    NULL                       DEFAULT NULL,
+                        `resignation_date`                       timestamp    NULL                       DEFAULT NULL,
+                        `wished_leaving_date`                    timestamp    NULL                       DEFAULT NULL,
+                        `effective_leaving_date`                 timestamp    NULL                       DEFAULT NULL,
+                        `pay_gap`                                tinyint      NOT NULL                   DEFAULT '0',
+                        `mission_lost`                           tinyint      NOT NULL                   DEFAULT '0',
+                        `company_name`                           varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `comment`                                TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
 }

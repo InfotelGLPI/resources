@@ -30,6 +30,8 @@
 namespace GlpiPlugin\Resources;
 
 use CommonTreeDropdown;
+use DBConnection;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -116,6 +118,40 @@ class ChoiceItem extends CommonTreeDropdown
         ];
 
         return $tab;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                     int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `is_recursive`                    tinyint      NOT NULL                   DEFAULT '0',
+                        `plugin_resources_choiceitems_id` int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `completename`                    TEXT COLLATE utf8mb4_unicode_ci,
+                        `level`                           int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `ancestors_cache`                 longTEXT COLLATE utf8mb4_unicode_ci,
+                        `sons_cache`                      longTEXT COLLATE utf8mb4_unicode_ci,
+                        `is_helpdesk_visible`             int {$default_key_sign} NOT NULL                   DEFAULT '1',
+                        `name`                            varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `comment`                         TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `unicity` (`entities_id`, `plugin_resources_choiceitems_id`, `name`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `plugin_resources_choiceitems_id` (`plugin_resources_choiceitems_id`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }
 

@@ -32,8 +32,10 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use Dropdown;
 use Html;
+use Migration;
 use Session;
 use Toolbox;
 
@@ -353,4 +355,26 @@ class TransferEntity extends CommonDBTM
         return true;
     }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `groups_id`   int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `groups_id` (`groups_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
 }

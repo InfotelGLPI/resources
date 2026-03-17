@@ -33,6 +33,7 @@ use Ajax;
 use CommonDBTM;
 use CommonGLPI;
 use CommonITILActor;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use GlpiPlugin\Badges\Badge;
@@ -42,6 +43,7 @@ use Group_Ticket;
 use Html;
 use ITILCategory;
 use Log;
+use Migration;
 use Plugin;
 use Session;
 use Ticket;
@@ -554,5 +556,26 @@ class ResourceBadge extends CommonDBTM
         return $result;
     }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
 
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                       int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `plugin_metademands_metademands_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `plugin_metademands_metademands_id` (`plugin_metademands_metademands_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
 }

@@ -31,8 +31,10 @@ namespace GlpiPlugin\Resources;
 
 use Ajax;
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use Html;
+use Migration;
 use Planning;
 use Session;
 
@@ -489,6 +491,31 @@ class TaskPlanning extends CommonDBTM
         $html .= "</div>";
 
         return $html;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_tasks_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
+                        `begin`                     timestamp    NULL     DEFAULT NULL,
+                        `end`                       timestamp    NULL     DEFAULT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `begin` (`begin`),
+                        KEY `end` (`end`),
+                        KEY `plugin_resources_tasks_id` (`plugin_resources_tasks_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 
 }

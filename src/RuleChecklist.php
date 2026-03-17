@@ -166,7 +166,7 @@ class RuleChecklist extends Rule
      * @param $name      criteria name
      * @param $ID        the given criteria
      * @param $condition condition used
-     * @param $value     the pattern (default '')
+     * @param $value     the pattern (DEFAULT '')
      * @param $test      Is to test rule ? (false by default)
      **/
     function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)

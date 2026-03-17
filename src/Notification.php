@@ -31,8 +31,10 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use DBConnection;
 use DbUtils;
 use Html;
+use Migration;
 use Session;
 use Toolbox;
 
@@ -210,5 +212,30 @@ class Notification extends CommonDBTM
     {
         $temp = new self();
         $temp->deleteByCriteria(['plugin_resources_resources_id' => $resource->getField("id")]);
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+                        `date_mod`                      timestamp    NULL     DEFAULT NULL,
+                        `users_id`                      int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `type`                          varchar(50)           default NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `users_id` (`users_id`),
+                        KEY `date_mod` (`date_mod`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

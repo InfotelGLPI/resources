@@ -32,11 +32,13 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use Dropdown;
 use GlpiPlugin\Metademands\Metademand;
 use Group;
 use Html;
 use ITILCategory;
+use Migration;
 use Plugin;
 use Session;
 
@@ -218,6 +220,7 @@ class Config extends CommonDBTM
         if (Plugin::isPluginActive("metademands")) {
             $this->addStandardTab(ConfigHabilitation::class, $ong, $options);
         }
+        $this->addStandardTab(CheckSchema::class, $ong, $options);
 
         return $ong;
     }
@@ -785,5 +788,80 @@ class Config extends CommonDBTM
     function useSecondaryService()
     {
         return $this->fields['use_secondary_service'];
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `security_display`                             tinyint      NOT NULL DEFAULT '0',
+                        `security_compliance`                          tinyint      NOT NULL DEFAULT '0',
+                        `resource_manager`                             varchar(255) NOT NULL DEFAULT '',
+                        `sales_manager`                                varchar(255) NOT NULL DEFAULT '',
+                        `create_ticket_departure`                      tinyint      NOT NULL DEFAULT '0',
+                        `categories_id`                                int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `mandatory_checklist`                          tinyint      NOT NULL DEFAULT '0',
+                        `mandatory_adcreation`                         tinyint      NOT NULL DEFAULT '0',
+                        `plugin_resources_resourcetemplates_id`        int          NULL     DEFAULT '0',
+                        `plugin_resources_resourcestates_id_arrival`   int {$default_key_sign} NULL     DEFAULT '0',
+                        `plugin_resources_resourcestates_id_departure` int {$default_key_sign} NULL     DEFAULT '0',
+                        `reaffect_checklist_change`                    tinyint      NOT NULL DEFAULT '1',
+                        `allow_without_contract`                       int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `use_service_department_ad`                    tinyint      NOT NULL DEFAULT '0',
+                        `use_secondary_service`                        tinyint      NOT NULL DEFAULT '0',
+                        `use_meta_for_changes`                         int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `use_meta_for_leave`                           int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `remove_habilitation_on_update`                int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `display_habilitations_txt`                    int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `hide_view_commercial_resource`                tinyint      NOT NULL DEFAULT '0',
+                        `automatic_notification_declare_arrival_form`  tinyint NOT NULL DEFAULT '0',
+                        `create_ticket_departure_instructions`         tinyint NOT NULL DEFAULT '0',
+                        `default_assignment_group`                     int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `text_ticket_validation`                       TEXT COLLATE utf8mb4_unicode_ci,
+                        `hide_fieds_arrival_form`                      TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                $table,
+                ['id' => 1,
+                    'security_display' => 0,
+                    'security_compliance' => '',
+                    'resource_manager' => '',
+                    'sales_manager' => '',
+                    'create_ticket_departure' => 0,
+                    'categories_id' => 0,
+                    'mandatory_checklist' => 0,
+                    'mandatory_adcreation' => 0,
+                    'plugin_resources_resourcetemplates_id' => 0,
+                    'plugin_resources_resourcestates_id_arrival' => 0,
+                    'plugin_resources_resourcestates_id_departure' => 0,
+                    'reaffect_checklist_change' => 0,
+                    'allow_without_contract' => 0,
+                    'use_service_department_ad' => 0,
+                    'use_secondary_service' => 0,
+                    'use_meta_for_changes' => 0,
+                    'use_meta_for_leave' => 0,
+                    'remove_habilitation_on_update' => 0,
+                    'display_habilitations_txt' => 0,
+                    'hide_view_commercial_resource' => 0,
+                    'automatic_notification_declare_arrival_form' => 0,
+                    'create_ticket_departure_instructions' => 0,
+                    'default_assignment_group' => 0,
+                    'text_ticket_validation' => '',
+                    'hide_fieds_arrival_form' => '']
+            );
+
+        }
     }
 }

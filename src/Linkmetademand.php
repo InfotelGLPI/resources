@@ -30,7 +30,9 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
+use DBConnection;
 use Dropdown;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -156,6 +158,32 @@ class Linkmetademand extends CommonDBTM
         return Dropdown::showFromArray('habilitation[]', $data, ['value' => $selected_value, 'display' => $display]);
     }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
 
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_metademands_fields_id`      int {$default_key_sign} NOT NULL           DEFAULT '0',
+                        `plugin_metademands_metademands_id` int {$default_key_sign} NOT NULL           DEFAULT '0',
+                        `check_value`                       TEXT COLLATE utf8mb4_unicode_ci default NULL,
+                        `checklist_in`                      TEXT COLLATE utf8mb4_unicode_ci default NULL,
+                        `checklist_out`                     TEXT COLLATE utf8mb4_unicode_ci default NULL,
+                        `habilitation`                      TEXT COLLATE utf8mb4_unicode_ci default NULL,
+                        `is_leaving_resource`               tinyint      NOT NULL           DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `unicity` (`plugin_metademands_fields_id`),
+                        KEY `plugin_metademands_fields_id` (`plugin_metademands_fields_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
 }
 

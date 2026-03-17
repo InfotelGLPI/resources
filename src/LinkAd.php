@@ -31,11 +31,13 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
 use Item_Ticket;
 use Location;
+use Migration;
 use Phone;
 use Session;
 use Ticket;
@@ -941,6 +943,38 @@ class LinkAd extends CommonDBTM
                 }
                 return false;
             }
+        }
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id` int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `auth_id`                       int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `login`                         varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `mail`                          varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `phone`                         varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `role`                          varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `service`                       varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `location`                      varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `cellphone`                     varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `action_done`                   tinyint      NOT NULL                   DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        UNIQUE KEY `unicity` (`login`),
+                        UNIQUE KEY `unicity2` (`plugin_resources_resources_id`),
+                        KEY `login` (`login`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
         }
     }
 }

@@ -32,10 +32,12 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
 use MassiveAction;
+use Migration;
 use Session;
 use Toolbox;
 
@@ -231,7 +233,7 @@ class Choice extends CommonDBTM
      * @param $itemtype     itemtype of the item
      * @param $oldid        ID of the item to clone
      * @param $newid        ID of the item cloned
-     * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (default '')
+     * @param $newitemtype  itemtype of the new item (= $itemtype if empty) (DEFAULT '')
      **@since version 0.84
      *
      */
@@ -516,5 +518,28 @@ class Choice extends CommonDBTM
         Html::closeForm();
     }
 
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id`   int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+                        `plugin_resources_choiceitems_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_choiceitems (id)',
+                        `comment`                         TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
+                        KEY `plugin_resources_choiceitems_id` (`plugin_resources_choiceitems_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
 }
 

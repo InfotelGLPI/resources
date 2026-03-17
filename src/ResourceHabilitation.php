@@ -31,10 +31,12 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
 use Log;
+use Migration;
 use PluginPdfSimplePDF;
 use Session;
 use Toolbox;
@@ -492,5 +494,28 @@ class ResourceHabilitation extends CommonDBTM
         $html .= "</p>";
 
         return $html;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id`     int unsigned NOT NULL DEFAULT '0',
+                        `plugin_resources_habilitations_id` int unsigned NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
+                        KEY `glpi_plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

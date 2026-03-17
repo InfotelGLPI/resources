@@ -32,12 +32,14 @@ namespace GlpiPlugin\Resources;
 use CommonDBTM;
 use CronTask;
 use DateTime;
+use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Location;
+use Migration;
 use Profile_User;
 use Session;
 use Toolbox;
@@ -3109,5 +3111,26 @@ class ImportResource extends CommonDBTM
     {
         $filepath = GLPI_PLUGIN_DOC_DIR . "/resources/import/verify/" . $filename;
         unlink($filepath);
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `date_creation`               timestamp    NULL     DEFAULT NULL,
+    `plugin_resources_imports_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace GlpiPlugin\Resources;
 use CommonDBTM;
 use DbUtils;
 use Location;
+use Migration;
 use Search;
 use Session;
 
@@ -954,7 +955,7 @@ class Recap extends CommonDBTM
      * @param $meta                        is it a meta item ? (default 0)
      * @param $meta_type                   meta type table (default 0)
      * @param $joinparams           array  join parameters (condition / joinbefore...)
-     * @param $field                string field to display (needed for translation join) (default '')
+     * @param $field                string field to display (needed for translation join) (DEFAULT '')
      *
      * @return Left join string
      **/
@@ -1245,6 +1246,242 @@ class Recap extends CommonDBTM
     {
         //To avoid masives action error as there is no table for recap.class.php
         return [];
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4350,
+                'rank' => 1,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4351,
+                'rank' => 2,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4352,
+                'rank' => 3,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4353,
+                'rank' => 4,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4354,
+                'rank' => 5,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4355,
+                'rank' => 6,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4356,
+                'rank' => 7,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4357,
+                'rank' => 8,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4358,
+                'rank' => 9,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4359,
+                'rank' => 10,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4360,
+                'rank' => 11,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4361,
+                'rank' => 12,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4362,
+                'rank' => 13,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4363,
+                'rank' => 14,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4364,
+                'rank' => 15,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4365,
+                'rank' => 16,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4366,
+                'rank' => 17,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4367,
+                'rank' => 18,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4368,
+                'rank' => 19,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4369,
+                'rank' => 20,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
+
+        $DB->insert(
+            'glpi_displaypreferences',
+            [
+                'itemtype' => self::class,
+                'num' => 4370,
+                'rank' => 21,
+                'users_id' => 0,
+                'interface' => 'central'
+            ]
+        );
     }
 
 }

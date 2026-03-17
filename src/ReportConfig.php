@@ -31,9 +31,11 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -458,6 +460,32 @@ class ReportConfig extends CommonDBTM
             if ($withtemplate < 2) {
                 Html::closeForm();
             }
+        }
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_resources_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+                        `send_report_notif`             tinyint      NOT NULL DEFAULT '1',
+                        `send_other_notif`              tinyint      NOT NULL DEFAULT '0',
+                        `send_transfer_notif`           tinyint      NOT NULL DEFAULT '0',
+                        `comment`                       TEXT COLLATE utf8mb4_unicode_ci,
+                        `information`                   TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
         }
     }
 }

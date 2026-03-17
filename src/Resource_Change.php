@@ -34,6 +34,7 @@ use Appliance;
 use CommonDBTM;
 use CommonGLPI;
 use CommonITILActor;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Entity;
@@ -42,6 +43,7 @@ use Html;
 use ITILCategory;
 use Location;
 use Log;
+use Migration;
 use Session;
 use Ticket;
 use TicketTemplate;
@@ -1758,5 +1760,30 @@ class Resource_Change extends CommonDBTM
             );
         }
         return $result;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`       int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `actions_id`        int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `itilcategories_id` varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `comment`           TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `itilcategories_id` (`itilcategories_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

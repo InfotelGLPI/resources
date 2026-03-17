@@ -32,9 +32,11 @@ namespace GlpiPlugin\Resources;
 use Alert;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Html;
+use Migration;
 use Plugin;
 use Search;
 use Session;
@@ -665,5 +667,100 @@ class Employment extends CommonDBTM
         }
 
         return $menu;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `name`                                 varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `entities_id`                          int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `is_recursive`                         tinyint        NOT NULL                 DEFAULT '0',
+                        `plugin_resources_resources_id`        int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+                        `plugin_resources_professions_id`      int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+                        `plugin_resources_ranks_id`            int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources_ranks (id)',
+                        `plugin_resources_employmentstates_id` int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_employmentstates (id)',
+                        `plugin_resources_employers_id`        int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
+                        `ratio_employment_budget`              decimal(10, 2) NOT NULL                 DEFAULT '0.00',
+                        `begin_date`                           timestamp      NULL                     DEFAULT NULL,
+                        `end_date`                             timestamp      NULL                     DEFAULT NULL,
+                        `date_mod`                             timestamp      NULL                     DEFAULT NULL,
+                        `comment`                              TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
+                        KEY `plugin_resources_professions_id` (`plugin_resources_professions_id`),
+                        KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
+                        KEY `plugin_resources_employmentstates_id` (`plugin_resources_employmentstates_id`),
+                        KEY `plugin_resources_employers_id` (`plugin_resources_employers_id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `date_mod` (`date_mod`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 9,
+                    'rank' => 1,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 5,
+                    'rank' => 2,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 4,
+                    'rank' => 3,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 6,
+                    'rank' => 4,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 7,
+                    'rank' => 5,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+
+            $DB->insert(
+                'glpi_displaypreferences',
+                ['itemtype' => self::class,
+                    'num' => 8,
+                    'rank' => 6,
+                    'users_id' => 0,
+                    'interface' => 'central']
+            );
+        }
     }
 }

@@ -30,6 +30,8 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDBRelation;
+use DBConnection;
+use Migration;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
@@ -60,5 +62,26 @@ class Role_Service extends CommonDBRelation
     static function getTypeName($nb = 0)
     {
         return _n('Link Role/Service', 'Links Role/Service', $nb, 'resources');
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `plugin_resources_roles_id`    int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `plugin_resources_services_id` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

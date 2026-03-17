@@ -30,8 +30,10 @@
 namespace GlpiPlugin\Resources;
 
 use CommonTreeDropdown;
+use DBConnection;
 use Dropdown;
 use Location;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -199,5 +201,42 @@ class Employer extends CommonTreeDropdown
             }
         }
         return 0;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                   int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `is_recursive`                  tinyint      NOT NULL                   DEFAULT '0',
+                        `name`                          varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `short_name`                    varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `locations_id`                  int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_locations (id)',
+                        `plugin_resources_employers_id` int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_employers (id)',
+                        `code`                          varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `comment`                       TEXT COLLATE utf8mb4_unicode_ci,
+                        `completename`                  TEXT COLLATE utf8mb4_unicode_ci         default NULL,
+                        `level`                         int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `ancestors_cache`               longTEXT COLLATE utf8mb4_unicode_ci     default NULL,
+                        `sons_cache`                    longTEXT COLLATE utf8mb4_unicode_ci     default NULL,
+                        `second_list`                   tinyint      NOT NULL                   DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `locations_id` (`locations_id`),
+                        KEY `plugin_resources_employers_id` (`plugin_resources_employers_id`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

@@ -4,8 +4,10 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBChild;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Glpi\Exception\Http\BadRequestHttpException;
+use Migration;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -278,5 +280,27 @@ class ResourceImport extends CommonDBChild
         echo "</table>";
 
         echo "</div>";
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `name`                          varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                        `value`                         varchar(255) COLLATE utf8mb4_unicode_ci NULL,
+                        `plugin_resources_resources_id` int {$default_key_sign}                            NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

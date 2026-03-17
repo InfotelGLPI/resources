@@ -30,7 +30,9 @@
 namespace GlpiPlugin\Resources;
 
 use CommonTreeDropdown;
+use DBConnection;
 use Dropdown;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -202,5 +204,39 @@ class Habilitation extends CommonTreeDropdown
         }
 
         return $habilitations;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                            int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `is_recursive`                           tinyint      NOT NULL                   DEFAULT '0',
+                        `name`                                   varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                        `plugin_resources_habilitations_id`      int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_habilitationlevels_id` int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `completename`                           TEXT COLLATE utf8mb4_unicode_ci,
+                        `comment`                                TEXT COLLATE utf8mb4_unicode_ci,
+                        `level`                                  int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `ancestors_cache`                        longTEXT COLLATE utf8mb4_unicode_ci,
+                        `sons_cache`                             longTEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `plugin_resources_habilitations_id` (`plugin_resources_habilitations_id`),
+                        KEY `plugin_resources_habilitationlevels_id` (`plugin_resources_habilitationlevels_id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

@@ -31,8 +31,10 @@
 namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
+use DBConnection;
 use Dropdown;
 use Html;
+use Migration;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -341,5 +343,38 @@ class Cost extends CommonDropdown
             }
         }
         return 0;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `entities_id`                     int {$default_key_sign}   NOT NULL                 DEFAULT '0',
+                        `is_recursive`                    tinyint        NOT NULL                 DEFAULT '0',
+                        `name`                            varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `plugin_resources_professions_id` int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_professions (id)',
+                        `plugin_resources_ranks_id`       int {$default_key_sign}   NOT NULL                 DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
+                        `begin_date`                      timestamp      NULL                     DEFAULT NULL,
+                        `end_date`                        timestamp      NULL                     DEFAULT NULL,
+                        `cost`                            decimal(10, 2) NOT NULL                 DEFAULT '0.00',
+                        `comment`                         TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `plugin_resources_professions_id` (`plugin_resources_professions_id`),
+                        KEY `plugin_resources_ranks_id` (`plugin_resources_ranks_id`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `is_recursive` (`is_recursive`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

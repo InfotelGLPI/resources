@@ -33,12 +33,14 @@ use Ajax;
 use Alert;
 use CommonDBTM;
 use CommonGLPI;
+use DBConnection;
 use DbUtils;
 use Dropdown;
 use Entity;
 use Html;
 use Log;
 use MassiveAction;
+use Migration;
 use NotificationEvent;
 use Plugin;
 use PluginPdfSimplePDF;
@@ -1616,5 +1618,40 @@ class Checklist extends CommonDBTM
         }
 
         return $menu;
+    }
+
+    public static function install(Migration $migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id`           int {$default_key_sign} NOT NULL auto_increment,
+                        `name`                              varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `entities_id`                       int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `plugin_resources_resources_id`     int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_resources (id)',
+                        `plugin_resources_tasks_id`         int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_tasks (id)',
+                        `plugin_resources_contracttypes_id` int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_contracttypes (id)',
+                        `checklist_type`                    int {$default_key_sign} NOT NULL                   DEFAULT '0',
+                        `tag`                               tinyint      NOT NULL                   DEFAULT '0',
+                        `is_checked`                        tinyint      NOT NULL                   DEFAULT '0',
+                        `address`                           varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
+                        `rank`                              smallint     NOT NULL                   DEFAULT '0',
+                        `comment`                           TEXT COLLATE utf8mb4_unicode_ci,
+                        PRIMARY KEY (`id`),
+                        KEY `name` (`name`),
+                        KEY `entities_id` (`entities_id`),
+                        KEY `plugin_resources_resources_id` (`plugin_resources_resources_id`),
+                        KEY `plugin_resources_tasks_id` (`plugin_resources_tasks_id`),
+                        KEY `plugin_resources_contracttypes_id` (`plugin_resources_contracttypes_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
     }
 }

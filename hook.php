@@ -30,6 +30,9 @@
 
 use Glpi\Search\Provider\SQLProvider;
 use GlpiPlugin\Badges\Badge;
+use GlpiPlugin\Resources\Actionprofile;
+use GlpiPlugin\Resources\Candidateorigin;
+use GlpiPlugin\Resources\Config;
 use GlpiPlugin\Resources\Adconfig;
 use GlpiPlugin\Resources\Budget;
 use GlpiPlugin\Resources\BudgetType;
@@ -41,11 +44,14 @@ use GlpiPlugin\Resources\Choice;
 use GlpiPlugin\Resources\ChoiceItem;
 use GlpiPlugin\Resources\Client;
 use GlpiPlugin\Resources\ClientInjection;
+use GlpiPlugin\Resources\ConfigHabilitation;
 use GlpiPlugin\Resources\ContractNature;
 use GlpiPlugin\Resources\ContractType;
+use GlpiPlugin\Resources\Contracttypeprofile;
 use GlpiPlugin\Resources\Cost;
 use GlpiPlugin\Resources\DegreeGroup;
 use GlpiPlugin\Resources\Department;
+use GlpiPlugin\Resources\Department_Service;
 use GlpiPlugin\Resources\Destination;
 use GlpiPlugin\Resources\Directory;
 use GlpiPlugin\Resources\Employee;
@@ -55,9 +61,15 @@ use GlpiPlugin\Resources\EmploymentState;
 use GlpiPlugin\Resources\Habilitation;
 use GlpiPlugin\Resources\HabilitationInjection;
 use GlpiPlugin\Resources\HabilitationLevel;
+use GlpiPlugin\Resources\Import;
+use GlpiPlugin\Resources\ImportColumn;
 use GlpiPlugin\Resources\ImportResource;
+use GlpiPlugin\Resources\ImportResourceData;
+use GlpiPlugin\Resources\LeavingInformation;
 use GlpiPlugin\Resources\LeavingReason;
 use GlpiPlugin\Resources\LinkAd;
+use GlpiPlugin\Resources\Linkmetademand;
+use GlpiPlugin\Resources\Notification;
 use GlpiPlugin\Resources\NotificationTargetResource;
 use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\ProfessionCategory;
@@ -66,25 +78,34 @@ use GlpiPlugin\Resources\Profile;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\Recap;
 use GlpiPlugin\Resources\RecruitingSource;
+use GlpiPlugin\Resources\ReportConfig;
 use GlpiPlugin\Resources\ResignationReason;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Change;
 use GlpiPlugin\Resources\Resource_Item;
+use GlpiPlugin\Resources\ResourceBadge;
 use GlpiPlugin\Resources\ResourceFunction;
+use GlpiPlugin\Resources\ResourceHabilitation;
 use GlpiPlugin\Resources\ResourceHoliday;
+use GlpiPlugin\Resources\ResourceImport;
 use GlpiPlugin\Resources\ResourceInjection;
 use GlpiPlugin\Resources\ResourceResting;
 use GlpiPlugin\Resources\ResourceSituation;
 use GlpiPlugin\Resources\ResourceSpeciality;
 use GlpiPlugin\Resources\ResourceState;
 use GlpiPlugin\Resources\Role;
+use GlpiPlugin\Resources\Role_Service;
 use GlpiPlugin\Resources\RuleChecklist;
 use GlpiPlugin\Resources\RuleContracttype;
 use GlpiPlugin\Resources\RuleContracttypeHidden;
 use GlpiPlugin\Resources\Service;
 use GlpiPlugin\Resources\Task;
+use GlpiPlugin\Resources\Task_Item;
 use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Resources\TaskType;
 use GlpiPlugin\Resources\Team;
+use GlpiPlugin\Resources\TicketCategory;
+use GlpiPlugin\Resources\TransferEntity;
 use GlpiPlugin\Resources\WorkProfile;
 
 //use function Safe\mkdir;
@@ -115,27 +136,81 @@ function plugin_resources_install()
 
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
-        $install = true;
-        $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/empty-4.0.10.sql");
 
-        $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
-         VALUES (1, '" . __('Long term contract', 'resources') . "', 0, 1)";
+        $migration = new Migration(PLUGIN_RESOURCES_VERSION);
+        Resource::install($migration);
+        Directory::install($migration);
+        Recap::install($migration);
+        ResourceState::install($migration);
+        Choice::install($migration);
+        ChoiceItem::install($migration);
+        Resource_Item::install($migration);
+        Employee::install($migration);
+        Employer::install($migration);
+        Client::install($migration);
+        ContractType::install($migration);
+        Department::install($migration);
+        Task::install($migration);
+        TaskPlanning::install($migration);
+        TaskType::install($migration);
+        Task_Item::install($migration);
+        Checklist::install($migration);
+        Checklistconfig::install($migration);
+        TicketCategory::install($migration);
+        ReportConfig::install($migration);
+        ResourceResting::install($migration);
+        ResourceHoliday::install($migration);
+        ResourceSituation::install($migration);
+        ContractNature::install($migration);
+        Rank::install($migration);
+        ResourceSpeciality::install($migration);
+        LeavingReason::install($migration);
+        Profession::install($migration);
+        ProfessionLine::install($migration);
+        ProfessionCategory::install($migration);
+        Employment::install($migration);
+        EmploymentState::install($migration);
+        Budget::install($migration);
+        Cost::install($migration);
+        BudgetType::install($migration);
+        BudgetVolume::install($migration);
+        Resource_Change::install($migration);
+        Notification::install($migration);
+        TransferEntity::install($migration);
+        ResourceBadge::install($migration);
+        ConfigHabilitation::install($migration);
+        HabilitationLevel::install($migration);
+        Habilitation::install($migration);
+        ResourceHabilitation::install($migration);
+        Config::install($migration);
+        Import::install($migration);
+        ImportColumn::install($migration);
+        ImportResource::install($migration);
+        ImportResourceData::install($migration);
+        ResourceImport::install($migration);
+        LinkAd::install($migration);
+        Linkmetademand::install($migration);
+        Adconfig::install($migration);
+        Role::install($migration);
+        ResourceFunction::install($migration);
+        Team::install($migration);
+        Service::install($migration);
+        Role_Service::install($migration);
+        Department_Service::install($migration);
+        Contracttypeprofile::install($migration);
+        Actionprofile::install($migration);
+        BusinessUnit::install($migration);
+        DegreeGroup::install($migration);
+        RecruitingSource::install($migration);
+        Destination::install($migration);
+        ResignationReason::install($migration);
+        WorkProfile::install($migration);
+        LeavingInformation::install($migration);
+        Candidateorigin::install($migration);
 
-        $DB->doQuery($query) or die($DB->error());
+        // Add notifications
+        NotificationTargetResource::install();
 
-        $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
-               VALUES (2, '" . __('Fixed term contract', 'resources') . "', 0, 1)";
-
-        $DB->doQuery($query) or die($DB->error());
-
-        $query = "INSERT INTO `glpi_plugin_resources_contracttypes` ( `id`, `name`, `entities_id`, `is_recursive`)
-               VALUES (3, '" . __('Trainee', 'resources') . "', 0, 1)";
-
-        $DB->doQuery($query) or die($DB->error());
-
-        // Add record notification
-        //        include_once(PLUGIN_RESOURCES_DIR . "/inc/notificationtargetresource.class.php");
-        call_user_func([NotificationTargetResource::class, 'install']);
     } else {
         if ($DB->tableExists("glpi_plugin_resources")
             && !$DB->tableExists("glpi_plugin_resources_employee")) {
@@ -940,7 +1015,6 @@ function plugin_resources_uninstall()
         "glpi_plugin_resources_recruitingsources",
         "glpi_plugin_resources_destinations",
         "glpi_plugin_resources_resignationreasons",
-        "glpi_plugin_resources_leavingdetails",
         "glpi_plugin_resources_workprofiles",
         "glpi_plugin_resources_leavinginformations",
         'glpi_plugin_resources_candidateorigins',
@@ -961,6 +1035,7 @@ function plugin_resources_uninstall()
         "glpi_dropdown_plugin_resources_type",
         "glpi_dropdown_plugin_resources_department",
         "glpi_dropdown_plugin_resources_tasks_type",
+        "glpi_plugin_resources_leavingdetails",
         "glpi_plugin_resources_mailingsettings",
         "glpi_plugin_resources_mailing",
     ];
@@ -1059,7 +1134,7 @@ function plugin_resources_uninstall()
         $Rule->delete($data);
     }
 
-    $notif = new Notification();
+    $notif = new \Notification();
 
     $options = [
         'itemtype' => Resource::class,
