@@ -36,6 +36,7 @@ use Document_Item;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Html;
+use Profile_User;
 use Session;
 use Toolbox;
 use UserCategory;
@@ -251,6 +252,62 @@ class Wizard extends CommonDBTM
             }
         }
 
+
+        $resource_managers = [];
+        if ($config->getField('resource_manager') != "") {
+            $tableProfileUser = Profile_User::getTable();
+
+            $profile_User = new Profile_User();
+            $prof = [];
+            foreach (json_decode($config->getField('resource_manager')) as $profs) {
+                $prof[$profs] = $profs;
+            }
+            $ids = join("','", $prof);
+            $restrict = getEntitiesRestrictCriteria(
+                $tableProfileUser,
+                'entities_id',
+                $_SESSION['glpiactive_entity'],
+                true
+            );
+            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
+            $profiles_User = $profile_User->find($restrict);
+
+            $resource_managers[0] = Dropdown::EMPTY_VALUE;
+            foreach ($profiles_User as $profileUser) {
+                $user = new \User();
+                $user->getFromDB($profileUser["users_id"]);
+                $resource_managers[$profileUser["users_id"]] = $user->getFriendlyName();
+            }
+        }
+
+        $sales_managers = [];
+        if (($config->getField('sales_manager') != "")) {
+            $tableProfileUser = Profile_User::getTable();
+
+            $profile_User = new Profile_User();
+            $prof = [];
+            foreach (json_decode($config->getField('sales_manager')) as $profs) {
+                $prof[$profs] = $profs;
+            }
+
+            $ids = join("','", $prof);
+            $restrict = getEntitiesRestrictCriteria(
+                $tableProfileUser,
+                'entities_id',
+                $_SESSION['glpiactive_entity'],
+                true
+            );
+            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
+            $profiles_User = $profile_User->find($restrict);
+
+            $sales_managers[0] = Dropdown::EMPTY_VALUE;
+            foreach ($profiles_User as $profileUser) {
+                $user = new \User();
+                $user->getFromDB($profileUser["users_id"]);
+                $sales_managers[$profileUser["users_id"]] = $user->getFriendlyName();
+            }
+        }
+
         $rank = new Rank();
 
         TemplateRenderer::getInstance()->display('@resources/wizard_secondstep_resource.html.twig', [
@@ -284,6 +341,8 @@ class Wizard extends CommonDBTM
                 'condition_emp' => $condition_emp,
                 'date_declaration' => date('Y-m-d'),
                 'users_id_recipient' => Session::getLoginUserID(),
+                'resource_managers' => $resource_managers,
+                'sales_managers' => $sales_managers,
             ],
         ]);
 

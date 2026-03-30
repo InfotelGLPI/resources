@@ -1046,6 +1046,7 @@ class Resource extends CommonDBTM
         $rank = new Rank();
 
         $field = [];
+
         foreach ($fields as $key => $val) {
             $required = explode("requiredfields_", $key);
             if (isset($required[1])) {
@@ -1071,7 +1072,6 @@ class Resource extends CommonDBTM
                                     'yearsexperience',
                                     'reconversion',
                                     'interview_date',
-                                    'users_id',
                                     'plugin_resources_workprofiles_id',
                                     'plugin_resources_clients_id',
                                     'resignation_date',
@@ -1101,7 +1101,6 @@ class Resource extends CommonDBTM
                                         'yearsexperience',
                                         'reconversion',
                                         'interview_date',
-                                        'users_id',
                                         'plugin_resources_workprofiles_id',
                                         'plugin_resources_clients_id',
                                         'resignation_date',
@@ -1122,7 +1121,6 @@ class Resource extends CommonDBTM
                                         'yearsexperience',
                                         'reconversion',
                                         'interview_date',
-                                        'users_id',
                                         'plugin_resources_workprofiles_id',
                                         'plugin_resources_clients_id',
                                         'resignation_date',
@@ -2342,6 +2340,7 @@ class Resource extends CommonDBTM
 
         echo "<tr class='tab_bg_1'>";
         echo "<td " . $tohide['users_id'] . " ";
+
         if (in_array("users_id", $required)) {
             echo $alert;
         }
@@ -2350,8 +2349,8 @@ class Resource extends CommonDBTM
         echo "<td " . $tohide['users_id'] . ">";
         $config = new Config();
         if ($config->getField('resource_manager') != "") {
+
             $tableProfileUser = Profile_User::getTable();
-            $tableUser = User::getTable();
             $profile_User = new Profile_User();
             $prof = [];
             foreach (json_decode($config->getField('resource_manager')) as $profs) {
@@ -2368,11 +2367,11 @@ class Resource extends CommonDBTM
             $profiles_User = $profile_User->find($restrict);
             $used = [];
             foreach ($profiles_User as $profileUser) {
-                $user = new User();
-                $user->getFromDB($profileUser["users_id"]);
-                $used[$profileUser["users_id"]] = $user->getFriendlyName();
+                $user = new \User();
+                if ($user->getFromDB($profileUser["users_id"])) {
+                    $used[$profileUser["users_id"]] = $user->getFriendlyName();
+                }
             }
-
 
             $option = ['value' => $this->fields["users_id"], 'display_emptychoice' => true];
             /*if (in_array("users_id", $readonly)){
@@ -2388,7 +2387,7 @@ class Resource extends CommonDBTM
             if (in_array("users_id", $readonly)) {
                 $option['readonly'] = true;
             }
-            User::dropdown($option);
+            \User::dropdown($option);
         }
 
         echo "</td>";
@@ -2425,7 +2424,7 @@ class Resource extends CommonDBTM
         if (($config->getField('sales_manager') != "")) {
             echo "<div class='col-md-3 mb-2'>";
             $tableProfileUser = Profile_User::getTable();
-            $tableUser = User::getTable();
+
             $profile_User = new Profile_User();
             $prof = [];
             foreach (json_decode($config->getField('sales_manager')) as $profs) {
@@ -2443,9 +2442,10 @@ class Resource extends CommonDBTM
             $profiles_User = $profile_User->find($restrict);
             $used = [];
             foreach ($profiles_User as $profileUser) {
-                $user = new User();
-                $user->getFromDB($profileUser["users_id"]);
-                $used[$profileUser["users_id"]] = $user->getFriendlyName();
+                $user = new \User();
+                if ($user->getFromDB($profileUser["users_id"])) {
+                    $used[$profileUser["users_id"]] = $user->getFriendlyName();
+                }
             }
 
             $option = ['value' => $this->fields["users_id_sales"], 'display_emptychoice' => true];
@@ -2462,7 +2462,7 @@ class Resource extends CommonDBTM
             if (in_array("users_id_sales", $readonly)) {
                 $option['readonly'] = true;
             }
-            User::dropdown($option);
+            \User::dropdown($option);
         }
 
         echo "</td>";
@@ -2495,7 +2495,7 @@ class Resource extends CommonDBTM
             $users_id_recipient = new \User();
             $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
             if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
-                User::dropdown([
+                \User::dropdown([
                     'value' => $this->fields["users_id_recipient"],
                     'name' => "users_id_recipient",
                     'entity' => $this->fields["entities_id"],
@@ -3114,7 +3114,7 @@ class Resource extends CommonDBTM
         $error['right'] = 0;
         $error['error'] = 0;
 
-        $user = new User();
+        $user = new \User();
         if ($user->getFromDB($userId)) {
             $resource = new Resource();
             $resource->getFromDBByCrit([
@@ -4724,7 +4724,7 @@ class Resource extends CommonDBTM
             }
         }
 
-        $User = new User();
+        $User = new \User();
         $mail = "";
         $first = true;
         foreach ($users as $key => $val) {

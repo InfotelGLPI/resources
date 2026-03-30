@@ -103,12 +103,13 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
         $required = [];
         Session::addMessageAfterRedirect(
-            htmlescape(
-                sprintf(
-                    __('Mandatory fields are not filled. Please correct: %s'),
-                    implode(', ', $required)
-                )
-            ),
+//            htmlescape(
+//                sprintf(
+//                    __('Mandatory fields are not filled. Please correct: %s'),
+//                    implode(', ', $required)
+//                )
+//            )
+            __('Required fields are not filled. Please try again.', 'resources'),
             false,
             ERROR
         );
