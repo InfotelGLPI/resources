@@ -927,16 +927,21 @@ class Resource extends CommonDBTM
         $this->addDefaultFormTab($ong);
         $this->addStandardTab(Resource::class, $ong, $options);
         if (Session::getCurrentInterface() == 'central') {
+
             $this->addStandardTab(Resource_Item::class, $ong, $options);
+
             $resourceItem = new Resource_Item();
             $resourceUsers = $resourceItem->find([
                 'plugin_resources_resources_id' => $this->getID(),
                 'itemtype' => 'User',
             ]);
+
+            if (is_array($resourceUsers)
+                && count($resourceUsers) > 0) {
+                $this->addStandardTab(User::class, $ong, $options);
+            }
         }
-        if (count($resourceUsers) > 0 && Session::getCurrentInterface() == 'central') {
-            $this->addStandardTab(User::class, $ong, $options);
-        }
+
         $this->addStandardTab(Choice::class, $ong, $options);
         $this->addStandardTab(Resource_Validation::class, $ong, $options);
         $this->addStandardTab(ResourceHabilitation::class, $ong, $options);
