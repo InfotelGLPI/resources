@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 12:33+0000\n"
+"POT-Creation-Date: 2026-04-09 07:23+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
@@ -270,11 +270,11 @@ msgstr "Etes-vous sûr ?"
 msgid "Arrival / Departure workflow"
 msgstr "Workflow Arrivées / Départs"
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:73
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:262
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:71
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:72
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:260
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:72
 #: report/resourcewithoutuser/resourcewithoutuser.php:68
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:258
 #: src/ResourcePDF.php:108 src/Checklist.php:1208 src/Directory.php:225
 #: src/Resource_Item.php:904 src/Resource_Item.php:1176
 #: src/Resource_Item.php:1186 src/RuleContracttype.php:263
@@ -644,12 +644,12 @@ msgstr "Client sensibilisé à la sécurité"
 msgid "Close"
 msgstr "Fermer"
 
-#: report/professionwithoutcost/professionwithoutcost.php:299
-#: report/professionwithoutcost/professionwithoutcost.php:304
-#: report/professionwithoutvolume/professionwithoutvolume.php:305
-#: report/professionwithoutvolume/professionwithoutvolume.php:310
-#: report/lapserankprofession/lapserankprofession.php:50
-#: report/lapserankprofession/lapserankprofession.php:66
+#: report/professionwithoutcost/professionwithoutcost.php:297
+#: report/professionwithoutcost/professionwithoutcost.php:302
+#: report/professionwithoutvolume/professionwithoutvolume.php:303
+#: report/professionwithoutvolume/professionwithoutvolume.php:308
+#: report/lapserankprofession/lapserankprofession.php:49
+#: report/lapserankprofession/lapserankprofession.php:65
 #: src/ContractType.php:74 src/ContractType.php:154 src/ContractNature.php:99
 #: src/ContractNature.php:184 src/Profession.php:101 src/Profession.php:220
 #: src/ProfessionLine.php:101 src/ProfessionLine.php:153
@@ -959,15 +959,15 @@ msgstr[1] "Départements"
 msgstr[2] "Départements"
 
 #: ajax/leavingform.php:104
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:77
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:263
-#: report/checkhabilitation/checkhabilitation.php:218
-#: report/checkmissingN1group/checkmissingN1group.php:216
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:75
-#: report/checkgroup/checkgroup.php:273
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:76
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:261
+#: report/checkhabilitation/checkhabilitation.php:217
+#: report/checkmissingN1group/checkmissingN1group.php:214
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:76
+#: report/checkgroup/checkgroup.php:271
 #: report/resourcewithoutuser/resourcewithoutuser.php:72
-#: report/checkmissingN0group/checkmissingN0group.php:216
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:260
+#: report/checkmissingN0group/checkmissingN0group.php:214
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
 #: src/LinkAd.php:722 src/Resource_Leaving.php:163 src/ResourcePDF.php:109
 #: src/Checklist.php:1206 src/Directory.php:233 src/Resource_Item.php:905
 #: src/Resource_Item.php:1177 src/Resource_Item.php:1187
@@ -1095,7 +1095,7 @@ msgstr[1] "Employés"
 msgstr[2] "Employés"
 
 #: hook.php:1450
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:93
 #: src/Department.php:85 src/Department.php:118 src/Employer.php:58
 #: src/Employment.php:232 src/Employment.php:314
 msgid "Employer"
@@ -1104,8 +1104,8 @@ msgstr[0] "Employeur"
 msgstr[1] "Employeurs"
 msgstr[2] "Employeurs"
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:81
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:86
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:80
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:85
 #: src/Profile.php:341 src/Employment.php:72
 msgid "Employment"
 msgid_plural "Employments"
@@ -1117,7 +1117,7 @@ msgstr[2] "Emplois"
 msgid "Employment management"
 msgstr "Gestion des emplois"
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:90
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:89
 #: src/EmploymentState.php:56 src/Employment.php:225 src/Employment.php:352
 msgid "Employment state"
 msgid_plural "Employment states"
@@ -1330,7 +1330,7 @@ msgstr[0] "Congé"
 msgstr[1] "Congés"
 msgstr[2] "Congés"
 
-#: src/Metademand.php:80 setup.php:252
+#: src/Metademand.php:80 setup.php:274
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Ressource humaine"
@@ -1656,11 +1656,11 @@ msgstr "Matricule"
 msgid "Meta-demands linked"
 msgstr "Meta-demandes liées"
 
-#: report/checkhabilitation/checkhabilitation.php:222
+#: report/checkhabilitation/checkhabilitation.php:221
 msgid "Missing group"
 msgstr "Groupe manquant"
 
-#: report/checkgroup/checkgroup.php:277
+#: report/checkgroup/checkgroup.php:275
 msgid "Missing habilitation"
 msgstr "Habilitation manquante"
 
@@ -1998,7 +1998,7 @@ msgctxt "button"
 msgid "Previous"
 msgstr "Précédent"
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:86
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:85
 #: src/Budget.php:180 src/Budget.php:277 src/Profession.php:55
 #: src/Rank.php:115 src/Rank.php:163 src/Cost.php:147 src/Cost.php:189
 #: src/Cost.php:262 src/Employment.php:203 src/Employment.php:327
@@ -2121,6 +2121,66 @@ msgstr "Remplace la gestion des actions de changement"
 #: src/Config.php:687
 msgid "Replace default form for departure"
 msgstr "Remplace le formulaire par défaut pour les départs"
+
+#: setup.php:195
+msgid "Report listing departing resources with active employment"
+msgstr "Rapport listant les ressources partantes ayant des emplois actifs"
+
+#: setup.php:187
+msgid "Report listing human resources without group N0"
+msgstr "Rapport listant les ressources humaines sans groupe N0"
+
+#: setup.php:188
+msgid "Report listing human resources without group N1"
+msgstr "Rapport listant les ressources humaines sans groupe N1"
+
+#: setup.php:189
+msgid "Report listing obsolete corps and ranks"
+msgstr "Rapport listant les corps et grades caduques"
+
+#: setup.php:193
+msgid "Report listing resources or jobs with an expired corp"
+msgstr "Rapport listant les ressources ou les emplois ayant un corps caduque"
+
+#: setup.php:194
+msgid "Report listing resources or jobs with an obsolete grade"
+msgstr "Rapport listant les ressources ou les emplois ayant un grade caduque"
+
+#: setup.php:197
+msgid "Report listing resources without users"
+msgstr "Rapport listant les ressources sans utilisateurs"
+
+#: setup.php:191
+msgid "Report listing the corps and grades without budget allocation"
+msgstr "Rapport listant les corps et grades sans volume budgétaire"
+
+#: setup.php:190
+msgid "Report listing the corps and grades without budgetary valuation"
+msgstr "Rapport listant les corps et grades sans valorisation budgétaire"
+
+#: setup.php:185
+msgid "Report listing the groups not included in the resource's permissions"
+msgstr ""
+"Rapport listant les groupes non présents dans les habilitations de la "
+"ressource"
+
+#: setup.php:186
+msgid "Report listing the permissions not present in the user's groups"
+msgstr ""
+"Rapport listant les habilitations non présentes dans les groupes de "
+"l'utilisateur"
+
+#: setup.php:196
+msgid "Report listing unemployed resources"
+msgstr "Rapport listant les ressources sans emploi"
+
+#: setup.php:198
+msgid "Report listing users linked to more than one resource"
+msgstr "Rapport listant les utilisateurs liés à plus d'une ressource"
+
+#: setup.php:192
+msgid "Report of pledges"
+msgstr "Rapport des gages"
 
 #: src/NotificationTargetResource.php:1226
 #: src/NotificationTargetResource.php:1261
@@ -2460,6 +2520,10 @@ msgstr "Responsable suppléant de l'équipe"
 #: src/Adconfig.php:284
 msgid "Suffix"
 msgstr "Suffixe"
+
+#: setup.php:184
+msgid "Summary by budget with total amount and quantity"
+msgstr "Synthèse par budget avec total en montant et quantité"
 
 #: src/Profile.php:335
 msgid "Super habilitation"
@@ -2819,7 +2883,7 @@ msgstr "Utiliser le service et le département de l'AD"
 msgid "Used for planning"
 msgstr "Inclure dans le planning"
 
-#: report/userwithnoresource/userwithnoresource.php:39
+#: report/userwithnoresource/userwithnoresource.php:40 setup.php:199
 msgid "User without resource"
 msgstr "Utilisateur sans ressource"
 
@@ -2940,23 +3004,23 @@ msgstr "Vous avez besoin des droits sur le plugin badges"
 msgid "budgetsummary_report_title"
 msgstr "Synthèse par budget avec total en montant et quantité"
 
-#: report/checkgroup/checkgroup.php:43
+#: report/checkgroup/checkgroup.php:41
 msgid "checkgroup_report_title"
 msgstr ""
 "Rapport listant les groupes non présents dans les habilitations de la "
 "ressource"
 
-#: report/checkhabilitation/checkhabilitation.php:43
+#: report/checkhabilitation/checkhabilitation.php:42
 msgid "checkhabilitation_report_title"
 msgstr ""
 "Rapport listant les habilitations non présentes dans les groupes de "
 "l'utilisateur"
 
-#: report/checkmissingN0group/checkmissingN0group.php:44
+#: report/checkmissingN0group/checkmissingN0group.php:42
 msgid "checkmissingN0group_report_title"
 msgstr "Rapport listant les ressources humaines sans groupe N0"
 
-#: report/checkmissingN1group/checkmissingN1group.php:44
+#: report/checkmissingN1group/checkmissingN1group.php:42
 msgid "checkmissingN1group_report_title"
 msgstr "Rapport listant les ressources humaines sans groupe N1"
 
@@ -2980,7 +3044,7 @@ msgstr "prénom + nom "
 msgid "given name.name"
 msgstr "prénom.nom"
 
-#: report/lapserankprofession/lapserankprofession.php:41
+#: report/lapserankprofession/lapserankprofession.php:40
 msgid "lapserankprofession_report_title"
 msgstr "Rapport listant les corps et grades caduques"
 
@@ -3004,19 +3068,19 @@ msgstr "Rapport listant les corps et grades sans volume budgétaire"
 msgid "resourceemploymentdiff_report_title"
 msgstr "Rapport des gages"
 
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:43
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:41
 msgid "resourceemploymentwithlapseprofession_report_title"
 msgstr "Rapport listant les ressources ou les emplois ayant un corps caduque"
 
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:41
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:40
 msgid "resourceemploymentwithlapserank_report_title"
 msgstr "Rapport listant les ressources ou les emplois ayant un grade caduque"
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:44
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:43
 msgid "resourceleavingwithactiveemployment_report_title"
 msgstr "Rapport listant les ressources partantes ayant des emplois actifs"
 
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:42
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:43
 msgid "resourcewithoutemployment_report_title"
 msgstr "Rapport listant les ressources sans emploi"
 
