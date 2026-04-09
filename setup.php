@@ -178,6 +178,28 @@ function plugin_init_resources()
             $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => Menu::class];
         }
         Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
+
+        if (class_exists(PluginReportsReport::class)) {
+            PluginReportsReport::setReportsTitles(
+                ["budgetsummary" => __("Summary by budget with total amount and quantity", "resources"),
+                    "checkgroup" => __("Report listing the groups not included in the resource's permissions", "resources"),
+                    "checkhabilitation" => __("Report listing the permissions not present in the user's groups", "resources"),
+                    "checkmissingN0group" => __("Report listing human resources without group N0", "resources"),
+                    "checkmissingN1group" => __("Report listing human resources without group N1", "resources"),
+                    "lapserankprofession" => __("Report listing obsolete corps and ranks", "resources"),
+                    "professionwithoutcost" => __("Report listing the corps and grades without budgetary valuation", "resources"),
+                    "professionwithoutvolume" => __("Report listing the corps and grades without budget allocation", "resources"),
+                    "resourceemploymentdiff" => __("Report of pledges", "resources"),
+                    "resourceemploymentwithlapseprofession" => __("Report listing resources or jobs with an expired corp", "resources"),
+                    "resourceemploymentwithlapserank" => __("Report listing resources or jobs with an obsolete grade", "resources"),
+                    "resourceleavingwithactiveemployment" => __("Report listing departing resources with active employment", "resources"),
+                    "resourcewithoutemployment" => __("Report listing unemployed resources", "resources"),
+                    "resourcewithoutuser" => __("Report listing resources without users", "resources"),
+                    "userwithmorethanoneresource" => __("Report listing users linked to more than one resource", "resources"),
+                    "userwithnoresource" => __("User without resource", "resources"),
+                    ]);
+        }
+
         // Resource menu
         if (Session::haveRight("plugin_resources", READ)
             || Session::haveright("plugin_resources_employee", UPDATE)) {

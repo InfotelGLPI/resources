@@ -29,6 +29,7 @@
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
 use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceSituation;
 use GlpiPlugin\Resources\ResourceState;
 

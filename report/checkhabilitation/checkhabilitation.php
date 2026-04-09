@@ -34,7 +34,6 @@ use GlpiPlugin\Resources\Resource;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
-include("../../../../inc/includes.php");
 global $HEADER_LOADED, $DB;
 
 //"Rapport listant les ressources sans utilisateurs";
@@ -160,7 +159,7 @@ if ($nbtot == 0) {
         Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
         Report::title();
     }
-    echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __('No results found') . "</span></div>";
+    echo "<div class='alert alert-danger center'>" . __('No results found') . "</div>";
     Html::footer();
 } elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
     include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");

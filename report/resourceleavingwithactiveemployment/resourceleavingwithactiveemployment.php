@@ -36,7 +36,6 @@ use GlpiPlugin\Resources\ResourceState;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 global $HEADER_LOADED, $DB;
-include("../../../../inc/includes.php");
 
 //"Rapport listant les ressources partantes ayant des emplois actifs"
 //"Report listing resource leaving with employment active";

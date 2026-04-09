@@ -148,7 +148,7 @@ if ($report->criteriasValidated()) {
             Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
             Report::title();
         }
-        echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __(
+        echo "<div class='alert alert-danger center'><span style='color : red;font-weight:bold;'>" . __(
                 'No results found'
             ) . "</span></div>";
         Html::footer();

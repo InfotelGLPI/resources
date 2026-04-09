@@ -27,11 +27,12 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QuerySubQuery;
+
 //Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
-include("../../../../inc/includes.php");
 global $HEADER_LOADED, $DB;
 //"Rapport listant les utilisateurs sans ressources";
 //"Report listing user without resource";
@@ -60,39 +61,69 @@ $report->setColumns(
     ]
 );
 
-// SQL statement
-//$dbu               = new DbUtils();
-//$entities_user     = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_users", '', '', false);
-//$entities_resource = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
-//
+$criteria = [
+    'SELECT' => [
+        'glpi_users.id AS user_id',
+        'glpi_users.name AS user_name',
+        'glpi_users.realname',
+        'glpi_users.firstname',
+        'glpi_locations.completename AS location',
+    ],
+    'FROM' => 'glpi_users',
+    'LEFT JOIN' => [
+        'glpi_locations' => [
+            'ON' => [
+                'glpi_locations' => 'id',
+                'glpi_users' => 'locations_id'
+            ]
+        ],
+    ],
+    'WHERE' => [
+        'glpi_users.is_deleted' => 0,
+        'glpi_users.authtype' => Auth::LDAP,
+        'glpi_users.is_active' => 1,
+        'AND' => [
+            [
+                'NOT' => [
+                    'glpi_users.id' => new QuerySubQuery([
+                        'SELECT' => ['items_id'],
+                        'FROM'   => 'glpi_plugin_resources_resources_items',
+                        'WHERE'  => [
+                            'itemtype' => 'User'
+                        ]
+                    ])
+                ]
+            ],
+            [
+                'NOT' => [
+                    'glpi_users.id' => new QuerySubQuery([
+                        'SELECT' => ['glpi_plugin_resources_resources_items.items_id'],
+                        'FROM'   => 'glpi_plugin_resources_resources_items',
 
-//display only resource without user linked
-$query = "SELECT  `glpi_users`.`id` as user_id,
-                  `glpi_users`.`name` as user_name,
-                  `glpi_users`.`realname` as realname,
-                  `glpi_users`.`firstname` as firstname,
-                `glpi_locations`.`completename` as location
-          FROM `glpi_users`
-            LEFT JOIN `glpi_locations`
-                ON (`glpi_locations`.`id` = `glpi_users`.`locations_id` )
-          WHERE (`glpi_users`.`id` NOT IN (SELECT `glpi_plugin_resources_resources_items`.`items_id`
-               FROM `glpi_plugin_resources_resources_items`
-               WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
-                OR `glpi_users`.`id` IN (SELECT `glpi_plugin_resources_resources_items`.`items_id`
-                FROM `glpi_plugin_resources_resources_items`
-                LEFT JOIN `glpi_plugin_resources_resources`
-                ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
-                WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User'
-                    AND `glpi_plugin_resources_resources`.`is_leaving` = 0
-                    AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-                    AND  `glpi_plugin_resources_resources`.`date_begin` IS NULL
-                    ))
-          AND `glpi_users`.`is_deleted` = 0
-          AND `glpi_users`.`authtype`   = 3
-          AND `glpi_users`.`is_active`  = 1";
+                        'INNER JOIN' => [
+                            'glpi_plugin_resources_resources' => [
+                                'ON' => [
+                                    'glpi_plugin_resources_resources'       => 'id',
+                                    'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id'
+                                ]
+                            ],
+                        ],
 
-$report->getOrderBy('user_id');
+                        'WHERE' => [
+                            'glpi_plugin_resources_resources.is_leaving' => 0,
+                            'glpi_plugin_resources_resources.is_deleted' => 0,
+                            'glpi_plugin_resources_resources.date_begin' => null
+                        ]
+                    ])
+                ]
+            ]
 
+        ]
+    ],
+];
 
-$report->setSqlRequest($query);
+$criteria = $criteria + $report->getNewOrderBy('user_id');
+
+$report->setSqlRequest($criteria);
+
 $report->execute();

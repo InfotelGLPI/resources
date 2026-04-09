@@ -33,8 +33,6 @@ use GlpiPlugin\Resources\Resource;
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
-//include("../../../../inc/includes.php");
-
 global $HEADER_LOADED, $DB;
 
 //"Rapport listant les ressources sans utilisateurs";
@@ -213,7 +211,7 @@ if ($report->criteriasValidated()) {
             Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
             Report::title();
         }
-        echo "<div class='center'><span style='color : red;font-weight:bold;'>" . __(
+        echo "<div class='alert alert-danger center'><span style='color : red;font-weight:bold;'>" . __(
                 'No results found'
             ) . "</span></div>";
         Html::footer();
