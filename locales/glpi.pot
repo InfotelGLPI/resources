@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-01 12:33+0000\n"
+"POT-Creation-Date: 2026-04-09 07:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,11 +258,11 @@ msgstr ""
 msgid "Arrival / Departure workflow"
 msgstr ""
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:73
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:262
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:71
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:72
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:260
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:72
 #: report/resourcewithoutuser/resourcewithoutuser.php:68
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:258
 #: src/ResourcePDF.php:108 src/Checklist.php:1208 src/Directory.php:225
 #: src/Resource_Item.php:904 src/Resource_Item.php:1176
 #: src/Resource_Item.php:1186 src/RuleContracttype.php:263 src/Resource.php:141
@@ -625,12 +625,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: report/professionwithoutcost/professionwithoutcost.php:299
-#: report/professionwithoutcost/professionwithoutcost.php:304
-#: report/professionwithoutvolume/professionwithoutvolume.php:305
-#: report/professionwithoutvolume/professionwithoutvolume.php:310
-#: report/lapserankprofession/lapserankprofession.php:50
-#: report/lapserankprofession/lapserankprofession.php:66
+#: report/professionwithoutcost/professionwithoutcost.php:297
+#: report/professionwithoutcost/professionwithoutcost.php:302
+#: report/professionwithoutvolume/professionwithoutvolume.php:303
+#: report/professionwithoutvolume/professionwithoutvolume.php:308
+#: report/lapserankprofession/lapserankprofession.php:49
+#: report/lapserankprofession/lapserankprofession.php:65
 #: src/ContractType.php:74 src/ContractType.php:154 src/ContractNature.php:99
 #: src/ContractNature.php:184 src/Profession.php:101 src/Profession.php:220
 #: src/ProfessionLine.php:101 src/ProfessionLine.php:153
@@ -932,15 +932,15 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ajax/leavingform.php:104
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:77
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:263
-#: report/checkhabilitation/checkhabilitation.php:218
-#: report/checkmissingN1group/checkmissingN1group.php:216
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:75
-#: report/checkgroup/checkgroup.php:273
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:76
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:261
+#: report/checkhabilitation/checkhabilitation.php:217
+#: report/checkmissingN1group/checkmissingN1group.php:214
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:76
+#: report/checkgroup/checkgroup.php:271
 #: report/resourcewithoutuser/resourcewithoutuser.php:72
-#: report/checkmissingN0group/checkmissingN0group.php:216
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:260
+#: report/checkmissingN0group/checkmissingN0group.php:214
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
 #: src/LinkAd.php:722 src/Resource_Leaving.php:163 src/ResourcePDF.php:109
 #: src/Checklist.php:1206 src/Directory.php:233 src/Resource_Item.php:905
 #: src/Resource_Item.php:1177 src/Resource_Item.php:1187
@@ -1061,7 +1061,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: hook.php:1450
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:94
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:93
 #: src/Department.php:85 src/Department.php:118 src/Employer.php:58
 #: src/Employment.php:232 src/Employment.php:314
 msgid "Employer"
@@ -1069,8 +1069,8 @@ msgid_plural "Employers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:81
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:86
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:80
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:85
 #: src/Profile.php:341 src/Employment.php:72
 msgid "Employment"
 msgid_plural "Employments"
@@ -1081,7 +1081,7 @@ msgstr[1] ""
 msgid "Employment management"
 msgstr ""
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:90
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:89
 #: src/EmploymentState.php:56 src/Employment.php:225 src/Employment.php:352
 msgid "Employment state"
 msgid_plural "Employment states"
@@ -1289,7 +1289,7 @@ msgid_plural "Holidays"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Metademand.php:80 setup.php:252
+#: src/Metademand.php:80 setup.php:274
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
@@ -1598,11 +1598,11 @@ msgstr ""
 msgid "Meta-demands linked"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:222
+#: report/checkhabilitation/checkhabilitation.php:221
 msgid "Missing group"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:277
+#: report/checkgroup/checkgroup.php:275
 msgid "Missing habilitation"
 msgstr ""
 
@@ -1933,7 +1933,7 @@ msgctxt "button"
 msgid "Previous"
 msgstr ""
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:86
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:85
 #: src/Budget.php:180 src/Budget.php:277 src/Profession.php:55 src/Rank.php:115
 #: src/Rank.php:163 src/Cost.php:147 src/Cost.php:189 src/Cost.php:262
 #: src/Employment.php:203 src/Employment.php:327
@@ -2047,6 +2047,62 @@ msgstr ""
 
 #: src/Config.php:687
 msgid "Replace default form for departure"
+msgstr ""
+
+#: setup.php:195
+msgid "Report listing departing resources with active employment"
+msgstr ""
+
+#: setup.php:187
+msgid "Report listing human resources without group N0"
+msgstr ""
+
+#: setup.php:188
+msgid "Report listing human resources without group N1"
+msgstr ""
+
+#: setup.php:189
+msgid "Report listing obsolete corps and ranks"
+msgstr ""
+
+#: setup.php:193
+msgid "Report listing resources or jobs with an expired corp"
+msgstr ""
+
+#: setup.php:194
+msgid "Report listing resources or jobs with an obsolete grade"
+msgstr ""
+
+#: setup.php:197
+msgid "Report listing resources without users"
+msgstr ""
+
+#: setup.php:191
+msgid "Report listing the corps and grades without budget allocation"
+msgstr ""
+
+#: setup.php:190
+msgid "Report listing the corps and grades without budgetary valuation"
+msgstr ""
+
+#: setup.php:185
+msgid "Report listing the groups not included in the resource's permissions"
+msgstr ""
+
+#: setup.php:186
+msgid "Report listing the permissions not present in the user's groups"
+msgstr ""
+
+#: setup.php:196
+msgid "Report listing unemployed resources"
+msgstr ""
+
+#: setup.php:198
+msgid "Report listing users linked to more than one resource"
+msgstr ""
+
+#: setup.php:192
+msgid "Report of pledges"
 msgstr ""
 
 #: src/NotificationTargetResource.php:1226
@@ -2374,6 +2430,10 @@ msgstr ""
 
 #: src/Adconfig.php:284
 msgid "Suffix"
+msgstr ""
+
+#: setup.php:184
+msgid "Summary by budget with total amount and quantity"
 msgstr ""
 
 #: src/Profile.php:335
@@ -2711,7 +2771,7 @@ msgstr ""
 msgid "Used for planning"
 msgstr ""
 
-#: report/userwithnoresource/userwithnoresource.php:39
+#: report/userwithnoresource/userwithnoresource.php:40 setup.php:199
 msgid "User without resource"
 msgstr ""
 
@@ -2827,19 +2887,19 @@ msgstr ""
 msgid "budgetsummary_report_title"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:43
+#: report/checkgroup/checkgroup.php:41
 msgid "checkgroup_report_title"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:43
+#: report/checkhabilitation/checkhabilitation.php:42
 msgid "checkhabilitation_report_title"
 msgstr ""
 
-#: report/checkmissingN0group/checkmissingN0group.php:44
+#: report/checkmissingN0group/checkmissingN0group.php:42
 msgid "checkmissingN0group_report_title"
 msgstr ""
 
-#: report/checkmissingN1group/checkmissingN1group.php:44
+#: report/checkmissingN1group/checkmissingN1group.php:42
 msgid "checkmissingN1group_report_title"
 msgstr ""
 
@@ -2863,7 +2923,7 @@ msgstr ""
 msgid "given name.name"
 msgstr ""
 
-#: report/lapserankprofession/lapserankprofession.php:41
+#: report/lapserankprofession/lapserankprofession.php:40
 msgid "lapserankprofession_report_title"
 msgstr ""
 
@@ -2887,19 +2947,19 @@ msgstr ""
 msgid "resourceemploymentdiff_report_title"
 msgstr ""
 
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:43
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:41
 msgid "resourceemploymentwithlapseprofession_report_title"
 msgstr ""
 
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:41
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:40
 msgid "resourceemploymentwithlapserank_report_title"
 msgstr ""
 
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:44
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:43
 msgid "resourceleavingwithactiveemployment_report_title"
 msgstr ""
 
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:42
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:43
 msgid "resourcewithoutemployment_report_title"
 msgstr ""
 
