@@ -28,6 +28,12 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\Column;
+use GlpiPlugin\Reports\ColumnDate;
+use GlpiPlugin\Reports\ColumnInteger;
+use GlpiPlugin\Reports\ColumnLink;
+use GlpiPlugin\Resources\Employment;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceSituation;
@@ -40,56 +46,56 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources partantes ayant des emplois actifs"
 //"Report listing resource leaving with employment active";
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("resourceleavingwithactiveemployment_report_title", "resources"));
+$report = new AutoReport(__("Report listing departing resources with active employment", "resources"));
 
 // Columns title (optional), from $LANG
 $report->setColumns([
-    new PluginReportsColumnInteger(
+    new ColumnInteger(
         'registration_number', _x('user', 'Administrative number'),
         ['sorton' => 'registration_number']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'resource_id', __('Surname'), Resource::class,
         ['sorton' => 'resource_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'firstname', __('First name'),
         ['sorton' => 'firstname']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_rank', Rank::getTypeName(1),
         ['sorton' => 'resource_rank']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resources_situation', ResourceSituation::getTypeName(1),
         ['sorton' => 'resources_situation']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_state', ResourceState::getTypeName(1),
         ['sorton' => 'resource_state']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'date_begin', __('Arrival date', 'resources'),
         ['sorton' => 'date_begin']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'date_end', __('Departure date', 'resources'),
         ['sorton' => 'date_end']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'employment_id', __('Name') . " - " . _n('Employment', 'Employments', 1, 'resources'),
         Employment::class, ['sorton' => 'employment_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_profession',
         _n('Employment', 'Employments', 1, 'resources') . " - " . _n('Profession', 'Professions', 2, 'resources'),
         ['sorton' => 'employment_profession']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_state', _n('Employment state', 'Employment states', 1, 'resources'),
         ['sorton' => 'employment_state']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employer_name', __('Name') . " - " . _n('Employer', 'Employers', 1, 'resources'),
         ['sorton' => 'employer_name']
     ),
@@ -147,4 +153,7 @@ $query = "SELECT `glpi_users`.`registration_number`,
 
 
 $report->setSqlRequest($query);
+
 $report->execute();
+
+$report->footer();

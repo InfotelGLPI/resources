@@ -28,6 +28,7 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Resources\Employment;
 use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\Resource;
@@ -38,7 +39,7 @@ $DBCONNECTION_REQUIRED = 0;
 global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("resourceemploymentwithlapseprofession_report_title", "resources"));
+$report = new AutoReport(__("Report listing resources or jobs with an expired corp", "resources"));
 
 //"Rapport listant les ressources ou les emplois ayant un corps caduque"
 //"Report listing resource or employment with lapse profession";

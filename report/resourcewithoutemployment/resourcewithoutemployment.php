@@ -28,6 +28,11 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\Column;
+use GlpiPlugin\Reports\ColumnDate;
+use GlpiPlugin\Reports\ColumnInteger;
+use GlpiPlugin\Reports\ColumnLink;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceSituation;
@@ -40,39 +45,39 @@ global $HEADER_LOADED, $DB;
 //"Report listing resource without employment";
 
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("resourcewithoutemployment_report_title", "resources"));
+$report = new AutoReport(__("Report listing unemployed resources", "resources"));
 
 // Columns title (optional)
 $report->setColumns([
-    new PluginReportsColumnInteger(
+    new Column(
         'registration_number', _x('user', 'Administrative number'),
         ['sorton' => 'registration_number']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'resource_id', __('Surname'), Resource::class,
         ['sorton' => 'resource_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'firstname', __('First name'),
         ['sorton' => 'firstname']
     ),
-    new PluginReportsColumn(
+    new Column(
         'rankName', Rank::getTypeName(1),
         ['sorton' => 'rankName']
     ),
-    new PluginReportsColumn(
+    new Column(
         'situation', ResourceSituation::getTypeName(1),
         ['sorton' => 'situation']
     ),
-    new PluginReportsColumn(
+    new Column(
         'state', ResourceState::getTypeName(1),
         ['sorton' => 'state']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'date_begin', __('Arrival date', 'resources'),
         ['sorton' => 'date_begin']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'date_end', __('Departure date', 'resources'),
         ['sorton' => 'date_end']
     )
@@ -124,6 +129,8 @@ $query = "SELECT `glpi_users`.`registration_number`,
                           OR ( `glpi_plugin_resources_resources`.`date_begin` < '" . $date . "'))" .
     $report->getOrderBy('resource_id');
 
-
 $report->setSqlRequest($query);
+
 $report->execute();
+
+$report->footer();

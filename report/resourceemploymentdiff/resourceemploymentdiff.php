@@ -28,6 +28,12 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\Column;
+use GlpiPlugin\Reports\ColumnDate;
+use GlpiPlugin\Reports\ColumnFloat;
+use GlpiPlugin\Reports\ColumnInteger;
+use GlpiPlugin\Reports\ColumnLink;
 use GlpiPlugin\Resources\Employer;
 use GlpiPlugin\Resources\Employment;
 use GlpiPlugin\Resources\EmploymentState;
@@ -43,79 +49,79 @@ $DBCONNECTION_REQUIRED = 1;
 global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("resourceemploymentdiff_report_title", "resources"));
+$report = new AutoReport(__("Report of pledges", "resources"));
 
 // Columns title (optional)
 $report->setColumns([
-    new PluginReportsColumn(
+    new Column(
         'registration_number', _x('user', 'Administrative number'),
         ['sorton' => 'registration_number']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'resource_id', __('Surname'), Resource::class,
         ['sorton' => 'resource_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'firstname', __('First name'),
         ['sorton' => 'firstname']
     ),
-    new PluginReportsColumnInteger(
+    new ColumnInteger(
         'quota', __('Quota', 'resources'),
         ['sorton' => 'quota']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_rank', __('Resource', 'resources') . " - " . Rank::getTypeName(1),
         ['sorton' => 'resource_rank']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_profession', __('Resource', 'resources') . " - " . Profession::getTypeName(1),
         ['sorton' => 'resource_profession']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_professionline', __('Resource', 'resources') . " - " . ProfessionLine::getTypeName(1),
         ['sorton' => 'resource_professionline']
     ),
-    new PluginReportsColumn(
+    new Column(
         'resource_professioncategory', __('Resource', 'resources') . " - " . ProfessionCategory::getTypeName(1),
         ['sorton' => 'resource_professioncategory']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'employment_id', __('Name') . " - " . Employment::getTypeName(1),
         Employment::class, ['sorton' => 'employment_name']
     ),
-    new PluginReportsColumnFloat(
+    new ColumnFloat(
         'ratio_employment_budget', __('Ratio Employment / Budget', 'resources'),
         ['sorton' => 'ratio_employment_budget']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_rank', Employment::getTypeName(1) . " - " . Rank::getTypeName(1),
         ['sorton' => 'employment_rank']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_profession', Employment::getTypeName(1) . " - " . Profession::getTypeName(1),
         ['sorton' => 'employment_profession']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_professionline', Employment::getTypeName(1) . " - " . ProfessionLine::getTypeName(1),
         ['sorton' => 'employment_professionline']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_professioncategory', Employment::getTypeName(1) . " - " . ProfessionCategory::getTypeName(1),
         ['sorton' => 'employment_professioncategory']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'begin_date', __('Begin date'),
         ['sorton' => 'begin_date']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'end_date', __('End date'),
         ['sorton' => 'end_date']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employment_state', EmploymentState::getTypeName(1),
         ['sorton' => 'employment_state']
     ),
-    new PluginReportsColumn(
+    new Column(
         'employer_name', __('Name') . " - " . Employer::getTypeName(1),
         ['sorton' => 'employer_name']
     ),
@@ -188,4 +194,7 @@ $query = "SELECT `glpi_users`.`registration_number`,
 
 
 $report->setSqlRequest($query);
+
 $report->execute();
+
+$report->footer();

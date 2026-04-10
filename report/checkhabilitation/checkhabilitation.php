@@ -28,6 +28,7 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Resources\Habilitation;
 use GlpiPlugin\Resources\Resource;
 
@@ -39,7 +40,7 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("checkhabilitation_report_title", "resources"));
+$report = new AutoReport(__("Report listing the permissions not present in the user's groups", "resources"));
 
 //colname with sort allowed
 $columns = [

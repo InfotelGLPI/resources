@@ -55,6 +55,7 @@ use GlpiPlugin\Resources\RuleContracttypeReadonly;
 use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
+use GlpiPlugin\Reports\Report;
 
 define('PLUGIN_RESOURCES_VERSION', '4.0.14');
 
@@ -179,8 +180,8 @@ function plugin_init_resources()
         }
         Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
 
-        if (class_exists(PluginReportsReport::class)) {
-            PluginReportsReport::setReportsTitles(
+        if (class_exists(Report::class)) {
+            Report::setReportsTitles(
                 ["budgetsummary" => __("Summary by budget with total amount and quantity", "resources"),
                     "checkgroup" => __("Report listing the groups not included in the resource's permissions", "resources"),
                     "checkhabilitation" => __("Report listing the permissions not present in the user's groups", "resources"),

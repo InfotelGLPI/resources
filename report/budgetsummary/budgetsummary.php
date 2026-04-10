@@ -29,6 +29,8 @@
 
 global $HEADER_LOADED;
 
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\DropdownCriteria;
 use GlpiPlugin\Resources\Budget;
 use GlpiPlugin\Resources\DateCriteria;
 use GlpiPlugin\Resources\Profession;
@@ -41,15 +43,15 @@ $DBCONNECTION_REQUIRED = 1;
 
 global $HEADER_LOADED, $DB;
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("budgetsummary_report_title", "resources"));
+$report = new AutoReport(__("Summary by budget with total amount and quantity", "resources"));
 
 //Report's search criterias
 $datecrit = new DateCriteria($report, 'date_budget', '', Budget::getTypeName(1) . " - " . __('Date'));
-$professioncategory = new PluginReportsDropdownCriteria(
+$professioncategory = new DropdownCriteria(
     $report, 'plugin_resources_professioncategories_id',
     'glpi_plugin_resources_professioncategories', ProfessionCategory::getTypeName(1)
 );
-$professionline = new PluginReportsDropdownCriteria(
+$professionline = new DropdownCriteria(
     $report, 'plugin_resources_professionlines_id',
     'glpi_plugin_resources_professionlines', ProfessionLine::getTypeName(1)
 );

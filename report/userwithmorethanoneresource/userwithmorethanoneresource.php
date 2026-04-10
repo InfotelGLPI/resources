@@ -28,6 +28,9 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\ColumnLink;
+
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
@@ -36,11 +39,11 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("userwithmorethanoneresource_report_title", "resources"));
+$report = new AutoReport(__("Report listing users linked to more than one resource", "resources"));
 
 // Columns title (optional)
 $report->setColumns([
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'items_id', __('User'), 'User',
         ['sorton' => 'items_id']
     ),
@@ -63,3 +66,5 @@ $query = "SELECT `glpi_plugin_resources_resources_items`.`items_id` as items_id
 
 $report->setSqlRequest($query);
 $report->execute();
+
+$report->footer();

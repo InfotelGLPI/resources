@@ -28,6 +28,10 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\Column;
+use GlpiPlugin\Reports\ColumnDate;
+use GlpiPlugin\Reports\ColumnLink;
 use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\Rank;
 
@@ -37,39 +41,39 @@ $DBCONNECTION_REQUIRED = 1;
 global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("lapserankprofession_report_title", "resources"));
+$report = new AutoReport(__("Report listing obsolete corps and ranks", "resources"));
 
 // Columns title (optional)
 $report->setColumns([
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'rank_id', Rank::getTypeName(1), Rank::class,
         ['sorton' => 'rank_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'rank_code', Rank::getTypeName(1) . " - " . __('Code', 'resources'),
         ['sorton' => 'rank_code']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'rank_begin_date', Rank::getTypeName(1) . " - " . __('Begin date'),
         ['sorton' => 'rank_begin_date']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'rank_end_date', Rank::getTypeName(1) . " - " . __('End date'),
         ['sorton' => 'rank_end_date']
     ),
-    new PluginReportsColumnLink(
+    new ColumnLink(
         'prof_id', Profession::getTypeName(1), Profession::class,
         ['sorton' => 'prof_name']
     ),
-    new PluginReportsColumn(
+    new Column(
         'prof_code', Profession::getTypeName(1) . " - " . __('Code', 'resources'),
         ['sorton' => 'prof_code']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'prof_begin_date', Profession::getTypeName(1) . " - " . __('Begin date'),
         ['sorton' => 'prof_begin_date']
     ),
-    new PluginReportsColumnDate(
+    new ColumnDate(
         'prof_end_date', Profession::getTypeName(1) . " - " . __('End date'),
         ['sorton' => 'prof_end_date']
     ),
@@ -108,4 +112,7 @@ $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
 
 
 $report->setSqlRequest($query);
+
 $report->execute();
+
+$report->footer();

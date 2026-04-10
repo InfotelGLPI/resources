@@ -30,6 +30,8 @@
 //Options for GLPI 0.71 and newer : need slave db to access the report
 global $HEADER_LOADED, $DB;
 
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\DropdownCriteria;
 use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\ProfessionCategory;
 use GlpiPlugin\Resources\ProfessionLine;
@@ -40,14 +42,14 @@ $DBCONNECTION_REQUIRED = 1;
 
 global $HEADER_LOADED, $DB;
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("professionwithoutvolume_report_title", "resources"));
+$report = new AutoReport(__("Report listing the corps and grades without budget allocation", "resources"));
 
 //Report's search criterias
-$professioncategory = new PluginReportsDropdownCriteria(
+$professioncategory = new DropdownCriteria(
     $report, 'plugin_resources_professioncategories_id',
     'glpi_plugin_resources_professioncategories', ProfessionCategory::getTypeName(1)
 );
-$professionline = new PluginReportsDropdownCriteria(
+$professionline = new DropdownCriteria(
     $report, 'plugin_resources_professionlines_id',
     'glpi_plugin_resources_professionlines', ProfessionLine::getTypeName(1)
 );

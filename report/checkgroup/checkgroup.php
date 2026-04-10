@@ -28,6 +28,9 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+use GlpiPlugin\Reports\ArrayCriteria;
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\GroupCriteria;
 use GlpiPlugin\Resources\Resource;
 
 $USEDBREPLICATE = 1;
@@ -38,26 +41,26 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources sans utilisateurs";
 //"Report listing resource without user";
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("checkgroup_report_title", "resources"));
+$report = new AutoReport(__("Report listing the groups not included in the resource's permissions", "resources"));
 
 //Report's search criterias
 $tab = [
     0 => __('No'),
     1 => __('Yes')
 ];
-$filter1 = new PluginReportsArrayCriteria($report, 'groupsN0', __('Display N0 Groups'), $tab);
+$filter1 = new ArrayCriteria($report, 'groupsN0', __('Display N0 Groups'), $tab);
 $tab = [
     0 => __('No'),
     1 => __('Yes')
 ];
-$filter2 = new PluginReportsArrayCriteria($report, 'groupsN1', __('Display N1 Groups'), $tab);
+$filter2 = new ArrayCriteria($report, 'groupsN1', __('Display N1 Groups'), $tab);
 $tab = [
     0 => __('No'),
     1 => __('Yes')
 ];
-$filter3 = new PluginReportsArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
+$filter3 = new ArrayCriteria($report, 'groupsN2', __('Display N2 Groups'), $tab);
 
-$filter4 = new PluginReportsGroupCriteria($report, 'groups_id', __('Filter by Groups'));
+$filter4 = new GroupCriteria($report, 'groups_id', __('Filter by Groups'));
 
 //Display criterias form is needed
 $report->displayCriteriasForm();

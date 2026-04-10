@@ -28,6 +28,9 @@
  */
 
 use Glpi\DBAL\QuerySubQuery;
+use GlpiPlugin\Reports\AutoReport;
+use GlpiPlugin\Reports\Column;
+use GlpiPlugin\Reports\ColumnLink;
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
@@ -37,24 +40,24 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les utilisateurs sans ressources";
 //"Report listing user without resource";
 // Instantiate Report with Name
-$report = new PluginReportsAutoReport(__("User without resource", "resources"));
+$report = new AutoReport(__("User without resource", "resources"));
 
 // Columns title (optional)
 $report->setColumns(
     [
-        new PluginReportsColumnLink(
+        new ColumnLink(
             'user_id', _n('User', 'Users', 1), 'User',
             ['sorton' => 'user_name']
         ),
-        new PluginReportsColumn(
+        new Column(
             'realname', __('Surname'),
             ['sorton' => 'realname']
         ),
-        new PluginReportsColumn(
+        new Column(
             'firstname', __('First name'),
             ['sorton' => 'firstname']
         ),
-        new PluginReportsColumn(
+        new Column(
             'location', __('Location'),
             ['sorton' => 'location']
         )
@@ -127,3 +130,5 @@ $criteria = $criteria + $report->getNewOrderBy('user_id');
 $report->setSqlRequest($criteria);
 
 $report->execute();
+
+$report->footer();
