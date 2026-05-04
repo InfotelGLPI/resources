@@ -32,6 +32,8 @@ use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Servicecatalog\Main;
 
+Session::checkLoginUser();
+
 //from helpdesk
 if (Plugin::isPluginActive('servicecatalog')) {
     Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));

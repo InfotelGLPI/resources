@@ -75,13 +75,12 @@ function plugin_init_resources()
     // add autoload for vendor
     include_once(PLUGIN_RESOURCES_DIR . "/vendor/autoload.php");
 
-    $PLUGIN_HOOKS['csrf_compliant']['resources'] = true;
-    $PLUGIN_HOOKS['change_profile']['resources'] = [Profile::class, 'initProfile'];
-    $PLUGIN_HOOKS['assign_to_ticket']['resources'] = true;
+    $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['resources'] = [Profile::class, 'initProfile'];
+    $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET]['resources'] = true;
 
     if (Session::getLoginUserID()) {
-        $PLUGIN_HOOKS['pre_item_form']['resources'] = [LinkAd::class, 'messageSolution'];
-        $PLUGIN_HOOKS['post_item_form']['resources'] = [LinkAd::class, 'deleteButtton'];
+        $PLUGIN_HOOKS[Hooks::PRE_ITEM_FORM]['resources'] = [LinkAd::class, 'messageSolution'];
+        $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['resources'] = [LinkAd::class, 'deleteButtton'];
         $noupdate = false;
         if (Session::getCurrentInterface() != 'central') {
             $noupdate = true;
@@ -147,8 +146,8 @@ function plugin_init_resources()
 
         if ((Session::haveRight("plugin_resources", READ)
             || Session::haveright("plugin_resources_employee", UPDATE))) {
-            $PLUGIN_HOOKS['helpdesk_menu_entry']['resources'] = PLUGIN_RESOURCES_WEBDIR . '/front/menu.php';
-            $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['resources'] = Resource::getIcon();
+            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['resources'] = PLUGIN_RESOURCES_WEBDIR . '/front/menu.php';
+            $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['resources'] = Resource::getIcon();
         }
 
         if (Session::haveright("plugin_resources_checklist", READ)
@@ -176,7 +175,7 @@ function plugin_init_resources()
 
         if ((Session::haveRight("plugin_resources", READ)
             || Session::haveright("plugin_resources_employee", UPDATE))) {
-            $PLUGIN_HOOKS['menu_toadd']['resources'] = ['admin' => Menu::class];
+            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['resources'] = ['admin' => Menu::class];
         }
         Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
 
@@ -208,12 +207,12 @@ function plugin_init_resources()
         }
 
         //
-        $PLUGIN_HOOKS['use_massive_action']['resources'] = true;
+        $PLUGIN_HOOKS[Hooks::USE_MASSIVE_ACTION]['resources'] = true;
         //      }
 
         // Config
         if (Session::haveRight("config", UPDATE)) {
-            $PLUGIN_HOOKS['config_page']['resources'] = 'front/config.form.php';
+            $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['resources'] = 'front/config.form.php';
         }
 
         // Add specific files to add to the header : javascript or css
@@ -236,14 +235,14 @@ function plugin_init_resources()
         //TODO : Check
         $PLUGIN_HOOKS['plugin_pdf'][Resource::class] = ResourcePDF::class;
 
-        $PLUGIN_HOOKS['item_add']['resources'] =
+        $PLUGIN_HOOKS[Hooks::ITEM_ADD]['resources'] =
             [
                 'Item_Ticket' => [new Resource(), 'afterInsert'],
             ];
 
         //Clean Plugin on Profile delete
         if (class_exists(Resource_Item::class)) { // only if plugin activated
-            $PLUGIN_HOOKS['pre_item_purge']['resources'] = [
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['resources'] = [
                 Resource::class => [
                     Notification::class,
                     'purgeNotification',
@@ -262,7 +261,7 @@ function plugin_init_resources()
 
 
     // End init, when all types are registered
-    $PLUGIN_HOOKS['post_init']['resources'] = 'plugin_resources_postinit';
+    $PLUGIN_HOOKS[Hooks::POST_INIT]['resources'] = 'plugin_resources_postinit';
 }
 
 // Get the name and the version of the plugin - Needed

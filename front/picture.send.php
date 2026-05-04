@@ -30,8 +30,15 @@
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Resource;
 
+Session::checkLoginUser();
+
 if (isset($_GET["file"])) {
-    Resource::sendFile(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $_GET["file"], $_GET["file"]);
+    $base_dir = realpath(GLPI_PLUGIN_DOC_DIR . "/resources/pictures");
+    $file     = realpath($base_dir . "/" . $_GET["file"]);
+    if ($file === false || strpos($file, $base_dir . DIRECTORY_SEPARATOR) !== 0) {
+        throw new AccessDeniedHttpException();
+    }
+    Resource::sendFile($file, basename($file));
 } else {
     throw new AccessDeniedHttpException();
 }

@@ -29,6 +29,8 @@
 
 use GlpiPlugin\Resources\RuleContracttypeCollection;
 
+Session::checkCentralAccess();
+
 $rulecollection = new RuleContracttypeCollection($_SESSION['glpiactive_entity']);
 
 include(GLPI_ROOT . "/front/rule.common.form.php");

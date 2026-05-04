@@ -29,6 +29,7 @@
 
 use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 
+Session::checkCentralAccess();
 
 $rulecollection = new RuleContracttypeReadonlyCollection($_SESSION['glpiactive_entity']);
 

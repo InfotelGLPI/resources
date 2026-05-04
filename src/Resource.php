@@ -1197,12 +1197,11 @@ class Resource extends CommonDBTM
         }
         //Add picture of the resource
         $input['picture'] = "NULL";
-        if (isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
-            if ($_FILES['picture']['type'] == "image/jpeg"
-                || $_FILES['picture']['type'] == "image/pjpeg"
-            ) {
+        if (isset($_FILES['_uploader_picture']['tmp_name'][0])
+            && is_uploaded_file($_FILES['_uploader_picture']['tmp_name'][0])) {
+            if (exif_imagetype($_FILES['_uploader_picture']['tmp_name'][0]) === IMAGETYPE_JPEG) {
                 $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-                if ($_FILES['picture']['size'] <= $max_size) {
+                if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
                     if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/")) {
                         $input['picture'] = $this->addPhoto($this);
                     }
@@ -1210,11 +1209,7 @@ class Resource extends CommonDBTM
                     Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);
                 }
             } else {
-                Session::addMessageAfterRedirect(
-                    __('Invalid filename') . " : " . $_FILES['picture']['type'],
-                    false,
-                    ERROR
-                );
+                Session::addMessageAfterRedirect(__('Invalid filename'), false, ERROR);
             }
         }
 
@@ -1335,7 +1330,7 @@ class Resource extends CommonDBTM
         $tmp = imagecreatetruecolor($newwidth, $newheight);
 
         imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-        $ext = strtolower(substr(strrchr($_FILES['_uploader_picture']['name'][0], '.'), 1));
+        $ext = 'jpg';
         $resources_name = str_replace(" ", "", strtolower($class->fields["name"]));
         $resources_firstname = str_replace(" ", "", strtolower($class->fields["firstname"]));
         $name = $resources_name . "_" . $resources_firstname . "." . $ext;
@@ -1377,13 +1372,12 @@ class Resource extends CommonDBTM
 
         $this->getFromDB($input["id"]);
 
-        if (!isset($input['_UpdateFromUser_']) && isset($_FILES) && isset($_FILES['picture']) && $_FILES['picture']['size'] > 0) {
-            if ($_FILES['picture']['type'] == "image/jpeg"
-                || $_FILES['picture']['type'] == "image/pjpeg"
-
-            ) {
+        if (!isset($input['_UpdateFromUser_'])
+            && isset($_FILES['_uploader_picture']['tmp_name'][0])
+            && is_uploaded_file($_FILES['_uploader_picture']['tmp_name'][0])) {
+            if (exif_imagetype($_FILES['_uploader_picture']['tmp_name'][0]) === IMAGETYPE_JPEG) {
                 $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-                if ($_FILES['picture']['size'] <= $max_size) {
+                if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
                     $input['picture'] = $this->addPhoto($this);
                 } else {
                     Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);

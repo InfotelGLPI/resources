@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -29,12 +30,14 @@
 
 namespace GlpiPlugin\Resources;
 
+use CommonDBRelation;
 use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
-use GlpiPlugin\Badges\Badge;
+use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Plugin;
@@ -49,18 +52,17 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class Resource_Item
  */
-class Resource_Item extends CommonDBTM
+class Resource_Item extends CommonDBRelation
 {
+    public static $rightname = 'plugin_resources';
 
-    static $rightname = 'plugin_resources';
-
-    // From CommonDBRelation
     public static $itemtype_1 = Resource::class;
     public static $items_id_1 = 'plugin_resources_resources_id';
+    public static $take_entity_1 = false;
 
     public static $itemtype_2 = 'itemtype';
     public static $items_id_2 = 'items_id';
-
+    public static $take_entity_2 = true;
     /**
      * Have I the global right to "view" the Object
      *
@@ -70,7 +72,7 @@ class Resource_Item extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -81,26 +83,26 @@ class Resource_Item extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
-     * @param \CommonDBTM $item
+     * @param CommonDBTM $item
      */
-    static function cleanForItem(CommonDBTM $item)
+    public static function cleanForItem(CommonDBTM $item)
     {
         $temp = new self();
         $temp->deleteByCriteria(
             [
                 'itemtype' => $item->getType(),
-                'items_id' => $item->getField('id')
+                'items_id' => $item->getField('id'),
             ]
         );
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-device-laptop";
     }
@@ -111,7 +113,7 @@ class Resource_Item extends CommonDBTM
      *
      * @return array|string
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class
             && count(Resource::getTypes(false))
@@ -136,13 +138,13 @@ class Resource_Item extends CommonDBTM
 
 
     /**
-     * @param \CommonGLPI $item
+     * @param CommonGLPI $item
      * @param int $tabnum
      * @param int $withtemplate
      *
      * @return bool
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
             self::showForResource($item, $withtemplate);
@@ -153,13 +155,13 @@ class Resource_Item extends CommonDBTM
     }
 
     /**
-     * @param \PluginPdfSimplePDF $pdf
-     * @param \CommonGLPI $item
+     * @param PluginPdfSimplePDF $pdf
+     * @param CommonGLPI $item
      * @param                     $tab
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         if ($item->getType() == Resource::class) {
             self::pdfForResource($pdf, $item);
@@ -172,11 +174,11 @@ class Resource_Item extends CommonDBTM
     }
 
     /**
-     * @param Resource $item
+     * @param resource $item
      *
      * @return int
      */
-    static function countForResource(Resource $item)
+    public static function countForResource(Resource $item)
     {
         $types = $item->getTypes();
         if (count($types) == 0) {
@@ -187,25 +189,25 @@ class Resource_Item extends CommonDBTM
             'glpi_plugin_resources_resources_items',
             [
                 "itemtype" => $types,
-                "plugin_resources_resources_id" => $item->getID()
+                "plugin_resources_resources_id" => $item->getID(),
             ]
         );
     }
 
 
     /**
-     * @param \CommonDBTM $item
+     * @param CommonDBTM $item
      *
      * @return int
      */
-    static function countForItem(CommonDBTM $item)
+    public static function countForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
         return $dbu->countElementsInTable(
             'glpi_plugin_resources_resources_items',
             [
                 "itemtype" => $item->getType(),
-                "items_id" => $item->getID()
+                "items_id" => $item->getID(),
             ]
         );
     }
@@ -217,12 +219,12 @@ class Resource_Item extends CommonDBTM
      *
      * @return bool
      */
-    function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
+    public function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
     {
         global $DB;
 
-        $query = "SELECT * FROM `" . $this->getTable() . "` " .
-            "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "'
+        $query = "SELECT * FROM `" . $this->getTable() . "` "
+            . "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "'
          AND `itemtype` = '" . $itemtype . "'
          AND `items_id` = '" . $items_id . "'";
         if ($result = $DB->doQuery($query)) {
@@ -244,7 +246,7 @@ class Resource_Item extends CommonDBTM
      *
      * @return bool
      */
-    function addItem($options)
+    public function addItem($options)
     {
         if (!isset($options["plugin_resources_resources_id"])
             || $options["plugin_resources_resources_id"] <= 0
@@ -254,7 +256,7 @@ class Resource_Item extends CommonDBTM
             $this->add([
                 'plugin_resources_resources_id' => $options["plugin_resources_resources_id"],
                 'items_id' => $options["items_id"],
-                'itemtype' => $options["itemtype"]
+                'itemtype' => $options["itemtype"],
             ]);
 
             if ($options["itemtype"] == 'User') {
@@ -276,7 +278,7 @@ class Resource_Item extends CommonDBTM
      * @param $ID
      * @param $comment
      */
-    function updateItem($ID, $comment)
+    public function updateItem($ID, $comment)
     {
         if ($ID > 0) {
             $values["id"] = $ID;
@@ -288,7 +290,7 @@ class Resource_Item extends CommonDBTM
     /**
      * @param $ID
      */
-    function deleteItem($ID)
+    public function deleteItem($ID)
     {
         $this->delete(['id' => $ID]);
     }
@@ -300,7 +302,7 @@ class Resource_Item extends CommonDBTM
      *
      * @return bool
      */
-    function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
+    public function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
     {
         if ($this->getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)) {
             return $this->delete(['id' => $this->fields["id"]]);
@@ -319,18 +321,18 @@ class Resource_Item extends CommonDBTM
      **@since version 0.84
      *
      */
-    static function cloneItem($oldid, $newid)
+    public static function cloneItem($oldid, $newid)
     {
         global $DB;
 
-        $query =
-            [
+        $query
+            = [
                 'SELECT' => [
                     '*',
                 ],
                 'FROM' => 'glpi_plugin_resources_resources_items',
                 'WHERE' => [
-                    'plugin_resources_resources_id' => $oldid
+                    'plugin_resources_resources_id' => $oldid,
                 ],
             ];
 
@@ -340,7 +342,7 @@ class Resource_Item extends CommonDBTM
                 'plugin_resources_resources_id' => $newid,
                 'itemtype' => $data["itemtype"],
                 'items_id' => $data["items_id"],
-                'comment' => $data["comment"]
+                'comment' => $data["comment"],
             ]);
         }
     }
@@ -349,7 +351,7 @@ class Resource_Item extends CommonDBTM
      * @param $values
      * @param $itemtype
      */
-    function updateLocation($values, $itemtype)
+    public function updateLocation($values, $itemtype)
     {
         global $DB;
 
@@ -357,7 +359,7 @@ class Resource_Item extends CommonDBTM
         if ($itemtype == Resource::class) {
             $restrict = [
                 "itemtype" => 'User',
-                "plugin_resources_resources_id" => $values["id"]
+                "plugin_resources_resources_id" => $values["id"],
             ];
             $dbu = new DbUtils();
             $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
@@ -391,13 +393,13 @@ class Resource_Item extends CommonDBTM
      *
      * @return int
      */
-    function searchAssociatedBadge($ID)
+    public function searchAssociatedBadge($ID)
     {
         if (Plugin::isPluginActive("badges")) {
             //search is the user have a linked badge
             $restrict = [
                 "itemtype" => 'User',
-                "plugin_resources_resources_id" => $ID
+                "plugin_resources_resources_id" => $ID,
             ];
             $dbu = new DbUtils();
             $resources = $dbu->getAllDataFromTable($this->getTable(), $restrict);
@@ -423,7 +425,7 @@ class Resource_Item extends CommonDBTM
      * @param       $ID
      * @param array $used
      */
-    function dropdownItems($ID, $used = [])
+    public function dropdownItems($ID, $used = [])
     {
         global $DB;
 
@@ -475,7 +477,7 @@ class Resource_Item extends CommonDBTM
     /**
      * @since version 0.84
      **/
-    function getForbiddenStandardMassiveAction()
+    public function getForbiddenStandardMassiveAction()
     {
         $forbidden = parent::getForbiddenStandardMassiveAction();
         $forbidden[] = 'update';
@@ -483,6 +485,125 @@ class Resource_Item extends CommonDBTM
     }
 
 
+    /**
+     * Print the HTML array for Items linked to a resource
+     *
+     * @param resource $resource
+     * @param int $withtemplate
+     *
+     * @return bool
+     **/
+    public static function showForResource(Resource $resource, int $withtemplate = 0): bool
+    {
+        $instID = $resource->getID();
+
+        if (!$resource->can($instID, READ)) {
+            return false;
+        }
+        $canedit = $resource->canEdit($instID);
+        $rand = mt_rand();
+
+        $types_iterator = self::getDistinctTypes($instID);
+
+        $totalnb = 0;
+        $entity_names_cache = [];
+        $entries = [];
+        $used = [];
+
+        foreach ($types_iterator as $row) {
+            $itemtype = $row['itemtype'];
+            if (!($item = getItemForItemtype($itemtype)) || !$item::canView()) {
+                continue;
+            }
+
+            $itemtype_name = $item::getTypeName(1);
+            $iterator = self::getTypeItems($instID, $itemtype);
+            $nb = count($iterator);
+
+            foreach ($iterator as $data) {
+                $name = $data[$itemtype::getNameField()];
+                if (
+                    $_SESSION["glpiis_ids_visible"]
+                    || empty($data[$itemtype::getNameField()])
+                ) {
+                    $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
+                }
+                $link = $item::getFormURLWithID($data['id']);
+                $namelink = "<a href=\"" . htmlescape($link) . "\">" . htmlescape($name) . "</a>";
+
+                if ($itemtype == 'User') {
+                    $data['entity'] = 0;
+                }
+                if (!isset($entity_names_cache[$data['entity']])) {
+                    if ($itemtype != 'User') {
+                        $entity_names_cache[$data['entity']] = Dropdown::getDropdownName("glpi_entities", $data['entity']);
+                    } else {
+                        $entity_names_cache[$data['entity']] = "";
+                    }
+                }
+
+                $entries[] = [
+                    'itemtype' => self::class,
+                    'id' => $data['linkid'],
+                    'row_class' => (isset($data['is_deleted']) && $data['is_deleted']) ? 'table-deleted' : '',
+                    'type' => $itemtype_name,
+                    'name' => $namelink,
+                    'entity' => $entity_names_cache[$data['entity']],
+                    'serial' => $data["serial"] ?? '-',
+                    'otherserial' => $data["otherserial"] ?? '-',
+                ];
+                $used[$itemtype][$data['id']] = $data['id'];
+            }
+            $totalnb += $nb;
+        }
+
+        $columns = [
+            'type' => _n('Type', 'Types', 1),
+        ];
+        if (Session::isMultiEntitiesMode()) {
+            $columns['entity'] = Entity::getTypeName(1);
+        }
+        $columns += [
+            'name' => __('Name'),
+            'serial' => __('Serial number'),
+            'otherserial' => __('Inventory number'),
+        ];
+        $formatters = [
+            'name' => 'raw_html',
+        ];
+        $footers = [];
+        if ($totalnb > 0) {
+            $footers = [
+                [sprintf(__('%1$s = %2$s'), __('Total'), $totalnb)],
+            ];
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/item_resource.html.twig', [
+            'item' => $resource,
+            'can_edit' => $canedit && $withtemplate != 2,
+            'withtemplate' => $withtemplate,
+            'used' => $used,
+            'types' => Resource::getTypes(true),
+            'datatable_params' => [
+                'is_tab' => true,
+                'nofilter' => true,
+                'nosort' => true,
+                'columns' => $columns,
+                'formatters' => $formatters,
+                'entries' => $entries,
+                'footers' => $footers,
+                'total_number' => count($entries),
+                'filtered_number' => count($entries),
+                'showmassiveactions' => $canedit,
+                'massiveactionparams' => [
+                    'container' => 'massiveactioncontainer' . $rand,
+                    'itemtype' => self::class,
+                ],
+            ],
+        ]);
+
+        return true;
+    }
     /**
      * Show items links to a resource
      *
@@ -492,256 +613,414 @@ class Resource_Item extends CommonDBTM
      **@since version 0.84
      *
      */
-    public static function showForResource(Resource $resource, $withtemplate = '')
+//    public static function showForResource(Resource $resource, $withtemplate = '')
+//    {
+//        global $DB, $CFG_GLPI;
+//
+//        $instID = $resource->fields['id'];
+//        if (!$resource->can($instID, READ)) {
+//            return false;
+//        }
+//
+//        $rand = mt_rand();
+//
+//        $canedit = $resource->can($instID, UPDATE);
+//        if (empty($withtemplate)) {
+//            $withtemplate = 0;
+//        }
+//        $types = Resource::getTypes();
+//
+//        $query = "SELECT DISTINCT `itemtype`
+//          FROM `glpi_plugin_resources_resources_items`
+//          WHERE `plugin_resources_resources_id` = '$instID'
+//          ORDER BY `itemtype`
+//          LIMIT " . count($types);
+//        $result = $DB->doQuery($query);
+//        $number = $DB->numrows($result);
+//
+//        if (Session::isMultiEntitiesMode()) {
+//            $colsup = 1;
+//        } else {
+//            $colsup = 0;
+//        }
+//
+//        if ($canedit && $withtemplate < 2
+//            //&& $number < 1
+//        ) {
+//            echo "<div class='firstbloc'>";
+//            echo "<form method='post' name='resource_form$rand' id='resource_form$rand'
+//         action='" . Toolbox::getItemTypeFormURL(Resource::class) . "'>";
+//
+//            echo "<table class='tab_cadre_fixe'>";
+//            echo "<tr class='tab_bg_2'><th colspan='" . ($canedit ? (5 + $colsup) : (4 + $colsup)) . "'>";
+//            //echo __('Add a user');
+//            echo __('Add an item');
+//            echo "</th></tr>";
+//            echo "<tr class='tab_bg_1'><td colspan='" . (3 + $colsup) . "' class='center'>";
+//            echo Html::hidden('plugin_resources_resources_id', ['value' => $instID]);
+//            //echo "<input type='hidden' name='itemtype' value='User'>";
+//            $randDropdown = Dropdown::showSelectItemFromItemtypes([
+//                'items_id_name' => "items_id",
+//                'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
+//                'itemtypes' => $types,
+//            ]);
+//
+//            echo "<span id='warning' hidden><i class='ti ti-alert-triangle' style='font-size:2em;color:orange'></i>&nbsp";
+//            echo __('This computer is already associated to a resource', 'resources') . "</span>";
+//            echo "<td colspan='2' class='tab_bg_2'>";
+//            echo Html::submit(_sx('button', 'Add'), ['name' => 'additem', 'class' => 'btn btn-primary']);
+//            echo "</td></tr>";
+//            echo "</table>";
+//            Html::closeForm();
+//            echo "</div>";
+//            $root_doc = PLUGIN_RESOURCES_WEBDIR;
+//            $js = "$(function(){
+//             $('#show_items_id$randDropdown').change(function() {
+//             let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
+//               if (item_type == 'Computer') {
+//                  let computer_id = $('#show_items_id$randDropdown :selected').val();
+//                  $.ajax({
+//                             url   : '$root_doc/ajax/checkComputerResource.php',
+//                             type  : 'POST',
+//                             data  : {'computer_id': computer_id},
+//                             success:function(data) {
+//                                if (data) {
+//                                    $('#warning').show();
+//                                } else {
+//                                    $('#warning').hide();
+//                                }
+//                             }
+//                  });
+//               }
+//            });
+//         });";
+//
+//            echo Html::scriptBlock($js);
+//        }
+//
+//        echo "<div class='spaced'>";
+//        if ($canedit && $number && $withtemplate < 2) {
+//            Html::openMassiveActionsForm('mass' . 'Resource' . $rand);
+//            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . 'Resource' . $rand];
+//            Html::showMassiveActions($massiveactionparams);
+//        }
+//        echo "<table class='tab_cadre_fixe'>";
+//        echo "<tr>";
+//
+//        if ($canedit && $number && $withtemplate < 2) {
+//            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . 'Resource' . $rand) . "</th>";
+//        }
+//
+//        echo "<th>" . __('Type') . "</th>";
+//        echo "<th>" . __('Name') . "</th>";
+//        if (Session::isMultiEntitiesMode()) {
+//            echo "<th>" . __('Entity') . "</th>";
+//        }
+//        echo "<th>" . __('Serial number') . "</th>";
+//        echo "<th>" . __('Inventory number') . "</th>";
+//        echo "</tr>";
+//
+//        $dbu = new DbUtils();
+//
+//        for ($i = 0; $i < $number; $i++) {
+//            $itemType = $DB->result($result, $i, "itemtype");
+//
+//            if (!($item = $dbu->getItemForItemtype($itemType))) {
+//                continue;
+//            }
+//
+//            if ($item->canView()) {
+//                $column = "name";
+//                $itemTable = $dbu->getTableForItemType($itemType);
+//
+//                $criteria = [
+//                    'SELECT' => [
+//                        $itemTable . '.*',
+//                        'glpi_plugin_resources_resources_items.id AS items_id',
+//                        'glpi_plugin_resources_resources_items.comment AS comment',
+//                        'glpi_entities.id AS entity',
+//                    ],
+//                    'FROM' => 'glpi_plugin_resources_resources_items',
+//                    'LEFT JOIN' => [
+//                        $itemTable => [
+//                            'ON' => [
+//                                $itemTable => 'id',
+//                                'glpi_plugin_resources_resources_items' => 'items_id',
+//                                [
+//                                    'AND' => [
+//                                        'glpi_plugin_resources_resources_items.itemtype' => $itemType,
+//                                    ],
+//                                ],
+//                            ],
+//                        ],
+//                        'glpi_entities' => [
+//                            'ON' => [
+//                                $itemTable => 'entities_id',
+//                                'glpi_entities' => 'id',
+//                            ],
+//                        ],
+//                    ],
+//
+//                    'WHERE' => ['glpi_plugin_resources_resources_items.plugin_resources_resources_id' => $instID],
+//                    'ORDERBY' => 'glpi_entities.completename, ' . $itemTable . '.' . $column,
+//                ];
+//                if ($item->maybeDeleted()) {
+//                    $criteria['WHERE'] = $criteria['WHERE'] + [$itemTable . '.is_deleted' => 0];
+//                }
+//                if ($item->maybeTemplate()) {
+//                    $criteria['WHERE'] = $criteria['WHERE'] + [$itemTable . '.is_template' => 0];
+//                }
+//                if ($itemType != 'User') {
+//                    $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+//                        $itemTable,
+//                        '',
+//                        '',
+//                        true
+//                    );
+//                }
+//
+//                $iterator = $DB->request($criteria);
+//
+//                if (count($iterator) > 0) {
+//                    Session::initNavigateListItems(
+//                        $itemType,
+//                        Resource::getTypeName(2) . " = " . $resource->fields['name']
+//                    );
+//
+//                    foreach ($iterator as $data) {
+//
+//                        $item->getFromDB($data["id"]);
+//
+//                        Session::addToNavigateListItems($itemType, $data["id"]);
+//
+//                        $ID = "";
+//
+//                        if ($itemType == 'User') {
+//                            $format = formatUserName(
+//                                $data["id"],
+//                                $data["name"],
+//                                $data["realname"],
+//                                $data["firstname"]
+//                            );
+//                        } else {
+//                            $format = $data["name"];
+//                        }
+//                        if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
+//                            $ID = " (" . $data["id"] . ")";
+//                        }
+//
+//                        $link = Toolbox::getItemTypeFormURL($itemType);
+//                        $name = "<a href=\"" . $link . "?id=" . $data["id"] . "\">"
+//                            . $format;
+//                        if ($itemType != 'User') {
+//                            $name .= "&nbsp;" . $ID;
+//                        }
+//                        $name .= "</a>";
+//
+//                        echo "<tr class='tab_bg_1'>";
+//                        $items_id = $data["items_id"];
+//                        if ($canedit && $withtemplate < 2) {
+//                            echo "<td width='10'>";
+//                            Html::showMassiveActionCheckBox(__CLASS__, $data["items_id"]);
+//                            /*TODO resolve IT or drop IT ?
+//                            echo "<img src='".$CFG_GLPI["root_doc"]."/pics/expand.gif' onclick=\"plugin_resources_show_item('comment$items_id$rand',this,'".$CFG_GLPI["root_doc"]."/pics/collapse.gif');\">";*/
+//                            echo "</td>";
+//                        }
+//                        echo "<td class='center'>" . $item::getTypeName(1) . "</td>";
+//
+//                        echo "<td class='center' " . (isset($data['is_deleted']) && $data['is_deleted'] ? "class='tab_bg_2_2'" : "")
+//                            . ">" . $name . "</td>";
+//
+//                        if (Session::isMultiEntitiesMode()) {
+//                            if ($itemType != 'User') {
+//                                echo "<td class='center'>" . Dropdown::getDropdownName(
+//                                    "glpi_entities",
+//                                    $data['entity']
+//                                ) . "</td>";
+//                            } else {
+//                                echo "<td class='center'>-</td>";
+//                            }
+//                        }
+//                        echo "<td class='center'>" . (isset($data["serial"]) ? "" . $data["serial"] . "" : "-") . "</td>";
+//                        echo "<td class='center'>" . (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-") . "</td>";
+//                        echo "</tr>";
+//                        /*TODO resolve IT or drop IT ?
+//                        echo "<tr class='tab_bg_1'>";
+//
+//                        $class = "class='plugin_resources_show'";
+//
+//                        if (!isset($data["comment"]) || empty($data["comment"])) {
+//                           $data["comment"]='';
+//                           $class = "class='plugin_resources_hide'";
+//                        }
+//                        echo "<td colspan='6' id='comment$items_id$rand' $class >";
+//
+//                        echo "<form method='post' name='updatecomment$items_id$rand' id='updatecomment$items_id$rand' action='".Toolbox::getItemTypeFormURL(Resource::class)."'>";
+//                        echo "<table><tr><td>";
+//                        echo __('Comments');
+//                        echo "<br><textarea cols='150' rows='5' name='comment$items_id' >";
+//                        echo $data["comment"];
+//                        echo "</textarea><br><br>";
+//                        echo "<input type='hidden' name='items_id' value='".$data["items_id"]."'>";
+//                        if($canedit && $withtemplate<2) {
+//                           if (!isset($data["comment"]) || empty($data["comment"])) {
+//
+//                              echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Add')."\" class='submit'>";
+//                           } else {
+//                              echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Update')."\" class='submit'>";
+//                           }
+//                        }
+//                        echo "</td>";
+//                        echo "</tr>";
+//                        echo "</table>";
+//                        Html::closeForm();
+//
+//                        echo "</td>";
+//                        echo "</tr>";*/
+//                    }
+//                }
+//            }
+//        }
+//        echo "</table>";
+//
+//        if ($canedit && $number && $withtemplate < 2) {
+//            $massiveactionparams['ontop'] = false;
+//            Html::showMassiveActions($massiveactionparams);
+//            Html::closeForm();
+//        }
+//        echo "</div>";
+//    }
+
+
+    private static function showForItem(CommonDBTM $item): bool
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        $instID = $resource->fields['id'];
-        if (!$resource->can($instID, READ)) {
-            return false;
-        }
+        $used = $entries = [];
 
-        $rand = mt_rand();
 
-        $canedit = $resource->can($instID, UPDATE);
-        if (empty($withtemplate)) {
-            $withtemplate = 0;
-        }
-        $types = Resource::getTypes();
+        $criteria = [
+            'SELECT' => [
+                'glpi_plugin_resources_resources_items.id AS assocID',
+                'glpi_entities.id AS entity',
+                'glpi_plugin_resources_resources.name AS assocName',
+                'glpi_plugin_resources_resources.*'
+            ],
+            'FROM' => 'glpi_plugin_resources_resources_items',
+            'LEFT JOIN' => [
+                'glpi_plugin_resources_resources' => [
+                    'ON' => [
+                        'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources' => 'id',
+                    ],
+                ],
+                'glpi_entities' => [
+                    'ON' => [
+                        'glpi_plugin_resources_resources' => 'entities_id',
+                        'glpi_entities' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'glpi_plugin_resources_resources_items.items_id' => $item->getID(),
+                'glpi_plugin_resources_resources_items.itemtype' => $item->getType(),
+            ],
+            'ORDERBY' => 'assocName',
+        ];
+        $criteria['WHERE'] = $criteria['WHERE'] + getEntitiesRestrictCriteria(
+                'glpi_plugin_resources_resources',
+                '',
+                '',
+                true
+            );
 
-        if (Plugin::isPluginActive("badges")) {
-            $types[] = Badge::class;
-        }
+        $iterator_list = $DB->request($criteria);
 
-        $query = "SELECT DISTINCT `itemtype`
-          FROM `glpi_plugin_resources_resources_items`
-          WHERE `plugin_resources_resources_id` = '$instID'
-          ORDER BY `itemtype`
-          LIMIT " . count($types);
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        foreach ($iterator_list as $value) {
+            $used[] = $value['id'];
+            $resource = new Resource();
 
-        if (Session::isMultiEntitiesMode()) {
-            $colsup = 1;
-        } else {
-            $colsup = 0;
-        }
+            $result = $resource->getFromDB($value['id']);
 
-        if ($canedit && $withtemplate < 2
-            //&& $number < 1
-        ) {
-            echo "<div class='firstbloc'>";
-            echo "<form method='post' name='resource_form$rand' id='resource_form$rand'
-         action='" . Toolbox::getItemTypeFormURL(Resource::class) . "'>";
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_2'><th colspan='" . ($canedit ? (5 + $colsup) : (4 + $colsup)) . "'>";
-            //echo __('Add a user');
-            echo __('Add an item');
-            echo "</th></tr>";
-            echo "<tr class='tab_bg_1'><td colspan='" . (3 + $colsup) . "' class='center'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $instID]);
-            //echo "<input type='hidden' name='itemtype' value='User'>";
-            $randDropdown = Dropdown::showSelectItemFromItemtypes([
-                'items_id_name' => "items_id",
-                'entity_restrict' => ($resource->fields['is_recursive'] ? -1 : $resource->fields['entities_id']),
-                'itemtypes' => $types
-            ]);
-
-            echo "<span id='warning' hidden><i class='ti ti-alert-triangle' style='font-size:2em;color:orange'></i>&nbsp";
-            echo __('This computer is already associated to a resource', 'resources') . "</span>";
-            echo "<td colspan='2' class='tab_bg_2'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'additem', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-            echo "</table>";
-            Html::closeForm();
-            echo "</div>";
-            $root_doc = PLUGIN_RESOURCES_WEBDIR;
-            $js = "$(function(){
-             $('#show_items_id$randDropdown').change(function() {
-             let item_type = $('#dropdown_itemtype$randDropdown :selected').val();
-               if (item_type == 'Computer') {
-                  let computer_id = $('#show_items_id$randDropdown :selected').val();
-                  $.ajax({
-                             url   : '$root_doc/ajax/checkComputerResource.php',
-                             type  : 'POST',
-                             data  : {'computer_id': computer_id},
-                             success:function(data) {
-                                if (data) {
-                                    $('#warning').show();
-                                } else {
-                                    $('#warning').hide();
-                                }
-                             }
-                  });
-               }
-            });
-         });";
-
-            echo Html::scriptBlock($js);
-        }
-
-        echo "<div class='spaced'>";
-        if ($canedit && $number && $withtemplate < 2) {
-            Html::openMassiveActionsForm('mass' . 'Resource' . $rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . 'Resource' . $rand];
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>";
-
-        if ($canedit && $number && $withtemplate < 2) {
-            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . 'Resource' . $rand) . "</th>";
-        }
-
-        echo "<th>" . __('Type') . "</th>";
-        echo "<th>" . __('Name') . "</th>";
-        if (Session::isMultiEntitiesMode()) {
-            echo "<th>" . __('Entity') . "</th>";
-        }
-        echo "<th>" . __('Serial number') . "</th>";
-        echo "<th>" . __('Inventory number') . "</th>";
-        echo "</tr>";
-
-        $dbu = new DbUtils();
-
-        for ($i = 0; $i < $number; $i++) {
-            $itemType = $DB->result($result, $i, "itemtype");
-
-            if (!($item = $dbu->getItemForItemtype($itemType))) {
+            if ($result === false || !$resource->can($resource->getID(), READ)) {
                 continue;
             }
 
-            if ($item->canView()) {
-                $column = "name";
-                $itemTable = $dbu->getTableForItemType($itemType);
-
-                $query = "SELECT `" . $itemTable . "`.*,
-                             `glpi_plugin_resources_resources_items`.`id` AS items_id,
-                             `glpi_plugin_resources_resources_items`.`comment` AS comment,
-                             `glpi_entities`.`id` AS entity "
-                    . " FROM `glpi_plugin_resources_resources_items`, `" . $itemTable
-                    . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $itemTable . "`.`entities_id`) "
-                    . " WHERE `" . $itemTable . "`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                AND `glpi_plugin_resources_resources_items`.`itemtype` = '$itemType'
-                AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$instID' ";
-                if ($itemType != 'User') {
-                    $query .= $dbu->getEntitiesRestrictRequest(" AND ", $itemTable, '', '', $item->maybeRecursive());
-                }
-                if ($item->maybeTemplate()) {
-                    $query .= " AND `" . $itemTable . "`.`is_template` = '0'";
-                }
-                $query .= " ORDER BY `glpi_entities`.`completename`, `" . $itemTable . "`.`$column`";
-
-                if ($result_linked = $DB->doQuery($query)) {
-                    if ($DB->numrows($result_linked)) {
-                        Session::initNavigateListItems(
-                            $itemType,
-                            Resource::getTypeName(2) . " = " . $resource->fields['name']
-                        );
-
-                        while ($data = $DB->fetchAssoc($result_linked)) {
-                            $item->getFromDB($data["id"]);
-
-                            Session::addToNavigateListItems($itemType, $data["id"]);
-
-                            $ID = "";
-
-                            if ($itemType == 'User') {
-                                $format = $dbu->formatUserName(
-                                    $data["id"],
-                                    $data["name"],
-                                    $data["realname"],
-                                    $data["firstname"]
-                                );
-                            } else {
-                                $format = $data["name"];
-                            }
-                            if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                                $ID = " (" . $data["id"] . ")";
-                            }
-
-                            $link = Toolbox::getItemTypeFormURL($itemType);
-                            $name = "<a href=\"" . $link . "?id=" . $data["id"] . "\">"
-                                . $format;
-                            if ($itemType != 'User') {
-                                $name .= "&nbsp;" . $ID;
-                            }
-                            $name .= "</a>";
-
-                            echo "<tr class='tab_bg_1'>";
-                            $items_id = $data["items_id"];
-                            if ($canedit && $withtemplate < 2) {
-                                echo "<td width='10'>";
-                                Html::showMassiveActionCheckBox(__CLASS__, $data["items_id"]);
-                                /*TODO resolve IT or drop IT ?
-                                echo "<img src='".$CFG_GLPI["root_doc"]."/pics/expand.gif' onclick=\"plugin_resources_show_item('comment$items_id$rand',this,'".$CFG_GLPI["root_doc"]."/pics/collapse.gif');\">";*/
-                                echo "</td>";
-                            }
-                            echo "<td class='center'>" . $item::getTypeName(1) . "</td>";
-
-                            echo "<td class='center' " . (isset($data['is_deleted']) && $data['is_deleted'] ? "class='tab_bg_2_2'" : "") .
-                                ">" . $name . "</td>";
-
-                            if (Session::isMultiEntitiesMode()) {
-                                if ($itemType != 'User') {
-                                    echo "<td class='center'>" . Dropdown::getDropdownName(
-                                        "glpi_entities",
-                                        $data['entity']
-                                    ) . "</td>";
-                                } else {
-                                    echo "<td class='center'>-</td>";
-                                }
-                            }
-                            echo "<td class='center'>" . (isset($data["serial"]) ? "" . $data["serial"] . "" : "-") . "</td>";
-                            echo "<td class='center'>" . (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-") . "</td>";
-                            echo "</tr>";
-                            /*TODO resolve IT or drop IT ?
-                            echo "<tr class='tab_bg_1'>";
-
-                            $class = "class='plugin_resources_show'";
-
-                            if (!isset($data["comment"]) || empty($data["comment"])) {
-                               $data["comment"]='';
-                               $class = "class='plugin_resources_hide'";
-                            }
-                            echo "<td colspan='6' id='comment$items_id$rand' $class >";
-
-                            echo "<form method='post' name='updatecomment$items_id$rand' id='updatecomment$items_id$rand' action='".Toolbox::getItemTypeFormURL(Resource::class)."'>";
-                            echo "<table><tr><td>";
-                            echo __('Comments');
-                            echo "<br><textarea cols='150' rows='5' name='comment$items_id' >";
-                            echo $data["comment"];
-                            echo "</textarea><br><br>";
-                            echo "<input type='hidden' name='items_id' value='".$data["items_id"]."'>";
-                            if($canedit && $withtemplate<2) {
-                               if (!isset($data["comment"]) || empty($data["comment"])) {
-
-                                  echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Add')."\" class='submit'>";
-                               } else {
-                                  echo "<input type='submit' name='updatecomment[".$items_id."]' value=\""._sx('button','Update')."\" class='submit'>";
-                               }
-                            }
-                            echo "</td>";
-                            echo "</tr>";
-                            echo "</table>";
-                            Html::closeForm();
-
-                            echo "</td>";
-                            echo "</tr>";*/
-                        }
-                    }
-                }
-            }
+            $rand = mt_rand();
+            $entries[] = [
+                'itemtype' => self::class,
+                'id' => $value['assocID'],
+                'name' => $resource->getLink(),
+                'firstname' => $resource->fields['firstname'],
+                'entities_id' => Dropdown::getDropdownName("glpi_entities", $resource->fields['entities_id']),
+                'locations_id' => Dropdown::getDropdownName("glpi_locations", $resource->fields["locations_id"]),
+                'plugin_resources_contracttypes_id' => Dropdown::getDropdownName(
+                    "glpi_plugin_resources_contracttypes",
+                    $resource->fields["plugin_resources_contracttypes_id"]
+                ),
+                'plugin_resources_departments_id' => Dropdown::getDropdownName(
+                    "glpi_plugin_resources_departments",
+                    $resource->fields["plugin_resources_departments_id"]
+                ),
+                'date_begin' => Html::convDate($resource->fields['date_begin']),
+                'date_end' => Html::convDate($resource->fields['date_end']),
+            ];
         }
-        echo "</table>";
 
-        if ($canedit && $number && $withtemplate < 2) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
-        echo "</div>";
+        $cols = [
+            'columns' => [
+                "name" => __('Surname'),
+                "firstname" =>  __('First name'),
+                "entities_id" => __s('Entity'),
+                "locations_id" => __s('Location'),
+                "plugin_resources_contracttypes_id" => ContractType::getTypeName(1),
+                "plugin_resources_departments_id" => Department::getTypeName(1),
+                "date_begin" => __('Arrival date', 'resources'),
+                "date_end" => __('Departure date', 'resources'),
+            ],
+            'formatters' => [
+                'name' => 'raw_html',
+                'firstname' => 'raw_html',
+                'entities_id' => 'raw_html',
+                'locations_id' => 'raw_html',
+                'plugin_resources_contracttypes_id' => 'raw_html',
+                'plugin_resources_departments_id' => 'raw_html',
+                "date_begin" => 'raw_html',
+                "date_end" => 'raw_html',
+            ],
+        ];
+
+
+        $footers = [];
+
+        TemplateRenderer::getInstance()->display('@resources/item_resource.html.twig', [
+            'item' => $item,
+            'can_edit' => $item->canEdit($item->getID()),
+            'used' => $used,
+            'datatable_params' => [
+                'is_tab' => true,
+                'nofilter' => true,
+                'nosort' => true,
+                'columns' => $cols['columns'],
+                'formatters' => $cols['formatters'],
+                'entries' => $entries,
+                'footers' => $footers,
+                'total_number' => count($entries),
+                'filtered_number' => count($entries),
+                'showmassiveactions' => $item->canEdit($item->getID()),
+                'massiveactionparams' => [
+                    'container' => 'massiveactioncontainer' . $rand,
+                    'itemtype' => self::class,
+                ],
+            ],
+        ]);
+
+//        if ($item->getType() == "User") {
+//            $Employee = new Employee();
+//            $Employee->showEmployeeForm($resourceID, $ID, 0);
+//        }
+
+        return true;
     }
 
     /**
@@ -752,247 +1031,247 @@ class Resource_Item extends CommonDBTM
      **@since version 0.84
      *
      */
-    static function showForItem(CommonDBTM $item, $withtemplate = '')
-    {
-        global $DB, $CFG_GLPI;
-
-        $ID = $item->getField('id');
-
-        if ($item->isNewID($ID)) {
-            return false;
-        }
-        if (!Session::haveRight('plugin_resources', READ)) {
-            return false;
-        }
-
-        if (!$item->can($item->fields['id'], READ)) {
-            return false;
-        }
-
-        if (empty($withtemplate)) {
-            $withtemplate = 0;
-        }
-
-        $canedit = $item->canadditem(Resource::class);
-        $rand = mt_rand();
-        $is_recursive = $item->isRecursive();
-        $dbu = new DbUtils();
-
-        $query = "SELECT `glpi_plugin_resources_resources_items`.`id` AS assocID,
-                       `glpi_entities`.`id` AS entity,
-                       `glpi_plugin_resources_resources`.`name` AS assocName,
-                       `glpi_plugin_resources_resources`.*
-                FROM `glpi_plugin_resources_resources_items`
-                LEFT JOIN `glpi_plugin_resources_resources`
-                 ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`=`glpi_plugin_resources_resources`.`id`)
-                LEFT JOIN `glpi_entities` ON (`glpi_plugin_resources_resources`.`entities_id`=`glpi_entities`.`id`)
-                WHERE `glpi_plugin_resources_resources_items`.`items_id` = '$ID'
-                      AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $item->getType() . "' ";
-
-        $query .= $dbu->getEntitiesRestrictRequest(" AND", "glpi_plugin_resources_resources", '', '', true);
-
-        $query .= " ORDER BY `assocName`";
-
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
-        $i = 0;
-
-        $resources = [];
-        $used = [];
-        if ($numrows = $DB->numrows($result)) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $resources[$data['assocID']] = $data;
-                $used[$data['id']] = $data['id'];
-            }
-        }
-        $resource = new Resource();
-
-        $more = true;
-        if ($item->getType() == "User" && $number != 0) {
-            $more = false;
-        }
-        if ($canedit && $withtemplate < 2 && $more) {
-            // Restrict entity for knowbase
-            $entities = "";
-            $entity = $_SESSION["glpiactive_entity"];
-
-            if ($item->isEntityAssign()) {
-                /// Case of personal items : entity = -1 : create on active entity (Reminder case))
-                if ($item->getEntityID() >= 0) {
-                    $entity = $item->getEntityID();
-                }
-
-                if ($item->isRecursive()) {
-                    $entities = $dbu->getSonsOf('glpi_entities', $entity);
-                } else {
-                    $entities = $entity;
-                }
-            }
-            $limit = $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', $entities, true);
-            $q = "SELECT COUNT(*)
-               FROM `glpi_plugin_resources_resources`
-               WHERE `is_deleted` = '0'
-               AND `is_template` = '0' ";
-            if ($item->getType() != 'User') {
-                $q .= " $limit";
-            }
-            $result = $DB->doQuery($q);
-            $nb = $DB->result($result, 0, 0);
-
-            echo "<div class='firstbloc'>";
-
-            if (Session::haveRight('plugin_resources', READ)
-                && ($nb > count($used))
-            ) {
-                echo "<form name='resource_form$rand' id='resource_form$rand' method='post'
-                   action='" . Toolbox::getItemTypeFormURL(Resource::class) . "'>";
-                echo "<table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td colspan='4' class='center'>";
-                echo Html::hidden('itemtype', ['value' => $item->getType()]);
-                echo Html::hidden('items_id', ['value' => $item->getID()]);
-                if ($item->getType() == 'Ticket') {
-                    echo Html::hidden('tickets_id', ['value' => $ID]);
-                }
-
-                Resource::dropdown([
-                    'name' => 'plugin_resources_resources_id',
-                    'display' => true,
-                    'entity' => $entities,
-                    'used' => $used
-                ]);
-
-                echo "</td><td class='center' width='20%'>";
-                echo Html::submit(
-                    __s('Associate a resource', 'resources'),
-                    ['name' => 'additem', 'class' => 'btn btn-primary']
-                );
-                echo "</td>";
-                echo "</tr>";
-                echo "</table>";
-                Html::closeForm();
-            }
-
-            echo "</div>";
-        }
-
-        echo "<div class='spaced'>";
-        if ($canedit && $number && ($withtemplate < 2)) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['num_displayed' => $number];
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "<table class='tab_cadre_fixe'>";
-        if (Session::isMultiEntitiesMode()) {
-            $colsup = 1;
-        } else {
-            $colsup = 0;
-        }
-
-        echo "<tr>";
-        if ($canedit && $number && ($withtemplate < 2)) {
-            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-        }
-        echo "<th>" . __('Surname') . "</th>";
-        echo "<th>" . __('First name') . "</th>";
-        if (Session::isMultiEntitiesMode()) {
-            echo "<th>" . __('Entity') . "</th>";
-        }
-        echo "<th>" . __('Location') . "</th>";
-        echo "<th>" . ContractType::getTypeName(1) . "</th>";
-        echo "<th>" . Department::getTypeName(1) . "</th>";
-        echo "<th>" . __('Arrival date', 'resources') . "</th>";
-        echo "<th>" . __('Departure date', 'resources') . "</th>";
-        echo "</tr>";
-
-        $used = [];
-        $resourceID = 0;
-        if ($number) {
-            Session::initNavigateListItems(
-                Resource::class,
-                //TRANS : %1$s is the itemtype name,
-                //        %2$s is the name of the item (used for headings of a list)
-                sprintf(
-                    __('%1$s = %2$s'),
-                    $item->getTypeName(1),
-                    $item->getName()
-                )
-            );
-
-            foreach ($resources as $data) {
-                $resourceID = $data["id"];
-                $link = NOT_AVAILABLE;
-
-                if ($resource->getFromDB($resourceID)) {
-                    $link = $resource->getLink();
-                }
-
-                Session::addToNavigateListItems(Resource::class, $resourceID);
-
-                $used[$resourceID] = $resourceID;
-                $assocID = $data["assocID"];
-
-                echo "<tr class='tab_bg_1" . ($data["is_deleted"] ? "_2" : "") . "'>";
-                if ($canedit && ($withtemplate < 2)) {
-                    echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $data["assocID"]);
-                    echo "</td>";
-                }
-                echo "<td class='center'>$link</td>";
-                echo "<td class='center'>" . $data['firstname'] . "</td>";
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center'>" . Dropdown::getDropdownName("glpi_entities", $data['entities_id']) .
-                        "</td>";
-                }
-
-                echo "<td class='center'>";
-                echo Dropdown::getDropdownName("glpi_locations", $data["locations_id"]);
-                echo "</td>";
-
-                echo "<td class='center'>";
-                echo Dropdown::getDropdownName(
-                    "glpi_plugin_resources_contracttypes",
-                    $data["plugin_resources_contracttypes_id"]
-                );
-                echo "</td>";
-                echo "<td class='center'>";
-                echo Dropdown::getDropdownName(
-                    "glpi_plugin_resources_departments",
-                    $data["plugin_resources_departments_id"]
-                );
-                echo "</td>";
-
-                echo "<td class='center'>" . Html::convDate($data["date_begin"]) . "</td>";
-                if ($data["date_end"] <= date('Y-m-d') && !empty($data["date_end"])) {
-                    echo "<td class='center'>";
-                    echo "<span class='plugin_resources_date_color'>";
-                    echo Html::convDate($data["date_end"]);
-                    echo "</span>";
-                    echo "</td>";
-                } elseif (empty($data["date_end"])) {
-                    echo "<td class='center'>" . __('Not defined', 'resources') . "</td>";
-                } else {
-                    echo "<td class='center'>" . Html::convDate($data["date_end"]) . "</td>";
-                }
-
-                echo "</tr>";
-                $i++;
-            }
-        }
-
-        echo "</table>";
-        if ($canedit && $number && ($withtemplate < 2)) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
-        echo "</div>";
-
-        if ($item->getType() == "User") {
-            $Employee = new Employee();
-            $Employee->showEmployeeForm($resourceID, $ID, 0);
-        }
-    }
+//    public static function showForItem(CommonDBTM $item, $withtemplate = '')
+//    {
+//        global $DB;
+//
+//        $ID = $item->getField('id');
+//
+//        if ($item->isNewID($ID)) {
+//            return false;
+//        }
+//        if (!Session::haveRight('plugin_resources', READ)) {
+//            return false;
+//        }
+//
+//        if (!$item->can($item->fields['id'], READ)) {
+//            return false;
+//        }
+//
+//        if (empty($withtemplate)) {
+//            $withtemplate = 0;
+//        }
+//
+//        $canedit = $item->canadditem(Resource::class);
+//        $rand = mt_rand();
+//
+//        $dbu = new DbUtils();
+//
+//        $query = "SELECT `glpi_plugin_resources_resources_items`.`id` AS assocID,
+//                       `glpi_entities`.`id` AS entity,
+//                       `glpi_plugin_resources_resources`.`name` AS assocName,
+//                       `glpi_plugin_resources_resources`.*
+//                FROM `glpi_plugin_resources_resources_items`
+//                LEFT JOIN `glpi_plugin_resources_resources`
+//                 ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`=`glpi_plugin_resources_resources`.`id`)
+//                LEFT JOIN `glpi_entities` ON (`glpi_plugin_resources_resources`.`entities_id`=`glpi_entities`.`id`)
+//                WHERE `glpi_plugin_resources_resources_items`.`items_id` = '$ID'
+//                      AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $item->getType() . "' ";
+//
+//        $query .= $dbu->getEntitiesRestrictRequest(" AND", "glpi_plugin_resources_resources", '', '', true);
+//
+//        $query .= " ORDER BY `assocName`";
+//
+//        $result = $DB->doQuery($query);
+//        $number = $DB->numrows($result);
+//        $i = 0;
+//
+//        $resources = [];
+//        $used = [];
+//        if ($numrows = $DB->numrows($result)) {
+//            while ($data = $DB->fetchAssoc($result)) {
+//                $resources[$data['assocID']] = $data;
+//                $used[$data['id']] = $data['id'];
+//            }
+//        }
+//        $resource = new Resource();
+//
+//        $more = true;
+//        if ($item->getType() == "User" && $number != 0) {
+//            $more = false;
+//        }
+//        if ($canedit && $withtemplate < 2 && $more) {
+//            // Restrict entity for knowbase
+//            $entities = "";
+//            $entity = $_SESSION["glpiactive_entity"];
+//
+//            if ($item->isEntityAssign()) {
+//                /// Case of personal items : entity = -1 : create on active entity (Reminder case))
+//                if ($item->getEntityID() >= 0) {
+//                    $entity = $item->getEntityID();
+//                }
+//
+//                if ($item->isRecursive()) {
+//                    $entities = $dbu->getSonsOf('glpi_entities', $entity);
+//                } else {
+//                    $entities = $entity;
+//                }
+//            }
+//            $limit = $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_resources_resources", '', $entities, true);
+//            $q = "SELECT COUNT(*)
+//               FROM `glpi_plugin_resources_resources`
+//               WHERE `is_deleted` = '0'
+//               AND `is_template` = '0' ";
+//            if ($item->getType() != 'User') {
+//                $q .= " $limit";
+//            }
+//            $result = $DB->doQuery($q);
+//            $nb = $DB->result($result, 0, 0);
+//
+//            echo "<div class='firstbloc'>";
+//
+//            if (Session::haveRight('plugin_resources', READ)
+//                && ($nb > count($used))
+//            ) {
+//                echo "<form name='resource_form$rand' id='resource_form$rand' method='post'
+//                   action='" . Toolbox::getItemTypeFormURL(Resource::class) . "'>";
+//                echo "<table class='tab_cadre_fixe'>";
+//                echo "<tr class='tab_bg_1'>";
+//                echo "<td colspan='4' class='center'>";
+//                echo Html::hidden('itemtype', ['value' => $item->getType()]);
+//                echo Html::hidden('items_id', ['value' => $item->getID()]);
+//                if ($item->getType() == 'Ticket') {
+//                    echo Html::hidden('tickets_id', ['value' => $ID]);
+//                }
+//
+//                Resource::dropdown([
+//                    'name' => 'plugin_resources_resources_id',
+//                    'display' => true,
+//                    'entity' => $entities,
+//                    'used' => $used,
+//                ]);
+//
+//                echo "</td><td class='center' width='20%'>";
+//                echo Html::submit(
+//                    __s('Associate a resource', 'resources'),
+//                    ['name' => 'additem', 'class' => 'btn btn-primary']
+//                );
+//                echo "</td>";
+//                echo "</tr>";
+//                echo "</table>";
+//                Html::closeForm();
+//            }
+//
+//            echo "</div>";
+//        }
+//
+//        echo "<div class='spaced'>";
+//        if ($canedit && $number && ($withtemplate < 2)) {
+//            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+//            $massiveactionparams = ['num_displayed' => $number];
+//            Html::showMassiveActions($massiveactionparams);
+//        }
+//        echo "<table class='tab_cadre_fixe'>";
+//        if (Session::isMultiEntitiesMode()) {
+//            $colsup = 1;
+//        } else {
+//            $colsup = 0;
+//        }
+//
+//        echo "<tr>";
+//        if ($canedit && $number && ($withtemplate < 2)) {
+//            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+//        }
+//        echo "<th>" . __('Surname') . "</th>";
+//        echo "<th>" . __('First name') . "</th>";
+//        if (Session::isMultiEntitiesMode()) {
+//            echo "<th>" . __('Entity') . "</th>";
+//        }
+//        echo "<th>" . __('Location') . "</th>";
+//        echo "<th>" . ContractType::getTypeName(1) . "</th>";
+//        echo "<th>" . Department::getTypeName(1) . "</th>";
+//        echo "<th>" . __('Arrival date', 'resources') . "</th>";
+//        echo "<th>" . __('Departure date', 'resources') . "</th>";
+//        echo "</tr>";
+//
+//        $used = [];
+//        $resourceID = 0;
+//        if ($number) {
+//            Session::initNavigateListItems(
+//                Resource::class,
+//                //TRANS : %1$s is the itemtype name,
+//                //        %2$s is the name of the item (used for headings of a list)
+//                sprintf(
+//                    __('%1$s = %2$s'),
+//                    $item->getTypeName(1),
+//                    $item->getName()
+//                )
+//            );
+//
+//            foreach ($resources as $data) {
+//                $resourceID = $data["id"];
+//                $link = NOT_AVAILABLE;
+//
+//                if ($resource->getFromDB($resourceID)) {
+//                    $link = $resource->getLink();
+//                }
+//
+//                Session::addToNavigateListItems(Resource::class, $resourceID);
+//
+//                $used[$resourceID] = $resourceID;
+//                $assocID = $data["assocID"];
+//
+//                echo "<tr class='tab_bg_1" . ($data["is_deleted"] ? "_2" : "") . "'>";
+//                if ($canedit && ($withtemplate < 2)) {
+//                    echo "<td width='10'>";
+//                    Html::showMassiveActionCheckBox(__CLASS__, $data["assocID"]);
+//                    echo "</td>";
+//                }
+//                echo "<td class='center'>$link</td>";
+//                echo "<td class='center'>" . $data['firstname'] . "</td>";
+//                if (Session::isMultiEntitiesMode()) {
+//                    echo "<td class='center'>" . Dropdown::getDropdownName("glpi_entities", $data['entities_id'])
+//                        . "</td>";
+//                }
+//
+//                echo "<td class='center'>";
+//                echo Dropdown::getDropdownName("glpi_locations", $data["locations_id"]);
+//                echo "</td>";
+//
+//                echo "<td class='center'>";
+//                echo Dropdown::getDropdownName(
+//                    "glpi_plugin_resources_contracttypes",
+//                    $data["plugin_resources_contracttypes_id"]
+//                );
+//                echo "</td>";
+//                echo "<td class='center'>";
+//                echo Dropdown::getDropdownName(
+//                    "glpi_plugin_resources_departments",
+//                    $data["plugin_resources_departments_id"]
+//                );
+//                echo "</td>";
+//
+//                echo "<td class='center'>" . Html::convDate($data["date_begin"]) . "</td>";
+//                if ($data["date_end"] <= date('Y-m-d') && !empty($data["date_end"])) {
+//                    echo "<td class='center'>";
+//                    echo "<span class='plugin_resources_date_color'>";
+//                    echo Html::convDate($data["date_end"]);
+//                    echo "</span>";
+//                    echo "</td>";
+//                } elseif (empty($data["date_end"])) {
+//                    echo "<td class='center'>" . __('Not defined', 'resources') . "</td>";
+//                } else {
+//                    echo "<td class='center'>" . Html::convDate($data["date_end"]) . "</td>";
+//                }
+//
+//                echo "</tr>";
+//                $i++;
+//            }
+//        }
+//
+//        echo "</table>";
+//        if ($canedit && $number && ($withtemplate < 2)) {
+//            $massiveactionparams['ontop'] = false;
+//            Html::showMassiveActions($massiveactionparams);
+//            Html::closeForm();
+//        }
+//        echo "</div>";
+//
+//        if ($item->getType() == "User") {
+//            $Employee = new Employee();
+//            $Employee->showEmployeeForm($resourceID, $ID, 0);
+//        }
+//    }
 
 
     /**
@@ -1001,7 +1280,7 @@ class Resource_Item extends CommonDBTM
      * @param $pdf object for the output
      * @param $ID of the resources
      */
-    static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
+    public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
     {
         global $DB, $CFG_GLPI;
 
@@ -1130,7 +1409,7 @@ class Resource_Item extends CommonDBTM
      * @param $itemtype : type of the device
      *
      */
-    static function PdfFromItems($pdf, $item)
+    public static function PdfFromItems($pdf, $item)
     {
         global $DB, $CFG_GLPI;
 
@@ -1228,7 +1507,7 @@ class Resource_Item extends CommonDBTM
         }
     }
 
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -1238,7 +1517,7 @@ class Resource_Item extends CommonDBTM
             'table' => Resource::getTable(),
             'field' => 'name',
             'name' => Resource::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '3',
@@ -1271,10 +1550,10 @@ class Resource_Item extends CommonDBTM
     {
         global $DB;
 
-        $default_charset   = DBConnection::getDefaultCharset();
+        $default_charset = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
-        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
-        $table  = self::getTable();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $table = self::getTable();
 
         if (!$DB->tableExists($table)) {
             $query = "CREATE TABLE `$table` (

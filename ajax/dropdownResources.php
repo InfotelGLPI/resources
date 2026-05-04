@@ -108,8 +108,8 @@ if ($_GET['addUnlinkedUsers']) {
     //   ksort($logins);
     $query = "SELECT `glpi_users`.*
              FROM `glpi_users`
-             WHERE `glpi_users`.`id` NOT IN ('" . implode("','", $linkedUsers) . "')
-             AND `glpi_users`.`entities_id` IN ('" . implode("','", $_GET["entity"]) . "')
+             WHERE `glpi_users`.`id` NOT IN (" . implode(",", array_map('intval', $linkedUsers)) . ")
+             AND `glpi_users`.`entities_id` IN (" . implode(",", array_map('intval', $_GET["entity"])) . ")
              AND `is_deleted` = 0
              AND (`glpi_users`.`name` " . Search::makeTextSearch($_GET['searchText']) . "
                   OR `glpi_users`.`firstname` " . Search::makeTextSearch($_GET['searchText']) . "

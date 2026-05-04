@@ -192,16 +192,16 @@ class ResourceSpeciality extends CommonDropdown
 
         $default_charset   = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
-        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
-        $table  = self::getTable();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+        $table = self::getTable();
 
         if (!$DB->tableExists($table)) {
             $query = "CREATE TABLE `$table` (
                         `id`           int {$default_key_sign} NOT NULL auto_increment,
-                        `entities_id`               int {$default_key_sign} NOT NULL                   DEFAULT '0',
-                        `is_recursive`              tinyint      NOT NULL                   DEFAULT '0',
+                        `entities_id`               int {$default_key_sign} NOT NULL DEFAULT '0',
+                        `is_recursive`              tinyint                 NOT NULL DEFAULT '0',
                         `name`                      varchar(255) COLLATE utf8mb4_unicode_ci default NULL,
-                        `plugin_resources_ranks_id` int {$default_key_sign} NOT NULL                   DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
+                        `plugin_resources_ranks_id` int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_plugin_resources_ranks (id)',
                         `comment`                   TEXT COLLATE utf8mb4_unicode_ci,
                         PRIMARY KEY (`id`),
                         KEY `name` (`name`),

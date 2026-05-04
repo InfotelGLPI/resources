@@ -29,6 +29,8 @@
 
 use GlpiPlugin\Resources\RuleChecklistCollection;
 
+Session::checkCentralAccess();
+
 $rulecollection = new RuleChecklistCollection($_SESSION['glpiactive_entity']);
 
 include(GLPI_ROOT . "/front/rule.common.form.php");

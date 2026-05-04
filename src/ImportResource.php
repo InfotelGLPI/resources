@@ -2195,8 +2195,7 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
         $query = "SELECT id FROM " . User::getTable(
-            ) . ' WHERE CONCAT(firstname," ",realname) LIKE "' . $fullname . '"';
-
+            ) . ' WHERE CONCAT(firstname," ",realname) LIKE "' . $DB->escape($fullname) . '"';
 
         $results = $DB->doQuery($query);
         $result = [];

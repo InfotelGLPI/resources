@@ -424,10 +424,10 @@ class Checklist extends CommonDBTM
 
         $query = "SELECT MAX(`rank`)
                FROM `" . $this->getTable() . "`
-               WHERE `checklist_type` = '" . $input['checklist_type'] . "'
-               AND `plugin_resources_contracttypes_id` = '" . $input['plugin_resources_contracttypes_id'] . "'
-               AND `plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "'
-               AND `entities_id` = '" . $input['entities_id'] . "' ";
+               WHERE `checklist_type` = " . (int) $input['checklist_type'] . "
+               AND `plugin_resources_contracttypes_id` = " . (int) $input['plugin_resources_contracttypes_id'] . "
+               AND `plugin_resources_resources_id` = " . (int) $input['plugin_resources_resources_id'] . "
+               AND `entities_id` = " . (int) $input['entities_id'];
         $result = $DB->doQuery($query);
         $input["rank"] = $DB->result($result, 0, 0) + 1;
 
@@ -469,26 +469,26 @@ class Checklist extends CommonDBTM
 
         $sql = "SELECT `rank`
               FROM `" . $this->getTable() . "`
-              WHERE `id` ='" . $input['id'] . "'";
+              WHERE `id` =" . (int) $input['id'];
 
         if ($result = $DB->doQuery($sql)) {
             if ($DB->numrows($result) == 1) {
-                $current_rank = $DB->result($result, 0, 0);
+                $current_rank = (int) $DB->result($result, 0, 0);
                 // Search rules to switch
                 $sql2 = "SELECT `ID`,`rank`
                      FROM `" . $this->getTable() . "`
-                     WHERE `checklist_type` = '" . $input['checklist_type'] . "'
-                     AND `plugin_resources_resources_id` = '" . $input['plugin_resources_resources_id'] . "' ";
+                     WHERE `checklist_type` = " . (int) $input['checklist_type'] . "
+                     AND `plugin_resources_resources_id` = " . (int) $input['plugin_resources_resources_id'];
 
                 switch ($input['action']) {
                     case "up":
-                        $sql2 .= " AND `rank` < '$current_rank'
+                        $sql2 .= " AND `rank` < " . $current_rank . "
                            ORDER BY `rank` DESC
                            LIMIT 1";
                         break;
 
                     case "down":
-                        $sql2 .= " AND `rank` > '$current_rank'
+                        $sql2 .= " AND `rank` > " . $current_rank . "
                            ORDER BY `rank` ASC
                            LIMIT 1";
                         break;

@@ -41,16 +41,13 @@ use GlpiPlugin\Resources\Service;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\Config;
 
-include('../../../inc/includes.php');
-
 Session::checkLoginUser();
 
-$_REQUEST["id"]       = $_REQUEST["plugin_resources_resources_id"];
-$_REQUEST["valid_resource_information"]       = 1;
-unset($_REQUEST["plugin_resources_resources_id"]);
+$resource_id = (int)($_REQUEST["plugin_resources_resources_id"] ?? 0);
 $resource = new Resource();
-$resource->update($_REQUEST);
-$resource->getFromDB($_REQUEST["id"]);
+$resource->check($resource_id, UPDATE);
+$resource->update(['id' => $resource_id, 'valid_resource_information' => 1]);
+$resource->getFromDB($resource_id);
 
 $config = new Config();
 $config->getFromDB(1);

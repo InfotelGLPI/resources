@@ -68,10 +68,6 @@ if (!isset($_GET['rand'])) {
     $_GET['rand'] = mt_rand();
 }
 
-if (isset($_GET['condition']) && !empty($_GET['condition'])) {
-    $_GET['condition'] = rawurldecode(stripslashes($_GET['condition']));
-}
-
 if (!isset($_GET['emptylabel']) || $_GET['emptylabel'] == '') {
     $_GET['emptylabel'] = Dropdown::EMPTY_VALUE;
 }
@@ -107,7 +103,7 @@ if ($_GET['searchText'] == $CFG_GLPI["ajax_wildcard"]) {
     $LIMIT = "";
 }
 
-$where .= " AND `$table`.`id` NOT IN ('" . $_GET['value'] . "'";
+$where .= " AND `$table`.`id` NOT IN (" . (int)$_GET['value'];
 
 if (isset($_GET['used'])) {
     if (is_array($_GET['used'])) {
@@ -117,7 +113,7 @@ if (isset($_GET['used'])) {
     }
 
     if (count($used)) {
-        $where .= ",'" . implode("','", $used) . "'";
+        $where .= "," . implode(",", array_map('intval', $used));
     }
 }
 
@@ -132,10 +128,6 @@ if (isset($_GET['toadd'])) {
 }
 
 $where .= ") ";
-
-if (isset($_GET['condition']) && $_GET['condition'] != '') {
-    $where .= " AND " . $_GET['condition'] . " ";
-}
 
 if ($item instanceof CommonTreeDropdown) {
     if ($_GET['searchText'] != $CFG_GLPI["ajax_wildcard"]) {

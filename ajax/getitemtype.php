@@ -32,5 +32,5 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (isset($_POST["type"])) {
-    echo $_POST['type'];
+    echo htmlspecialchars($_POST['type'], ENT_QUOTES, 'UTF-8');
 }
