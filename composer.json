@@ -11,6 +11,6 @@
     },
     "require": {
         "php": ">=8.2",
-        "adldap2/adldap2": "^10.3"
+        "adldap2/adldap2": "^10.5"
     }
 }
