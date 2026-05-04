@@ -1,4 +1,9 @@
 {
+    "config": {
+        "platform": {
+            "ext-ldap": "8.0"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
