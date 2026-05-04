@@ -259,7 +259,8 @@ class Wizard extends CommonDBTM
 
             $profile_User = new Profile_User();
             $prof = [];
-            foreach (json_decode($config->getField('resource_manager')) as $profs) {
+            $decoded_managers = json_decode($config->getField('resource_manager'), true);
+            foreach (is_array($decoded_managers) ? $decoded_managers : [] as $profs) {
                 $prof[$profs] = $profs;
             }
             $ids = join("','", $prof);
@@ -336,7 +337,7 @@ class Wizard extends CommonDBTM
                 'use_services_deparments_ad' => $config->useServiceDepartmentAD(),
                 'use_secondary_services' => $config->useSecondaryService() && $config->useServiceDepartmentAD(),
                 'use_security' => $config->useSecurity(),
-                'use_notification' => ($config->fields['automatic_notification_declare_arrival_form'] == 0) ? 1 : 0,
+                'use_notification' => (($config->fields['automatic_notification_declare_arrival_form'] ?? 0) == 0) ? 1 : 0,
                 'display_employee' => $display_employee,
                 'condition_emp' => $condition_emp,
                 'date_declaration' => date('Y-m-d'),

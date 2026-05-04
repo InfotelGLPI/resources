@@ -2352,7 +2352,8 @@ class Resource extends CommonDBTM
             $tableProfileUser = Profile_User::getTable();
             $profile_User = new Profile_User();
             $prof = [];
-            foreach (json_decode($config->getField('resource_manager')) as $profs) {
+            $decoded_managers = json_decode($config->getField('resource_manager'), true);
+            foreach (is_array($decoded_managers) ? $decoded_managers : [] as $profs) {
                 $prof[$profs] = $profs;
             }
             $ids = join("','", $prof);

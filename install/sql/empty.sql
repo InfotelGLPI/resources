@@ -927,7 +927,7 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `remove_habilitation_on_update`                int unsigned NOT NULL DEFAULT '0',
     `display_habilitations_txt`                    int unsigned NOT NULL DEFAULT '0',
     `hide_view_commercial_resource`                tinyint      NOT NULL DEFAULT '0',
-    `automatic_notification_declare_arrival_form` tinyint NOT NULL DEFAULT '0',
+    `automatic_notification_declare_arrival_form`  tinyint NOT NULL DEFAULT '0',
     `create_ticket_departure_instructions`         tinyint NOT NULL DEFAULT '0',
     `default_assignment_group`                     int unsigned NOT NULL DEFAULT '0',
     `text_ticket_validation`                       TEXT COLLATE utf8mb4_unicode_ci,
