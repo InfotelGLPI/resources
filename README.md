@@ -22,11 +22,6 @@ Ce plugin vous permet de gérer les ressources humaines afin de gérer correctem
 > * GLPI > 0.84 : Utilisable avec le plugin "Arborescence":https://forge.glpi-project.org/projects/show/treeview
 > * Import de fichier csv
 
-Mode d'emploi - pdf : https://forge.glpi-project.org/attachments/1329/Guide_Utilisateur_Resource.pdf
-
-Mode d'emploi - Service public -
-pdf : https://forge.glpi-project.org/attachments/1330/Guide_Utilisateur_Resource_service_public.pdf
-
 This plugin allows you to manage resources to properly manage the allocation of material.
 
 * Features :
