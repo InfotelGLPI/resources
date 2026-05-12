@@ -529,6 +529,15 @@ class Resource_Item extends CommonDBRelation
                     $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
                 }
                 $link = $item::getFormURLWithID($data['id']);
+
+                if ($itemtype == 'User') {
+                    $name = formatUserName(
+                        $data["id"],
+                        $data["name"],
+                        $data["realname"],
+                        $data["firstname"]
+                    );
+                }
                 $namelink = "<a href=\"" . htmlescape($link) . "\">" . htmlescape($name) . "</a>";
 
                 if ($itemtype == 'User') {
@@ -935,6 +944,7 @@ class Resource_Item extends CommonDBRelation
             );
 
         $iterator_list = $DB->request($criteria);
+        $rand = mt_rand();
 
         foreach ($iterator_list as $value) {
             $used[] = $value['id'];
@@ -946,7 +956,6 @@ class Resource_Item extends CommonDBRelation
                 continue;
             }
 
-            $rand = mt_rand();
             $entries[] = [
                 'itemtype' => self::class,
                 'id' => $value['assocID'],
@@ -1520,7 +1529,7 @@ class Resource_Item extends CommonDBRelation
             'datatype' => 'dropdown',
         ];
         $tab[] = [
-            'id' => '3',
+            'id' => '5',
             'table' => $this->getTable(),
             'field' => 'items_id',
             'name' => __('Items id'),
@@ -1528,7 +1537,7 @@ class Resource_Item extends CommonDBRelation
             'massiveaction' => false,
         ];
         $tab[] = [
-            'id' => '4',
+            'id' => '6',
             'table' => $this->getTable(),
             'field' => 'itemtype',
             'name' => __('Itemtype'),
@@ -1536,7 +1545,7 @@ class Resource_Item extends CommonDBRelation
             'massiveaction' => false,
         ];
         $tab[] = [
-            'id' => '5',
+            'id' => '7',
             'table' => $this->getTable(),
             'field' => 'plugin_resources_resources_id',
             'name' => __('plugin_resources_resources_id'),
