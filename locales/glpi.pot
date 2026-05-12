@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 15:04+0000\n"
+"POT-Creation-Date: 2026-05-12 15:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,8 +263,8 @@ msgstr ""
 #: src/Config.php:139 src/Resource.php:141 src/Resource.php:446
 #: src/Resource.php:2402 src/RuleContracttype.php:263
 #: src/RuleContracttypeReadonly.php:282 src/RuleContracttypeHidden.php:262
-#: src/Resource_Item.php:978 src/Resource_Item.php:1455
-#: src/Resource_Item.php:1465 src/ResourcePDF.php:108 src/ResourceCard.php:179
+#: src/Resource_Item.php:987 src/Resource_Item.php:1464
+#: src/Resource_Item.php:1474 src/ResourcePDF.php:108 src/ResourceCard.php:179
 #: src/ResourceCard.php:263 src/Dashboard.php:130
 #: src/NotificationTargetResource.php:474
 #: src/NotificationTargetResource.php:574
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Associate an existing document"
 msgstr ""
 
-#: src/Resource_Item.php:1417
+#: src/Resource_Item.php:1426
 msgid "Associated Human Resource"
 msgstr ""
 
@@ -936,8 +936,8 @@ msgstr[1] ""
 #: src/Config.php:140 src/Resource.php:142 src/Resource.php:453
 #: src/Resource.php:2582 src/Resource.php:3495 src/Adconfig.php:379
 #: src/RuleContracttype.php:267 src/RuleContracttypeReadonly.php:286
-#: src/RuleContracttypeHidden.php:266 src/Resource_Item.php:979
-#: src/Resource_Item.php:1456 src/Resource_Item.php:1466
+#: src/RuleContracttypeHidden.php:266 src/Resource_Item.php:988
+#: src/Resource_Item.php:1465 src/Resource_Item.php:1475
 #: src/ResourcePDF.php:109 src/Dashboard.php:178
 #: src/NotificationTargetResource.php:475
 #: src/NotificationTargetResource.php:575
