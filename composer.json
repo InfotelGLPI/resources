@@ -12,5 +12,8 @@
     "require": {
         "php": ">=8.2",
         "adldap2/adldap2": "^10.5"
+    },
+    "conflict": {
+        "symfony/console": "<6.0"
     }
 }
