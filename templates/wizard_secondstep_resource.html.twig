@@ -1,30 +1,29 @@
 {#
-# -------------------------------------------------------------------------
-# Resources plugin for GLPI
-# -------------------------------------------------------------------------
-#
-# LICENSE
-#
-# This file is part of Resources.
-#
-# Resources is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Resources is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Resources. If not, see <http://www.gnu.org/licenses/>.
-# -------------------------------------------------------------------------
-# @copyright Copyright (C) 2026-2026 by Resources plugin team.
-# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
-# @link      https://github.com/InfotelGLPI/Resources
-# -------------------------------------------------------------------------
-#}
+ -------------------------------------------------------------------------
+ resources plugin for GLPI
+ Copyright (C) 2015-2026 by the resources Development Team.
+
+ https://github.com/InfotelGLPI/resources
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of resources.
+
+ resources is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ resources is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with resources. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
 
 {% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
@@ -301,18 +300,20 @@
                                             </div>
                                         </div>
                                     {% endif %}
-                                    {% if item.isField('plugin_resources_contractnatures_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "GlpiPlugin\\Resources\\ContractNature"|itemtype_name }}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                        <span id='span_contractnature' name='span_contractnature'>
-                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contractnatures", options['plugin_resources_contractnatures_id']]) }}
-                                           </span>
-                                                {{ inputs.hidden('plugin_resources_contractnatures_id', 0) }}
+                                    {% if hidden.plugin_resources_contractnatures_id is not defined %}
+                                        {% if item.isField('plugin_resources_contractnatures_id') %}
+                                            <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                                <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                    {{ "GlpiPlugin\\Resources\\ContractNature"|itemtype_name }}
+                                                </label>
+                                                <div class="col-xxl-7 field-container">
+                                            <span id='span_contractnature' name='span_contractnature'>
+                                                 {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_contractnatures", options['plugin_resources_contractnatures_id']]) }}
+                                               </span>
+                                                    {{ inputs.hidden('plugin_resources_contractnatures_id', 0) }}
+                                                </div>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
 
@@ -339,18 +340,20 @@
                                             </div>
                                         </div>
                                     {% endif %}
-                                    {% if item.isField('plugin_resources_resourcespecialities_id') %}
-                                        <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
-                                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                                {{ "GlpiPlugin\\Resources\\ResourceSpeciality"|itemtype_name }}
-                                            </label>
-                                            <div class="col-xxl-7 field-container">
-                                        <span id='span_speciality' name='span_speciality'>
-                                             {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcespecialities", options['plugin_resources_resourcespecialities_id']]) }}
-                                           </span>
-                                                {{ inputs.hidden('plugin_resources_resourcespecialities_id', 0) }}
+                                    {% if hidden.plugin_resources_resourcespecialities_id is not defined %}
+                                        {% if item.isField('plugin_resources_resourcespecialities_id') %}
+                                            <div class="form-field row align-items-center col-12 col-sm-6 mb-2">
+                                                <label class="col-form-label col-xxl-5 text-xxl-end ">
+                                                    {{ "GlpiPlugin\\Resources\\ResourceSpeciality"|itemtype_name }}
+                                                </label>
+                                                <div class="col-xxl-7 field-container">
+                                            <span id='span_speciality' name='span_speciality'>
+                                                 {{ call('Dropdown::getDropdownName', ["glpi_plugin_resources_resourcespecialities", options['plugin_resources_resourcespecialities_id']]) }}
+                                               </span>
+                                                    {{ inputs.hidden('plugin_resources_resourcespecialities_id', 0) }}
+                                                </div>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             </div>

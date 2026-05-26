@@ -1,10 +1,9 @@
 <?php
 
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  resources plugin for GLPI
- Copyright (C) 2009-2022 by the resources Development Team.
+ Copyright (C) 2015-2026 by the resources Development Team.
 
  https://github.com/InfotelGLPI/resources
  -------------------------------------------------------------------------
@@ -145,7 +144,7 @@ class Metademand extends CommonGLPI
     {
         $res = "";
         if ($p["hidden"]) {
-            $res .= "<tr><td>";
+            $res .= "<tr><td colspan='2'>";
             $res .= __('Link a checklist in', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If the value selected equals the value to check, the checklist in will be add',
@@ -161,7 +160,7 @@ class Metademand extends CommonGLPI
             );
             $res .= "</td></tr>";
 
-            $res .= "<tr><td>";
+            $res .= "<tr><td colspan='2'>";
             $res .= __('Link a checklist out', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If the value selected equals the value to check, the checklist out will be add',
@@ -178,7 +177,7 @@ class Metademand extends CommonGLPI
             $res .= "</td></tr>";
 
             if (isset($p['habilitation'])) {
-                $res .= "<tr><td>";
+                $res .= "<tr ><td colspan='2'>";
                 $res .= __('Habilitation', 'resources');
                 $res .= '</br><span class="metademands_wizard_comments">' . __(
                     'If the value selected equals the value to check, the habilitation will be add',
@@ -196,7 +195,7 @@ class Metademand extends CommonGLPI
             }
 
 
-            $res .= "<tr><td>";
+            $res .= "<tr><td colspan='2'>";
             $res .= __('Leaving resource', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If yes, the resource will be declared as leaving',
