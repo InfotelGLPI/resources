@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-26 10:12+0000\n"
+"POT-Creation-Date: 2026-06-01 14:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,8 +32,8 @@ msgstr ""
 msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
 msgstr ""
 
-#: ajax/validinformation.php:268 front/linkad.form.php:101
-#: front/resource.form.php:568
+#: ajax/validinformation.php:268 front/resource.form.php:568
+#: front/linkad.form.php:101
 #, php-format
 msgid "%1$s %2$s have been updated in the LDAP directory"
 msgstr ""
@@ -130,10 +130,10 @@ msgstr ""
 msgid "Active Directory synchronization"
 msgstr ""
 
+#: templates/item_resource.html.twig:58
 #: templates/wizard_fourstep_choice.html.twig:72
 #: templates/wizard_fourstep_choice.html.twig:107
 #: templates/wizard_fivestep_photo.html.twig:64
-#: templates/item_resource.html.twig:58
 msgctxt "button"
 msgid "Add"
 msgstr ""
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: src/Client.php:54 hook.php:1453
+#: hook.php:1455 src/Client.php:54
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -251,7 +251,7 @@ msgstr ""
 msgid "All resources access"
 msgstr ""
 
-#: src/Resource_Validation.php:157 src/Config.php:517
+#: src/Config.php:517 src/Resource_Validation.php:157
 msgid "Are you sure?"
 msgstr ""
 
@@ -259,25 +259,24 @@ msgstr ""
 msgid "Arrival / Departure workflow"
 msgstr ""
 
-#: src/ResourceCard.php:179 src/ResourceCard.php:263
-#: src/RuleContracttypeReadonly.php:283 src/ResourcePDF.php:108
-#: src/Dashboard.php:130 src/Resource.php:140 src/Resource.php:445
-#: src/Resource.php:2401 src/Directory.php:225
-#: src/NotificationTargetResource.php:473
+#: src/Config.php:139 src/Recap.php:226 src/Checklist.php:1208
+#: src/Directory.php:225 src/RuleContracttypeReadonly.php:283
+#: src/Resource.php:140 src/Resource.php:445 src/Resource.php:2401
+#: src/RuleContracttype.php:262 src/Dashboard.php:130 src/ResourceCard.php:179
+#: src/ResourceCard.php:263 src/NotificationTargetResource.php:473
 #: src/NotificationTargetResource.php:573
 #: src/NotificationTargetResource.php:746
 #: src/NotificationTargetResource.php:817
 #: src/NotificationTargetResource.php:976
 #: src/NotificationTargetResource.php:1607
-#: src/NotificationTargetResource.php:1635 src/Config.php:139
-#: src/RuleContracttypeHidden.php:262 src/Recap.php:226
-#: src/RuleContracttype.php:262 src/Resource_Item.php:986
-#: src/Resource_Item.php:1463 src/Resource_Item.php:1473 src/Checklist.php:1208
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:78
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:77
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
+#: src/NotificationTargetResource.php:1635 src/Resource_Item.php:986
+#: src/Resource_Item.php:1463 src/Resource_Item.php:1473
+#: src/ResourcePDF.php:108 src/RuleContracttypeHidden.php:262
 #: report/resourcewithoutuser/resourcewithoutuser.php:72
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:77
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:261
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:78
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:259
 #: templates/wizard_secondstep_resource.html.twig:667
 msgid "Arrival date"
 msgstr ""
@@ -360,7 +359,7 @@ msgstr ""
 msgid "Available contract type"
 msgstr ""
 
-#: src/Menu.php:263 src/ResourceBadge.php:77 src/ResourceBadge.php:268
+#: src/ResourceBadge.php:77 src/ResourceBadge.php:268 src/Menu.php:263
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -386,7 +385,7 @@ msgstr[1] ""
 msgid "Budget management"
 msgstr ""
 
-#: src/BudgetType.php:56 src/Budget.php:189 src/Budget.php:267
+#: src/Budget.php:189 src/Budget.php:267 src/BudgetType.php:56
 msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] ""
@@ -422,11 +421,11 @@ msgstr ""
 
 #: src/Wizard.php:742
 #: templates/wizard_eightstep_recruitinginformation.html.twig:132
-#: templates/wizard_fourstep_choice.html.twig:125
-#: templates/wizard_fivestep_photo.html.twig:79
 #: templates/wizard_thirdstep_employee.html.twig:132
-#: templates/wizard_sevenstep_document.html.twig:58
+#: templates/wizard_fourstep_choice.html.twig:125
 #: templates/wizard_sixstep_habilitation.html.twig:94
+#: templates/wizard_sevenstep_document.html.twig:58
+#: templates/wizard_fivestep_photo.html.twig:79
 msgctxt "button"
 msgid "Cancel the request"
 msgstr ""
@@ -574,7 +573,7 @@ msgstr ""
 msgid "Checked"
 msgstr ""
 
-#: src/Profile.php:304 src/Menu.php:472 src/Checklist.php:81
+#: src/Checklist.php:81 src/Profile.php:304 src/Menu.php:472
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] ""
@@ -584,7 +583,7 @@ msgstr[1] ""
 msgid "Checklist action"
 msgstr ""
 
-#: src/NotificationTargetResource.php:563 src/Checklist.php:1215
+#: src/Checklist.php:1215 src/NotificationTargetResource.php:563
 msgid "Checklist needs to verificated"
 msgstr ""
 
@@ -614,7 +613,7 @@ msgstr ""
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Resource.php:4743 src/Directory.php:1200
+#: src/Directory.php:1200 src/Resource.php:4743
 msgid "Click here to send your email"
 msgstr ""
 
@@ -626,19 +625,19 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/ProfessionLine.php:101 src/ProfessionLine.php:153
-#: src/ProfessionCategory.php:102 src/ProfessionCategory.php:154
-#: src/ContractType.php:73 src/ContractType.php:153 src/BudgetType.php:94
-#: src/BudgetType.php:146 src/ResourceSituation.php:102
-#: src/ResourceSituation.php:166 src/ContractNature.php:99
-#: src/ContractNature.php:184 src/BudgetVolume.php:94 src/BudgetVolume.php:146
-#: src/Rank.php:103 src/Rank.php:151 src/Profession.php:101
-#: src/Profession.php:220 report/lapserankprofession/lapserankprofession.php:53
-#: report/lapserankprofession/lapserankprofession.php:69
+#: src/ContractType.php:73 src/ContractType.php:153 src/BudgetVolume.php:94
+#: src/BudgetVolume.php:146 src/ContractNature.php:99
+#: src/ContractNature.php:184 src/Profession.php:101 src/Profession.php:220
+#: src/Rank.php:103 src/Rank.php:151 src/ProfessionLine.php:101
+#: src/ProfessionLine.php:153 src/ResourceSituation.php:102
+#: src/ResourceSituation.php:166 src/ProfessionCategory.php:102
+#: src/ProfessionCategory.php:154 src/BudgetType.php:94 src/BudgetType.php:146
 #: report/professionwithoutcost/professionwithoutcost.php:299
 #: report/professionwithoutcost/professionwithoutcost.php:304
 #: report/professionwithoutvolume/professionwithoutvolume.php:305
 #: report/professionwithoutvolume/professionwithoutvolume.php:310
+#: report/lapserankprofession/lapserankprofession.php:53
+#: report/lapserankprofession/lapserankprofession.php:69
 msgid "Code"
 msgstr ""
 
@@ -652,9 +651,10 @@ msgstr[1] ""
 msgid "Company"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:418 src/RuleContracttypeHidden.php:400
-#: src/RuleContracttype.php:365 src/LeavingInformation.php:400
-#: src/LeavingInformation.php:571 templates/leavinginformation.html.twig:210
+#: src/LeavingInformation.php:400 src/LeavingInformation.php:571
+#: src/RuleContracttypeReadonly.php:418 src/RuleContracttype.php:365
+#: src/RuleContracttypeHidden.php:400
+#: templates/leavinginformation.html.twig:210
 msgid "Company name"
 msgstr ""
 
@@ -692,8 +692,8 @@ msgstr ""
 msgid "ContractType"
 msgstr ""
 
-#: src/Resource_Change.php:1735 src/ResourceBadge.php:529 src/Checklist.php:351
-#: src/Checklist.php:757
+#: src/Checklist.php:351 src/Checklist.php:757 src/Resource_Change.php:1735
+#: src/ResourceBadge.php:529
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -705,7 +705,7 @@ msgstr ""
 msgid "Create a ticket with departure and instructions"
 msgstr ""
 
-#: src/LinkAd.php:215 src/Checklist.php:447
+#: src/Checklist.php:447 src/LinkAd.php:215
 msgid "Create checklists"
 msgstr ""
 
@@ -784,8 +784,8 @@ msgstr ""
 msgid "Data Type not found"
 msgstr ""
 
-#: ajax/validinformation.php:269 front/linkad.form.php:105
-#: front/resource.form.php:569
+#: ajax/validinformation.php:269 front/resource.form.php:569
+#: front/linkad.form.php:105
 msgid "Data changed"
 msgstr ""
 
@@ -798,7 +798,7 @@ msgid "Date"
 msgstr ""
 
 #: src/RuleContracttypeReadonly.php:366 src/Resource.php:802
-#: src/RuleContracttypeHidden.php:344 src/RuleContracttype.php:309
+#: src/RuleContracttype.php:309 src/RuleContracttypeHidden.php:344
 #: templates/wizard_eightstep_recruitinginformation.html.twig:58
 msgid "Date agreement candidate"
 msgstr ""
@@ -875,14 +875,14 @@ msgstr ""
 msgid "Declare an employment"
 msgstr ""
 
-#: src/Resource.php:508 src/Resource.php:2540
+#: hook.php:1444 src/Resource.php:508 src/Resource.php:2540
 #: src/NotificationTargetResource.php:481
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:761
 #: src/NotificationTargetResource.php:821
 #: src/NotificationTargetResource.php:1035
 #: src/NotificationTargetResource.php:1616
-#: src/NotificationTargetResource.php:1642 hook.php:1442
+#: src/NotificationTargetResource.php:1642
 msgid "Declared as leaving"
 msgstr ""
 
@@ -926,37 +926,36 @@ msgid "Deletion category"
 msgstr ""
 
 #: src/Resource.php:139 src/LinkAd.php:404 src/LinkAd.php:720
-#: src/Department.php:56 src/Adconfig.php:308
+#: src/Adconfig.php:308 src/Department.php:56
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Resource_Change.php:600 src/RuleContracttypeReadonly.php:287
-#: src/ResourcePDF.php:109 src/Dashboard.php:178 src/Resource.php:141
+#: ajax/leavingform.php:104 src/Config.php:140 src/Resource_Leaving.php:164
+#: src/Recap.php:234 src/Checklist.php:1206 src/Directory.php:233
+#: src/RuleContracttypeReadonly.php:287 src/Resource.php:141
 #: src/Resource.php:452 src/Resource.php:2581 src/Resource.php:3494
-#: src/Directory.php:233 src/LinkAd.php:722
-#: src/NotificationTargetResource.php:474
+#: src/RuleContracttype.php:266 src/LinkAd.php:722 src/Adconfig.php:379
+#: src/Dashboard.php:178 src/NotificationTargetResource.php:474
 #: src/NotificationTargetResource.php:574
 #: src/NotificationTargetResource.php:749
 #: src/NotificationTargetResource.php:818
 #: src/NotificationTargetResource.php:979
 #: src/NotificationTargetResource.php:1608
-#: src/NotificationTargetResource.php:1636 src/Config.php:140
-#: src/Adconfig.php:379 src/RuleContracttypeHidden.php:266 src/Recap.php:234
-#: src/RuleContracttype.php:266 src/Resource_Leaving.php:164
-#: src/Resource_Item.php:987 src/Resource_Item.php:1464
-#: src/Resource_Item.php:1474 src/Checklist.php:1206
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:82
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:81
-#: report/checkhabilitation/checkhabilitation.php:218
-#: report/checkgroup/checkgroup.php:274
+#: src/NotificationTargetResource.php:1636 src/Resource_Item.php:987
+#: src/Resource_Item.php:1464 src/Resource_Item.php:1474
+#: src/Resource_Change.php:600 src/ResourcePDF.php:109
+#: src/RuleContracttypeHidden.php:266 report/checkgroup/checkgroup.php:274
+#: report/resourcewithoutuser/resourcewithoutuser.php:76
 #: report/checkmissingN1group/checkmissingN1group.php:215
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:81
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:262
+#: report/checkhabilitation/checkhabilitation.php:218
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:82
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:260
 #: report/checkmissingN0group/checkmissingN0group.php:215
-#: report/resourcewithoutuser/resourcewithoutuser.php:76
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:262
-#: ajax/leavingform.php:104 templates/wizard_secondstep_resource.html.twig:681
+#: templates/wizard_secondstep_resource.html.twig:681
 msgid "Departure date"
 msgstr ""
 
@@ -964,7 +963,7 @@ msgstr ""
 msgid "Departure of"
 msgstr ""
 
-#: src/Config.php:141 front/modalavailablevariable.php:38
+#: front/modalavailablevariable.php:38 src/Config.php:141
 #: templates/wizard_secondstep_resource.html.twig:738
 msgid "Description"
 msgstr ""
@@ -1044,8 +1043,8 @@ msgstr ""
 msgid "Effective duration"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:406 src/RuleContracttypeHidden.php:388
-#: src/RuleContracttype.php:353 src/LeavingInformation.php:376
+#: src/LeavingInformation.php:376 src/RuleContracttypeReadonly.php:406
+#: src/RuleContracttype.php:353 src/RuleContracttypeHidden.php:388
 #: templates/leavinginformation.html.twig:158
 msgid "Effective leaving date"
 msgstr ""
@@ -1060,10 +1059,9 @@ msgid_plural "Employees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Department.php:84 src/Department.php:117 src/Employment.php:232
-#: src/Employment.php:314 src/Employer.php:58
+#: hook.php:1451 src/Employer.php:58 src/Department.php:84
+#: src/Department.php:117 src/Employment.php:232 src/Employment.php:314
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:99
-#: hook.php:1449
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] ""
@@ -1081,7 +1079,7 @@ msgstr[1] ""
 msgid "Employment management"
 msgstr ""
 
-#: src/Employment.php:225 src/Employment.php:352 src/EmploymentState.php:56
+#: src/EmploymentState.php:56 src/Employment.php:225 src/Employment.php:352
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:95
 msgid "Employment state"
 msgid_plural "Employment states"
@@ -1199,8 +1197,8 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: src/Resource_Change.php:586 src/Resource.php:133 src/LinkAd.php:432
-#: src/LinkAd.php:709
+#: src/Resource.php:133 src/LinkAd.php:432 src/LinkAd.php:709
+#: src/Resource_Change.php:586
 msgid "Firstname"
 msgstr ""
 
@@ -1213,8 +1211,8 @@ msgid "Forced holiday declaration of a resource performed"
 msgstr ""
 
 #: src/NotificationTargetResource.php:1237
-#: src/NotificationTargetResource.php:1622 src/Menu.php:243
-#: src/ResourceHoliday.php:299
+#: src/NotificationTargetResource.php:1622 src/ResourceHoliday.php:299
+#: src/Menu.php:243
 msgid "Forced holiday management"
 msgstr ""
 
@@ -1240,8 +1238,8 @@ msgstr ""
 msgid "GISF - Supplier security incident management"
 msgstr ""
 
-#: src/Resource.php:897 src/Resource.php:1787 src/Config.php:127
-#: src/Config.php:157 templates/wizard_secondstep_resource.html.twig:83
+#: src/Config.php:127 src/Config.php:157 src/Resource.php:897
+#: src/Resource.php:1787 templates/wizard_secondstep_resource.html.twig:83
 msgid "Gender"
 msgstr ""
 
@@ -1257,15 +1255,15 @@ msgstr ""
 msgid "Give a leaving order"
 msgstr ""
 
-#: src/Habilitation.php:59 src/ResourceHabilitation.php:67
-#: src/Metademand.php:181
+#: src/Metademand.php:181 src/ResourceHabilitation.php:67
+#: src/Habilitation.php:59
 msgid "Habilitation"
 msgid_plural "Habilitations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Habilitation.php:101 src/Habilitation.php:123
-#: src/HabilitationLevel.php:58
+#: src/HabilitationLevel.php:58 src/Habilitation.php:101
+#: src/Habilitation.php:123
 msgid "Habilitation level"
 msgid_plural "Habilitations level"
 msgstr[0] ""
@@ -1283,19 +1281,19 @@ msgstr ""
 msgid "Hide/Show elements"
 msgstr ""
 
-#: src/Profile.php:329 src/ResourceHoliday.php:63
+#: src/ResourceHoliday.php:63 src/Profile.php:329
 msgid "Holiday"
 msgid_plural "Holidays"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Metademand.php:79 setup.php:273
+#: src/Metademand.php:79 setup.php:272
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Profile.php:286 src/Resource.php:118 src/Menu.php:350
+#: src/Resource.php:118 src/Profile.php:286 src/Menu.php:350
 #: src/Employment.php:187 src/Employment.php:246 src/Employment.php:381
 #: src/TaskPlanning.php:70
 msgid "Human resource"
@@ -1365,8 +1363,8 @@ msgstr ""
 msgid "Import resources"
 msgstr ""
 
-#: src/LinkAd.php:288 src/Checklistconfig.php:124 src/Checklistconfig.php:160
-#: src/Checklist.php:579 src/Checklist.php:831
+#: src/Checklistconfig.php:124 src/Checklistconfig.php:160
+#: src/Checklist.php:579 src/Checklist.php:831 src/LinkAd.php:288
 msgid "Important"
 msgstr ""
 
@@ -1374,14 +1372,14 @@ msgstr ""
 msgid "Imported values"
 msgstr ""
 
-#: src/Resource.php:516 src/NotificationTargetResource.php:114
+#: hook.php:1473 src/Resource.php:516 src/NotificationTargetResource.php:114
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:770
 #: src/NotificationTargetResource.php:823
 #: src/NotificationTargetResource.php:1019
 #: src/NotificationTargetResource.php:1615
-#: src/NotificationTargetResource.php:1641 hook.php:1471
+#: src/NotificationTargetResource.php:1641
 msgid "Informant of leaving"
 msgstr ""
 
@@ -1402,9 +1400,9 @@ msgstr ""
 msgid "Integer"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:386 src/RuleContracttypeHidden.php:364
-#: src/RuleContracttype.php:329 src/LeavingInformation.php:352
-#: src/LeavingInformation.php:511 templates/leavinginformation.html.twig:65
+#: src/LeavingInformation.php:352 src/LeavingInformation.php:511
+#: src/RuleContracttypeReadonly.php:386 src/RuleContracttype.php:329
+#: src/RuleContracttypeHidden.php:364 templates/leavinginformation.html.twig:65
 msgid "Interview date"
 msgstr ""
 
@@ -1452,8 +1450,8 @@ msgstr[1] ""
 msgid "Leaving resource"
 msgstr ""
 
-#: src/Dashboard.php:76 src/Dashboard.php:190
-#: src/NotificationTargetResource.php:559 src/Checklist.php:1199
+#: src/Checklist.php:1199 src/Dashboard.php:76 src/Dashboard.php:190
+#: src/NotificationTargetResource.php:559
 msgid "Leaving resource - checklist needs to verificated"
 msgstr ""
 
@@ -1465,7 +1463,7 @@ msgstr ""
 msgid "Level 2 Identifier"
 msgstr ""
 
-#: src/LinkAd.php:297 src/Checklistconfig.php:168 src/Checklist.php:588
+#: src/Checklistconfig.php:168 src/Checklist.php:588 src/LinkAd.php:297
 msgid "Link"
 msgstr ""
 
@@ -1519,13 +1517,13 @@ msgstr ""
 msgid "List of badges"
 msgstr ""
 
-#: src/Menu.php:436 src/ResourceHoliday.php:319 src/ResourceHoliday.php:322
-#: src/ResourceHoliday.php:407
+#: src/ResourceHoliday.php:319 src/ResourceHoliday.php:322
+#: src/ResourceHoliday.php:407 src/Menu.php:436
 msgid "List of forced holidays"
 msgstr ""
 
-#: src/Menu.php:428 src/ResourceResting.php:329 src/ResourceResting.php:332
-#: src/ResourceResting.php:439 src/ResourceResting.php:536
+#: src/ResourceResting.php:329 src/ResourceResting.php:332
+#: src/ResourceResting.php:439 src/ResourceResting.php:536 src/Menu.php:428
 msgid "List of non contract periods"
 msgstr ""
 
@@ -1587,9 +1585,9 @@ msgstr ""
 msgid "Mark as unfinished"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:299 src/Resource.php:752
-#: src/Resource.php:1877 src/Config.php:150 src/Config.php:160
-#: src/RuleContracttypeHidden.php:278 src/RuleContracttype.php:274
+#: src/Config.php:150 src/Config.php:160 src/RuleContracttypeReadonly.php:299
+#: src/Resource.php:752 src/Resource.php:1877 src/RuleContracttype.php:274
+#: src/RuleContracttypeHidden.php:278
 #: templates/wizard_secondstep_resource.html.twig:187
 msgid "Matricule"
 msgstr ""
@@ -1606,9 +1604,10 @@ msgstr ""
 msgid "Missing habilitation"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:426 src/RuleContracttypeHidden.php:408
-#: src/RuleContracttype.php:373 src/LeavingInformation.php:392
-#: src/LeavingInformation.php:559 templates/leavinginformation.html.twig:234
+#: src/LeavingInformation.php:392 src/LeavingInformation.php:559
+#: src/RuleContracttypeReadonly.php:426 src/RuleContracttype.php:373
+#: src/RuleContracttypeHidden.php:408
+#: templates/leavinginformation.html.twig:234
 msgid "Mission lost"
 msgstr ""
 
@@ -1620,7 +1619,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2882
+#: hook.php:2884
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1660,8 +1659,8 @@ msgstr ""
 msgid "New resource"
 msgstr ""
 
-#: src/Dashboard.php:71 src/Dashboard.php:142
-#: src/NotificationTargetResource.php:552 src/Checklist.php:1201
+#: src/Checklist.php:1201 src/Dashboard.php:71 src/Dashboard.php:142
+#: src/NotificationTargetResource.php:552
 msgid "New resource - checklist needs to verificated"
 msgstr ""
 
@@ -1723,15 +1722,14 @@ msgstr ""
 msgid "New type of contract"
 msgstr ""
 
-#: src/Wizard.php:757
-#: templates/wizard_eightstep_recruitinginformation.html.twig:144
-#: templates/wizard_secondstep_resource.html.twig:790
-#: templates/wizard_fourstep_choice.html.twig:137
-#: templates/wizard_fivestep_photo.html.twig:91
-#: templates/wizard_thirdstep_employee.html.twig:144
+#: src/Wizard.php:757 templates/wizard_secondstep_resource.html.twig:790
 #: templates/wizard_firststep_contractype.html.twig:66
-#: templates/wizard_sevenstep_document.html.twig:70
+#: templates/wizard_eightstep_recruitinginformation.html.twig:144
+#: templates/wizard_thirdstep_employee.html.twig:144
+#: templates/wizard_fourstep_choice.html.twig:137
 #: templates/wizard_sixstep_habilitation.html.twig:106
+#: templates/wizard_sevenstep_document.html.twig:70
+#: templates/wizard_fivestep_photo.html.twig:91
 msgctxt "button"
 msgid "Next"
 msgstr ""
@@ -1753,8 +1751,8 @@ msgstr ""
 msgid "No Imports"
 msgstr ""
 
-#: front/resourcebadge.form.php:88 front/confighabilitation.form.php:89
-#: front/confighabilitation.form.php:110
+#: front/confighabilitation.form.php:89 front/confighabilitation.form.php:110
+#: front/resourcebadge.form.php:88
 msgid "No advanced request found"
 msgstr ""
 
@@ -1788,15 +1786,15 @@ msgstr[1] ""
 msgid "Non contract period declaration of a resource performed"
 msgstr ""
 
-#: src/Profile.php:323 src/NotificationTargetResource.php:1189
-#: src/NotificationTargetResource.php:1612 src/Menu.php:231
-#: src/ResourceResting.php:296
+#: src/NotificationTargetResource.php:1189
+#: src/NotificationTargetResource.php:1612 src/Profile.php:323
+#: src/ResourceResting.php:296 src/Menu.php:231
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2641
+#: hook.php:2643
 msgid "Not defined"
 msgstr ""
 
@@ -1833,17 +1831,17 @@ msgid "Number of titles and values of tooltip doesn't match"
 msgstr ""
 
 #: src/RuleContracttypeReadonly.php:378 src/Resource.php:827
-#: src/RuleContracttypeHidden.php:356 src/RuleContracttype.php:321
+#: src/RuleContracttype.php:321 src/RuleContracttypeHidden.php:356
 #: templates/wizard_eightstep_recruitinginformation.html.twig:99
 msgid "Number of years experience"
 msgstr ""
 
-#: src/Resource_Leaving.php:169 front/resource.form.php:493
+#: front/resource.form.php:493 src/Resource_Leaving.php:169
 msgid "Order"
 msgstr ""
 
-#: src/Resource.php:143 src/Resource.php:5289 src/Resource.php:5303
-#: src/Notification.php:199 src/Config.php:115 src/Config.php:587
+#: src/Config.php:115 src/Config.php:587 src/Resource.php:143
+#: src/Resource.php:5289 src/Resource.php:5303 src/Notification.php:199
 msgid "Other"
 msgstr ""
 
@@ -1863,14 +1861,15 @@ msgstr ""
 msgid "Others declarations"
 msgstr ""
 
-#: src/Choice.php:185 hook.php:597
+#: hook.php:597 src/Choice.php:185
 #: templates/wizard_fourstep_choice.html.twig:92
 msgid "Others needs"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:422 src/RuleContracttypeHidden.php:404
-#: src/RuleContracttype.php:369 src/LeavingInformation.php:384
-#: src/LeavingInformation.php:547 templates/leavinginformation.html.twig:222
+#: src/LeavingInformation.php:384 src/LeavingInformation.php:547
+#: src/RuleContracttypeReadonly.php:422 src/RuleContracttype.php:369
+#: src/RuleContracttypeHidden.php:404
+#: templates/leavinginformation.html.twig:222
 msgid "Pay gap"
 msgstr ""
 
@@ -1894,9 +1893,9 @@ msgstr ""
 msgid "Please activate the plugin badge"
 msgstr ""
 
-#: front/resourcebadge.form.php:75 front/resourcebadge.form.php:93
 #: front/confighabilitation.form.php:74 front/confighabilitation.form.php:94
-#: front/confighabilitation.form.php:115
+#: front/confighabilitation.form.php:115 front/resourcebadge.form.php:75
+#: front/resourcebadge.form.php:93
 msgid "Please activate the plugin metademand"
 msgstr ""
 
@@ -1921,34 +1920,33 @@ msgstr ""
 msgid "Prefix"
 msgstr ""
 
-#: src/Wizard.php:752
+#: src/Wizard.php:752 templates/wizard_secondstep_resource.html.twig:784
 #: templates/wizard_eightstep_recruitinginformation.html.twig:138
-#: templates/wizard_secondstep_resource.html.twig:784
-#: templates/wizard_fourstep_choice.html.twig:131
-#: templates/wizard_fivestep_photo.html.twig:85
 #: templates/wizard_thirdstep_employee.html.twig:138
-#: templates/wizard_sevenstep_document.html.twig:64
+#: templates/wizard_fourstep_choice.html.twig:131
 #: templates/wizard_sixstep_habilitation.html.twig:100
+#: templates/wizard_sevenstep_document.html.twig:64
+#: templates/wizard_fivestep_photo.html.twig:85
 msgctxt "button"
 msgid "Previous"
 msgstr ""
 
 #: src/Cost.php:146 src/Cost.php:188 src/Cost.php:261 src/Budget.php:180
-#: src/Budget.php:277 src/Employment.php:203 src/Employment.php:327
-#: src/Rank.php:115 src/Rank.php:163 src/Profession.php:55
+#: src/Budget.php:277 src/Profession.php:55 src/Rank.php:115 src/Rank.php:163
+#: src/Employment.php:203 src/Employment.php:327
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:91
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ProfessionCategory.php:56 src/Profession.php:119 src/Profession.php:239
+#: src/Profession.php:119 src/Profession.php:239 src/ProfessionCategory.php:56
 msgid "Profession category"
 msgid_plural "Profession categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ProfessionLine.php:56 src/Profession.php:113 src/Profession.php:232
+#: src/Profession.php:113 src/Profession.php:232 src/ProfessionLine.php:56
 msgid "Profession line"
 msgid_plural "Profession lines"
 msgstr[0] ""
@@ -1968,23 +1966,23 @@ msgstr[1] ""
 msgid "Purge imported resources"
 msgstr ""
 
+#: src/Config.php:142 src/Config.php:165 src/Recap.php:154
 #: src/RuleContracttypeReadonly.php:291 src/Resource.php:569
-#: src/Resource.php:1981 src/NotificationTargetResource.php:694
+#: src/Resource.php:1981 src/RuleContracttype.php:270
+#: src/NotificationTargetResource.php:694
 #: src/NotificationTargetResource.php:807
 #: src/NotificationTargetResource.php:961
 #: src/NotificationTargetResource.php:1599
-#: src/NotificationTargetResource.php:1627 src/Config.php:142
-#: src/Config.php:165 src/RuleContracttypeHidden.php:270 src/Recap.php:154
-#: src/RuleContracttype.php:270
+#: src/NotificationTargetResource.php:1627 src/RuleContracttypeHidden.php:270
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:69
 #: templates/wizard_secondstep_resource.html.twig:267
 msgid "Quota"
 msgstr ""
 
 #: src/Cost.php:152 src/Cost.php:196 src/Cost.php:275 src/Budget.php:171
-#: src/Budget.php:290 src/Employment.php:195 src/Employment.php:339
-#: src/ResourceSpeciality.php:104 src/ResourceSpeciality.php:182
-#: src/Rank.php:56
+#: src/Budget.php:290 src/Rank.php:56 src/Employment.php:195
+#: src/Employment.php:339 src/ResourceSpeciality.php:104
+#: src/ResourceSpeciality.php:182
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] ""
@@ -1999,16 +1997,15 @@ msgstr ""
 msgid "Read only Fields"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:350 src/Resource.php:644
+#: src/Config.php:148 src/RuleContracttypeReadonly.php:350 src/Resource.php:644
 #: src/Resource.php:2619 src/NotificationTargetResource.php:1062
-#: src/NotificationTargetResource.php:1619 src/Config.php:148
-#: src/RuleContracttypeHidden.php:328
+#: src/NotificationTargetResource.php:1619 src/RuleContracttypeHidden.php:328
 #: templates/wizard_secondstep_resource.html.twig:717
 msgid "Reading the security charter"
 msgstr ""
 
 #: src/RuleContracttypeReadonly.php:382 src/Resource.php:835
-#: src/RuleContracttypeHidden.php:360 src/RuleContracttype.php:325
+#: src/RuleContracttype.php:325 src/RuleContracttypeHidden.php:360
 #: templates/wizard_eightstep_recruitinginformation.html.twig:111
 msgid "Reconversion"
 msgstr ""
@@ -2049,64 +2046,64 @@ msgstr ""
 msgid "Replace default form for departure"
 msgstr ""
 
+#: setup.php:193
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:49
-#: setup.php:194
 msgid "Report listing departing resources with active employment"
 msgstr ""
 
-#: report/checkmissingN0group/checkmissingN0group.php:43 setup.php:186
+#: setup.php:185 report/checkmissingN0group/checkmissingN0group.php:43
 msgid "Report listing human resources without group N0"
 msgstr ""
 
-#: report/checkmissingN1group/checkmissingN1group.php:43 setup.php:187
+#: setup.php:186 report/checkmissingN1group/checkmissingN1group.php:43
 msgid "Report listing human resources without group N1"
 msgstr ""
 
-#: report/lapserankprofession/lapserankprofession.php:44 setup.php:188
+#: setup.php:187 report/lapserankprofession/lapserankprofession.php:44
 msgid "Report listing obsolete corps and ranks"
 msgstr ""
 
+#: setup.php:191
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:42
-#: setup.php:192
 msgid "Report listing resources or jobs with an expired corp"
 msgstr ""
 
+#: setup.php:192
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:41
-#: setup.php:193
 msgid "Report listing resources or jobs with an obsolete grade"
 msgstr ""
 
-#: report/resourcewithoutuser/resourcewithoutuser.php:47 setup.php:196
+#: setup.php:195 report/resourcewithoutuser/resourcewithoutuser.php:47
 msgid "Report listing resources without users"
 msgstr ""
 
-#: report/professionwithoutvolume/professionwithoutvolume.php:45 setup.php:190
+#: setup.php:189 report/professionwithoutvolume/professionwithoutvolume.php:45
 msgid "Report listing the corps and grades without budget allocation"
 msgstr ""
 
-#: report/professionwithoutcost/professionwithoutcost.php:45 setup.php:189
+#: setup.php:188 report/professionwithoutcost/professionwithoutcost.php:45
 msgid "Report listing the corps and grades without budgetary valuation"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:44 setup.php:184
+#: setup.php:183 report/checkgroup/checkgroup.php:44
 msgid "Report listing the groups not included in the resource's permissions"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:43 setup.php:185
+#: setup.php:184 report/checkhabilitation/checkhabilitation.php:43
 msgid "Report listing the permissions not present in the user's groups"
 msgstr ""
 
+#: setup.php:194
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:48
-#: setup.php:195
 msgid "Report listing unemployed resources"
 msgstr ""
 
+#: setup.php:196
 #: report/userwithmorethanoneresource/userwithmorethanoneresource.php:42
-#: setup.php:197
 msgid "Report listing users linked to more than one resource"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:52 setup.php:191
+#: setup.php:190 report/resourceemploymentdiff/resourceemploymentdiff.php:52
 msgid "Report of pledges"
 msgstr ""
 
@@ -2123,7 +2120,7 @@ msgstr ""
 msgid "Required Fields"
 msgstr ""
 
-#: src/Resource.php:1168 front/wizard.form.php:111 front/wizard.form.php:395
+#: front/wizard.form.php:111 front/wizard.form.php:395 src/Resource.php:1168
 msgid "Required fields are not filled. Please try again."
 msgstr ""
 
@@ -2141,9 +2138,10 @@ msgid_plural "Resignation Reasons"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/RuleContracttypeReadonly.php:398 src/RuleContracttypeHidden.php:380
-#: src/RuleContracttype.php:345 src/LeavingInformation.php:360
-#: src/LeavingInformation.php:523 templates/leavinginformation.html.twig:134
+#: src/LeavingInformation.php:360 src/LeavingInformation.php:523
+#: src/RuleContracttypeReadonly.php:398 src/RuleContracttype.php:345
+#: src/RuleContracttypeHidden.php:380
+#: templates/leavinginformation.html.twig:134
 msgid "Resignation date"
 msgstr ""
 
@@ -2171,9 +2169,10 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:271 src/ResourcePDF.php:100
+#: ajax/leavingform.php:114 hook.php:1460 src/Config.php:133
+#: src/Directory.php:216 src/RuleContracttypeReadonly.php:271
 #: src/Resource.php:138 src/Resource.php:432 src/Resource.php:2346
-#: src/Resource.php:3065 src/Resource.php:3504 src/Directory.php:216
+#: src/Resource.php:3065 src/Resource.php:3504 src/RuleContracttype.php:250
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:569
@@ -2181,9 +2180,8 @@ msgstr ""
 #: src/NotificationTargetResource.php:813
 #: src/NotificationTargetResource.php:964
 #: src/NotificationTargetResource.php:1604
-#: src/NotificationTargetResource.php:1632 src/Config.php:133
-#: src/RuleContracttypeHidden.php:250 src/RuleContracttype.php:250
-#: src/Task.php:851 src/Task.php:1276 ajax/leavingform.php:114 hook.php:1458
+#: src/NotificationTargetResource.php:1632 src/Task.php:851 src/Task.php:1276
+#: src/ResourcePDF.php:100 src/RuleContracttypeHidden.php:250
 #: templates/wizard_secondstep_resource.html.twig:373
 #: templates/wizard_secondstep_resource.html.twig:398
 msgid "Resource manager"
@@ -2246,29 +2244,28 @@ msgstr ""
 msgid "Resources not declaring leaving"
 msgstr ""
 
-#: src/Profile.php:316 src/RuleContracttypeReadonly.php:315 src/Role.php:57
+#: src/RuleContracttypeReadonly.php:315 src/RuleContracttype.php:290
 #: src/LinkAd.php:507 src/LinkAd.php:716 src/Adconfig.php:403
-#: src/RuleContracttypeHidden.php:294 src/RuleContracttype.php:290
+#: src/Profile.php:316 src/Role.php:57 src/RuleContracttypeHidden.php:294
 msgid "Role"
 msgid_plural "Roles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/RuleContracttypeReadonly.php:275 src/Resource.php:142
-#: src/Resource.php:621 src/Resource.php:2420
+#: hook.php:1481 src/LeavingInformation.php:345 src/LeavingInformation.php:492
+#: src/Config.php:134 src/RuleContracttypeReadonly.php:275 src/Resource.php:142
+#: src/Resource.php:621 src/Resource.php:2420 src/RuleContracttype.php:254
 #: src/NotificationTargetResource.php:112
 #: src/NotificationTargetResource.php:142
 #: src/NotificationTargetResource.php:470
 #: src/NotificationTargetResource.php:570
 #: src/NotificationTargetResource.php:737
 #: src/NotificationTargetResource.php:814
-#: src/NotificationTargetResource.php:967 src/Config.php:134
-#: src/RuleContracttypeHidden.php:254 src/RuleContracttype.php:254
-#: src/LeavingInformation.php:345 src/LeavingInformation.php:492 hook.php:1479
-#: templates/wizard_secondstep_resource.html.twig:418
-#: templates/wizard_secondstep_resource.html.twig:443
+#: src/NotificationTargetResource.php:967 src/RuleContracttypeHidden.php:254
 #: templates/leavinginformation.html.twig:77
 #: templates/leavinginformation.html.twig:91
+#: templates/wizard_secondstep_resource.html.twig:418
+#: templates/wizard_secondstep_resource.html.twig:443
 msgid "Sales manager"
 msgstr ""
 
@@ -2292,9 +2289,9 @@ msgstr ""
 msgid "Second Form"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:311 src/Resource.php:796
-#: src/Resource.php:1932 src/Config.php:151 src/Config.php:162
-#: src/RuleContracttypeHidden.php:290 src/RuleContracttype.php:286
+#: src/Config.php:151 src/Config.php:162 src/RuleContracttypeReadonly.php:311
+#: src/Resource.php:796 src/Resource.php:1932 src/RuleContracttype.php:286
+#: src/RuleContracttypeHidden.php:290
 #: templates/wizard_secondstep_resource.html.twig:230
 msgid "Second matricule"
 msgstr ""
@@ -2307,7 +2304,7 @@ msgstr ""
 msgid "Secondaries services"
 msgstr ""
 
-#: src/Employee.php:323 ajax/employee.php:50
+#: ajax/employee.php:50 src/Employee.php:323
 #: templates/wizard_thirdstep_employee.html.twig:114
 msgid "Security compliance"
 msgstr ""
@@ -2352,11 +2349,10 @@ msgstr ""
 msgid "Send resource transfer notification"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:346 src/Resource.php:652
+#: src/Config.php:147 src/RuleContracttypeReadonly.php:346 src/Resource.php:652
 #: src/Resource.php:744 src/Resource.php:2607
 #: src/NotificationTargetResource.php:1057
-#: src/NotificationTargetResource.php:1618 src/Config.php:147
-#: src/RuleContracttypeHidden.php:324
+#: src/NotificationTargetResource.php:1618 src/RuleContracttypeHidden.php:324
 #: templates/wizard_secondstep_resource.html.twig:703
 msgid "Sensitized to security"
 msgstr ""
@@ -2375,11 +2371,10 @@ msgstr ""
 msgid "Setup LDAP directory"
 msgstr ""
 
+#: src/Profession.php:107 src/Profession.php:226 src/Rank.php:109
+#: src/Rank.php:157 src/EmploymentState.php:94 src/EmploymentState.php:156
 #: src/ResourceSituation.php:108 src/ResourceSituation.php:172
-#: src/ResourceSituation.php:178 src/EmploymentState.php:94
-#: src/EmploymentState.php:156 src/Rank.php:109 src/Rank.php:157
-#: src/Employer.php:100 src/Employer.php:139 src/Profession.php:107
-#: src/Profession.php:226
+#: src/ResourceSituation.php:178 src/Employer.php:100 src/Employer.php:139
 msgid "Short name"
 msgstr ""
 
@@ -2438,7 +2433,7 @@ msgstr ""
 msgid "Suffix"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:46 setup.php:183
+#: setup.php:182 report/budgetsummary/budgetsummary.php:46
 msgid "Summary by budget with total amount and quantity"
 msgstr ""
 
@@ -2572,7 +2567,7 @@ msgstr ""
 msgid "The folder you expected to display content doesn't exist."
 msgstr ""
 
-#: src/Resource.php:4314 front/resource.form.php:360
+#: front/resource.form.php:360 src/Resource.php:4314
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
@@ -2773,11 +2768,11 @@ msgstr ""
 msgid "Used for planning"
 msgstr ""
 
-#: report/userwithnoresource/userwithnoresource.php:43 setup.php:198
+#: setup.php:197 report/userwithnoresource/userwithnoresource.php:43
 msgid "User without resource"
 msgstr ""
 
-#: src/Resource_Validation.php:169 front/modalvalidationinfo.php:32
+#: front/modalvalidationinfo.php:32 src/Resource_Validation.php:169
 msgid "Validate"
 msgstr ""
 
@@ -2821,7 +2816,7 @@ msgstr ""
 msgid "View leaving information"
 msgstr ""
 
-#: src/Menu.php:213 src/Menu.php:489 src/Config.php:593
+#: src/Config.php:593 src/Menu.php:213 src/Menu.php:489
 msgid "View my resources as a commercial"
 msgstr ""
 
@@ -2829,15 +2824,16 @@ msgstr ""
 msgid "Welcome to the wizard resource"
 msgstr ""
 
-#: src/RuleContracttypeReadonly.php:402 src/RuleContracttypeHidden.php:384
-#: src/RuleContracttype.php:349 src/LeavingInformation.php:368
-#: src/LeavingInformation.php:535 templates/leavinginformation.html.twig:146
+#: src/LeavingInformation.php:368 src/LeavingInformation.php:535
+#: src/RuleContracttypeReadonly.php:402 src/RuleContracttype.php:349
+#: src/RuleContracttypeHidden.php:384
+#: templates/leavinginformation.html.twig:146
 msgid "Wished leaving date"
 msgstr ""
 
-#: src/ContractType.php:270 src/ContractType.php:290 src/Resource.php:1674
-#: src/Contracttypeprofile.php:93 front/resource.form.php:491
-#: front/resource.remove.php:148
+#: front/resource.form.php:491 front/resource.remove.php:148
+#: src/ContractType.php:270 src/ContractType.php:290
+#: src/Contracttypeprofile.php:93 src/Resource.php:1674
 msgid "Without contract"
 msgstr ""
 
@@ -2849,7 +2845,7 @@ msgstr ""
 msgid "Wizard resource creation"
 msgstr ""
 
-#: src/WorkProfile.php:56 src/Candidateorigin.php:56
+#: src/Candidateorigin.php:56 src/WorkProfile.php:56
 msgid "Work Profile"
 msgid_plural "Work Profiles"
 msgstr[0] ""
@@ -2863,15 +2859,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: src/LinkAd.php:855 hook.php:2940
+#: hook.php:2942 src/LinkAd.php:855
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2987
+#: hook.php:2989
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: src/LinkAd.php:853 hook.php:2922 hook.php:2969
+#: hook.php:2924 hook.php:2971 src/LinkAd.php:853
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
@@ -2925,8 +2921,8 @@ msgstr ""
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
-#: ajax/validinformation.php:293 front/linkad.form.php:127
-#: front/resource.form.php:452 front/resource.form.php:593
+#: ajax/validinformation.php:293 front/resource.form.php:452
+#: front/resource.form.php:593 front/linkad.form.php:127
 msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
@@ -2938,8 +2934,8 @@ msgstr ""
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
-#: ajax/validinformation.php:296 front/linkad.form.php:130
-#: front/resource.form.php:437 front/resource.form.php:455
-#: front/resource.form.php:548 front/resource.form.php:596
+#: ajax/validinformation.php:296 front/resource.form.php:437
+#: front/resource.form.php:455 front/resource.form.php:548
+#: front/resource.form.php:596 front/linkad.form.php:130
 msgid "the user has not been updated to the LDAP directory"
 msgstr ""
