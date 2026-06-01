@@ -915,7 +915,7 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `categories_id`                                int unsigned NOT NULL DEFAULT '0',
     `mandatory_checklist`                          tinyint      NOT NULL DEFAULT '0',
     `mandatory_adcreation`                         tinyint      NOT NULL DEFAULT '0',
-    `plugin_resources_resourcetemplates_id`        int          NULL     DEFAULT '0',
+    `plugin_resources_resourcetemplates_id`        int unsigned NULL     DEFAULT '0',
     `plugin_resources_resourcestates_id_arrival`   int unsigned NULL     DEFAULT '0',
     `plugin_resources_resourcestates_id_departure` int unsigned NULL     DEFAULT '0',
     `reaffect_checklist_change`                    tinyint      NOT NULL DEFAULT '1',

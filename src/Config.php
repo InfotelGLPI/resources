@@ -810,7 +810,7 @@ class Config extends CommonDBTM
                         `categories_id`                                int {$default_key_sign} NOT NULL DEFAULT '0',
                         `mandatory_checklist`                          tinyint      NOT NULL DEFAULT '0',
                         `mandatory_adcreation`                         tinyint      NOT NULL DEFAULT '0',
-                        `plugin_resources_resourcetemplates_id`        int          NULL     DEFAULT '0',
+                        `plugin_resources_resourcetemplates_id`        int {$default_key_sign} NULL     DEFAULT '0',
                         `plugin_resources_resourcestates_id_arrival`   int {$default_key_sign} NULL     DEFAULT '0',
                         `plugin_resources_resourcestates_id_departure` int {$default_key_sign} NULL     DEFAULT '0',
                         `reaffect_checklist_change`                    tinyint      NOT NULL DEFAULT '1',

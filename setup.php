@@ -31,7 +31,6 @@ use Glpi\Plugin\Hooks;
 use GlpiPlugin\Behaviors\Common;
 use GlpiPlugin\Behaviors\Rule;
 use GlpiPlugin\Mydashboard\Menu as DashboardMenu;
-use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Resources\Dashboard;
 use GlpiPlugin\Resources\Directory;
 use GlpiPlugin\Resources\Employment;
@@ -56,7 +55,7 @@ use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Reports\Report;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.14');
+define('PLUGIN_RESOURCES_VERSION', '4.0.15');
 
 global $CFG_GLPI;
 
@@ -155,8 +154,8 @@ function plugin_init_resources()
             $PLUGIN_HOOKS['mydashboard']['resources'] = [Dashboard::class];
         }
 
-        if (class_exists(Position::class)) {
-            Position::registerType(Resource::class);
+        if (class_exists(GlpiPlugin\Positions\Position::class)) {
+            GlpiPlugin\Positions\Position::registerType(Resource::class);
         }
 
         if (class_exists(Common::class)) {
