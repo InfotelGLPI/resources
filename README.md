@@ -1,12 +1,10 @@
-# resources
+## Resources plugin for GLPI
 
-Plugin resources pour GLPI
+[![License](https://img.shields.io/badge/License-GNU%20v2-blue.svg?style=flat-square)](https://github.com/InfotelGLPI/resources/blob/master/LICENSE)
+[![Web](https://img.shields.io/badge/Web-Infotel-blue.svg?style=flat-square)](https://blogglpi.infotel.com)
+[![Translate](https://img.shields.io/badge/Translate-Transifex-cyan)](https://explore.transifex.com/infotelGLPI/GLPI_resources/)
 
-Ce plugin est sur Transifex - Aidez-nous à le traduire :
-https://www.transifex.com/infotelGLPI/GLPI_resources/
-
-This plugin is on Transifex - Help us to translate :
-https://www.transifex.com/infotelGLPI/GLPI_resources/
+### French
 
 Ce plugin vous permet de gérer les ressources humaines afin de gérer correctement l'attribution de matériel.
 
@@ -23,6 +21,8 @@ Ce plugin vous permet de gérer les ressources humaines afin de gérer correctem
 > * Import de fichier csv
 
 > [Documentation](public/docs/guide_utilisateur_resource_fr.md)
+
+### English
 
 This plugin allows you to manage resources to properly manage the allocation of material.
 
