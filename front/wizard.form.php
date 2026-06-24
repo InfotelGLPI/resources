@@ -71,6 +71,8 @@ if (isset($_POST["cancel_request"]) && $resource->canPurge()) {
 }
 
 if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
+    $_POST['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+    $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
     if (!isset($_POST["template"])) {
         $_POST["template"] = $_GET["template"];
     }
@@ -577,7 +579,28 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $wizard->wizardSecondStep($resources_id, $values);
     }
 } else {
-    $wizard->wizardFirstStep();
+    $config = new \GlpiPlugin\Resources\Config();
+    if ($config->fields['hidden_first_form']) {
+        $resourcestemplate = new Resource();
+        $resourcestemplatedata = $resourcestemplate->find(['is_template' => 1]);
+        if (count($resourcestemplatedata) == 1) {
+            // Clean text fields
+            $values['name']    = stripslashes('');
+            $values['withtemplate'] = 2;
+            $values['new']          = 1;
+            $values["requiredfields"] = 1;
+            foreach ($resourcestemplatedata as $id => $resourcestemplatevalue) {
+                $values['template'] = $id;
+            }
+
+            $wizard->wizardSecondStep(0, $values);
+        } else {
+            $wizard->wizardFirstStep();
+        }
+    } else {
+        $wizard->wizardFirstStep();
+    }
+
 }
 
 if (Session::getCurrentInterface() != 'central'

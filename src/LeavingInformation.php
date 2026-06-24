@@ -575,6 +575,18 @@ class LeavingInformation extends CommonDBTM
                     'jointype' => 'child',
                 ],
             ];
+
+            $tab[] = [
+                'id'            => '171',
+                'table'         => LinkAd::getTable(),
+                'field'         => 'id',
+                'name'          => __('Link AD', 'resources'),
+                'massiveaction' => false,
+                'datatype'      => 'bool',
+                'joinparams'    => [
+                    'jointype' => 'child'
+                ]
+            ];
         }
 
         return $tab;

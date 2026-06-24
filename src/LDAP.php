@@ -34,8 +34,10 @@ use Adldap\Auth\BindException;
 use Adldap\Models\ModelNotFoundException;
 use AuthLDAP;
 use CommonDBTM;
+use Exception;
 use GLPIKey;
 use Session;
+use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -285,6 +287,12 @@ class LDAP extends CommonDBTM
         return $find;
     }
 
+    public function isSSLorTLSAD() {
+        $adConfig = new Adconfig();
+        $config = self::getConfig();
+        return $config['use_tls'] || $config['use_ssl'];
+    }
+
     public function createUserAD($data)
     {
         $adConfig = new Adconfig();
@@ -334,6 +342,31 @@ class LDAP extends CommonDBTM
             $user->fill($attributes);
 
             if ($user->save()) {
+                if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
+                    try {
+                        $newPassword = '';
+                        if($adConfig->fields['format_default_account_password'] == 1) {
+                            $newPassword = strtoupper(substr($data["firstname"], 0, 1))
+                                . strtolower(substr($data["name"], 0, 1));
+                            if ($adConfig->fields['pefixe_default_account_password'] == 1 && isset($data['begindate'])) {
+                                $date = substr($data["begindate"], 0, 10);
+                                $date = explode('-', $date);
+                                $newPassword .= $date[2] .$date[1] . $date[0] ;
+                            }
+                            $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
+
+                        } elseif ($adConfig->fields['format_default_account_password'] == 2) {
+                            $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
+                        }
+                        if ($newPassword != '') {
+                            $user->changePassword('', $newPassword,true);
+                        }
+                        return true;
+                    } catch (Exception $ex) {
+                        Toolbox::logInFile('LDAPERROR', "Erreur LDAP : ". $ex->getMessage());
+                        return false;
+                    }
+                }
                 return true;
             } else {
                 return false;

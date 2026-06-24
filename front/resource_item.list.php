@@ -73,7 +73,7 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     }
     Html::back();
 } elseif (isset($_POST['updateSpecialRequirement'])) {
-    if ($resource->canCreate()) {
+    if ($resource->canUpdate()) {
         $_POST['id'] = $_POST['plugin_resources_resources_id'];
         $resource->update($_POST);
     }

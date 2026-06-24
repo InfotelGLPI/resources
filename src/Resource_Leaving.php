@@ -102,11 +102,9 @@ class Resource_Leaving extends CommonDBTM
      **/
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-        $wizard_need = ContractType::checkWizardSetup($item->getField('id'), "use_need_wizard");
 
         if ($item->getType() == Resource::class
             && $this->canView()
-            && $wizard_need
         ) {
             return self::createTabEntry(self::getTypeName(2));
         }
@@ -163,7 +161,7 @@ class Resource_Leaving extends CommonDBTM
             echo "<tr class='tab_bg_1'><td class='tab_bg_2'>";
             echo __('Departure date', 'resources');
             echo "</td><td class='tab_bg_2'>";
-            echo Html::input('date_declaration_leaving', ['value' => $resources->fields['date_declaration_leaving'], 'readonly' => true]);
+            echo Html::input('date_end', ['value' => $resources->fields['date_end'], 'readonly' => true]);
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'><td class='tab_bg_2'>";
             echo __('Order', 'resources');
@@ -173,7 +171,7 @@ class Resource_Leaving extends CommonDBTM
             echo "</td></tr>";
             echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
             if (empty($resources->fields['remove_order'])) {
-                echo Html::submit(_sx('button', 'Validate'), ['name' => 'validOrderLeaving', 'class' => 'btn btn-primary']);
+                echo Html::submit(_sx('button', __('Validate', 'resources')), ['name' => 'validOrderLeaving', 'class' => 'btn btn-primary']);
             }
             echo "</td></tr>";
             echo "</table></div>";

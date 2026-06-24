@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Resources;
 
+use Group;
 use Html;
 use Rule;
 use Session;
@@ -176,6 +177,14 @@ class RuleContracttype extends Rule
         $criterias['plugin_resources_contracttypes_id']['type'] = 'dropdownContractType';
         $criterias['plugin_resources_contracttypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
 
+        $criterias['plugin_resources_profiltypes_id']['name']  = \Profile::getTypeName(1);
+        $criterias['plugin_resources_profiltypes_id']['type']  = 'dropdownProfilType';
+        $criterias['plugin_resources_profiltypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
+        $criterias['plugin_resources_grouptypes_id']['name']  = Group::getTypeName(1);
+        $criterias['plugin_resources_grouptypes_id']['type']  = 'dropdownGroupType';
+        $criterias['plugin_resources_grouptypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
         return $criterias;
     }
 
@@ -201,6 +210,14 @@ class RuleContracttype extends Rule
                     $ContractType->dropdownContractType($name);
                     $display = true;
                     break;
+                case "dropdownProfilType" :
+                    \Profile::dropdown(['name'=>$name, 'value'=>$value]);
+                    $display = true;
+                    break;
+                case "dropdownGroupType" :
+                    Group::dropdown(['name'=>$name, 'value'=>$value]);
+                    $display = true;
+                    break;
             }
         }
     }
@@ -221,6 +238,10 @@ class RuleContracttype extends Rule
                     case "dropdownContractType":
                         $ContractType = new ContractType();
                         return $ContractType->getContractTypeName($pattern);
+                    case "dropdownProfilType" :
+                        return \Profile::getFriendlyNameById($pattern);
+                    case "dropdownGroupType" :
+                        return Group::getFriendlyNameById($pattern);
                 }
             }
         }

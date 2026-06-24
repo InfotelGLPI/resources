@@ -204,7 +204,7 @@ class Wizard extends CommonDBTM
                 }
             }
         }
-        $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+        $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
 

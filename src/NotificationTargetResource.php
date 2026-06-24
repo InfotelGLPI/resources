@@ -473,6 +473,8 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.datebegin##'] = __('Arrival date', 'resources');
             $this->data['##lang.resource.dateend##'] = __('Departure date', 'resources');
             $this->data['##lang.resource.department##'] = Department::getTypeName(1);
+            $this->data['##lang.resource.service##']         = Service::getTypeName(1);
+            $this->data['##lang.resource.role##']            = Role::getTypeName(1);
             $this->data['##lang.resource.habilitation##'] = Habilitation::getTypeName(1);
             $this->data['##lang.resource.status##'] = ResourceState::getTypeName(1);
             $this->data['##lang.resource.location##'] = __('Location');
@@ -502,6 +504,10 @@ class NotificationTargetResource extends NotificationTarget
                     'glpi_plugin_resources_departments',
                     $resource['plugin_resources_departments_id']
                 );
+                $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
+                    $resource['plugin_resources_role_id']);
+                $tmp['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
+                    $resource['plugin_resources_services_id']);
                 $resourcehabilitation = new ResourceHabilitation();
                 $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource['id']]);
                 $tab = [];
@@ -700,6 +706,14 @@ class NotificationTargetResource extends NotificationTarget
                 $this->obj->getField('plugin_resources_departments_id')
             );
 
+            $this->data['##lang.resource.service##'] = Service::getTypeName(1);
+            $this->data['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
+                $this->obj->getField('plugin_resources_services_id'));
+
+            $this->data['##lang.resource.role##'] = Role::getTypeName(1);
+            $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
+                $this->obj->getField('plugin_resources_role_id'));
+
             $resourcehabilitation = new ResourceHabilitation();
             $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $this->obj->getField('id')]
             );
@@ -806,6 +820,8 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.contractnature##'] = ContractNature::getTypeName(1);
             $this->data['##lang.resource.quota##'] = __('Quota', 'resources');
             $this->data['##lang.resource.department##'] = Department::getTypeName(1);
+            $this->data['##lang.resource.service##']         = Service::getTypeName(1);
+            $this->data['##lang.resource.role##']            = Role::getTypeName(1);
             $this->data['##lang.resource.habilitation##'] = Habilitation::getTypeName(1);
             $this->data['##lang.resource.rank##'] = Rank::getTypeName(1);
             $this->data['##lang.resource.speciality##'] = ResourceSpeciality::getTypeName(1);
@@ -854,6 +870,13 @@ class NotificationTargetResource extends NotificationTarget
                     'glpi_plugin_resources_departments',
                     $resource['plugin_resources_departments_id']
                 );
+
+                $tmp['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
+                    $resource['plugin_resources_services_id']);
+
+                $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
+                    $resource['plugin_resources_role_id']);
+
 
                 $resourcehabilitation = new ResourceHabilitation();
                 $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource['id']]);
@@ -984,6 +1007,15 @@ class NotificationTargetResource extends NotificationTarget
                 'glpi_plugin_resources_departments',
                 $this->obj->getField('plugin_resources_departments_id')
             );
+
+            $this->data['##lang.resource.service##'] = Service::getTypeName(1);
+            $this->data['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
+                $this->obj->getField('plugin_resources_services_id'));
+
+            $this->data['##lang.resource.role##'] = Role::getTypeName(1);
+            $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
+                $this->obj->getField('plugin_resources_role_id'));
+
 
             $this->data['##lang.resource.rank##'] = Rank::getTypeName(1);
             $this->data['##resource.rank##'] = Dropdown::getDropdownName(
@@ -1607,6 +1639,8 @@ class NotificationTargetResource extends NotificationTarget
             'resource.datebegin' => __('Arrival date', 'resources'),
             'resource.dateend' => __('Departure date', 'resources'),
             'resource.department' => Department::getTypeName(1),
+            'resource.service'           => Service::getTypeName(1),
+            'resource.role'              => Role::getTypeName(1),
             'resource.status' => ResourceState::getTypeName(1),
             'resource.location' => __('Location'),
             'resource.restingtitle' => __('Non contract period management', 'resources'),
