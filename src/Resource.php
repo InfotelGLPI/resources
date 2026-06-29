@@ -1189,7 +1189,7 @@ class Resource extends CommonDBTM
         if (!isset($input["is_template"])) {
             if (!isset($input['force'])) {
                 $required = $this->checkRequiredFields($input);
-                $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+                $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
                 $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
                 if (count($required) > 0) {

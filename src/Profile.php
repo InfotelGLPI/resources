@@ -94,7 +94,6 @@ class Profile extends \Profile
                 'plugin_resources_budget' => 0,
                 'plugin_resources_dropdown_public' => 0,
                 'plugin_resources_import' => 0,
-                'plugin_resources_otheraction' => 0,
                 'plugin_resources_annuaire' => 0,
                 'plugin_resources_validation' => 0,
                 'plugin_resources_open_ticket' => 0,
@@ -126,7 +125,6 @@ class Profile extends \Profile
             'plugin_resources_budget' => ALLSTANDARDRIGHT,
             'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
             'plugin_resources_import' => ALLSTANDARDRIGHT,
-            'plugin_resources_otheraction' => ALLSTANDARDRIGHT,
             'plugin_resources_annuaire' => ALLSTANDARDRIGHT,
             'plugin_resources_validation' => ALLSTANDARDRIGHT,
             'plugin_resources_open_ticket' => 1,
@@ -366,18 +364,7 @@ class Profile extends \Profile
                     PURGE => __('Purge')
                 ]
             ],
-            ['itemtype' => 'PluginResourcesOtherAction',
-                'label' => __('Other actions', 'resources'),
-                'field' => 'plugin_resources_otheraction',
-                'type' => 'general',
-                'rights' => [
-                    READ => __('Read'),
-                    UPDATE => __('Update'),
-                    CREATE => __('Create'),
-                    PURGE => __('Purge')
-                ]
-            ],
-            ['itemtype' => 'PluginResourcesAnnuaire',
+            ['itemtype' => Directory::class,
                 'label' => __('Annuaire', 'resources'),
                 'field' => 'plugin_resources_annuaire',
                 'type' => 'general',

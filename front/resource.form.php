@@ -209,7 +209,7 @@ elseif (isset($_POST["deleteemployee"])) {
 //update resource
 elseif (isset($_POST["update"])) {
     $resource->check($_POST['id'], UPDATE);
-    $_POST['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+    $_POST['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
     $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
     $required    = $resource->checkRequiredFields($_POST);

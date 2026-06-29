@@ -885,8 +885,6 @@ function plugin_resources_install()
 
     $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.12.sql");
 
-    $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.15.sql");
-
     if (!$DB->fieldExists("glpi_plugin_resources_configs", "search_default_my_resources")) {
         $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-4.0.15.sql");
     }

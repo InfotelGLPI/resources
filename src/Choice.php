@@ -373,7 +373,7 @@ class Choice extends CommonDBTM
             $input['entities_id'] = $_SESSION['glpiactive_entity'];
         }
         $input['plugin_resources_contracttypes_id'] = $resource->fields["plugin_resources_contracttypes_id"];
-        $input['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+        $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
         $input['plugin_resources_users_id'] = Session::getLoginUserID();
         $input['plugin_resources_users_id_reel'] = $resource->fields['users_id'];

@@ -71,7 +71,7 @@ if (isset($_POST["cancel_request"]) && $resource->canPurge()) {
 }
 
 if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
-    $_POST['plugin_resources_profiltypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+    $_POST['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
     $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
     if (!isset($_POST["template"])) {
         $_POST["template"] = $_GET["template"];
