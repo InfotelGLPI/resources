@@ -932,6 +932,22 @@ CREATE TABLE `glpi_plugin_resources_configs`
     `default_assignment_group`                     int unsigned NOT NULL DEFAULT '0',
     `text_ticket_validation`                       TEXT COLLATE utf8mb4_unicode_ci,
     `hide_fieds_arrival_form`                      TEXT COLLATE utf8mb4_unicode_ci,
+    `search_default_my_resources` int unsigned NOT NULL default '1',
+    `hidden_first_form` tinyint NOT NULL default '0',
+    `needs_tab_access` tinyint NOT NULL default '0',
+    `assignment_group_second_ticket` int unsigned NOT NULL default '0',
+    `send_second_ticket_validation` tinyint NOT NULL default '0',
+    `view_notification_tab` tinyint NOT NULL default '0',
+    `view_needs_parts` varchar(255) NOT NULL DEFAULT '',
+    `freeze_form_after_validation` tinyint NOT NULL default '0',
+    `can_view_synchronisationAD` varchar(255) NOT NULL DEFAULT '',
+    `order_order` varchar(4) NOT NULL DEFAULT 'ASC',
+    `order_column` int unsigned NOT NULL default '1',
+    `send_second_ticket_remove` tinyint NOT NULL default '0',
+    `remove_at_midnight` tinyint NOT NULL default '1',
+    `use_module_validation` tinyint NOT NULL default '0',
+    `use_module_duplicata_ticket` tinyint NOT NULL default '0',
+    `use_module_departure_instruction` tinyint NOT NULL default '0',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -1082,6 +1098,10 @@ CREATE TABLE `glpi_plugin_resources_adconfigs`
     `mail_prefix`                int unsigned NOT NULL                   DEFAULT '0',
     `mail_suffix`                varchar(255) NOT NULL                   DEFAULT '',
     `fonctionAD`                 varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+    `use_password_module` tinyint NOT NULL default '0',
+    `default_account_password` varchar(255) COLLATE utf8mb4_unicode_ci default '',
+    `format_default_account_password` int unsigned NOT NULL default '0',
+    `prefix_default_account_password` int unsigned NOT NULL default '0',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

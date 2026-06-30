@@ -15,7 +15,7 @@ ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `remove_at_midnight` tinyin
 ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `use_password_module` tinyint NOT NULL default '0';
 ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `default_account_password` varchar(255) COLLATE utf8mb4_unicode_ci default '';
 ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `use_module_validation` tinyint NOT NULL default '0';
-ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `use_module_dupplicata_ticket` tinyint NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `use_module_duplicata_ticket` tinyint NOT NULL default '0';
 ALTER TABLE glpi_plugin_resources_configs ADD COLUMN `use_module_departure_instruction` tinyint NOT NULL default '0';
 ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `format_default_account_password` int unsigned NOT NULL default '0';
-ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `pefixe_default_account_password` int unsigned NOT NULL default '0';
+ALTER TABLE glpi_plugin_resources_adconfigs ADD COLUMN `prefix_default_account_password` int unsigned NOT NULL default '0';

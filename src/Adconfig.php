@@ -301,7 +301,7 @@ class Adconfig extends CommonDBTM
                             $suffixeDefaultPassword = [0 => Dropdown::EMPTY_VALUE,
                                 1 => __('First name initial (uppercase) + last name initial (lowercase) + arrival date (DDMMYYYY)', 'resources'),
                                 2 => __('First name initial (uppercase) + last name initial (lowercase)', 'resources')];
-                            Dropdown::showFromArray('pefixe_default_account_password', $suffixeDefaultPassword, ['value' => $this->fields["pefixe_default_account_password"]]);
+                            Dropdown::showFromArray('prefix_default_account_password', $suffixeDefaultPassword, ['value' => $this->fields["prefix_default_account_password"]]);
                             echo "</td>";
                         }
 

@@ -733,11 +733,11 @@ class Config extends CommonDBTM
             echo __('Use ticket duplication module', 'resources');
             echo "</td>";
             echo "<td>";
-            Dropdown::showYesNo('use_module_dupplicata_ticket',$this->fields['use_module_dupplicata_ticket']);
+            Dropdown::showYesNo('use_module_duplicata_ticket',$this->fields['use_module_duplicata_ticket']);
             echo "</td>";
             echo "</tr>";
 
-            if ($this->fields['use_module_dupplicata_ticket']
+            if ($this->fields['use_module_duplicata_ticket']
                 && ($this->fields['use_module_validation'] || $this->fields['use_module_departure_instruction'])) {
                 echo "<tr class='tab_bg_1'>";
                 echo "<td>";

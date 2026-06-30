@@ -161,7 +161,7 @@ $ticket->fields['items_id'] = [Resource::class => [$resource->fields['id']]];
 unset($ticket->fields["id"]);
 $ticket_id = $ticket->add($ticket->fields);
 
-if ($config->fields['use_module_dupplicata_ticket'] && $config->fields['use_module_validation'] && $config->fields["send_second_ticket_validation"] && $config->fields["assignment_group_second_ticket"]) {
+if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_module_validation'] && $config->fields["send_second_ticket_validation"] && $config->fields["assignment_group_second_ticket"]) {
     unset($ticket->fields["id"]);
     $ticket_id = $ticket->add($ticket->fields);
     $groupticket = new Group_Ticket();

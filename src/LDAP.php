@@ -348,7 +348,7 @@ class LDAP extends CommonDBTM
                         if($adConfig->fields['format_default_account_password'] == 1) {
                             $newPassword = strtoupper(substr($data["firstname"], 0, 1))
                                 . strtolower(substr($data["name"], 0, 1));
-                            if ($adConfig->fields['pefixe_default_account_password'] == 1 && isset($data['begindate'])) {
+                            if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
                                 $date = substr($data["begindate"], 0, 10);
                                 $date = explode('-', $date);
                                 $newPassword .= $date[2] .$date[1] . $date[0] ;

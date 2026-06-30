@@ -541,19 +541,7 @@ elseif (isset($_POST["add_checklist"])) {
         unset($ticket->fields["id"]);
         $ticket_id = $ticket->add($ticket->fields);
 
-        if ($config->fields['use_module_dupplicata_ticket']) {
-            echo 'use_module_dupplicata_ticket';
-        }
-        if ($config->fields['use_module_departure_instruction']) {
-            echo 'use_module_dupplicata_ticket';
-        }
-        if ($config->fields['send_second_ticket_remove']) {
-            echo 'use_module_dupplicata_ticket';
-        }
-        if ($config->fields['assignment_group_second_ticket']) {
-            echo 'use_module_dupplicata_ticket';
-        }
-        if ($config->fields['use_module_dupplicata_ticket'] && $config->fields['use_module_departure_instruction'] && $config->fields["send_second_ticket_remove"] && $config->fields["assignment_group_second_ticket"]) {
+        if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_module_departure_instruction'] && $config->fields["send_second_ticket_remove"] && $config->fields["assignment_group_second_ticket"]) {
             unset($ticket->fields["id"]);
             $ticket_id = $ticket->add($ticket->fields);
             $groupticket = new Group_Ticket();
