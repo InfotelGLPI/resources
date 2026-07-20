@@ -56,8 +56,12 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             echo $tmpname["comment"];
 
             if (isset($_REQUEST['withlink'])) {
+                // withlink is reflected into a jQuery selector ($('#...')): restrict it to
+                // a safe id pattern so a crafted GET value cannot break out and inject JS.
+                // json_encode() emits the link as a properly-quoted JS string literal.
+                $withlink = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $_REQUEST['withlink']);
                 echo "<script type='text/javascript' >\n";
-                echo Resource::jsGetElementbyID($_REQUEST['withlink']) . ".attr('href', '" . $tmpname['link'] . "');";
+                echo Resource::jsGetElementbyID($withlink) . ".attr('href', " . json_encode($tmpname['link']) . ");";
                 echo "</script>\n";
             }
             break;

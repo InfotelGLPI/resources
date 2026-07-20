@@ -787,6 +787,7 @@ class Resource extends CommonDBTM
             'name' => Team::getTypeName(),
             'datatype' => 'dropdown',
             'massiveaction' => true,
+            'nosort' => true,
         ];
 
         $tab[] = [
@@ -2538,7 +2539,20 @@ class Resource extends CommonDBTM
         echo "<tr class='tab_bg_1'>";
 
         echo "<td>" . __('Declared as leaving', 'resources') . "</td><td>";
-        Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
+
+        if (Session::getCurrentInterface() != 'central') {
+            // Helpdesk: read-only display + link to the dedicated departure wizard
+            echo Dropdown::getYesNo($this->fields["is_leaving"]);
+            echo Html::hidden('is_leaving', ['value' => $this->fields["is_leaving"]]);
+            if (!$this->fields["is_leaving"] && $ID > 0 && (!isset($options['withtemplate']) || !$options['withtemplate'])) {
+                $remove_url = PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php?resource_id=" . (int) $ID;
+                echo "&nbsp;&nbsp;<a href='" . htmlspecialchars($remove_url) . "' class='btn btn-sm btn-warning'>"
+                    . __('Declare a departure', 'resources')
+                    . "</a>";
+            }
+        } else {
+            Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
+        }
 
         if ($ID != -1 && $options['withtemplate'] != 1 && $this->fields["is_leaving"] == 1
             && isset($this->fields["users_id_recipient_leaving"])
@@ -2563,13 +2577,18 @@ class Resource extends CommonDBTM
             echo ">";
             echo LeavingReason::getTypeName(1) . "</td>";
             echo "<td>";
-            Dropdown::show(
-                LeavingReason::class,
-                [
-                    'value' => $this->fields["plugin_resources_leavingreasons_id"],
-                    'entity' => $this->fields["entities_id"],
-                ]
-            );
+            if (Session::getCurrentInterface() != 'central') {
+                echo Dropdown::getDropdownName(LeavingReason::getTable(), $this->fields["plugin_resources_leavingreasons_id"]);
+                echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => $this->fields["plugin_resources_leavingreasons_id"]]);
+            } else {
+                Dropdown::show(
+                    LeavingReason::class,
+                    [
+                        'value' => $this->fields["plugin_resources_leavingreasons_id"],
+                        'entity' => $this->fields["entities_id"],
+                    ]
+                );
+            }
             echo "</td>";
         }
 
@@ -2584,7 +2603,12 @@ class Resource extends CommonDBTM
         }
         echo "</td>";
         echo "<td " . $tohide['date_end'] . ">";
-        Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
+        if (Session::getCurrentInterface() != 'central') {
+            echo Html::convDate($this->fields["date_end"]);
+            echo Html::hidden('date_end', ['value' => $this->fields["date_end"]]);
+        } else {
+            Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
+        }
         echo "</td>";
         if ($tohide['date_end'] == "hidden") {
             echo "<td colspan='2'></td>";
@@ -3431,6 +3455,7 @@ class Resource extends CommonDBTM
     {
 
         $dbu = new DbUtils();
+        $preselected_id = isset($_GET['resource_id']) ? (int) $_GET['resource_id'] : 0;
 
         if ($dbu->countElementsInTable($this->getTable()) > 0) {
 
@@ -3470,6 +3495,7 @@ class Resource extends CommonDBTM
                 'entity' => $_SESSION['glpiactiveentities'],
                 'condition' => $cond,
                 'rand' => $rand,
+                'value' => $preselected_id,
                 'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
             ]);
 
@@ -3483,6 +3509,18 @@ class Resource extends CommonDBTM
                 "../ajax/leavingform.php",
                 $params
             );
+
+            // If a resource is pre-selected, trigger the ajax call immediately to populate leaving_input
+            if ($preselected_id > 0) {
+                Ajax::updateItem(
+                    "leaving_input",
+                    "../ajax/leavingform.php",
+                    [
+                        'plugin_resources_resources_id' => $preselected_id,
+                        'rand' => $rand,
+                    ]
+                );
+            }
 
             echo "</div>";
             echo "</div>";

@@ -328,7 +328,10 @@ class Menu extends CommonGLPI
                 'trash' => ['pics' => '',
                     'icon' => 'ti ti-trash',
                     'title' => __('Purge imported resources', 'resources'),
-                    'url' => ImportResource::getFormURL() . "?reset-imports=1"
+                    // POST-only + CSRF token: a destructive purge must not be a GET link.
+                    'url' => ImportResource::getFormURL(),
+                    'post' => ['reset-imports' => 1],
+                    'confirm' => __('Confirm the purge of all imported resources?', 'resources')
                 ]
             ];
 
@@ -374,13 +377,31 @@ class Menu extends CommonGLPI
             echo "<div class='card-body'>";
             echo "<div class='card-text'>";
 
-            echo "<a href='" . $labels['url'] . "'>";
+            $inner = "";
             if (isset($labels['icon']) && !empty($labels['icon'])) {
-                echo "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
+                $inner .= "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
             } else if (isset($labels['pics']) && !empty($labels['pics'])) {
-                echo "<img src='" . $labels['pics'] . "'>";
+                $inner .= "<img src='" . $labels['pics'] . "'>";
             }
-            echo "<br>" . $labels['title'] . "</a>";
+            $inner .= "<br>" . $labels['title'];
+
+            if (!empty($labels['post']) && is_array($labels['post'])) {
+                // Destructive actions must not be triggerable by a GET link (CSRF): render
+                // them as a CSRF-protected POST submit. The listener validates the token on
+                // POST; an optional 'confirm' adds a client-side guard.
+                $confirm = isset($labels['confirm']) ? $labels['confirm'] : '';
+                echo "<form method='post' action='" . htmlescape($labels['url']) . "' class='d-inline'"
+                    . ($confirm ? " onsubmit=\"return confirm('" . htmlescape($confirm) . "');\"" : "") . ">";
+                echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
+                foreach ($labels['post'] as $post_key => $post_value) {
+                    echo Html::hidden($post_key, ['value' => $post_value]);
+                }
+                echo "<button type='submit' class='btn btn-link p-0 border-0 text-reset text-decoration-none'>"
+                    . $inner . "</button>";
+                echo "</form>";
+            } else {
+                echo "<a href='" . $labels['url'] . "'>" . $inner . "</a>";
+            }
             echo "</div>";
             echo "</div>";
             echo "</div>";
