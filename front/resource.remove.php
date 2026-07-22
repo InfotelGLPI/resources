@@ -63,9 +63,13 @@ if (empty($_POST["date_end"])) {
 }
 
 $resource = new Resource();
+
 $checklistconfig = new Checklistconfig();
 
 if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+
+    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+
     if (!isset($_POST["plugin_resources_leavingreasons_id"])) {
         $_POST["plugin_resources_leavingreasons_id"] = 0;
     }

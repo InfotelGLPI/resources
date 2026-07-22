@@ -134,7 +134,8 @@ if ($report->criteriasValidated()) {
     $res = $DB->doQuery($query);
     $nbtot = ($res ? $DB->numrows($res) : 0);
     if ($limit) {
-        $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+        // Cast to int: $start is concatenated raw into the LIMIT clause below (SQL injection).
+        $start = (int) ($_GET["start"] ?? 0);
         if ($start >= $nbtot) {
             $start = 0;
         }

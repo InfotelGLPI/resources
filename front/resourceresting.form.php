@@ -51,16 +51,20 @@ if (!isset($_GET["id"])) {
 $resting = new ResourceResting();
 
 if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $resting->check(-1, CREATE, $_POST);
     $resting->add($_POST);
     Html::back();
 } elseif (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $resting->check($_POST['id'], UPDATE);
     $resting->update($_POST);
     Html::back();
 } elseif (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {
+    $resting->check($_POST['id'], UPDATE);
     $resting->fields = ['id' => $_POST['id'], 'date_end' => $_POST['date_end']];
     $resting->updateInDB(['date_end']);
     Html::back();
 } elseif (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $resting->check($_POST['id'], PURGE);
     $resting->delete($_POST, 1);
     $resting->redirectToList();
 } elseif (isset($_GET['menu'])) {

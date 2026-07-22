@@ -46,6 +46,7 @@ $employee = new Employee();
 //add employee informations from helpdesk
 //next step : show list needs of the new ressource
 if (isset($_POST["add_helpdesk_employee"])) {
+    Session::checkRight(Employee::$rightname, CREATE);
     $newID = $employee->add($_POST);
     Html::redirect("./resource_item.list.php?id=" . $_POST["plugin_resources_resources_id"] . "&exist=0");
 } else {

@@ -27,17 +27,23 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Import;
 use GlpiPlugin\Resources\ImportResource;
 
 header('Content-Type: application/json');
 Html::header_nocache();
 
 Session::checkLoginUser();
+// checkLoginUser() is not authorization on GLPI 11: gate on the import feature right.
+Session::checkRight(Import::$rightname, READ);
 
 if (isset($_GET['page']) && isset($_GET['file'])) {
     $ImportResource = new ImportResource();
 
-    $absoluteFilePath = $ImportResource::getLocationOfVerificationFiles() . "/" . $_GET['file'];
+    // Reduce the client-supplied name to its basename so it cannot escape the
+    // verification directory (path traversal → arbitrary file read).
+    $safeFile         = basename((string) $_GET['file']);
+    $absoluteFilePath = $ImportResource::getLocationOfVerificationFiles() . "/" . $safeFile;
 
     $temp = $ImportResource->readCSVLines($absoluteFilePath, 0, 1);
     $header = array_shift($temp);
@@ -50,7 +56,7 @@ if (isset($_GET['page']) && isset($_GET['file'])) {
         $_GET['page'],
         $absoluteFilePath,
         $importId,
-        $_GET['file'],
+        $safeFile,
         $ImportResource::DISPLAY_STATISTICS,
         true
     );

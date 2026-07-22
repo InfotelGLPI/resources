@@ -40,6 +40,9 @@ $linkad = new LinkAd();
 //from central
 //update checklist
 if (isset($_POST["add"])) {
+    // checkLoginUser() is not authorization on GLPI 11 and add() enforces no right:
+    // gate on the same right as the guarded update branch (LinkAd::canCreate()).
+    Session::checkRight(LinkAd::$rightname, CREATE);
     $linkad->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
@@ -50,6 +53,9 @@ if (isset($_POST["add"])) {
     $ldap->getUserInformation($_POST["auth_id"]);
     Html::back();
 } elseif (isset($_POST["createAD"])) {
+    // Drives Active Directory account creation from arbitrary POST identity fields:
+    // require the plugin write right before touching the directory or the DB.
+    Session::checkRight(LinkAd::$rightname, CREATE);
     $ldap = new LDAP();
     $res = $ldap->createUserAD($_POST);
     if ($res) {
@@ -81,6 +87,8 @@ if (isset($_POST["add"])) {
     }
     Html::back();
 } elseif (isset($_POST["updateAD"])) {
+    // Drives Active Directory account modification: require the plugin write right.
+    Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     $linkad->getFromDB($_POST['id']);
     $_POST["login"] = $linkad->getField("login");
@@ -132,6 +140,8 @@ if (isset($_POST["add"])) {
     }
     Html::back();
 } elseif (isset($_POST["disableAD"])) {
+    // Drives Active Directory account disabling/move: require the plugin write right.
+    Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     $linkad->getFromDB($_POST['id']);
     $_POST["login"] = $linkad->getField("login");

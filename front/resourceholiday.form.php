@@ -51,12 +51,15 @@ if (!isset($_GET["id"])) {
 $holiday = new ResourceHoliday();
 
 if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $holiday->check(-1, CREATE, $_POST);
     $holiday->add($_POST);
     Html::back();
 } elseif (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $holiday->check($_POST['id'], UPDATE);
     $holiday->update($_POST);
     Html::back();
 } elseif (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
+    $holiday->check($_POST['id'], PURGE);
     $holiday->delete($_POST, 1);
     $holiday->redirectToList();
 } elseif (isset($_GET['menu'])) {

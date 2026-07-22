@@ -217,7 +217,7 @@
                             {% endif %}
                             {% if hidden.pay_gap is not defined %}
                                 {% if item.isField('pay_gap') %}
-                                    {{ fields.dropdownYesNo('pay_gap',
+                                    {{ fields.sliderField('pay_gap',
                                         item.fields['pay_gap'],
                                         __('Pay gap','resources'),
                                         {
@@ -229,7 +229,7 @@
                             {% endif %}
                             {% if hidden.mission_lost is not defined %}
                                 {% if item.isField('mission_lost') %}
-                                    {{ fields.dropdownYesNo('mission_lost',
+                                    {{ fields.sliderField('mission_lost',
                                         item.fields['mission_lost'],
                                         __('Mission lost','resources'),
                                         {

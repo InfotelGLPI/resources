@@ -35,6 +35,7 @@ use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Choice;
 use GlpiPlugin\Resources\Employee;
 use GlpiPlugin\Resources\LDAP;
+use GlpiPlugin\Resources\ContractType;
 use GlpiPlugin\Resources\LeavingReason;
 use GlpiPlugin\Resources\LinkAd;
 use GlpiPlugin\Resources\Resource_Item;
@@ -253,6 +254,47 @@ elseif (isset($_POST["update"])) {
         }
     }
 
+    // Create departure ticket when is_leaving is set to 1 for the first time from the resource form
+    $new_is_leaving = $_POST['is_leaving'] ?? 0;
+    if (!$old_is_leaving && $new_is_leaving) {
+        $config = new Config();
+        $config->getFromDB(1);
+        if ($config->fields["create_ticket_departure"]) {
+            $ticket = new Ticket();
+            $resource->getFromDB($_POST['id']);
+
+            $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
+            if (isset($tt->predefined) && count($tt->predefined)) {
+                foreach ($tt->predefined as $predeffield => $predefvalue) {
+                    $ticket->fields[$predeffield] = $predefvalue;
+                }
+            }
+            $ticket->fields["name"] = __("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
+            $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
+            $ticket->fields["content"] = $resource->fields['name'] . " " . $resource->fields['firstname'] . " " . __("leave on", "resources") . " " . Html::convDate($resource->fields['date_end']);
+            if (!empty($resource->fields['plugin_resources_leavingreasons_id'])) {
+                $ticket->fields["content"] .= "<br>" . LeavingReason::getTypeName(0) . " : " . Dropdown::getDropdownName(LeavingReason::getTable(), $resource->fields["plugin_resources_leavingreasons_id"]);
+            }
+            if (!empty($resource->fields['plugin_resources_contracttypes_id'])) {
+                $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . Dropdown::getDropdownName(ContractType::getTable(), $resource->fields['plugin_resources_contracttypes_id']);
+            } else {
+                $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . __("Without contract", 'resources');
+            }
+            $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
+            $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
+            $ticket->fields["type"] = Ticket::DEMAND_TYPE;
+            $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+            $ticket->fields['items_id'] = [Resource::class => [$_POST['id']]];
+            unset($ticket->fields["id"]);
+            $ticket->add($ticket->fields);
+
+            $linkad = new LinkAd();
+            if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $_POST['id']])) {
+                $linkad->update(['id' => $linkad->getID(), 'action_done' => 0]);
+            }
+        }
+    }
+
     Html::back();
 } //from central
 //delete resource
@@ -389,12 +431,17 @@ elseif (isset($_POST["add_checklist"])) {
     }
     Html::back();
 } elseif (isset($_POST["delete_picture"])) {
+    // Enforce the right BEFORE any filesystem mutation (check() dies on failure).
+    $resource->check($_POST['id'], UPDATE);
     if (isset($_POST['picture'])) {
-        $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $_POST['picture'];
-        if (file_exists($filename)) {
-            if (unlink($filename)) {
+        // basename() strips any path component and realpath() containment prevents traversal
+        // (e.g. "../../config/glpi.conf"): only files inside the pictures directory can be deleted.
+        $picture_dir = realpath(GLPI_PLUGIN_DOC_DIR . "/resources/pictures");
+        $filename    = $picture_dir . "/" . basename((string) $_POST['picture']);
+        $real        = realpath($filename);
+        if ($picture_dir !== false && $real !== false && str_starts_with($real, $picture_dir . "/")) {
+            if (unlink($real)) {
                 $_POST['picture'] = 'NULL';
-                $resource->check($_POST['id'], UPDATE);
                 $resource->update($_POST);
             }
         }

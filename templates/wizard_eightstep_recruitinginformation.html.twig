@@ -106,7 +106,7 @@
 
                     {% if hidden.reconversion is not defined %}
                         {% if item.isField('reconversion') %}
-                            {{ fields.dropdownYesNo('reconversion',
+                            {{ fields.sliderField('reconversion',
                                 item.fields['reconversion'],
                                 __('Reconversion','resources'),
                                 {

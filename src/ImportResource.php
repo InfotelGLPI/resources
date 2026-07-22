@@ -3056,6 +3056,10 @@ class ImportResource extends CommonDBTM
 
     function setFileVerify($params)
     {
+        // Reduce the client-supplied name to its basename so it cannot escape the
+        // import directories (path traversal → arbitrary rename/move).
+        $params['filename'] = basename((string) ($params['filename'] ?? ''));
+
         Document::renameForce(
             GLPI_PLUGIN_DOC_DIR . "/resources/import/verify/" . $params['filename'],
             GLPI_PLUGIN_DOC_DIR . "/resources/import/" . $params['filename']
@@ -3108,6 +3112,9 @@ class ImportResource extends CommonDBTM
 
     static function deleteFile($filename)
     {
+        // Reduce the client-supplied name to its basename so it cannot escape the
+        // verification directory (path traversal → arbitrary file delete).
+        $filename = basename((string) $filename);
         $filepath = GLPI_PLUGIN_DOC_DIR . "/resources/import/verify/" . $filename;
         unlink($filepath);
     }

@@ -37,8 +37,18 @@ if (Session::getCurrentInterface()
 global $DB;
 
 if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
+    // $_GET['users_id'] is attacker-controlled and was streamed back as a document
+    // without any ownership/right check (IDOR). Authorize it:
+    //  - simplified (helpdesk) interface: a user may only export their OWN equipment;
+    //  - central interface: exporting an arbitrary user's data requires the resources
+    //    READ right (checkCentralAccess() only asserts central access, not the plugin right).
+    if (Session::getCurrentInterface() === 'helpdesk') {
+        $users_id = (int) Session::getLoginUserID();
+    } else {
+        Session::checkRight('plugin_resources', READ);
+        $users_id = (int) $_GET['users_id'];
+    }
     $PluginUseditemsexportExport = new PluginUseditemsexportExport();
-    $users_id = $_GET['users_id'];
     if ($PluginUseditemsexportExport::generatePDF($users_id)) {
         $dbu = new DbUtils();
         $table = $dbu->getTableForItemType('PluginUseditemsexportExport');

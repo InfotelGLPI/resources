@@ -28,6 +28,8 @@
  */
 
 // Direct access to file
+use Glpi\Exception\Http\NotFoundHttpException;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownValue.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
@@ -45,7 +47,7 @@ $dbu = new DbUtils();
 
 // Security
 if (!($item = $dbu->getItemForItemtype($_GET['itemtype']))) {
-    throw new \Glpi\Exception\Http\NotFoundHttpException();
+    throw new NotFoundHttpException();
 }
 
 $table = $item->getTable();
@@ -188,11 +190,17 @@ if ($item instanceof CommonTreeDropdown) {
              $LIMIT";
 
     if ($result = $DB->doQuery($query)) {
-        echo "<select class='form-select' id='dropdown_" . $_GET["myname"] . $_GET["rand"] . "' name='" . $_GET['myname'] . "'
+        // Escape every request-derived value before embedding it in HTML: these
+        // parameters are reflected from $_GET on a GET-reachable endpoint (no CSRF
+        // token applies), so raw output is a reflected-XSS vector.
+        echo "<select class='form-select' id='dropdown_" . htmlescape($_GET["myname"]) . htmlescape($_GET["rand"]) . "' name='" . htmlescape($_GET['myname']) . "'
              size='1'";
 
         if (isset($_GET["on_change"]) && !empty($_GET["on_change"])) {
-            echo " onChange='" . $_GET["on_change"] . "'";
+            // on_change is a JS callback the widget forwards through the AJAX round-trip
+            // (server-generated in normal use). Escape it so a crafted value cannot break
+            // out of the single-quoted attribute to inject further handlers/markup.
+            echo " onChange='" . htmlescape($_GET["on_change"]) . "'";
         }
         echo ">";
 
@@ -228,12 +236,14 @@ if ($item instanceof CommonTreeDropdown) {
 
             default :
                 if ($_GET['display_emptychoice']) {
-                    echo "<option class='tree' value='0'>" . $_GET['emptylabel'] . "</option>";
+                    echo "<option class='tree' value='0'>" . htmlescape($_GET['emptylabel']) . "</option>";
                 }
         }
 
         if ($display_selected) {
-            $outputval = Dropdown::getDropdownName($table, $_GET['value']);
+            // Escape the DB-sourced name at the source so the literal markup appended
+            // below (&hellip;, id suffix) is not double-escaped.
+            $outputval = htmlescape(Dropdown::getDropdownName($table, $_GET['value']));
 
             if (Toolbox::strlen($outputval) != 0 && $outputval != "&nbsp;") {
                 if (Toolbox::strlen($outputval) > $_GET["limit"]) {
@@ -241,9 +251,9 @@ if ($item instanceof CommonTreeDropdown) {
                     $outputval = "&hellip;" . Toolbox::substr($outputval, -$_GET["limit"]);
                 }
                 if ($_SESSION["glpiis_ids_visible"] || Toolbox::strlen($outputval) == 0) {
-                    $outputval .= " (" . $_GET['value'] . ")";
+                    $outputval .= " (" . htmlescape($_GET['value']) . ")";
                 }
-                echo "<option class='tree' selected value='" . $_GET['value'] . "'>" . $outputval . "</option>";
+                echo "<option class='tree' selected value='" . htmlescape($_GET['value']) . "'>" . $outputval . "</option>";
             }
         }
 
@@ -423,11 +433,17 @@ if ($item instanceof CommonTreeDropdown) {
     }
 
     if ($result = $DB->doQuery($query)) {
-        echo "<select class='form-select' id='dropdown_" . $_GET["myname"] . $_GET["rand"] . "' name='" . $_GET['myname'] . "'
+        // Escape every request-derived value before embedding it in HTML: these
+        // parameters are reflected from $_GET on a GET-reachable endpoint (no CSRF
+        // token applies), so raw output is a reflected-XSS vector.
+        echo "<select class='form-select' id='dropdown_" . htmlescape($_GET["myname"]) . htmlescape($_GET["rand"]) . "' name='" . htmlescape($_GET['myname']) . "'
              size='1'";
 
         if (isset($_GET["on_change"]) && !empty($_GET["on_change"])) {
-            echo " onChange='" . $_GET["on_change"] . "'";
+            // on_change is a JS callback the widget forwards through the AJAX round-trip
+            // (server-generated in normal use). Escape it so a crafted value cannot break
+            // out of the single-quoted attribute to inject further handlers/markup.
+            echo " onChange='" . htmlescape($_GET["on_change"]) . "'";
         }
 
         echo ">";
@@ -435,7 +451,7 @@ if ($item instanceof CommonTreeDropdown) {
         if ($_GET['searchText'] != $CFG_GLPI["ajax_wildcard"] && $DB->numrows($result) == $NBMAX) {
             echo "<option value='0'>--" . __('Limited view') . "--</option>";
         } elseif (!isset($_GET['display_emptychoice']) || $_GET['display_emptychoice']) {
-            echo "<option value='0'>" . $_GET["emptylabel"] . "</option>";
+            echo "<option value='0'>" . htmlescape($_GET["emptylabel"]) . "</option>";
         }
 
         if (count($toadd)) {
@@ -446,13 +462,13 @@ if ($item instanceof CommonTreeDropdown) {
             }
         }
 
-        $output = Dropdown::getDropdownName($table, $_GET['value']);
+        $output = htmlescape(Dropdown::getDropdownName($table, $_GET['value']));
 
         if (strlen($output) != 0 && $output != "&nbsp;") {
             if ($_SESSION["glpiis_ids_visible"]) {
-                $output .= " (" . $_GET['value'] . ")";
+                $output .= " (" . htmlescape($_GET['value']) . ")";
             }
-            echo "<option selected value='" . $_GET['value'] . "'>" . $output . "</option>";
+            echo "<option selected value='" . htmlescape($_GET['value']) . "'>" . $output . "</option>";
         }
 
         if ($DB->numrows($result)) {
