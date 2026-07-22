@@ -45,6 +45,7 @@ use Document;
 use Document_Item;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
@@ -3262,9 +3263,11 @@ class Resource extends CommonDBTM
                             // Cochage des checklist en mode "JOB DONE"
                             $pChecklist = new Checklist();
 
-                            $query = "UPDATE " . $pChecklist->getTable(
-                            ) . " SET `is_checked`=1 WHERE `plugin_resources_resources_id`=" . $idResource;
-                            if ($DB->doQuery($query)) {
+                            if ($DB->update(
+                                $pChecklist->getTable(),
+                                ['is_checked' => 1],
+                                ['plugin_resources_resources_id' => (int) $idResource]
+                            )) {
                                 $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
                             }
                         } else {
@@ -3297,7 +3300,7 @@ class Resource extends CommonDBTM
      * @param string $search
      * @param bool $showOnlyLinkedResources
      *
-     * @return bool|\mysqli_result
+     * @return \Glpi\DBAL\DBmysqlIterator
      */
     public static function getSqlSearchResult(
         $count = true,
@@ -3317,80 +3320,66 @@ class Resource extends CommonDBTM
 
         $dbu = new DbUtils();
 
-        $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0 ";
+        $where = [
+            'glpi_plugin_resources_resources.is_deleted' => 0,
+        ];
         if (!$isNotLeavingOnly) {
-            $where .= " AND (`glpi_plugin_resources_resources`.`is_leaving` = 0 OR `glpi_plugin_resources_resources`.`date_end` > now())";
+            $where[] = [
+                'OR' => [
+                    'glpi_plugin_resources_resources.is_leaving' => 0,
+                    'glpi_plugin_resources_resources.date_end'   => ['>', QueryFunction::now()],
+                ],
+            ];
         } else {
-            $where .= " AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
+            $where['glpi_plugin_resources_resources.is_leaving'] = 0;
         }
 
-        $where .= "  AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
+        $where['glpi_plugin_resources_resources.is_template'] = 0;
 
-        $where .= $dbu->getEntitiesRestrictRequest(
-            'AND',
+        $entities_crit = $dbu->getEntitiesRestrictCriteria(
             'glpi_plugin_resources_resources',
             '',
             $entity_restrict,
             true
         );
+        if (count($entities_crit)) {
+            $where[] = $entities_crit;
+        }
+
         if ((is_numeric($value) && $value)
             || count($used)
         ) {
-            $where .= " AND `glpi_plugin_resources_resources`.`id` NOT IN (0";
+            $exclude = [0];
             if (is_numeric($value)) {
-                $first = false;
-                $where .= $value;
-            } else {
-                $first = true;
+                $exclude[] = (int) $value;
             }
             if (is_array($used)) {
                 foreach ($used as $val) {
-                    if ($first) {
-                        $first = false;
-                    } else {
-                        $where .= ",";
-                    }
-                    $where .= $val;
+                    $exclude[] = (int) $val;
                 }
             }
-            $where .= ")";
-        }
-
-        if ($count) {
-            $query = "SELECT COUNT(DISTINCT `glpi_plugin_resources_resources`.`id` ) AS cpt
-                   FROM `glpi_plugin_resources_resources` ";
-        } else {
-            $query = "SELECT DISTINCT `glpi_plugin_resources_resources`.*,
-                          `glpi_users`.`registration_number`,
-                          `glpi_users`.`name` AS username,
-                          `glpi_users`.`id` AS userid
-                   FROM `glpi_plugin_resources_resources`";
-            if ($showOnlyLinkedResources) {
-                $query .= "INNER JOIN `glpi_plugin_resources_resources_items`
-                        ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`
-                            AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
-                      INNER JOIN `glpi_users`
-                        ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                              AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User') ";
-            } else {
-                $query .= "LEFT JOIN `glpi_plugin_resources_resources_items`
-                        ON (`glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`
-                            = `glpi_plugin_resources_resources`.`id`
-                             AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User')
-                      LEFT JOIN `glpi_users`
-                        ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                              AND `glpi_plugin_resources_resources_items`.`itemtype` = 'User') ";
-            }
+            $where[] = ['NOT' => ['glpi_plugin_resources_resources.id' => $exclude]];
         }
 
         if (!Session::haveRight("plugin_resources_all", READ)) {
-            $who = Session::getLoginUserID();
-            $where .= " AND (`glpi_plugin_resources_resources`.`users_id_recipient` = '$who' OR `glpi_plugin_resources_resources`.`users_id` = '$who') ";
+            $who = (int) Session::getLoginUserID();
+            $where[] = [
+                'OR' => [
+                    'glpi_plugin_resources_resources.users_id_recipient' => $who,
+                    'glpi_plugin_resources_resources.users_id'           => $who,
+                ],
+            ];
         }
 
         if ($count) {
-            $query .= " WHERE $where ";
+            $criteria = [
+                'SELECT' => new QueryExpression(
+                    'COUNT(DISTINCT ' . $DB->quoteName('glpi_plugin_resources_resources.id')
+                    . ') AS ' . $DB->quoteName('cpt')
+                ),
+                'FROM'   => 'glpi_plugin_resources_resources',
+                'WHERE'  => $where,
+            ];
         } else {
             $contracttypeprofile = new Contracttypeprofile();
             if ($contracttypeprofile->getFromDBByCrit(["profiles_id" => $_SESSION['glpiactiveprofile']['id']])) {
@@ -3398,35 +3387,87 @@ class Resource extends CommonDBTM
                 if ($contracttypeprofiles !== false && is_array(
                     $contracttypeprofiles
                 ) && !empty($contracttypeprofiles)) {
-                    $where .= "AND (`glpi_plugin_resources_resources`.`plugin_resources_contracttypes_id` IN (" . implode(
-                        ', ',
-                        $contracttypeprofiles
-                    ) . "))";
+                    $where['glpi_plugin_resources_resources.plugin_resources_contracttypes_id']
+                        = array_map('intval', $contracttypeprofiles);
                 }
             }
             if (strlen($search) > 0 && $search != $CFG_GLPI["ajax_wildcard"]) {
-                $where .= " AND (`glpi_plugin_resources_resources`.`name` " . Search::makeTextSearch($search) . "
-                             OR `glpi_plugin_resources_resources`.`firstname` " . Search::makeTextSearch($search) . "
-                             OR `glpi_users`.`registration_number` " . Search::makeTextSearch($search) . "
-                             OR `glpi_users`.`name` " . Search::makeTextSearch($search) . "
-                             OR CONCAT(`glpi_plugin_resources_resources`.`name`,' ',`glpi_plugin_resources_resources`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) "
-                    . Search::makeTextSearch($search) . ")";
+                $search_sql = Search::makeTextSearch($search);
+                $where[] = [
+                    'OR' => [
+                        new QueryExpression(
+                            $DB->quoteName('glpi_plugin_resources_resources.name') . ' ' . $search_sql
+                        ),
+                        new QueryExpression(
+                            $DB->quoteName('glpi_plugin_resources_resources.firstname') . ' ' . $search_sql
+                        ),
+                        new QueryExpression(
+                            $DB->quoteName('glpi_users.registration_number') . ' ' . $search_sql
+                        ),
+                        new QueryExpression(
+                            $DB->quoteName('glpi_users.name') . ' ' . $search_sql
+                        ),
+                        new QueryExpression(
+                            'CONCAT(' . $DB->quoteName('glpi_plugin_resources_resources.name') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_plugin_resources_resources.firstname') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_users.registration_number') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_users.name') . ') ' . $search_sql
+                        ),
+                    ],
+                ];
             }
-            $query .= " WHERE $where ";
 
-            if ($_SESSION["glpinames_format"] == User::FIRSTNAME_BEFORE) {
-                $query .= " ORDER BY `glpi_plugin_resources_resources`.`firstname`,
-                               `glpi_plugin_resources_resources`.`name` ";
-            } else {
-                $query .= " ORDER BY `glpi_plugin_resources_resources`.`firstname`,
-                               `glpi_plugin_resources_resources`.`name` ";
-            }
+            $join = [
+                'glpi_plugin_resources_resources_items' => [
+                    'ON' => [
+                        'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources'       => 'id',
+                        [
+                            'AND' => [
+                                'glpi_plugin_resources_resources_items.itemtype' => 'User',
+                            ],
+                        ],
+                    ],
+                ],
+                'glpi_users' => [
+                    'ON' => [
+                        'glpi_users'                            => 'id',
+                        'glpi_plugin_resources_resources_items' => 'items_id',
+                        [
+                            'AND' => [
+                                'glpi_plugin_resources_resources_items.itemtype' => 'User',
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+
+            $criteria = [
+                'SELECT'   => [
+                    'glpi_plugin_resources_resources.*',
+                    'glpi_users.registration_number',
+                    'glpi_users.name AS username',
+                    'glpi_users.id AS userid',
+                ],
+                'DISTINCT' => true,
+                'FROM'     => 'glpi_plugin_resources_resources',
+                ($showOnlyLinkedResources ? 'INNER JOIN' : 'LEFT JOIN') => $join,
+                'WHERE'    => $where,
+                'ORDER'    => [
+                    'glpi_plugin_resources_resources.firstname',
+                    'glpi_plugin_resources_resources.name',
+                ],
+            ];
 
             if ($search != $CFG_GLPI["ajax_wildcard"]) {
-                $query .= " LIMIT 0," . $CFG_GLPI["dropdown_max"];
+                $criteria['START'] = 0;
+                $criteria['LIMIT'] = (int) $CFG_GLPI["dropdown_max"];
             }
         }
-        return $DB->doQuery($query);
+        return $DB->request($criteria);
     }
 
 
@@ -4374,10 +4415,11 @@ class Resource extends CommonDBTM
                         'plugin_resources_resources_id' => $resources_id,
                         'checklist_type' => Checklist::RESOURCES_CHECKLIST_TRANSFER,
                     ]);
-                    $query = "UPDATE `glpi_plugin_resources_checklists`
-                         SET `entities_id` = '" . $entities_id . "'
-                         WHERE `plugin_resources_resources_id` ='$resources_id'";
-                    $DB->doQuery($query);
+                    $DB->update(
+                        'glpi_plugin_resources_checklists',
+                        ['entities_id' => (int) $entities_id],
+                        ['plugin_resources_resources_id' => (int) $resources_id]
+                    );
                 }
                 $checklistconfig->addChecklistsFromRules($this, Checklist::RESOURCES_CHECKLIST_TRANSFER);
 
@@ -5114,11 +5156,6 @@ class Resource extends CommonDBTM
         $tableResourceCriterias = [];
         $tableResourceImportCriterias = [];
 
-        $query = "SELECT r.*";
-        $from = "FROM " . self::getTable() . " as r";
-        $join = "";
-        $where = 'WHERE 1=1';
-
         foreach ($identifiers as $identifier) {
             if (is_string($identifier['value']) && empty($identifier['value'])) {
                 $identifier['value'] = null;
@@ -5142,40 +5179,41 @@ class Resource extends CommonDBTM
             }
         }
 
+        $criteria = [
+            'SELECT' => 'r.*',
+            'FROM'   => self::getTable() . ' AS r',
+        ];
+        $where = [];
+
         if (count($tableResourceImportCriterias) > 0) {
-            $join .= " INNER JOIN " . ResourceImport::getTable() . " as ri";
-            $join .= " ON ri.plugin_resources_resources_id = r.id";
+            $criteria['INNER JOIN'] = [
+                ResourceImport::getTable() . ' AS ri' => [
+                    'ON' => [
+                        'ri' => 'plugin_resources_resources_id',
+                        'r'  => 'id',
+                    ],
+                ],
+            ];
 
             foreach ($tableResourceImportCriterias as $tableResourceImportCriteria) {
-                $where .= " AND ri.name = '" . addslashes($tableResourceImportCriteria['name']) . "'";
-                $where .= " AND ri.value = ";
-                if (is_string($tableResourceImportCriteria['value'])) {
-                    $where .= "'" . addslashes($tableResourceImportCriteria['value']) . "'";
-                } else {
-                    $where = $tableResourceImportCriteria['value'];
-                }
+                $where[] = [
+                    'ri.name'  => $tableResourceImportCriteria['name'],
+                    'ri.value' => $tableResourceImportCriteria['value'],
+                ];
             }
         }
 
         if (count($tableResourceCriterias) > 0) {
             foreach ($tableResourceCriterias as $tableResourceCriteria) {
-                $where .= " AND r." . addslashes($tableResourceCriteria['name']) . " = ";
-
-                if (is_string($tableResourceCriteria['value'])) {
-                    $where .= "'" . addslashes($tableResourceCriteria['value']) . "'";
-                } else {
-                    $where = $tableResourceCriteria['value'];
-                }
+                $where[] = ['r.' . $tableResourceCriteria['name'] => $tableResourceCriteria['value']];
             }
         }
 
-        $query .= " " . $from;
-        $query .= " " . $join;
-        $query .= " " . $where;
+        $criteria['WHERE'] = $where;
 
-        $results = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
 
-        while ($data = $results->fetchArray()) {
+        foreach ($iterator as $data) {
             return $data['id'];
         }
         return null;

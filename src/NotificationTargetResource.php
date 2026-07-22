@@ -1759,12 +1759,14 @@ class NotificationTargetResource extends NotificationTarget
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id` FROM `glpi_notificationtemplates`
-                  WHERE `itemtype`='GlpiPlugin\\Resources\\Resource' AND `name` = 'Resources'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Resources'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Resources',
@@ -1829,12 +1831,14 @@ class NotificationTargetResource extends NotificationTarget
                 }
             }
         }
-        $query_id = "SELECT `id` FROM `glpi_notificationtemplates`
-                  WHERE `itemtype`='GlpiPlugin\\Resources\\Resource' AND `name` = 'Alert Resources Tasks'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Alert Resources Tasks'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Alert Resources Tasks',
@@ -1929,12 +1933,14 @@ class NotificationTargetResource extends NotificationTarget
             }
         }
 
-        $query_id = "SELECT `id` FROM `glpi_notificationtemplates`
-                   WHERE `itemtype`='GlpiPlugin\\Resources\\Resource' AND `name` = 'Alert Leaving Resources'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Alert Leaving Resources'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Alert Leaving Resources',
@@ -2023,14 +2029,14 @@ class NotificationTargetResource extends NotificationTarget
             }
         }
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Alert Resources Checklists'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Alert Resources Checklists'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Alert Resources Checklists',
@@ -2136,14 +2142,14 @@ class NotificationTargetResource extends NotificationTarget
             }
         }
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Leaving Resource'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Leaving Resource'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Leaving Resource',
@@ -2236,15 +2242,14 @@ class NotificationTargetResource extends NotificationTarget
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Resource Resting'";
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Resource Resting'],
+        ]);
 
-        $result = $DB->doQuery($query_id) or die($DB->error());
-
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Resource Resting',
@@ -2332,14 +2337,14 @@ class NotificationTargetResource extends NotificationTarget
             }
         }
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                             AND `name` = 'Resource Holiday'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Resource Holiday'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Resource Holiday',
@@ -2432,14 +2437,14 @@ class NotificationTargetResource extends NotificationTarget
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Send other resource notification'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Send other resource notification'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Send other resource notification',
@@ -2547,14 +2552,14 @@ class NotificationTargetResource extends NotificationTarget
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Resource Transfer'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Resource Transfer'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Resource Transfer',
@@ -2624,14 +2629,14 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Alert for sales people'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Alert for sales people'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Alert for sales people',
@@ -2747,14 +2752,14 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
         $template = new NotificationTemplate();
         $dbu = new DbUtils();
 
-        $query_id = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Resources\\Resource'
-                       AND `name` = 'Resource Report Creation'";
-        $result = $DB->doQuery($query_id) or die($DB->error());
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => 'glpi_notificationtemplates',
+            'WHERE'  => ['itemtype' => Resource::class, 'name' => 'Resource Report Creation'],
+        ]);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($iterator) > 0) {
+            $templates_id = $iterator->current()['id'];
         } else {
             $tmp = [
                 'name' => 'Resource Report Creation',

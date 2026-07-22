@@ -36,6 +36,7 @@ use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Location;
@@ -249,8 +250,7 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
 
-        $query = "DELETE FROM `" . self::getTable() . "`";
-        return $DB->doQuery($query);
+        return $DB->delete(self::getTable(), [1]);
     }
 
     /**
@@ -2197,13 +2197,20 @@ class ImportResource extends CommonDBTM
     private function getUserByFullname($fullname)
     {
         global $DB;
-        $query = "SELECT id FROM " . User::getTable(
-            ) . ' WHERE CONCAT(firstname," ",realname) LIKE "' . $DB->escape($fullname) . '"';
 
-        $results = $DB->doQuery($query);
+        $iterator = $DB->request([
+            'SELECT' => 'id',
+            'FROM'   => User::getTable(),
+            'WHERE'  => [
+                new QueryExpression(
+                    'CONCAT(' . $DB->quoteName('firstname') . ', ' . $DB->quoteValue(' ')
+                    . ', ' . $DB->quoteName('realname') . ') LIKE ' . $DB->quoteValue($fullname)
+                ),
+            ],
+        ]);
         $result = [];
 
-        while ($data = $DB->fetchAssoc($results)) {
+        foreach ($iterator as $data) {
             $result[] = $data;
         }
         return $result;
@@ -2232,51 +2239,38 @@ class ImportResource extends CommonDBTM
     public function findResource($identifiers)
     {
         global $DB;
-        $crit = [];
+        $where    = [];
         $needLink = false;
         $Resource = new Resource();
         foreach ($identifiers as $identifier) {
-            if (is_string($identifier['value'])) {
-                $value = "'" . addslashes($identifier['value']) . "'";
-            } elseif (is_null($identifier['value'])) {
-                $value = "NULL";
-            } else {
-                $value = $identifier['value'];
-            }
-
             if ($identifier['resource_column'] != "10") {
-                $crit[] = "r." . addslashes(
-                        $Resource->getResourceColumnNameFromDataNameID($identifier['resource_column'])
-                    ) . " = " . $value;
+                $column = $Resource->getResourceColumnNameFromDataNameID($identifier['resource_column']);
+                $where[] = ["r.$column" => $identifier['value']];
             } else {
                 $needLink = true;
-                $crit[] = "rd.name = '" . addslashes($identifier['name']) . "'";
-                $crit[] = "rd.value = " . $value;
+                $where[]  = ['rd.name' => $identifier['name']];
+                $where[]  = ['rd.value' => $identifier['value']];
             }
         }
 
-        $query = "SELECT r.id";
-        $query .= " FROM " . Resource::getTable() . " as r";
+        $criteria = [
+            'SELECT' => 'r.id',
+            'FROM'   => Resource::getTable() . ' AS r',
+            'WHERE'  => $where,
+        ];
 
         if ($needLink) {
-            $query .= " INNER JOIN " . ResourceImport::getTable() . " as rd";
-            $query .= " ON rd." . ResourceImport::$items_id;
-            $query .= " = r.id";
+            $criteria['INNER JOIN'] = [
+                ResourceImport::getTable() . ' AS rd' => [
+                    'ON' => [
+                        'rd' => ResourceImport::$items_id,
+                        'r'  => 'id',
+                    ],
+                ],
+            ];
         }
 
-        for ($i = 0; $i < count($crit); $i++) {
-            if ($i == 0) {
-                $query .= " WHERE ";
-            } elseif ($i > 0) {
-                $query .= " AND ";
-            }
-
-            $query .= $crit[$i];
-        }
-
-        $result = $DB->doQuery($query);
-
-        while ($data = $DB->fetchArray($result)) {
+        foreach ($DB->request($criteria) as $data) {
             return $data['id'];
         }
 
@@ -2622,16 +2616,15 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT *";
-        $query .= " FROM " . Resource::getTable();
-        $query .= " LIMIT " . intval($start);
-        $query .= ", " . intval($limit);
+        $iterator = $DB->request([
+            'FROM'  => Resource::getTable(),
+            'START' => (int) $start,
+            'LIMIT' => (int) $limit,
+        ]);
 
         $resources = [];
-        if ($result = $DB->doQuery($query)) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $resources[] = $data;
-            }
+        foreach ($iterator as $data) {
+            $resources[] = $data;
         }
 
         return $resources;
@@ -2713,15 +2706,16 @@ class ImportResource extends CommonDBTM
     public function getResourcesImports($imports_id, $start, $limit)
     {
         global $DB;
-        $query = "SELECT * FROM " . $this->getTable();
-        $query .= " WHERE plugin_resources_imports_id = " . $imports_id;
-        $query .= " LIMIT " . $start . ", " . $limit;
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'WHERE' => ['plugin_resources_imports_id' => (int) $imports_id],
+            'START' => (int) $start,
+            'LIMIT' => (int) $limit,
+        ]);
 
         $resourcesImports = [];
-        if ($result = $DB->doQuery($query)) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $resourcesImports[] = $data;
-            }
+        foreach ($iterator as $data) {
+            $resourcesImports[] = $data;
         }
         return $resourcesImports;
     }
@@ -3024,23 +3018,21 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT *";
-        $query .= " FROM " . self::getTable();
-        $query .= " WHERE plugin_resources_imports_id = " . $importID;
-
-        $query .= " AND id ";
-        $query .= ($order == self::BEFORE) ? "<" : ">";
-        $query .= " " . $importId;
+        $criteria = [
+            'FROM'  => self::getTable(),
+            'WHERE' => [
+                'plugin_resources_imports_id' => (int) $importID,
+                'id' => [($order == self::BEFORE) ? '<' : '>', (int) $importId],
+            ],
+        ];
 
         if (!is_null($limit)) {
-            $query .= " LIMIT " . intval($limit);
+            $criteria['LIMIT'] = (int) $limit;
         }
 
         $imports = [];
-        if ($result = $DB->doQuery($query)) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $imports[] = $data;
-            }
+        foreach ($DB->request($criteria) as $data) {
+            $imports[] = $data;
         }
 
         return $imports;

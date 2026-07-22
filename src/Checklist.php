@@ -36,6 +36,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\DBAL\QueryExpression;
 use Entity;
 use Html;
 use Log;
@@ -422,14 +423,19 @@ class Checklist extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT MAX(`rank`)
-               FROM `" . $this->getTable() . "`
-               WHERE `checklist_type` = " . (int) $input['checklist_type'] . "
-               AND `plugin_resources_contracttypes_id` = " . (int) $input['plugin_resources_contracttypes_id'] . "
-               AND `plugin_resources_resources_id` = " . (int) $input['plugin_resources_resources_id'] . "
-               AND `entities_id` = " . (int) $input['entities_id'];
-        $result = $DB->doQuery($query);
-        $input["rank"] = $DB->result($result, 0, 0) + 1;
+        $iterator = $DB->request([
+            'SELECT' => new QueryExpression(
+                'MAX(' . $DB->quoteName('rank') . ') AS ' . $DB->quoteName('maxrank')
+            ),
+            'FROM'   => $this->getTable(),
+            'WHERE'  => [
+                'checklist_type'                     => (int) $input['checklist_type'],
+                'plugin_resources_contracttypes_id'  => (int) $input['plugin_resources_contracttypes_id'],
+                'plugin_resources_resources_id'      => (int) $input['plugin_resources_resources_id'],
+                'entities_id'                        => (int) $input['entities_id'],
+            ],
+        ]);
+        $input["rank"] = ((int) $iterator->current()['maxrank']) + 1;
 
         return $input;
     }
@@ -467,52 +473,56 @@ class Checklist extends CommonDBTM
     {
         global $DB;
 
-        $sql = "SELECT `rank`
-              FROM `" . $this->getTable() . "`
-              WHERE `id` =" . (int) $input['id'];
+        $iterator = $DB->request([
+            'SELECT' => 'rank',
+            'FROM'   => $this->getTable(),
+            'WHERE'  => ['id' => (int) $input['id']],
+        ]);
 
-        if ($result = $DB->doQuery($sql)) {
-            if ($DB->numrows($result) == 1) {
-                $current_rank = (int) $DB->result($result, 0, 0);
-                // Search rules to switch
-                $sql2 = "SELECT `ID`,`rank`
-                     FROM `" . $this->getTable() . "`
-                     WHERE `checklist_type` = " . (int) $input['checklist_type'] . "
-                     AND `plugin_resources_resources_id` = " . (int) $input['plugin_resources_resources_id'];
+        if (count($iterator) == 1) {
+            $current_rank = (int) $iterator->current()['rank'];
+            // Search rules to switch
+            $criteria = [
+                'SELECT' => ['id', 'rank'],
+                'FROM'   => $this->getTable(),
+                'WHERE'  => [
+                    'checklist_type'                => (int) $input['checklist_type'],
+                    'plugin_resources_resources_id' => (int) $input['plugin_resources_resources_id'],
+                ],
+                'LIMIT'  => 1,
+            ];
 
-                switch ($input['action']) {
-                    case "up":
-                        $sql2 .= " AND `rank` < " . $current_rank . "
-                           ORDER BY `rank` DESC
-                           LIMIT 1";
-                        break;
+            switch ($input['action']) {
+                case "up":
+                    $criteria['WHERE']['rank'] = ['<', $current_rank];
+                    $criteria['ORDER']         = 'rank DESC';
+                    break;
 
-                    case "down":
-                        $sql2 .= " AND `rank` > " . $current_rank . "
-                           ORDER BY `rank` ASC
-                           LIMIT 1";
-                        break;
+                case "down":
+                    $criteria['WHERE']['rank'] = ['>', $current_rank];
+                    $criteria['ORDER']         = 'rank ASC';
+                    break;
 
-                    default:
-                        return false;
-                }
-
-                if ($result2 = $DB->doQuery($sql2)) {
-                    if ($DB->numrows($result2) == 1) {
-                        list($other_ID, $new_rank) = $DB->fetchArray($result2);
-
-                        return ($this->update([
-                                'id' => $input['id'],
-                                'rank' => $new_rank
-                            ]) && $this->update([
-                                'id' => $other_ID,
-                                'rank' => $current_rank
-                            ]));
-                    }
-                }
+                default:
+                    return false;
             }
-            return false;
+
+            $iterator2 = $DB->request($criteria);
+            if (count($iterator2) == 1) {
+                $row      = $iterator2->current();
+                $other_ID = $row['id'];
+                $new_rank = $row['rank'];
+
+                return ($this->update([
+                        'id' => $input['id'],
+                        'rank' => $new_rank
+                    ]) && $this->update([
+                        'id' => $other_ID,
+                        'rank' => $current_rank
+                    ]));
+            }
         }
+        return false;
     }
 
     /**
@@ -1543,15 +1553,15 @@ class Checklist extends CommonDBTM
             return false;
         }
 
-        $query = "SELECT *
-               FROM `glpi_plugin_resources_checklists`
-               WHERE `plugin_resources_resources_id` = '$ID'
-               AND `checklist_type` = '$checklist_type'
-               ORDER BY `rank` ";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
-
-        $i = $j = 0;
+        $iterator = $DB->request([
+            'FROM'  => 'glpi_plugin_resources_checklists',
+            'WHERE' => [
+                'plugin_resources_resources_id' => (int) $ID,
+                'checklist_type'                => (int) $checklist_type,
+            ],
+            'ORDER' => 'rank',
+        ]);
+        $number = count($iterator);
 
         $pdf->setColumnsSize(100);
         if ($number > 0) {
@@ -1564,24 +1574,17 @@ class Checklist extends CommonDBTM
                 __('Checked', 'resources') . '</i></b>'
             );
 
-            $i++;
-
-            while ($j < $number) {
-                $checkedID = $DB->result($result, $j, "is_checked");
-                $name = $DB->result($result, $j, "name");
-                $task_id = $DB->result($result, $j, "plugin_resources_tasks_id");
-
-                if ($checkedID == 1) {
+            foreach ($iterator as $data) {
+                if ($data['is_checked'] == 1) {
                     $checked = __('Yes');
                 } else {
                     $checked = __('No');
                 }
                 $pdf->displayLine(
-                    $name,
-                    Dropdown::getYesNo($task_id),
+                    $data['name'],
+                    Dropdown::getYesNo($data['plugin_resources_tasks_id']),
                     $checked
                 );
-                $j++;
             }
         } else {
             $pdf->displayLine(__('No checklist found', 'resources'));

@@ -35,7 +35,6 @@ use DbUtils;
 use Html;
 use Migration;
 use Session;
-use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -151,25 +150,35 @@ class Notification extends CommonDBTM
 
         $output = [];
 
-        $query = "SELECT `" . $this->getTable() . "`.`id`,
-                       `glpi_users`.`realname`,
-                       `glpi_users`.`firstname`,
-                       `glpi_users`.`name`,
-                       `" . $this->getTable() . "`.`type`,
-                       `" . $this->getTable() . "`.`users_id`,
-                       `" . $this->getTable() . "`.`date_mod`,
-                       `" . $this->getTable() . "`.`plugin_resources_resources_id`
-          FROM " . $this->getTable() . "
-          LEFT JOIN `glpi_users` ON (`" . $this->getTable() . "`.`users_id` = `glpi_users`.`id`)
-          WHERE `" . $this->getTable() . "`.`plugin_resources_resources_id` = " . Toolbox::cleanInteger($resources_id) . "
-          ORDER BY `" . $this->getTable() . "`.`date_mod` DESC
-          LIMIT " . intval($start) . "," . intval($_SESSION['glpilist_limit']);
+        $table = $this->getTable();
 
-        $result = $DB->doQuery($query);
-        if ($DB->numrows($result)) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $output[$data['id']] = $data;
-            }
+        $iterator = $DB->request([
+            'SELECT'    => [
+                "$table.id",
+                'glpi_users.realname',
+                'glpi_users.firstname',
+                'glpi_users.name',
+                "$table.type",
+                "$table.users_id",
+                "$table.date_mod",
+                "$table.plugin_resources_resources_id",
+            ],
+            'FROM'      => $table,
+            'LEFT JOIN' => [
+                'glpi_users' => [
+                    'ON' => [
+                        'glpi_users' => 'id',
+                        $table       => 'users_id',
+                    ],
+                ],
+            ],
+            'WHERE'     => ["$table.plugin_resources_resources_id" => (int) $resources_id],
+            'ORDER'     => "$table.date_mod DESC",
+            'START'     => (int) $start,
+            'LIMIT'     => (int) $_SESSION['glpilist_limit'],
+        ]);
+        foreach ($iterator as $data) {
+            $output[$data['id']] = $data;
         }
 
         return $output;

@@ -408,19 +408,21 @@ class Metademand extends CommonGLPI
                     }
                     if ($config->fields["remove_habilitation_on_update"] == 1) {
                         if ($habilitationToDelKeep && !$config_data['show_form_changes']) {
-                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
-       WHERE plugin_resources_resources_id=" . $idResource . " AND id NOT IN(" . implode(
-                                ",",
-                                $habilitationToDelKeep
-                            ) . ")";
-                            $DB->doQuery($query);
+                            $DB->delete(
+                                'glpi_plugin_resources_resourcehabilitations',
+                                [
+                                    'plugin_resources_resources_id' => (int) $idResource,
+                                    'NOT' => ['id' => array_map('intval', $habilitationToDelKeep)],
+                                ]
+                            );
                         } elseif ($habilitationToDel && $config_data['show_form_changes']) {
-                            $query = "DELETE FROM glpi_plugin_resources_resourcehabilitations
-       WHERE plugin_resources_resources_id=" . $idResource . " AND id IN(" . implode(
-                                ",",
-                                $habilitationToDel
-                            ) . ")";
-                            $DB->doQuery($query);
+                            $DB->delete(
+                                'glpi_plugin_resources_resourcehabilitations',
+                                [
+                                    'plugin_resources_resources_id' => (int) $idResource,
+                                    'id' => array_map('intval', $habilitationToDel),
+                                ]
+                            );
                         }
                     }
                 }

@@ -94,8 +94,8 @@ $linkedUsers = [];
 $dbu = new DbUtils();
 
 // Add linked resource users
-if ($DB->numrows($result)) {
-    while ($data = $DB->fetchArray($result)) {
+if (count($result)) {
+    foreach ($result as $data) {
         $users[] = [
             'id' => $data["id"],
             'text' => $dbu->formatUserName(

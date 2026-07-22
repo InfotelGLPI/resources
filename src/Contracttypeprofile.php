@@ -59,7 +59,7 @@ class Contracttypeprofile extends CommonDBTM
      */
     static function addContracttype($profiles_id, $canedit)
     {
-        global $CFG_GLPI;
+
         if ($canedit) {
             echo "<form method='post' action='" . PLUGIN_RESOURCES_WEBDIR . "/front/contracttypeprofile.form.php" . "'>";
             echo Html::hidden('profiles_id', ['value' => $profiles_id]);

@@ -120,15 +120,13 @@ class Role extends CommonDropdown
 
         if ($professionId > 0) {
             if ($sort) {
-                $query = "SELECT `glpi_plugin_resources_ranks`.*
-                     FROM `glpi_plugin_resources_ranks`
-                     WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '" . $professionId . "'";
-
                 $values[0] = Dropdown::EMPTY_VALUE;
-                if ($result = $DB->doQuery($query)) {
-                    while ($data = $DB->fetchArray($result)) {
-                        $values[$data['id']] = $data['name'];
-                    }
+                $iterator = $DB->request([
+                    'FROM'  => 'glpi_plugin_resources_ranks',
+                    'WHERE' => ['plugin_resources_professions_id' => (int) $professionId],
+                ]);
+                foreach ($iterator as $data) {
+                    $values[$data['id']] = $data['name'];
                 }
                 Dropdown::showFromArray('plugin_resources_ranks_id', $values);
             } else {

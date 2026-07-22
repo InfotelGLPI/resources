@@ -66,20 +66,19 @@ class TicketCategory extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT * FROM `" . $this->getTable() . "` "
-            . "WHERE `ticketcategories_id` = '" . $category . "' ";
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            } else {
-                return false;
-            }
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'WHERE' => ['ticketcategories_id' => (int) $category],
+        ]);
+        if (count($iterator) != 1) {
+            return false;
         }
-        return false;
+        $this->fields = $iterator->current();
+        if (is_array($this->fields) && count($this->fields)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

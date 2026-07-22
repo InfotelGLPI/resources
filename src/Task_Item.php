@@ -136,22 +136,23 @@ class Task_Item extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT * FROM `" . $this->getTable() . "` " .
-            "WHERE `plugin_resources_tasks_id` = '" . $plugin_resources_tasks_id . "'
-			AND `itemtype` = '" . $itemtype . "'
-			AND `items_id` = '" . $items_id . "'";
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            } else {
-                return false;
-            }
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'WHERE' => [
+                'plugin_resources_tasks_id' => (int) $plugin_resources_tasks_id,
+                'itemtype'                  => $itemtype,
+                'items_id'                  => (int) $items_id,
+            ],
+        ]);
+        if (count($iterator) != 1) {
+            return false;
         }
-        return false;
+        $this->fields = $iterator->current();
+        if (is_array($this->fields) && count($this->fields)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -205,12 +206,14 @@ class Task_Item extends CommonDBTM
 
             $canedit = $Resource->can($plugin_resources_resources_id, UPDATE);
 
-            $query = "SELECT `items_id`, `itemtype`
-               FROM `" . $this->getTable() . "`
-               WHERE `plugin_resources_tasks_id` = '$instID'
-               ORDER BY `itemtype` ";
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
+            $iterator = $DB->request([
+                'SELECT' => ['items_id', 'itemtype'],
+                'FROM'   => $this->getTable(),
+                'WHERE'  => ['plugin_resources_tasks_id' => (int) $instID],
+                'ORDER'  => 'itemtype',
+            ]);
+            $rows   = iterator_to_array($iterator, false);
+            $number = count($rows);
 
             echo "<form method='post' name='addtaskitem' action=\"./task.form.php\">";
             echo "<table class='tab_cadre_fixe'>";
@@ -227,25 +230,38 @@ class Task_Item extends CommonDBTM
             $dbu = new DbUtils();
             if ($number != "0") {
                 for ($i = 0; $i < $number; $i++) {
-                    $type = $DB->result($result, $i, "itemtype");
-                    $items_id = $DB->result($result, $i, "items_id");
+                    $type = $rows[$i]["itemtype"];
+                    $items_id = $rows[$i]["items_id"];
                     if (!class_exists($type)) {
                         continue;
                     }
                     $item = new $type();
                     if ($item->canView()) {
                         $table = $dbu->getTableForItemType($type);
-                        $query = "SELECT `" . $table . "`.*, `" . $this->getTable() . "`.`id` as items_id
-                        FROM `" . $this->getTable() . "`
-                        INNER JOIN `" . $table . "` ON (`" . $table . "`.`id` = `" . $this->getTable() . "`.`items_id`)
-                        WHERE `" . $this->getTable() . "`.`itemtype` = '" . $type . "'
-                        AND `" . $this->getTable() . "`.`items_id` = '" . $items_id . "'
-                        AND `" . $this->getTable() . "`.`plugin_resources_tasks_id` = '$instID' ";
-                        $query .= "ORDER BY `" . $table . "`.`name` ";
-                        $result_linked = $DB->doQuery($query);
+                        $iterator_linked = $DB->request([
+                            'SELECT'     => [
+                                "$table.*",
+                                $this->getTable() . '.id AS items_id',
+                            ],
+                            'FROM'       => $this->getTable(),
+                            'INNER JOIN' => [
+                                $table => [
+                                    'ON' => [
+                                        $table            => 'id',
+                                        $this->getTable() => 'items_id',
+                                    ],
+                                ],
+                            ],
+                            'WHERE'      => [
+                                $this->getTable() . '.itemtype'                  => $type,
+                                $this->getTable() . '.items_id'                  => (int) $items_id,
+                                $this->getTable() . '.plugin_resources_tasks_id' => (int) $instID,
+                            ],
+                            'ORDER'      => "$table.name",
+                        ]);
 
-                        if ($DB->numrows($result_linked)) {
-                            while ($data = $DB->fetchAssoc($result_linked)) {
+                        if (count($iterator_linked)) {
+                            foreach ($iterator_linked as $data) {
                                 $ID = "";
                                 $itemID = $data["id"];
                                 $used[] = $itemID;

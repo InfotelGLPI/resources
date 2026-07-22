@@ -456,11 +456,11 @@ class ResourceHabilitation extends CommonDBTM
             return false;
         }
 
-        $query = "SELECT *
-               FROM `glpi_plugin_resources_resourcehabilitations`
-               WHERE `plugin_resources_resources_id` = '$ID'";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'FROM'  => 'glpi_plugin_resources_resourcehabilitations',
+            'WHERE' => ['plugin_resources_resources_id' => (int) $ID],
+        ]);
+        $number = count($iterator);
         $pdf->setColumnsSize(100);
 
         $pdf->displayTitle('<b>' . self::getTypeName(2) . '</b>');
@@ -468,9 +468,8 @@ class ResourceHabilitation extends CommonDBTM
         if (!$number) {
             $pdf->displayLine(__('No results found'));
         } else {
-            for ($i = 0; $i < $number; $i++) {
-                $habilitaion_id = $DB->result($result, $i, "plugin_resources_habilitations_id");
-                $pdf->displayLine(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $habilitaion_id));
+            foreach ($iterator as $data) {
+                $pdf->displayLine(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $data["plugin_resources_habilitations_id"]));
             }
         }
 

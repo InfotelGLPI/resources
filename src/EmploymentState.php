@@ -184,10 +184,11 @@ class EmploymentState extends CommonDropdown
         global $DB;
 
         if (isset($this->input["is_leaving_state"]) && $this->input["is_leaving_state"]) {
-            $query = "UPDATE `" . $this->getTable() . "`
-                   SET `is_leaving_state` = 0
-                   WHERE `id` <> '" . $this->fields['id'] . "'";
-            $DB->doQuery($query);
+            $DB->update(
+                $this->getTable(),
+                ['is_leaving_state' => 0],
+                ['id' => ['<>', (int) $this->fields['id']]]
+            );
         }
     }
 
@@ -204,10 +205,11 @@ class EmploymentState extends CommonDropdown
 
         if (in_array('is_leaving_state', $this->updates)) {
             if ($this->input["is_leaving_state"]) {
-                $query = "UPDATE `" . $this->getTable() . "`
-                      SET `is_leaving_state` = 0
-                      WHERE `id` <> '" . $this->input['id'] . "'";
-                $DB->doQuery($query);
+                $DB->update(
+                    $this->getTable(),
+                    ['is_leaving_state' => 0],
+                    ['id' => ['<>', (int) $this->input['id']]]
+                );
             } else {
                 Session::addMessageAfterRedirect(__('Be careful: there is no default value'), false, ERROR);
             }

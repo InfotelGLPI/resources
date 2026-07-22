@@ -84,21 +84,21 @@ class ImportColumn extends CommonDBChild
     {
         global $DB;
 
-        $query = 'SELECT * from ' . self::getTable();
-        $query .= " WHERE " . self::$items_id . " = " . $importID;
-
+        $criteria = [
+            'FROM'  => self::getTable(),
+            'WHERE' => [self::$items_id => (int) $importID],
+            'ORDER' => 'resource_column',
+        ];
         if ($distinctResourceColumns) {
-            $query .= " GROUP BY resource_column";
+            $criteria['GROUPBY'] = 'resource_column';
         }
 
-        $query .= " ORDER BY resource_column";
-
-        $results = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
 
         $temp = [];
 
         $it = 0;
-        while ($data = $DB->fetchAssoc($results)) {
+        foreach ($iterator as $data) {
             $temp[$it] = $data;
             $it++;
         }

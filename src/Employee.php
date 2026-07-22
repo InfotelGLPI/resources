@@ -531,11 +531,11 @@ class Employee extends CommonDBTM
         if (!Session::haveRight("plugin_resources", READ)) {
             return false;
         }
-        $query = "SELECT *
-               FROM `glpi_plugin_resources_employees`
-               WHERE `plugin_resources_resources_id` = '$ID'";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'FROM'  => 'glpi_plugin_resources_employees',
+            'WHERE' => ['plugin_resources_resources_id' => (int) $ID],
+        ]);
+        $number = count($iterator);
 
         $pdf->setColumnsSize(100);
 
@@ -551,13 +551,10 @@ class Employee extends CommonDBTM
         if (!$number) {
             $pdf->displayLine(__('No results found'));
         } else {
-            for ($i = 0; $i < $number; $i++) {
-                $employer = $DB->result($result, $i, "plugin_resources_employers_id");
-                $client = $DB->result($result, $i, "plugin_resources_clients_id");
-
+            foreach ($iterator as $data) {
                 $pdf->displayLine(
-                    Dropdown::getDropdownName("glpi_plugin_resources_employers", $employer),
-                    Dropdown::getDropdownName("glpi_plugin_resources_clients", $client)
+                    Dropdown::getDropdownName("glpi_plugin_resources_employers", $data["plugin_resources_employers_id"]),
+                    Dropdown::getDropdownName("glpi_plugin_resources_clients", $data["plugin_resources_clients_id"])
                 );
             }
         }

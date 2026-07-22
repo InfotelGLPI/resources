@@ -429,23 +429,31 @@ class Resource_Item extends CommonDBRelation
             foreach ($resources as $resource) {
                 $table = $dbu->getTableForItemType($resource["itemtype"]);
 
-                $query = "SELECT `" . $table . "`.*
-                     FROM `" . $this->getTable() . "`
-                     INNER JOIN `" . $table . "` ON (`" . $table . "`.`id` = `" . $this->getTable() . "`.`items_id`)
-                     WHERE `" . $this->getTable() . "`.`itemtype` = '" . $resource["itemtype"] . "'
-                     AND `" . $this->getTable() . "`.`items_id` = '" . $resource["items_id"] . "' ";
+                $self_table = $this->getTable();
+                $where = [
+                    "$self_table.itemtype" => $resource["itemtype"],
+                    "$self_table.items_id" => (int) $resource["items_id"],
+                ];
                 if (count($used)) {
-                    $query .= " AND `" . $table . "`.`id` NOT IN (0";
-                    foreach ($used as $ID) {
-                        $query .= ",$ID";
-                    }
-                    $query .= ")";
+                    $where[] = ['NOT' => ["$table.id" => array_merge([0], array_map('intval', $used))]];
                 }
-                $query .= " ORDER BY `" . $table . "`.`name`";
-                $result_linked = $DB->doQuery($query);
+                $iterator = $DB->request([
+                    'SELECT'     => ["$table.*"],
+                    'FROM'       => $self_table,
+                    'INNER JOIN' => [
+                        $table => [
+                            'ON' => [
+                                $table      => 'id',
+                                $self_table => 'items_id',
+                            ],
+                        ],
+                    ],
+                    'WHERE'      => $where,
+                    'ORDER'      => "$table.name",
+                ]);
 
-                if ($DB->numrows($result_linked)) {
-                    if ($data = $DB->fetchAssoc($result_linked)) {
+                if (count($iterator)) {
+                    if ($data = $iterator->current()) {
                         $name = $data["name"];
                         if ($resource["itemtype"] == 'User') {
                             $name = $dbu->getUserName($data["id"]);
@@ -1297,12 +1305,14 @@ class Resource_Item extends CommonDBRelation
         $pdf->setColumnsSize(100);
         $pdf->displayTitle('<b>' . _n('Associated item', 'Associated items', 2) . '</b>');
 
-        $query = "SELECT DISTINCT `itemtype`
-               FROM `glpi_plugin_resources_resources_items`
-               WHERE `plugin_resources_resources_id` = '$ID'
-               ORDER BY `itemtype` ";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'SELECT'   => 'itemtype',
+            'DISTINCT' => true,
+            'FROM'     => 'glpi_plugin_resources_resources_items',
+            'WHERE'    => ['plugin_resources_resources_id' => (int) $ID],
+            'ORDER'    => 'itemtype',
+        ]);
+        $number = count($iterator);
 
         if (Session::isMultiEntitiesMode()) {
             $pdf->setColumnsSize(12, 27, 25, 18, 18);
@@ -1326,8 +1336,8 @@ class Resource_Item extends CommonDBRelation
         if (!$number) {
             $pdf->displayLine(__('No results found'));
         } else {
-            for ($i = 0; $i < $number; $i++) {
-                $type = $DB->result($result, $i, "itemtype");
+            foreach ($iterator as $row) {
+                $type = $row["itemtype"];
                 if (!($item = $dbu->getItemForItemtype($type))) {
                     continue;
                 }
@@ -1336,64 +1346,89 @@ class Resource_Item extends CommonDBRelation
                     $table = $dbu->getTableForItemType($type);
                     $items = new $type();
 
-                    $query = "SELECT `" . $table . "`.*, `glpi_entities`.`id` AS entity "
-                        . " FROM `glpi_plugin_resources_resources_items`, `" . $table
-                        . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $table . "`.`entities_id`) "
-                        . " WHERE `" . $table . "`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                  AND `glpi_plugin_resources_resources_items`.`itemtype` = '$type'
-                  AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = '$ID' ";
+                    $ri = 'glpi_plugin_resources_resources_items';
+                    $where = [
+                        "$ri.itemtype"                      => $type,
+                        "$ri.plugin_resources_resources_id" => (int) $ID,
+                    ];
                     if ($type != 'User') {
-                        $query .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', '', $items->maybeRecursive());
+                        $entities_crit = $dbu->getEntitiesRestrictCriteria($table, '', '', $items->maybeRecursive());
+                        if (count($entities_crit)) {
+                            $where[] = $entities_crit;
+                        }
                     }
 
                     if ($items->maybeTemplate()) {
-                        $query .= " AND `" . $table . "`.`is_template` = '0'";
+                        $where["$table.is_template"] = 0;
                     }
-                    $query .= " ORDER BY `glpi_entities`.`completename`, `" . $table . "`.`$column`";
 
-                    if ($result_linked = $DB->doQuery($query)) {
-                        if ($DB->numrows($result_linked)) {
-                            while ($data = $DB->fetchAssoc($result_linked)) {
-                                if (!$items->getFromDB($data["id"])) {
-                                    continue;
-                                }
-                                $items_id_display = "";
+                    $iterator_linked = $DB->request([
+                        'SELECT'     => [
+                            "$table.*",
+                            'glpi_entities.id AS entity',
+                        ],
+                        'FROM'       => $ri,
+                        'INNER JOIN' => [
+                            $table => [
+                                'ON' => [
+                                    $table => 'id',
+                                    $ri    => 'items_id',
+                                ],
+                            ],
+                        ],
+                        'LEFT JOIN'  => [
+                            'glpi_entities' => [
+                                'ON' => [
+                                    'glpi_entities' => 'id',
+                                    $table          => 'entities_id',
+                                ],
+                            ],
+                        ],
+                        'WHERE'      => $where,
+                        'ORDER'      => ['glpi_entities.completename', "$table.$column"],
+                    ]);
 
-                                if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                                    $items_id_display = " (" . $data["id"] . ")";
-                                }
-                                if ($type == 'User') {
-                                    $name = getUserName($data["id"]) . $items_id_display;
-                                } else {
-                                    $name = $data["name"] . $items_id_display;
-                                }
+                    if (count($iterator_linked)) {
+                        foreach ($iterator_linked as $data) {
+                            if (!$items->getFromDB($data["id"])) {
+                                continue;
+                            }
+                            $items_id_display = "";
 
-                                if ($type != 'User') {
-                                    $entity = Dropdown::getDropdownName("glpi_entities", $data['entity']);
-                                } else {
-                                    $entity = "-";
-                                }
+                            if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
+                                $items_id_display = " (" . $data["id"] . ")";
+                            }
+                            if ($type == 'User') {
+                                $name = getUserName($data["id"]) . $items_id_display;
+                            } else {
+                                $name = $data["name"] . $items_id_display;
+                            }
 
-                                if (Session::isMultiEntitiesMode()) {
-                                    $pdf->setColumnsSize(12, 27, 25, 18, 18);
-                                    $pdf->displayLine(
-                                        $items->getTypeName(),
-                                        $name,
-                                        $entity,
-                                        (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                                        (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
-                                    );
-                                } else {
-                                    $pdf->setColumnsSize(25, 31, 22, 22);
-                                    $pdf->displayTitle(
-                                        $items->getTypeName(),
-                                        $name,
-                                        (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                                        (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
-                                    );
-                                }
-                            } // Each device
-                        } // numrows device
+                            if ($type != 'User') {
+                                $entity = Dropdown::getDropdownName("glpi_entities", $data['entity']);
+                            } else {
+                                $entity = "-";
+                            }
+
+                            if (Session::isMultiEntitiesMode()) {
+                                $pdf->setColumnsSize(12, 27, 25, 18, 18);
+                                $pdf->displayLine(
+                                    $items->getTypeName(),
+                                    $name,
+                                    $entity,
+                                    (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
+                                    (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
+                                );
+                            } else {
+                                $pdf->setColumnsSize(25, 31, 22, 22);
+                                $pdf->displayTitle(
+                                    $items->getTypeName(),
+                                    $name,
+                                    (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
+                                    (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-")
+                                );
+                            }
+                        } // Each device
                     }
                 } // type right
             } // each type
@@ -1422,22 +1457,42 @@ class Resource_Item extends CommonDBRelation
         $Resource = new Resource();
         $dbu = new DbUtils();
 
-        $query = "SELECT `glpi_plugin_resources_resources`.* "
-            . " FROM `glpi_plugin_resources_resources_items`,`glpi_plugin_resources_resources` "
-            . " LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `glpi_plugin_resources_resources`.`entities_id`) "
-            . " WHERE `glpi_plugin_resources_resources_items`.`items_id` = '" . $ID . "'
-         AND `glpi_plugin_resources_resources_items`.`itemtype` = '" . $itemtype . "'
-         AND `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id` "
-            . $dbu->getEntitiesRestrictRequest(
-                " AND ",
-                "glpi_plugin_resources_resources",
-                '',
-                '',
-                $Resource->maybeRecursive()
-            );
+        $where = [
+            'glpi_plugin_resources_resources_items.items_id'  => (int) $ID,
+            'glpi_plugin_resources_resources_items.itemtype'  => $itemtype,
+        ];
+        $entities_crit = $dbu->getEntitiesRestrictCriteria(
+            'glpi_plugin_resources_resources',
+            '',
+            '',
+            $Resource->maybeRecursive()
+        );
+        if (count($entities_crit)) {
+            $where[] = $entities_crit;
+        }
 
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'SELECT'     => 'glpi_plugin_resources_resources.*',
+            'FROM'       => 'glpi_plugin_resources_resources_items',
+            'INNER JOIN' => [
+                'glpi_plugin_resources_resources' => [
+                    'ON' => [
+                        'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources'       => 'id',
+                    ],
+                ],
+            ],
+            'LEFT JOIN'  => [
+                'glpi_entities' => [
+                    'ON' => [
+                        'glpi_entities'                   => 'id',
+                        'glpi_plugin_resources_resources' => 'entities_id',
+                    ],
+                ],
+            ],
+            'WHERE'      => $where,
+        ]);
+        $number = count($iterator);
 
         if (!$number) {
             $pdf->displayLine(__('No results found'));
@@ -1464,7 +1519,7 @@ class Resource_Item extends CommonDBRelation
                     __('Departure date', 'resources') . '</i></b>'
                 );
             }
-            while ($data = $DB->fetchArray($result)) {
+            foreach ($iterator as $data) {
                 $resourcesID = $data["id"];
 
                 if (Session::isMultiEntitiesMode()) {

@@ -185,14 +185,17 @@ class User extends \User
             return false;
         }
 
-        $query = "SELECT *
-               FROM `glpi_plugin_resources_resources_items`
-               WHERE `plugin_resources_resources_id` = '$ID'
-               AND `itemtype` = 'User'
-               ORDER BY ID DESC
-               LIMIT 1";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'FROM'  => 'glpi_plugin_resources_resources_items',
+            'WHERE' => [
+                'plugin_resources_resources_id' => (int) $ID,
+                'itemtype'                      => 'User',
+            ],
+            'ORDER' => 'id DESC',
+            'LIMIT' => 1,
+        ]);
+        $rows   = iterator_to_array($iterator, false);
+        $number = count($rows);
         $pdf->setColumnsSize(100);
 
         $pdf->displayTitle('<b>' . self::getTypeName(1) . '</b>');
@@ -205,7 +208,7 @@ class User extends \User
                 $nameTable = "PluginFieldsUser" . $fieldContainer->getField('name');
                 $itemUser = new $nameTable();
                 for ($i = 0; $i < $number; $i++) {
-                    $user_id = $DB->result($result, $i, "items_id");
+                    $user_id = $rows[$i]["items_id"];
                     if ($itemUser->getFromDBByCrit(['items_id' => $user_id, 'itemtype' => 'User'])) {
                         foreach ($itemUser->fields as $key => $field) {
                             if ($key != 'id' && $key != 'items_id' && $key != 'itemtype' && $key != 'plugin_fields_containers_id') {
@@ -252,7 +255,7 @@ class User extends \User
         } else {
             for ($i = 0; $i < $number; $i++) {
                 $user = new User();
-                $user_id = $DB->result($result, $i, "items_id");
+                $user_id = $rows[$i]["items_id"];
                 $user->getFromDB($user_id);
                 $auth = Auth::getMethodName($user->getField("authtype"), $user->getField("auths_id"));
                 $lastSync = "";

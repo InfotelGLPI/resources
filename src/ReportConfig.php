@@ -196,18 +196,16 @@ class ReportConfig extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT * FROM `" . $this->getTable() . "`
-                  WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "' ";
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            } else {
-                return false;
-            }
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'WHERE' => ['plugin_resources_resources_id' => (int) $plugin_resources_resources_id],
+        ]);
+        if (count($iterator) != 1) {
+            return false;
+        }
+        $this->fields = $iterator->current();
+        if (is_array($this->fields) && count($this->fields)) {
+            return true;
         }
         return false;
     }
@@ -359,18 +357,31 @@ class ReportConfig extends CommonDBTM
             Resource::getTypeName(1) . " = " . $resource->fields["name"]
         );
 
-        $query = "SELECT `glpi_plugin_resources_reportconfigs`.`id`,
-               `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`,
-                `glpi_plugin_resources_reportconfigs`.`information`,
-                `glpi_plugin_resources_reportconfigs`.`send_report_notif`,
-                `glpi_plugin_resources_reportconfigs`.`send_other_notif`,
-                `glpi_plugin_resources_reportconfigs`.`send_transfer_notif`,
-                `glpi_plugin_resources_reportconfigs`.`comment`
-                 FROM `glpi_plugin_resources_reportconfigs` ";
-        $query .= " LEFT JOIN `glpi_plugin_resources_resources` ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id`)";
-        $query .= " WHERE `glpi_plugin_resources_reportconfigs`.`plugin_resources_resources_id` = '$ID' LIMIT 1";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $reportconfigs = 'glpi_plugin_resources_reportconfigs';
+        $resources     = 'glpi_plugin_resources_resources';
+        $iterator = $DB->request([
+            'SELECT'    => [
+                "$reportconfigs.id",
+                "$reportconfigs.plugin_resources_resources_id",
+                "$reportconfigs.information",
+                "$reportconfigs.send_report_notif",
+                "$reportconfigs.send_other_notif",
+                "$reportconfigs.send_transfer_notif",
+                "$reportconfigs.comment",
+            ],
+            'FROM'      => $reportconfigs,
+            'LEFT JOIN' => [
+                $resources => [
+                    'ON' => [
+                        $resources     => 'id',
+                        $reportconfigs => 'plugin_resources_resources_id',
+                    ],
+                ],
+            ],
+            'WHERE'     => ["$reportconfigs.plugin_resources_resources_id" => (int) $ID],
+            'LIMIT'     => 1,
+        ]);
+        $number = count($iterator);
 
         $i = 0;
         $row_num = 1;
@@ -381,7 +392,7 @@ class ReportConfig extends CommonDBTM
             echo "<div class='center'><table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='2'>" . __('Notification configuration', 'resources') . "</th></tr>";
 
-            while ($data = $DB->fetchArray($result)) {
+            foreach ($iterator as $data) {
                 $i++;
                 $row_num++;
                 echo "<tr class='tab_bg_1'>";

@@ -320,22 +320,26 @@ class ResourceCard extends CommonDBTM
             }
             $i = 0;
             $itemtable = $dbu->getTableForItemType($itemtype);
-            $query = "SELECT *
-                      FROM `$itemtable`
-                      WHERE `" . $field_user . "` = '$ID'";
+            $where = [$field_user => (int) $ID];
 
             if ($item->maybeTemplate()) {
-                $query .= " AND `is_template` = 0 ";
+                $where['is_template'] = 0;
             }
             if ($item->maybeDeleted()) {
-                $query .= " AND `is_deleted` = 0 ";
+                $where['is_deleted'] = 0;
             }
-            $query .= $dbu->getEntitiesRestrictRequest('AND', $itemtable, '', $item->maybeRecursive());
-            $result = $DB->doQuery($query);
+            $entities_crit = $dbu->getEntitiesRestrictCriteria($itemtable, '', $item->maybeRecursive());
+            if (count($entities_crit)) {
+                $where[] = $entities_crit;
+            }
+            $iterator = $DB->request([
+                'FROM'  => $itemtable,
+                'WHERE' => $where,
+            ]);
 
-            if ($DB->numrows($result) > 0) {
+            if (count($iterator) > 0) {
                 $inv = true;
-                while ($data = $DB->fetchAssoc($result)) {
+                foreach ($iterator as $data) {
                     $datas[$itemtype][$i] = $data;
                     $i++;
                 }

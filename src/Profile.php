@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use ProfileRight;
 use Session;
@@ -69,40 +70,37 @@ class Profile extends \Profile
     }
 
     /**
-     * @param \CommonGLPI $item
+     * @param CommonGLPI $item
      * @param int $tabnum
      * @param int $withtemplate
      *
      * @return bool
      */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-    {
-        if ($item->getType() == 'Profile') {
-            $ID = $item->getID();
-            $prof = new self();
-
-            self::addDefaultProfileInfos($ID, [
-                'plugin_resources' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                'plugin_resources_task' => 0,
-                'plugin_resources_checklist' => 0,
-                'plugin_resources_employee' => 0,
-                'plugin_resources_role' => 0,
-                'plugin_resources_resting' => 0,
-                'plugin_resources_holiday' => 0,
-                'plugin_resources_habilitation' => 0,
-                'plugin_resources_employment' => 0,
-                'plugin_resources_budget' => 0,
-                'plugin_resources_dropdown_public' => 0,
-                'plugin_resources_import' => 0,
-                'plugin_resources_annuary' => 0,
-                'plugin_resources_validation' => 0,
-                'plugin_resources_open_ticket' => 0,
-                'plugin_resources_all' => 0,
-                'plugin_resources_leavinginformation' => 0,
-                'plugin_resources_employee_core_form' => 0
-            ]);
-            $prof->showForm($ID);
+    public static function displayTabContentForItem(
+        CommonGLPI $item,
+        $tabnum = 1,
+        $withtemplate = 0
+    ) {
+        if (!$item instanceof \Profile || !self::canView()) {
+            return false;
         }
+
+        $profile = new \Profile();
+        $profile->getFromDB($item->getID());
+
+        $rights = self::getAllRights(true);
+
+        $twig = TemplateRenderer::getInstance();
+        $twig->display('@resources/profile.html.twig', [
+            'id' => $item->getID(),
+            'profile' => $profile,
+            'title' => self::getTypeName(Session::getPluralNumber()),
+            'rights' => $rights,
+        ]);
+
+        $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
+        Contracttypeprofile::addContracttype($item->getID(), $canedit);
+        Actionprofile::addAction($item->getID(), $canedit);
 
         return true;
     }
@@ -163,118 +161,7 @@ class Profile extends \Profile
         }
     }
 
-    /**
-     * @param int $profiles_id
-     * @param bool $openform
-     * @param bool $closeform
-     *
-     * @return bool|void
-     */
-    public function showForm($profiles_id = 0, $openform = true, $closeform = true)
-    {
-        echo "<div class='firstbloc'>";
-        if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-            && $openform) {
-            $profile = new \Profile();
-            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
-        }
 
-        $profile = new \Profile();
-        $profile->getFromDB($profiles_id);
-
-        $generalRights = $this->getAllRights(false, ['general']);
-        $profile->displayRightsChoiceMatrix($generalRights, [
-            'canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('General')
-        ]);
-
-
-        echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr class='tab_bg_1'><th colspan='4'>" . __('Helpdesk') . "</th></tr>\n";
-
-        $effective_rights = ProfileRight::getProfileRights(
-            $profiles_id,
-            [
-                'plugin_resources_open_ticket',
-                'plugin_resources_all',
-                'plugin_resources_employee_core_form',
-                'plugin_resources_leavinginformation'
-            ]
-        );
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('Associable items to a ticket') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox([
-            'name' => '_plugin_resources_open_ticket',
-            'checked' => $effective_rights['plugin_resources_open_ticket']
-        ]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('All resources access', 'resources') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox([
-            'name' => '_plugin_resources_all',
-            'checked' => $effective_rights['plugin_resources_all']
-        ]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('View leaving information', 'resources') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox([
-            'name' => '_plugin_resources_leavinginformation',
-            'checked' => $effective_rights['plugin_resources_leavinginformation']
-        ]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('View employer in core form ', 'resources') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox([
-            'name' => '_plugin_resources_employee_core_form',
-            'checked' => $effective_rights['plugin_resources_employee_core_form']
-        ]);
-        echo "</td></tr>\n";
-
-        echo "</table>";
-
-        $ssiiRights = $this->getAllRights(false, ['ssii']);
-        $profile->displayRightsChoiceMatrix($ssiiRights, [
-            'canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('Service company management', 'resources')
-        ]);
-
-        $publicRights = $this->getAllRights(false, ['public']);
-        $profile->displayRightsChoiceMatrix($publicRights, [
-            'canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('Public service management', 'resources')
-        ]);
-        $importRights = $this->getAllRights(false, ['import']);
-        $profile->displayRightsChoiceMatrix($importRights, [
-            'canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('Import external', 'resources')
-        ]);
-
-        if ($canedit
-            && $closeform) {
-            echo "<div class='center'>";
-            echo Html::hidden('id', ['value' => $profiles_id]);
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo "</div>\n";
-            Html::closeForm();
-        }
-        echo "</div>";
-
-        $this->showLegend();
-
-        Contracttypeprofile::addContracttype($profiles_id, $canedit);
-        Actionprofile::addAction($profiles_id, $canedit);
-    }
 
     /**
      * @param bool $all
@@ -388,19 +275,28 @@ class Profile extends \Profile
             $rights[] = [
                 'itemtype' => Resource::class,
                 'label' => __('All resources access', 'resources'),
-                'field' => 'plugin_resources_all'
+                'field' => 'plugin_resources_all',
+                'rights' => [
+                    READ => __('Read'),
+                ]
             ];
 
             $rights[] = [
                 'itemtype' => Resource::class,
                 'label' => __('Associable items to a ticket'),
-                'field' => 'plugin_resources_open_ticket'
+                'field' => 'plugin_resources_open_ticket',
+                'rights' => [
+                    READ => __('Read'),
+                ]
             ];
 
             $rights[] = [
                 'itemtype' => Resource::class,
                 'label' => __('Display employee in core form'),
-                'field' => 'plugin_resources_employee_core_form'
+                'field' => 'plugin_resources_employee_core_form',
+                'rights' => [
+                    READ => __('Read'),
+                ]
             ];
         }
         if (!$all) {

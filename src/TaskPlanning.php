@@ -33,6 +33,7 @@ use Ajax;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
+use Glpi\DBAL\QuerySubQuery;
 use Html;
 use Migration;
 use Planning;
@@ -178,18 +179,16 @@ class TaskPlanning extends CommonDBTM
     {
         global $DB;
 
-        $query = "SELECT *
-                FROM `" . $this->getTable() . "`
-                WHERE `plugin_resources_tasks_id` = '$plugin_resources_tasks_id'";
-
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            }
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'WHERE' => ['plugin_resources_tasks_id' => (int) $plugin_resources_tasks_id],
+        ]);
+        if (count($iterator) != 1) {
+            return false;
+        }
+        $this->fields = $iterator->current();
+        if (is_array($this->fields) && count($this->fields)) {
+            return true;
         }
         return false;
     }
@@ -344,67 +343,87 @@ class TaskPlanning extends CommonDBTM
         $begin = $parm['begin'];
         $end = $parm['end'];
         // Get items to print
-        $ASSIGN = "";
 
-//      if ($who_group === "mine") {
-//         if (count($_SESSION["glpigroups"])) {
-//            $groups = implode("','", $_SESSION['glpigroups']);
-//            $ASSIGN = " `glpi_plugin_resources_tasks`.`users_id` IN (SELECT DISTINCT `users_id`
-//                                    FROM `glpi_groups_users`
-//                                    WHERE `groups_id` IN ('$groups'))
-//                                          AND ";
-//         } else { // Only personal ones
-//            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` = '$who'
-//                     AND ";
-//         }
-//      } else {
+        //      if ($who_group === "mine") {  ... only personal / group ones (kept commented above)
         if ($who > 0) {
-            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` = '$who'
-                     AND ";
-        }
-        if ($who_group > 0) {
-            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` IN (SELECT `users_id`
-                                    FROM `glpi_groups_users`
-                                    WHERE `groups_id` = '$who_group')
-                                          AND ";
-        }
-//      }
-        if (empty($ASSIGN)) {
-            $ASSIGN = "`glpi_plugin_resources_tasks`.`users_id` IN (SELECT DISTINCT `glpi_profiles_users`.`users_id`
-                                 FROM `glpi_profiles`
-                                 LEFT JOIN `glpi_profiles_users`
-                                    ON (`glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`)
-                                 WHERE `glpi_profiles`.`interface`='central' ";
+            $assign = ['glpi_plugin_resources_tasks.users_id' => (int) $who];
+        } elseif ($who_group > 0) {
+            $assign = [
+                'glpi_plugin_resources_tasks.users_id' => new QuerySubQuery([
+                    'SELECT' => 'users_id',
+                    'FROM'   => 'glpi_groups_users',
+                    'WHERE'  => ['groups_id' => (int) $who_group],
+                ]),
+            ];
+        } else {
             $dbu = new DbUtils();
-            $ASSIGN .= $dbu->getEntitiesRestrictRequest(
-                "AND",
-                "glpi_profiles_users",
+            $sub_where = ['glpi_profiles.interface' => 'central'];
+            $entities_crit = $dbu->getEntitiesRestrictCriteria(
+                'glpi_profiles_users',
                 '',
                 $_SESSION["glpiactive_entity"],
                 1
             );
-            $ASSIGN .= ") AND ";
+            if (count($entities_crit)) {
+                $sub_where[] = $entities_crit;
+            }
+            $assign = [
+                'glpi_plugin_resources_tasks.users_id' => new QuerySubQuery([
+                    'SELECT'    => 'glpi_profiles_users.users_id',
+                    'DISTINCT'  => true,
+                    'FROM'      => 'glpi_profiles',
+                    'LEFT JOIN' => [
+                        'glpi_profiles_users' => [
+                            'ON' => [
+                                'glpi_profiles'       => 'id',
+                                'glpi_profiles_users' => 'profiles_id',
+                            ],
+                        ],
+                    ],
+                    'WHERE'     => $sub_where,
+                ]),
+            ];
         }
 
-        $query = "SELECT `glpi_plugin_resources_tasks`.*,
-                        `glpi_plugin_resources_taskplannings`.`begin`,
-                        `glpi_plugin_resources_taskplannings`.`end`,
-                        `glpi_plugin_resources_resources`.`name` as resource,
-                        `glpi_plugin_resources_tasktypes`.`name` as type
-                FROM `glpi_plugin_resources_tasks`
-                LEFT JOIN `glpi_plugin_resources_taskplannings` ON (`glpi_plugin_resources_taskplannings`.`plugin_resources_tasks_id` = `glpi_plugin_resources_tasks`.`id`)
-                LEFT JOIN `glpi_plugin_resources_resources`
-                ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_tasks`.`plugin_resources_resources_id`)
-                LEFT JOIN `glpi_plugin_resources_tasktypes`
-                ON (`glpi_plugin_resources_tasktypes`.`id` = `glpi_plugin_resources_tasks`.`plugin_resources_tasktypes_id`)
-                WHERE $ASSIGN
-                      '$begin' < `end` AND '$end' > `begin` AND `glpi_plugin_resources_tasks`.`is_finished` != 1
-                ORDER BY `begin`";
+        $iterator = $DB->request([
+            'SELECT'    => [
+                'glpi_plugin_resources_tasks.*',
+                'glpi_plugin_resources_taskplannings.begin',
+                'glpi_plugin_resources_taskplannings.end',
+                'glpi_plugin_resources_resources.name AS resource',
+                'glpi_plugin_resources_tasktypes.name AS type',
+            ],
+            'FROM'      => 'glpi_plugin_resources_tasks',
+            'LEFT JOIN' => [
+                'glpi_plugin_resources_taskplannings' => [
+                    'ON' => [
+                        'glpi_plugin_resources_taskplannings' => 'plugin_resources_tasks_id',
+                        'glpi_plugin_resources_tasks'         => 'id',
+                    ],
+                ],
+                'glpi_plugin_resources_resources' => [
+                    'ON' => [
+                        'glpi_plugin_resources_resources' => 'id',
+                        'glpi_plugin_resources_tasks'     => 'plugin_resources_resources_id',
+                    ],
+                ],
+                'glpi_plugin_resources_tasktypes' => [
+                    'ON' => [
+                        'glpi_plugin_resources_tasktypes' => 'id',
+                        'glpi_plugin_resources_tasks'     => 'plugin_resources_tasktypes_id',
+                    ],
+                ],
+            ],
+            'WHERE'     => $assign + [
+                'glpi_plugin_resources_taskplannings.end'   => ['>', $begin],
+                'glpi_plugin_resources_taskplannings.begin' => ['<', $end],
+                'glpi_plugin_resources_tasks.is_finished'   => ['!=', 1],
+            ],
+            'ORDER'     => 'glpi_plugin_resources_taskplannings.begin',
+        ]);
 
-        $result = $DB->doQuery($query);
-
-        if ($DB->numrows($result) > 0) {
-            for ($i = 0; $data = $DB->fetchArray($result); $i++) {
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
                 $key = $parm["begin"] . $data["id"] . "$$$" . "plugin_resource";
                 $output[$key]['color'] = $parm['color'];
                 $output[$key]['event_type_color'] = $parm['event_type_color'];

@@ -35,6 +35,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\DBAL\QuerySubQuery;
 use Html;
 use MassiveAction;
 use Migration;
@@ -268,10 +269,11 @@ class Task extends CommonDBTM
     {
         global $DB;
 
-        $query = "UPDATE `glpi_plugin_resources_checklists`
-            SET `plugin_resources_tasks_id` = 0
-            WHERE `plugin_resources_tasks_id` = '" . $this->fields["id"] . "' ";
-        $result = $DB->doQuery($query);
+        $DB->update(
+            'glpi_plugin_resources_checklists',
+            ['plugin_resources_tasks_id' => 0],
+            ['plugin_resources_tasks_id' => (int) $this->fields["id"]]
+        );
     }
 
     /**
@@ -794,43 +796,63 @@ class Task extends CommonDBTM
             }
 
             $dbu = new DbUtils();
+            $self_table = $this->getTable();
 
-            $ASSIGN = "";
+            $or = [];
             if ($who > 0) {
-                $ASSIGN = " AND ((`" . $this->getTable() . "`.`users_id` = '$who')";
+                $or[$self_table . '.users_id'] = (int) $who;
             }
-            //if ($who_group>0) {
-            $ASSIGN .= " OR (`" . $this->getTable() . "`.`groups_id` IN (SELECT `groups_id`
-                                                      FROM `glpi_groups_users`
-                                                      WHERE `users_id` = '$who') )";
-            //}
+            $or[$self_table . '.groups_id'] = new QuerySubQuery([
+                'SELECT' => 'groups_id',
+                'FROM'   => 'glpi_groups_users',
+                'WHERE'  => ['users_id' => (int) $who],
+            ]);
 
-            $query = "SELECT `" . $this->getTable() . "`.`id` AS plugin_resources_tasks_id, `" . $this->getTable(
-            ) . "`.`name` AS name_task, `" . $this->getTable(
-            ) . "`.`plugin_resources_tasktypes_id` AS plugin_resources_tasktypes_id,`" . $this->getTable(
-            ) . "`.`is_deleted` AS is_deleted, ";
-            $query .= "`" . $this->getTable(
-            ) . "`.`users_id` AS users_id_task, `glpi_plugin_resources_resources`.`id` as id, `glpi_plugin_resources_resources`.`name` AS name, `glpi_plugin_resources_resources`.`firstname` AS firstname, `glpi_plugin_resources_resources`.`entities_id`, `glpi_plugin_resources_resources`.`users_id` as users_id ";
-            $query .= " FROM `" . $this->getTable() . "`,`glpi_plugin_resources_resources` ";
-            $query .= " WHERE `glpi_plugin_resources_resources`.`is_template` = 0
-                  AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-                  AND `" . $this->getTable() . "`.`is_deleted` = 0
-                  AND `" . $this->getTable() . "`.`is_finished` = 0
-                  AND `" . $this->getTable() . "`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id`
-                  $ASSIGN ) ";
+            $where = [
+                'glpi_plugin_resources_resources.is_template' => 0,
+                'glpi_plugin_resources_resources.is_deleted'  => 0,
+                $self_table . '.is_deleted'  => 0,
+                $self_table . '.is_finished' => 0,
+                ['OR' => $or],
+            ];
 
             // Add Restrict to current entities
             $Resource = new Resource();
             $itemtable = "glpi_plugin_resources_resources";
             if ($Resource->isEntityAssign()) {
-                $LINK = " AND ";
-                $query .= $dbu->getEntitiesRestrictRequest($LINK, $itemtable);
+                $entities_crit = $dbu->getEntitiesRestrictCriteria($itemtable);
+                if (count($entities_crit)) {
+                    $where[] = $entities_crit;
+                }
             }
 
-            $query .= " ORDER BY `glpi_plugin_resources_resources`.`name` DESC LIMIT 10;";
-
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
+            $iterator = $DB->request([
+                'SELECT'     => [
+                    $self_table . '.id AS plugin_resources_tasks_id',
+                    $self_table . '.name AS name_task',
+                    $self_table . '.plugin_resources_tasktypes_id AS plugin_resources_tasktypes_id',
+                    $self_table . '.is_deleted AS is_deleted',
+                    $self_table . '.users_id AS users_id_task',
+                    'glpi_plugin_resources_resources.id AS id',
+                    'glpi_plugin_resources_resources.name AS name',
+                    'glpi_plugin_resources_resources.firstname AS firstname',
+                    'glpi_plugin_resources_resources.entities_id',
+                    'glpi_plugin_resources_resources.users_id AS users_id',
+                ],
+                'FROM'       => $self_table,
+                'INNER JOIN' => [
+                    'glpi_plugin_resources_resources' => [
+                        'ON' => [
+                            $self_table                       => 'plugin_resources_resources_id',
+                            'glpi_plugin_resources_resources' => 'id',
+                        ],
+                    ],
+                ],
+                'WHERE'      => $where,
+                'ORDER'      => 'glpi_plugin_resources_resources.name DESC',
+                'LIMIT'      => 10,
+            ]);
+            $number = count($iterator);
 
             if ($number > 0) {
                 echo "<div class='center'><table class='tab_cadre' width='100%'>";
@@ -852,7 +874,7 @@ class Task extends CommonDBTM
                 echo "<th>" . __('User') . "</th>";
                 echo "</tr>";
 
-                while ($data = $DB->fetchArray($result)) {
+                foreach ($iterator as $data) {
                     echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
                     echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
                     if ($_SESSION["glpiis_ids_visible"]) {
@@ -1251,12 +1273,15 @@ class Task extends CommonDBTM
             return false;
         }
 
-        $query = "SELECT *
-               FROM `glpi_plugin_resources_tasks`
-               WHERE `plugin_resources_resources_id` = $ID
-               AND `is_deleted` = 0";
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'FROM'  => 'glpi_plugin_resources_tasks',
+            'WHERE' => [
+                'plugin_resources_resources_id' => (int) $ID,
+                'is_deleted'                    => 0,
+            ],
+        ]);
+        $rows   = iterator_to_array($iterator, false);
+        $number = count($rows);
 
         $i = $j = 0;
 
@@ -1280,8 +1305,8 @@ class Task extends CommonDBTM
             $i++;
 
             while ($j < $number) {
-                $tID = $DB->result($result, $j, "id");
-                $actiontime_ID = $DB->result($result, $j, "actiontime");
+                $tID = $rows[$j]["id"];
+                $actiontime_ID = $rows[$j]["actiontime"];
 
                 $actiontime = '';
                 $units = Toolbox::getTimestampTimeUnits($actiontime_ID);
@@ -1308,13 +1333,13 @@ class Task extends CommonDBTM
                     $planification = __('None');
                 }
 
-                $users_id = $DB->result($result, $j, "users_id");
+                $users_id = $rows[$j]["users_id"];
 
                 $managers = getUserName($users_id);
-                $name = $DB->result($result, $j, "name");
-                $task_type = $DB->result($result, $j, "plugin_resources_tasktypes_id");
-                $comment = $DB->result($result, $j, "comment");
-                $groups_id = $DB->result($result, $j, "groups_id");
+                $name = $rows[$j]["name"];
+                $task_type = $rows[$j]["plugin_resources_tasktypes_id"];
+                $comment = $rows[$j]["comment"];
+                $groups_id = $rows[$j]["groups_id"];
 
                 $pdf->displayLine(
                     $name,

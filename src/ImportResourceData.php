@@ -64,48 +64,52 @@ class ImportResourceData extends CommonDBChild
     {
         global $DB;
 
-        $query = "DELETE FROM `" . self::getTable() . "`";
-        return $DB->doQuery($query);
+        return $DB->delete(self::getTable(), [1]);
     }
 
     public function purgeDataByImportResource($importResourceId)
     {
         global $DB;
 
-        $query =
-            "DELETE FROM `" . self::getTable() . "`" .
-            " WHERE `plugin_resources_importresources_id` = " . $importResourceId;
-
-        return $DB->doQuery($query);
+        return $DB->delete(self::getTable(), ['plugin_resources_importresources_id' => $importResourceId]);
     }
 
     public function getFromParentAndIdentifierLevel($importResourceId, $identifierLevel = null, $order = [])
     {
         global $DB;
 
-        $query =
-            "SELECT data.id, data.name, data.value, ic.resource_column, ic.type" .
-            " FROM `" . self::getTable() . "` as data" .
-            " INNER JOIN `" . ImportColumn::getTable() . "` as ic" .
-            " ON ic.`id` = data.`plugin_resources_importcolumns_id`" .
-            " WHERE data.`plugin_resources_importresources_id` = " . $importResourceId;
+        $criteria = [
+            'SELECT'     => [
+                'data.id',
+                'data.name',
+                'data.value',
+                'ic.resource_column',
+                'ic.type',
+            ],
+            'FROM'       => self::getTable() . ' AS data',
+            'INNER JOIN' => [
+                ImportColumn::getTable() . ' AS ic' => [
+                    'ON' => [
+                        'ic'   => 'id',
+                        'data' => 'plugin_resources_importcolumns_id',
+                    ],
+                ],
+            ],
+            'WHERE'      => ['data.plugin_resources_importresources_id' => (int) $importResourceId],
+        ];
 
         if ($identifierLevel) {
-            $query .= " AND ic.`is_identifier` = " . $identifierLevel;
+            $criteria['WHERE']['ic.is_identifier'] = (int) $identifierLevel;
         }
 
         if (count($order)) {
-            $query .= " ORDER BY ";
-
-            foreach ($order as $o) {
-                $query .= "`$o` ";
-            }
+            $criteria['ORDER'] = $order;
         }
 
-        $results = $DB->doQuery($query);
+        $iterator = $DB->request($criteria);
         $temp = [];
 
-        while ($data = $DB->fetchAssoc($results)) {
+        foreach ($iterator as $data) {
             $temp[] = $data;
         }
         return $temp;
