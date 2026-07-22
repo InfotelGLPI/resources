@@ -1710,7 +1710,7 @@ class ImportResource extends CommonDBTM
                 echo "<form name='form' method='post' id='verify' action ='$formURL' >";
                 echo "<div class='center'>";
 
-                Html::printPager($start, $nbLines, $_SERVER['PHP_SELF'], $parameters);
+                Html::printPager($start, $nbLines, self::getIndexUrl(), $parameters);
 
                 echo "<table border='0' class='tab_cadre_fixe'>";
 
@@ -2345,7 +2345,7 @@ class ImportResource extends CommonDBTM
                 echo "<form name='form' method='post' id='verify' action ='$formURL' >";
                 echo "<div class='center'>";
 
-                Html::printPager($start, $nbOfResources, $_SERVER['PHP_SELF'], $parameters);
+                Html::printPager($start, $nbOfResources, self::getIndexUrl(), $parameters);
 
                 echo "<table border='0' class='tab_cadre_fixe'>";
 
@@ -2878,7 +2878,7 @@ class ImportResource extends CommonDBTM
 
             $formURL = self::getResourceImportFormUrl() . "?" . $parameters . $parameters2;
 
-            Html::printPager($params['start'], $nbImports, $_SERVER['PHP_SELF'], $parameters . $parameters2);
+            Html::printPager($params['start'], $nbImports, self::getResourceImportFormUrl(), $parameters . $parameters2);
 
             echo "<form name='form' method='post' id='import' action ='$formURL' >";
             echo "<div class='center'>";
@@ -2891,7 +2891,7 @@ class ImportResource extends CommonDBTM
             echo "<td class='center' style='width: 10px;height: 10px;background-color:red;'>";
             echo "</td>";
             echo "<td>";
-            echo "<a href='" . $_SERVER['PHP_SELF'] . "?" . $parameters . "&filter=deleted'>" . __(
+            echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=deleted'>" . __(
                     "Deleted resource",
                     'resources'
                 ) . "</a>";
@@ -2899,7 +2899,7 @@ class ImportResource extends CommonDBTM
             echo "<td class='center' style='width: 10px;height: 10px;background-color:orange;'>";
             echo "</td>";
             echo "<td>";
-            echo "<a href='" . $_SERVER['PHP_SELF'] . "?" . $parameters . "&filter=update'>" . __(
+            echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=update'>" . __(
                     "Updated resource",
                     'resources'
                 ) . "</a>";
@@ -2907,7 +2907,7 @@ class ImportResource extends CommonDBTM
             echo "<td class='center' style='width: 10px;height: 10px;background-color:green;'>";
             echo "</td>";
             echo "<td>";
-            echo "<a href='" . $_SERVER['PHP_SELF'] . "?" . $parameters . "&filter=new'>" . __(
+            echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=new'>" . __(
                     "New resource",
                     'resources'
                 ) . "</a>";

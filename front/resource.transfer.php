@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
@@ -44,6 +45,12 @@ if (Session::getCurrentInterface() == 'central') {
 $resource = new Resource();
 
 if (isset($_POST["transferresources"])) {
+    // Enforce authorization before transferring: the current user must be allowed
+    // to update the source resource and must have access to the target entity.
+    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+    if (!Session::haveAccessToEntity((int) $_POST['entities_id'])) {
+        throw new AccessDeniedHttpException();
+    }
     if ($resource->checkTransferMandatoryFields($_POST)) {
         $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
         Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php");

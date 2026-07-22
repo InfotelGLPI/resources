@@ -254,10 +254,6 @@ class LDAP extends CommonDBTM
         try {
             // If a successful connection is made to your server, the provider will be returned.
             $provider = $ad->connect();
-
-            // Performing a query.
-            $results = $provider->search()->where('samaccountname', '=', 'ales')->get();
-            //         Toolbox::logWarning($results);
         } catch (BindException $e) {
             // There was an issue binding / connecting to the server.
 

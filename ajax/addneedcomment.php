@@ -30,11 +30,11 @@
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if (isset($_POST["id"])) {
-    $items_id = $_POST["id"];
-    $rand = $_POST["rand"];
+    $items_id = (int) $_POST["id"];
+    $rand = (int) ($_POST["rand"] ?? 0);
     echo "<div id='addcommentneed$items_id$rand'class='center'>";
     echo Html::textarea([
         'name' => 'commentneed' . $items_id,

@@ -36,7 +36,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 $KO = false;
 

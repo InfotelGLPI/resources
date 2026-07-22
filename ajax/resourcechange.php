@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\Resource_Change;
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 $resource_change = new Resource_Change();
 

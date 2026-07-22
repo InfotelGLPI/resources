@@ -105,7 +105,9 @@ if ($report->criteriasValidated()) {
 
     $title = $report->getFullTitle();
     $dbu = new DbUtils();
-    $group = $filter4->getParameterValue();
+    // Cast to int: this criterion value comes from the submitted report form and is
+    // concatenated into the query below (groups_id = $group).
+    $group = (int) $filter4->getParameterValue();
     $query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
                         FROM `glpi_plugin_resources_resources`
                         LEFT JOIN glpi_plugin_resources_resources_items ON glpi_plugin_resources_resources_items.plugin_resources_resources_id = glpi_plugin_resources_resources.id

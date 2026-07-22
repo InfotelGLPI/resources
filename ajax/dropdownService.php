@@ -33,7 +33,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownService.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if ($_POST['plugin_resources_departments_id'] > 0) {
     $rand = $_POST['rand'];

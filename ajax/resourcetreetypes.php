@@ -36,7 +36,7 @@ Html::header_nocache();
 
 global $DB;
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if (isset($_GET['node'])) {
     $target = "resource.php";

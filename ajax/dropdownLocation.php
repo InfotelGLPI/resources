@@ -33,7 +33,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownLocation.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if ($_POST['plugin_resources_employers_id'] > 0) {
     $employer = new Employer();

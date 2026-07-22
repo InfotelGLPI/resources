@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownSpeciality.php")) {
     Html::header_nocache();
 }
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 //allow speciality's display depending on rank
 $options = [

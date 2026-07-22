@@ -33,7 +33,7 @@ use GlpiPlugin\Resources\Resource_Change;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 $resource_change = new Resource_Change();
 

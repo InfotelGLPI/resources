@@ -29,7 +29,7 @@
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if (isset($_POST["type"])) {
     echo htmlspecialchars($_POST['type'], ENT_QUOTES, 'UTF-8');

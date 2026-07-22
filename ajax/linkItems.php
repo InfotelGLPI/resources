@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Resource;
+
 if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
     $AJAX_INCLUDE = 1;
     header("Content-Type: text/html; charset=UTF-8");
@@ -38,6 +40,13 @@ Session::checkCentralAccess();
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
     $values = 0;
     if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
+        // Restrict the dynamic ::dropdown() call to the itemtypes the plugin actually
+        // exposes: prevents an attacker from invoking a static dropdown() on an arbitrary
+        // class through the POSTed "type" value.
+        if (!in_array($_POST["type"], Resource::getTypes(true), true)) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+
         if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
             $values = $_POST['values'];
         }

@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\Resource_Item;
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 global $CFG_GLPI, $DB;
 
@@ -44,7 +44,7 @@ if (Plugin::isPluginActive("useditemsexport")) {
             [1]);
         if (count($resource) == 1) {
             $resource = reset($resource);
-            $users_id = $resource['items_id'];
+            $users_id = (int) $resource['items_id'];
 
             $type_user = $CFG_GLPI['linkuser_types'];
             $field_user = 'users_id';
@@ -58,18 +58,15 @@ if (Plugin::isPluginActive("useditemsexport")) {
                 }
 
                 $itemtable = $dbu->getTableForItemType($itemtype);
-                $query = "SELECT *
-                      FROM `$itemtable`
-                      WHERE `" . $field_user . "` = '$users_id'";
-
+                // Use the query builder so users_id is bound rather than concatenated.
+                $where = [$field_user => $users_id];
                 if ($item->maybeTemplate()) {
-                    $query .= " AND `is_template` = 0 ";
+                    $where['is_template'] = 0;
                 }
                 if ($item->maybeDeleted()) {
-                    $query .= " AND `is_deleted` = 0 ";
+                    $where['is_deleted'] = 0;
                 }
-                $result = $DB->doQuery($query);
-                $total_numrows += $DB->numrows($result);
+                $total_numrows += count($DB->request(['FROM' => $itemtable, 'WHERE' => $where]));
             }
 
             if ($total_numrows > 0) {

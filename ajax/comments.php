@@ -36,7 +36,7 @@ $AJAX_INCLUDE = 1;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 global $DB;
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
@@ -53,7 +53,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             } else {
                 $tmpname = Resource::getResourceName($_REQUEST["value"], 2);
             }
-            echo $tmpname["comment"];
+            echo htmlspecialchars((string) $tmpname["comment"], ENT_QUOTES, 'UTF-8');
 
             if (isset($_REQUEST['withlink'])) {
                 // withlink is reflected into a jQuery selector ($('#...')): restrict it to
@@ -69,7 +69,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
         default :
             if ($_REQUEST["value"] > 0) {
                 $tmpname = Dropdown::getDropdownName($_REQUEST["table"], $_REQUEST["value"], 1);
-                echo $tmpname["comment"];
+                echo htmlspecialchars((string) $tmpname["comment"], ENT_QUOTES, 'UTF-8');
             }
     }
 }

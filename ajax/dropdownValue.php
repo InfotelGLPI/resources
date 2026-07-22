@@ -41,7 +41,7 @@ if (!defined('GLPI_ROOT')) {
     die("Can not acces directly to this file");
 }
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 $dbu = new DbUtils();
 
@@ -211,7 +211,7 @@ if ($item instanceof CommonTreeDropdown) {
         if (count($toadd)) {
             foreach ($toadd as $key => $val) {
                 echo "<option class='tree' " . ($_GET['value'] == $key ? 'selected' : '') .
-                    " value='$key' title=\"" . htmlescape($val) . "\">" .
+                    " value='" . htmlescape($key) . "' title=\"" . htmlescape($val) . "\">" .
                     Toolbox::substr($val, 0, $_GET["limit"]) . "</option>";
             }
         }

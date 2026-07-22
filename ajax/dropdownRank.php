@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownRank.php")) {
     Html::header_nocache();
 }
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 //allow rank's diplay depending on profession
 $options = [

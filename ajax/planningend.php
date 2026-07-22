@@ -33,7 +33,7 @@ $AJAX_INCLUDE = 1;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if (isset($_POST['duration']) && $_POST['duration'] == 0) {
     Html::showDateTimeField("plan[end]", [

@@ -33,7 +33,7 @@ $AJAX_INCLUDE = 1;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 if (!isset($_GET['target'])) {
     $_GET['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";

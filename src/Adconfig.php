@@ -53,6 +53,18 @@ class Adconfig extends CommonDBTM
 
     static $rightname = 'plugin_resources';
 
+    // Bind and default-account secrets are stored encrypted (GLPIKey); keep them out of
+    // API/exports and out of the update history so the (encrypted) value is not disclosed.
+    public static $undisclosedFields = [
+        'password',
+        'default_account_password',
+    ];
+
+    public $history_blacklist = [
+        'password',
+        'default_account_password',
+    ];
+
     /**
      * functions mandatory
      * getTypeName(), canCreate(), canView()

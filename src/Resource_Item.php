@@ -220,24 +220,14 @@ class Resource_Item extends CommonDBRelation
      */
     public function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
     {
-        global $DB;
-
-        $query = "SELECT * FROM `" . $this->getTable() . "` "
-            . "WHERE `plugin_resources_resources_id` = '" . $plugin_resources_resources_id . "'
-         AND `itemtype` = '" . $itemtype . "'
-         AND `items_id` = '" . $items_id . "'";
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
+        // Use the query builder (getFromDBByCrit) so the itemtype/items_id parameters are
+        // bound instead of concatenated into raw SQL. Returns true only on a single match,
+        // preserving the previous "numrows != 1 -> false" semantics.
+        return $this->getFromDBByCrit([
+            'plugin_resources_resources_id' => $plugin_resources_resources_id,
+            'itemtype'                      => $itemtype,
+            'items_id'                      => $items_id,
+        ]);
     }
 
     /**

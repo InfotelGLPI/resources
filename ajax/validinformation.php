@@ -70,7 +70,7 @@ use GlpiPlugin\Resources\Service;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\Config;
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 
 $resource_id = (int)($_REQUEST["plugin_resources_resources_id"] ?? 0);
 $resource = new Resource();

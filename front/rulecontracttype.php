@@ -30,6 +30,7 @@
 use GlpiPlugin\Resources\RuleContracttypeCollection;
 
 Session::checkCentralAccess();
+Session::checkRight('plugin_resources', READ);
 
 $rulecollection = new RuleContracttypeCollection($_SESSION['glpiactive_entity']);
 

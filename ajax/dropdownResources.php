@@ -46,7 +46,7 @@ if (empty($_GET)) {
     $_GET = $_POST;
 }
 
-Session::checkLoginUser();
+Session::checkRight('plugin_resources', READ);
 // Default view : Nobody
 if (!isset($_GET['all'])) {
     $_GET['all'] = 0;
