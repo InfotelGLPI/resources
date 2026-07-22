@@ -145,6 +145,7 @@ class Menu extends CommonGLPI
         $canseeemployment = Session::haveright('plugin_resources_employment', READ);
         $canseebudget = Session::haveright('plugin_resources_budget', READ);
         $canImport = Session::haveright('plugin_resources_import', READ);
+        $canAnnuaire     = Session::haveright('plugin_resources_annuaire', READ);
 
 
         if ($tabnum == self::RESOURCES_TAB) {
@@ -189,12 +190,14 @@ class Menu extends CommonGLPI
                 $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
                     'title' => __('Search resources', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset'
-                ],
-                    'directory' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
+                ]];
+
+                if ($canAnnuaire) {
+                    $actions_others['directory'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
                         'title' => Directory::getTypeName(1),
                         'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php'
-                    ]
-                ];
+                    ];
+                }
 
                 $config = new Config();
                 if (!$config->fields["hide_view_commercial_resource"]) {
@@ -202,6 +205,9 @@ class Menu extends CommonGLPI
                     $opt = [];
                     $opt['reset'] = 'reset';
                     $opt['criteria'][0]['field'] = 27;
+                    if (!$config->fields["search_default_my_resources"]) {
+                        $opt['criteria'][0]['field']      = 4;
+                    }
                     $opt['criteria'][0]['searchtype'] = 'equals';
                     $opt['criteria'][0]['value'] = Session::getLoginUserID();
                     $opt['criteria'][0]['link'] = 'AND';
@@ -215,8 +221,11 @@ class Menu extends CommonGLPI
                     ];
                 }
 
-                $title = __('Others actions', 'resources');
-                self::showMenuBlock($title, "ti ti-list", $actions_others);
+                if (!empty($actions_others)) {
+                    $title = __('Others actions', 'resources');
+                    self::showMenuBlock($title, "ti ti-list", $actions_others);
+                }
+
 
             }
             return true;

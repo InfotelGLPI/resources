@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 
 
+use Dropdown;
 use Group;
 use Html;
 use Rule;
@@ -181,6 +182,10 @@ class RuleContracttypeReadonly extends Rule {
         $criterias['plugin_resources_grouptypes_id']['name']  = Group::getTypeName(1);
         $criterias['plugin_resources_grouptypes_id']['type']  = 'dropdownGroupType';
         $criterias['plugin_resources_grouptypes_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
+
+        $criterias['plugin_resources_users_id']['name']  = __('Resource manager', 'resources');
+        $criterias['plugin_resources_users_id']['type']  = 'dropdownManagerType';
+        $criterias['plugin_resources_users_id']['allow_condition'] = [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT];
         return $criterias;
     }
 
@@ -217,6 +222,10 @@ class RuleContracttypeReadonly extends Rule {
                     Group::dropdown(['name'=>$name, 'value'=>$value]);
                     $display = true;
                     break;
+                case "dropdownManagerType" :
+                    Dropdown::showFromArray($name, [__('Resource manager', 'resources')]);
+                    $display = true;
+                    break;
             }
         }
     }
@@ -242,6 +251,8 @@ class RuleContracttypeReadonly extends Rule {
                         return \Profile::getFriendlyNameById($pattern);
                     case "dropdownGroupType" :
                         return Group::getFriendlyNameById($pattern);
+                    case "dropdownManagerType" :
+                        return __('Resource manager', 'resources');
                 }
             }
         }
@@ -255,10 +266,33 @@ class RuleContracttypeReadonly extends Rule {
 
         $actions = [];
 
+        $actions['readonlyfields_gender']['name']  = __('Gender', 'resources');
+        $actions['readonlyfields_gender']['type']  = "yesonly";
+        $actions['readonlyfields_gender']['force_actions'] = ['assign'];
+
         $actions['readonlyfields_name']['name']  = __('Surname');
         $actions['readonlyfields_name']['type']  = "yesonly";
         $actions['readonlyfields_name']['force_actions'] = ['assign'];
-        $actions['readonlyfields_name']['type']  = "yesonly";
+
+        $actions['readonlyfields_plugin_resources_resourcestates_id']['name']  = ResourceState::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_resourcestates_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_resourcestates_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_plugin_resources_contracttypes_id']['name']  = ContractType::getTypeName(1);
+        $actions['readonlyfields_plugin_resources_contracttypes_id']['type']  = "yesonly";
+        $actions['readonlyfields_plugin_resources_contracttypes_id']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_is_helpdesk_visible']['name']  = __('Associable to a ticket');
+        $actions['readonlyfields_is_helpdesk_visible']['type']  = "yesonly";
+        $actions['readonlyfields_is_helpdesk_visible']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_is_leaving']['name']  = __('Declared as leaving', 'resources');
+        $actions['readonlyfields_is_leaving']['type']  = "yesonly";
+        $actions['readonlyfields_is_leaving']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_users_id_recipient']['name']  = __('Requesting user', 'resources');
+        $actions['readonlyfields_users_id_recipient']['type']  = "yesonly";
+        $actions['readonlyfields_users_id_recipient']['force_actions'] = ['assign'];
 
         $actions['readonlyfields_firstname']['name']  = __('First name');
         $actions['readonlyfields_firstname']['type']  = "yesonly";
@@ -300,13 +334,13 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_matricule']['type']  = "yesonly";
         $actions['readonlyfields_matricule']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_phone']['name']  = __('Phone');
+        $actions['readonlyfields_cellphone']['name']  = __('Phone');
+        $actions['readonlyfields_cellphone']['type']  = "yesonly";
+        $actions['readonlyfields_cellphone']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_phone']['name']  = __('Mobile phone');
         $actions['readonlyfields_phone']['type']  = "yesonly";
         $actions['readonlyfields_phone']['force_actions'] = ['assign'];
-
-        $actions['readonlyfields_mobilephone']['name']  = __('Mobile phone');
-        $actions['readonlyfields_mobilephone']['type']  = "yesonly";
-        $actions['readonlyfields_mobilephone']['force_actions'] = ['assign'];
 
         $actions['readonlyfields_matricule_second']['name']  = __('Second matricule','resources');
         $actions['readonlyfields_matricule_second']['type']  = "yesonly";
@@ -426,6 +460,10 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_plugin_resources_mission_lost']['name']  = __('Mission lost','resources');
         $actions['readonlyfields_plugin_resources_mission_lost']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_mission_lost']['force_actions'] = ['assign'];
+
+        $actions['readonlyfields_special_need']['name']  = __('Specials requirements', 'resources');
+        $actions['readonlyfields_special_need']['type']  = "yesonly";
+        $actions['readonlyfields_special_need']['force_actions'] = ['assign'];
 
         return $actions;
     }

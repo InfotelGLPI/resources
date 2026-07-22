@@ -44,7 +44,7 @@ if (!defined('GLPI_ROOT')) {
 class Resource_Validation extends CommonDBTM
 {
 
-    static $rightname = 'plugin_resources';
+    static $rightname = 'plugin_resources_validation';
 
     /**
      * @param int $nb
@@ -53,8 +53,10 @@ class Resource_Validation extends CommonDBTM
      */
     static function getTypeName($nb = 0)
     {
-
-        return __('Validation and AD Synchronization','resources');
+        if ($nb == 1) {
+            return __('Validation','resources');
+        }
+        return __('AD Synchronization','resources');
     }
 
     static function getIcon()
@@ -103,12 +105,12 @@ class Resource_Validation extends CommonDBTM
      **/
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-        $wizard_need = ContractType::checkWizardSetup($item->getField('id'), "use_need_wizard");
-
         if ($item->getType() == Resource::class
             && $this->canView()
-            && $wizard_need
         ) {
+            if (!$item->fields['valid_resource_information']) {
+                return self::createTabEntry(self::getTypeName(1));
+            }
             return self::createTabEntry(self::getTypeName(2));
         }
         return '';
@@ -147,49 +149,47 @@ class Resource_Validation extends CommonDBTM
             return false;
         }
 
-        if ($canedit) {
-            if (!$resources->fields['valid_resource_information']) {
+        if (!$resources->fields['valid_resource_information']) {
 
-                echo Ajax::createModalWindow(
-                    'popupAnswer',
-                    PLUGIN_RESOURCES_WEBDIR . '/front/modalvalidationinfo.php',
-                    [
-                        'title' => __('Are you sure?', 'resources'),
-                        'reloadonclose' => false,
-                        'width' => 1180,
-                        'height' => 500,
-                    ]
-                );
-//                echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
+            echo Ajax::createModalWindow(
+                'popupAnswer',
+                PLUGIN_RESOURCES_WEBDIR . '/front/modalvalidationinfo.php',
+                [
+                    'title' => __('Are you sure?', 'resources'),
+                    'reloadonclose' => false,
+                    'width' => 1180,
+                    'height' => 500,
+                ]
+            );
 
-                echo "<div align='center'><table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Validation', 'resources') . "</th></tr>";
+            echo "<div align='center'><table class='tab_cadre_fixe'>";
+            echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Validation', 'resources') . "</th></tr>";
 
-                echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-                echo "<a class='btn btn-primary overflow-hidden text-nowrap' href='#' onclick='popupAnswer.show();' title='" . __("Validate", "resources") . "'>" . __("Validate", "resources") . "</a>";
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                //echo Html::submit(_sx('button', 'Validate'), ['name' => 'validSaisie', 'class' => 'btn btn-primary', 'data-bs-toggle' => "modal", 'data-bs-target' => "#popupAnswer"]);
-                echo "</td></tr>";
-//                echo "</table></div>";
-                echo Html::scriptBlock("
-                function validinformation() {
-                   $.ajax({
-                       type: 'POST',
-                       url: '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/validinformation.php',
-                       data:{
-                           'plugin_resources_resources_id' : " . $plugin_resources_resources_id . ",
-                           'validSaisie' : 1,
-                       },
-                       success: function(){
-                        window.location.reload();
-                       },
-                   });
+            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
+            echo "<a class='btn btn-primary overflow-hidden text-nowrap' href='#' onclick='popupAnswer.show();' title='" . __("Validate", "resources") . "'>" . __("Validate", "resources") . "</a>";
+            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+           echo "</td></tr>";
+
+            echo Html::scriptBlock("
+            function validinformation() {
+               $.ajax({
+                   type: 'POST',
+                   url: '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/validinformation.php',
+                   data:{
+                       'plugin_resources_resources_id' : " . $plugin_resources_resources_id . ",
+                       'validSaisie' : 1,
+                   },
+                   success: function(){
+                    window.location.reload();
+                   },
+               });
 
 
-           }
-                ");
-                Html::closeForm();
-            } else {
+       }
+            ");
+            Html::closeForm();
+        } else {
+            if ($canedit) {
                 echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
 
                 echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -201,6 +201,12 @@ class Resource_Validation extends CommonDBTM
                 echo "</td></tr>";
                 echo "</table></div>";
                 Html::closeForm();
+            } else {
+                echo "<div class='alert alert-danger'>" . __(
+                        'You are not able to synchronize this account.',
+                        'resources'
+                    ) . "</div>";
+                return false;
             }
         }
     }

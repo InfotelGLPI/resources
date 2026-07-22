@@ -72,12 +72,19 @@ if (isset($_GET["plugin_resources_contracttypes_id"]) &&
     $plugin_resources_contracttypes_id = $_GET["plugin_resources_contracttypes_id"];
 }
 
+$isNotLeavingOnly = false;
+if (isset($_GET['condition']) && isset($_GET['condition']['is_not_leaving_only'])) {
+    $isNotLeavingOnly = true;
+}
+
 $result = Resource::getSqlSearchResult(
     false,
     $_GET["entity"],
     $_GET['value2'],
     $used,
-    $_GET['searchText']
+    $_GET['searchText'],
+    false,
+    $isNotLeavingOnly,
 );
 
 $users = [];

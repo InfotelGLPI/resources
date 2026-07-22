@@ -332,6 +332,10 @@ class Resource extends CommonDBTM
         ]);
     }
 
+    public function playnotification($resource) {
+        NotificationEvent::raiseEvent("AlertLeavingRessourceManager", $resource);
+    }
+
     /**
      * Get Tab Name used for itemtype
      *
@@ -382,6 +386,16 @@ class Resource extends CommonDBTM
             $wizard->wizardEightStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
         }
         return true;
+    }
+
+    static function getDefaultSearchRequest() {
+
+        $config = new Config();
+        $search = ['sort'  => $config->fields['order_column'],
+            'order' => $config->fields['order_order'],];
+
+
+        return $search;
     }
 
     /**
@@ -924,6 +938,8 @@ class Resource extends CommonDBTM
     {
         $ong = [];
 
+        $config = new Config();
+
         $this->addDefaultFormTab($ong);
         $this->addStandardTab(Resource::class, $ong, $options);
         if (Session::getCurrentInterface() == 'central') {
@@ -943,18 +959,29 @@ class Resource extends CommonDBTM
         }
 
         $this->addStandardTab(Choice::class, $ong, $options);
-        $this->addStandardTab(Resource_Validation::class, $ong, $options);
+        $canViewSynchroADView = json_decode($config->fields['can_view_synchronisationAD']);
+        $canViewSynchroADView = is_array($canViewSynchroADView) ? $canViewSynchroADView : [];
+
+        if ($config->fields['use_module_validation'] && ((!$this->fields['valid_resource_information'] && Session::getLoginUserID() == $this->fields['users_id']) ||
+            ($this->fields['valid_resource_information'] && in_array($_SESSION['glpiactiveprofile']['id'], $canViewSynchroADView)))
+        ) {
+            $this->addStandardTab(Resource_Validation::class, $ong, $options);
+        }
         $this->addStandardTab(ResourceHabilitation::class, $ong, $options);
         $this->addStandardTab(Employment::class, $ong, $options);
         $this->addStandardTab(Employee::class, $ong, $options);
         $this->addStandardTab(LeavingInformation::class, $ong, $options);
-        $this->addStandardTab(Resource_Leaving::class, $ong, $options);
+        if ($config->fields['use_module_departure_instruction']) {
+            $this->addStandardTab(Resource_Leaving::class, $ong, $options);
+        }
         $this->addStandardTab(Checklist::class, $ong, $options);
         $this->addStandardTab(Task::class, $ong, $options);
 
         if (Session::getCurrentInterface() == 'central') {
             $this->addStandardTab(ResourceImport::class, $ong, $options);
-            $this->addStandardTab(ReportConfig::class, $ong, $options);
+            if ($config->fields['view_notification_tab']) {
+                $this->addStandardTab(ReportConfig::class, $ong, $options);
+            }
             $this->addStandardTab(Document_Item::class, $ong, $options);
 
             if (!isset($options['withtemplate']) || empty($options['withtemplate'])) {
@@ -1163,6 +1190,8 @@ class Resource extends CommonDBTM
         if (!isset($input["is_template"])) {
             if (!isset($input['force'])) {
                 $required = $this->checkRequiredFields($input);
+                $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+                $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
                 if (count($required) > 0) {
                     Session::addMessageAfterRedirect(
@@ -1728,6 +1757,9 @@ class Resource extends CommonDBTM
         $options['formoptions'] = " enctype='multipart/form-data'";
         $this->showFormHeader($options);
 
+        $config = new Config();
+
+
         if (isset($this->fields["entities_id"])) {
             $input['entities_id'] = $this->fields["entities_id"];
         } else {
@@ -1736,6 +1768,8 @@ class Resource extends CommonDBTM
         $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
         $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
+        $input['plugin_resources_users_id'] = Session::getLoginUserID();
+        $input['plugin_resources_users_id_reel'] = $this->fields['users_id'];
         $hidden = $this->getHiddenFields($input);
         $readonly = $this->getReadonlyFields($input);
         $required = $this->checkRequiredFields($input);
@@ -1945,12 +1979,14 @@ class Resource extends CommonDBTM
         echo "<tr class='tab_bg_1'><td>" . ResourceState::getTypeName(1) . "</td>";
         echo "<td>";
         if (Session::getCurrentInterface() == 'central') {
+            $option = ['value'  => $this->fields["plugin_resources_resourcestates_id"],
+                'entity' => $this->fields["entities_id"]];
+            if (in_array('plugin_resources_resourcestates_id', $readonly)) {
+                $option['readonly'] = true;
+            }
             Dropdown::show(
                 ResourceState::class,
-                [
-                    'value' => $this->fields["plugin_resources_resourcestates_id"],
-                    'entity' => $this->fields["entities_id"],
-                ]
+                $option
             );
         } else {
             echo Dropdown::getDropdownName(
@@ -1964,12 +2000,15 @@ class Resource extends CommonDBTM
             1
         ) . "</td>";
         echo "<td>";
+
+        $option = ['value'  => $this->fields["plugin_resources_contracttypes_id"],
+            'entity' => $this->fields["entities_id"]];
+        if (in_array('plugin_resources_contracttypes_id', $readonly)) {
+            $option['readonly'] = true;
+        }
         Dropdown::show(
             ContractType::class,
-            [
-                'value' => $this->fields["plugin_resources_contracttypes_id"],
-                'entity' => $this->fields["entities_id"],
-            ]
+            $option
         );
         echo "</td></tr>";
 
@@ -2384,10 +2423,12 @@ class Resource extends CommonDBTM
                 'entity'      => $this->fields["entities_id"],
                 'entity_sons' => true,
                 'right'       => 'all'];
-            if (in_array("users_id", $readonly)) {
+            if (in_array("users_id", $readonly)){
                 $option['readonly'] = true;
+                echo \User::dropdown($option);
+            } else {
+                \User::dropdown($option);
             }
-            \User::dropdown($option);
         }
 
         echo "</td>";
@@ -2403,7 +2444,7 @@ class Resource extends CommonDBTM
         echo "<td " . $tohide['date_begin'] . " >";
         $option = ['value' => $this->fields["date_begin"]];
         if (in_array("date_begin", $readonly)) {
-            $option['readonly'] = true;
+            $option['canedit'] = true;
         }
         Html::showDateField("date_begin", $option);
         echo "</td>";
@@ -2459,10 +2500,12 @@ class Resource extends CommonDBTM
                 'entity'      => $this->fields["entities_id"],
                 'entity_sons' => true,
                 'right'       => 'all'];
-            if (in_array("users_id_sales", $readonly)) {
+            if (in_array("users_id_sales", $readonly)){
                 $option['readonly'] = true;
+                echo \User::dropdown($option);
+            } else {
+                \User::dropdown($option);
             }
-            \User::dropdown($option);
         }
 
         echo "</td>";
@@ -2495,13 +2538,17 @@ class Resource extends CommonDBTM
             $users_id_recipient = new \User();
             $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
             if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
-                \User::dropdown([
-                    'value' => $this->fields["users_id_recipient"],
-                    'name' => "users_id_recipient",
-                    'entity' => $this->fields["entities_id"],
+                $option = ['value'       => $this->fields["users_id_recipient"],
+                    'name'        => "users_id_recipient",
+                    'entity'      => $this->fields["entities_id"],
                     'entity_sons' => true,
-                    'right' => 'all',
-                ]);
+                    'right'       => 'all'];
+                if (in_array('users_id_recipient', $readonly)) {
+                    $option['readonly'] = true;
+                    echo \User::dropdown($option);
+                } else {
+                    \User::dropdown($option);
+                }
             } else {
                 echo getUserName($this->fields["users_id_recipient"]);
             }
@@ -2514,7 +2561,11 @@ class Resource extends CommonDBTM
         echo "<td>" . __('Associable to a ticket') . "</td><td>";
 
         if (Session::getCurrentInterface() == 'central') {
-            Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible']);
+            if (in_array('is_helpdesk_visible', $readonly)) {
+                Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible'], -1, ['readonly' => true]);
+            } else {
+                Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible']);
+            }
         } else {
             echo Dropdown::getDropdownName($this->getTable(), $this->fields["is_helpdesk_visible"]);
         }
@@ -2551,7 +2602,11 @@ class Resource extends CommonDBTM
                     . "</a>";
             }
         } else {
-            Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
+            if (in_array('is_leaving', $readonly)) {
+                Dropdown::showYesNo('is_leaving', $this->fields['is_leaving'], -1, ['readonly'=> true]);
+            } else {
+                Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
+            }
         }
 
         if ($ID != -1 && $options['withtemplate'] != 1 && $this->fields["is_leaving"] == 1
@@ -2607,7 +2662,11 @@ class Resource extends CommonDBTM
             echo Html::convDate($this->fields["date_end"]);
             echo Html::hidden('date_end', ['value' => $this->fields["date_end"]]);
         } else {
-            Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
+            $option = ['value' => $this->fields["date_end"]];
+            if (in_array('date_end', $readonly)) {
+                $option['canedit'] = false;
+            }
+            Html::showDateField("date_end", $option);
         }
         echo "</td>";
         if ($tohide['date_end'] == "hidden") {
@@ -3246,7 +3305,8 @@ class Resource extends CommonDBTM
         $value = 0,
         $used = [],
         $search = '',
-        $showOnlyLinkedResources = false
+        $showOnlyLinkedResources = false,
+        $isNotLeavingOnly = false
     ) {
         global $DB, $CFG_GLPI;
 
@@ -3257,9 +3317,14 @@ class Resource extends CommonDBTM
 
         $dbu = new DbUtils();
 
-        $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0
-                  AND `glpi_plugin_resources_resources`.`is_leaving` = 0
-                  AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
+        $where = " `glpi_plugin_resources_resources`.`is_deleted` = 0 ";
+        if (!$isNotLeavingOnly) {
+            $where .= " AND (`glpi_plugin_resources_resources`.`is_leaving` = 0 OR `glpi_plugin_resources_resources`.`date_end` > now())";
+        } else {
+            $where .= " AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
+        }
+
+        $where .= "  AND `glpi_plugin_resources_resources`.`is_template` = 0 ";
 
         $where .= $dbu->getEntitiesRestrictRequest(
             'AND',
@@ -3482,11 +3547,11 @@ class Resource extends CommonDBTM
                 );
             }
 
-            $cond = [];
+            $cond = ['is_not_leaving_only' => 'is_not_leaving_only'];
 
             if ($available_contracttype !== false && is_array($available_contracttype)) {
                 $available_contracttype[] = 0;
-                $cond = ['plugin_resources_contracttypes_id' => $available_contracttype];
+                $cond['plugin_resources_contracttypes_id']  = $available_contracttype;
             }
             $rand = mt_rand();
             self::dropdown([

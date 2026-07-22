@@ -149,6 +149,10 @@ class Config extends CommonDBTM
             '##resource_plugin_resources_roles_id##' => Role::getTypeName(1),
             '##resource_matricule##' => __('Matricule', 'resources'),
             '##resource_matricule_second##' => __('Second matricule', 'resources'),
+            '##computer_phone_equipment##' => __('Computer and telephone equipment needs', 'resources'),
+            '##softwares_requirements##' => __('Softwares requirements', 'resources'),
+            '##furnitures_needs##' => __('Furnitures needs', 'resources'),
+            '##other_needs##' => __('Others needs', 'resources'),
         ];
     }
 
@@ -255,6 +259,15 @@ class Config extends CommonDBTM
             echo "</td>";
             echo "<td>";
             Dropdown::showYesNo("allow_without_contract", $this->fields["allow_without_contract"]);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Hidden first form when you have only one template', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('hidden_first_form', $this->fields['hidden_first_form']);
             echo "</td>";
             echo "</tr>";
 
@@ -375,6 +388,64 @@ class Config extends CommonDBTM
                 echo "</tr>";
             }
 
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Access the needs tab', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('needs_tab_access',$this->fields['needs_tab_access']);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Can view notification tab', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('view_notification_tab',$this->fields['view_notification_tab']);
+            echo "</td>";
+            echo "</tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('On needs tab, view parts', 'resources');
+            echo "</td>";
+            echo "<td>";
+            $possible_values_choice = [];
+            foreach (Choice::TYPE_CHOICE as $id => $name) {
+                $possible_values_choice[$id] = __($name, 'resources');
+            }
+            $values = json_decode($this->fields['view_needs_parts']);
+            if (!is_array($values)) {
+                $values = [];
+            }
+            Dropdown::showFromArray("view_needs_parts",
+                $possible_values_choice,
+                ['values'   => $values,
+                    'multiple' => 'multiples']);
+
+            echo "</td>";
+            echo "</tr>";
+
+            if ((new Adconfig())->fields['auth_id'] > 0 && $this->fields['use_module_validation']) {
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Can view SynchronisationAD tab', 'resources');
+                echo "</td>";
+                echo "<td>";
+                $values = json_decode($this->fields['can_view_synchronisationAD']);
+                if (!is_array($values)) {
+                    $values = [];
+                }
+                Dropdown::showFromArray("can_view_synchronisationAD",
+                    $possible_values,
+                    ['values' => $values,
+                        'multiple' => 'multiples']);
+
+                echo "</td>";
+                echo "</tr>";
+            }
+
             echo "<tr>";
             echo "<td class='tab_bg_2 center' colspan='3'>";
             echo Html::hidden('id', ['value' => 1]);
@@ -419,15 +490,6 @@ class Config extends CommonDBTM
             echo "</td>";
             echo "<td>";
             Dropdown::showYesNo("create_ticket_departure", $this->fields["create_ticket_departure"]);
-            echo "</td>";
-            echo "</tr>";
-
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Create a ticket with departure and instructions', 'resources');
-            echo "</td>";
-            echo "<td>";
-            Dropdown::showYesNo("create_ticket_departure_instructions",$this->fields["create_ticket_departure_instructions"]);
             echo "</td>";
             echo "</tr>";
 
@@ -510,26 +572,7 @@ class Config extends CommonDBTM
             echo "</td>";
             echo "</tr>";
 
-            echo Ajax::createModalWindow(
-                'popupAvailablevariable',
-                PLUGIN_RESOURCES_WEBDIR . '/front/modalavailablevariable.php',
-                [
-                    'title' => __('Are you sure?', 'resources'),
-                    'reloadonclose' => false,
-                    'width' => 1180,
-                    'height' => 500,
-                ]
-            );
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Text in the resource creation ticket after validation', 'resources') . '<br>';
-            Html::requireJs('tinymce');
-            echo "<a class='' href='#' onclick='popupAvailablevariable.show()' title='" . __("See variable available", "resources") . "'>" . __("See variable available", "resources") . "</a>";
-            echo "</td>";
-            echo "<td>";
-            Html::textarea(['name' => 'text_ticket_validation','value' => $this->fields['text_ticket_validation']]);
-            echo "</td>";
-            echo "</tr>";
+
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
@@ -605,6 +648,151 @@ class Config extends CommonDBTM
             Group::dropdown(['name' => 'default_assignment_group','value' => $this->fields['default_assignment_group']]);
             echo "</td>";
             echo "</tr>";
+
+            $optionSearch = [
+                1 => __('Sales manager', 'resources'),
+                0 => __('Resource manager', 'resources'),
+            ];
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('In element', 'resources'). ' "' . __('View my resources as a commercial', 'resources') . '" : ' . __('Search by default', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showFromArray('search_default_my_resources',$optionSearch, ['value' => $this->fields['search_default_my_resources']]);
+            echo "</td>";
+            echo "</tr>";
+
+            $removeTimeChoice = ['0' => '23:59:59', '1' => '00:00:00'];
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Time to remove ressource', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showFromArray('remove_at_midnight',$removeTimeChoice ,['values' =>[$this->fields['remove_at_midnight']]]);
+            echo "</td>";
+            echo "</tr>";
+
+            $orderColumn = [1 => __('Name'), 5 => __('Arrival date', 'resources'),16 => __('Last update'), 31 => __('ID')];
+            $orderOrder = ['ASC' => __('Ascending', 'resources'), 'DESC' => __('Descending', 'resources')];
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Order resources by', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showFromArray('order_column',$orderColumn ,['values' =>[$this->fields['order_column']]]);
+            echo " ";
+            Dropdown::showFromArray('order_order',$orderOrder ,['values' =>[$this->fields['order_order']]]);
+            echo "</td>";
+            echo "</tr>";
+
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use validation module', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('use_module_validation',$this->fields['use_module_validation']);
+            echo "</td>";
+            echo "</tr>";
+
+            if ($this->fields['use_module_validation']) {
+                echo Ajax::createModalWindow(
+                    'popupAvailablevariable',
+                    PLUGIN_RESOURCES_WEBDIR . '/front/modalavailablevariable.php',
+                    [
+                        'title' => __('Are you sure?', 'resources'),
+                        'reloadonclose' => false,
+                        'width' => 1180,
+                        'height' => 500,
+                    ]
+                );
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Text in the resource creation ticket after validation', 'resources') . '<br>';
+                Html::requireJs('tinymce');
+                echo "<a class='' href='#' onclick='popupAvailablevariable.show()' title='" . __("See variable available", "resources") . "'>" . __("See variable available", "resources") . "</a>";
+                echo "</td>";
+                echo "<td>";
+                Html::textarea(['name' => 'text_ticket_validation', 'value' => $this->fields['text_ticket_validation']]);
+                echo "</td>";
+                echo "</tr>";
+
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Freeze the resource and special needs tabs after validation', 'resources');
+                echo "</td>";
+                echo "<td>";
+                Dropdown::showYesNo('freeze_form_after_validation', $this->fields['freeze_form_after_validation']);
+                echo "</td>";
+                echo "</tr>";
+
+            }
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use ticket duplication module', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('use_module_duplicata_ticket',$this->fields['use_module_duplicata_ticket']);
+            echo "</td>";
+            echo "</tr>";
+
+            if ($this->fields['use_module_duplicata_ticket']
+                && ($this->fields['use_module_validation'] || $this->fields['use_module_departure_instruction'])) {
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Assignment group for the second ticket', 'resources');
+                echo "</td>";
+                echo "<td>";
+                Group::dropdown(['name' => 'assignment_group_second_ticket','value' => $this->fields['assignment_group_second_ticket']]);
+                echo "</td>";
+                echo "</tr>";
+
+
+                if ($this->fields['use_module_validation']) {
+                    echo "<tr class='tab_bg_1'>";
+                    echo "<td>";
+                    echo __('Send a second ticket after validating informations', 'resources');
+                    echo "</td>";
+                    echo "<td>";
+                    Dropdown::showYesNo('send_second_ticket_validation', $this->fields['send_second_ticket_validation']);
+                    echo "</td>";
+                    echo "</tr>";
+                }
+
+                if ($this->fields['use_module_departure_instruction']) {
+                    echo "<tr class='tab_bg_1'>";
+                    echo "<td>";
+                    echo __('Send a second ticket for a departure after instruction', 'resources');
+                    echo "</td>";
+                    echo "<td>";
+                    Dropdown::showYesNo('send_second_ticket_remove',$this->fields['send_second_ticket_remove']);
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            }
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Use departure instruction module', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Dropdown::showYesNo('use_module_departure_instruction',$this->fields['use_module_departure_instruction']);
+            echo "</td>";
+            echo "</tr>";
+
+            if ($this->fields['use_module_departure_instruction']) {
+                echo "</td>";
+                echo "</tr>";
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Create a ticket with departure and instructions', 'resources');
+                echo "</td>";
+                echo "<td>";
+                Dropdown::showYesNo("create_ticket_departure_instructions",$this->fields["create_ticket_departure_instructions"]);
+                echo "</td>";
+                echo "</tr>";
+            }
 
             echo "<tr>";
             echo "<td class='tab_bg_2 center' colspan='3'>";
@@ -769,6 +957,12 @@ class Config extends CommonDBTM
         }
         if (!empty($input['sales_manager'])) {
             $input['sales_manager'] = json_encode(array_values($input['sales_manager']));
+        }
+        if (!empty($input['view_needs_parts'])) {
+            $input['view_needs_parts'] = json_encode(array_values($input['view_needs_parts']));
+        }
+        if (!empty($input['can_view_synchronisationAD'])) {
+            $input['can_view_synchronisationAD'] = json_encode(array_values($input['can_view_synchronisationAD']));
         }
 
         return $input;

@@ -132,7 +132,7 @@
                                     __('First name'),
                                     {
                                         'required': mandatory.firstname is defined,
-                                        'readonly': readonly.name is defined,
+                                        'readonly': readonly.firstname is defined,
                                         'additional_attributes': {
                                         'onchange': "javascript:this.value=First2UpperCase(this.value);style='text-transform:capitalize';checkResource('"~ root_resources ~"');",
                                     }
@@ -667,7 +667,7 @@
                                         __('Arrival date', 'resources'),
                                         {
                                             'required': mandatory.date_begin is defined,
-                                            'readonly': readonly.date_begin is defined,
+                                            'canedit': readonly.date_begin is defined,
                                         }
                                     ) }}
                                 {% endif %}
@@ -681,7 +681,7 @@
                                         __('Departure date', 'resources'),
                                         {
                                             'required': mandatory.date_end is defined,
-                                            'readonly': readonly.date_end is defined,
+                                            'canedit': readonly.date_end is defined,
                                             'helper': __('Empty for non defined', 'resources')
                                         }
                                     ) }}

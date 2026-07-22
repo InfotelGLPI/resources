@@ -210,6 +210,30 @@ elseif (isset($_POST["deleteemployee"])) {
 //update resource
 elseif (isset($_POST["update"])) {
     $resource->check($_POST['id'], UPDATE);
+    $_POST['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+    $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
+
+    $required    = $resource->checkRequiredFields($_POST);
+
+    if (count($required) > 0) {
+        // Set default value...
+        foreach ($_POST as $key => $val) {
+            $values[$key] = $val;
+        }
+
+        // Clean text fields
+        $values['name']    = stripslashes($values['name']);
+
+        $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
+        $values['withtemplate'] = $_POST["withtemplate"];
+
+
+        $values["requiredfields"] = 1;
+
+        Session::addMessageAfterRedirect(__("One or more mandatory fields are empty.", 'resources'), false, ERROR);
+
+        Html::back();
+    }
     $old_is_leaving = $resource->fields['is_leaving'] ?? 0;
     $resource->update($_POST);
     if (isset($_POST['plugin_resources_employers_id'])) {
@@ -471,19 +495,35 @@ elseif (isset($_POST["add_checklist"])) {
         'firstname' => $resource->getField("firstname"),
         'phone' => $resource->getField('phone'),
         'mail' => $linkAD->fields["mail"],
-        'contract' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")),
+        'contract' => $resource->getField("plugin_resources_contracttypes_id") ? Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")) : '',
         'glpi_plugin_resources_contracttypes' => $resource->getField("plugin_resources_contracttypes_id"),
         'cellphone' => $resource->getField("cellphone"),
-        'role' => $resource->getField('plugin_resources_roles_id'),
-        'service' => $resource->getField('plugin_resources_services_id'),
-        'location' => $resource->getField('locations_id'),
+        'role' => $resource->getField('plugin_resources_roles_id') ? Dropdown::getDropdownName('glpi_plugin_resources_roles', $resource->getField('plugin_resources_roles_id')) : '',
+        'glpi_plugin_resources_roles_id' => $resource->getField("plugin_resources_roles_id"),
+        'service' => $resource->getField('plugin_resources_services_id') ? Dropdown::getDropdownName('glpi_plugin_resources_services', $resource->getField('plugin_resources_services_id')) : '',
+        'glpi_plugin_resources_services_id' => $resource->getField("plugin_resources_services_id"),
+        'location' => $resource->getField('locations_id') ? Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')) : '',
+        'glpi_locations_id' => $resource->getField("locations_id"),
+        'function' => $resource->getField('plugin_resources_functions_id') ? Dropdown::getDropdownName('glpi_plugin_resources_functions', $resource->getField('plugin_resources_functions_id')) : '',
+        'glpi_plugin_resources_functions_id' => $resource->getField("plugin_resources_functions_id"),
+        'begindate' => $resource->getField("date_begin"),
     ];
 
     $linkad = new LinkAd();
 
     if (!$islink) {
-        $message = __('the user has not been updated to the LDAP directory','resources');
-        Session::addMessageAfterRedirect($message, false, ERROR);
+        //creation
+        $ldap = new LDAP();
+        $res = $ldap->createUserAD($value);
+        if ($res) {
+            $_POST["action_done"] = 1;
+            $linkad->add($value);
+            $message = __('the user has been added to the LDAP directory','resources');
+            Session::addMessageAfterRedirect($message, false, INFO);
+        }else{
+            $message = __('the user has not been added to the LDAP directory','resources');
+            Session::addMessageAfterRedirect($message, false, ERROR);
+        }
     }
     else {
 
@@ -505,10 +545,12 @@ elseif (isset($_POST["add_checklist"])) {
         }
     }
 
+    Html::back();
+
 } else if (isset($_POST["validOrderLeaving"])) {
     $_POST["id"]       = $_POST["plugin_resources_resources_id"];
     unset($_POST["plugin_resources_resources_id"]);
-    unset($_POST["date_declaration_leaving"]);
+    unset($_POST["date_end"]);
     $resource->update($_POST);
 
     $config = new Config();
@@ -547,105 +589,23 @@ elseif (isset($_POST["add_checklist"])) {
         unset($ticket->fields["id"]);
         $ticket_id = $ticket->add($ticket->fields);
 
-
-        //Update AD
-        $authLDAP = new AuthLDAP();
-        $auth = $authLDAP->find();
-        if (count($auth)) {
-            $config = new Config();
-            $configAD = new Adconfig();
-            $config->getFromDB(1);
-            $configAD->getFromDB(1);
-            $configAD->fields = $configAD->prepareFields($configAD->fields);
-            $canedit = $resource->can($resource->fields['id'], UPDATE);
-            $entities_id = $resource->fields["entities_id"];
-            $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
-            $rand = mt_rand();
-            $enddate = $resource->getField("date_end");
-
-            $linkAD = new LinkAd();
-            $linkAD->getEmpty();
-            $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-
-            $ID = $linkAD->getID();
-            $value = [
-                'plugin_resources_resources_id' => $resource->fields['id'],
-                'tickets_id' => $ticket_id,
-                'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
-                'entities_id' => $entities_id,
-                'enddate' => $enddate,
-                'id' => $ID,
-                'login' => $linkAD->fields["login"],
-                'department' => Dropdown::getDropdownName('glpi_plugin_resources_departments', $resource->getField("plugin_resources_departments_id")),
-                'glpi_plugin_resources_departments' => $resource->getField("plugin_resources_departments_id"),
-                'name' => $resource->getField("name"),
-                'firstname' => $resource->getField("firstname"),
-                'phone' => $resource->getField('phone'),
-                'mail' => $linkAD->fields["mail"],
-                'contract' => Dropdown::getDropdownName('glpi_plugin_resources_contracttypes', $resource->getField("plugin_resources_contracttypes_id")),
-                'glpi_plugin_resources_contracttypes' => $resource->getField("plugin_resources_contracttypes_id"),
-                'cellphone' => $resource->getField("cellphone"),
-                'role' => $resource->getField('plugin_resources_roles_id'),
-                'service' => $resource->getField('plugin_resources_services_id'),
-                'location' => $resource->getField('locations_id'),
-            ];
-
-            $linkad = new LinkAd();
-
-            if (!$islink) {
-                $message = __('the user has not been updated to the LDAP directory', 'resources');
-                Session::addMessageAfterRedirect($message, false, ERROR);
-            } else {
-
-                //update
-                $ldap = new LDAP();
-                $linkad->getFromDB($value['id']);
-                $value["login"] = $linkad->getField("login");
-                $res = $ldap->updateUserAD($value);
-                if ($res[0]) {
-
-                    $value["action_done"] = 1;
-                    $linkad->update($value);
-                    $fup = new ITILFollowup();
-
-                    $toadd = ['type' => "new",
-                        'items_id' => $value["ticket_id"],
-                        'itemtype' => 'Ticket',
-                        'is_private' => 1];
-
-                    $content = $DB->escape(sprintf(__('%1$s %2$s have been updated in the LDAP directory', 'resources'), $value["firstname"], $value["name"]));
-                    $content .= __("Data changed", 'resources') . " <br />";
-                    foreach ($res[1] as $key => $oldData) {
-                        $i = 1;
-                        $nb = count($oldData);
-                        $content .= $key . " : ";
-                        foreach ($oldData as $data) {
-                            if ($key == "accountexpires") {
-                                $time = $ldap->ldapTimeToUnixTime($data);
-                                $data = date('Y-m-d', $time);
-                                $data = Html::convDate($data);
-
-                            }
-                            $content .= $data;
-                            if ($i < $nb) {
-                                $content .= ", ";
-                            }
-                            $i++;
-                        }
-                        $content .= "<br />";
-
-                    }
-                    $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
-
-                    $fup->add($toadd);
-                    $message = __('the user has been updated to the LDAP directory', 'resources');
-                    Session::addMessageAfterRedirect($message, false, INFO);
-                } else {
-                    $message = __('the user has not been updated to the LDAP directory', 'resources');
-                    Session::addMessageAfterRedirect($message, false, ERROR);
-                }
-            }
+        if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_module_departure_instruction'] && $config->fields["send_second_ticket_remove"] && $config->fields["assignment_group_second_ticket"]) {
+            $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
+            $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
+            $ticket->fields["type"] = Ticket::DEMAND_TYPE;
+            $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+            $ticket->fields['items_id'] = [Resource::class => [$_POST['id']]];
+            unset($ticket->fields["id"]);
+            $ticket_id = $ticket->add($ticket->fields);
+            $groupticket = new Group_Ticket();
+            $groupticket->fields['tickets_id'] = $ticket_id;
+            $groupticket->fields['groups_id'] = $config->fields["assignment_group_second_ticket"];
+            $groupticket->fields['type'] = CommonITILActor::ASSIGN;
+            unset($groupticket->fields["id"]);
+            $groupticket->add($groupticket->fields);
         }
+
+
     }
     Html::back();
 } else {

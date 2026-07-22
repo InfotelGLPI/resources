@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
+global $CFG_GLPI, $DB;
+
+use GlpiPlugin\Resources\Adconfig;
 use GlpiPlugin\Resources\Checklist;
 use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Config;
@@ -71,12 +73,16 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
     if (!isset($_POST["plugin_resources_leavingreasons_id"])) {
         $_POST["plugin_resources_leavingreasons_id"] = 0;
     }
+    $config = new Config();
     $date = date("Y-m-d H:i:s");
     $CronTask = new CronTask();
     $CronTask->getFromDBbyName(Employment::class, "ResourcesLeaving");
 
     $input["id"] = $_POST["plugin_resources_resources_id"];
     $input["date_end"] = $_POST["date_end"];
+    if (!$config->fields['remove_at_midnight']) {
+        $input["date_end"] .=" 23:59:59";
+    }
     $input["remove_manager"] = $_POST["remove_manager"] ?? 0;
     if (($_POST["date_end"] < $date)
         || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
@@ -160,6 +166,9 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
         $ticket->fields['items_id'] = [Resource::class => [$input['id']]];
         unset($ticket->fields["id"]);
         $ticket->add($ticket->fields);
+
+
+
         $linkad = new LinkAd();
         if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $input['id']])) {
             $input2 = [];
@@ -174,7 +183,93 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
             && $resource->input['send_notification'] == 1
         ) {
             if ($CFG_GLPI["notifications_mailing"]) {
-                NotificationEvent::raiseEvent("AlertLeavingRessourceManager", $resource);
+                $resource->playnotification($resource);
+            }
+        }
+    }
+
+    if ((new Adconfig())->fields['auth_id'] > 0) {
+        //Update AD
+        $authLDAP = new AuthLDAP();
+        $auth = $authLDAP->find();
+        if (count($auth)) {
+            $config = new Config();
+            $configAD = new Adconfig();
+            $config->getFromDB(1);
+            $configAD->getFromDB(1);
+            $configAD->fields = $configAD->prepareFields($configAD->fields);
+            $canedit = $resource->can($resource->fields['id'], UPDATE);
+            $entities_id = $resource->fields["entities_id"];
+            $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
+            $rand = mt_rand();
+            $enddate = $resource->getField("date_end");
+
+            $linkAD = new LinkAd();
+            $linkAD->getEmpty();
+            $islink = $linkAD->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
+
+            $ID = $linkAD->getID();
+            $value = [
+                'enddate' => $enddate,
+                'id' => $ID,
+                'login' => $linkAD->fields["login"],
+
+            ];
+
+            $linkad = new LinkAd();
+
+            if (!$islink) {
+                $message = __('the user has not been updated to the LDAP directory', 'resources');
+                Session::addMessageAfterRedirect($message, false, ERROR);
+            } else {
+
+                //update
+                $ldap = new LDAP();
+                $linkad->getFromDB($value['id']);
+                $value["login"] = $linkad->getField("login");
+                $res = $ldap->updateUserAD($value);
+                if ($res[0]) {
+
+                    $value["action_done"] = 1;
+                    $linkad->update($value);
+                    $fup = new ITILFollowup();
+
+                    $toadd = ['type' => "new",
+                        'items_id' => $value["ticket_id"],
+                        'itemtype' => 'Ticket',
+                        'is_private' => 1];
+
+                    $content = $DB->escape(sprintf(__('%1$s %2$s have been updated in the LDAP directory', 'resources'), $value["firstname"], $value["name"]));
+                    $content .= __("Data changed", 'resources') . " <br />";
+                    foreach ($res[1] as $key => $oldData) {
+                        $i = 1;
+                        $nb = count($oldData);
+                        $content .= $key . " : ";
+                        foreach ($oldData as $data) {
+                            if ($key == "accountexpires") {
+                                $time = $ldap->ldapTimeToUnixTime($data);
+                                $data = date('Y-m-d', $time);
+                                $data = Html::convDate($data);
+
+                            }
+                            $content .= $data;
+                            if ($i < $nb) {
+                                $content .= ", ";
+                            }
+                            $i++;
+                        }
+                        $content .= "<br />";
+
+                    }
+                    $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
+
+//                    $fup->add($toadd);
+                    $message = __('the user has been updated to the LDAP directory', 'resources');
+                    Session::addMessageAfterRedirect($message, false, INFO);
+                } else {
+                    $message = __('the user has not been updated to the LDAP directory', 'resources');
+                    Session::addMessageAfterRedirect($message, false, ERROR);
+                }
             }
         }
     }

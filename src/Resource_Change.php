@@ -78,6 +78,7 @@ class Resource_Change extends CommonDBTM
     const CHANGE_RESOURCEROLE = 14;
     const CHANGE_RESOURCEFUNCTION = 15;
     const CHANGE_RESOURCETEAM = 16;
+    const CHANGE_NAME = 17;
 
 
     /**
@@ -131,6 +132,7 @@ class Resource_Change extends CommonDBTM
         $actions[self::CHANGE_CONTRACTTYPE] = self::getNameActions(self::CHANGE_CONTRACTTYPE);
         $actions[self::CHANGE_AGENCY] = self::getNameActions(self::CHANGE_AGENCY);
         $actions[self::CHANGE_RESOURCEINFORMATIONS] = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
+        $actions[self::CHANGE_NAME]                   = self::getNameActions(self::CHANGE_NAME);
         $actions[self::CHANGE_RESOURCECOMPANY] = self::getNameActions(self::CHANGE_RESOURCECOMPANY);
         $actions[self::CHANGE_RESOURCEDEPARTMENT] = self::getNameActions(self::CHANGE_RESOURCEDEPARTMENT);
         $actions[self::CHANGE_RESOURCEMATERIAL] = self::getNameActions(self::CHANGE_RESOURCEMATERIAL);
@@ -187,6 +189,8 @@ class Resource_Change extends CommonDBTM
                 return __('Badge restitution', 'resources');
             case self::CHANGE_RESOURCEINFORMATIONS:
                 return __(' Change information', 'resources');
+            case self::CHANGE_NAME :
+                return __(' Change name', 'resources');
             case self::CHANGE_RESOURCECOMPANY:
                 return __('Change company', 'resources');
             case self::CHANGE_RESOURCEDEPARTMENT:
@@ -574,8 +578,7 @@ class Resource_Change extends CommonDBTM
                 $rand = mt_rand();
                 $option = [
                     'rand' => $rand,
-                    'value' => $resource->fields["name"],
-                    'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "
+                    'value' => $resource->fields["name"]
                 ];
                 echo Html::input('name', $option);
                 echo "</div>";
@@ -611,7 +614,8 @@ class Resource_Change extends CommonDBTM
                 echo "$('input[name=\"date_end\"]').change(function() {
                   plugin_resources_load_button_changeresources_information();
             });
-            $('input[name=\"name\"]').change(function() {
+            $('input[name=\"name\"]').on(\"input\", function() {
+             this.value = this.value.toUpperCase();
                   plugin_resources_load_button_changeresources_information();
             });";
                 echo "function plugin_resources_load_button_changeresources_information(){";
@@ -619,6 +623,38 @@ class Resource_Change extends CommonDBTM
                 echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
                ,{load_button_changeresources:true,action:8,name:$('input[name=\"name\"]').val(),firstname:'" . $resource->fields["firstname"] . "',date_end:$('input[name=\"date_end\"]').val()}
                )";
+
+                echo "}";
+                echo "</script>";
+                echo "</div>";
+                echo "</div>";
+
+                break;
+            case self::CHANGE_NAME :
+
+                echo "<div class=\"form-row\">";
+                echo "<div class=\"bt-feature col-md-4 \">";
+                echo __('Name', 'resources');
+                echo "</div>";
+                echo "<div class=\"bt-feature col-md-4 \">";
+                $rand   = mt_rand();
+                $option = ['rand'     => $rand,
+                    'value'    => $resource->fields["name"],
+                    'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
+                echo Html::input('name', $option);
+                echo "</div>";
+                echo "</div>";
+
+
+                echo "<script type='text/javascript'>";
+                echo "$('input[name=\"name\"]').change(function() {
+                 plugin_resources_load_button_changeresources_information();
+           });";
+                echo "function plugin_resources_load_button_changeresources_information(){";
+                $root_doc = PLUGIN_RESOURCES_WEBDIR;
+                echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
+              ,{load_button_changeresources:true,action:17,name:$('input[name=\"name\"]').val()}
+              )";
 
                 echo "}";
                 echo "</script>";
@@ -1050,6 +1086,13 @@ class Resource_Change extends CommonDBTM
                 }
 
                 break;
+            case self::CHANGE_NAME :
+                if (isset($options['name'])
+                    && !empty($options['name'])) {
+                    $display = true;
+                }
+
+                break;
             case self::CHANGE_RESOURCECOMPANY:
                 if (isset($options['plugin_resources_employers_id'])
                     && !empty($options['plugin_resources_employers_id'])) {
@@ -1293,6 +1336,18 @@ class Resource_Change extends CommonDBTM
                 $input['name'] = $options['name'];
                 $input['firstname'] = isset($options['firstname']) ? $options['firstname'] : $resource->getField('firstname');
                 $input['date_end'] = $options['date_end'];
+                break;
+            case self::CHANGE_NAME :
+                $data['name']    = __("Change information for", 'resources') . " " .
+                    Resource::getResourceName($plugin_resources_resources_id);
+                $data['content'] = __("Change information for", 'resources') . " " .
+                    Resource::getResourceName($plugin_resources_resources_id) . "\n";
+                $data['content'] .= __("Current name of the resource", 'resources') . "&nbsp;:&nbsp;" .
+                    $resource->getField('name') . "\n";
+                $data['content'] .= __("New resource name", 'resources') . "&nbsp;:&nbsp;" .
+                    $options['name'] . "\n";
+
+                $input['name']      = $options['name'];
                 break;
             case self::CHANGE_RESOURCECOMPANY:
                 $data['name'] = __("Change of company for", 'resources') . " " .

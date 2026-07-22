@@ -114,7 +114,7 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
         echo __('Resource manager', 'resources');
         echo "</div>";
         echo "<div class='col-md-4 mb-2'>";
-        User::dropdown(['name' => 'remove_manager', 'right' => 'all']);
+        User::dropdown(['name' => 'remove_manager', 'right' => 'all', 'value' => $resource->fields['users_id']]);
         echo "</div>";
         echo "</div>";
     }

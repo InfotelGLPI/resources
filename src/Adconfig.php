@@ -270,6 +270,60 @@ class Adconfig extends CommonDBTM
             Dropdown::showFromArray("second_form", $this->loginForm(), $option);
             echo "</td>";
             echo "</tr>";
+
+            if ((new LDAP())->isSSLorTLSAD()) {
+                echo "<tr><th colspan='4'>".__("Password Creation",'resources')."</th></tr>";
+
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>";
+                echo __('Use Password creation module','resources');
+                echo "</td>";
+                echo "<td>";
+                Dropdown::showYesNo("use_password_module",$this->fields["use_password_module"]);
+                echo "</td>";
+                if ($this->fields["use_password_module"]) {
+                    echo "<td>";
+                    echo __('Format password', 'resources');
+                    echo "</td>";
+                    echo "<td>";
+                    $formaDefaultPassword = [0 => Dropdown::EMPTY_VALUE, 1 => 'prefixe dynamique et suffixe statique', 2 => __('Statique default password ', 'resources')];
+                    Dropdown::showFromArray('format_default_account_password', $formaDefaultPassword, ['value' => $this->fields["format_default_account_password"]]);
+                    echo "</td>";
+
+                    if ($this->fields["format_default_account_password"] != 0) {
+                        echo "</tr>";
+                        echo "<tr class='tab_bg_1'>";
+                        if ($this->fields["format_default_account_password"] == 1) {
+                            echo "<td>";
+                            echo __('Prefix','resources');
+                            echo "</td>";
+                            echo "<td>";
+                            $suffixeDefaultPassword = [0 => Dropdown::EMPTY_VALUE,
+                                1 => __('First name initial (uppercase) + last name initial (lowercase) + arrival date (DDMMYYYY)', 'resources'),
+                                2 => __('First name initial (uppercase) + last name initial (lowercase)', 'resources')];
+                            Dropdown::showFromArray('prefix_default_account_password', $suffixeDefaultPassword, ['value' => $this->fields["prefix_default_account_password"]]);
+                            echo "</td>";
+                        }
+
+                        echo "<td>";
+                        if ($this->fields["format_default_account_password"] == 2) {
+                            echo __('Default password', 'resources');
+                        } else {
+                            echo __('Suffix','resources');
+                        }
+
+                        echo "</td>";
+                        echo "<td >";
+                        $option = ['value' => (new GLPIKey())->decrypt($this->fields["default_account_password"]), 'required' => true];
+                        echo Html::input('default_account_password', $option);
+                        echo "</td>";
+                    }
+
+
+                }
+                echo "</tr>";
+            }
+
             echo "<tr><th colspan='4'>" . __("Mail Creation", 'resources') . "</th></tr>";
 
             echo "<tr class='tab_bg_1'>";
@@ -563,6 +617,10 @@ class Adconfig extends CommonDBTM
 
         if (isset($input["_blank_passwd"]) && $input["_blank_passwd"]) {
             $input['password'] = '';
+        }
+
+        if (isset($input["default_account_password"])) {
+            $input["default_account_password"] = (new GLPIKey())->encrypt($input["default_account_password"]);
         }
 
         $input = $this->encodeSubtypes($input);

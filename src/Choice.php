@@ -53,6 +53,8 @@ class Choice extends CommonDBTM
 
     static $rightname = 'plugin_resources';
 
+    const TYPE_CHOICE = [1 => 'Element(s) to be affected', 2 => 'Specials requirements'];
+
     /**
      * @param int $nb
      *
@@ -104,7 +106,11 @@ class Choice extends CommonDBTM
      */
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        $wizard_need = ContractType::checkWizardSetup($item->getField('id'), "use_need_wizard");
+        $config = new Config();
+        $wizard_need = true;
+        if (!$config->fields['needs_tab_access']) {
+            $wizard_need = ContractType::checkWizardSetup($item->getField('id'), "use_need_wizard");
+        }
 
         if ($item->getType() == Resource::class
             && $this->canView()
@@ -354,168 +360,192 @@ class Choice extends CommonDBTM
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
         $dbu = new DbUtils();
         $choices = $dbu->getAllDataFromTable($this->getTable(), $restrict);
+        $config = new Config();
+        $configchoice = json_decode($config->fields['view_needs_parts']);
+        $configchoice = is_array($configchoice) ? $configchoice : [];
 
         $resource = new Resource();
         $resource->getFromDB($plugin_resources_resources_id);
 
+        if (isset($resource->fields["entities_id"])) {
+            $input['entities_id'] = $resource->fields["entities_id"];
+        } else {
+            $input['entities_id'] = $_SESSION['glpiactive_entity'];
+        }
+        $input['plugin_resources_contracttypes_id'] = $resource->fields["plugin_resources_contracttypes_id"];
+        $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
+        $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
+        $input['plugin_resources_users_id'] = Session::getLoginUserID();
+        $input['plugin_resources_users_id_reel'] = $resource->fields['users_id'];
+
+        $readonly                                   = $resource->getReadonlyFields($input);
+
         $canedit = $resource->can($plugin_resources_resources_id, UPDATE)
             && $withtemplate < 2
             && $resource->fields["is_leaving"] != 1;
-        if ($exist == 0) {
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
-        } elseif ($exist == 1) {
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-        }
+        if (in_array(1, $configchoice)) {
+            if ($exist == 0) {
+                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
+            } elseif ($exist == 1) {
+                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
+            }
 
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th colspan='4'>" . __('Element(s) to be affected', 'resources') . "</th>";
-        echo "</tr>";
-        echo "<tr>";
-        echo "<th>" . __('Type') . "</th>";
-        echo "<th>" . __('Description') . "</th>";
-        echo "<th>" . __('Comments') . "</th>";
-        if ($canedit) {
-            echo "<th>&nbsp;</th>";
-        }
-        echo "</tr>";
+            echo "<div class='center'><table class='tab_cadre_fixe'>";
+            echo "<tr>";
+            echo "<th colspan='4'>" . __('Element(s) to be affected', 'resources') . "</th>";
+            echo "</tr>";
+            echo "<tr>";
+            echo "<th>" . __('Type') . "</th>";
+            echo "<th>" . __('Description') . "</th>";
+            echo "<th>" . __('Comments') . "</th>";
+            if ($canedit) {
+                echo "<th>&nbsp;</th>";
+            }
+            echo "</tr>";
 
-        $used = [];
-        if (!empty($choices)) {
-            foreach ($choices as $choice) {
-                $used[] = $choice["plugin_resources_choiceitems_id"];
-                echo "<tr class='tab_bg_1'>";
+            $used = [];
+            if (!empty($choices)) {
+                foreach ($choices as $choice) {
+                    $used[] = $choice["plugin_resources_choiceitems_id"];
+                    echo "<tr class='tab_bg_1'>";
 
-                $items = Dropdown::getDropdownName(
-                    "glpi_plugin_resources_choiceitems",
-                    $choice["plugin_resources_choiceitems_id"],
-                );
-                $items_comments = Dropdown::getDropdownComments(
-                    "glpi_plugin_resources_choiceitems",
-                    $choice["plugin_resources_choiceitems_id"]);
-                echo "<td class='left'>";
-                echo $items;
-                echo "</td>";
-                echo "<td class='left'>";
-                echo nl2br($items_comments);
-                echo "</td>";
-                echo "<td class='center'>";
-
-                $rand = mt_rand();
-                if (!empty($choice["comment"])) {
-                    self::showModifyCommentFrom($choice, $rand);
-                } else {
-                    self::showAddCommentForm($choice, $rand);
-                }
-                echo "</td>";
-                if ($canedit) {
-                    echo "<td class='center' class='tab_bg_2'>";
-                    Html::showSimpleForm(
-                        PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
-                        'deletehelpdeskitem',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $choice["id"]]
+                    $items = Dropdown::getDropdownName(
+                        "glpi_plugin_resources_choiceitems",
+                        $choice["plugin_resources_choiceitems_id"],
                     );
+                    $items_comments = Dropdown::getDropdownComments(
+                        "glpi_plugin_resources_choiceitems",
+                        $choice["plugin_resources_choiceitems_id"]);
+                    echo "<td class='left'>";
+                    echo $items;
                     echo "</td>";
+                    echo "<td class='left'>";
+                    echo nl2br($items_comments);
+                    echo "</td>";
+                    echo "<td class='center'>";
+
+                    $rand = mt_rand();
+                    if (!empty($choice["comment"])) {
+                        self::showModifyCommentFrom($choice, $rand);
+                    } else {
+                        self::showAddCommentForm($choice, $rand);
+                    }
+                    echo "</td>";
+                    if ($canedit) {
+                        echo "<td class='center' class='tab_bg_2'>";
+                        Html::showSimpleForm(
+                            PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
+                            'deletehelpdeskitem',
+                            _x('button', 'Delete permanently'),
+                            ['id' => $choice["id"]]
+                        );
+                        echo "</td>";
+                    }
+                    echo "</tr>";
                 }
+            }
+            if ($canedit) {
+                echo "<tr class='tab_bg_1'>";
+                echo "<th colspan='4'>" . __('Add a need', 'resources') . " :</th>";
+                echo "</tr>";
+                echo "<tr class='tab_bg_1'>";
+                echo "<td colspan='4' class='center'>";
+                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+
+                $condition = [];
+                if (Session::getCurrentInterface() != 'central') {
+                    $condition = ['is_helpdesk_visible' => 1];
+                }
+                Dropdown::show(
+                    ChoiceItem::class,
+                    [
+                        'name' => 'plugin_resources_choiceitems_id',
+                        'entity' => $resource->getEntityID(),
+                        'condition' => $condition,
+                        'used' => $used,
+                        'addicon' => true
+                    ]
+                );
+                echo "</td></tr>";
+                echo "<tr class='tab_bg_1'>";
+                echo "<td class='center' colspan='4'>";
+                echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem', 'class' => 'btn btn-primary']);
+                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                if (Session::getCurrentInterface() != 'central') {
+                    if ($exist != 1) {
+                        echo Html::submit(
+                            __('Terminate the declaration', 'resources'),
+                            ['name' => 'finish', 'class' => 'btn btn-primary']
+                        );
+                    } else {
+                        echo Html::submit(
+                            __('Resend the declaration', 'resources'),
+                            ['name' => 'resend', 'class' => 'btn btn-primary']
+                        );
+                    }
+                }
+                echo "</td>";
                 echo "</tr>";
             }
+            echo "</table></div>";
+            Html::closeForm();
+            echo "<br>";
         }
-        if ($canedit) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<th colspan='4'>" . __('Add a need', 'resources') . " :</th>";
+
+        if (in_array(2,$configchoice)) {
+            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
+
+            echo "<div align='center'><table class='tab_cadre_fixe'>";
+            echo "<tr>";
+            echo "<th colspan='4'>" . __('Specials requirements', 'resources') . "</th>";
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td colspan='4' class='center'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-
-            $condition = [];
-            if (Session::getCurrentInterface() != 'central') {
-                $condition = ['is_helpdesk_visible' => 1];
-            }
-            Dropdown::show(
-                ChoiceItem::class,
-                [
-                    'name' => 'plugin_resources_choiceitems_id',
-                    'entity' => $resource->getEntityID(),
-                    'condition' => $condition,
-                    'used' => $used,
-                    'addicon' => true
-                ]
-            );
-            echo "</td></tr>";
+            echo "<td>";
+            echo __('Computer and phone equipment needs', 'resources');
+            echo "</td>";
+            echo "<td>";
+            Html::textarea(['name' => 'computer_phone_equipment', 'value' => $resource->fields['computer_phone_equipment'], 'rows' => 7]);
+            echo "</td>";
+            echo "</tr>";
             echo "<tr class='tab_bg_1'>";
-            echo "<td class='center' colspan='4'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem', 'class' => 'btn btn-primary']);
+            echo "<td>";
+            echo __('Softwares requirements', 'resources');;
+            echo "</td>";
+            echo "<td>";
+            Html::textarea(['name' => 'softwares_requirements', 'value' => $resource->fields['softwares_requirements'], 'rows' => 7]);
+            echo "</td>";
+            echo "</tr>";
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Furnitures needs', 'resources');;
+            echo "</td>";
+            echo "<td>";
+            Html::textarea(['name' => 'furnitures_needs', 'value' => $resource->fields['furnitures_needs'], 'rows' => 7]);
+            echo "</td>";
+            echo "</tr>";
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>";
+            echo __('Other needs', 'resources');;
+            echo "</td>";
+            echo "<td>";
+            Html::textarea(['name' => 'other_needs', 'value' => $resource->fields['other_needs'], 'rows' => 7]);
+            echo "</td>";
+            echo "</tr>";
+            echo "<tr class='tab_bg_1'>";
+            echo "<td class='center' colspan='2'>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            if (Session::getCurrentInterface() != 'central') {
-                if ($exist != 1) {
-                    echo Html::submit(
-                        __('Terminate the declaration', 'resources'),
-                        ['name' => 'finish', 'class' => 'btn btn-primary']
-                    );
-                } else {
-                    echo Html::submit(
-                        __('Resend the declaration', 'resources'),
-                        ['name' => 'resend', 'class' => 'btn btn-primary']
-                    );
+            if (!in_array("special_need", $readonly)) {
+                if (!$config->fields['use_module_validation'] || !$config->fields['freeze_form_after_validation'] || !$resource->fields['valid_resource_information']) {
+                    echo Html::submit(_sx('button', 'Save'), ['name' => 'updateSpecialRequirement', 'class' => 'btn btn-primary']);
                 }
             }
             echo "</td>";
             echo "</tr>";
+            echo "</table></div>";
+
+            Html::closeForm();
         }
-        echo "</table></div>";
-        Html::closeForm();
-        echo "<br>";
-
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource_item.list.php\">";
-
-        echo "<div align='center'><table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th colspan='4'>" . __('Specials requirements', 'resources') . "</th>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Computer and phone equipment needs', 'resources');
-        echo "</td>";
-        echo "<td>";
-        Html::textarea(['name' => 'computer_phone_equipment', 'value' => $resource->fields['computer_phone_equipment']]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Softwares requirements', 'resources');;
-        echo "</td>";
-        echo "<td>";
-        Html::textarea(['name' => 'softwares_requirements', 'value' => $resource->fields['softwares_requirements']]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Furnitures needs', 'resources');;
-        echo "</td>";
-        echo "<td>";
-        Html::textarea(['name' => 'furnitures_needs', 'value' => $resource->fields['furnitures_needs']]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Other needs', 'resources');;
-        echo "</td>";
-        echo "<td>";
-        Html::textarea(['name' => 'other_needs', 'value' => $resource->fields['other_needs']]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center' colspan='2'>";
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-        echo Html::submit(_sx('button', 'Save'), ['name' => 'updateSpecialRequirement', 'class' => 'btn btn-primary']);
-        echo "</td>";
-        echo "</tr>";
-        echo "</table></div>";
-
-        Html::closeForm();
     }
 
     public static function install(Migration $migration)
