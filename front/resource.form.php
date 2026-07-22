@@ -233,6 +233,7 @@ elseif (isset($_POST["update"])) {
 
         Html::back();
     }
+    $old_is_leaving = $resource->fields['is_leaving'] ?? 0;
     $resource->update($_POST);
     if (isset($_POST['plugin_resources_employers_id'])) {
         $employee = new Employee();
