@@ -1,7 +1,8 @@
 {
     "config": {
         "platform": {
-            "php": "8.2.99"
+            "php": "8.2.99",
+            "ext-ldap": "8.2"
         },
         "optimize-autoloader": true,
         "sort-packages": true
