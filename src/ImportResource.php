@@ -510,7 +510,10 @@ class ImportResource extends CommonDBTM
      */
     function importFileToVerify($params = [])
     {
-        $filePath = GLPI_DOC_DIR . '/_tmp/' . $params['_filename'][0];
+        // The uploaded filename is client-supplied: strip any directory component so a
+        // crafted "../" value cannot escape the temporary upload directory.
+        $safe_filename = basename($params['_filename'][0]);
+        $filePath = GLPI_DOC_DIR . '/_tmp/' . $safe_filename;
 
         $temp = $this->readCSVLines($filePath, 0, 1);
         $header = array_shift($temp);
@@ -523,8 +526,8 @@ class ImportResource extends CommonDBTM
             return;
         }
 
-        $fullpath = GLPI_TMP_DIR . "/" . $params['_filename'][0];
-        $filename = str_replace($params['_prefix_filename'], '', $params['_filename'][0]);
+        $fullpath = GLPI_TMP_DIR . "/" . $safe_filename;
+        $filename = str_replace($params['_prefix_filename'], '', $safe_filename);
         $origin_filename = $filename;
         $exist = false;
         $i = 1;

@@ -94,7 +94,7 @@ class Profile extends \Profile
                 'plugin_resources_budget' => 0,
                 'plugin_resources_dropdown_public' => 0,
                 'plugin_resources_import' => 0,
-                'plugin_resources_annuaire' => 0,
+                'plugin_resources_annuary' => 0,
                 'plugin_resources_validation' => 0,
                 'plugin_resources_open_ticket' => 0,
                 'plugin_resources_all' => 0,
@@ -125,7 +125,7 @@ class Profile extends \Profile
             'plugin_resources_budget' => ALLSTANDARDRIGHT,
             'plugin_resources_dropdown_public' => ALLSTANDARDRIGHT,
             'plugin_resources_import' => ALLSTANDARDRIGHT,
-            'plugin_resources_annuaire' => ALLSTANDARDRIGHT,
+            'plugin_resources_annuary' => ALLSTANDARDRIGHT,
             'plugin_resources_validation' => ALLSTANDARDRIGHT,
             'plugin_resources_open_ticket' => 1,
             'plugin_resources_all' => 1,
@@ -365,15 +365,15 @@ class Profile extends \Profile
                 ]
             ],
             ['itemtype' => Directory::class,
-                'label' => __('Annuaire', 'resources'),
-                'field' => 'plugin_resources_annuaire',
+                'label' => __('Annuary', 'resources'),
+                'field' => 'plugin_resources_annuary',
                 'type' => 'general',
                 'rights' => [
                     READ => __('Read')
                 ]
             ],
             ['itemtype' => Resource_Validation::class,
-                'label' => __('AD Synchronisation', 'resources'),
+                'label' => __('AD Synchronization', 'resources'),
                 'field' => 'plugin_resources_validation',
                 'type' => 'general',
                 'rights' => [

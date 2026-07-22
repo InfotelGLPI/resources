@@ -49,6 +49,9 @@ $checklist = new Checklist();
 //from central
 //update checklist
 if (isset($_POST["add"])) {
+    // Enforce the create right before the mutation, mirroring the update branch below:
+    // CommonDBTM::add() performs no authorization on its own.
+    $checklist->check(-1, CREATE, $_POST);
     $checklist->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {

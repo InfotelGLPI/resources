@@ -145,7 +145,7 @@ class Menu extends CommonGLPI
         $canseeemployment = Session::haveright('plugin_resources_employment', READ);
         $canseebudget = Session::haveright('plugin_resources_budget', READ);
         $canImport = Session::haveright('plugin_resources_import', READ);
-        $canAnnuaire     = Session::haveright('plugin_resources_annuaire', READ);
+        $canAnnuaire     = Session::haveright('plugin_resources_annuary', READ);
 
 
         if ($tabnum == self::RESOURCES_TAB) {

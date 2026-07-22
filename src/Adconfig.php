@@ -298,7 +298,7 @@ class Adconfig extends CommonDBTM
                     echo __('Format password', 'resources');
                     echo "</td>";
                     echo "<td>";
-                    $formaDefaultPassword = [0 => Dropdown::EMPTY_VALUE, 1 => 'prefixe dynamique et suffixe statique', 2 => __('Statique default password ', 'resources')];
+                    $formaDefaultPassword = [0 => Dropdown::EMPTY_VALUE, 1 => 'prefixe dynamique et suffixe statique', 2 => __('Static default password ', 'resources')];
                     Dropdown::showFromArray('format_default_account_password', $formaDefaultPassword, ['value' => $this->fields["format_default_account_password"]]);
                     echo "</td>";
 
@@ -326,7 +326,13 @@ class Adconfig extends CommonDBTM
 
                         echo "</td>";
                         echo "<td >";
-                        $option = ['value' => (new GLPIKey())->decrypt($this->fields["default_account_password"]), 'required' => true];
+                        // Never re-expose the stored secret in the HTML: render an empty field
+                        // (like the bind password). Only require input on first configuration;
+                        // an empty submit keeps the existing value (see prepareInputForUpdate).
+                        $option = [
+                            'value'    => '',
+                            'required' => empty($this->fields["default_account_password"]),
+                        ];
                         echo Html::input('default_account_password', $option);
                         echo "</td>";
                     }
@@ -632,7 +638,12 @@ class Adconfig extends CommonDBTM
         }
 
         if (isset($input["default_account_password"])) {
-            $input["default_account_password"] = (new GLPIKey())->encrypt($input["default_account_password"]);
+            if (empty($input["default_account_password"])) {
+                // Empty submit: keep the currently stored secret instead of wiping it.
+                unset($input["default_account_password"]);
+            } else {
+                $input["default_account_password"] = (new GLPIKey())->encrypt($input["default_account_password"]);
+            }
         }
 
         $input = $this->encodeSubtypes($input);

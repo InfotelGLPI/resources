@@ -1,0 +1,38 @@
+name: Composer Security Audit
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Weekly, so a newly published advisory is caught even without a commit.
+    - cron: '17 6 * * 1'
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  composer-audit:
+    name: "composer audit (runtime dependencies)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, openssl, ldap
+          coverage: none
+
+      - name: Audit runtime dependencies
+        # Fail the build on any known security advisory. Abandoned packages
+        # (adldap2/adldap2, tightenco/collect) are a documented/accepted risk,
+        # tracked for migration to directorytree/ldaprecord, so they are only
+        # reported here — not treated as a build failure.
+        run: composer audit --no-dev --locked --abandoned=report --ansi

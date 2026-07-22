@@ -160,49 +160,45 @@ class LDAP extends CommonDBTM
         $config_ldap = new AuthLDAP();
         $configAD = new Adconfig();
         $configAD->getFromDB(1);
-        $authID = $configAD->fields["auth_id"];
+        $authID = $configAD->fields["auth_id"] ?? 0;
         $res = $config_ldap->getFromDB($authID);
 
+        // The AuthLDAP record may not be loaded yet (no auth_id configured,
+        // or the referenced directory was deleted): fall back to empty values
+        // instead of dereferencing undefined field keys.
+        $raw_host = $config_ldap->fields['host'] ?? '';
 
         // Create a configuration array.
-        if (($ret = strpos($config_ldap->fields['host'], 'ldaps://')) !== false) {
-            $host = str_replace('ldaps://', '', $config_ldap->fields['host']);
+        if (strpos($raw_host, 'ldaps://') !== false) {
+            $host = str_replace('ldaps://', '', $raw_host);
             $ssl = true;
-        } elseif (($ret = strpos($config_ldap->fields['host'], 'ldap://')) !== false) {
-            $host = str_replace('ldap://', '', $config_ldap->fields['host']);
+        } elseif (strpos($raw_host, 'ldap://') !== false) {
+            $host = str_replace('ldap://', '', $raw_host);
             $ssl = false;
         } else {
-            $host = $config_ldap->fields['host'];
+            $host = $raw_host;
             $ssl = false;
         }
-        if ($config_ldap->fields['deref_option']) {
-            $deref = true;
-        } else {
-            $deref = false;
-        }
-        if ($config_ldap->fields['use_tls']) {
-            $tls = true;
-        } else {
-            $tls = false;
-        }
+        $deref = !empty($config_ldap->fields['deref_option']);
+        $tls   = !empty($config_ldap->fields['use_tls']);
 
         $config = [
             // An array of your LDAP hosts. You can use either
             // the host name or the IP address of your host.
             'hosts' => [$host],
-            'port' => $config_ldap->fields['port'],
+            'port' => $config_ldap->fields['port'] ?? 389,
             'use_tls' => $tls,
             'use_ssl' => $ssl,
             'follow_referrals' => $deref,
 
             // The base distinguished name of your domain to perform searches upon.
-            'base_dn' => $config_ldap->fields['basedn'],
+            'base_dn' => $config_ldap->fields['basedn'] ?? '',
 
             // The account to use for querying / modifying LDAP records. This
             // does not need to be an admin account. This can also
             // be a full distinguished name of the user account.
-            'username' => $configAD->fields['login'],
-            'password' => (new GLPIKey())->decrypt($configAD->fields['password']),
+            'username' => $configAD->fields['login'] ?? '',
+            'password' => (new GLPIKey())->decrypt($configAD->fields['password'] ?? ''),
         ];
         //      Toolbox::logWarning($config);
         return $config;
@@ -215,16 +211,18 @@ class LDAP extends CommonDBTM
         $config_ldap = new AuthLDAP();
         $res = $config_ldap->getFromDB($authID);
 
+        // Guard against a missing/unloaded directory record.
+        $raw_host = $config_ldap->fields['host'] ?? '';
 
         // Create a configuration array.
-        if (($ret = strpos($config_ldap->fields['host'], 'ldaps://')) !== false) {
-            $host = str_replace('ldaps://', '', $config_ldap->fields['host']);
+        if (strpos($raw_host, 'ldaps://') !== false) {
+            $host = str_replace('ldaps://', '', $raw_host);
             $ssl = true;
-        } elseif (($ret = strpos($config_ldap->fields['host'], 'ldap://')) !== false) {
-            $host = str_replace('ldap://', '', $config_ldap->fields['host']);
+        } elseif (strpos($raw_host, 'ldap://') !== false) {
+            $host = str_replace('ldap://', '', $raw_host);
             $ssl = false;
         } else {
-            $host = $config_ldap->fields['host'];
+            $host = $raw_host;
             $ssl = false;
         }
 
@@ -232,20 +230,20 @@ class LDAP extends CommonDBTM
             // An array of your LDAP hosts. You can use either
             // the host name or the IP address of your host.
             'hosts' => [$host],
-            'port' => $config_ldap->fields['port'],
-            'use_tls' => !!$config_ldap->fields['use_tls'],
+            'port' => $config_ldap->fields['port'] ?? 389,
+            'use_tls' => !empty($config_ldap->fields['use_tls']),
             'use_ssl' => $ssl,
-            'follow_referrals' => !!$config_ldap->fields['deref_option'],
+            'follow_referrals' => !empty($config_ldap->fields['deref_option']),
             'version' => 3,
 
             // The base distinguished name of your domain to perform searches upon.
-            'base_dn' => $config_ldap->fields['basedn'],
+            'base_dn' => $config_ldap->fields['basedn'] ?? '',
 
             // The account to use for querying / modifying LDAP records. This
             // does not need to be an admin account. This can also
             // be a full distinguished name of the user account.
-            'username' => $config_ldap->fields['rootdn'],
-            'password' => (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd']),
+            'username' => $config_ldap->fields['rootdn'] ?? '',
+            'password' => (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd'] ?? ''),
         ];
 
         // Add a connection provider to Adldap.
