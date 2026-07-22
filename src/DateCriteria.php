@@ -30,20 +30,20 @@
 namespace GlpiPlugin\Resources;
 
 //Criteria which allows to select a date
+use GlpiPlugin\Reports\AutoCriteria;
 use Html;
-use PluginReportsAutoCriteria;
 
 /**
  * Class DateCriteria
  */
-class DateCriteria extends PluginReportsAutoCriteria
+class DateCriteria extends AutoCriteria
 {
 
     /**
      * Contructor
      * @param report              the report in which the criteria is added
-     * @param $name               the criteria's name
-     * @param $sql_field          the sql field associated with the criteria
+     * @param $name                criteria's name
+     * @param $sql_field           sql field associated with the criteria
      *                            (can be set later with setSqlField).(DEFAULT '')
      *          - Sql_field can be prefixed with table name
      *          - if sql_field=='' then sql_field=name

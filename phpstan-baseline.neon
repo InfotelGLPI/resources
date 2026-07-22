@@ -1,0 +1,4807 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/checkComputerResource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/checkResource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/checklistactions.php
+
+		-
+			message: '#^Offset ''comment'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: ajax/comments.php
+
+		-
+			message: '#^Parameter \#3 \$withcomment of static method Dropdown\:\:getDropdownName\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ajax/comments.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method DbUtils\:\:formatUserName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ajax/dropdownResources.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/dropdownResources.php
+
+		-
+			message: '#^Binary operation "\-" between string and 1 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 3
+			path: ajax/dropdownValue.php
+
+		-
+			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ajax/dropdownValue.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/dropdownValue.php
+
+		-
+			message: '#^Parameter \#3 \$limit of method CommonDBTM\:\:find\(\) expects int\|null, array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ajax/pdfresource.php
+
+		-
+			message: '#^Access to property \$fields on an unknown class GlpiPlugin\\Metademands\\Metademand\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Call to method find\(\) on an unknown class GlpiPlugin\\Metademands\\Form\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Call to method getField\(\) on an unknown class GlpiPlugin\\Metademands\\Form\.$#'
+			identifier: class.notFound
+			count: 3
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Call to method getFromDB\(\) on an unknown class GlpiPlugin\\Metademands\\Form\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Call to method getFromDB\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Call to static method loadFormValues\(\) on an unknown class GlpiPlugin\\Metademands\\Form_Value\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Constant PLUGIN_METADEMANDS_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 2
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Metademands\\Form not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Metademands\\Metademand not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Metademands\\Wizard not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Variable \$last might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: ajax/showHabilitations.php
+
+		-
+			message: '#^Offset ''ticket_id'' does not exist on array\{plugin_resources_resources_id\: mixed, tickets_id\: int\|false, plugin_resources_contracttypes_id\: mixed, entities_id\: mixed, enddate\: mixed, id\: int, login\: mixed, department\: string, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: ajax/validinformation.php
+
+		-
+			message: '#^Property ITILTemplate\:\:\$predefined \(array\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: ajax/validinformation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ImportResource\:\:fillVerifyParams\(\) invoked with 8 parameters, 7 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: ajax/verifyCSVStatistics.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/budget.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/checklistconfig.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/confighabilitation.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/confighabilitation.form.php
+
+		-
+			message: '#^Constant PLUGIN_METADEMANDS_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 2
+			path: front/confighabilitation.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/directory.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/directory.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/employee.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/employee.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/employment.form.php
+
+		-
+			message: '#^Call to static method generatePDF\(\) on an unknown class PluginUseditemsexportExport\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/export.pdf.php
+
+		-
+			message: '#^Instantiated class PluginUseditemsexportExport not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/export.pdf.php
+
+		-
+			message: '#^Parameter \#1 \$itemtype of method DbUtils\:\:getTableForItemType\(\) expects class\-string\<CommonDBTM\>, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/export.pdf.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 2
+			path: front/export.pdf.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/menu.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/menu.php
+
+		-
+			message: '#^Path in include\(\) "C\:\\wamp\\www\\infotel11/front/rule\.cache\.php" is not a file or it does not exist\.$#'
+			identifier: include.fileNotFound
+			count: 1
+			path: front/popup.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/recap.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/recap.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: front/reportconfig.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.change.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.change.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.form.php
+
+		-
+			message: '#^Class User referenced with incorrect case\: user\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: front/resource.form.php
+
+		-
+			message: '#^Offset ''ticket_id'' does not exist on array\{plugin_resources_resources_id\: mixed, tickets_id\: int\|false, plugin_resources_contracttypes_id\: mixed, entities_id\: mixed, enddate\: mixed, id\: int, login\: mixed, department\: string, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: front/resource.form.php
+
+		-
+			message: '#^Offset mixed on array\{\} in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: front/resource.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 4
+			path: front/resource.form.php
+
+		-
+			message: '#^Property ITILTemplate\:\:\$predefined \(array\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 2
+			path: front/resource.form.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 2
+			path: front/resource.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Property ITILTemplate\:\:\$predefined \(array\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.transfer.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.transfer.php
+
+		-
+			message: '#^Parameter \#2 \$right of static method Session\:\:haveRight\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/resource.transfer.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource_item.list.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource_item.list.php
+
+		-
+			message: '#^Call to method canView\(\) on an unknown class GlpiPlugin\\Badges\\Badge\.$#'
+			identifier: class.notFound
+			count: 3
+			path: front/resourcebadge.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourcebadge.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourcebadge.form.php
+
+		-
+			message: '#^Constant PLUGIN_METADEMANDS_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: front/resourcebadge.form.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Badges\\Badge not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourcebadge.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourcehabilitation.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourcehabilitation.form.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: front/resourcehabilitation.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceholiday.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceholiday.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/resourceholiday.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceholiday.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceholiday.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceresting.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceresting.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/resourceresting.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceresting.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resourceresting.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:addSpecificParamsForPreview\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:getRuleWithCriteriasAndActions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:prepareAllInputDataForProcess\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:showRulePreviewCriteriasForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:showRulePreviewResultsForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: front/rule.test.php
+
+		-
+			message: '#^Method RuleCollection\:\:showRulesEnginePreviewCriteriasForm\(\) invoked with 3 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: front/rulesengine.test.php
+
+		-
+			message: '#^Method RuleCollection\:\:showRulesEnginePreviewResultsForm\(\) invoked with 3 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: front/rulesengine.test.php
+
+		-
+			message: '#^Parameter \#2 \$condition of method RuleCollection\:\:showRulesEnginePreviewCriteriasForm\(\) expects int, array\<string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/rulesengine.test.php
+
+		-
+			message: '#^Parameter \#2 \$condition of method RuleCollection\:\:showRulesEnginePreviewResultsForm\(\) expects int, array\<mixed, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/rulesengine.test.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/task.form.php
+
+		-
+			message: '#^Call to method getField\(\) on an unknown class PluginFieldsField\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/user.form.php
+
+		-
+			message: '#^Call to method getFromDBByCrit\(\) on an unknown class PluginFieldsField\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/user.form.php
+
+		-
+			message: '#^Call to static method getFirstLineForTicket\(\) on an unknown class PluginEscaladeHistory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/user.form.php
+
+		-
+			message: '#^Instantiated class PluginFieldsField not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/user.form.php
+
+		-
+			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Wizard\:\:wizardFirstStep\(\) invoked with 2 parameters, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Variable \$_FILES in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Variable \$resources_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: front/wizard.form.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''glpi_plugin_resources_ranks'' \("glpi_plugin_resources_ranks", "glpi_plugin_resources_ranks"\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Call to function unset\(\) contains undefined variable \$input\.$#'
+			identifier: unset.variable
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Badges\\Badge\.$#'
+			identifier: class.notFound
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Class GlpiPlugin\\Badges\\Badge not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Function plugin_resources_addDefaultWhere\(\) should return array\<int\> but returns array\<string, array\<string, int\|string\|false\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Function plugin_resources_giveItem\(\) should return string but returns float\.$#'
+			identifier: return.type
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 3
+			path: hook.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Left side of \|\| is always false\.$#'
+			identifier: booleanOr.leftAlwaysFalse
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Method DBmysql\:\:doQuery\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 6
+			path: hook.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$INJECTABLE_TYPES$#'
+			identifier: glpi.missingGlobalVarType
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Offset ''ITEMtype'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: hook.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Variable \$out might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: hook.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 4
+			path: hook.php
+
+		-
+			message: '#^Class GlpiPlugin\\Behaviors\\Rule not found\.$#'
+			identifier: class.notFound
+			count: 4
+			path: setup.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Actionprofile.php
+
+		-
+			message: '#^Access to offset ''creation_categories…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 4
+			path: src/Adconfig.php
+
+		-
+			message: '#^Access to offset ''deletion_categories…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 4
+			path: src/Adconfig.php
+
+		-
+			message: '#^Access to offset ''modification…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 4
+			path: src/Adconfig.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) has invalid return type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) has invalid return type type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForUpdate\(\) should return array\<string, mixed\>\|false but returns GlpiPlugin\\Resources\\type\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:showConfigForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Parameter \#1 \$input of method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) expects GlpiPlugin\\Resources\\type, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Adconfig.php
+
+		-
+			message: '#^Parameter \$input of method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\type\|type\) of method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForAdd\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Adconfig.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$options \(array\<int, string\>\) of method GlpiPlugin\\Resources\\Budget\:\:showForm\(\) is incompatible with type array\<string, mixed\>\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Budget.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Budget.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 118 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetType.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetType.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetType.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/BudgetType.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 118 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetVolume.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetVolume.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BudgetVolume.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/BudgetVolume.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BusinessUnit.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/BusinessUnit.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/BusinessUnit.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Candidateorigin.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Candidateorigin.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Candidateorigin.php
+
+		-
+			message: '#^Property GlpiPlugin\\Resources\\CheckSchema\:\:\$table is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/CheckSchema.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/CheckSchema.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Checklist\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Checklist\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Checklist\:\:openFinishedChecklist\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Checklist\:\:showFromResources\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\Checklist\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Checklist.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Checklist\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Parameter \#3 \$withtemplate of static method GlpiPlugin\\Resources\\Checklist\:\:showFromResources\(\) expects string, bool given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Checklist.php
+
+		-
+			message: '#^Parameter \#4 \$toobserve of static method Ajax\:\:updateItemJsCode\(\) expects array\|string, false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Variable \$addLinkName might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Variable \$checklists in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Variable \$tid might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Variable \$viewId might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Checklist.php
+
+		-
+			message: '#^Variable \$viewId_finished might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Checklist.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Checklist.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:addRulesFromChecklists\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^Iterating over an object of an unknown class GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^Parameter \#4 \$toobserve of static method Ajax\:\:updateItem\(\) expects string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Checklistconfig.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Choice.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Choice\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Choice\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Choice\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Choice\:\:countForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Choice\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Parameter \#3 \$withtemplate of method GlpiPlugin\\Resources\\Choice\:\:showItemHelpdesk\(\) expects string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^Parameter \#4 \$toobserve of static method Ajax\:\:updateItemJsCode\(\) expects array\|string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Choice.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Choice.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ChoiceItem.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ChoiceItem.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ChoiceItem.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 69 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Client.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Client.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Client.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Client.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ClientInjection\:\:addOrUpdateObject\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ClientInjection\:\:addOrUpdateObject\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ClientInjection\:\:getOptions\(\) has invalid return type the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\ClientInjection\:\:addOrUpdateObject\(\) should be compatible with return type \(array\) of method PluginDatainjectionInjectionInterface\:\:addOrUpdateObject\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ClientInjection.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showMetademandsForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showOtherForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showWizardForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showWorkflowForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to method listMetademands\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Config.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 4
+			path: src/Config.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Metademands\\Metademand not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Config\:\:getTabNameForItem\(\) should return array\<string\>\|string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Config\:\:showMetademandsForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Config\:\:showOtherForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Config\:\:showWorkflowForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 49 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Config.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 83 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Config.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand_Resource\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^Class GlpiPlugin\\Metademands\\Metademand not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ConfigHabilitation\:\:showFormHabilitation\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 82 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ConfigHabilitation.php
+
+		-
+			message: '#^Class GlpiPlugin\\Resources\\ContractNature referenced with incorrect case\: GlpiPlugin\\Resources\\Contractnature\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: src/ContractNature.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 114 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ContractNature.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ContractNature.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ContractNature.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ContractType\:\:getContractTypeName\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ContractType.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ContractType.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ContractType.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Contracttypeprofile.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 122 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Cost.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 99 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Cost.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Cost.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Cost.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Cost.php
+
+		-
+			message: '#^Access to an undefined property GlpiPlugin\\Resources\\Dashboard\:\:\$interfaces\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Access to static property \$TABLE on an unknown class GlpiPlugin\\Mydashboard\\Widget\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Access to static property \$USERS on an unknown class GlpiPlugin\\Mydashboard\\Menu\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Call to method setTabDatas\(\) on an unknown class GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Call to method setTabNames\(\) on an unknown class GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Call to method setWidgetTitle\(\) on an unknown class GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Call to method toggleWidgetRefresh\(\) on an unknown class GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Instantiated class GlpiPlugin\\Mydashboard\\Datatable not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Dashboard\:\:getWidgetContentForItem\(\) has invalid return type GlpiPlugin\\Mydashboard\\Datatable\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Dashboard\:\:getWidgetContentForItem\(\) should return GlpiPlugin\\Mydashboard\\Datatable but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Dashboard\:\:getWidgetsForItem\(\) has invalid return type array\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Dashboard\:\:getWidgetsForItem\(\) should return array\<array\<array\>\> but returns array\<array\<string, array\<string, mixed\>\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Property GlpiPlugin\\Resources\\Dashboard\:\:\$datas is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Property GlpiPlugin\\Resources\\Dashboard\:\:\$form is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Property GlpiPlugin\\Resources\\Dashboard\:\:\$options is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Dashboard.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/Dashboard.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$LANG$#'
+			identifier: glpi.missingGlobalVarType
+			count: 1
+			path: src/DateCriteria.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(report              the report in which the criteria is added\)\: Unexpected token "the", expected variable at offset 58 on line 3$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/DateCriteria.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/DateCriteria.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/DegreeGroup.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/DegreeGroup.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/DegreeGroup.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Department.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Department.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Department.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Department_Service.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Destination.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Destination.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Destination.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:sendEmail\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Call to an undefined static method CommonDBTM\:\:doSpecificMassiveActions\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 2
+			path: src/Directory.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Directory\:\:addLeftJoin\(\) has invalid return type GlpiPlugin\\Resources\\Left\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Directory\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Directory\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Directory\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but returns string\.$#'
+			identifier: return.type
+			count: 3
+			path: src/Directory.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Directory\:\:processMassiveActionsForOneItemtype\(\) with return type void returns mixed but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '''
+				#^PHPDoc tag @return has invalid value \(
+				\*@since version 0\.85\)\: Unexpected token "\\n     \*", expected type at offset 507 on line 12$#
+			'''
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 191 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Parameter \#2 \$NOT of static method Search\:\:addHaving\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Directory.php
+
+		-
+			message: '#^Parameter \#2 \$nott of static method Search\:\:addWhere\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Directory.php
+
+		-
+			message: '#^Parameter \#3 \$meta of static method Search\:\:addSelect\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Directory.php
+
+		-
+			message: '#^Parameter \#4 \$joinparams of static method Search\:\:addMetaLeftJoin\(\) expects array, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Parameter \#7 \$meta of static method Search\:\:addWhere\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Static method Search\:\:addHaving\(\) invoked with 8 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: src/Directory.php
+
+		-
+			message: '#^Static method Search\:\:addOrderBy\(\) invoked with 4 parameters, 2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Variable \$interjoinparams might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Variable \$intertable might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/Directory.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Directory.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Employee.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Employee\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Employee\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Employee\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 2
+			path: src/Employee.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Employee\:\:showEmployeeForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Employee.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Employee\:\:showFormHelpdesk\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Employee.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\Employee\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Employee\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^Parameter \#3 \$withtemplate of method GlpiPlugin\\Resources\\Employee\:\:showEmployeeForm\(\) expects string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Employee.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employer.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 99 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employer.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employer.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employer.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Employer.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Employment.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Resources\\Employment\:\:doQueryLeavingResources\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$options \(array\<int, string\>\) of method GlpiPlugin\\Resources\\Employment\:\:showForm\(\) is incompatible with type array\<string, mixed\>\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Employment\:\:cleanDBonPurge\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Employment\:\:cleanDBonPurge\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$item with type CommonGLPI is not subtype of native type GlpiPlugin\\Resources\\Resource\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Parameter \#1 \$criteria of method DBmysql\:\:request\(\) expects array\|Glpi\\DBAL\\QueryUnion, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Employment\:\:showMinimalList\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Employment.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/EmploymentProfession.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/EmploymentProfessionCategory.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/EmploymentProfessionLine.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/EmploymentRank.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 136 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 68 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 98 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 108 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^Parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\EmploymentState\:\:post_updateItem\(\) should be compatible with parameter \$history \(bool\) of method CommonDropdown\:\:post_updateItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/EmploymentState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 86 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Habilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Habilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Habilitation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Habilitation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\HabilitationInjection\:\:addOrUpdateObject\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\HabilitationInjection\:\:addOrUpdateObject\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\HabilitationInjection\:\:getOptions\(\) has invalid return type the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\HabilitationInjection\:\:addOrUpdateObject\(\) should be compatible with return type \(array\) of method PluginDatainjectionInjectionInterface\:\:addOrUpdateObject\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/HabilitationInjection.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 86 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/HabilitationLevel.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/HabilitationLevel.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/HabilitationLevel.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/HabilitationLevel.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Import.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$item with type GlpiPlugin\\Resources\\ommonGLPI is not subtype of native type CommonGLPI\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^Parameter \#1 \$import of static method GlpiPlugin\\Resources\\ImportColumn\:\:showForImport\(\) expects GlpiPlugin\\Resources\\Import, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^Parameter \$item of method GlpiPlugin\\Resources\\ImportColumn\:\:getTabNameForItem\(\) has invalid type GlpiPlugin\\Resources\\ommonGLPI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^Variable \$import might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ImportColumn.php
+
+		-
+			message: '#^Access to an undefined property GlpiPlugin\\Resources\\ImportResource\:\:\$existingImports\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/ImportResource.php
+
+		-
+			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
+			identifier: greater.alwaysTrue
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Inner named functions are not supported by PHPStan\. Consider refactoring to an anonymous function, class method, or a top\-level\-defined function\. See issue \#165 \(https\://github\.com/phpstan/phpstan/issues/165\) for more details\.$#'
+			identifier: function.inner
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ImportResource\:\:countRowsInFile\(\) should return int but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ImportResource\:\:getImportResources\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ImportResource\:\:getStatusTitle\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$defaultValue$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$recursive$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\|null\)\: Unexpected token "\|", expected type at offset 106 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#1 \$month of function checkdate expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#2 \$day of function checkdate expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#2 \$force \(int\) of method GlpiPlugin\\Resources\\ImportResource\:\:delete\(\) should be compatible with parameter \$force \(bool\) of method CommonDBTM\:\:delete\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#2 \$linkText of method GlpiPlugin\\Resources\\ImportResource\:\:showErrorHeader\(\) expects null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#2 \$string2 of function strcasecmp expects string, bool given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#3 \$history \(int\) of method GlpiPlugin\\Resources\\ImportResource\:\:delete\(\) should be compatible with parameter \$history \(bool\) of method CommonDBTM\:\:delete\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#3 \$history of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#3 \$url of method GlpiPlugin\\Resources\\ImportResource\:\:showErrorHeader\(\) expects null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Parameter \#3 \$year of function checkdate expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Static method GlpiPlugin\\Resources\\Resource\:\:getColumnName\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/ImportResource.php
+
+		-
+			message: '#^Variable \$initElemJs might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Variable \$resourceID might not be defined\.$#'
+			identifier: variable.undefined
+			count: 8
+			path: src/ImportResource.php
+
+		-
+			message: '#^Variable \$resources might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^Variable \$result might not be defined\.$#'
+			identifier: variable.undefined
+			count: 9
+			path: src/ImportResource.php
+
+		-
+			message: '#^Variable \$updateResultJs might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ImportResource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ImportResourceData.php
+
+		-
+			message: '#^Cannot call method getUserAccountControlObject\(\) on Adldap\\Models\\Model\|array\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/LDAP.php
+
+		-
+			message: '#^Cannot call method setUserAccountControl\(\) on Adldap\\Models\\Model\|array\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/LDAP.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/LDAP.php
+
+		-
+			message: '#^Access to an undefined property CommonGLPI\:\:\$fields\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\LeavingInformation\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\LeavingInformation\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LeavingInformation\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 2
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LeavingInformation\:\:showLeavingInformationForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\LeavingInformation\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^Parameter \#3 \$withtemplate of method GlpiPlugin\\Resources\\LeavingInformation\:\:showLeavingInformationForm\(\) expects string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 116 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LeavingReason.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LeavingReason.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LeavingReason.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/LeavingReason.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/LinkAd.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/LinkAd.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\LinkAd\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\LinkAd\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LinkAd\:\:deleteButtton\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/LinkAd.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LinkAd\:\:messageSolution\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/LinkAd.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LinkAd\:\:showFromResources\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\LinkAd\:\:showMessage\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/LinkAd.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$withtemplate$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\LinkAd\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/LinkAd.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Linkmetademand.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Location.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Manager.php
+
+		-
+			message: '#^Call to static method hidden\(\) on an unknown class GlpiPlugin\\Resources\\Html\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Menu.php
+
+		-
+			message: '#^Constant PLUGIN_BADGES_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Constant PLUGIN_METADEMANDS_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 2
+			path: src/Menu.php
+
+		-
+			message: '#^Variable \$tabs might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Menu.php
+
+		-
+			message: '#^Call to static method _serialize\(\) on an unknown class GlpiPlugin\\Metademands\\FieldParameter\.$#'
+			identifier: class.notFound
+			count: 3
+			path: src/Metademand.php
+
+		-
+			message: '#^Call to static method _unserialize\(\) on an unknown class GlpiPlugin\\Metademands\\Field\.$#'
+			identifier: class.notFound
+			count: 7
+			path: src/Metademand.php
+
+		-
+			message: '#^Call to static method getInstance\(\) on an unknown class GlpiPlugin\\Metademands\\Config\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Metademand\:\:afterCreateTicket\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Metademand.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Metademand\:\:saveOptions\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Metademand.php
+
+		-
+			message: '#^Offset ''check_value'' on array\{check_value\: mixed, checklist_in\?\: mixed, checklist_out\?\: mixed, habilitation\?\: mixed, is_leaving_resource\?\: mixed\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Offset ''checklist_in'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Offset ''checklist_out'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Offset ''habilitation'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Offset ''is_leaving_resource'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 4
+			path: src/Metademand.php
+
+		-
+			message: '#^Variable \$idResource might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Metademand.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Metademand.php
+
+		-
+			message: '#^Binary operation "\." between ''\<td\>'' and array results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \* ", expected type at offset 118 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^Parameter \#2 \$right of static method Session\:\:haveRight\(\) expects int, array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Notification.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 64
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^Cannot access property \$input on array\<CommonGLPI\>\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^Cannot access property \$oldvalues on array\<CommonGLPI\>\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^Result of method NotificationTarget\<CommonGLPI\>\:\:addUserByField\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 4
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^Variable \$entity might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 12
+			path: src/NotificationTargetResource.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 96 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Profession.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionCategory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionCategory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionCategory.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ProfessionCategory.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionLine.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionLine.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ProfessionLine.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ProfessionLine.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Parameter \#2 \$openform \(bool\) of method GlpiPlugin\\Resources\\Profile\:\:showForm\(\) should be compatible with parameter \$options \(array\<string, mixed\>\) of method Profile\:\:showForm\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 97 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Rank.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 2
+			path: src/Recap.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Recap\:\:addLeftJoin\(\) has invalid return type GlpiPlugin\\Resources\\Left\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Recap\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Recap\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Recap\:\:addLeftJoin\(\) should return GlpiPlugin\\Resources\\Left but returns string\.$#'
+			identifier: return.type
+			count: 3
+			path: src/Recap.php
+
+		-
+			message: """
+				#^PHPDoc tag @return has invalid value \\(\r
+				\\*@since version 0\\.85\\)\\: Unexpected token "\\\\r\\\\n     \\*", expected type at offset 518 on line 12$#
+			"""
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 217 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Parameter \#2 \$NOT of static method Search\:\:addHaving\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recap.php
+
+		-
+			message: '#^Parameter \#2 \$nott of static method Search\:\:addWhere\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Recap.php
+
+		-
+			message: '#^Parameter \#3 \$meta of static method Search\:\:addSelect\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recap.php
+
+		-
+			message: '#^Parameter \#4 \$joinparams of static method Search\:\:addMetaLeftJoin\(\) expects array, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Parameter \#7 \$meta of static method Search\:\:addWhere\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Static method Search\:\:addHaving\(\) invoked with 8 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: src/Recap.php
+
+		-
+			message: '#^Static method Search\:\:addOrderBy\(\) invoked with 4 parameters, 2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Variable \$interjoinparams might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^Variable \$intertable might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: src/Recap.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Recap.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Recipient.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Recipient_Leaving.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RecruitingSource.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RecruitingSource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RecruitingSource.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\ReportConfig\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\ReportConfig\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ReportConfig\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method GlpiPlugin\\Resources\\ReportConfig\:\:showForm\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\ReportConfig\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of static method GlpiPlugin\\Resources\\ReportConfig\:\:showReports\(\) expects string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ReportConfig.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResignationReason.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResignationReason.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResignationReason.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:transferResource\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Cannot call method fetchArray\(\) on mysqli_result\|true\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Resource\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Resource\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Resource\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:cleanDBonPurge\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:cleanDBonPurge\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:dropdownTemplate\(\) should return int\|string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSelectLinkedItem\(\) has invalid return type GlpiPlugin\\Resources\\a\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSelectLinkedItem\(\) should return GlpiPlugin\\Resources\\a but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSpecificMassiveActions\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSpecificMassiveActions\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSpecificValueToDisplay\(\) has invalid return type GlpiPlugin\\Resources\\a\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSpecificValueToDisplay\(\) should return GlpiPlugin\\Resources\\a but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:post_addItem\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:post_addItem\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:post_updateItem\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:post_updateItem\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:pre_updateInDB\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:pre_updateInDB\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Resources\\the but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Resources\\the but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:prepareInputForUpdate\(\) has invalid return type GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:prepareInputForUpdate\(\) should return GlpiPlugin\\Resources\\the but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:rawSearchOptions\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:rawSearchOptions\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:reSendResourceCreation\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:sendFile\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:sendFile\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:sendReport\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:showResourceTreeview\(\) has invalid return type GlpiPlugin\\Resources\\params\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(array \(\$itemtype,\$myname,\$value,\$entity_restrict,\$action,\$span\)\)\: Unexpected token "\(", expected variable at offset 123 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(array \(\$myname,\$value,\$entity_restrict\)\)\: Unexpected token "\(", expected variable at offset 120 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\$action\)\: Unexpected token "\$action", expected type at offset 93 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\|null\)\: Unexpected token "\|", expected type at offset 187 on line 10$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method CommonDBTM\:\:getFromDB\(\) expects int\|string, GlpiPlugin\\Resources\\type given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function strstr expects string, GlpiPlugin\\Resources\\type given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:deleteByCriteria\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#2 \$right of method CommonDBTM\:\:can\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, GlpiPlugin\\Resources\\type given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Resource\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \#3 \$input of method CommonDBTM\:\:can\(\) expects array\<string, mixed\>\|null, GlpiPlugin\\Resources\\Resource given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \$entities_id of method GlpiPlugin\\Resources\\Resource\:\:transferResource\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \$resources_id of method GlpiPlugin\\Resources\\Resource\:\:transferResource\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Parameter \$type of method GlpiPlugin\\Resources\\Resource\:\:massiveActions\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\Resource\:\:getSpecificMassiveActions\(\) should be compatible with return type \(array\) of method CommonDBTM\:\:getSpecificMassiveActions\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\Resource\:\:rawSearchOptions\(\) should be compatible with return type \(array\<array\<string, mixed\>\>\) of method CommonDBTM\:\:rawSearchOptions\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\the\) of method GlpiPlugin\\Resources\\Resource\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForAdd\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\the\) of method GlpiPlugin\\Resources\\Resource\:\:prepareInputForUpdate\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForUpdate\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 11
+			path: src/Resource.php
+
+		-
+			message: '#^Variable \$users_id might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 4
+			path: src/Resource.php
+
+		-
+			message: '#^Call to static method dropdown\(\) on an unknown class GlpiPlugin\\Badges\\Badge\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Badges\\Badge\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Call to static method getTypeName\(\) on an unknown class GlpiPlugin\\Metademands\\Metademand_Resource\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Class GlpiPlugin\\Badges\\Badge not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Class GlpiPlugin\\Metademands\\Metademand not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Constant PLUGIN_BADGES_WEBDIR not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceBadge\:\:showFormBadge\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceBadge.php
+
+		-
+			message: '#^Class GlpiPlugin\\Badges\\Badge not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceCard.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/ResourceCard.php
+
+		-
+			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/ResourceCard.php
+
+		-
+			message: '#^Parameter \#3 \$limit of method CommonDBTM\:\:find\(\) expects int\|null, array\<int, int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ResourceCard.php
+
+		-
+			message: '#^Parameter \#4 \$value of method DbUtils\:\:getEntitiesRestrictRequest\(\) expects ''''\|array\<int\>\|int, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ResourceCard.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceCard.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/ResourceFunction.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceFunction.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceFunction.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\ResourceHabilitation\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Default value of the parameter \#3 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\ResourceHabilitation\:\:displayTabContentForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceHabilitation\:\:showItem\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\ResourceHabilitation\:\:countForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\ResourceHabilitation\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\ResourceHabilitation\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceHabilitation.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\ResourceHoliday\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ResourceHoliday.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceHoliday\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceHoliday.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceHoliday.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceHoliday.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceHoliday.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ResourceImport.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$history \(int\) of method GlpiPlugin\\Resources\\ResourceImport\:\:update\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ResourceImport.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceImport\:\:add\(\) should return int\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceImport.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceImport\:\:update\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceImport.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceImport.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceInjection\:\:addOrUpdateObject\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceInjection\:\:addOrUpdateObject\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceInjection\:\:getOptions\(\) has invalid return type the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\ResourceInjection\:\:addOrUpdateObject\(\) should be compatible with return type \(array\) of method PluginDatainjectionInjectionInterface\:\:addOrUpdateObject\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceInjection.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:show_PDF\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ResourcePDF.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourcePDF\:\:pdfMain\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourcePDF.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\ResourceResting\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:post_updateItem\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:post_updateItem\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Resources\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Resources\\datas but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Resources\\datas but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForUpdate\(\) has invalid return type GlpiPlugin\\Resources\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForUpdate\(\) should return GlpiPlugin\\Resources\\datas but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForUpdate\(\) should return GlpiPlugin\\Resources\\datas but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:rawSearchOptions\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:rawSearchOptions\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\ResourceResting\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 90 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\ResourceResting\:\:rawSearchOptions\(\) should be compatible with return type \(array\<array\<string, mixed\>\>\) of method CommonDBTM\:\:rawSearchOptions\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\datas\) of method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForAdd\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\datas\) of method GlpiPlugin\\Resources\\ResourceResting\:\:prepareInputForUpdate\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForUpdate\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceResting.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 114 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSituation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSituation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSituation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceSituation.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 120 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSpeciality.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSpeciality.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceSpeciality.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceSpeciality.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/ResourceState.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 69 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/ResourceState.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ResourceState.php
+
+		-
+			message: '#^Call to an undefined static method Ajax\:\:updateItemOnInputTextEvent\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Resource_Change.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Change\:\:showFormActions\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Resource_Change.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Resource_Change.php
+
+		-
+			message: '#^Class GlpiPlugin\\Resources\\Resource referenced with incorrect case\: GlpiPlugin\\Resources\\resource\.$#'
+			identifier: class.nameCase
+			count: 2
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Item\:\:addItem\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Item\:\:searchAssociatedBadge\(\) should return int but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Item\:\:showForItem\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Resources\\nothing is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$ID of function getUserName expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Resource_Item\:\:countForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Resource_Item\:\:countForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Resource_Item\:\:showForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#1 \$resource of static method GlpiPlugin\\Resources\\Resource_Item\:\:showForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\Resource_Item\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 8
+			path: src/Resource_Item.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Resource_Item.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Resource_Leaving\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Leaving\:\:canCreate\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Leaving\:\:canView\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$withtemplate$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Resources\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Resource_Leaving\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Resource_Leaving.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Resources\\Resource_Validation\:\:getTabNameForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Validation\:\:canCreate\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource_Validation\:\:canView\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$withtemplate$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Resources\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Resource_Validation\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Role\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Role.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Role\:\:post_getEmpty\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Role.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Role.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Role.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Role_Service.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 176 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklist.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklist.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleChecklist.php
+
+		-
+			message: '#^Default value of the parameter \#4 \$force_no_cache \(false\) of method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:processAllRules\(\) is incompatible with type array\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:processAllRules\(\) has invalid return type GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:processAllRules\(\) should return GlpiPlugin\\Resources\\the but returns list\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:showTestResults\(\) has invalid return type GlpiPlugin\\Resources\\cleaned\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:showTestResults\(\) should return GlpiPlugin\\Resources\\cleaned but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(input the input data used to check criterias\)\: Unexpected token "the", expected variable at offset 74 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(output the initial ouput array used to be manipulate by actions\)\: Unexpected token "the", expected variable at offset 135 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(params parameters for all internal functions\)\: Unexpected token "parameters", expected variable at offset 214 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\the\) of method GlpiPlugin\\Resources\\RuleChecklistCollection\:\:processAllRules\(\) should be compatible with return type \(array\) of method RuleCollection\:\:processAllRules\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleChecklistCollection.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttype.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 176 on line 7$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttype.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttype.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttype.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttypeCollection.php
+
+		-
+			message: '#^Call to static method hidden\(\) on an unknown class GlpiPlugin\\Resources\\Html\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeHidden.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttypeHidden.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttypeHidden.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttypeHidden.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttypeHiddenCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:canCreate\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:canUnrecurs\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:canUnrecurs\(\) should return GlpiPlugin\\Resources\\booleen but returns true\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:canView\(\) has invalid return type GlpiPlugin\\Resources\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:getTitle\(\) has invalid return type GlpiPlugin\\Resources\\Title\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:getTitle\(\) should return GlpiPlugin\\Resources\\Title but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:maxActionsCount\(\) has invalid return type GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:maxActionsCount\(\) should return GlpiPlugin\\Resources\\the but returns int\<0, max\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Resources\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\Title\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:getTitle\(\) should be compatible with return type \(string\) of method Rule\:\:getTitle\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\booleen\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:canUnrecurs\(\) should be compatible with return type \(bool\) of method CommonDBTM\:\:canUnrecurs\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\the\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonly\:\:maxActionsCount\(\) should be compatible with return type \(int\) of method Rule\:\:maxActionsCount\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttypeReadonly.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:getTitle\(\) has invalid return type GlpiPlugin\\Resources\\Title\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:getTitle\(\) should return GlpiPlugin\\Resources\\Title but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\Title\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:getTitle\(\) should be compatible with return type \(string\) of method RuleCollection\:\:getTitle\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Service\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Service.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Service.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Service.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Service.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Task\:\:getSpecificMassiveActions\(\) has invalid return type GlpiPlugin\\Resources\\an\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Task\:\:getSpecificMassiveActions\(\) should return GlpiPlugin\\Resources\\an but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Task\:\:post_updateItem\(\) should be compatible with parameter \$history \(bool\) of method CommonDBTM\:\:post_updateItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Task\:\:addNewTasks\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Task\:\:countForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\Task\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Task.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of static method GlpiPlugin\\Resources\\Task\:\:addNewTasks\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\an\) of method GlpiPlugin\\Resources\\Task\:\:getSpecificMassiveActions\(\) should be compatible with return type \(array\) of method CommonDBTM\:\:getSpecificMassiveActions\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Task.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TaskPlanning\:\:displayError\(\) has invalid return type GlpiPlugin\\Resources\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TaskPlanning\:\:displayError\(\) should return GlpiPlugin\\Resources\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TaskPlanning\:\:getAlreadyPlannedInformation\(\) has invalid return type GlpiPlugin\\Resources\\Already\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TaskPlanning\:\:getAlreadyPlannedInformation\(\) should return GlpiPlugin\\Resources\\Already but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\(display function\)\)\: Unexpected token "function", expected ''\)'' at offset 128 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(bool, true if exists\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 166 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^Parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\TaskPlanning\:\:post_updateItem\(\) should be compatible with parameter \$history \(bool\) of method CommonDBTM\:\:post_updateItem\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^Parameter \#5 \$is_recursive of method DbUtils\:\:getEntitiesRestrictRequest\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TaskPlanning.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/TaskType.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/TaskType.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TaskType.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Task_Item\:\:countForResourceTask\(\) expects GlpiPlugin\\Resources\\Task, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of method GlpiPlugin\\Resources\\Task_Item\:\:showItemFromPlugin\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Task_Item.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 2
+			path: src/Team.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Team.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Team.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TicketCategory.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TransferEntity\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TransferEntity\:\:prepareInputForUpdate\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TransferEntity\:\:showConfigForm\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\TransferEntity\:\:showConfigForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/TransferEntity.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TransferEntity.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/User.php
+
+		-
+			message: '#^Call to method getField\(\) on an unknown class PluginFieldsContainer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Call to method getFromDBByCrit\(\) on an unknown class PluginFieldsContainer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Call to method getFromDBByCrit\(\) on an unknown class PluginFieldsField\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Call to method getID\(\) on an unknown class PluginFieldsField\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Call to static method getLabelFor\(\) on an unknown class PluginFieldsLabelTranslation\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Instantiated class PluginFieldsContainer not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Instantiated class PluginFieldsField not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\User\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Variable \$auth might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Variable \$email might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Variable \$lastSync might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Variable \$phone might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Variable \$userDN might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/User.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Wizard.php
+
+		-
+			message: '#^Undefined variable\: \$data$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Wizard.php
+
+		-
+			message: '#^Variable \$data in isset\(\) is never defined\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Wizard.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/WorkProfile.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/WorkProfile.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/WorkProfile.php

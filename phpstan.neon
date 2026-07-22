@@ -1,0 +1,27 @@
+includes:
+    - vendor/glpi-project/phpstan-glpi/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - ajax
+        - front
+        - install
+        - src
+        - hook.php
+        - setup.php
+    scanDirectories:
+        - ../../inc
+        - ../../src
+    scanFiles:
+        # Local stubs for optional plugin dependencies (see each stub header).
+        # Keeps analysis independent of where these plugins live, or if absent.
+        - tools/phpstan-stubs/datainjection.php
+        - tools/phpstan-stubs/pdf.php
+        - tools/phpstan-stubs/reports.php
+    bootstrapFiles:
+        - ../../stubs/glpi_constants.php
+        - ../../vendor/autoload.php
+        - setup.php
+    treatPhpDocTypesAsCertain: false
