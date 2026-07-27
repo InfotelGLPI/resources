@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
@@ -55,6 +57,6 @@ if (isset($_POST["id"])) {
     );
     echo "</div>";
 } else {
-    echo __("You don't have permission to perform this action.");
+    throw new AccessDeniedHttpException();
 }
 

@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Adconfig;
 
 Session::checkRight("config", UPDATE);
@@ -41,9 +42,11 @@ if (Plugin::isPluginActive("resources")) {
         Html::back();
     }
 } else {
-    Html::header(__('Setup'), '', "config", "plugin");
-    echo "<div class='alert alert-important alert-warning d-flex'>";
-    echo "<b>" . __('Please activate the plugin', 'resources') . "</b></div>";
+    Html::header(__s('Setup'), '', "config", "plugin");
+    TemplateRenderer::getInstance()->display('@resources/plugin_inactive.html.twig', [
+        'message' => __('Please activate the plugin', 'resources'),
+    ]);
+    Html::footer();
 }
 
 Html::footer();
