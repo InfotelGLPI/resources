@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-28 21:08+0000\n"
+"POT-Creation-Date: 2026-07-28 21:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -656,7 +656,7 @@ msgstr ""
 msgid "Client Sensitized to security"
 msgstr ""
 
-#: front/modalvalidationinfo.php:41
+#: front/modalvalidationinfo.php:45
 msgid "Close"
 msgstr ""
 
@@ -1021,7 +1021,7 @@ msgstr ""
 msgid "Descending"
 msgstr ""
 
-#: front/modalavailablevariable.php:38 src/Config.php:142
+#: front/modalavailablevariable.php:42 src/Config.php:142
 #: templates/wizard_secondstep_resource.html.twig:738
 msgid "Description"
 msgstr ""
@@ -1079,7 +1079,7 @@ msgstr ""
 msgid "Displaying the security block on the resource"
 msgstr ""
 
-#: front/modalvalidationinfo.php:30
+#: front/modalvalidationinfo.php:34
 msgid "Do you verify all the information listed on this resource?"
 msgstr ""
 
@@ -2931,7 +2931,7 @@ msgstr ""
 msgid "User without resource"
 msgstr ""
 
-#: front/modalvalidationinfo.php:32 src/Resource_Leaving.php:174
+#: front/modalvalidationinfo.php:36 src/Resource_Leaving.php:174
 #: src/Resource_Validation.php:169
 msgid "Validate"
 msgstr ""
@@ -2944,7 +2944,7 @@ msgstr ""
 msgid "Validation"
 msgstr ""
 
-#: front/modalavailablevariable.php:37
+#: front/modalavailablevariable.php:41
 msgid "Variable"
 msgstr ""
 
