@@ -1,0 +1,29 @@
+{#
+ # File upload form (resources plugin, ImportResource::showFileImporter).
+ #
+ # Multipart POST form carrying a native file input plus GLPI's file widget
+ # (pre-rendered by PHP, injected with |raw). The <form> carries the GLPI CSRF
+ # token. Replaces a legacy echo where the action attribute was accidentally
+ # commented out inside the tag string.
+ #
+ # Expected data:
+ #   form_action  : string   target URL
+ #   file_widget  : string   pre-rendered Html::file() widget
+ #   label_import : string   submit button label
+ #}
+<form name="import_file_form" id="import_file_form" method="post" action="{{ form_action }}" enctype="multipart/form-data">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table>
+            <tr>
+                <td>
+                    <input class="form-control" type="file" name="picture">
+                    {{ file_widget|raw }}
+                </td>
+                <td>
+                    <button type="submit" name="import-file" class="btn btn-primary">{{ label_import }}</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

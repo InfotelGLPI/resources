@@ -1,0 +1,29 @@
+{#
+ # "Create checklists" trigger form (resources plugin, Checklist::showAddForm).
+ #
+ # Standalone POST form targeting the Resource form URL. Plain text is
+ # auto-escaped; the <form> carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action : string   target URL
+ #   title       : string   panel header
+ #   id          : int      resource id carried through the post
+ #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table class="tab_cadre" width="50%">
+            <tr>
+                <th colspan="2">{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_2 center">
+                <td colspan="2">
+                    <button type="submit" name="add_checklist_resources" class="btn btn-primary">
+                        {{ _x('button', 'Post') }}
+                    </button>
+                    <input type="hidden" name="id" value="{{ id }}">
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

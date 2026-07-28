@@ -47,6 +47,8 @@ $importResource = new ImportResource();
 
 if ($import->canView()) {
     if (isset($_POST['delete_file'])) {
+        // Deleting an uploaded import file is a state change: require UPDATE, not READ.
+        $import->checkGlobal(UPDATE);
         ImportResource::deleteFile($_POST['selected-file']);
     }
 

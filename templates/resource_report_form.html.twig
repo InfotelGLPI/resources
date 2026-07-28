@@ -1,0 +1,30 @@
+{#
+ # "Send a notification" report form (resources plugin, Resource::showReportForm).
+ #
+ # Standalone POST form with a single submit and two hidden ids. Plain text is
+ # auto-escaped; the <form> carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action : string   target URL
+ #   title       : string   panel header
+ #   label_send  : string   submit button label
+ #   id          : int      resource id
+ #   reports_id  : int      report config id
+ #}
+<div class="center">
+    <form method="post" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        <table class="tab_cadre_fixe" width="50%">
+            <tr>
+                <th colspan="4">{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_2 center">
+                <td colspan="4">
+                    <button type="submit" name="report" class="btn btn-primary">{{ label_send }}</button>
+                    <input type="hidden" name="id" value="{{ id }}">
+                    <input type="hidden" name="reports_id" value="{{ reports_id }}">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

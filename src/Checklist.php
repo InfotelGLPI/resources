@@ -36,6 +36,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Entity;
 use Html;
@@ -445,20 +446,11 @@ class Checklist extends CommonDBTM
      */
     static function showAddForm($ID)
     {
-        echo "<div class='center'>";
-        echo "<form action='" . Toolbox::getItemTypeFormURL(Resource::class) . "' method='post'>";
-        echo "<table class='tab_cadre' width='50%'>";
-        echo "<tr>";
-        echo "<th colspan='2'>";
-        echo __('Create checklists', 'resources');
-        echo "</th></tr>";
-        echo "<tr class='tab_bg_2 center'>";
-        echo "<td colspan='2'>";
-        echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
-        echo Html::hidden('id', ['value' => $ID]);
-        echo "</td></tr></table>";
-        Html::closeForm();
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/checklist_add_form.html.twig', [
+            'form_action' => Toolbox::getItemTypeFormURL(Resource::class),
+            'title'       => __('Create checklists', 'resources'),
+            'id'          => (int) $ID,
+        ]);
     }
 
     /**
@@ -566,59 +558,41 @@ class Checklist extends CommonDBTM
 
         $this->showFormHeader($options);
 
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
+
+        $hidden_fields = Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
         if ($ID > 0) {
-            echo Html::hidden(
+            $hidden_fields .= Html::hidden(
                 'plugin_resources_contracttypes_id',
                 ['value' => $this->fields["plugin_resources_contracttypes_id"]]
             );
-            echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
+            $hidden_fields .= Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
         } else {
-            echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
-            echo Html::hidden('checklist_type', ['value' => $checklist_type]);
+            $hidden_fields .= Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
+            $hidden_fields .= Html::hidden('checklist_type', ['value' => $checklist_type]);
         }
 
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td>";
-        echo __('Important', 'resources');
-        echo "</td><td>";
-        Dropdown::showYesNo("tag", $this->fields["tag"]);
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Link', 'resources') . "</td>";
-        echo "<td>";
-        echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
-        echo "</td>";
-
-        echo "<td></td>";
-        echo "<td></td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td class='left' colspan = '4'>";
-        echo __('Description') . "<br>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '150',
-            'rows' => '6',
-            'display' => false,
+        TemplateRenderer::getInstance()->display('@resources/checklist_form.html.twig', [
+            'hidden_fields'        => $hidden_fields,
+            'label_name'           => __('Name'),
+            'name_input'           => Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
+            'label_important'      => __('Important', 'resources'),
+            'tag_dropdown'         => $capture(fn() => Dropdown::showYesNo("tag", $this->fields["tag"])),
+            'label_link'           => __('Link', 'resources'),
+            'address_input'        => Html::input('address', ['value' => $this->fields['address'], 'size' => 75]),
+            'label_description'    => __('Description'),
+            'description_textarea' => Html::textarea([
+                'name'    => 'comment',
+                'value'   => $this->fields["comment"],
+                'cols'    => '150',
+                'rows'    => '6',
+                'display' => false,
+            ]),
         ]);
-        echo "</td>";
-
-        echo "</tr>";
 
         $this->showFormButtons($options);
         return true;

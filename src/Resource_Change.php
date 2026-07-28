@@ -38,6 +38,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use Group_Ticket;
 use Html;
 use ITILCategory;
@@ -1503,13 +1504,12 @@ class Resource_Change extends CommonDBTM
      */
     function showConfigForm()
     {
-        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th>" . __("Managing change actions", 'resources') . "</th></tr>";
-        echo "<tr class='tab_bg_1'><td class='center'>";
-        echo "<a href=\"./resource_change.form.php\">" . __('Setup') . "</a>";
-        echo "</td></tr></table></div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@resources/resource_change_config_form.html.twig', [
+            'form_action' => self::getFormURL(),
+            'title'       => __("Managing change actions", 'resources'),
+            'setup_url'   => "./resource_change.form.php",
+            'setup_label' => __('Setup'),
+        ]);
     }
 
     /**
@@ -1527,14 +1527,6 @@ class Resource_Change extends CommonDBTM
             return false;
         }
 
-        echo "<div class='alert alert-warning'>" ;
-        echo __('Define entity & ticket category for each change action', 'resources')
-            . "</div>";
-
-        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='3'>" . __("Managing change actions", 'resources') . "</th></tr>";
-
         $actions = self::getAllActions(true);
         $actions[self::BADGE_RESTITUTION] = self::getNameActions(self::BADGE_RESTITUTION);
         //delete mutation
@@ -1542,8 +1534,10 @@ class Resource_Change extends CommonDBTM
 
         $canedit = true;
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center'>";
+        // Build the action cell (label + dropdown + AJAX reload script). The
+        // script depends on the rand returned by the dropdown, so both are
+        // captured together as a single trusted HTML fragment.
+        ob_start();
         echo __('Action') . '&nbsp;';
         $rand = Dropdown::showFromArray('actions_id', $actions, ['on_change' => 'plugin_resources_load_entity();']);
         // Dropdown list according to the entity
@@ -1564,21 +1558,14 @@ class Resource_Change extends CommonDBTM
             'dropdown_actions_id' . $rand);
         echo "}";
         echo "</script>";
-        echo "</td>";
+        $action_cell = (string) ob_get_clean();
 
-        // Dropdown entity
-        echo "<td class='center' id='plugin_resources_entity_itil_categories'>";
-
-        echo "</td>";
-
-        echo "<td class='center' id='plugin_resources_button_add'>";
-
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "</table></div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@resources/resource_change_actions_form.html.twig', [
+            'form_action' => self::getFormURL(),
+            'alert_text'  => __('Define entity & ticket category for each change action', 'resources'),
+            'title'       => __("Managing change actions", 'resources'),
+            'action_cell' => $action_cell,
+        ]);
 
         self::listItems($canedit);
     }

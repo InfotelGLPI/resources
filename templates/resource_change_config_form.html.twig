@@ -1,0 +1,28 @@
+{#
+ # Change-actions config shortcut form (resources plugin,
+ # Resource_Change::showConfigForm).
+ #
+ # A single-cell panel linking to the setup page. Plain text is auto-escaped;
+ # the <form> carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action : string   target URL
+ #   title       : string   panel header
+ #   setup_url   : string   link to the setup page
+ #   setup_label : string   link label
+ #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th>{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_1">
+                <td class="center">
+                    <a href="{{ setup_url }}">{{ setup_label }}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

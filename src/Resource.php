@@ -2797,18 +2797,13 @@ class Resource extends CommonDBTM
         $reportconfig->getFromDBByResource($options['id']);
 
         if ($reportconfig->fields['send_report_notif'] || $reportconfig->fields['send_other_notif']) {
-            echo "<div class='center'>";
-            echo "<form action='" . $options['target'] . "' method='post'>";
-            echo "<table class='tab_cadre_fixe' width='50%'>";
-            echo "<tr><th colspan='4'>" . ReportConfig::getTypeName(2) . "</th></tr>";
-            echo "<tr class='tab_bg_2 center'>";
-            echo "<td colspan='4'>";
-            echo Html::submit(__s('Send a notification'), ['name' => 'report', 'class' => 'btn btn-primary']);
-            echo Html::hidden('id', ['value' => $options['id']]);
-            echo Html::hidden('reports_id', ['value' => $reportconfig->fields["id"]]);
-            echo "</td></tr></table>";
-            Html::closeForm();
-            echo "</div>";
+            TemplateRenderer::getInstance()->display('@resources/resource_report_form.html.twig', [
+                'form_action' => $options['target'],
+                'title'       => ReportConfig::getTypeName(2),
+                'label_send'  => __('Send a notification'),
+                'id'          => (int) $options['id'],
+                'reports_id'  => (int) $reportconfig->fields["id"],
+            ]);
         }
 
         $notification = new Notification();

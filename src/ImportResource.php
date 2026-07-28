@@ -36,6 +36,7 @@ use DBConnection;
 use DbUtils;
 use Document;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
@@ -1468,45 +1469,16 @@ class ImportResource extends CommonDBTM
 
     private function showFileImporter()
     {
-        $formURL = self::getResourceImportFormUrl();
-
-//      echo "<form name='file-importer' method='post' action ='" . $formURL . "' >";
-        echo "<form name='import_file_form' id='import_file_form' method='post'
-//            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
-        echo "<div class='center'>";
-        echo "<table>";
-
-        echo "<tr>";
-        echo "<td>";
-        echo "<input class='form-control' type='file' name='picture'>";
+        $file_widget = '';
+        ob_start();
         Html::file();
-        echo "</td>";
-        echo "<td>";
-        echo Html::submit(__('Import file', 'resources'), ['name' => 'import-file', 'class' => 'btn btn-primary']);
-        echo "</td>";
-        echo "</tr>";
+        $file_widget = (string) ob_get_clean();
 
-        echo "</table>";
-        echo "</div>";
-        Html::closeForm();
-//      echo "<form name='import_file_form' id='import_file_form' method='post'
-//            action='" . self::getFormURL() . "' enctype='multipart/form-data'>";
-//      echo " <table class='tab_cadre' width='30%' cellpadding='5'>";
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>";
-//      echo __("Verifying file to import", 'metademands');
-//      echo "</td>";
-//      echo "<td>";
-//      echo "<input type='file' name='verify_file' accept='text/*'>";
-//      echo "</td>";
-//      echo "</tr>";
-//      echo "<tr>";
-//      echo "<td  class='center' colspan='2'>";
-//      echo Html::submit(__('Import', 'metademands'), ['name' => 'import_file']);
-//      echo "</td>";
-//      echo "</tr>";
-//      echo "</table>";
-//      Html::closeForm();
+        TemplateRenderer::getInstance()->display('@resources/import_file_upload.html.twig', [
+            'form_action'  => self::getFormURL(),
+            'file_widget'  => $file_widget,
+            'label_import' => __('Import file', 'resources'),
+        ]);
     }
 
     /**
@@ -1521,36 +1493,24 @@ class ImportResource extends CommonDBTM
         $action = ImportResource::getIndexUrl();
         $action .= "?type=" . $type;
 
-        echo "<form name='file-selector' method='post' action ='" . $action . "' >";
-        echo "<div class='center'>";
-        echo "<table>";
-
-        echo "<tr>";
-        echo "<td>";
-
         $dropdownParams = [
             'name' => self::SELECTED_FILE_DROPDOWN_NAME,
             'folder' => $locationOfFiles,
             'default' => $defaultFileSelected
         ];
 
+        ob_start();
         self::dropdownFileInFolder($dropdownParams);
-        echo "</td>";
-        echo "<td>";
-        echo Html::submit(__('Verify file', 'resources'), ['name' => 'verify', 'class' => 'btn btn-primary']);
-        echo "</td>";
-        echo "<td>";
-        echo Html::submit(__('Delete file', 'resources'), ['name' => 'delete_file', 'class' => 'btn btn-primary']);
-        echo "</td>";
-        // TODO Move the verified file to parent folder to import it auto
-//      echo "<td>";
-//      echo "<input type='submit' name='valid' class='submit' value='" . __('Set file ready to import', 'resources') . "' >";
-//      echo "</td>";
-        echo "</tr>";
+        $dropdown = (string) ob_get_clean();
 
-        echo "</table>";
-        echo "</div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@resources/import_selector_form.html.twig', [
+            'form_action' => $action,
+            'dropdown'    => $dropdown,
+            'buttons'     => [
+                ['name' => 'verify', 'label' => __('Verify file', 'resources')],
+                ['name' => 'delete_file', 'label' => __('Delete file', 'resources')],
+            ],
+        ]);
     }
 
     /**
@@ -1623,22 +1583,17 @@ class ImportResource extends CommonDBTM
             $action = ImportResource::getIndexUrl();
             $action .= "?type=" . $type;
 
-            echo "<form name='file-selector' method='post' action ='" . $action . "' >";
-            echo "<div class='center'>";
-            echo "<table>";
-
-            echo "<tr>";
-            echo "<td>";
+            ob_start();
             self::dropdownImports($params);
-            echo "</td>";
-            echo "<td>";
-            echo Html::submit(__('Choose', 'resources'), ['name' => 'select', 'class' => 'btn btn-primary']);
-            echo "</td>";
-            echo "</tr>";
+            $dropdown = (string) ob_get_clean();
 
-            echo "</table>";
-            echo "</div>";
-            Html::closeForm();
+            TemplateRenderer::getInstance()->display('@resources/import_selector_form.html.twig', [
+                'form_action' => $action,
+                'dropdown'    => $dropdown,
+                'buttons'     => [
+                    ['name' => 'select', 'label' => __('Choose', 'resources')],
+                ],
+            ]);
         }
     }
 

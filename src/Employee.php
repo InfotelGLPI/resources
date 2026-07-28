@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use PluginPdfSimplePDF;
@@ -241,145 +242,130 @@ class Employee extends CommonDBTM
                 $employee_spotted = true;
             }
         }
-        if ($employee_spotted) {
-            echo "<div class='center'>";
-            if ($withtemplate < 2) {
-                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-            }
-            if (!empty($plugin_resources_resources_id)) {
-                $resource->getFromDB($plugin_resources_resources_id);
-                $entity = $resource->fields["entities_id"];
-            } else {
-                $entity = $_SESSION["glpiactive_entity"];
-            }
+        if (!$employee_spotted) {
+            return false;
+        }
 
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='4'>" . self::getTypeName(1) . "</th></tr>";
-            if (empty($plugin_resources_resources_id)) {
-                echo "<tr class='tab_bg_1'><td colspan='4' class='center'>" . __(
-                        'The resource is also created if not existent',
-                        'resources'
-                    );
-                echo "</td></tr>";
-            }
-            echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
+        if (!empty($plugin_resources_resources_id)) {
+            $resource->getFromDB($plugin_resources_resources_id);
+            $entity = $resource->fields["entities_id"];
+        } else {
+            $entity = $_SESSION["glpiactive_entity"];
+        }
 
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+        // Capture GLPI widgets that echo directly, so they can be injected as |raw.
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
 
-            echo Employer::getTypeName(1) . "</td>";
-            echo "<td colspan='2'>";
+        $params = [
+            'name'   => 'plugin_resources_employers_id',
+            'value'  => $this->fields['plugin_resources_employers_id'],
+            'entity' => $entity,
+            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownLocation.php",
+            'span'   => 'span_location'
+        ];
+        $employer_dropdown = $capture(fn() => Resource::showGenericDropdown(Employer::class, $params));
 
-            $params = [
-                'name' => 'plugin_resources_employers_id',
-                'value' => $this->fields['plugin_resources_employers_id'],
-                'entity' => $entity,
-                'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownLocation.php",
-                'span' => 'span_location'
-            ];
-            Resource::showGenericDropdown(Employer::class, $params);
-            echo "</td></tr>";
+        $locationId = 0;
+        if ($this->fields["plugin_resources_employers_id"] > 0) {
+            $employer = new Employer();
+            $employer->getFromDB($this->fields["plugin_resources_employers_id"]);
+            $locationId = $employer->fields["locations_id"];
+        }
+        if ($locationId > 0) {
+            $address_html = Dropdown::getDropdownName('glpi_locations', $locationId);
+        } else {
+            $address_html = __('None');
+        }
 
-            $locationId = 0;
-            if ($this->fields["plugin_resources_employers_id"] > 0) {
-                $employer = new Employer();
-                $employer->getFromDB($this->fields["plugin_resources_employers_id"]);
-                $locationId = $employer->fields["locations_id"];
-            }
+        $client_dropdown = $capture(fn() => Dropdown::show(
+            Client::class,
+            [
+                'value'     => $this->fields["plugin_resources_clients_id"],
+                'entity'    => $entity,
+                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"
+            ]
+        ));
 
-            echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-            echo __('Address');
-            echo "</td><td colspan='2'>";
-            echo "<span id='span_location' name='span_location'>";
-            if ($locationId > 0) {
-                echo Dropdown::getDropdownName('glpi_locations', $locationId);
-            } else {
-                echo __('None');
-            }
-            echo "</span>";
-            echo "</td>";
-            echo "</tr>";
+        if (Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
+            $img   = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
+            $color = "color: green;";
+        } else {
+            $img   = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
+            $color = "color: red;";
+        }
 
-            echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-            echo Client::getTypeName(1) . "</td>";
-            echo "<td>";
-            Dropdown::show(
-                Client::class,
-                [
-                    'value' => $this->fields["plugin_resources_clients_id"],
-                    'entity' => $entity,
-                    'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"
-                ]
-            );
-
-            if (Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-                $img = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
-                $color = "color: green;";
-            } else {
-                $img = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
-                $color = "color: red;";
-            }
-            echo "</td><td><div id='security_compliance'>";
-            echo "<span style='$color'>";
-            echo __('Security compliance', 'resources') . "&nbsp;";
-            echo $img;
-            echo "</span>";
-            echo "</div></td></tr>";
-
-            echo "<tr>";
-            echo "<td class='tab_bg_2 top' colspan='4'>";
-            if ($withtemplate < 2) {
-                if (empty($ID)) {
-                    if ($this->canCreate() && $canedit) {
-                        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                        if (!empty($plugin_resources_resources_id)) {
-                            echo "<div class='center'>";
-                            echo Html::submit(
-                                _sx('button', 'Add'),
-                                ['name' => 'addemployee', 'class' => 'btn btn-primary']
-                            );
-                            echo "</div>";
-                        } else {
-                            echo "<div class='center'>";
-                            Resource::dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]);
-                            echo Html::hidden('users_id', ['value' => $users_id]);
-                            echo "&nbsp;";
-                            echo Html::submit(
-                                _sx('button', 'Add'),
-                                ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary']
-                            );
-                            echo "</div>";
-                        }
-                    }
-                } else {
-                    if ($this->canCreate() && $canedit) {
-                        echo Html::hidden('id', ['value' => $ID]);
-                        echo Html::hidden(
-                            'plugin_resources_resources_id',
-                            ['value' => $this->fields["plugin_resources_resources_id"]]
+        // Action buttons cell (mix of returned Html::* helpers and the echoing template dropdown).
+        $buttons_cell = '';
+        if ($withtemplate < 2) {
+            if (empty($ID)) {
+                if ($this->canCreate() && $canedit) {
+                    $buttons_cell .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                    if (!empty($plugin_resources_resources_id)) {
+                        $buttons_cell .= "<div class='center'>";
+                        $buttons_cell .= Html::submit(
+                            _sx('button', 'Add'),
+                            ['name' => 'addemployee', 'class' => 'btn btn-primary']
                         );
-                        echo "<div class='center'>";
-                        echo Html::submit(
-                            _sx('button', 'Update'),
-                            ['name' => 'updateemployee', 'class' => 'btn btn-primary']
+                        $buttons_cell .= "</div>";
+                    } else {
+                        $buttons_cell .= "<div class='center'>";
+                        $buttons_cell .= $capture(fn() => Resource::dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]));
+                        $buttons_cell .= Html::hidden('users_id', ['value' => $users_id]);
+                        $buttons_cell .= "&nbsp;";
+                        $buttons_cell .= Html::submit(
+                            _sx('button', 'Add'),
+                            ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary']
                         );
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        echo Html::submit(
-                            _sx('button', 'Delete permanently'),
-                            ['name' => 'deleteemployee', 'class' => 'btn btn-primary']
-                        );
-                        echo "</div>";
+                        $buttons_cell .= "</div>";
                     }
                 }
+            } else {
+                if ($this->canCreate() && $canedit) {
+                    $buttons_cell .= Html::hidden('id', ['value' => $ID]);
+                    $buttons_cell .= Html::hidden(
+                        'plugin_resources_resources_id',
+                        ['value' => $this->fields["plugin_resources_resources_id"]]
+                    );
+                    $buttons_cell .= "<div class='center'>";
+                    $buttons_cell .= Html::submit(
+                        _sx('button', 'Update'),
+                        ['name' => 'updateemployee', 'class' => 'btn btn-primary']
+                    );
+                    $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    $buttons_cell .= Html::submit(
+                        _sx('button', 'Delete permanently'),
+                        ['name' => 'deleteemployee', 'class' => 'btn btn-primary']
+                    );
+                    $buttons_cell .= "</div>";
+                }
             }
-            echo "</td>";
-            echo "</tr>";
-            echo "</table>";
-            if ($withtemplate < 2) {
-                Html::closeForm();
-            }
-            echo "</div>";
         }
+
+        TemplateRenderer::getInstance()->display('@resources/employee_form.html.twig', [
+            'show_form'           => ($withtemplate < 2),
+            'form_action'         => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
+            'hidden_resources_id' => Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]),
+            'title'               => self::getTypeName(1),
+            'show_created_note'   => empty($plugin_resources_resources_id),
+            'created_note'        => __('The resource is also created if not existent', 'resources'),
+            'label_employer'      => Employer::getTypeName(1),
+            'employer_dropdown'   => $employer_dropdown,
+            'label_address'       => __('Address'),
+            'address_html'        => $address_html,
+            'label_client'        => Client::getTypeName(1),
+            'client_dropdown'     => $client_dropdown,
+            'compliance_color'    => $color,
+            'compliance_label'    => __('Security compliance', 'resources'),
+            'compliance_img'      => $img,
+            'buttons_cell'        => $buttons_cell,
+        ]);
+
+        return true;
     }
 
 
@@ -391,7 +377,6 @@ class Employee extends CommonDBTM
      */
     function showFormHelpdesk($plugin_resources_resources_id, $exist)
     {
-        global $CFG_GLPI;
 
         if (!$this->canView()) {
             return false;
@@ -421,78 +406,85 @@ class Employee extends CommonDBTM
                 $employee_spotted = true;
             }
         }
-        if ($employee_spotted) {
-            echo "<div class='center'><br>";
-            if ($exist == 0 || empty($ID)) {
-                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/employee.form.php\">";
+        if (!$employee_spotted) {
+            return false;
+        }
+
+        $entity = $resource->fields["entities_id"];
+
+        if ($exist == 0 || empty($ID)) {
+            $form_action = PLUGIN_RESOURCES_WEBDIR . "/front/employee.form.php";
+        } else {
+            $form_action = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php";
+        }
+
+        // Capture GLPI dropdowns that echo directly, so they can be injected as |raw.
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
+
+        $employer_dropdown = $capture(fn() => Dropdown::show(Employer::class, [
+            'name'   => "plugin_resources_employers_id",
+            'value'  => $this->fields["plugin_resources_employers_id"],
+            'entity' => $entity
+        ]));
+
+        $client_dropdown = $capture(fn() => Dropdown::show(Client::class, [
+            'name'   => "plugin_resources_clients_id",
+            'value'  => $this->fields["plugin_resources_clients_id"],
+            'entity' => $entity
+        ]));
+
+        // Conditional action row: each branch emits its own <tr>/<td> wrapper.
+        $buttons_block = '';
+        if ($this->canCreate()) {
+            if ($exist == 0) {
+                $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
+                $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                $buttons_block .= "<div class='center'>";
+                $buttons_block .= Html::submit(
+                    _sx('button', 'Next step', 'resources'),
+                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
+                );
+                $buttons_block .= "</td></tr>";
+            } elseif (empty($ID)) {
+                $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
+                $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                $buttons_block .= Html::submit(
+                    _sx('button', 'Add'),
+                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
+                );
+                $buttons_block .= "</td></tr>";
             } else {
-                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-            }
-
-            $entity = $resource->fields["entities_id"];
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='4'>" . self::getTypeName(1) . "</th></tr>";
-
-            echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo Employer::getTypeName(1) . "</td>";
-            echo "<td colspan='2'>";
-            Dropdown::show(Employer::class, [
-                'name' => "plugin_resources_employers_id",
-                'value' => $this->fields["plugin_resources_employers_id"],
-                'entity' => $entity
-            ]);
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_1'><td colspan='2' class='center'>";
-            echo Client::getTypeName(1) . "</td>";
-            echo "<td colspan='2'>";
-            Dropdown::show(Client::class, [
-                'name' => "plugin_resources_clients_id",
-                'value' => $this->fields["plugin_resources_clients_id"],
-                'entity' => $entity
-            ]);
-            echo "</td></tr>";
-
-            if ($this->canCreate()) {
-                if ($exist == 0) {
-                    echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-                    echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                    echo "<div class='center'>";
-                    echo Html::submit(
-                        _sx('button', 'Next step', 'resources'),
-                        ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
+                if ($resource->fields["is_leaving"] != 1) {
+                    $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
+                    $buttons_block .= Html::hidden('id', ['value' => $ID]);
+                    $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                    $buttons_block .= "<div class='center'>";
+                    $buttons_block .= Html::submit(
+                        _sx('button', 'Update'),
+                        ['name' => 'updateemployee', 'class' => 'btn btn-primary']
                     );
-                    echo "</td></tr>";
-                } elseif (empty($ID)) {
-                    echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-                    echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                    echo Html::submit(
-                        _sx('button', 'Add'),
-                        ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
-                    );
-                    echo "</td></tr>";
-                } else {
-                    if ($resource->fields["is_leaving"] != 1) {
-                        echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-                        echo Html::hidden('id', ['value' => $ID]);
-                        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                        echo "<div class='center'>";
-                        echo Html::submit(
-                            _sx('button', 'Update'),
-                            ['name' => 'updateemployee', 'class' => 'btn btn-primary']
-                        );
-                        echo "</div>";
-                        echo "</td></tr>";
-                    }
+                    $buttons_block .= "</div>";
+                    $buttons_block .= "</td></tr>";
                 }
             }
-
-            echo "</table>";
-            Html::closeForm();
-            echo "</div>";
         }
+
+        TemplateRenderer::getInstance()->display('@resources/employee_helpdesk_form.html.twig', [
+            'form_action'         => $form_action,
+            'hidden_resources_id' => Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]),
+            'title'               => self::getTypeName(1),
+            'label_employer'      => Employer::getTypeName(1),
+            'employer_dropdown'   => $employer_dropdown,
+            'label_client'        => Client::getTypeName(1),
+            'client_dropdown'     => $client_dropdown,
+            'buttons_block'       => $buttons_block,
+        ]);
+
+        return true;
     }
 
     /**

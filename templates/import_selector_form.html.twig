@@ -1,0 +1,27 @@
+{#
+ # File / import selector form (resources plugin, ImportResource).
+ #
+ # A single dropdown cell followed by one or more submit buttons. The dropdown
+ # is pre-rendered by PHP and injected with |raw; button labels are auto-escaped.
+ # The <form> carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action : string   target URL
+ #   dropdown    : string   pre-rendered dropdown widget
+ #   buttons     : array of { name, label }
+ #}
+<form name="file-selector" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table>
+            <tr>
+                <td>{{ dropdown|raw }}</td>
+                {% for btn in buttons %}
+                    <td>
+                        <button type="submit" name="{{ btn.name }}" class="btn btn-primary">{{ btn.label }}</button>
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+</form>

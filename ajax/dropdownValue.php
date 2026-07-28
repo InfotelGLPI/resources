@@ -319,7 +319,11 @@ if ($item instanceof CommonTreeDropdown) {
                                     }
                                     $output2 = $item->getName();
                                     if (Toolbox::strlen($output2) > $_GET["limit"]) {
-                                        $output2 = Toolbox::substr($output2, 0, $_GET["limit"]) . "&hellip;";
+                                        // Escape the DB-derived label (stored XSS guard); the
+                                        // appended entity marker below is a safe literal.
+                                        $output2 = htmlescape(Toolbox::substr($output2, 0, $_GET["limit"])) . "&hellip;";
+                                    } else {
+                                        $output2 = htmlescape($output2);
                                     }
 
                                     $class2 = " class='tree' ";
@@ -355,11 +359,17 @@ if ($item instanceof CommonTreeDropdown) {
                 }
 
                 if (Toolbox::strlen($output) > $_GET["limit"]) {
+                    // Truncate on the raw text (correct character boundaries), then escape
+                    // the DB-derived label; the "&hellip;" marker is a safe literal.
                     if ($_SESSION['glpiuse_flat_dropdowntree']) {
-                        $output = "&hellip;" . Toolbox::substr($output, -$_GET["limit"]);
+                        $output = "&hellip;" . htmlescape(Toolbox::substr($output, -$_GET["limit"]));
                     } else {
-                        $output = Toolbox::substr($output, 0, $_GET["limit"]) . "&hellip;";
+                        $output = htmlescape(Toolbox::substr($output, 0, $_GET["limit"])) . "&hellip;";
                     }
+                } else {
+                    // Escape the DB-derived visible option text (stored XSS guard); the title
+                    // attribute above is already escaped.
+                    $output = htmlescape($output);
                 }
 
                 if ($_SESSION["glpiis_ids_visible"] || Toolbox::strlen($output) == 0) {
@@ -502,8 +512,10 @@ if ($item instanceof CommonTreeDropdown) {
                     echo "<optgroup label=\"" . Dropdown::getDropdownName("glpi_entities", $prev) . "\">";
                 }
 
+                // Escape the DB-derived visible option text (stored XSS guard); the title
+                // attribute is already escaped.
                 echo "<option value='$ID' title=\"" . htmlescape($output . $addcomment) . "\">" .
-                    Toolbox::substr($output, 0, $_GET["limit"]) . "</option>";
+                    htmlescape(Toolbox::substr($output, 0, $_GET["limit"])) . "</option>";
             }
 
             if ($multi) {

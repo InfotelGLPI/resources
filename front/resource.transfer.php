@@ -58,7 +58,7 @@ if (isset($_POST["transferresources"])) {
         Html::back();
     }
 } else {
-    if ($resource->canView() || Session::haveRight("config", "w")) {
+    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
         //show remove resource form
         $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
     }

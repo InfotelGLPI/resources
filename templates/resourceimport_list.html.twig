@@ -1,0 +1,36 @@
+{#
+ # Imported values list (resources plugin, ResourceImport::showImportResources).
+ #
+ # Read-only card listing the name/value pairs imported for a resource. The
+ # values come from imported CSV data, so they are rendered with Twig's default
+ # auto-escaping (never |raw) to neutralise any stored markup.
+ #
+ # Expected data:
+ #   title       : string
+ #   label_name  : string
+ #   label_value : string
+ #   rows        : array of { name, value }
+ #}
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th colspan="2">{{ title }}</th>
+                </tr>
+                <tr>
+                    <th>{{ label_name }}</th>
+                    <th>{{ label_value }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

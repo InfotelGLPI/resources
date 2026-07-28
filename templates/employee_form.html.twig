@@ -1,0 +1,64 @@
+{#
+ # Employee edit form (resources plugin, Employee::showEmployeeForm).
+ #
+ # GLPI widgets (employer/client dropdowns, the action buttons cell) are
+ # pre-rendered by PHP and injected with |raw. Plain labels are auto-escaped.
+ # The <form>/CSRF token are only emitted outside template mode (show_form).
+ #
+ # Expected data:
+ #   show_form           : bool
+ #   form_action         : string
+ #   hidden_resources_id : string   pre-rendered hidden input
+ #   title               : string
+ #   show_created_note   : bool
+ #   created_note        : string
+ #   label_employer      : string
+ #   employer_dropdown   : string   pre-rendered widget
+ #   label_address       : string
+ #   address_html        : string
+ #   label_client        : string
+ #   client_dropdown     : string   pre-rendered widget
+ #   compliance_color    : string   inline style
+ #   compliance_label    : string
+ #   compliance_img      : string   trusted GLPI icon markup
+ #   buttons_cell        : string   pre-rendered action buttons (may be empty)
+ #}
+<div class="center">
+    {% if show_form %}
+        <form method="post" action="{{ form_action }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    {% endif %}
+    <table class="tab_cadre_fixe">
+        <tr>
+            <th colspan="4">{{ title }}</th>
+        </tr>
+        {% if show_created_note %}
+            <tr class="tab_bg_1">
+                <td colspan="4" class="center">{{ created_note }}</td>
+            </tr>
+        {% endif %}
+        <tr class="tab_bg_1">
+            <td colspan="2" class="center">{{ hidden_resources_id|raw }}{{ label_employer }}</td>
+            <td colspan="2">{{ employer_dropdown|raw }}</td>
+        </tr>
+        <tr class="tab_bg_1">
+            <td colspan="2" class="center">{{ label_address }}</td>
+            <td colspan="2"><span id="span_location" name="span_location">{{ address_html }}</span></td>
+        </tr>
+        <tr class="tab_bg_1">
+            <td colspan="2" class="center">{{ label_client }}</td>
+            <td>{{ client_dropdown|raw }}</td>
+            <td>
+                <div id="security_compliance">
+                    <span style="{{ compliance_color }}">{{ compliance_label }}&nbsp;{{ compliance_img|raw }}</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="tab_bg_2 top" colspan="4">{{ buttons_cell|raw }}</td>
+        </tr>
+    </table>
+    {% if show_form %}
+        </form>
+    {% endif %}
+</div>

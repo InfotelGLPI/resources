@@ -1,0 +1,30 @@
+{#
+ # Change-action setup form (resources plugin, Resource_Change::showFormActions).
+ #
+ # The action cell (label + dropdown + the AJAX reload <script> that depends on
+ # the dropdown's rand) is pre-rendered by PHP and injected with |raw. The two
+ # empty cells are AJAX targets filled client-side. The <form> carries the GLPI
+ # CSRF token.
+ #
+ # Expected data:
+ #   form_action : string   target URL
+ #   alert_text  : string   warning banner text
+ #   title       : string   panel header
+ #   action_cell : string   pre-rendered label + dropdown + script
+ #}
+<div class="alert alert-warning">{{ alert_text }}</div>
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th colspan="3">{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_1">
+                <td class="center">{{ action_cell|raw }}</td>
+                <td class="center" id="plugin_resources_entity_itil_categories"></td>
+                <td class="center" id="plugin_resources_button_add"></td>
+            </tr>
+        </table>
+    </div>
+</form>

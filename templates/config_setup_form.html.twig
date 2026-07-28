@@ -1,0 +1,46 @@
+{#
+ # Generic resources configuration setup form (Config tab panels).
+ #
+ # Every panel (wizard, workflow, other, metademands) shares the same layout:
+ # a single <table> of label / widget rows plus an "Update" submit. GLPI widgets
+ # (dropdowns, textareas, hidden inputs) are pre-rendered by PHP and injected
+ # with |raw. Labels and warnings are trusted translated strings (they may embed
+ # markup such as <br> or a modal trigger link) and carry no user input, so they
+ # are injected with |raw too. The <form> carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action : string      target URL
+ #   title       : string      panel header
+ #   rows        : array of { label, widget, warning? }
+ #   extra_html  : string?     optional markup rendered inside the form (e.g. a modal)
+ #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        {% if extra_html is defined and extra_html is not empty %}
+            {{ extra_html|raw }}
+        {% endif %}
+        <table class="tab_cadre_fixe">
+            <tr class="tab_bg_1">
+                <th colspan="3">{{ title }}</th>
+            </tr>
+            {% for row in rows %}
+                <tr class="tab_bg_1">
+                    <td>{{ row.label|raw }}</td>
+                    <td>{{ row.widget|raw }}</td>
+                    {% if row.warning is defined and row.warning is not empty %}
+                        <td><span class="alert alert-warning">{{ row.warning|raw }}</span></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            <tr>
+                <td class="tab_bg_2 center" colspan="3">
+                    <input type="hidden" name="id" value="1">
+                    <button type="submit" name="update_setup" class="btn btn-primary">
+                        {{ _x('button', 'Update') }}
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

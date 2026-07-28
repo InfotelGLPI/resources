@@ -1,0 +1,38 @@
+{#
+ # Checklist item edit rows (resources plugin, Checklist::showForm).
+ #
+ # Rendered between showFormHeader() and showFormButtons(), so it only emits the
+ # <tr> rows (the surrounding <form>/<table> and CSRF token are handled by the
+ # form header/footer helpers). GLPI widgets (inputs, yes/no dropdown, textarea)
+ # are pre-rendered by PHP and injected with |raw; labels are auto-escaped.
+ #
+ # Expected data:
+ #   hidden_fields         : string   pre-rendered hidden inputs
+ #   label_name            : string
+ #   name_input            : string   Html::input widget
+ #   label_important       : string
+ #   tag_dropdown          : string   Dropdown::showYesNo widget
+ #   label_link            : string
+ #   address_input         : string   Html::input widget
+ #   label_description     : string
+ #   description_textarea  : string   Html::textarea widget
+ #}
+{{ hidden_fields|raw }}
+<tr class="tab_bg_1">
+    <td>{{ label_name }}</td>
+    <td>{{ name_input|raw }}</td>
+    <td>{{ label_important }}</td>
+    <td>{{ tag_dropdown|raw }}</td>
+</tr>
+<tr class="tab_bg_1">
+    <td>{{ label_link }}</td>
+    <td>{{ address_input|raw }}</td>
+    <td></td>
+    <td></td>
+</tr>
+<tr class="tab_bg_1">
+    <td class="left" colspan="4">
+        {{ label_description }}<br>
+        {{ description_textarea|raw }}
+    </td>
+</tr>

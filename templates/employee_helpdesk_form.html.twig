@@ -1,0 +1,39 @@
+{#
+ # Employee helpdesk form (resources plugin, Employee::showFormHelpdesk).
+ #
+ # The <form> is always emitted here (simplified interface). GLPI dropdowns and
+ # the conditional action buttons are pre-rendered by PHP and injected with |raw;
+ # the captured button block already carries its own <tr>/<td> wrapper. Plain
+ # labels are auto-escaped. The form carries the GLPI CSRF token.
+ #
+ # Expected data:
+ #   form_action         : string
+ #   hidden_resources_id : string   pre-rendered hidden input
+ #   title               : string
+ #   label_employer      : string
+ #   employer_dropdown   : string   pre-rendered widget
+ #   label_client        : string
+ #   client_dropdown     : string   pre-rendered widget
+ #   buttons_block       : string   pre-rendered <tr> action row (may be empty)
+ #}
+<div class="center">
+    <br>
+    <form method="post" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        {{ hidden_resources_id|raw }}
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th colspan="4">{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_1">
+                <td colspan="2" class="center">{{ label_employer }}</td>
+                <td colspan="2">{{ employer_dropdown|raw }}</td>
+            </tr>
+            <tr class="tab_bg_1">
+                <td colspan="2" class="center">{{ label_client }}</td>
+                <td colspan="2">{{ client_dropdown|raw }}</td>
+            </tr>
+            {{ buttons_block|raw }}
+        </table>
+    </form>
+</div>

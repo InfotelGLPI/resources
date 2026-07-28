@@ -33,6 +33,7 @@ use CommonDBChild;
 use CommonGLPI;
 use DBConnection;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Migration;
 
@@ -284,29 +285,12 @@ class ResourceImport extends CommonDBChild
             'plugin_resources_resources_id' => $item->getID()
         ]);
 
-        echo "<div align='central'>";
-
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>" . __("Imported values", 'resources') . "</tr>";
-        echo "<tr>";
-        echo "<th>" . __("Name") . "</th>";
-        echo "<th>" . __("Value") . "</th>";
-        echo "</tr>";
-
-        foreach ($resourceImports as $resourceImport) {
-            echo "<tr>";
-            echo "<td style='text-align:center'>";
-            echo $resourceImport['name'];
-            echo "</td>";
-            echo "<td style='text-align:center'>";
-            echo $resourceImport['value'];
-            echo "</td>";
-            echo "<tr>";
-        }
-
-        echo "</table>";
-
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/resourceimport_list.html.twig', [
+            'title'       => __("Imported values", 'resources'),
+            'label_name'  => __("Name"),
+            'label_value' => __("Value"),
+            'rows'        => $resourceImports,
+        ]);
     }
 
     public static function install(Migration $migration)
