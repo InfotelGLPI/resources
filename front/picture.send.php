@@ -38,6 +38,26 @@ if (isset($_GET["file"])) {
     if ($file === false || strpos($file, $base_dir . DIRECTORY_SEPARATOR) !== 0) {
         throw new AccessDeniedHttpException();
     }
+
+    // Directory traversal is blocked above, but the file name is derived
+    // deterministically from the employee identity (name_firstname.jpg), so it is
+    // trivially enumerable. Authorization must match the rest of the plugin:
+    // resolve the resource that owns this picture and enforce the business right
+    // AND the entity scope through ->can(id, READ). Several resources may share the
+    // same picture (homonyms overwrite each other), so allow access as soon as the
+    // current user is entitled to at least one of them.
+    $resource = new Resource();
+    $granted  = false;
+    foreach ($resource->find(['picture' => basename($file)]) as $row) {
+        if ($resource->can($row['id'], READ)) {
+            $granted = true;
+            break;
+        }
+    }
+    if (!$granted) {
+        throw new AccessDeniedHttpException();
+    }
+
     Resource::sendFile($file, basename($file));
 } else {
     throw new AccessDeniedHttpException();

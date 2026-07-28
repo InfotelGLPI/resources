@@ -29,6 +29,10 @@
 
 use GlpiPlugin\Resources\Config;
 
+// This endpoint exposes the full notification variable catalog; gate it behind the
+// plugin read right like every other resources endpoint (was reachable unauthenticated).
+Session::checkRight('plugin_resources', READ);
+
 echo '<div>
 
 <table>

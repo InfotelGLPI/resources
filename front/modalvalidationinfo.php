@@ -27,6 +27,10 @@
  --------------------------------------------------------------------------
  */
 
+// Static validation prompt, also shown in the simplified (helpdesk) interface:
+// require authentication for consistency without gating behind the plugin right.
+Session::checkLoginUser();
+
 echo '<div >'.  __('Do you verify all the information listed on this resource?', 'resources') .'</div><br><br>';
 echo Html::submit(
     __('Validate', 'resources'),
