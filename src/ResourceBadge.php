@@ -50,6 +50,7 @@ use Ticket;
 use TicketTemplate;
 use TicketTemplatePredefinedField;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -176,33 +177,28 @@ class ResourceBadge extends CommonDBTM
         $canedit = $this->canCreate();
 
         if ($canedit) {
+            $tpl = ['already_linked' => $is_present];
             if ($is_present) {
-                echo "<div class='center'>";
-                __('The current entity is already linked to a meta-demand', 'resources');
-                echo "</div>";
+                $tpl['already_linked_message'] = __('The current entity is already linked to a meta-demand', 'resources');
             } else {
-                //form to choose the metademand
-                echo "<form name='form' method='post' action='" .
-                    Toolbox::getItemTypeFormURL(ResourceBadge::class) . "'>";
-
-                echo "<div class='center'><table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th>" . Metademand_Resource::getTypeName(1) . "</th></tr>";
-                echo "<tr class='tab_bg_1'><td class='center'>";
-                echo Metademand::getTypeName(1) . '&nbsp;';
+                // Capture the GLPI meta-demand dropdown as an HTML fragment for the template.
+                ob_start();
                 Dropdown::show(Metademand::class, [
                     'name' => 'plugin_metademands_metademands_id',
                     'used' => $used_data,
                     'entity' => $_SESSION['glpiactive_entity']
                 ]);
-                echo "</td></tr>";
-                echo "<tr class='tab_bg_1'><td class='tab_bg_2 center'>";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'add_metademand', 'class' => 'btn btn-primary']);
-                echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
+                $metademand_dropdown = ob_get_clean();
 
-                echo "</td></tr>";
-                echo "</table></div>";
-                Html::closeForm();
+                $tpl += [
+                    'form_action'         => Toolbox::getItemTypeFormURL(ResourceBadge::class),
+                    'title'               => Metademand_Resource::getTypeName(1),
+                    'metademand_label'    => Metademand::getTypeName(1),
+                    'metademand_dropdown' => $metademand_dropdown,
+                    'entities_id'         => $_SESSION['glpiactive_entity'],
+                ];
             }
+            TemplateRenderer::getInstance()->display('@resources/resourcebadge_form.html.twig', $tpl);
         }
         //list metademands
         $this->listItems($data, $canedit);
@@ -301,74 +297,50 @@ class ResourceBadge extends CommonDBTM
      */
     function showWizardForm()
     {
+        // Capture the wizard header and the resource dropdown as HTML fragments; keep the
+        // dropdown rand to wire the AJAX loader script to its change event.
+        ob_start();
+        Wizard::WizardHeader(__('Badge restitution', 'resources'));
+        $wizard_header = ob_get_clean();
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Badge restitution', 'resources');
-        Wizard::WizardHeader($title);
-
-        echo "<div class='card-body'>";
-
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php\">";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Resource::getTypeName(1);
-        echo "</div>";
-
-        echo "<div class='col-md-4 mb-2'>";
+        ob_start();
         $rand = Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'display' => true,
             'on_change' => 'plugin_resources_load_badge()',
             'entity' => $_SESSION['glpiactiveentities']
         ]);
+        $resource_dropdown = ob_get_clean();
 
         //display list of badges
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_badge(){";
         $params = ['action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
+        $load_badge = Ajax::updateItemJsCode(
             'plugin_resources_badge',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
             $params,
-            'dropdown_plugin_resources_resources_id' . $rand
+            'dropdown_plugin_resources_resources_id' . $rand,
+            false
         );
-        echo ";";
         $params = ['action' => 'cleanButtonRestitution'];
-        Ajax::updateItemJsCode(
+        $clean_button = Ajax::updateItemJsCode(
             'plugin_resources_button_restitution',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
             $params,
-            'dropdown_plugin_resources_resources_id' . $rand
+            'dropdown_plugin_resources_resources_id' . $rand,
+            false
         );
-        echo "}";
+        $load_script = "<script type='text/javascript'>function plugin_resources_load_badge(){"
+            . $load_badge . ";" . $clean_button . "}</script>";
 
-        echo "</script>";
-        echo "</div>";
-        echo "</div>";
-
-        //div for badge
-        echo "<div id='plugin_resources_badge'>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-
-        echo "<div class='preview'>";
-        echo "<a href=\"" . PLUGIN_BADGES_WEBDIR . "/front/badge.php\">";
-        echo __('List of badges', 'resources');
-        echo "</a>";
-        echo "</div>";
-
-        echo "<div class='next' id='plugin_resources_button_restitution'>";
-        echo "</div>";
-
-        echo "</div></div>";
-
-        Html::closeForm();
-
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/resourcebadge_wizard.html.twig', [
+            'wizard_header'     => $wizard_header,
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php",
+            'resource_label'    => Resource::getTypeName(1),
+            'resource_dropdown' => $resource_dropdown,
+            'load_script'       => $load_script,
+            'badges_list_url'   => PLUGIN_BADGES_WEBDIR . "/front/badge.php",
+            'badges_list_label' => __('List of badges', 'resources'),
+        ]);
     }
 
     /**

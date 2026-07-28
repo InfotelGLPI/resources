@@ -40,6 +40,7 @@ use Migration;
 use Plugin;
 use Session;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -143,15 +144,12 @@ class ConfigHabilitation extends CommonDBTM
      */
     function showConfigForm()
     {
-        echo "<br>";
-        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
-        echo "<tr class='tab_bg_1'><td class='center'>";
-        echo "<a href=\"./confighabilitation.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
-        echo "</td></tr></table></div>";
-        Html::closeForm();
-        echo "<br>";
+        TemplateRenderer::getInstance()->display('@resources/confighabilitation_config.html.twig', [
+            'form_action' => self::getFormURL(),
+            'title'       => self::getTypeName(2),
+            'link'        => './confighabilitation.form.php?config',
+            'link_label'  => Metademand_Resource::getTypeName(2),
+        ]);
     }
 
     /**
@@ -168,7 +166,7 @@ class ConfigHabilitation extends CommonDBTM
             return false;
         }
 
-        $used_data = [];
+        $used_data     = [];
         $data_entities = $this->find(['entities_id' => $_SESSION['glpiactive_entity']]);
 
         $number_action = count($data_entities);
@@ -181,43 +179,40 @@ class ConfigHabilitation extends CommonDBTM
         $canedit = $this->canCreate();
 
         if ($canedit) {
+            $tpl = ['already_linked' => ($number_action == 2)];
             if ($number_action == 2) {
-                echo "<div class='center'>";
-                __('The current entity is already linked to a meta-demand', 'resources');
-                echo "</div>";
+                $tpl['already_linked_message'] = __('The current entity is already linked to a meta-demand', 'resources');
             } else {
-                //form to choose the metademand
-                echo "<form name='form' method='post' action='" .
-                    Toolbox::getItemTypeFormURL(ConfigHabilitation::class) . "'>";
-
-                echo "<div class='center'><table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th colspan='2'>" . Metademand_Resource::getTypeName(2) . "</th></tr>";
-                echo "<tr class='tab_bg_1'><td class='center'>";
-                echo _n('Action', 'Actions', 1) . '&nbsp;';
+                // Capture the two GLPI dropdowns as HTML fragments for the template.
+                ob_start();
                 Dropdown::showFromArray(
                     'action',
                     [
-                        self::ACTION_ADD => self::getNameAction(self::ACTION_ADD),
-                        self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE)
+                        self::ACTION_ADD    => self::getNameAction(self::ACTION_ADD),
+                        self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE),
                     ],
                     ['used' => $used_data]
                 );
-                echo "</td><td>";
-                echo Metademand::getTypeName(1) . '&nbsp;';
+                $action_dropdown = ob_get_clean();
+
+                ob_start();
                 Dropdown::show(Metademand::class, [
-                    'name' => 'plugin_metademands_metademands_id',
-                    'entity' => $_SESSION['glpiactive_entity']
+                    'name'   => 'plugin_metademands_metademands_id',
+                    'entity' => $_SESSION['glpiactive_entity'],
                 ]);
-                echo "</td></tr>";
+                $metademand_dropdown = ob_get_clean();
 
-                echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'add_metademand', 'class' => 'btn btn-primary']);
-                echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
-
-                echo "</td></tr>";
-                echo "</table></div>";
-                Html::closeForm();
+                $tpl += [
+                    'form_action'         => Toolbox::getItemTypeFormURL(ConfigHabilitation::class),
+                    'title'               => Metademand_Resource::getTypeName(2),
+                    'action_label'        => _n('Action', 'Actions', 1),
+                    'action_dropdown'     => $action_dropdown,
+                    'metademand_label'    => Metademand::getTypeName(1),
+                    'metademand_dropdown' => $metademand_dropdown,
+                    'entities_id'         => $_SESSION['glpiactive_entity'],
+                ];
             }
+            TemplateRenderer::getInstance()->display('@resources/confighabilitation_form.html.twig', $tpl);
         }
         //list metademands
         $data = $this->find();

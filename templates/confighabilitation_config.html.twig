@@ -1,0 +1,19 @@
+{#
+ # Link card to the super-habilitation configuration screen (resources plugin).
+ # Static markup only; the link target is a plain relative URL.
+ #}
+<br>
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr><th>{{ title }}</th></tr>
+            <tr class="tab_bg_1">
+                <td class="center">
+                    <a href="{{ link }}">{{ link_label }}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<br>

@@ -3878,7 +3878,7 @@ class Resource extends CommonDBTM
     /**
      * Massive actions to be added
      *
-     * @param type $type
+     * @param $type
      *
      * @return $action
      */
@@ -4191,8 +4191,8 @@ class Resource extends CommonDBTM
     /**
      * Transfer resource
      *
-     * @param type $resources_id
-     * @param type $entities_id
+     * @param  $resources_id
+     * @param  $entities_id
      *
      * @return bool
      */

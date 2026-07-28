@@ -38,6 +38,7 @@ use Html;
 use Migration;
 use Session;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -141,43 +142,32 @@ class TransferEntity extends CommonDBTM
         }
 
         if ($canedit) {
-            echo "<form name='form' method='post' action='$target'>";
-
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='2'>" . self::getTypeName() . "</th></tr>";
-
-            echo "<tr class='tab_bg_1'>";
-            // Dropdown group
-            echo "<td class='center'>";
-            echo __('Entity') . '&nbsp;';
+            // Capture the GLPI entity dropdown and keep its rand to wire the AJAX refresh
+            // of the adjacent group placeholder.
+            ob_start();
             $rand = Dropdown::show(
-                "Entity",
+                'Entity',
                 ['name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()']
             );
-            echo "<script type='text/javascript'>";
-            echo "function entity_group(){";
+            $entity_dropdown = ob_get_clean();
+
             $params = ['action' => 'groupEntity', 'entities_id' => '__VALUE__'];
-            Ajax::updateItemJsCode(
+            $ajax   = Ajax::updateItemJsCode(
                 'entity_group',
                 PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceinfo.php',
                 $params,
-                'dropdown_entities_id' . $rand
+                'dropdown_entities_id' . $rand,
+                false
             );
-            echo "}";
-            echo "</script>";
-            echo "</td>";
-            echo "<td class='center'>";
-            echo "<span id='entity_group'></span>";
-            echo "</td>";
-            echo "</tr>";
+            $entity_group_js = "<script type='text/javascript'>function entity_group(){" . $ajax . "}</script>";
 
-            echo "<tr>";
-            echo "<td class='tab_bg_2 center' colspan='2'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_transferentity', 'class' => 'btn btn-primary']);
-            echo "</td>";
-            echo "</tr>";
-            echo "</table></div>";
-            Html::closeForm();
+            TemplateRenderer::getInstance()->display('@resources/transferentity_config.html.twig', [
+                'form_action'     => $target,
+                'title'           => self::getTypeName(),
+                'entity_label'    => __('Entity'),
+                'entity_dropdown' => $entity_dropdown,
+                'entity_group_js' => $entity_group_js,
+            ]);
         }
         if ($dataEntity) {
             $this->listItems($dataEntity, $canedit);

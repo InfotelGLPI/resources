@@ -37,6 +37,7 @@ use Dropdown;
 use Html;
 use Migration;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -131,54 +132,27 @@ class TicketCategory extends CommonDBTM
      */
     public function showConfigForm()
     {
-        $dbu = new DbUtils();
+        $dbu        = new DbUtils();
         $categories = $dbu->getAllDataFromTable($this->getTable());
 
-        $target = Toolbox::getItemTypeFormURL(Config::class);
-
-        echo "<div class='alert alert-warning'>" ;
-        echo __('Define ticket category from checklist creation', 'resources')
-            . "</span>";
-        echo "</div>";
+        $data = [
+            'form_action'  => Toolbox::getItemTypeFormURL(Config::class),
+            'warning'      => __('Define ticket category from checklist creation', 'resources'),
+            'title'        => __('Category of created tickets', 'resources'),
+            'has_category' => !empty($categories),
+        ];
 
         if (!empty($categories)) {
-            echo "<div class='center'>";
-            echo "<form method='post' action='" . $target . "'>";
-            echo "<table class='tab_cadre_fixe' cellpadding='5'>";
-            echo "<tr>";
-            echo "<th colspan='2'>" . __('Category of created tickets', 'resources') . "</th>";
-            echo "</tr>";
-            $categorie = reset($categories);
-            $ID = $categorie["id"];
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>" . Dropdown::getDropdownName("glpi_itilcategories", $categorie["ticketcategories_id"]) . "</td>";
-            echo "<td class='center'>";
-            echo Html::hidden('id', ['value' => $ID]);
-            echo Html::submit(
-                _sx('button', 'Delete permanently'),
-                ['name' => 'delete_ticket', 'class' => 'btn btn-primary']
-            );
-            echo "</td>";
-            echo "</tr>";
-
-            echo "</table>";
-            Html::closeForm();
-            echo "</div>";
+            $category              = reset($categories);
+            $data['id']            = $category['id'];
+            $data['category_name'] = Dropdown::getDropdownName('glpi_itilcategories', $category['ticketcategories_id']);
         } else {
-            echo "<div class='center'><form method='post'  action='" . $target . "'>";
-            echo "<table class='tab_cadre_fixe' cellpadding='5'><tr ><th colspan='2'>";
-            echo __('Category of created tickets', 'resources') . "</th></tr>";
-            echo "<tr class='tab_bg_1'><td>";
-            Dropdown::show('ITILCategory', ['name' => "ticketcategories_id"]);
-            echo "</td>";
-            echo "<td>";
-            echo "<div class='center'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_ticket', 'class' => 'btn btn-primary']);
-            echo "</div></td></tr>";
-            echo "</table>";
-            Html::closeForm();
-            echo "</div>";
+            ob_start();
+            Dropdown::show('ITILCategory', ['name' => 'ticketcategories_id']);
+            $data['category_dropdown'] = ob_get_clean();
         }
+
+        TemplateRenderer::getInstance()->display('@resources/ticketcategory_config.html.twig', $data);
     }
 
     public static function install(Migration $migration)

@@ -1,0 +1,31 @@
+{#
+ # Transfer-entity add form (resources plugin, Config tab).
+ # The entity dropdown refreshes the adjacent group placeholder through an AJAX call;
+ # the generated dropdown and its companion script are built by GLPI/PHP and injected
+ # with |raw. Plain text is auto-escaped by Twig.
+ #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr><th colspan="2">{{ title }}</th></tr>
+            <tr class="tab_bg_1">
+                <td class="center">
+                    {{ entity_label }}&nbsp;{{ entity_dropdown|raw }}
+                    {{ entity_group_js|raw }}
+                </td>
+                <td class="center">
+                    <span id="entity_group"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="tab_bg_2 center" colspan="2">
+                    <button type="submit" name="add_transferentity" class="btn btn-primary">
+                        <i class="ti ti-plus"></i>
+                        {{ _x('button', 'Add') }}
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

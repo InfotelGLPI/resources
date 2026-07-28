@@ -1,0 +1,43 @@
+{#
+ # Ticket-category configuration tab for the resources plugin.
+ # Lets the administrator pick the ITIL category assigned to tickets created from a
+ # checklist. Two states: a category is already configured (offer to remove it) or
+ # none is set yet (offer to add one). The category dropdown is produced by GLPI and
+ # injected with |raw; all plain text is auto-escaped by Twig.
+ #}
+<div class="alert alert-warning">
+    {{ warning }}
+</div>
+
+<div class="center">
+    <form method="post" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        <table class="tab_cadre_fixe" cellpadding="5">
+            <tr><th colspan="2">{{ title }}</th></tr>
+            {% if has_category %}
+                <tr class="tab_bg_1">
+                    <td>{{ category_name }}</td>
+                    <td class="center">
+                        <input type="hidden" name="id" value="{{ id }}">
+                        <button type="submit" name="delete_ticket" class="btn btn-primary">
+                            <i class="ti ti-trash"></i>
+                            {{ _x('button', 'Delete permanently') }}
+                        </button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="tab_bg_1">
+                    <td>{{ category_dropdown|raw }}</td>
+                    <td>
+                        <div class="center">
+                            <button type="submit" name="add_ticket" class="btn btn-primary">
+                                <i class="ti ti-plus"></i>
+                                {{ _x('button', 'Add') }}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </form>
+</div>

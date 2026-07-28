@@ -1,0 +1,33 @@
+{#
+ # Field rows for the checklist-setup item form (resources plugin).
+ # Rendered between showFormHeader() and showFormButtons(), which provide the <form>
+ # wrapper (with the GLPI CSRF token) and the surrounding <table>. GLPI widgets
+ # (dropdowns, inputs, the AJAX linked-items script) are injected with |raw; plain
+ # text is auto-escaped by Twig.
+ #}
+<tr class="tab_bg_1">
+    <td>{{ label_name }}</td>
+    <td>{{ name_field|raw }}</td>
+    <td>{{ label_important }}</td>
+    <td>{{ tag_dropdown|raw }}</td>
+</tr>
+<tr class="tab_bg_1">
+    <td>{{ label_link }}</td>
+    <td>{{ address_field|raw }}</td>
+    <td></td>
+    <td></td>
+</tr>
+<tr class="tab_bg_1">
+    <td>{{ label_itemtype }}</td>
+    <td>{{ itemtype_dropdown|raw }}</td>
+    <td>{{ label_item }}</td>
+    <td id="linkitems">{{ linkitems_js|raw }}</td>
+</tr>
+<tr class="tab_bg_1">
+    <td colspan="4">
+        <table cellpadding="2" cellspacing="2" border="0">
+            <tr><td>{{ label_description }}</td></tr>
+            <tr><td class="center">{{ comment_field|raw }}</td></tr>
+        </table>
+    </td>
+</tr>

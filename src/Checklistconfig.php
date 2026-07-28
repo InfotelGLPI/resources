@@ -41,6 +41,7 @@ use Rule;
 use RuleAction;
 use RuleCriteria;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -148,102 +149,71 @@ class Checklistconfig extends CommonDBTM
         global $CFG_GLPI;
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
-        $rand = mt_rand();
-        echo "<tr class='tab_bg_1'>";
 
-        echo "<td >" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td>";
-        echo __('Important', 'resources') . "</td><td>";
-        Dropdown::showYesNo("tag", $this->fields["tag"]);
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Link', 'resources') . "</td>";
-        echo "<td>";
-        echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
-        echo "</td>";
-
-        echo "<td></td>";
-        echo "<td></td>";
-
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Itemtype') . "</td>";
-        echo "<td>";
         $types = Resource::getTypes();
+
+        // Capture the GLPI widgets that echo their own HTML so they can be injected
+        // into the Twig row fragment with |raw.
+        ob_start();
         $addrand = Dropdown::showItemTypes(
             'itemtype',
             $types,
-            ["id" => "itemtype", "value" => $this->fields["itemtype"]]
+            ['id' => 'itemtype', 'value' => $this->fields['itemtype']]
         );
-        echo "</td>";
+        $itemtype_dropdown = ob_get_clean();
 
+        ob_start();
+        Dropdown::showYesNo('tag', $this->fields['tag']);
+        $tag_dropdown = ob_get_clean();
 
-        $items = $this->fields["items"];
+        $items = $this->fields['items'];
 
-        echo "<td>" . _n(
-                'Item',
-                'Items',
-                Session::getPluralNumber()
-            ) . "</td>";
-
-        echo "<td id='linkitems'>";
-
-        echo "</td>";
-        Ajax::updateItem(
-            "linkitems",
-            PLUGIN_RESOURCES_WEBDIR . "/ajax/linkItems.php",
+        // Linked-items AJAX: initial load into #linkitems + refresh on itemtype change.
+        // $display = false returns the <script> block instead of echoing it.
+        $linkitems_js = Ajax::updateItem(
+            'linkitems',
+            PLUGIN_RESOURCES_WEBDIR . '/ajax/linkItems.php',
             [
-                'type' => $this->fields["itemtype"],
-                'current_type' => $this->fields["itemtype"],
-                'values' => $items
+                'type'         => $this->fields['itemtype'],
+                'current_type' => $this->fields['itemtype'],
+                'values'       => $items,
             ],
-            true
+            true,
+            false
         );
-        Ajax::updateItemOnSelectEvent(
-            "dropdown_itemtype" . $addrand,
-            "linkitems",
-            PLUGIN_RESOURCES_WEBDIR . "/ajax/linkItems.php",
+        $linkitems_js .= Ajax::updateItemOnSelectEvent(
+            'dropdown_itemtype' . $addrand,
+            'linkitems',
+            PLUGIN_RESOURCES_WEBDIR . '/ajax/linkItems.php',
             [
-                'type' => '__VALUE__',
-                'current_type' => $this->fields["itemtype"],
-                'values' => $items
+                'type'         => '__VALUE__',
+                'current_type' => $this->fields['itemtype'],
+                'values'       => $items,
             ],
-            true
+            false
         );
-        echo "</td>";
 
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td colspan = '4'>";
-        echo "<table cellpadding='2' cellspacing='2' border='0'><tr><td>";
-        echo __('Description') . "</td></tr>";
-        echo "<tr><td class='center'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '125',
-            'rows' => '6',
-            'display' => false,
+        TemplateRenderer::getInstance()->display('@resources/checklistconfig_form.html.twig', [
+            'label_name'        => __('Name'),
+            'name_field'        => Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
+            'label_important'   => __('Important', 'resources'),
+            'tag_dropdown'      => $tag_dropdown,
+            'label_link'        => __('Link', 'resources'),
+            'address_field'     => Html::input('address', ['value' => $this->fields['address'], 'size' => 75]),
+            'label_itemtype'    => __('Itemtype'),
+            'itemtype_dropdown' => $itemtype_dropdown,
+            'label_item'        => _n('Item', 'Items', Session::getPluralNumber()),
+            'linkitems_js'      => $linkitems_js,
+            'label_description' => __('Description'),
+            'comment_field'     => Html::textarea([
+                'name'    => 'comment',
+                'value'   => $this->fields['comment'],
+                'cols'    => '125',
+                'rows'    => '6',
+                'display' => false,
+            ]),
         ]);
-        echo "</textarea>";
-        echo "</td></tr></table>";
-        echo "</td>";
 
-        echo "</tr>";
-
-//      $options['candel'] = false;
         $this->showFormButtons($options);
         return true;
     }

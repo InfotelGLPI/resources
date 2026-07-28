@@ -1,0 +1,28 @@
+{#
+ # Field rows for the report-notification config form (resources plugin).
+ # Rendered between showFormHeader() and showFormButtons(), which provide the <form>
+ # wrapper (with the GLPI CSRF token) and the surrounding <table>. GLPI widgets
+ # (textareas, yes/no dropdowns, hidden input) are injected with |raw; plain text
+ # is auto-escaped by Twig.
+ #}
+{{ resource_hidden|raw }}
+<tr class="tab_bg_1">
+    <td>{{ label_comments }}</td>
+    <td>{{ comment_field|raw }}</td>
+</tr>
+<tr class="tab_bg_1">
+    <td>{{ label_information }}</td>
+    <td>{{ information_field|raw }}</td>
+</tr>
+<tr class="tab_bg_2">
+    <td>{{ label_send_report }}</td>
+    <td>{{ send_report_dropdown|raw }}</td>
+</tr>
+<tr class="tab_bg_2">
+    <td>{{ label_send_transfer }}</td>
+    <td>{{ send_transfer_dropdown|raw }}</td>
+</tr>
+<tr class="tab_bg_2">
+    <td>{{ label_send_other }}</td>
+    <td>{{ send_other_dropdown|raw }}</td>
+</tr>

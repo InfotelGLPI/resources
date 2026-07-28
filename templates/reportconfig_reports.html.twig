@@ -1,0 +1,60 @@
+{#
+ # Existing report-notification config (resources plugin), shown on a resource.
+ # When editable (show_form) the table is wrapped in a POST <form> carrying the GLPI
+ # CSRF token and the save/delete buttons. GLPI widgets (textareas, yes/no dropdowns,
+ # hidden inputs) are injected with |raw; plain text is auto-escaped by Twig.
+ #}
+{% if show_form %}
+    <form method="post" name="form_reports{{ rand }}" id="form_reports{{ rand }}" action="./reportconfig.form.php">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+{% endif %}
+        <div class="center">
+            <table class="tab_cadre_fixe">
+                <tr><th colspan="2">{{ title }}</th></tr>
+                {% for report in reports %}
+                    <tr class="tab_bg_1">
+                        <td>{{ label_comments }}</td>
+                        <td>{{ report.comment_field|raw }}</td>
+                    </tr>
+                    <tr class="tab_bg_1">
+                        <td>{{ label_information }}</td>
+                        <td>{{ report.information_field|raw }}</td>
+                    </tr>
+                    <tr class="tab_bg_2">
+                        <td>{{ label_send_report }}</td>
+                        <td>{{ report.send_report_dropdown|raw }}</td>
+                    </tr>
+                    <tr class="tab_bg_2">
+                        <td>{{ label_send_transfer }}</td>
+                        <td>{{ report.send_transfer_dropdown|raw }}</td>
+                    </tr>
+                    <tr class="tab_bg_2">
+                        <td>{{ label_send_other }}</td>
+                        <td>{{ report.send_other_dropdown|raw }}</td>
+                    </tr>
+                    {% if show_buttons %}
+                        <tr class="tab_bg_1 center">
+                            <td colspan="2">
+                                <button type="submit" name="update" class="btn btn-primary">
+                                    <i class="ti ti-device-floppy"></i>
+                                    {{ _x('button', 'Save') }}
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="tab_bg_1 center">
+                            <td colspan="2" class="right">
+                                {{ report.id_hidden|raw }}
+                                {{ report.resource_hidden|raw }}
+                                <button type="submit" name="delete" class="btn btn-primary">
+                                    <i class="ti ti-trash"></i>
+                                    {{ _x('button', 'Delete permanently') }}
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+{% if show_form %}
+    </form>
+{% endif %}

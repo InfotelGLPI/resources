@@ -1,0 +1,31 @@
+{#
+ # Super-habilitation add form (resources plugin, Config tab).
+ # When the current entity already has both add/delete meta-demands linked, only an
+ # informational message is shown; otherwise a two-dropdown form is offered. The
+ # dropdowns are produced by GLPI and injected with |raw; plain text is auto-escaped.
+ #}
+{% if already_linked %}
+    <div class="center">{{ already_linked_message }}</div>
+{% else %}
+    <form name="form" method="post" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        <div class="center">
+            <table class="tab_cadre_fixe">
+                <tr class="tab_bg_1"><th colspan="2">{{ title }}</th></tr>
+                <tr class="tab_bg_1">
+                    <td class="center">{{ action_label }}&nbsp;{{ action_dropdown|raw }}</td>
+                    <td>{{ metademand_label }}&nbsp;{{ metademand_dropdown|raw }}</td>
+                </tr>
+                <tr class="tab_bg_1">
+                    <td colspan="2" class="tab_bg_2 center">
+                        <button type="submit" name="add_metademand" class="btn btn-primary">
+                            <i class="ti ti-plus"></i>
+                            {{ _x('button', 'Add') }}
+                        </button>
+                        <input type="hidden" name="entities_id" value="{{ entities_id }}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+{% endif %}

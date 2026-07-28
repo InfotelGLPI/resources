@@ -1,0 +1,30 @@
+{#
+ # Badge / meta-demand link form (resources plugin, Config tab).
+ # When the current entity is already linked, only a message is shown; otherwise a POST
+ # form carrying the GLPI CSRF token lets the user pick a meta-demand. The GLPI dropdown
+ # is built by PHP and injected with |raw; plain text is auto-escaped by Twig.
+ #}
+{% if already_linked %}
+    <div class="center">{{ already_linked_message }}</div>
+{% else %}
+    <form name="form" method="post" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        <div class="center">
+            <table class="tab_cadre_fixe">
+                <tr class="tab_bg_1"><th>{{ title }}</th></tr>
+                <tr class="tab_bg_1">
+                    <td class="center">{{ metademand_label }}&nbsp;{{ metademand_dropdown|raw }}</td>
+                </tr>
+                <tr class="tab_bg_1">
+                    <td class="tab_bg_2 center">
+                        <button type="submit" name="add_metademand" class="btn btn-primary">
+                            <i class="ti ti-plus"></i>
+                            {{ _x('button', 'Add') }}
+                        </button>
+                        <input type="hidden" name="entities_id" value="{{ entities_id }}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+{% endif %}

@@ -37,6 +37,7 @@ use Dropdown;
 use Html;
 use Migration;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -278,60 +279,47 @@ class ReportConfig extends CommonDBTM
         //$this->showTabs($options);
         $this->showFormHeader($options);
 
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Comments');
-        echo "</td>";
-        echo "<td>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '100',
-            'rows' => '6',
-            'display' => false,
-        ]);
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo _n('Information', 'Informations', 2);
-        echo "</td>";
-        echo "<td>";
-        echo Html::textarea([
-            'name' => 'information',
-            'value' => $this->fields["information"],
-            'cols' => '100',
-            'rows' => '6',
-            'display' => false,
-        ]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>";
-        echo __('Send resource creation report notification', 'resources');
-        echo "</td>";
-        echo "<td>";
+        // Capture the GLPI yes/no dropdowns as HTML fragments for the template.
+        ob_start();
         Dropdown::showYesNo('send_report', $this->fields["send_report_notif"]);
-        echo "</td>";
-        echo "</tr>";
+        $send_report_dropdown = ob_get_clean();
 
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>";
-        echo __('Send resource transfer notification', 'resources');
-        echo "</td>";
-        echo "<td>";
+        ob_start();
         Dropdown::showYesNo('send_transfer_notif', $this->fields["send_transfer_notif"]);
-        echo "</td>";
-        echo "</tr>";
+        $send_transfer_dropdown = ob_get_clean();
 
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>";
-        echo __('Send other notification', 'resources');
-        echo "</td>";
-        echo "<td>";
+        ob_start();
         Dropdown::showYesNo('send_report', $this->fields["send_other_notif"]);
-        echo "</td>";
-        echo "</tr>";
+        $send_other_dropdown = ob_get_clean();
+
+        TemplateRenderer::getInstance()->display('@resources/reportconfig_form.html.twig', [
+            'resource_hidden'        => Html::hidden(
+                'plugin_resources_resources_id',
+                ['value' => $plugin_resources_resources_id]
+            ),
+            'label_comments'         => __('Comments'),
+            'comment_field'          => Html::textarea([
+                'name'    => 'comment',
+                'value'   => $this->fields["comment"],
+                'cols'    => '100',
+                'rows'    => '6',
+                'display' => false,
+            ]),
+            'label_information'      => _n('Information', 'Informations', 2),
+            'information_field'      => Html::textarea([
+                'name'    => 'information',
+                'value'   => $this->fields["information"],
+                'cols'    => '100',
+                'rows'    => '6',
+                'display' => false,
+            ]),
+            'label_send_report'      => __('Send resource creation report notification', 'resources'),
+            'send_report_dropdown'   => $send_report_dropdown,
+            'label_send_transfer'    => __('Send resource transfer notification', 'resources'),
+            'send_transfer_dropdown' => $send_transfer_dropdown,
+            'label_send_other'       => __('Send other notification', 'resources'),
+            'send_other_dropdown'    => $send_other_dropdown,
+        ]);
 
         $options['candel'] = false;
         $this->showFormButtons($options);
@@ -383,94 +371,63 @@ class ReportConfig extends CommonDBTM
         ]);
         $number = count($iterator);
 
-        $i = 0;
-        $row_num = 1;
         if ($number != "0") {
-            if ($withtemplate < 2) {
-                echo "<form method='post' name='form_reports$rand' id='form_reports$rand' action=\"./reportconfig.form.php\">";
-            }
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='2'>" . __('Notification configuration', 'resources') . "</th></tr>";
+            $show_form    = ($withtemplate < 2);
+            $show_buttons = ($withtemplate < 2 && $canedit);
 
+            $reports = [];
             foreach ($iterator as $data) {
-                $i++;
-                $row_num++;
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Comments') . "</td>";
-                echo "<td>";
-                echo Html::textarea([
-                    'name' => 'comment',
-                    'value' => $data["comment"],
-                    'cols' => '100',
-                    'rows' => '6',
-                    'display' => false,
-                ]);
-                echo "</td></tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . _n('Information', 'Informations', 2) . "</td>";
-                echo "<td>";
-                echo Html::textarea([
-                    'name' => 'information',
-                    'value' => $data["information"],
-                    'cols' => '100',
-                    'rows' => '6',
-                    'display' => false,
-                ]);
-                echo "</td>";
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_2'>";
-                echo "<td>";
-                echo __('Send resource creation report notification', 'resources');
-                echo "</td>";
-                echo "<td>";
+                // Capture the GLPI yes/no dropdowns as HTML fragments for the template.
+                ob_start();
                 Dropdown::showYesNo('send_report_notif', $data["send_report_notif"]);
-                echo "</td>";
-                echo "</tr>";
+                $send_report_dropdown = ob_get_clean();
 
-                echo "<tr class='tab_bg_2'>";
-                echo "<td>";
-                echo __('Send resource transfer notification', 'resources');
-                echo "</td>";
-                echo "<td>";
+                ob_start();
                 Dropdown::showYesNo('send_transfer_notif', $data["send_transfer_notif"]);
-                echo "</td>";
-                echo "</tr>";
+                $send_transfer_dropdown = ob_get_clean();
 
-                echo "<tr class='tab_bg_2'>";
-                echo "<td>";
-                echo __('Send other notification', 'resources');
-                echo "</td>";
-                echo "<td>";
+                ob_start();
                 Dropdown::showYesNo('send_other_notif', $data["send_other_notif"]);
-                echo "</td>";
-                echo "</tr>";
+                $send_other_dropdown = ob_get_clean();
 
-                if ($withtemplate < 2 && $canedit) {
-                    echo "<tr class='tab_bg_1 center'>";
-                    echo "<td colspan='2'>";
-                    echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-                    echo "</td>";
-                    echo "</tr>";
-
-                    echo "<tr class='tab_bg_1 center'>";
-                    echo "<td colspan='2' class='right'>";
-                    echo Html::hidden('id', ['value' => $data["id"]]);
-                    echo Html::hidden('plugin_resources_resources_id', ['value' => $ID]);
-                    echo Html::submit(
-                        _sx('button', 'Delete permanently'),
-                        ['name' => 'delete', 'class' => 'btn btn-primary']
-                    );
-                    echo "</td>";
-                    echo "</tr>";
-                }
+                $reports[] = [
+                    'comment_field'          => Html::textarea([
+                        'name'    => 'comment',
+                        'value'   => $data["comment"],
+                        'cols'    => '100',
+                        'rows'    => '6',
+                        'display' => false,
+                    ]),
+                    'information_field'      => Html::textarea([
+                        'name'    => 'information',
+                        'value'   => $data["information"],
+                        'cols'    => '100',
+                        'rows'    => '6',
+                        'display' => false,
+                    ]),
+                    'send_report_dropdown'   => $send_report_dropdown,
+                    'send_transfer_dropdown' => $send_transfer_dropdown,
+                    'send_other_dropdown'    => $send_other_dropdown,
+                    'id_hidden'              => Html::hidden('id', ['value' => $data["id"]]),
+                    'resource_hidden'        => Html::hidden(
+                        'plugin_resources_resources_id',
+                        ['value' => $ID]
+                    ),
+                ];
             }
 
-            echo "</table></div>";
-
-            if ($withtemplate < 2) {
-                Html::closeForm();
-            }
+            TemplateRenderer::getInstance()->display('@resources/reportconfig_reports.html.twig', [
+                'rand'                => $rand,
+                'show_form'           => $show_form,
+                'show_buttons'        => $show_buttons,
+                'title'               => __('Notification configuration', 'resources'),
+                'label_comments'      => __('Comments'),
+                'label_information'   => _n('Information', 'Informations', 2),
+                'label_send_report'   => __('Send resource creation report notification', 'resources'),
+                'label_send_transfer' => __('Send resource transfer notification', 'resources'),
+                'label_send_other'    => __('Send other notification', 'resources'),
+                'reports'             => $reports,
+            ]);
         }
     }
 

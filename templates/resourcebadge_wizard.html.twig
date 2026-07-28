@@ -1,0 +1,30 @@
+{#
+ # Badge-restitution wizard (resources plugin, helpdesk).
+ # GLPI widgets (wizard header, resource dropdown, AJAX loader script) are built by PHP
+ # and injected with |raw. The <form> carries the GLPI CSRF token. Plain text is
+ # auto-escaped by Twig.
+ #}
+<div class="card container" style="min-width: 80%;">
+    {{ wizard_header|raw }}
+    <div class="card-body">
+        <form method="post" action="{{ form_action }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+            <div class="row">
+                <div class="col-md-4 mb-2">{{ resource_label }}</div>
+                <div class="col-md-4 mb-2">
+                    {{ resource_dropdown|raw }}
+                    {{ load_script|raw }}
+                </div>
+            </div>
+            <div id="plugin_resources_badge"></div>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="preview">
+                        <a href="{{ badges_list_url }}">{{ badges_list_label }}</a>
+                    </div>
+                    <div class="next" id="plugin_resources_button_restitution"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
