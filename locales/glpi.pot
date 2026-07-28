@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-28 09:09+0000\n"
+"POT-Creation-Date: 2026-07-28 19:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -234,7 +234,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: src/Client.php:54 hook.php:1457
+#: src/Client.php:54 hook.php:1462
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] ""
@@ -419,13 +419,13 @@ msgstr[1] ""
 msgid "Budget volume"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:220
-#: report/budgetsummary/budgetsummary.php:451
+#: report/budgetsummary/budgetsummary.php:225
+#: report/budgetsummary/budgetsummary.php:456
 msgid "Budget volume (€)"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:216
-#: report/budgetsummary/budgetsummary.php:432
+#: report/budgetsummary/budgetsummary.php:221
+#: report/budgetsummary/budgetsummary.php:437
 msgid "Budget volume(qty)"
 msgstr ""
 
@@ -923,7 +923,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:1076
 #: src/NotificationTargetResource.php:1660
 #: src/NotificationTargetResource.php:1686 src/Resource.php:523
-#: src/Resource.php:2593 src/RuleContracttypeReadonly.php:289 hook.php:1446
+#: src/Resource.php:2593 src/RuleContracttypeReadonly.php:289 hook.php:1451
 msgid "Declared as leaving"
 msgstr ""
 
@@ -1004,8 +1004,8 @@ msgstr[1] ""
 msgid "Departure date"
 msgstr ""
 
-#: front/resource.remove.php:136 front/resource.form.php:272
-#: front/resource.form.php:570
+#: front/resource.remove.php:136 front/resource.form.php:281
+#: front/resource.form.php:579
 msgid "Departure of"
 msgstr ""
 
@@ -1112,7 +1112,7 @@ msgstr[1] ""
 #: src/Department.php:84 src/Department.php:117 src/Employer.php:58
 #: src/Employment.php:232 src/Employment.php:314
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:99
-#: hook.php:1453
+#: hook.php:1458
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] ""
@@ -1141,13 +1141,13 @@ msgstr[1] ""
 msgid "Employment state at leaving's resource"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:217
-#: report/budgetsummary/budgetsummary.php:438
+#: report/budgetsummary/budgetsummary.php:222
+#: report/budgetsummary/budgetsummary.php:443
 msgid "Employment volume (qty)"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:221
-#: report/budgetsummary/budgetsummary.php:457
+#: report/budgetsummary/budgetsummary.php:226
+#: report/budgetsummary/budgetsummary.php:462
 msgid "Employment volume (€)"
 msgstr ""
 
@@ -1211,11 +1211,11 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: front/wizard.form.php:366
+#: front/wizard.form.php:372
 msgid "Failed to send the file"
 msgstr ""
 
-#: front/wizard.form.php:352
+#: front/wizard.form.php:358
 msgid "Failed to send the file (probably too large)"
 msgstr ""
 
@@ -1457,7 +1457,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:845
 #: src/NotificationTargetResource.php:1060
 #: src/NotificationTargetResource.php:1659
-#: src/NotificationTargetResource.php:1685 src/Resource.php:531 hook.php:1475
+#: src/NotificationTargetResource.php:1685 src/Resource.php:531 hook.php:1480
 msgid "Informant of leaving"
 msgstr ""
 
@@ -1702,7 +1702,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2886
+#: hook.php:2891
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -1876,7 +1876,7 @@ msgid_plural "Non contract periods management"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:2645
+#: hook.php:2650
 msgid "Not defined"
 msgstr ""
 
@@ -1904,7 +1904,7 @@ msgstr ""
 msgid "Notification history"
 msgstr ""
 
-#: front/resource.form.php:424
+#: front/resource.form.php:433
 msgid "Notification sent"
 msgstr ""
 
@@ -1922,11 +1922,11 @@ msgstr ""
 msgid "On needs tab, view parts"
 msgstr ""
 
-#: front/resource.form.php:233
+#: front/resource.form.php:242
 msgid "One or more mandatory fields are empty."
 msgstr ""
 
-#: front/resource.form.php:583 src/Resource_Leaving.php:167
+#: front/resource.form.php:592 src/Resource_Leaving.php:167
 msgid "Order"
 msgstr ""
 
@@ -2115,12 +2115,12 @@ msgstr[1] ""
 msgid "Recruiting information"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:219
+#: report/budgetsummary/budgetsummary.php:224
 msgid "Remaining budget - employment (qty)"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:223
-#: report/budgetsummary/budgetsummary.php:469
+#: report/budgetsummary/budgetsummary.php:228
+#: report/budgetsummary/budgetsummary.php:474
 msgid "Remaining budget - employment (€)"
 msgstr ""
 
@@ -2219,7 +2219,7 @@ msgstr ""
 msgid "Required Fields"
 msgstr ""
 
-#: front/wizard.form.php:113 front/wizard.form.php:397 src/Resource.php:1199
+#: front/wizard.form.php:116 front/wizard.form.php:403 src/Resource.php:1199
 msgid "Required fields are not filled. Please try again."
 msgstr ""
 
@@ -2282,7 +2282,7 @@ msgstr ""
 #: src/Task.php:873 src/Task.php:1301 src/RuleContracttype.php:271
 #: src/RuleContracttypeReadonly.php:186 src/RuleContracttypeReadonly.php:226
 #: src/RuleContracttypeReadonly.php:255 src/RuleContracttypeReadonly.php:305
-#: hook.php:1462 ajax/leavingform.php:114
+#: hook.php:1467 ajax/leavingform.php:114
 #: templates/wizard_secondstep_resource.html.twig:373
 #: templates/wizard_secondstep_resource.html.twig:398
 msgid "Resource manager"
@@ -2310,13 +2310,13 @@ msgstr ""
 msgid "Resource user"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:218
-#: report/budgetsummary/budgetsummary.php:444
+#: report/budgetsummary/budgetsummary.php:223
+#: report/budgetsummary/budgetsummary.php:449
 msgid "Resource volume (qty)"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:222
-#: report/budgetsummary/budgetsummary.php:463
+#: report/budgetsummary/budgetsummary.php:227
+#: report/budgetsummary/budgetsummary.php:468
 msgid "Resource volume (€)"
 msgstr ""
 
@@ -2363,7 +2363,7 @@ msgstr[1] ""
 #: src/NotificationTargetResource.php:997 src/Resource.php:143
 #: src/Resource.php:636 src/Resource.php:2463 src/RuleContracttype.php:275
 #: src/LeavingInformation.php:345 src/LeavingInformation.php:492
-#: src/RuleContracttypeReadonly.php:309 hook.php:1483
+#: src/RuleContracttypeReadonly.php:309 hook.php:1488
 #: templates/wizard_secondstep_resource.html.twig:418
 #: templates/wizard_secondstep_resource.html.twig:443
 #: templates/leavinginformation.html.twig:77
@@ -2657,7 +2657,7 @@ msgstr ""
 msgid "The checklist is finished"
 msgstr ""
 
-#: front/resource.form.php:397
+#: front/resource.form.php:406
 msgid "The checklist is not finished"
 msgstr ""
 
@@ -2687,7 +2687,7 @@ msgstr ""
 msgid "The folder you expected to display content doesn't exist."
 msgstr ""
 
-#: front/resource.form.php:427 src/Resource.php:4459
+#: front/resource.form.php:436 src/Resource.php:4459
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
@@ -2718,15 +2718,15 @@ msgstr ""
 msgid "The selected file doesn't match any configured import"
 msgstr ""
 
-#: front/wizard.form.php:137
+#: front/wizard.form.php:140
 msgid "The start date must be greater than the end date"
 msgstr ""
 
-#: front/wizard.form.php:217
+#: front/wizard.form.php:223
 msgid "There is a problem with resource creation"
 msgstr ""
 
-#: front/wizard.form.php:178
+#: front/wizard.form.php:184
 msgid "There is a right problem"
 msgstr ""
 
@@ -2772,13 +2772,13 @@ msgstr ""
 msgid "To begin, select type of contract"
 msgstr ""
 
-#: src/ImportResource.php:745 report/budgetsummary/budgetsummary.php:432
-#: report/budgetsummary/budgetsummary.php:438
-#: report/budgetsummary/budgetsummary.php:444
-#: report/budgetsummary/budgetsummary.php:451
-#: report/budgetsummary/budgetsummary.php:457
-#: report/budgetsummary/budgetsummary.php:463
-#: report/budgetsummary/budgetsummary.php:469
+#: src/ImportResource.php:745 report/budgetsummary/budgetsummary.php:437
+#: report/budgetsummary/budgetsummary.php:443
+#: report/budgetsummary/budgetsummary.php:449
+#: report/budgetsummary/budgetsummary.php:456
+#: report/budgetsummary/budgetsummary.php:462
+#: report/budgetsummary/budgetsummary.php:468
+#: report/budgetsummary/budgetsummary.php:474
 msgid "Total"
 msgstr ""
 
@@ -2960,8 +2960,8 @@ msgstr ""
 msgid "Wished leaving date"
 msgstr ""
 
-#: front/resource.remove.php:158 front/resource.form.php:281
-#: front/resource.form.php:581 src/ContractType.php:270
+#: front/resource.remove.php:158 front/resource.form.php:290
+#: front/resource.form.php:590 src/ContractType.php:270
 #: src/ContractType.php:290 src/Resource.php:1705
 #: src/Contracttypeprofile.php:93
 msgid "Without contract"
@@ -2993,15 +2993,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: src/LinkAd.php:855 hook.php:2944
+#: src/LinkAd.php:855 hook.php:2949
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:2991
+#: hook.php:2996
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: src/LinkAd.php:853 hook.php:2926 hook.php:2973
+#: src/LinkAd.php:853 hook.php:2931 hook.php:2978
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
@@ -3035,8 +3035,8 @@ msgstr ""
 msgid "given name.name"
 msgstr ""
 
-#: front/resource.remove.php:142 front/resource.form.php:274
-#: front/resource.form.php:574
+#: front/resource.remove.php:142 front/resource.form.php:283
+#: front/resource.form.php:583
 msgid "leave on"
 msgstr ""
 
@@ -3048,7 +3048,7 @@ msgstr ""
 msgid "second level"
 msgstr ""
 
-#: front/linkad.form.php:82 front/resource.form.php:521
+#: front/linkad.form.php:82 front/resource.form.php:530
 msgid "the user has been added to the LDAP directory"
 msgstr ""
 
@@ -3057,11 +3057,11 @@ msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:135 front/resource.remove.php:267
-#: front/resource.form.php:540
+#: front/resource.form.php:549
 msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:85 front/resource.form.php:524
+#: front/linkad.form.php:85 front/resource.form.php:533
 msgid "the user has not been added to the LDAP directory"
 msgstr ""
 
@@ -3070,6 +3070,6 @@ msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:138 front/resource.remove.php:222
-#: front/resource.remove.php:270 front/resource.form.php:543
+#: front/resource.remove.php:270 front/resource.form.php:552
 msgid "the user has not been updated to the LDAP directory"
 msgstr ""
