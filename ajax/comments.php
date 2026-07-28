@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 
@@ -67,9 +68,10 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             break;
 
         default :
-            if ($_REQUEST["value"] > 0) {
-                $tmpname = Dropdown::getDropdownName($_REQUEST["table"], $_REQUEST["value"], 1);
-                echo htmlspecialchars((string) $tmpname["comment"], ENT_QUOTES, 'UTF-8');
-            }
+            // The only table this plugin endpoint legitimately serves is the resources
+            // table handled above (see Resource::dropdown(), which passes getTable()).
+            // Refuse any other client-supplied table so it cannot be used to read the
+            // "comment" column of an arbitrary GLPI table (horizontal info disclosure).
+            throw new BadRequestHttpException();
     }
 }

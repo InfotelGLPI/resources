@@ -224,7 +224,7 @@ if ($report->criteriasValidated()) {
 
     $nbtot = count($dataAll);
     if ($limit) {
-        $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+        $start = (int) ($_GET["start"] ?? 0);
         if ($start >= $nbtot) {
             $start = 0;
         }
@@ -249,7 +249,7 @@ if ($report->criteriasValidated()) {
         echo "<div class='center'><table class='tab_cadre_fixe'>";
         echo "<tr><th>$title</th></tr>\n";
         echo "<tr class='tab_bg_2 center'><td class='center'>";
-        echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+        echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES, 'UTF-8') . "?start=$start'>\n";
 
         $param = "";
         foreach ($_POST as $key => $val) {

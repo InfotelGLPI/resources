@@ -77,15 +77,19 @@ if (isset($_POST["resend"])) {
     //add items needs of a resource
 } elseif (isset($_POST["addhelpdeskitem"])) {
     if ($_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
-        if ($resource->canCreate()) {
-            $choice->addHelpdeskItem($_POST);
-        }
+        // Choices carry no entity of their own: gate right + entity access on the
+        // parent resource (the entity owner) instead of the global create right.
+        $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
+        $choice->addHelpdeskItem($_POST);
     }
     Html::back();
 } //from helpdesk
 //delete items needs of a resource
 elseif (isset($_POST["deletehelpdeskitem"])) {
-    if ($resource->canCreate()) {
+    // Resolve the choice's parent resource and gate right + entity access on it
+    // (the choice itself has no entities_id) before deleting.
+    if ($choice->getFromDB((int) $_POST["id"])) {
+        $resource->check((int) $choice->fields['plugin_resources_resources_id'], UPDATE);
         $choice->delete(['id' => $_POST["id"]]);
     }
     Html::back();
@@ -163,31 +167,36 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     //add employee informations from user details form or resource form
 } elseif (isset($_POST["addemployee"])) {
     if ($_POST['plugin_resources_resources_id'] > 0) {
-        if ($employee->canCreate()) {
-            $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
-            $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
-            $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
-            $newID = $employee->add($values);
-        }
+        // Employees carry no entity of their own: gate right + entity access on the
+        // parent resource before creating the employee record under it.
+        $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+        $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
+        $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
+        $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
+        $newID = $employee->add($values);
     }
     Html::back();
 } //from central OR helpdesk
 //update employee informations from user details form or resource form
 elseif (isset($_POST["updateemployee"])) {
-    if ($_POST['plugin_resources_resources_id'] > 0) {
-        if ($employee->canCreate()) {
-            $values["id"] = $_POST['id'];
-            $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
-            $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
-            $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
-            $employee->update($values);
-        }
+    // Gate on the employee's own parent resource (the entity owner of the record
+    // being modified), not on the global right, to prevent cross-entity IDOR.
+    if ($_POST['plugin_resources_resources_id'] > 0 && $employee->getFromDB((int) $_POST['id'])) {
+        $resource->check((int) $employee->fields['plugin_resources_resources_id'], UPDATE);
+        $values["id"] = $_POST['id'];
+        $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
+        $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
+        $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
+        $employee->update($values);
     }
     Html::back();
 } //from central
 //delete employee informations from user details form or resource form
 elseif (isset($_POST["deleteemployee"])) {
-    if ($employee->canCreate()) {
+    // Resolve the employee's parent resource and gate right + entity access on it
+    // (the employee has no entities_id) before purging.
+    if ($employee->getFromDB((int) $_POST["id"])) {
+        $resource->check((int) $employee->fields['plugin_resources_resources_id'], UPDATE);
         $employee->delete($_POST, 1);
     }
     Html::back();

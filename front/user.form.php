@@ -63,18 +63,19 @@ if (isset($_POST["update"])) {
         if (strpos($key, 'field') > 0 && !is_integer(strpos($key, 'plugin_ldapfields'))) {
             $field = new PluginFieldsField();
             if ($field->getFromDBByCrit(['name' => $key])) {
-                $content .= $field->getField('label') . " : " . $value . '<br />';
+                // Client-supplied value injected into the rich-text solution content: escape it.
+                $content .= $field->getField('label') . " : " . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '<br />';
             }
         } else {
             switch ($key) {
                 case 'phone':
-                    $content .= __('Phone') . " : " . $value . "<br />";
+                    $content .= __('Phone') . " : " . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . "<br />";
                     break;
                 case '_useremails' :
                     if (is_array($value) && !empty($value)) {
                         $content .= _n('Email', 'Emails', 1) . " : ";
                         foreach ($value as $email) {
-                            $content .= $email . "<br />";
+                            $content .= htmlspecialchars((string) $email, ENT_QUOTES, 'UTF-8') . "<br />";
                         }
                     }
                     break;

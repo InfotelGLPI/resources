@@ -65,7 +65,10 @@ if (empty($_POST)) {
 //    $_POST["secondary_services"] = "";
 //}
 
-if (isset($_POST["cancel_request"]) && $resource->canPurge()) {
+if (isset($_POST["cancel_request"])) {
+    // The resource id is client-supplied: enforce entity access on the targeted
+    // record (canPurge() only checks the global right and allows cross-entity IDOR).
+    $resource->check((int) $_POST['plugin_resources_resources_id'], PURGE);
     $resource->delete(['id' => $_POST['plugin_resources_resources_id']], 1);
     Html::back();
 }
@@ -148,6 +151,9 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
             if (isset($_POST["plugin_resources_resources_id"])
                 && $_POST["plugin_resources_resources_id"] > 0) {
+                // Updating an existing resource: canCreate() only checks the global
+                // right, so enforce entity access on the targeted record (anti-IDOR).
+                $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
                 $_POST['id'] = $_POST["plugin_resources_resources_id"];
                 $resource->update($_POST);
                 $newresource = $_POST['plugin_resources_resources_id'];

@@ -102,6 +102,11 @@ if ($report->criteriasValidated()) {
     // SQL statement
     $condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_resources_budgets", '', '', false);
     $date = $datecrit->getDate();
+    // Defense-in-depth: this criterion value is concatenated into the SQL below. Keep only a
+    // well-formed date and bind it via quoteValue() rather than trusting the reports plugin.
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', (string) $date)) {
+        $date = date('Y-m-d');
+    }
     $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
     $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
 
@@ -119,13 +124,13 @@ if ($report->criteriasValidated()) {
                      ON (`glpi_plugin_resources_budgets`.`plugin_resources_professions_id`
                            = `glpi_plugin_resources_professions`.`id`)
              WHERE " . $condition . "
-                  AND (`glpi_plugin_resources_budgets`.`begin_date` <= '" . $date . "'
+                  AND (`glpi_plugin_resources_budgets`.`begin_date` <= " . $DB->quoteValue($date) . "
                      AND (`glpi_plugin_resources_budgets`.`end_date` IS NULL
-                        OR `glpi_plugin_resources_budgets`.`end_date` >= '" . $date . "'))
+                        OR `glpi_plugin_resources_budgets`.`end_date` >= " . $DB->quoteValue($date) . "))
                   AND `glpi_plugin_resources_professions`.`is_active` = 1
-                  AND ((`glpi_plugin_resources_professions`.`begin_date` <= '" . $date . "')
+                  AND ((`glpi_plugin_resources_professions`.`begin_date` <= " . $DB->quoteValue($date) . ")
                      AND (`glpi_plugin_resources_professions`.`end_date` IS NULL
-                        OR `glpi_plugin_resources_professions`.`end_date` >= '" . $date . "')) " .
+                        OR `glpi_plugin_resources_professions`.`end_date` >= " . $DB->quoteValue($date) . ")) " .
         $sqlprofessioncategory . $sqlprofessionline . "
              GROUP BY profession,
                       rank,
@@ -165,7 +170,7 @@ if ($report->criteriasValidated()) {
         echo "<div class='center'><table class='tab_cadre_fixe'>";
         echo "<tr><th>$title</th></tr>\n";
         echo "<tr class='tab_bg_2 center'><td class='center'>";
-        echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+        echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES, 'UTF-8') . "?start=$start'>\n";
 
         $param = "";
         foreach ($_POST as $key => $val) {
@@ -295,9 +300,9 @@ if ($report->criteriasValidated()) {
             if ($data['rank'] != 0) {
                 $calqtvolbudguse .= " AND `glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
                                  AND `glpi_plugin_resources_ranks`.`is_active` = 1
-                                 AND ((`glpi_plugin_resources_ranks`.`begin_date` <= '" . $date . "')
+                                 AND ((`glpi_plugin_resources_ranks`.`begin_date` <= " . $DB->quoteValue($date) . ")
                                     AND (`glpi_plugin_resources_ranks`.`end_date` IS NULL
-                                       OR `glpi_plugin_resources_ranks`.`end_date` >= '" . $date . "'))";
+                                       OR `glpi_plugin_resources_ranks`.`end_date` >= " . $DB->quoteValue($date) . "))";
             }
 
             $result1 = $DB->doQuery($calqtvolbudguse);
@@ -346,9 +351,9 @@ if ($report->criteriasValidated()) {
             if ($data['rank'] != 0) {
                 $calqtvolreal .= " AND `glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
                              AND `glpi_plugin_resources_ranks`.`is_active` = 1
-                             AND ((`glpi_plugin_resources_ranks`.`begin_date` <= '" . $date . "')
+                             AND ((`glpi_plugin_resources_ranks`.`begin_date` <= " . $DB->quoteValue($date) . ")
                                 AND (`glpi_plugin_resources_ranks`.`end_date` IS NULL
-                                    OR `glpi_plugin_resources_ranks`.`end_date` >= '" . $date . "'))";
+                                    OR `glpi_plugin_resources_ranks`.`end_date` >= " . $DB->quoteValue($date) . "))";
             }
 
             $result2 = $DB->doQuery($calqtvolreal);
@@ -382,9 +387,9 @@ if ($report->criteriasValidated()) {
                  FROM `glpi_plugin_resources_costs`
                  WHERE `glpi_plugin_resources_costs`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
                  AND `glpi_plugin_resources_costs`.`plugin_resources_professions_id` = '" . $data['profession'] . "'
-                 AND (`begin_date` <= '" . $date . "'
+                 AND (`begin_date` <= " . $DB->quoteValue($date) . "
                  AND (`end_date` IS NULL
-                        OR `end_date` >= '" . $date . "'))";
+                        OR `end_date` >= " . $DB->quoteValue($date) . "))";
 
             $result3 = $DB->doQuery($query3);
             $data3 = $DB->fetchArray($result3);

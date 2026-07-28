@@ -51,6 +51,11 @@ if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["pl
             PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id']
         );
     } else {
+        // Enforce authorization before mutating: the current user must hold the plugin
+        // UPDATE right and have access to the target resource's entity. Without this any
+        // authenticated user could change an arbitrary resource across entities (IDOR).
+        // Mirrors the guard already present in resource.transfer.php / resource.remove.php.
+        $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
         $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
         Html::back();
     }

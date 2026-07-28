@@ -147,7 +147,7 @@ while ($data = $DB->fetchAssoc($result_resource_user)) {
 
 $nbtot = count($dataAll);
 if ($limit) {
-    $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+    $start = (int) ($_GET["start"] ?? 0);
     if ($start >= $nbtot) {
         $start = 0;
     }
@@ -172,7 +172,7 @@ if ($nbtot == 0) {
     echo "<div class='center'><table class='tab_cadre_fixe'>";
     echo "<tr><th>$title</th></tr>\n";
     echo "<tr class='tab_bg_2 center'><td class='center'>";
-    echo "<form method='POST' action='" . $_SERVER["PHP_SELF"] . "?start=$start'>\n";
+    echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES, 'UTF-8') . "?start=$start'>\n";
 
     $param = "";
     foreach ($_POST as $key => $val) {
@@ -243,12 +243,15 @@ if ($nbtot > 0) {
             $key
         );
         echo Search::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
-        echo Search::showItem($output_type, implode('<br>', $data['habilitations']), $num, $key);
+        // Escape raw DB values (habilitation labels, user login) before output: GLPI 10+
+        // stores them unencoded, so a crafted label would otherwise run as HTML.
+        $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+        echo Search::showItem($output_type, implode('<br>', array_map($escape, $data['habilitations'])), $num, $key);
         $user = new User();
         $user->getFromDB($data['users_id']);
         echo Search::showItem($output_type, $user->getLink(), $num, $key);
-        echo Search::showItem($output_type, $user->getField('name'), $num, $key);
-        echo Search::showItem($output_type, implode('<br>', $data['diff']), $num, $key);
+        echo Search::showItem($output_type, $escape($user->getField('name')), $num, $key);
+        echo Search::showItem($output_type, implode('<br>', array_map($escape, $data['diff'])), $num, $key);
 
         echo Search::showEndLine($output_type);
     }

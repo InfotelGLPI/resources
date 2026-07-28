@@ -358,7 +358,7 @@ function plugin_resources_install()
                     $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
                             SET `completename`= '" . $data["name"] . "'
                             WHERE `id`= '" . $data["id"] . "'";
-                    $DB->doQuery($queryUpdate) or die($DB->error());
+                    $DB->doQuery($queryUpdate);
                 }
             }
         }
@@ -450,14 +450,14 @@ function plugin_resources_install()
         if ($DB->tableExists("glpi_plugin_resources_teams")
             && !$DB->fieldExists("glpi_plugin_resources_teams", "users_id")) {
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id` INT(11) NOT NULL DEFAULT '0' AFTER `comment`;";
-            $DB->doQuery($query) or die($DB->error());
+            $DB->doQuery($query);
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD `users_id_substitute` INT(11) NOT NULL DEFAULT '0';";
-            $DB->doQuery($query) or die($DB->error());
+            $DB->doQuery($query);
         }
         if ($DB->tableExists("glpi_plugin_resources_teams")
             && !$DB->fieldExists("glpi_plugin_resources_teams", "code")) {
             $query = "ALTER TABLE `glpi_plugin_resources_teams` ADD   `code` varchar(255) collate utf8_unicode_ci default NULL;";
-            $DB->doQuery($query) or die($DB->error());
+            $DB->doQuery($query);
         }
         if (!$DB->tableExists("glpi_plugin_resources_degreegroups")) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-3.0.4.sql");
@@ -1197,6 +1197,11 @@ function plugin_resources_uninstall()
     Toolbox::deleteDir($rep_files_resources);
 
     Profile::removeRightsFromSession();
+
+    // Remove the plugin's rights from every profile: removeRightsFromSession() only clears
+    // the current user's $_SESSION, leaving orphaned plugin_resources% rows in the database
+    // that would resurface on reinstall (all rightnames share the plugin_resources prefix).
+    $DB->delete('glpi_profilerights', ['name' => ['LIKE', 'plugin_resources%']]);
 
     return true;
 }
