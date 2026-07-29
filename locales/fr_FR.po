@@ -2965,7 +2965,7 @@ msgstr "Nombre illimité d'habilitations sélectionnables"
 #: templates/config_setup_form.html.twig:40
 msgctxt "button"
 msgid "Update"
-msgstr "Merttre à jour"
+msgstr "Mettre à jour"
 
 #: src/Menu.php:322 src/ImportResource.php:681
 msgid "Update GLPI Resources"
