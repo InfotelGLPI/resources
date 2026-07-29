@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-28 21:26+0000\n"
+"POT-Creation-Date: 2026-07-29 08:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -387,7 +387,7 @@ msgstr ""
 msgid "Available contract type"
 msgstr ""
 
-#: src/ResourceBadge.php:78 src/ResourceBadge.php:264 src/Menu.php:272
+#: src/ResourceBadge.php:78 src/ResourceBadge.php:264 src/Menu.php:273
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -409,7 +409,7 @@ msgid_plural "Budget costs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:303 src/Menu.php:486
+#: src/Menu.php:304 src/Menu.php:491
 msgid "Budget management"
 msgstr ""
 
@@ -608,7 +608,7 @@ msgstr ""
 msgid "Checked"
 msgstr ""
 
-#: src/Profile.php:195 src/Menu.php:502 src/Checklist.php:83
+#: src/Profile.php:195 src/Menu.php:507 src/Checklist.php:83
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] ""
@@ -710,7 +710,7 @@ msgstr ""
 msgid "Computer and telephone equipment needs"
 msgstr ""
 
-#: src/Menu.php:334
+#: src/Menu.php:335
 msgid "Configure Imports"
 msgstr ""
 
@@ -718,7 +718,7 @@ msgstr ""
 msgid "Configure a new import"
 msgstr ""
 
-#: src/Menu.php:343
+#: src/Menu.php:344
 msgid "Confirm the purge of all imported resources?"
 msgstr ""
 
@@ -879,11 +879,11 @@ msgstr ""
 msgid "Declaration of resource transfer OK"
 msgstr ""
 
-#: src/Menu.php:176 src/Resource.php:3712
+#: src/Menu.php:177 src/Resource.php:3712
 msgid "Declare a change"
 msgstr ""
 
-#: src/Menu.php:181 src/Resource.php:2602 src/Resource.php:3565
+#: src/Menu.php:182 src/Resource.php:2602 src/Resource.php:3565
 #: src/Resource.php:3683
 msgid "Declare a departure"
 msgstr ""
@@ -911,11 +911,11 @@ msgstr ""
 msgid "Declare a transfer"
 msgstr ""
 
-#: src/Menu.php:171
+#: src/Menu.php:172
 msgid "Declare an arrival"
 msgstr ""
 
-#: src/Menu.php:290
+#: src/Menu.php:291
 msgid "Declare an employment"
 msgstr ""
 
@@ -1054,7 +1054,7 @@ msgstr ""
 msgid "Different to GLPI"
 msgstr ""
 
-#: src/Menu.php:451
+#: src/Menu.php:456
 msgid "Directory"
 msgstr ""
 
@@ -1134,7 +1134,7 @@ msgid_plural "Employments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:296 src/Menu.php:474
+#: src/Menu.php:297 src/Menu.php:479
 msgid "Employment management"
 msgstr ""
 
@@ -1159,7 +1159,7 @@ msgstr ""
 msgid "Employment volume (€)"
 msgstr ""
 
-#: src/Menu.php:103 src/Menu.php:315
+#: src/Menu.php:104 src/Menu.php:316
 msgid "Employments / budgets management"
 msgstr ""
 
@@ -1279,7 +1279,7 @@ msgstr ""
 msgid "Forced holiday declaration of a resource performed"
 msgstr ""
 
-#: src/Menu.php:252 src/NotificationTargetResource.php:1278
+#: src/Menu.php:253 src/NotificationTargetResource.php:1278
 #: src/NotificationTargetResource.php:1666 src/ResourceHoliday.php:299
 msgid "Forced holiday management"
 msgstr ""
@@ -1375,7 +1375,7 @@ msgid_plural "Human Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/TaskPlanning.php:71 src/Profile.php:177 src/Menu.php:362
+#: src/TaskPlanning.php:71 src/Profile.php:177 src/Menu.php:363
 #: src/Resource.php:119 src/Employment.php:187 src/Employment.php:246
 #: src/Employment.php:381
 msgid "Human resource"
@@ -1429,7 +1429,7 @@ msgid_plural "Imports"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:525
+#: src/Menu.php:530
 msgid "Import configuration"
 msgstr ""
 
@@ -1441,7 +1441,7 @@ msgstr ""
 msgid "Import file"
 msgstr ""
 
-#: src/Menu.php:111 src/Menu.php:347
+#: src/Menu.php:112 src/Menu.php:348
 msgid "Import resources"
 msgstr ""
 
@@ -1600,7 +1600,7 @@ msgid_plural "List Employments / Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:310 src/Menu.php:478
+#: src/Menu.php:311 src/Menu.php:483
 msgid "List Employments / Resources"
 msgstr ""
 
@@ -1608,12 +1608,12 @@ msgstr ""
 msgid "List of badges"
 msgstr ""
 
-#: src/Menu.php:466 src/ResourceHoliday.php:319 src/ResourceHoliday.php:322
+#: src/Menu.php:471 src/ResourceHoliday.php:319 src/ResourceHoliday.php:322
 #: src/ResourceHoliday.php:407
 msgid "List of forced holidays"
 msgstr ""
 
-#: src/Menu.php:458 src/ResourceResting.php:329 src/ResourceResting.php:332
+#: src/Menu.php:463 src/ResourceResting.php:329 src/ResourceResting.php:332
 #: src/ResourceResting.php:439 src/ResourceResting.php:536
 msgid "List of non contract periods"
 msgstr ""
@@ -1877,7 +1877,7 @@ msgstr[1] ""
 msgid "Non contract period declaration of a resource performed"
 msgstr ""
 
-#: src/Profile.php:214 src/Menu.php:240 src/NotificationTargetResource.php:1230
+#: src/Profile.php:214 src/Menu.php:241 src/NotificationTargetResource.php:1230
 #: src/NotificationTargetResource.php:1656 src/ResourceResting.php:296
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
@@ -1955,11 +1955,11 @@ msgstr ""
 msgid "Other resource notification"
 msgstr ""
 
-#: src/Menu.php:225
+#: src/Menu.php:226
 msgid "Others actions"
 msgstr ""
 
-#: src/Menu.php:95 src/Menu.php:281
+#: src/Menu.php:96 src/Menu.php:282
 msgid "Others declarations"
 msgstr ""
 
@@ -2069,7 +2069,7 @@ msgid_plural "Public statuses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Menu.php:339
+#: src/Menu.php:340
 msgid "Purge imported resources"
 msgstr ""
 
@@ -2405,7 +2405,7 @@ msgstr ""
 msgid "Search by default"
 msgstr ""
 
-#: src/Menu.php:191
+#: src/Menu.php:192
 msgid "Search resources"
 msgstr ""
 
@@ -2620,7 +2620,7 @@ msgstr ""
 msgid "Tasks in progress"
 msgstr ""
 
-#: src/TaskPlanning.php:72 src/Menu.php:494
+#: src/TaskPlanning.php:72 src/Menu.php:499
 msgid "Tasks list"
 msgstr ""
 
@@ -2849,7 +2849,7 @@ msgctxt "button"
 msgid "Update"
 msgstr ""
 
-#: src/Menu.php:321 src/ImportResource.php:681
+#: src/Menu.php:322 src/ImportResource.php:681
 msgid "Update GLPI Resources"
 msgstr ""
 
@@ -2948,11 +2948,11 @@ msgstr ""
 msgid "Variable"
 msgstr ""
 
-#: src/Menu.php:325
+#: src/Menu.php:326
 msgid "Verify CSV file"
 msgstr ""
 
-#: src/Menu.php:329
+#: src/Menu.php:330
 msgid "Verify GLPI resources"
 msgstr ""
 
@@ -2964,7 +2964,7 @@ msgstr ""
 msgid "View by contract type"
 msgstr ""
 
-#: src/Config.php:495 src/Config.php:508 src/Menu.php:219 src/Menu.php:519
+#: src/Config.php:495 src/Config.php:508 src/Menu.php:220 src/Menu.php:524
 msgid "View my resources as a commercial"
 msgstr ""
 
