@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use Html;
 use Plugin;
 use Session;
 use Toolbox;
@@ -405,7 +406,11 @@ class Menu extends CommonGLPI
                 foreach ($labels['post'] as $post_key => $post_value) {
                     echo Html::hidden($post_key, ['value' => $post_value]);
                 }
-                echo "<button type='submit' class='btn btn-link p-0 border-0 text-reset text-decoration-none'>"
+                // .btn is inline-flex under Tabler, so the <br> in $inner would not wrap the
+                // title below the icon: use a block-level column layout constrained to the
+                // card width (w-100) with centered, wrapping text so the label sits under the
+                // icon without overflowing card-text.
+                echo "<button type='submit' class='btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap'>"
                     . $inner . "</button>";
                 echo "</form>";
             } else {
