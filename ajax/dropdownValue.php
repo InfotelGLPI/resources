@@ -28,6 +28,7 @@
  */
 
 // Direct access to file
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownValue.php")) {
@@ -48,6 +49,19 @@ $dbu = new DbUtils();
 // Security
 if (!($item = $dbu->getItemForItemtype($_GET['itemtype']))) {
     throw new NotFoundHttpException();
+}
+
+// Authorization: this endpoint backs the plugin's own dropdown fields
+// (getAdditionalFields entries of type 'dropdownValue') and must not double as a
+// generic value browser for arbitrary GLPI itemtypes. A caller holding only
+// plugin_resources READ may query the plugin's own dropdowns and the core dropdowns
+// those forms reference (e.g. Location on the Employer form); any other itemtype
+// requires the caller to actually hold view rights on it, otherwise a bare
+// plugin_resources READ would allow horizontal enumeration of out-of-scope tables.
+$is_plugin_dropdown = str_starts_with($item::class, 'GlpiPlugin\\Resources\\');
+$is_allowed_core    = in_array($item::class, [Location::class], true);
+if (!$is_plugin_dropdown && !$is_allowed_core && !$item->canView()) {
+    throw new AccessDeniedHttpException();
 }
 
 $table = $item->getTable();

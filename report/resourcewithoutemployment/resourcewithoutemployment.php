@@ -45,6 +45,11 @@ global $HEADER_LOADED, $DB;
 //"Report listing resource without employment";
 
 // Instantiate Report with Name
+// Authorization guard: this report script is directly addressable and bypasses the
+// reports plugin dispatcher, so enforce the plugin business right — like every other
+// resources endpoint — before running any query or emitting output.
+Session::checkRight('plugin_resources', READ);
+
 $report = new AutoReport(__("Report listing unemployed resources", "resources"));
 
 // Columns title (optional)

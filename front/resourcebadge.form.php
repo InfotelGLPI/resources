@@ -93,7 +93,19 @@ if (Plugin::isPluginActive("badges")) {
             echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
         }
     } elseif (isset($_POST['plugin_resources_badge_restitution'])) {
-        $badge->createTicket($_POST['plugin_resources_resources_id'], $_POST);
+        // The target resource id comes straight from $_POST and createTicket() opens a
+        // ticket in that resource's own entity. Mirror the display guard used by the
+        // other branches and validate the resource's entity scope, otherwise any user
+        // could trigger a badge-restitution ticket for an arbitrary resource, possibly
+        // in another entity.
+        $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+        $resource     = new Resource();
+        if (($pluginbadge->canView() || Session::haveRight("config", UPDATE))
+            && $resources_id > 0
+            && $resource->getFromDB($resources_id)
+            && Session::haveAccessToEntity($resource->fields['entities_id'])) {
+            $badge->createTicket($resources_id, $_POST);
+        }
         Html::back();
     } else {
         if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {

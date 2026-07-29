@@ -29,9 +29,23 @@
 
 use GlpiPlugin\Resources\Actionprofile;
 
+// Mapping a profile to plugin capabilities (which actions/buttons a profile is
+// offered) is a configuration-level change: gate it on the administration right
+// (config UPDATE), like config.form.php/adconfig.form.php, rather than on the
+// ordinary plugin_resources CREATE right that any resource manager holds — the
+// latter would let a non-admin grant capabilities to any profile (privilege
+// escalation).
+Session::checkRight('config', UPDATE);
+
 $actionprofile = new Actionprofile();
 if (isset($_POST["addAction"])) {
     $actionprofile->check(-1, CREATE, $_POST);
+    // Validate that profiles_id references a real profile before writing the mapping.
+    $profiles_id = (int) ($_POST['profiles_id'] ?? 0);
+    if ($profiles_id <= 0 || !(new Profile())->getFromDB($profiles_id)) {
+        Html::back();
+    }
+    $_POST['profiles_id'] = $profiles_id;
     if (isset($_POST["actions_id"])) {
         $_POST["actions_id"] = json_encode($_POST["actions_id"]);
     } else {

@@ -1423,11 +1423,22 @@ class ImportResource extends CommonDBTM
 
         // Verify user select a file
         if (isset($params[self::SELECTED_FILE_DROPDOWN_NAME]) && !empty($params[self::SELECTED_FILE_DROPDOWN_NAME])) {
-            $absoluteFilePath = self::getLocationOfVerificationFiles(
-                ) . "/" . $params[self::SELECTED_FILE_DROPDOWN_NAME];
+            // Defense in depth: never trust the caller-supplied file name for a filesystem
+            // path. Reduce it to its basename and confirm the resolved path stays within
+            // the verification directory before reading it back for display (path traversal
+            // / arbitrary file read guard).
+            $baseDir  = self::getLocationOfVerificationFiles();
+            $safeName = basename((string) $params[self::SELECTED_FILE_DROPDOWN_NAME]);
+            $params[self::SELECTED_FILE_DROPDOWN_NAME] = $safeName;
+            $absoluteFilePath = $baseDir . "/" . $safeName;
 
-            // Verify file exist
-            if (!file_exists($absoluteFilePath)) {
+            $realBase = realpath($baseDir);
+            $realPath = realpath($absoluteFilePath);
+
+            // Verify file exist and is confined to the verification directory
+            if ($realBase === false
+                || $realPath === false
+                || strpos($realPath, $realBase . DIRECTORY_SEPARATOR) !== 0) {
                 $title = __("File not found", "resources");
                 self::showErrorHeader($title);
             } else {

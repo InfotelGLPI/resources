@@ -40,6 +40,11 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les utilisateurs sans ressources";
 //"Report listing user without resource";
 // Instantiate Report with Name
+// Authorization guard: this report script is directly addressable and bypasses the
+// reports plugin dispatcher, so enforce the plugin business right — like every other
+// resources endpoint — before running any query or emitting output.
+Session::checkRight('plugin_resources', READ);
+
 $report = new AutoReport(__("User without resource", "resources"));
 
 // Columns title (optional)

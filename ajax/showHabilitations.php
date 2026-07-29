@@ -27,10 +27,12 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Metademands\Form;
 use GlpiPlugin\Metademands\Form_Value;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Wizard;
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -38,13 +40,25 @@ Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
+// The wizard is driven by a caller-supplied resource id ($_POST['value']): validate it and
+// confirm the caller may actually read that specific resource (right + entity scope) before
+// seeding the metademands session or redirecting. The global plugin_resources READ alone
+// would otherwise let a user pivot the wizard onto any resource id, including ones outside
+// their entity perimeter (mirror the ->can(id, READ) guard used by picture.send.php).
+$resources_id   = (int) ($_POST['value'] ?? 0);
+$metademands_id = (int) ($_POST['metademands_id'] ?? 0);
+$resource       = new Resource();
+if ($resources_id <= 0 || $metademands_id <= 0 || !$resource->can($resources_id, READ)) {
+    throw new AccessDeniedHttpException();
+}
+
 $KO = false;
 
 $metademands = new Metademand();
 $wizard = new Wizard();
 $form = new Form();
 $resForm = $form->find(
-    ['plugin_metademands_metademands_id' => $_POST['metademands_id'], 'resources_id' => $_POST['value']]
+    ['plugin_metademands_metademands_id' => $metademands_id, 'resources_id' => $resources_id]
 );
 if (count($resForm)) {
     foreach ($resForm as $res) {
@@ -52,13 +66,13 @@ if (count($resForm)) {
     }
     $form->getFromDB($last);
     unset($_SESSION['plugin_metademands']);
-    $metademands->getFromDB($_POST['metademands_id']);
-    Form_Value::loadFormValues($_POST['metademands_id'], $form->getField('id'));
+    $metademands->getFromDB($metademands_id);
+    Form_Value::loadFormValues($metademands_id, $form->getField('id'));
     $form_name = $form->getField('name');
 
     // Resources id
     if (isset($_POST['resources_id'])) {
-        $_SESSION['plugin_metademands']['fields']['resources_id'] = $_POST['value'];
+        $_SESSION['plugin_metademands']['fields']['resources_id'] = $resources_id;
     }
 
     //Category id if have category field
@@ -68,15 +82,13 @@ if (count($resForm)) {
 
 
     Html::redirect(
-        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $_POST['value'] . "&metademands_id=" . $_POST['metademands_id'] . "&step=2"
-    );
-} elseif (isset($_POST['value'])) {
-    unset($_SESSION['plugin_metademands']);
-    Html::redirect(
-        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $_POST['value'] . "&metademands_id=" . $_POST['metademands_id'] . "&step=2"
+        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $resources_id . "&metademands_id=" . $metademands_id . "&step=2"
     );
 } else {
-    $KO = true;
+    unset($_SESSION['plugin_metademands']);
+    Html::redirect(
+        PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $resources_id . "&metademands_id=" . $metademands_id . "&step=2"
+    );
 }
 if ($KO === false) {
     echo 0;

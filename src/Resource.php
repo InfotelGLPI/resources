@@ -5111,7 +5111,7 @@ class Resource extends CommonDBTM
                     if (!$resource->fields['is_deleted']) {
                         echo "<tr class='tab_bg_1'>";
                         echo "<td>" . $resource->getLink() . "</td>";
-                        echo "<td>" . $resource->fields['firstname'] . "</td>";
+                        echo "<td>" . htmlescape((string) $resource->fields['firstname']) . "</td>";
                         echo "<td>" . Dropdown::getDropdownName(
                             $dbu->getTableForItemType(ResourceState::class),
                             $resource->fields['plugin_resources_resourcestates_id']

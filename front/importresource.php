@@ -81,10 +81,14 @@ if ($import->canView()) {
 
     $dropdownName = ImportResource::SELECTED_FILE_DROPDOWN_NAME;
 
+    // Reduce the selected file to its basename on entry (path-traversal guard), like the
+    // sibling endpoints (verifyCSVStatistics.php, deleteFile(), setFileVerify()): the
+    // value is later concatenated into an absolute path and read back for display, so a
+    // raw '../' would allow arbitrary server file disclosure.
     if (isset($_POST[$dropdownName]) && !empty($_POST[$dropdownName])) {
-        $params[$dropdownName] = $_POST[$dropdownName];
+        $params[$dropdownName] = basename((string) $_POST[$dropdownName]);
     } elseif (isset($_GET[$dropdownName]) && !empty($_GET[$dropdownName])) {
-        $params[$dropdownName] = $_GET[$dropdownName];
+        $params[$dropdownName] = basename((string) $_GET[$dropdownName]);
     }
 
     $dropdownName = ImportResource::SELECTED_IMPORT_DROPDOWN_NAME;

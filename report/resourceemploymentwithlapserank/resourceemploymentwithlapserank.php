@@ -38,6 +38,11 @@ $DBCONNECTION_REQUIRED = 0;
 global $HEADER_LOADED, $DB;
 
 // Instantiate Report with Name
+// Authorization guard: this report script is directly addressable and bypasses the
+// reports plugin dispatcher, so enforce the plugin business right — like every other
+// resources endpoint — before running any query or emitting output.
+Session::checkRight('plugin_resources', READ);
+
 $report = new AutoReport(__("Report listing resources or jobs with an obsolete grade", "resources"));
 
 //"Rapport listant les ressources ou les emplois ayant un grade caduque"

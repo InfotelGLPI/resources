@@ -46,29 +46,28 @@ if (!isset($_GET["plugin_resources_resources_id"])) {
 $reportconfig = new ReportConfig();
 
 if (isset($_POST["add"])) {
-    if ($reportconfig->canCreate()) {
-        $reportconfig->add($_POST);
-    }
+    // Per-object check() (right + existence) rather than the global canCreate(): the
+    // mutating branches previously acted on a $_POST id without loading or verifying
+    // the target row.
+    $reportconfig->check(-1, CREATE, $_POST);
+    $reportconfig->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
-    if ($reportconfig->canCreate()) {
-        $reportconfig->update($_POST);
-    }
+    $reportconfig->check((int) $_POST["id"], UPDATE);
+    $reportconfig->update($_POST);
     Html::back();
 } elseif (isset($_POST["delete"])) {
-    if ($reportconfig->canCreate()) {
-        $reportconfig->delete($_POST, 1);
-    }
+    $reportconfig->check((int) $_POST["id"], PURGE);
+    $reportconfig->delete($_POST, 1);
 
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) .
         "?id=" . $_POST["plugin_resources_resources_id"]
     );
 } elseif (isset($_POST["delete_report"])) {
-    if ($reportconfig->canCreate()) {
-        foreach ($_POST["check"] as $ID => $value) {
-            $reportconfig->delete(["id" => $ID], 1);
-        }
+    foreach ($_POST["check"] as $ID => $value) {
+        $reportconfig->check((int) $ID, PURGE);
+        $reportconfig->delete(["id" => $ID], 1);
     }
     Html::back();
 } else {

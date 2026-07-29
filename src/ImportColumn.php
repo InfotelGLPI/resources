@@ -269,7 +269,7 @@ class ImportColumn extends CommonDBChild
         }
 
         // NAME
-        echo "<td class='left' style='text-align:center'>" . nl2br($this->fields["name"]) . "</td>";
+        echo "<td class='left' style='text-align:center'>" . nl2br(htmlescape((string) $this->fields["name"])) . "</td>";
 
         // Type
         $array = ImportColumn::getColumnsTypes();

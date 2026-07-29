@@ -622,7 +622,7 @@ class Resource_Change extends CommonDBTM
                 echo "function plugin_resources_load_button_changeresources_information(){";
                 $root_doc = PLUGIN_RESOURCES_WEBDIR;
                 echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
-               ,{load_button_changeresources:true,action:8,name:$('input[name=\"name\"]').val(),firstname:'" . $resource->fields["firstname"] . "',date_end:$('input[name=\"date_end\"]').val()}
+               ,{load_button_changeresources:true,action:8,name:$('input[name=\"name\"]').val(),firstname:" . json_encode((string) $resource->fields["firstname"], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",date_end:$('input[name=\"date_end\"]').val()}
                )";
 
                 echo "}";

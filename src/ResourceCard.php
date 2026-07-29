@@ -160,7 +160,7 @@ class ResourceCard extends CommonDBTM
 
             echo "<div id='plugin_resources_about-content' align='left'>";
 
-            echo "<h1>" . sprintf(__('%1$s %2$s'), $resource->fields['firstname'], $resource->fields['name']) . "</h1>";
+            echo "<h1>" . sprintf(__('%1$s %2$s'), htmlescape((string) $resource->fields['firstname']), htmlescape((string) $resource->fields['name'])) . "</h1>";
             echo "<div style='height:10px;'></div>";
             echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
             echo "<p>";

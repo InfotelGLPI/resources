@@ -46,6 +46,11 @@ global $HEADER_LOADED, $DB;
 //"Rapport listant les ressources partantes ayant des emplois actifs"
 //"Report listing resource leaving with employment active";
 // Instantiate Report with Name
+// Authorization guard: this report script is directly addressable and bypasses the
+// reports plugin dispatcher, so enforce the plugin business right — like every other
+// resources endpoint — before running any query or emitting output.
+Session::checkRight('plugin_resources', READ);
+
 $report = new AutoReport(__("Report listing departing resources with active employment", "resources"));
 
 // Columns title (optional), from $LANG
