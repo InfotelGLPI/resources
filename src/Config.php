@@ -727,6 +727,16 @@ class Config extends CommonDBTM
             $input['can_view_synchronisationAD'] = json_encode(array_values($input['can_view_synchronisationAD']));
         }
 
+        // The "Default contract template" dropdown offers a -1 "Without contract" sentinel
+        // (Resource::dropdownTemplate), but the configs column is INT UNSIGNED (see
+        // install/sql/update-4.0.3.sql): writing -1 raises MySQL error 1264 (out of range).
+        // Normalize the sentinel to 0, which the dropdown renders as the same "Without
+        // contract" choice — mirroring the -1 => 0 handling already used in ImportResource.
+        if (isset($input['plugin_resources_resourcetemplates_id'])
+            && (int) $input['plugin_resources_resourcetemplates_id'] < 0) {
+            $input['plugin_resources_resourcetemplates_id'] = 0;
+        }
+
         return $input;
     }
 
