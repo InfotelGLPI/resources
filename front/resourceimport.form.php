@@ -30,9 +30,16 @@
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Resources\Import;
 use GlpiPlugin\Resources\ImportResource;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceImport;
 
-Session::checkLoginUser();
+// Feature-access gate: this controller applies staged CSV imports (create/update
+// Resource records, purge the import queue). checkLoginUser() only enforced
+// authentication, not authorization, so any authenticated user could reach the
+// ungated save(update)/delete branches. Require the import business right, then
+// replay an object-level check() per branch so the entity scope of the actually
+// mutated record is enforced too.
+Session::checkRight(ResourceImport::$rightname, READ);
 
 $import = new Import();
 
@@ -43,6 +50,11 @@ if (isset($_POST['save'])) {
         if ($selected) {
             // Update
             if ($_POST['resource'][$key]) {
+                // Authorize the Resource actually overwritten (global right + entity),
+                // otherwise a POST could rewrite any resource of any entity by id.
+                $resource = new Resource();
+                $resource->check((int) $_POST['resource'][$key], UPDATE);
+
                 $input = [
                     'resourceID' => $_POST['resource'][$key],
                     'datas' => $_POST['import'][$key]
@@ -74,6 +86,9 @@ if (isset($_POST['save'])) {
     foreach ($_POST['select'] as $key => $selected) {
         if ($selected) {
             $pluginResourcesImportResource = new ImportResource();
+            // Authorize the deletion of each staged import row (global right + entity)
+            // instead of purging arbitrary ids straight from $_POST.
+            $pluginResourcesImportResource->check((int) $key, PURGE);
 
             $input = [
                 ImportResource::getIndexName() => $key
@@ -88,17 +103,8 @@ throw new BadRequestHttpException();
 
 function redirectWithParameters($url, array $parameters)
 {
-    $params = "";
-    if (count($parameters)) {
-        $iterator = 0;
-        foreach ($parameters as $key => $parameter) {
-            if ($iterator === 0) {
-                $params .= "?$key=$parameter";
-            } else {
-                $params .= "&$key=$parameter";
-            }
-            $iterator++;
-        }
-    }
+    // Build the query string with http_build_query() so values containing & or =
+    // are URL-encoded instead of breaking the redirect target.
+    $params = count($parameters) ? '?' . http_build_query($parameters) : '';
     Html::redirect($url . $params);
 }

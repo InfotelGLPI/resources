@@ -346,6 +346,10 @@ elseif (isset($_POST["purge"])) {
 //add items of a resource
 elseif (isset($_POST["additem"])) {
     if (!empty($_POST['itemtype']) && !empty($_POST['items_id'])) {
+        // Authorize the parent resource (right + entity) before linking an item to it,
+        // like the neighbouring addhelpdeskitem branch — otherwise any authenticated
+        // user could attach an arbitrary object to a resource of another entity.
+        $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
         $resource_item->addItem($_POST);
     }
     Html::back();
@@ -353,6 +357,9 @@ elseif (isset($_POST["additem"])) {
 //update comment of item of a resource
 elseif (isset($_POST["updatecomment"])) {
     foreach ($_POST["updatecomment"] as $key => $val) {
+        // Authorize each Resource_Item actually updated (right + entity), mirroring
+        // the deleteitem branch, to prevent editing comments of items one does not own.
+        $resource_item->check((int) $key, UPDATE);
         $varcomment = "comment" . $key;
         $resource_item->updateItem($key, $_POST[$varcomment]);
     }
@@ -418,9 +425,15 @@ elseif (isset($_POST["add_checklist"])) {
     //from central
     //up / down checklist
 } elseif (isset($_POST["move"])) {
+    // changeRank reorders a checklist row of a given resource: authorize the parent
+    // resource (right + entity) before mutating its checklist ordering.
+    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
     $checklist->changeRank($_POST);
     Html::back();
 } elseif (isset($_POST["report"])) {
+    // sendReport() triggers an outbound notification about the resource: authorize
+    // read access (right + entity) on the targeted resource before sending it.
+    $resource->check((int) $_POST["id"], READ);
     $restrict = [
         "itemtype" => 'User',
         "plugin_resources_resources_id" => $_POST["id"]
