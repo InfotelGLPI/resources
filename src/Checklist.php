@@ -845,7 +845,7 @@ class Checklist extends CommonDBTM
                 echo "<a href='" . $targetchecklist . "?id=" . $ID . "&amp;plugin_resources_resources_id=" .
                     $plugin_resources_resources_id . "&amp;plugin_resources_contracttypes_id=" .
                     $plugin_resources_contracttypes_id . "&amp;checklist_type=" . $checklist_type . "' >";
-                echo $checklist["name"];
+                echo htmlescape($checklist["name"]);
                 echo "</a>&nbsp;";
 
                 echo Html::hidden('comment', ['value' => $checklist["comment"]]);
@@ -861,7 +861,7 @@ class Checklist extends CommonDBTM
                 if ($checklist["tag"]) {
                     echo "<span class='plugin_resources_date_over_color'>";
                 }
-                echo nl2br($checklist["comment"]);
+                echo nl2br(htmlescape($checklist["comment"]));
                 if ($checklist["tag"]) {
                     echo "</span>";
                 }
@@ -1203,7 +1203,7 @@ class Checklist extends CommonDBTM
 
                     echo "<td class='center'>";
                     echo "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $data["plugin_resources_resources_id"] . "'>";
-                    echo $data["resource_name"] . " " . $data["resource_firstname"];
+                    echo htmlescape($data["resource_name"]) . " " . htmlescape($data["resource_firstname"]);
                     if ($_SESSION["glpiis_ids_visible"]) {
                         echo " (" . $data["plugin_resources_resources_id"] . ")";
                     }
@@ -1265,7 +1265,7 @@ class Checklist extends CommonDBTM
                         if ($data_checklists["tag"]) {
                             echo "<span class='plugin_resources_date_over_color'>";
                         }
-                        echo $data_checklists["name"];
+                        echo htmlescape($data_checklists["name"]);
                         if ($_SESSION["glpiis_ids_visible"]) {
                             echo " (" . $data_checklists["id"] . ")";
                         }
@@ -1434,7 +1434,7 @@ class Checklist extends CommonDBTM
             $checklist_infos[$type] = [];
             foreach ($DB->request($query) as $data) {
                 $entity = $data['entities_id'];
-                $message = "checklists" . ": " . $data["resource_name"] . " " . $data["resource_firstname"] . "<br>\n";
+                $message = "checklists" . ": " . htmlescape($data["resource_name"]) . " " . htmlescape($data["resource_firstname"]) . "<br>\n";
                 $checklist_infos[$type][$entity][] = $data;
 
                 if (!isset($checklist_messages[$type][$entity])) {

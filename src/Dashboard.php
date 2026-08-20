@@ -103,7 +103,7 @@ class Dashboard extends CommonGLPI
                 if (count($checklists) > 0) {
                     foreach ($checklists as $key => $checklist) {
                         $name = "<a href='" . $link . "?id=" . $checklist["plugin_resources_resources_id"] . "' target='_blank'>";
-                        $name .= $checklist["resource_name"] . " " . $checklist["resource_firstname"] . "</a>";
+                        $name .= htmlescape($checklist["resource_name"]) . " " . htmlescape($checklist["resource_firstname"]) . "</a>";
                         $data["name"] = $name;
 
                         if ($checklist["date_begin"] <= date('Y-m-d') && !empty($checklist["date_begin"])) {
@@ -152,7 +152,7 @@ class Dashboard extends CommonGLPI
                 if (!empty($checklists)) {
                     foreach ($checklists as $key => $checklist) {
                         $name = "<a href='" . $link . "?id=" . $checklist["plugin_resources_resources_id"] . "' target='_blank'>";
-                        $name .= $checklist["resource_name"] . " " . $checklist["resource_firstname"] . "</a>";
+                        $name .= htmlescape($checklist["resource_name"]) . " " . htmlescape($checklist["resource_firstname"]) . "</a>";
                         $data["name"] = $name;
 
                         if ($checklist["date_end"] <= date('Y-m-d') && !empty($checklist["date_end"])) {

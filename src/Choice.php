@@ -330,7 +330,7 @@ class Choice extends CommonDBTM
         echo "}";
         echo "</script>\n";
         echo "<div id='commentneed$items_id$rand' class='center' onClick='showComment$items_id()'>\n";
-        echo $item["comment"];
+        echo nl2br(htmlescape($item["comment"]));
         echo "</div>\n";
         echo "<div id='viewcommentneed$items_id$rand'>\n";
         echo "</div>\n";
@@ -420,7 +420,7 @@ class Choice extends CommonDBTM
                     echo $items;
                     echo "</td>";
                     echo "<td class='left'>";
-                    echo nl2br($items_comments);
+                    echo nl2br(htmlescape($items_comments));
                     echo "</td>";
                     echo "<td class='center'>";
 

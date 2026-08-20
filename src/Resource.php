@@ -1350,7 +1350,16 @@ class Resource extends CommonDBTM
      */
     public function addPhoto($class)
     {
-        $uploadedfile = $_FILES['_uploader_picture']['tmp_name'][0];
+        $uploadedfile = $_FILES['_uploader_picture']['tmp_name'][0] ?? '';
+
+        // Fail-closed defense in depth: never trust the caller's pre-checks. Only process a
+        // real uploaded temp file that GD confirms is a genuine JPEG, so a spoofed
+        // Content-Type or a missing/forged temp path cannot reach imagecreatefromjpeg().
+        if (!is_uploaded_file($uploadedfile)
+            || exif_imagetype($uploadedfile) !== IMAGETYPE_JPEG) {
+            return '';
+        }
+
         $src = imagecreatefromjpeg($uploadedfile);
 
         [$width, $height] = getimagesize($uploadedfile);

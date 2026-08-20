@@ -339,12 +339,22 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     }
 } elseif (isset($_POST["upload_five_step"])) {
 
-    if (isset($_FILES) && isset($_FILES['_uploader_picture'])) {
+    $resources_id = (int) $_POST["plugin_resources_resources_id"];
 
-        $resources_id = $_POST["plugin_resources_resources_id"];
+    // The target resource id is client-supplied and this page only gates entry with
+    // checkGlobal(READ): enforce a per-record UPDATE right (right bit + entity access)
+    // before overwriting the photo, otherwise a READ-only or cross-entity caller could
+    // replace an arbitrary resource's picture. check() halts (AccessDenied) on failure.
+    $resource->check($resources_id, UPDATE);
 
-        if ($_FILES['_uploader_picture']['type'][0] == "image/jpeg"
-            || $_FILES['_uploader_picture']['type'][0] == "image/pjpeg") {
+    if (isset($_FILES) && isset($_FILES['_uploader_picture']['tmp_name'][0])) {
+
+        $tmp_name = $_FILES['_uploader_picture']['tmp_name'][0];
+
+        // The client Content-Type is spoofable: mirror prepareInputForUpdate() and require
+        // a genuine uploaded file that is really a JPEG (is_uploaded_file + exif_imagetype).
+        if (is_uploaded_file($tmp_name)
+            && exif_imagetype($tmp_name) === IMAGETYPE_JPEG) {
 
             $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
             if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {

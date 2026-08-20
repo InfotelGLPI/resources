@@ -99,7 +99,31 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
     $resource->update($input);
     $leavingInformation = new LeavingInformation();
 
-    $inputleaving = $_POST;
+    // Mass-assignment guard: only copy the LeavingInformation columns this form owns
+    // instead of forwarding the whole $_POST, so a crafted request cannot set arbitrary
+    // DB columns. The resource foreign key is forced from the already-validated $input['id'].
+    $leaving_fields = [
+        'plugin_resources_clients_id',
+        'plugin_resources_destinations_id',
+        'plugin_resources_workprofiles_id',
+        'plugin_resources_resignationreasons_id',
+        'users_id',
+        'interview_date',
+        'resignation_date',
+        'wished_leaving_date',
+        'effective_leaving_date',
+        'pay_gap',
+        'mission_lost',
+        'company_name',
+        'comment',
+    ];
+    $inputleaving = [];
+    foreach ($leaving_fields as $leaving_field) {
+        if (isset($_POST[$leaving_field])) {
+            $inputleaving[$leaving_field] = $_POST[$leaving_field];
+        }
+    }
+    $inputleaving['plugin_resources_resources_id'] = (int) $input['id'];
     if ($leavingInformation->getFromDBByCrit(['plugin_resources_resources_id' => $input['id']])) {
         $inputleaving['id'] = $leavingInformation->getID();
         $leavingInformation->update($inputleaving);
