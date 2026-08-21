@@ -40,8 +40,6 @@ $linkad = new LinkAd();
 //from central
 //update checklist
 if (isset($_POST["add"])) {
-    // checkLoginUser() is not authorization on GLPI 11 and add() enforces no right:
-    // gate on the same right as the guarded update branch (LinkAd::canCreate()).
     Session::checkRight(LinkAd::$rightname, CREATE);
     $linkad->add($_POST);
     Html::back();

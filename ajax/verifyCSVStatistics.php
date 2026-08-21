@@ -33,8 +33,6 @@ use GlpiPlugin\Resources\ImportResource;
 header('Content-Type: application/json');
 Html::header_nocache();
 
-Session::checkLoginUser();
-// checkLoginUser() is not authorization on GLPI 11: gate on the import feature right.
 Session::checkRight(Import::$rightname, READ);
 
 if (isset($_GET['page']) && isset($_GET['file'])) {

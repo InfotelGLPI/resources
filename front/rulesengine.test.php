@@ -29,6 +29,8 @@
 
 Session::checkCentralAccess();
 
+Session::checkRight("plugin_resources", READ);
+
 if (isset($_POST["sub_type"])) {
     $sub_type = $_POST["sub_type"];
 } elseif (isset($_GET["sub_type"])) {

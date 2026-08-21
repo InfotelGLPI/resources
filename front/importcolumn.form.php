@@ -30,7 +30,6 @@
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Resources\ImportColumn;
 
-Session::checkLoginUser();
 if (!isset($_GET["id"])) {
     $_GET["id"] = "";
 }

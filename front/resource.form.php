@@ -70,6 +70,11 @@ if (isset($_POST["secondary_services"])) {
     $_POST["secondary_services"] = "";
 }
 if (isset($_POST["resend"])) {
+    // resend reads the resource by POST id and raises a notification event (e-mails
+    // carrying resource data). The id comes entirely from POST and this branch runs
+    // before any other guard, so enforce READ right + entity access on the target
+    // first, like the sibling "report" branch.
+    $resource->check((int) $_POST["id"], READ);
     $resource->reSendResourceCreation($_POST);
     $resource->redirectToList();
 
@@ -336,13 +341,7 @@ elseif (isset($_POST["purge"])) {
     } else {
         $resource->redirectToList();
     }
-} //from central
-//purge resource
-elseif (isset($_POST["purge"])) {
-    $resource->check($_POST['id'], UPDATE);
-    $resource->delete($_POST, 1);
-    $resource->redirectToList();
-} //from central
+}  //from central
 //add items of a resource
 elseif (isset($_POST["additem"])) {
     if (!empty($_POST['itemtype']) && !empty($_POST['items_id'])) {
@@ -470,6 +469,11 @@ elseif (isset($_POST["add_checklist"])) {
     }
     Html::back();
 } else if (isset($_POST["synchActiveDirectory"])) {
+    // Creating/updating an Active Directory account is a high-impact external side
+    // effect. resource.form.php has no global guard and the $canedit computed below was
+    // never enforced, leaving this branch reachable by any authenticated user. Gate on
+    // UPDATE right + entity access of the target resource before touching the directory.
+    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
     $resource->getFromDB($_POST["plugin_resources_resources_id"] );
 
     $config          = new Config();
@@ -570,6 +574,10 @@ elseif (isset($_POST["add_checklist"])) {
     Html::back();
 
 } else if (isset($_POST["validOrderLeaving"])) {
+    // IDOR + unauthorized write: the target id comes entirely from POST and update()
+    // enforces neither right nor entity. Gate on UPDATE of the target resource, like the
+    // sibling write branches, before mutating it and generating a departure ticket.
+    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
     $_POST["id"]       = $_POST["plugin_resources_resources_id"];
     unset($_POST["plugin_resources_resources_id"]);
     unset($_POST["date_end"]);

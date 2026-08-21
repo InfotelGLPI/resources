@@ -32,14 +32,6 @@ use GlpiPlugin\Resources\Import;
 use GlpiPlugin\Resources\ImportResource;
 use GlpiPlugin\Resources\ImportResourceData;
 
-Session::checkLoginUser();
-
-// checkLoginUser() is not authorization on GLPI 11, and none of these mutations
-// (create/update/purge import rows, launch an import, wipe the staging database)
-// are guarded by CommonDBTM. Gate every branch on the import feature right
-// (plugin_resources_import), the same right the list controller enforces via
-// Import::checkGlobal(). ImportResource::$rightname is never granted to any profile,
-// so it must not be used here.
 $importResource = new ImportResource();
 if (isset($_POST["add"])) {
     Session::checkRight(Import::$rightname, CREATE);

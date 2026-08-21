@@ -229,6 +229,12 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     }
 } elseif (isset($_POST["four_step"])) {
 
+    // Employee carries no entities_id of its own: gate the write on UPDATE of the parent
+    // resource (the entity owner). Under the sole checkGlobal(READ) entry guard, this
+    // branch would otherwise let a read-only user create/update Employee records on
+    // resources of any entity.
+    $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
+
     if (isset($_POST['id']) && $_POST['id'] > 0) {
         $employee->update($_POST);
     } else {
@@ -391,6 +397,10 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     $resources_id = $_POST["plugin_resources_resources_id"];
 
+    // ResourceHabilitation carries no entities_id of its own: gate on UPDATE of the
+    // parent resource before creating habilitation rows (entry guard is only READ).
+    $resource->check((int) $resources_id, UPDATE);
+
     if ($resourcehabilitation->checkRequiredFields($_POST)) {
         $resourcehabilitation->addResourceHabilitation($_POST);
 
@@ -468,6 +478,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 } elseif (isset($_POST["nine_step"])) {
 
     $resources_id = $_POST["plugin_resources_resources_id"];
+
+    // Entry guard is only checkGlobal(READ): enforce UPDATE right + entity access on the
+    // target resource before writing its fields (READ->write escalation + cross-entity IDOR).
+    $resource->check((int) $resources_id, UPDATE);
+
     $data = [];
     $data['id'] = $_POST['plugin_resources_resources_id'];
     $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'] ?? NULL;

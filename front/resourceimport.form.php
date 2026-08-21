@@ -33,12 +33,6 @@ use GlpiPlugin\Resources\ImportResource;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceImport;
 
-// Feature-access gate: this controller applies staged CSV imports (create/update
-// Resource records, purge the import queue). checkLoginUser() only enforced
-// authentication, not authorization, so any authenticated user could reach the
-// ungated save(update)/delete branches. Require the import business right, then
-// replay an object-level check() per branch so the entity scope of the actually
-// mutated record is enforced too.
 Session::checkRight(ResourceImport::$rightname, READ);
 
 $import = new Import();

@@ -31,9 +31,7 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Import;
 use GlpiPlugin\Resources\ImportResource;
 use GlpiPlugin\Resources\Menu;
-use GlpiPlugin\Resources\Resource;
 
-Session::checkLoginUser();
 if (!isset($_GET["type"])) {
     $_GET["type"] = 0;
 }

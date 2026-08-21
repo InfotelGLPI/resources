@@ -29,7 +29,6 @@
 
 use GlpiPlugin\Resources\LeavingInformation;
 
-Session::checkLoginUser();
 if (!isset($_GET["id"])) {
     $_GET["id"] = "";
 }

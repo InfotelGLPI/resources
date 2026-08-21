@@ -77,6 +77,22 @@ if (isset($_GET['condition']) && isset($_GET['condition']['is_not_leaving_only']
     $isNotLeavingOnly = true;
 }
 
+// Entity scoping: $_GET['entity'] is a client-controlled list of entity ids reused both
+// as the getSqlSearchResult()/getEntitiesRestrictCriteria() filter and in the raw
+// "entities_id IN (...)" clause below. getEntitiesRestrictCriteria() trusts the ids as
+// given (GLPI does not confine queries automatically), so without this intersection a
+// user holding plugin_resources READ in one entity could force entity[]=<other entities>
+// and enumerate the personnel/user directory across the whole entity tree. Confine the
+// requested entities to the active session scope; fall back to the full active scope
+// when the caller sends nothing valid.
+$requested_entities = isset($_GET['entity']) ? (array) $_GET['entity'] : [];
+$requested_entities = array_map('intval', $requested_entities);
+$allowed_entities   = array_values(array_intersect($requested_entities, $_SESSION['glpiactiveentities'] ?? []));
+if (empty($allowed_entities)) {
+    $allowed_entities = $_SESSION['glpiactiveentities'] ?? [];
+}
+$_GET['entity'] = $allowed_entities;
+
 $result = Resource::getSqlSearchResult(
     false,
     $_GET["entity"],

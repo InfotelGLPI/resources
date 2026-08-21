@@ -30,7 +30,7 @@
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkCentralAccess();
+Session::checkRight('plugin_resources', READ);
 
 global $CFG_GLPI;
 

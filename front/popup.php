@@ -27,8 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-Session::checkLoginUser();
-
 if (isset($_GET["popup"])) {
     $_SESSION["glpipopup"]["name"] = $_GET["popup"];
 }

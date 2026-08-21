@@ -30,8 +30,6 @@
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Resource;
 
-Session::checkLoginUser();
-
 if (isset($_GET["file"])) {
     $base_dir = realpath(GLPI_PLUGIN_DOC_DIR . "/resources/pictures");
     $file     = realpath($base_dir . "/" . $_GET["file"]);
