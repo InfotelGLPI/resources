@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-20 14:46+0000\n"
+"POT-Creation-Date: 2026-08-21 10:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,17 +26,17 @@ msgstr ""
 msgid " Change name"
 msgstr ""
 
-#: front/linkad.form.php:75
+#: front/linkad.form.php:73
 #, php-format
 msgid "%1$s %2$s have been added in the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:162
+#: front/linkad.form.php:160
 #, php-format
 msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
 msgstr ""
 
-#: front/resource.remove.php:266 front/linkad.form.php:109
+#: front/resource.remove.php:266 front/linkad.form.php:107
 #, php-format
 msgid "%1$s %2$s have been updated in the LDAP directory"
 msgstr ""
@@ -657,7 +657,7 @@ msgstr ""
 msgid "Client Sensitized to security"
 msgstr ""
 
-#: front/modalvalidationinfo.php:45
+#: front/modalvalidationinfo.php:44
 msgid "Close"
 msgstr ""
 
@@ -827,7 +827,7 @@ msgstr ""
 msgid "Data Type not found"
 msgstr ""
 
-#: front/resource.remove.php:267 front/linkad.form.php:113
+#: front/resource.remove.php:267 front/linkad.form.php:111
 msgid "Data changed"
 msgstr ""
 
@@ -1012,8 +1012,8 @@ msgstr[1] ""
 msgid "Departure date"
 msgstr ""
 
-#: front/resource.remove.php:160 front/resource.form.php:281
-#: front/resource.form.php:592
+#: front/resource.remove.php:160 front/resource.form.php:286
+#: front/resource.form.php:600
 msgid "Departure of"
 msgstr ""
 
@@ -1079,7 +1079,7 @@ msgstr ""
 msgid "Displaying the security block on the resource"
 msgstr ""
 
-#: front/modalvalidationinfo.php:34
+#: front/modalvalidationinfo.php:33
 msgid "Do you verify all the information listed on this resource?"
 msgstr ""
 
@@ -1218,11 +1218,11 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: front/wizard.form.php:382
+#: front/wizard.form.php:388
 msgid "Failed to send the file"
 msgstr ""
 
-#: front/wizard.form.php:368
+#: front/wizard.form.php:374
 msgid "Failed to send the file (probably too large)"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgstr ""
 msgid "Notification history"
 msgstr ""
 
-#: front/resource.form.php:446
+#: front/resource.form.php:445
 msgid "Notification sent"
 msgstr ""
 
@@ -1928,11 +1928,11 @@ msgstr ""
 msgid "On needs tab, view parts"
 msgstr ""
 
-#: front/resource.form.php:242
+#: front/resource.form.php:247
 msgid "One or more mandatory fields are empty."
 msgstr ""
 
-#: front/resource.form.php:605 src/Resource_Leaving.php:167
+#: front/resource.form.php:613 src/Resource_Leaving.php:167
 msgid "Order"
 msgstr ""
 
@@ -2230,7 +2230,7 @@ msgstr ""
 msgid "Required Fields"
 msgstr ""
 
-#: front/wizard.form.php:116 front/wizard.form.php:413 src/Resource.php:1199
+#: front/wizard.form.php:116 front/wizard.form.php:423 src/Resource.php:1199
 msgid "Required fields are not filled. Please try again."
 msgstr ""
 
@@ -2666,7 +2666,7 @@ msgstr ""
 msgid "The checklist is finished"
 msgstr ""
 
-#: front/resource.form.php:413
+#: front/resource.form.php:412
 msgid "The checklist is not finished"
 msgstr ""
 
@@ -2696,7 +2696,7 @@ msgstr ""
 msgid "The folder you expected to display content doesn't exist."
 msgstr ""
 
-#: front/resource.form.php:449 src/Resource.php:4463
+#: front/resource.form.php:448 src/Resource.php:4463
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
@@ -2927,7 +2927,7 @@ msgstr ""
 msgid "User without resource"
 msgstr ""
 
-#: front/modalvalidationinfo.php:36 src/Resource_Leaving.php:174
+#: front/modalvalidationinfo.php:35 src/Resource_Leaving.php:174
 #: src/Resource_Validation.php:169
 msgid "Validate"
 msgstr ""
@@ -2974,8 +2974,8 @@ msgstr ""
 msgid "Wished leaving date"
 msgstr ""
 
-#: front/resource.remove.php:182 front/resource.form.php:290
-#: front/resource.form.php:603 src/ContractType.php:270
+#: front/resource.remove.php:182 front/resource.form.php:295
+#: front/resource.form.php:611 src/ContractType.php:270
 #: src/ContractType.php:290 src/Resource.php:1714
 #: src/Contracttypeprofile.php:93
 msgid "Without contract"
@@ -3049,8 +3049,8 @@ msgstr ""
 msgid "given name.name"
 msgstr ""
 
-#: front/resource.remove.php:166 front/resource.form.php:283
-#: front/resource.form.php:596
+#: front/resource.remove.php:166 front/resource.form.php:288
+#: front/resource.form.php:604
 msgid "leave on"
 msgstr ""
 
@@ -3062,28 +3062,28 @@ msgstr ""
 msgid "second level"
 msgstr ""
 
-#: front/linkad.form.php:82 front/resource.form.php:543
+#: front/linkad.form.php:80 front/resource.form.php:547
 msgid "the user has been added to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:169
+#: front/linkad.form.php:167
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
-#: front/resource.remove.php:291 front/linkad.form.php:135
-#: front/resource.form.php:562
+#: front/resource.remove.php:291 front/linkad.form.php:133
+#: front/resource.form.php:566
 msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:85 front/resource.form.php:546
+#: front/linkad.form.php:83 front/resource.form.php:550
 msgid "the user has not been added to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:172
+#: front/linkad.form.php:170
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/resource.remove.php:246 front/resource.remove.php:294
-#: front/linkad.form.php:138 front/resource.form.php:565
+#: front/linkad.form.php:136 front/resource.form.php:569
 msgid "the user has not been updated to the LDAP directory"
 msgstr ""
