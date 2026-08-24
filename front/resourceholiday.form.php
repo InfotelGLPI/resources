@@ -52,14 +52,19 @@ $holiday = new ResourceHoliday();
 
 if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $holiday->check(-1, CREATE, $_POST);
+    // ResourceHoliday has no entities_id of its own, so the check() above cannot enforce
+    // any entity boundary: re-check it on the owning Resource.
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
     $holiday->add($_POST);
     Html::back();
 } elseif (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $holiday->check($_POST['id'], UPDATE);
+    Resource::checkChildOwnership($holiday, $_POST['id']);
     $holiday->update($_POST);
     Html::back();
 } elseif (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $holiday->check($_POST['id'], PURGE);
+    Resource::checkChildOwnership($holiday, $_POST['id']);
     $holiday->delete($_POST, 1);
     $holiday->redirectToList();
 } elseif (isset($_GET['menu'])) {

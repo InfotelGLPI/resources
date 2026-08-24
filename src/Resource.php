@@ -125,6 +125,47 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Guard a mutation performed on a row owned by a Resource.
+     *
+     * Several child itemtypes of this plugin (LinkAd, ResourceHabilitation,
+     * ResourceHoliday, ResourceResting, Employee, ...) carry no entities_id column of
+     * their own. On those, CommonDBTM::check()/can() cannot enforce any entity boundary:
+     * checkEntity() short-circuits to true as soon as isEntityAssign() is false, so a
+     * check() called directly on the child degrades to a plain global right test and lets
+     * a user of entity A mutate rows belonging to entity B. The boundary only exists on
+     * the owning Resource, so it has to be checked there.
+     *
+     * @param int|string $resources_id id of the owning Resource
+     * @param int        $right        right to require on that Resource
+     */
+    public static function checkOwnership($resources_id, int $right = UPDATE): void
+    {
+        $resource = new self();
+        $resource->check((int) $resources_id, $right);
+    }
+
+    /**
+     * Same guard, for a mutation targeting an existing child row.
+     *
+     * The owning Resource is resolved from the child row read back from the database,
+     * never from a parent id posted alongside it: the two are not correlated, so trusting
+     * the posted parent would let a caller pass a Resource they own while naming a child
+     * id belonging to another one (identifier substitution).
+     *
+     * @param CommonDBTM $child    empty instance of the child itemtype
+     * @param int|string $child_id id of the child row being mutated
+     * @param int        $right    right to require on the owning Resource
+     */
+    public static function checkChildOwnership(CommonDBTM $child, $child_id, int $right = UPDATE): void
+    {
+        if (!$child->getFromDB((int) $child_id)) {
+            throw new BadRequestHttpException();
+        }
+
+        self::checkOwnership($child->fields['plugin_resources_resources_id'] ?? 0, $right);
+    }
+
+    /**
      * @return array
      */
     public static function getDataNames()

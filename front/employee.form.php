@@ -45,6 +45,9 @@ $employee = new Employee();
 //next step : show list needs of the new ressource
 if (isset($_POST["add_helpdesk_employee"])) {
     Session::checkRight(Employee::$rightname, CREATE);
+    // Employee has no entities_id of its own, so the global right above is the only guard
+    // here: scope the creation to the Resource it is attached to.
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
     $newID = $employee->add($_POST);
     Html::redirect("./resource_item.list.php?id=" . $_POST["plugin_resources_resources_id"] . "&exist=0");
 } else {

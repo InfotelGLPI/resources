@@ -55,8 +55,7 @@ if (isset($_POST["addhelpdeskitem"])) {
     Html::back();
 } //delete items needs from helpdesk
 elseif (isset($_POST["deletehelpdeskitem"])) {
-    $choice->getFromDB($_POST["id"]);
-    $resource->check($choice->fields['plugin_resources_resources_id'], UPDATE);
+    Resource::checkChildOwnership($choice, $_POST["id"]);
     $choice->delete(['id' => $_POST["id"]]);
     Html::back();
     //next step : email and finish resource creation
@@ -67,8 +66,7 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     // pass a Resource they own in plugin_resources_resources_id while listing Choice ids
     // belonging to a different Resource, so each Choice's own parent must be re-checked.
     foreach ($_POST["updateneedcomment"] as $key => $val) {
-        $choice->getFromDB($key);
-        $resource->check($choice->fields['plugin_resources_resources_id'], UPDATE);
+        Resource::checkChildOwnership($choice, $key);
         $varcomment = "commentneed" . $key;
         $values['id'] = $key;
         $values['commentneed'] = $_POST[$varcomment];

@@ -41,23 +41,27 @@ $linkad = new LinkAd();
 //update checklist
 if (isset($_POST["add"])) {
     Session::checkRight(LinkAd::$rightname, CREATE);
+    // LinkAd has no entities_id of its own, so the global right above is the only guard
+    // here: scope the creation to the Resource it is attached to.
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
     $linkad->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
     // LinkAd carries no entities_id of its own, so check($id, UPDATE) alone cannot scope
     // this to the caller's entity: resolve the owning Resource via
     // plugin_resources_resources_id and check the right on that instance instead.
-    $linkad->getFromDB((int) $_POST["id"]);
-    $resource = new Resource();
-    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
+    Resource::checkChildOwnership($linkad, $_POST["id"]);
     $linkad->update($_POST);
     $ldap = new LDAP();
     $ldap->getUserInformation($_POST["auth_id"]);
     Html::back();
 } elseif (isset($_POST["createAD"])) {
     // Drives Active Directory account creation from arbitrary POST identity fields:
-    // require the plugin write right before touching the directory or the DB.
+    // require the plugin write right before touching the directory or the DB, and scope it
+    // to the Resource this account is created for (LinkAd carries no entities_id, so no
+    // check() on it can enforce the entity boundary — see the "update" branch below).
     Session::checkRight(LinkAd::$rightname, CREATE);
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
     $ldap = new LDAP();
     $res = $ldap->createUserAD($_POST);
     if ($res) {
@@ -93,9 +97,7 @@ if (isset($_POST["add"])) {
     // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
-    $linkad->getFromDB($_POST['id']);
-    $resource = new Resource();
-    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
+    Resource::checkChildOwnership($linkad, $_POST['id']);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->updateUserAD($_POST);
     if ($res[0]) {
@@ -150,9 +152,7 @@ if (isset($_POST["add"])) {
     // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
-    $linkad->getFromDB($_POST['id']);
-    $resource = new Resource();
-    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
+    Resource::checkChildOwnership($linkad, $_POST['id']);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->disableUserAD($_POST);
     if ($res) {

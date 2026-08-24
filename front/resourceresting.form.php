@@ -52,19 +52,26 @@ $resting = new ResourceResting();
 
 if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $resting->check(-1, CREATE, $_POST);
+    // ResourceResting has no entities_id of its own, so the check() above cannot enforce
+    // any entity boundary: re-check it on the owning Resource.
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
     $resting->add($_POST);
     Html::back();
 } elseif (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $resting->check($_POST['id'], UPDATE);
+    Resource::checkChildOwnership($resting, $_POST['id']);
     $resting->update($_POST);
     Html::back();
 } elseif (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {
     $resting->check($_POST['id'], UPDATE);
+    // Resolve the owner before $resting->fields is overwritten below.
+    Resource::checkChildOwnership($resting, $_POST['id']);
     $resting->fields = ['id' => $_POST['id'], 'date_end' => $_POST['date_end']];
     $resting->updateInDB(['date_end']);
     Html::back();
 } elseif (isset($_POST["deleterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $resting->check($_POST['id'], PURGE);
+    Resource::checkChildOwnership($resting, $_POST['id']);
     $resting->delete($_POST, 1);
     $resting->redirectToList();
 } elseif (isset($_GET['menu'])) {

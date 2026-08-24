@@ -55,11 +55,15 @@ if (isset($_POST['add'])) {
         !empty($_POST['plugin_resources_habilitations_id']) &&
         $_POST['plugin_resources_habilitations_id']) {
         $habilitation->check(-1, UPDATE, $_POST);
+        // ResourceHabilitation has no entities_id of its own, so the check() above cannot
+        // enforce any entity boundary: re-check it on the owning Resource.
+        Resource::checkOwnership($_POST['plugin_resources_resources_id'] ?? 0);
         $habilitation->add($_POST);
     }
     Html::back();
 } elseif (isset($_POST["delete"])) {
     $habilitation->check($_POST["id"], UPDATE);
+    Resource::checkChildOwnership($habilitation, $_POST["id"]);
     $habilitation->delete($_POST);
     Html::back();
 }
