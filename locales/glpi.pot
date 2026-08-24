@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-24 12:43+0000\n"
+"POT-Creation-Date: 2026-08-24 13:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,17 +26,17 @@ msgstr ""
 msgid " Change name"
 msgstr ""
 
-#: front/linkad.form.php:73
+#: front/linkad.form.php:76
 #, php-format
 msgid "%1$s %2$s have been added in the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:160
+#: front/linkad.form.php:171
 #, php-format
 msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
 msgstr ""
 
-#: front/resource.remove.php:263 front/linkad.form.php:107
+#: front/resource.remove.php:263 front/linkad.form.php:114
 #, php-format
 msgid "%1$s %2$s have been updated in the LDAP directory"
 msgstr ""
@@ -818,7 +818,7 @@ msgstr ""
 msgid "Data Type not found"
 msgstr ""
 
-#: front/resource.remove.php:264 front/linkad.form.php:111
+#: front/resource.remove.php:264 front/linkad.form.php:118
 msgid "Data changed"
 msgstr ""
 
@@ -2940,28 +2940,28 @@ msgstr ""
 msgid "second level"
 msgstr ""
 
-#: front/linkad.form.php:80 front/resource.form.php:545
+#: front/linkad.form.php:83 front/resource.form.php:545
 msgid "the user has been added to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:167
+#: front/linkad.form.php:178
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
-#: front/resource.remove.php:288 front/linkad.form.php:133
+#: front/resource.remove.php:288 front/linkad.form.php:140
 #: front/resource.form.php:563
 msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:83 front/resource.form.php:548
+#: front/linkad.form.php:86 front/resource.form.php:548
 msgid "the user has not been added to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:170
+#: front/linkad.form.php:181
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/resource.remove.php:243 front/resource.remove.php:291
-#: front/linkad.form.php:136 front/resource.form.php:566
+#: front/linkad.form.php:143 front/resource.form.php:566
 msgid "the user has not been updated to the LDAP directory"
 msgstr ""
