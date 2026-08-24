@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -61,8 +61,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceBadge extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
     public $dohistory = true;
 
     /**
@@ -73,7 +72,7 @@ class ResourceBadge extends CommonDBTM
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Badge management', 'Badges management', 2, 'resources');
     }
@@ -87,7 +86,7 @@ class ResourceBadge extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -98,7 +97,7 @@ class ResourceBadge extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -108,7 +107,7 @@ class ResourceBadge extends CommonDBTM
         return self::createTabEntry(self::getTypeName());
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-id";
     }
@@ -121,7 +120,7 @@ class ResourceBadge extends CommonDBTM
      * @return bool
      * @see CommonGLPI::displayTabContentForItem()
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             $self = new self();
@@ -133,25 +132,25 @@ class ResourceBadge extends CommonDBTM
     /**
      * Display of the link to configure the badge interface
      */
-//    function showConfigForm()
-//    {
-//        echo "<br>";
-//        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-//        echo "<div class='center'><table class='tab_cadre_fixe'>";
-//        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
-//        echo "<tr class='tab_bg_1'><td class='center'>";
-//        echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
-//        echo "</td></tr></table></div>";
-//        Html::closeForm();
-//        echo "<br>";
-//    }
+    //    function showConfigForm()
+    //    {
+    //        echo "<br>";
+    //        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
+    //        echo "<div class='center'><table class='tab_cadre_fixe'>";
+    //        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
+    //        echo "<tr class='tab_bg_1'><td class='center'>";
+    //        echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
+    //        echo "</td></tr></table></div>";
+    //        Html::closeForm();
+    //        echo "<br>";
+    //    }
 
     /**
      * Choose link with metademand
      *
      * @return bool
      */
-    function showFormBadge()
+    public function showFormBadge()
     {
         if (!$this->canView()) {
             return false;
@@ -186,7 +185,7 @@ class ResourceBadge extends CommonDBTM
                 Dropdown::show(Metademand::class, [
                     'name' => 'plugin_metademands_metademands_id',
                     'used' => $used_data,
-                    'entity' => $_SESSION['glpiactive_entity']
+                    'entity' => $_SESSION['glpiactive_entity'],
                 ]);
                 $metademand_dropdown = ob_get_clean();
 
@@ -239,9 +238,9 @@ class ResourceBadge extends CommonDBTM
                 }
                 //DATA LINE
                 echo "<td>" . Dropdown::getDropdownName(
-                        'glpi_plugin_metademands_metademands',
-                        $field['plugin_metademands_metademands_id']
-                    ) . "</td>";
+                    'glpi_plugin_metademands_metademands',
+                    $field['plugin_metademands_metademands_id'],
+                ) . "</td>";
                 echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
                 echo "</tr>";
             }
@@ -258,7 +257,7 @@ class ResourceBadge extends CommonDBTM
     /**
      * Display Menu
      */
-    function showMenu()
+    public function showMenu()
     {
 
         $title = _n('Badge management', 'Badges management', 2, 'resources');
@@ -295,7 +294,7 @@ class ResourceBadge extends CommonDBTM
     /**
      * Show form from helpdesk to badge restitution of a resource
      */
-    function showWizardForm()
+    public function showWizardForm()
     {
         // Capture the wizard header and the resource dropdown as HTML fragments; keep the
         // dropdown rand to wire the AJAX loader script to its change event.
@@ -308,7 +307,7 @@ class ResourceBadge extends CommonDBTM
             'name' => 'plugin_resources_resources_id',
             'display' => true,
             'on_change' => 'plugin_resources_load_badge()',
-            'entity' => $_SESSION['glpiactiveentities']
+            'entity' => $_SESSION['glpiactiveentities'],
         ]);
         $resource_dropdown = ob_get_clean();
 
@@ -319,7 +318,7 @@ class ResourceBadge extends CommonDBTM
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
             $params,
             'dropdown_plugin_resources_resources_id' . $rand,
-            false
+            false,
         );
         $params = ['action' => 'cleanButtonRestitution'];
         $clean_button = Ajax::updateItemJsCode(
@@ -327,7 +326,7 @@ class ResourceBadge extends CommonDBTM
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
             $params,
             'dropdown_plugin_resources_resources_id' . $rand,
-            false
+            false,
         );
         $load_script = "<script type='text/javascript'>function plugin_resources_load_badge(){"
             . $load_badge . ";" . $clean_button . "}</script>";
@@ -348,7 +347,7 @@ class ResourceBadge extends CommonDBTM
      *
      * @param $users_id
      */
-    function loadBadge($plugin_resources_resources_id)
+    public function loadBadge($plugin_resources_resources_id)
     {
 
         echo "<div class='row'>";
@@ -360,7 +359,7 @@ class ResourceBadge extends CommonDBTM
 
         $condition = [
             "plugin_resources_resources_id" => $plugin_resources_resources_id,
-            "itemtype" => 'User'
+            "itemtype" => 'User',
         ];
         $dbu = new DbUtils();
         $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
@@ -375,7 +374,7 @@ class ResourceBadge extends CommonDBTM
         $rand = Badge::dropdown([
             'name' => 'badges_id',
             'condition' => $crit,
-            'on_change' => 'plugin_resources_load_badge_restitution()'
+            'on_change' => 'plugin_resources_load_badge_restitution()',
         ]);
 
         //Button display
@@ -386,7 +385,7 @@ class ResourceBadge extends CommonDBTM
             'plugin_resources_button_restitution',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
             $params,
-            'dropdown_badges_id' . $rand
+            'dropdown_badges_id' . $rand,
         );
         echo "}";
 
@@ -398,14 +397,13 @@ class ResourceBadge extends CommonDBTM
     /**
      * Button display
      */
-    function loadBadgeRestitution()
+    public function loadBadgeRestitution()
     {
         echo Html::submit(
             _sx('button', 'Save'),
-            ['name' => 'plugin_resources_badge_restitution', 'class' => 'btn btn-primary']
+            ['name' => 'plugin_resources_badge_restitution', 'class' => 'btn btn-primary'],
         );
     }
-
 
     /**
      * Creation of ticket for restitution badge
@@ -414,7 +412,7 @@ class ResourceBadge extends CommonDBTM
      *
      * @return bool
      */
-    static function createTicket($plugin_resources_resources_id, $options = [])
+    public static function createTicket($plugin_resources_resources_id, $options = [])
     {
         $resource = new Resource();
         $resource->getFromDB($plugin_resources_resources_id);
@@ -428,7 +426,7 @@ class ResourceBadge extends CommonDBTM
         $resource_change = new Resource_Change();
         if ($resource_change->getFromDBByCrit([
             'actions_id' => Resource_Change::BADGE_RESTITUTION,
-            'entities_id' => $resource->fields['entities_id']
+            'entities_id' => $resource->fields['entities_id'],
         ])) {
             $data['itilcategories_id'] = $resource_change->fields['itilcategories_id'];
 
@@ -471,7 +469,7 @@ class ResourceBadge extends CommonDBTM
         $input['_users_id_requester'] = Session::getLoginUserID();
         $input["items_id"] = [
             Resource::class => [$plugin_resources_resources_id],
-            Badge::class => [$options['badges_id']]
+            Badge::class => [$options['badges_id']],
         ];
 
         // Compute time_to_resolve if predefined based on create date
@@ -479,20 +477,20 @@ class ResourceBadge extends CommonDBTM
             $input['time_to_resolve'] = Html::computeGenericDateTimeSearch(
                 $predefined['time_to_resolve'],
                 false,
-                strtotime($createtime)
+                strtotime($createtime),
             );
         }
 
         $input["name"] = __('Badge restitution', 'resources') . ' : ' . " " . Resource::getResourceName(
-                $plugin_resources_resources_id
-            );
+            $plugin_resources_resources_id,
+        );
         $input["content"] = __('Badge restitution', 'resources') . ' :' . " " . Resource::getResourceName(
-                $plugin_resources_resources_id
-            ) . "\n";
+            $plugin_resources_resources_id,
+        ) . "\n";
         $input["content"] .= Badge::getTypeName(1) . ' : ' . " " . Dropdown::getDropdownName(
-                'glpi_plugin_badges_badges',
-                $options['badges_id']
-            );
+            'glpi_plugin_badges_badges',
+            $options['badges_id'],
+        );
         $input["content"] .= addslashes("\n\n");
         $input['id'] = 0;
         $ticket = new Ticket();
@@ -522,7 +520,7 @@ class ResourceBadge extends CommonDBTM
                 Resource::class,
                 $changes,
                 '',
-                Log::HISTORY_LOG_SIMPLE_MESSAGE
+                Log::HISTORY_LOG_SIMPLE_MESSAGE,
             );
         }
         return $result;

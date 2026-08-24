@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -49,11 +49,12 @@ $report = new AutoReport(__("Report listing users linked to more than one resour
 // Columns title (optional)
 $report->setColumns([
     new ColumnLink(
-        'items_id', __('User'), 'User',
-        ['sorton' => 'items_id']
+        'items_id',
+        __('User'),
+        'User',
+        ['sorton' => 'items_id'],
     ),
 ]);
-
 
 //display only resource without user linked
 $query = "SELECT `glpi_plugin_resources_resources_items`.`items_id` as items_id
@@ -67,7 +68,6 @@ $query = "SELECT `glpi_plugin_resources_resources_items`.`items_id` as items_id
             AND `glpi_users`.`is_deleted` = 0
           AND `glpi_plugin_resources_resources`.`is_deleted` = 0
           GROUP BY items_id HAVING COUNT(items_id) > 1 ";
-
 
 $report->setSqlRequest($query);
 $report->execute();

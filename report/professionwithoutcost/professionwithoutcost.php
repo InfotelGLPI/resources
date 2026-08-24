@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -51,12 +51,16 @@ $report = new AutoReport(__("Report listing the corps and grades without budgeta
 
 //Report's search criterias
 $professioncategory = new DropdownCriteria(
-    $report, 'plugin_resources_professioncategories_id',
-    'glpi_plugin_resources_professioncategories', ProfessionCategory::getTypeName(1)
+    $report,
+    'plugin_resources_professioncategories_id',
+    'glpi_plugin_resources_professioncategories',
+    ProfessionCategory::getTypeName(1),
 );
 $professionline = new DropdownCriteria(
-    $report, 'plugin_resources_professionlines_id',
-    'glpi_plugin_resources_professionlines', ProfessionLine::getTypeName(1)
+    $report,
+    'plugin_resources_professionlines_id',
+    'glpi_plugin_resources_professionlines',
+    ProfessionLine::getTypeName(1),
 );
 
 //Display criterias form is needed
@@ -74,24 +78,23 @@ $columns = [
     'end_date' => ['sorton' => 'end_date'],
 ];
 
-
 $output_type = Search::HTML_OUTPUT;
 $dbu = new DbUtils();
 
 // Form validate
 if ($report->criteriasValidated()) {
-    if (isset ($_POST['list_limit'])) {
+    if (isset($_POST['list_limit'])) {
         $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-        unset ($_POST['list_limit']);
+        unset($_POST['list_limit']);
     }
-    if (!isset ($_REQUEST['sort'])) {
+    if (!isset($_REQUEST['sort'])) {
         $_REQUEST['sort'] = "profession";
         $_REQUEST['order'] = "ASC";
     }
 
     $limit = $_SESSION['glpilist_limit'];
 
-    if (isset ($_POST["display_type"])) {
+    if (isset($_POST["display_type"])) {
         $output_type = $_POST["display_type"];
         if ($output_type < 0) {
             $output_type = -$output_type;
@@ -198,8 +201,8 @@ if ($report->criteriasValidated()) {
                                  AND (`glpi_plugin_resources_costs`.`end_date` IS NULL)
                                  OR (`glpi_plugin_resources_costs`.`end_date` > '" . $date . "')))
                       WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id`='" . $rank->getField(
-                    'plugin_resources_professions_id'
-                ) . "'
+                'plugin_resources_professions_id',
+            ) . "'
                            AND `glpi_plugin_resources_ranks`.`is_active` = 1
                            AND ((`glpi_plugin_resources_ranks`.`end_date` IS NULL )
                                  OR (`glpi_plugin_resources_ranks`.`end_date` > '" . $date . "' ))
@@ -262,14 +265,14 @@ if ($report->criteriasValidated()) {
                 foreach ($val as $k => $v) {
                     $name = $key . "[$k]";
                     echo Html::hidden($name, ['value' => $v]);
-                    if (!empty ($param)) {
+                    if (!empty($param)) {
                         $param .= "&";
                     }
                     $param .= $key . "[" . $k . "]=" . urlencode($v);
                 }
             } else {
                 echo Html::hidden($key, ['value' => $val]);
-                if (!empty ($param)) {
+                if (!empty($param)) {
                     $param .= "&";
                 }
                 $param .= "$key=" . urlencode($val);
@@ -303,7 +306,7 @@ if ($report->criteriasValidated()) {
             $num,
             Profession::getTypeName(1) . " - " . __('Code', 'resources'),
             'profession_code',
-            true
+            true,
         );
         showTitle($output_type, $num, Rank::getTypeName(1), 'rank_name', true);
         showTitle($output_type, $num, Rank::getTypeName(1) . " - " . __('Code', 'resources'), 'rank_code', true);
@@ -336,16 +339,16 @@ if ($report->criteriasValidated()) {
                     $output_type,
                     Dropdown::getDropdownName('glpi_plugin_resources_professionlines', $data['professionline']),
                     $num,
-                    $key
+                    $key,
                 );
                 echo Search::showItem(
                     $output_type,
                     Dropdown::getDropdownName(
                         'glpi_plugin_resources_professioncategories',
-                        $data['professioncategory']
+                        $data['professioncategory'],
                     ),
                     $num,
-                    $key
+                    $key,
                 );
                 echo Search::showItem($output_type, $data['profession'], $num, $key);
                 echo Search::showItem($output_type, $data['profession_code'], $num, $key);
@@ -412,7 +415,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
         $num,
         $link,
         $issort,
-        ($order == 'ASC' ? 'DESC' : 'ASC')
+        ($order == 'ASC' ? 'DESC' : 'ASC'),
     );
 }
 

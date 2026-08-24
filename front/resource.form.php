@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 global $DB;
@@ -216,7 +216,7 @@ elseif (isset($_POST["deleteemployee"])) {
         $employee->add([
             'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
             'plugin_resources_resources_id' => $newID,
-            'plugin_resources_clients_id' => 0
+            'plugin_resources_clients_id' => 0,
         ]);
     }
     Html::back();
@@ -241,7 +241,6 @@ elseif (isset($_POST["update"])) {
         $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
         $values['withtemplate'] = $_POST["withtemplate"];
 
-
         $values["requiredfields"] = 1;
 
         Session::addMessageAfterRedirect(__("One or more mandatory fields are empty.", 'resources'), false, ERROR);
@@ -257,13 +256,13 @@ elseif (isset($_POST["update"])) {
                 'id' => $employee->getID(),
                 'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
                 'plugin_resources_resources_id' => $_POST['id'],
-                'plugin_resources_clients_id' => 0
+                'plugin_resources_clients_id' => 0,
             ]);
         } else {
             $employee->add([
                 'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
                 'plugin_resources_resources_id' => $_POST['id'],
-                'plugin_resources_clients_id' => 0
+                'plugin_resources_clients_id' => 0,
             ]);
         }
     }
@@ -435,7 +434,7 @@ elseif (isset($_POST["add_checklist"])) {
     $resource->check((int) $_POST["id"], READ);
     $restrict = [
         "itemtype" => 'User',
-        "plugin_resources_resources_id" => $_POST["id"]
+        "plugin_resources_resources_id" => $_POST["id"],
     ];
     $dbu = new DbUtils();
     $linkeduser = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
@@ -447,7 +446,7 @@ elseif (isset($_POST["add_checklist"])) {
         Session::addMessageAfterRedirect(
             __('The notification is not sent because the resource is not linked with a user', 'resources'),
             true,
-            ERROR
+            ERROR,
         );
     }
     Html::back();
@@ -468,13 +467,13 @@ elseif (isset($_POST["add_checklist"])) {
         }
     }
     Html::back();
-} else if (isset($_POST["synchActiveDirectory"])) {
+} elseif (isset($_POST["synchActiveDirectory"])) {
     // Creating/updating an Active Directory account is a high-impact external side
     // effect. resource.form.php has no global guard and the $canedit computed below was
     // never enforced, leaving this branch reachable by any authenticated user. Gate on
     // UPDATE right + entity access of the target resource before touching the directory.
     $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
-    $resource->getFromDB($_POST["plugin_resources_resources_id"] );
+    $resource->getFromDB($_POST["plugin_resources_resources_id"]);
 
     $config          = new Config();
     $configAD        = new Adconfig();
@@ -505,7 +504,6 @@ elseif (isset($_POST["add_checklist"])) {
         $location                   = Dropdown::getDropdownName(Location::getTable(), $resource->fields['locations_id']);
         $linkAD->fields["location"] = $location;
     }
-
 
     $ID = $linkAD->getID();
     $value = [
@@ -544,36 +542,35 @@ elseif (isset($_POST["add_checklist"])) {
         if ($res) {
             $_POST["action_done"] = 1;
             $linkad->add($value);
-            $message = __('the user has been added to the LDAP directory','resources');
+            $message = __('the user has been added to the LDAP directory', 'resources');
             Session::addMessageAfterRedirect($message, false, INFO);
-        }else{
-            $message = __('the user has not been added to the LDAP directory','resources');
+        } else {
+            $message = __('the user has not been added to the LDAP directory', 'resources');
             Session::addMessageAfterRedirect($message, false, ERROR);
         }
-    }
-    else {
+    } else {
 
         //update
         $ldap = new LDAP();
         $linkad->getFromDB($value['id']);
         $value["login"] = $linkad->getField("login");
         $res = $ldap->updateUserAD($value);
-        if($res[0]){
+        if ($res[0]) {
 
             $value["action_done"] = 1;
             $linkad->update($value);
 
-            $message = __('the user has been updated to the LDAP directory','resources');
+            $message = __('the user has been updated to the LDAP directory', 'resources');
             Session::addMessageAfterRedirect($message, false, INFO);
-        }else{
-            $message = __('the user has not been updated to the LDAP directory','resources');
+        } else {
+            $message = __('the user has not been updated to the LDAP directory', 'resources');
             Session::addMessageAfterRedirect($message, false, ERROR);
         }
     }
 
     Html::back();
 
-} else if (isset($_POST["validOrderLeaving"])) {
+} elseif (isset($_POST["validOrderLeaving"])) {
     // IDOR + unauthorized write: the target id comes entirely from POST and update()
     // enforces neither right nor entity. Gate on UPDATE of the target resource, like the
     // sibling write branches, before mutating it and generating a departure ticket.
@@ -634,7 +631,6 @@ elseif (isset($_POST["add_checklist"])) {
             unset($groupticket->fields["id"]);
             $groupticket->add($groupticket->fields);
         }
-
 
     }
     Html::back();

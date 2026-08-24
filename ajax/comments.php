@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\BadRequestHttpException;
@@ -47,7 +47,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
     }
 
     switch ($_REQUEST["table"]) {
-        case "glpi_plugin_resources_resources" :
+        case "glpi_plugin_resources_resources":
             if ($_REQUEST['value'] == 0) {
                 $tmpname['link'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
                 $tmpname['comment'] = "";
@@ -67,7 +67,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             }
             break;
 
-        default :
+        default:
             // The only table this plugin endpoint legitimately serves is the resources
             // table handled above (see Resource::dropdown(), which passes getTable()).
             // Refuse any other client-supplied table so it cannot be used to read the

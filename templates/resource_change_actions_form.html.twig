@@ -1,17 +1,30 @@
 {#
- # Change-action setup form (resources plugin, Resource_Change::showFormActions).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # The action cell (label + dropdown + the AJAX reload <script> that depends on
- # the dropdown's rand) is pre-rendered by PHP and injected with |raw. The two
- # empty cells are AJAX targets filled client-side. The <form> carries the GLPI
- # CSRF token.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   form_action : string   target URL
- #   alert_text  : string   warning banner text
- #   title       : string   panel header
- #   action_cell : string   pre-rendered label + dropdown + script
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <div class="alert alert-warning">{{ alert_text }}</div>
 <form name="form" method="post" action="{{ form_action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">

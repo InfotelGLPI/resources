@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 global $CFG_GLPI, $DB;
@@ -55,7 +55,7 @@ if (Session::getCurrentInterface() == 'central') {
 if (empty($_POST["date_end"])) {
     if (isset($_POST["effective_leaving_date"]) && !empty($_POST["effective_leaving_date"])) {
         $_POST["date_end"] = $_POST["effective_leaving_date"];
-    } else if (isset($_POST["resignation_date"]) && !empty($_POST["resignation_date"])) {
+    } elseif (isset($_POST["resignation_date"]) && !empty($_POST["resignation_date"])) {
         $_POST["date_end"] = $_POST["resignation_date"];
     } else {
         $_POST["date_end"] = date("Y-m-d");
@@ -81,7 +81,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
     $input["id"] = $_POST["plugin_resources_resources_id"];
     $input["date_end"] = $_POST["date_end"];
     if (!$config->fields['remove_at_midnight']) {
-        $input["date_end"] .=" 23:59:59";
+        $input["date_end"] .= " 23:59:59";
     }
     $input["remove_manager"] = $_POST["remove_manager"] ?? 0;
     if (($_POST["date_end"] < $date)
@@ -131,12 +131,11 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
         $leavingInformation->add($inputleaving);
     }
 
-
     //test it
     $resource->getFromDB($_POST["plugin_resources_resources_id"]);
     $resources_checklist = Checklist::checkIfChecklistExist(
         $_POST["plugin_resources_resources_id"],
-        Checklist::RESOURCES_CHECKLIST_OUT
+        Checklist::RESOURCES_CHECKLIST_OUT,
     );
     if (!$resources_checklist) {
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_OUT);
@@ -157,31 +156,31 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
         }
         $resource->getFromDB($input["id"]);
         $ticket->fields["name"] = __(
-                "Departure of",
-                'resources'
-            ) . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
+            "Departure of",
+            'resources',
+        ) . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
         $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
 
         $ticket->fields["content"] = $resource->fields['name'] . " " . $resource->fields['firstname'] . " " . __(
-                "leave on",
-                "resources"
-            ) . " " . Html::convDate($input["date_end"]);
+            "leave on",
+            "resources",
+        ) . " " . Html::convDate($input["date_end"]);
         if (isset($input['plugin_resources_leavingreasons_id']) && !empty($input['plugin_resources_leavingreasons_id'])) {
             $ticket->fields["content"] .= "<br>" . LeavingReason::getTypeName(0) . " : " . Dropdown::getDropdownName(
-                    LeavingReason::getTable(),
-                    $input["plugin_resources_leavingreasons_id"]
-                );
+                LeavingReason::getTable(),
+                $input["plugin_resources_leavingreasons_id"],
+            );
         }
         if (($resource->fields['plugin_resources_contracttypes_id']) != 0) {
             $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . Dropdown::getDropdownName(
-                    ContractType::getTable(),
-                    $resource->fields['plugin_resources_contracttypes_id']
-                );
+                ContractType::getTable(),
+                $resource->fields['plugin_resources_contracttypes_id'],
+            );
         } else {
             $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . __(
-                    "Without contract",
-                    'resources'
-                );
+                "Without contract",
+                'resources',
+            );
         }
         $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
         $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
@@ -190,8 +189,6 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
         $ticket->fields['items_id'] = [Resource::class => [$input['id']]];
         unset($ticket->fields["id"]);
         $ticket->add($ticket->fields);
-
-
 
         $linkad = new LinkAd();
         if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $input['id']])) {
@@ -287,7 +284,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
                     }
                     $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
-//                    $fup->add($toadd);
+                    //                    $fup->add($toadd);
                     $message = __('the user has been updated to the LDAP directory', 'resources');
                     Session::addMessageAfterRedirect($message, false, INFO);
                 } else {

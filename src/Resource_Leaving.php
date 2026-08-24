@@ -1,33 +1,34 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
+
 use CommonDBTM;
 use CommonGLPI;
 use Html;
@@ -42,18 +43,17 @@ if (!defined('GLPI_ROOT')) {
  */
 class Resource_Leaving extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     /**
      * @param int $nb
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
 
-        return __('Leaving','resources');
+        return __('Leaving', 'resources');
     }
 
     public static function getIcon()
@@ -70,7 +70,7 @@ class Resource_Leaving extends CommonDBTM
      *
      * @return booleen
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -81,7 +81,7 @@ class Resource_Leaving extends CommonDBTM
      *
      * @return booleen
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -100,7 +100,8 @@ class Resource_Leaving extends CommonDBTM
      *
      *  @return string tab name
      **/
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
 
         if ($item->getType() == Resource::class
@@ -111,7 +112,8 @@ class Resource_Leaving extends CommonDBTM
         return '';
     }
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
 
         if ($item->getType() == Resource::class) {
 
@@ -126,7 +128,8 @@ class Resource_Leaving extends CommonDBTM
      * @param        $exist
      * @param string $withtemplate
      */
-    function showLeavingForm($plugin_resources_resources_id) {
+    public function showLeavingForm($plugin_resources_resources_id)
+    {
         if (!$this->canView()) {
             return false;
         }
@@ -134,27 +137,27 @@ class Resource_Leaving extends CommonDBTM
         $canedit = $this->canCreate();
         $resources = new Resource();
 
-        $resources->getFromDB( $plugin_resources_resources_id);
+        $resources->getFromDB($plugin_resources_resources_id);
 
         if (empty($resources->fields['date_declaration_leaving'])) {
             echo "<div class='alert alert-info'>" . __(
-                    'The resource is not leaving',
-                    'resources'
-                ) . "</div>";
+                'The resource is not leaving',
+                'resources',
+            ) . "</div>";
             return false;
         }
 
 
         if (empty($resources->fields['remove_manager']) || $_SESSION['glpiID'] != $resources->fields['remove_manager']) {
             echo "<div class='alert alert-danger'>" . __(
-                    'You are not the manager of this resource departure',
-                    'resources'
-                ) . "</div>";
+                'You are not the manager of this resource departure',
+                'resources',
+            ) . "</div>";
             return false;
         }
 
         if ($canedit) {
-            echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
+            echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Give a leaving order', 'resources') . "</th></tr>";

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Resources\Menu;
@@ -63,7 +63,7 @@ elseif (isset($_POST["delete"])) {
     $task->delete($_POST);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
-        $_POST["plugin_resources_resources_id"]
+        $_POST["plugin_resources_resources_id"],
     );
 } //from central
 //restore task
@@ -72,7 +72,7 @@ elseif (isset($_POST["restore"])) {
     $task->restore($_POST);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
-        $_POST["plugin_resources_resources_id"]
+        $_POST["plugin_resources_resources_id"],
     );
 } //from central
 //purge task
@@ -81,7 +81,7 @@ elseif (isset($_POST["purge"])) {
     $task->delete($_POST, 1);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
-        $_POST["plugin_resources_resources_id"]
+        $_POST["plugin_resources_resources_id"],
     );
 } //from central
 //add item to task
@@ -104,8 +104,8 @@ elseif (isset($_POST["deletetaskitem"])) {
         [
             'id' => $_GET["id"],
             'plugin_resources_resources_id' => $_GET["plugin_resources_resources_id"],
-            'withtemplate' => $_GET["withtemplate"]
-        ]
+            'withtemplate' => $_GET["withtemplate"],
+        ],
     );
     Html::footer();
 }

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -51,36 +51,46 @@ $report = new AutoReport(__("Report listing obsolete corps and ranks", "resource
 // Columns title (optional)
 $report->setColumns([
     new ColumnLink(
-        'rank_id', Rank::getTypeName(1), Rank::class,
-        ['sorton' => 'rank_name']
+        'rank_id',
+        Rank::getTypeName(1),
+        Rank::class,
+        ['sorton' => 'rank_name'],
     ),
     new Column(
-        'rank_code', Rank::getTypeName(1) . " - " . __('Code', 'resources'),
-        ['sorton' => 'rank_code']
+        'rank_code',
+        Rank::getTypeName(1) . " - " . __('Code', 'resources'),
+        ['sorton' => 'rank_code'],
     ),
     new ColumnDate(
-        'rank_begin_date', Rank::getTypeName(1) . " - " . __('Begin date'),
-        ['sorton' => 'rank_begin_date']
+        'rank_begin_date',
+        Rank::getTypeName(1) . " - " . __('Begin date'),
+        ['sorton' => 'rank_begin_date'],
     ),
     new ColumnDate(
-        'rank_end_date', Rank::getTypeName(1) . " - " . __('End date'),
-        ['sorton' => 'rank_end_date']
+        'rank_end_date',
+        Rank::getTypeName(1) . " - " . __('End date'),
+        ['sorton' => 'rank_end_date'],
     ),
     new ColumnLink(
-        'prof_id', Profession::getTypeName(1), Profession::class,
-        ['sorton' => 'prof_name']
+        'prof_id',
+        Profession::getTypeName(1),
+        Profession::class,
+        ['sorton' => 'prof_name'],
     ),
     new Column(
-        'prof_code', Profession::getTypeName(1) . " - " . __('Code', 'resources'),
-        ['sorton' => 'prof_code']
+        'prof_code',
+        Profession::getTypeName(1) . " - " . __('Code', 'resources'),
+        ['sorton' => 'prof_code'],
     ),
     new ColumnDate(
-        'prof_begin_date', Profession::getTypeName(1) . " - " . __('Begin date'),
-        ['sorton' => 'prof_begin_date']
+        'prof_begin_date',
+        Profession::getTypeName(1) . " - " . __('Begin date'),
+        ['sorton' => 'prof_begin_date'],
     ),
     new ColumnDate(
-        'prof_end_date', Profession::getTypeName(1) . " - " . __('End date'),
-        ['sorton' => 'prof_end_date']
+        'prof_end_date',
+        Profession::getTypeName(1) . " - " . __('End date'),
+        ['sorton' => 'prof_end_date'],
     ),
 ]);
 
@@ -114,7 +124,6 @@ $query = "SELECT `glpi_plugin_resources_ranks`.`id` as rank_id,
                OR (`glpi_plugin_resources_ranks`.`end_date` IS NULL AND `glpi_plugin_resources_professions`.`end_date` IS NOT NULL)
                OR (`glpi_plugin_resources_ranks`.`end_date` IS NOT NULL AND `glpi_plugin_resources_professions`.`end_date` IS NULL)
              " . $condition . $report->getOrderBy('rank_id');
-
 
 $report->setSqlRequest($query);
 

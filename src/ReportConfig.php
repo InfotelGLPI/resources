@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -48,8 +48,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ReportConfig extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     /**
      * Return the localized name of the current Type
@@ -59,12 +58,12 @@ class ReportConfig extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Notification', 'Notifications', $nb);
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-mail";
     }
@@ -78,7 +77,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -89,7 +88,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -107,7 +106,7 @@ class ReportConfig extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class && $this->canView()) {
             return self::createTabEntry(self::getTypeName(2));
@@ -126,7 +125,7 @@ class ReportConfig extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         global $CFG_GLPI;
 
@@ -138,14 +137,14 @@ class ReportConfig extends CommonDBTM
                 $self = new self();
                 $self->showForm("", [
                     'plugin_resources_resources_id' => $ID,
-                    'target' => PLUGIN_RESOURCES_WEBDIR . "/front/reportconfig.form.php"
+                    'target' => PLUGIN_RESOURCES_WEBDIR . "/front/reportconfig.form.php",
                 ]);
             }
 
             if ($item->can($ID, UPDATE) && self::checkIfReportsExist($ID) && !$withtemplate) {
                 Resource::showReportForm([
                     'id' => $ID,
-                    'target' => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php"
+                    'target' => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
                 ]);
             }
         }
@@ -159,7 +158,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         // Not attached to reference -> not added
         if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
@@ -173,7 +172,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return bool
      */
-    static function checkIfReportsExist($ID)
+    public static function checkIfReportsExist($ID)
     {
         $restrict = ["plugin_resources_resources_id" => $ID];
         $dbu = new DbUtils();
@@ -193,7 +192,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return bool
      */
-    function getFromDBByResource($plugin_resources_resources_id)
+    public function getFromDBByResource($plugin_resources_resources_id)
     {
         global $DB;
 
@@ -220,7 +219,7 @@ class ReportConfig extends CommonDBTM
      * @since version 0.84
      *
      */
-    static function cloneItem($oldid, $newid)
+    public static function cloneItem($oldid, $newid)
     {
         global $DB;
 
@@ -231,7 +230,7 @@ class ReportConfig extends CommonDBTM
                 ],
                 'FROM' => 'glpi_plugin_resources_reportconfigs',
                 'WHERE' => [
-                    'plugin_resources_resources_id' => $oldid
+                    'plugin_resources_resources_id' => $oldid,
                 ],
             ];
 
@@ -243,7 +242,7 @@ class ReportConfig extends CommonDBTM
                 'comment' => addslashes($data["comment"]),
                 'send_transfer_notif' => $data["send_transfer_notif"],
                 'send_report_notif' => $data["send_report_notif"],
-                'send_other_notif' => $data["send_other_notif"]
+                'send_other_notif' => $data["send_other_notif"],
             ]);
         }
     }
@@ -254,7 +253,7 @@ class ReportConfig extends CommonDBTM
      *
      * @return bool
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         if (!$this->canview()) {
             return false;
@@ -295,7 +294,7 @@ class ReportConfig extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/reportconfig_form.html.twig', [
             'resource_hidden'        => Html::hidden(
                 'plugin_resources_resources_id',
-                ['value' => $plugin_resources_resources_id]
+                ['value' => $plugin_resources_resources_id],
             ),
             'label_comments'         => __('Comments'),
             'comment_field'          => Html::textarea([
@@ -331,7 +330,7 @@ class ReportConfig extends CommonDBTM
      * @param        $ID
      * @param string $withtemplate
      */
-    static function showReports($ID, $withtemplate = '')
+    public static function showReports($ID, $withtemplate = '')
     {
         global $DB;
 
@@ -342,7 +341,7 @@ class ReportConfig extends CommonDBTM
 
         Session::initNavigateListItems(
             ReportConfig::class,
-            Resource::getTypeName(1) . " = " . $resource->fields["name"]
+            Resource::getTypeName(1) . " = " . $resource->fields["name"],
         );
 
         $reportconfigs = 'glpi_plugin_resources_reportconfigs';
@@ -411,7 +410,7 @@ class ReportConfig extends CommonDBTM
                     'id_hidden'              => Html::hidden('id', ['value' => $data["id"]]),
                     'resource_hidden'        => Html::hidden(
                         'plugin_resources_resources_id',
-                        ['value' => $ID]
+                        ['value' => $ID],
                     ),
                 ];
             }

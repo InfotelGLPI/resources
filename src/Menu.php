@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -69,7 +69,7 @@ class Menu extends CommonGLPI
             $name = self::getTypeName(2);
             $tabs[self::RESOURCES_TAB] = self::createTabEntry(
                 text: $name,
-                icon: Resource::getIcon()
+                icon: Resource::getIcon(),
             );
         }
 
@@ -96,7 +96,7 @@ class Menu extends CommonGLPI
             $name = __('Others declarations', 'resources');
             $tabs[self::SSII_TAB] = self::createTabEntry(
                 text: $name,
-                icon: 'ti ti-writing'
+                icon: 'ti ti-writing',
             );
         }
 
@@ -104,7 +104,7 @@ class Menu extends CommonGLPI
             $name = __('Employments / budgets management', 'resources');
             $tabs[self::PUBLIC_TAB] = self::createTabEntry(
                 text: $name,
-                icon:'ti ti-buildings'
+                icon: 'ti ti-buildings',
             );
         }
 
@@ -112,7 +112,7 @@ class Menu extends CommonGLPI
             $name = __('Import resources', 'resources');
             $tabs[self::IMPORT_TAB] = self::createTabEntry(
                 text: $name,
-                icon: 'ti ti-settings'
+                icon: 'ti ti-settings',
             );
         }
 
@@ -148,7 +148,6 @@ class Menu extends CommonGLPI
         $canImport = Session::haveright('plugin_resources_import', READ);
         $canAnnuaire     = Session::haveright('plugin_resources_annuary', READ);
 
-
         if ($tabnum == self::RESOURCES_TAB) {
 
             if ($item->canCreate()) {
@@ -170,18 +169,18 @@ class Menu extends CommonGLPI
                     'new' => [
                         'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
                         'title' => __('Declare an arrival', 'resources'),
-                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php'
+                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php',
                     ],
                     'change' => [
                         'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
                         'title' => __('Declare a change', 'resources'),
-                        'url' => $url_change
+                        'url' => $url_change,
                     ],
                     'remove' => [
                         'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/removeresource.png',
                         'title' => __('Declare a departure', 'resources'),
-                        'url' => $url_remove
-                    ]
+                        'url' => $url_remove,
+                    ],
                 ];
 
                 self::showMenuBlock("", "ti ti-user", $actions);
@@ -190,13 +189,13 @@ class Menu extends CommonGLPI
 
                 $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
                     'title' => __('Search resources', 'resources'),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset',
                 ]];
 
                 if ($canAnnuaire) {
                     $actions_others['directory'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
                         'title' => Directory::getTypeName(1),
-                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php'
+                        'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php',
                     ];
                 }
 
@@ -218,7 +217,7 @@ class Menu extends CommonGLPI
                     $actions_others['commercial'] =  ['pics' => '',
                         'icon' => 'ti ti-tie',
                         'title' => __('View my resources as a commercial', 'resources'),
-                        'url' => $url_commercial
+                        'url' => $url_commercial,
                     ];
                 }
 
@@ -227,11 +226,10 @@ class Menu extends CommonGLPI
                     self::showMenuBlock($title, "ti ti-list", $actions_others);
                 }
 
-
             }
             return true;
 
-        } else if ($tabnum == self::SSII_TAB && ($canresting || $canholiday || $canbadges || $canhabilitation)) {
+        } elseif ($tabnum == self::SSII_TAB && ($canresting || $canholiday || $canbadges || $canhabilitation)) {
 
             $actions_declare = [];
 
@@ -241,9 +239,9 @@ class Menu extends CommonGLPI
                         'Non contract period management',
                         'Non contract periods management',
                         2,
-                        'resources'
+                        'resources',
                     ),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceresting.form.php?menu'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceresting.form.php?menu',
                 ];
             }
 
@@ -251,9 +249,9 @@ class Menu extends CommonGLPI
                 $actions_declare['holiday'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png",
                     'title' =>  __(
                         'Forced holiday management',
-                        'resources'
+                        'resources',
                     ),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceholiday.form.php?menu'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourceholiday.form.php?menu',
                 ];
             }
 
@@ -261,9 +259,9 @@ class Menu extends CommonGLPI
                 //Management of a super habilitation
                 $actions_declare['habilitation'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitation.png",
                     'title' =>  ConfigHabilitation::getTypeName(
-                        1
+                        1,
                     ),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/confighabilitation.form.php?menu'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/confighabilitation.form.php?menu',
                 ];
             }
 
@@ -273,15 +271,15 @@ class Menu extends CommonGLPI
                         'Badge management',
                         'Badges management',
                         2,
-                        'resources'
+                        'resources',
                     ),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourcebadge.form.php?menu'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resourcebadge.form.php?menu',
                 ];
             }
 
             $title_declare = __('Others declarations', 'resources');
             self::showMenuBlock($title_declare, "ti ti-writing", $actions_declare);
-        } else if ($tabnum == self::PUBLIC_TAB && ($canseeemployment || $canseebudget)) {
+        } elseif ($tabnum == self::PUBLIC_TAB && ($canseeemployment || $canseebudget)) {
 
             $actions_employment = [];
 
@@ -289,51 +287,51 @@ class Menu extends CommonGLPI
                 //Add an employment
                 $actions_employment['new'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png",
                     'title' =>  __('Declare an employment', 'resources'),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php',
                 ];
             }
             if ($canseeemployment) {
                 $actions_employment['listemployment'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png",
                     'title' =>  __('Employment management', 'resources'),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.php'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.php',
                 ];
             }
 
             if ($canseebudget) {
                 $actions_employment['listbudget'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/budgetlist.png",
                     'title' =>  __('Budget management', 'resources'),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/budget.php'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/budget.php',
                 ];
             }
 
             if ($canseeemployment) {
                 $actions_employment['recap'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
                     'title' =>  __('List Employments / Resources', 'resources'),
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/recap.php'
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/recap.php',
                 ];
             }
 
             $title_employment = __('Employments / budgets management', 'resources');
             self::showMenuBlock($title_employment, "ti ti-buildings", $actions_employment);
 
-        } else if ($tabnum == self::IMPORT_TAB && $canImport) {
+        } elseif ($tabnum == self::IMPORT_TAB && $canImport) {
             $actions_import = ['update' => ['pics' => '',
                 'icon' => 'ti ti-user-edit',
                 'title' =>  __('Update GLPI Resources', 'resources'),
-                'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::UPDATE_RESOURCES
+                'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::UPDATE_RESOURCES,
             ],
                 'csv' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/csv_check.png",
                     'title' => __('Verify CSV file', 'resources'),
-                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_FILE
+                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_FILE,
                 ],
                 'glpi' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/resource_check.png",
                     'title' => __('Verify GLPI resources', 'resources'),
-                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_GLPI
+                    'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_GLPI,
                 ],
                 'config' => ['pics' => '',
                     'icon' => 'ti ti-settings',
                     'title' => __('Configure Imports', 'resources'),
-                    'url' => Import::getIndexUrl()
+                    'url' => Import::getIndexUrl(),
                 ],
                 'trash' => ['pics' => '',
                     'icon' => 'ti ti-trash',
@@ -341,8 +339,8 @@ class Menu extends CommonGLPI
                     // POST-only + CSRF token: a destructive purge must not be a GET link.
                     'url' => ImportResource::getFormURL(),
                     'post' => ['reset-imports' => 1],
-                    'confirm' => __('Confirm the purge of all imported resources?', 'resources')
-                ]
+                    'confirm' => __('Confirm the purge of all imported resources?', 'resources'),
+                ],
             ];
 
             $title_import = __('Import resources', 'resources');
@@ -390,7 +388,7 @@ class Menu extends CommonGLPI
             $inner = "";
             if (isset($labels['icon']) && !empty($labels['icon'])) {
                 $inner .= "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
-            } else if (isset($labels['pics']) && !empty($labels['pics'])) {
+            } elseif (isset($labels['pics']) && !empty($labels['pics'])) {
                 $inner .= "<img src='" . $labels['pics'] . "'>";
             }
             $inner .= "<br>" . $labels['title'];
@@ -428,7 +426,6 @@ class Menu extends CommonGLPI
         echo "</div>";
     }
 
-
     /**
      * get menu content
      *
@@ -454,14 +451,14 @@ class Menu extends CommonGLPI
         // Resource directory
         $menu['links']["<i class='far fa-address-book fa-1x' title='" . __(
             'Directory',
-            'resources'
+            'resources',
         ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/directory.php';
 
         // Resting
         if (Session::haveright("plugin_resources_resting", UPDATE)) {
             $menu['links']["<i class='ti ti-writing fa-1x' title='" . __(
                 'List of non contract periods',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/resourceresting.php';
         }
 
@@ -469,7 +466,7 @@ class Menu extends CommonGLPI
         if (Session::haveright("plugin_resources_holiday", UPDATE)) {
             $menu['links']["<i class='ti ti-device-imac-pause fa-1x' title='" . __(
                 'List of forced holidays',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/resourceholiday.php';
         }
 
@@ -477,11 +474,11 @@ class Menu extends CommonGLPI
         if (Session::haveright("plugin_resources_employment", READ)) {
             $menu['links']["<i class='ti ti-list fa-1x' title='" . __(
                 'Employment management',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/employment.php';
             $menu['links']["<i class='ti ti-buildings fa-1x' title='" . __(
                 'List Employments / Resources',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/recap.php';
         }
 
@@ -489,7 +486,7 @@ class Menu extends CommonGLPI
         if (Session::haveright("plugin_resources_budget", READ)) {
             $menu['links']["<i class='ti ti-coins fa-1x' title='" . __(
                 'Budget management',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/budget.php';
         }
 
@@ -497,7 +494,7 @@ class Menu extends CommonGLPI
         if (Session::haveright("plugin_resources_task", READ)) {
             $menu['links']["<i class='ti ti-list-details fa-1x' title='" . __(
                 'Tasks list',
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/task.php';
         }
 
@@ -507,7 +504,7 @@ class Menu extends CommonGLPI
                 'Checklist',
                 'Checklists',
                 2,
-                'resources'
+                'resources',
             ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/checklistconfig.php';
         }
 
@@ -522,7 +519,7 @@ class Menu extends CommonGLPI
 
         $menu['links']["<i class='ti ti-tie fa-1x' title='" . __(
             'View my resources as a commercial',
-            'resources'
+            'resources',
         ) . "'></i>"] = $url;
 
         // Import page

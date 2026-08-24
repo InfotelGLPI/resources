@@ -1,16 +1,30 @@
 {#
- # Change-actions config shortcut form (resources plugin,
- # Resource_Change::showConfigForm).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # A single-cell panel linking to the setup page. Plain text is auto-escaped;
- # the <form> carries the GLPI CSRF token.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   form_action : string   target URL
- #   title       : string   panel header
- #   setup_url   : string   link to the setup page
- #   setup_label : string   link label
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <form name="form" method="post" action="{{ form_action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="center">

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -45,8 +45,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Budget extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_budget';
+    public static $rightname = 'plugin_resources_budget';
     // From CommonDBTM
     public $dohistory = true;
 
@@ -58,7 +57,7 @@ class Budget extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Budget', 'Budgets', $nb);
     }
@@ -72,7 +71,7 @@ class Budget extends CommonDBTM
      *
      * @return bool
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -83,7 +82,7 @@ class Budget extends CommonDBTM
      *
      * @return bool
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -95,7 +94,7 @@ class Budget extends CommonDBTM
      *
      * @return array
      */
-    function defineTabs($options = [])
+    public function defineTabs($options = [])
     {
         $ong = [];
 
@@ -112,14 +111,14 @@ class Budget extends CommonDBTM
      * @param $input
      * @return array
      */
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         if (!isset($input["plugin_resources_professions_id"])
             || $input["plugin_resources_professions_id"] == '0') {
             Session::addMessageAfterRedirect(
                 __('The profession for the budget must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -133,14 +132,14 @@ class Budget extends CommonDBTM
      * @param $input
      * @return array
      */
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         if (!isset($input["plugin_resources_professions_id"])
             || $input["plugin_resources_professions_id"] == '0') {
             Session::addMessageAfterRedirect(
                 __('The profession for the budget must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -151,7 +150,7 @@ class Budget extends CommonDBTM
     /**
      * allow search management
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -161,7 +160,7 @@ class Budget extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'datatype' => 'number',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         $tab[] = [
@@ -170,7 +169,7 @@ class Budget extends CommonDBTM
             'field' => 'name',
             'name' => __('Rank', 'resources'),
             'massiveaction' => false,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -179,7 +178,7 @@ class Budget extends CommonDBTM
             'field' => 'name',
             'name' => __('Profession', 'resources'),
             'massiveaction' => false,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -187,7 +186,7 @@ class Budget extends CommonDBTM
             'table' => 'glpi_plugin_resources_budgettypes',
             'field' => 'name',
             'name' => __('Budget type', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -195,7 +194,7 @@ class Budget extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'begin_date',
             'name' => __('Begin date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -203,14 +202,14 @@ class Budget extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'end_date',
             'name' => __('End date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
             'id' => '8',
             'table' => $this->getTable(),
             'field' => 'volume',
-            'name' => __('Budget volume', 'resources')
+            'name' => __('Budget volume', 'resources'),
         ];
 
         $tab[] = [
@@ -218,7 +217,7 @@ class Budget extends CommonDBTM
             'table' => 'glpi_plugin_resources_budgetvolumes',
             'field' => 'name',
             'name' => __('Type of budget volume', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -227,7 +226,7 @@ class Budget extends CommonDBTM
             'field' => 'date_mod',
             'name' => __('Last update'),
             'datatype' => 'datetime',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         $tab[] = [
@@ -235,7 +234,7 @@ class Budget extends CommonDBTM
             'table' => 'glpi_entities',
             'field' => 'completename',
             'name' => __('Entity'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
@@ -251,7 +250,7 @@ class Budget extends CommonDBTM
      *
      * @return boolean item found
      * */
-    function showForm($ID, $options = [""])
+    public function showForm($ID, $options = [""])
     {
         global $CFG_GLPI;
 
@@ -268,7 +267,7 @@ class Budget extends CommonDBTM
         echo "<td>";
         Dropdown::show(BudgetType::class, [
             'value' => $this->fields["plugin_resources_budgettypes_id"],
-            'entity' => $this->fields["entities_id"]
+            'entity' => $this->fields["entities_id"],
         ]);
         echo "</td>";
         echo "</tr>";
@@ -282,7 +281,7 @@ class Budget extends CommonDBTM
             'entityt' => $this->fields["entities_id"],
             'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
             'span' => 'span_rank',
-            'sort' => true
+            'sort' => true,
         ];
         Resource::showGenericDropdown(Profession::class, $params);
 
@@ -304,7 +303,7 @@ class Budget extends CommonDBTM
         echo "</td><td>" . __('Type of budget volume', 'resources') . "</td><td>";
         Dropdown::show(BudgetVolume::class, [
             'value' => $this->fields["plugin_resources_budgetvolumes_id"],
-            'entity' => $this->fields["entities_id"]
+            'entity' => $this->fields["entities_id"],
         ]);
         echo "</td></tr>";
 
@@ -338,7 +337,7 @@ class Budget extends CommonDBTM
      *
      * @return mixed
      */
-    static function getMenuOptions($menu)
+    public static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/budget.php';
         $itemtype = self::getType();
@@ -399,7 +398,7 @@ class Budget extends CommonDBTM
                     'num' => 6,
                     'rank' => 1,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -408,7 +407,7 @@ class Budget extends CommonDBTM
                     'num' => 7,
                     'rank' => 2,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -417,7 +416,7 @@ class Budget extends CommonDBTM
                     'num' => 4,
                     'rank' => 3,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -426,7 +425,7 @@ class Budget extends CommonDBTM
                     'num' => 3,
                     'rank' => 4,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -435,7 +434,7 @@ class Budget extends CommonDBTM
                     'num' => 5,
                     'rank' => 5,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -444,7 +443,7 @@ class Budget extends CommonDBTM
                     'num' => 8,
                     'rank' => 6,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -453,7 +452,7 @@ class Budget extends CommonDBTM
                     'num' => 9,
                     'rank' => 7,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
         }
     }

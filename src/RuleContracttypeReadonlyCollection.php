@@ -1,33 +1,34 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
+
 use RuleCollection;
 use Session;
 use Toolbox;
@@ -40,20 +41,21 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class RuleContracttypeReadonlyCollection
  */
-class RuleContracttypeReadonlyCollection extends RuleCollection {
-
-    static $rightname = 'plugin_resources';
+class RuleContracttypeReadonlyCollection extends RuleCollection
+{
+    public static $rightname = 'plugin_resources';
 
     // From RuleCollection
-    public $stop_on_first_match=true;
-    public $menu_option='contracttypereadonlys';
+    public $stop_on_first_match = true;
+    public $menu_option = 'contracttypereadonlys';
 
     /**
      * Get title used in list of rules
      *
      * @return Title of the rule collection
      **/
-    function getTitle() {
+    public function getTitle()
+    {
 
         return __('Assignment rule of read only fields to a contract type', 'resources');
     }
@@ -63,21 +65,24 @@ class RuleContracttypeReadonlyCollection extends RuleCollection {
      *
      * @param int $entity
      */
-    function __construct($entity = 0) {
+    public function __construct($entity = 0)
+    {
         $this->entity = $entity;
     }
 
     /**
      * @return bool
      */
-    function showInheritedTab() {
+    public function showInheritedTab()
+    {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
     }
 
     /**
      * @return bool
      */
-    function showChildrensTab() {
+    public function showChildrensTab()
+    {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count($_SESSION['glpiactiveentities']) > 1);
     }
 
@@ -90,8 +95,12 @@ class RuleContracttypeReadonlyCollection extends RuleCollection {
      *
      * @return the output array updated by actions
      **/
-    function processAllRules($input = [], $output = [], $params = [],
-                             $force_no_cache = false) {
+    public function processAllRules(
+        $input = [],
+        $output = [],
+        $params = [],
+        $force_no_cache = false
+    ) {
 
         // Get Collection datas
         $this->getCollectionDatas(1, 1);
@@ -136,4 +145,3 @@ class RuleContracttypeReadonlyCollection extends RuleCollection {
         return $output;
     }
 }
-

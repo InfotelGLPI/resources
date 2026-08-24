@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -55,37 +55,46 @@ $report = new AutoReport(__("Report listing unemployed resources", "resources"))
 // Columns title (optional)
 $report->setColumns([
     new Column(
-        'registration_number', _x('user', 'Administrative number'),
-        ['sorton' => 'registration_number']
+        'registration_number',
+        _x('user', 'Administrative number'),
+        ['sorton' => 'registration_number'],
     ),
     new ColumnLink(
-        'resource_id', __('Surname'), Resource::class,
-        ['sorton' => 'resource_name']
+        'resource_id',
+        __('Surname'),
+        Resource::class,
+        ['sorton' => 'resource_name'],
     ),
     new Column(
-        'firstname', __('First name'),
-        ['sorton' => 'firstname']
+        'firstname',
+        __('First name'),
+        ['sorton' => 'firstname'],
     ),
     new Column(
-        'rankName', Rank::getTypeName(1),
-        ['sorton' => 'rankName']
+        'rankName',
+        Rank::getTypeName(1),
+        ['sorton' => 'rankName'],
     ),
     new Column(
-        'situation', ResourceSituation::getTypeName(1),
-        ['sorton' => 'situation']
+        'situation',
+        ResourceSituation::getTypeName(1),
+        ['sorton' => 'situation'],
     ),
     new Column(
-        'state', ResourceState::getTypeName(1),
-        ['sorton' => 'state']
+        'state',
+        ResourceState::getTypeName(1),
+        ['sorton' => 'state'],
     ),
     new ColumnDate(
-        'date_begin', __('Arrival date', 'resources'),
-        ['sorton' => 'date_begin']
+        'date_begin',
+        __('Arrival date', 'resources'),
+        ['sorton' => 'date_begin'],
     ),
     new ColumnDate(
-        'date_end', __('Departure date', 'resources'),
-        ['sorton' => 'date_end']
-    )
+        'date_end',
+        __('Departure date', 'resources'),
+        ['sorton' => 'date_end'],
+    ),
 ]);
 
 // SQL statement

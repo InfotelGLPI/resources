@@ -1,34 +1,33 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
-
 
 use CommonDBTM;
 use DBConnection;
@@ -46,9 +45,8 @@ if (!defined('GLPI_ROOT')) {
  */
 class Contracttypeprofile extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
-    var $dohistory = true;
+    public static $rightname = 'plugin_resources';
+    public $dohistory = true;
 
     /**
      * Add a category to profile
@@ -57,7 +55,7 @@ class Contracttypeprofile extends CommonDBTM
      * @global  $CFG_GLPI
      *
      */
-    static function addContracttype($profiles_id, $canedit)
+    public static function addContracttype($profiles_id, $canedit)
     {
 
         if ($canedit) {
@@ -78,7 +76,7 @@ class Contracttypeprofile extends CommonDBTM
             $plugin_resources_contracttypes_id = [];
             if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
                 $plugin_resources_contracttypes_id = json_decode(
-                    $contracttypeprofile->fields['plugin_resources_contracttypes_id']
+                    $contracttypeprofile->fields['plugin_resources_contracttypes_id'],
                 );
             }
             //         Group::dropdown(['entity' => $_SESSION['glpiactive_entity'],
@@ -102,7 +100,7 @@ class Contracttypeprofile extends CommonDBTM
                 "multiple" => true,
                 "width" => '200px',
                 'values' => isset($plugin_resources_contracttypes_id) ? $plugin_resources_contracttypes_id : [],
-                'display_emptychoice' => true
+                'display_emptychoice' => true,
             ];
 
 

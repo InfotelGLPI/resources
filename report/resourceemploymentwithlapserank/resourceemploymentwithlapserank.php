@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -63,18 +63,18 @@ $columns = [
 
 $output_type = Search::HTML_OUTPUT;
 
-if (isset ($_POST['list_limit'])) {
+if (isset($_POST['list_limit'])) {
     $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-    unset ($_POST['list_limit']);
+    unset($_POST['list_limit']);
 }
-if (!isset ($_REQUEST['sort'])) {
+if (!isset($_REQUEST['sort'])) {
     $_REQUEST['sort'] = "entity";
     $_REQUEST['order'] = "ASC";
 }
 
 $limit = $_SESSION['glpilist_limit'];
 
-if (isset ($_POST["display_type"])) {
+if (isset($_POST["display_type"])) {
     $output_type = $_POST["display_type"];
     if ($output_type < 0) {
         $output_type = -$output_type;
@@ -222,14 +222,14 @@ if ($nbtot == 0) {
             foreach ($val as $k => $v) {
                 $name = $key . "[$k]";
                 echo Html::hidden($name, ['value' => $v]);
-                if (!empty ($param)) {
+                if (!empty($param)) {
                     $param .= "&";
                 }
                 $param .= $key . "[" . $k . "]=" . urlencode($v);
             }
         } else {
             echo Html::hidden($key, ['value' => $val]);
-            if (!empty ($param)) {
+            if (!empty($param)) {
                 $param .= "&";
             }
             $param .= "$key=" . urlencode($val);
@@ -357,7 +357,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
         $num,
         $link,
         $issort,
-        ($order == 'ASC' ? 'DESC' : 'ASC')
+        ($order == 'ASC' ? 'DESC' : 'ASC'),
     );
 }
 
@@ -404,5 +404,3 @@ function getOrderByFields($default, $columns)
     }
     return [];
 }
-
-

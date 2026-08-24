@@ -1,16 +1,30 @@
 {#
- # Imported values list (resources plugin, ResourceImport::showImportResources).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # Read-only card listing the name/value pairs imported for a resource. The
- # values come from imported CSV data, so they are rendered with Twig's default
- # auto-escaping (never |raw) to neutralise any stored markup.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   title       : string
- #   label_name  : string
- #   label_value : string
- #   rows        : array of { name, value }
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <div class="card">
     <div class="card-body">
         <table class="table">

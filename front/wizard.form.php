@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Resources\Choice;
@@ -89,7 +89,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     $wizard->wizardSecondStep(0, $values);
 
-} else if (isset($_POST["third_step"])) {
+} elseif (isset($_POST["third_step"])) {
 
     $required = $resource->checkRequiredFields($_POST);
 
@@ -107,15 +107,15 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
         $required = [];
         Session::addMessageAfterRedirect(
-//            htmlescape(
-//                sprintf(
-//                    __('Mandatory fields are not filled. Please correct: %s'),
-//                    implode(', ', $required)
-//                )
-//            )
+            //            htmlescape(
+            //                sprintf(
+            //                    __('Mandatory fields are not filled. Please correct: %s'),
+            //                    implode(', ', $required)
+            //                )
+            //            )
             __('Required fields are not filled. Please try again.', 'resources'),
             false,
-            ERROR
+            ERROR,
         );
 
         //OK
@@ -139,10 +139,10 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         Session::addMessageAfterRedirect(
             __('The start date must be greater than the end date', 'resources'),
             false,
-            ERROR
+            ERROR,
         );
         //OK
-//        $values['template'] = $_POST['id_template'] ?? 0;
+        //        $values['template'] = $_POST['id_template'] ?? 0;
         $wizard->wizardSecondStep(0, $values);
 
     } else {
@@ -183,7 +183,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             Session::addMessageAfterRedirect(
                 __('There is a right problem', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
 
             $wizard->wizardSecondStep(0, $values);
@@ -222,7 +222,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             Session::addMessageAfterRedirect(
                 __('There is a problem with resource creation', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             Html::back();
         }
@@ -266,17 +266,17 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $resource->redirectToList();
     }
 } elseif (isset($_POST["updateneedcomment"])) {
-//    $resources_id = $_POST["plugin_resources_resources_id"];
-//    if ($resource->canCreate()) {
-//        foreach ($_POST["updateneedcomment"] as $key => $val) {
-//            $varcomment = "commentneed" . $key;
-//            $values['id'] = $key;
-//            $values['commentneed'] = $_POST[$varcomment];
-//            $choice->addNeedComment($values);
-//        }
-//    }
-//
-//    $wizard->wizardFourStep($resources_id);
+    //    $resources_id = $_POST["plugin_resources_resources_id"];
+    //    if ($resource->canCreate()) {
+    //        foreach ($_POST["updateneedcomment"] as $key => $val) {
+    //            $varcomment = "commentneed" . $key;
+    //            $values['id'] = $key;
+    //            $values['commentneed'] = $_POST[$varcomment];
+    //            $choice->addNeedComment($values);
+    //        }
+    //    }
+    //
+    //    $wizard->wizardFourStep($resources_id);
 
 } elseif (isset($_POST["addcomment"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
@@ -288,7 +288,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 } elseif (isset($_POST["addchoice"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
     if ($resource->canCreate(
-        ) && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
+    ) && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
         $choice->addHelpdeskItem($_POST);
     }
     $wizard->wizardFourStep($resources_id);
@@ -373,21 +373,21 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 Session::addMessageAfterRedirect(
                     __('Failed to send the file (probably too large)', 'resources'),
                     false,
-                    ERROR
+                    ERROR,
                 );
             }
         } else {
             Session::addMessageAfterRedirect(
                 __('Invalid filename'),
                 false,
-                ERROR
+                ERROR,
             );
         }
-    }  else {
+    } else {
         Session::addMessageAfterRedirect(
             __('Failed to send the file', 'resources'),
             false,
-            ERROR
+            ERROR,
         );
     }
 
@@ -422,7 +422,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         Session::addMessageAfterRedirect(
             __('Required fields are not filled. Please try again.', 'resources'),
             false,
-            ERROR
+            ERROR,
         );
         $wizard->wizardSixStep($resources_id);
     }
@@ -485,7 +485,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     $data = [];
     $data['id'] = $_POST['plugin_resources_resources_id'];
-    $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'] ?? NULL;
+    $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'] ?? null;
     $data['plugin_resources_degreegroups_id'] = $_POST['plugin_resources_degreegroups_id'] ?? 0;
     $data['plugin_resources_recruitingsources_id'] = $_POST['plugin_resources_recruitingsources_id'] ?? 0;
     $data['yearsexperience'] = $_POST['yearsexperience'] ?? 0;
@@ -496,7 +496,6 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     $resource->fields['resources_step'] = 'eight_step';
     Plugin::doHook('item_show', $resource);
     $resource->redirectToList();
-
 
     //Revert cases//
 } elseif (isset($_POST["undo_second_step"])) {

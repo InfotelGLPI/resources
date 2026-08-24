@@ -1,21 +1,30 @@
 {#
- # Employee helpdesk form (resources plugin, Employee::showFormHelpdesk).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # The <form> is always emitted here (simplified interface). GLPI dropdowns and
- # the conditional action buttons are pre-rendered by PHP and injected with |raw;
- # the captured button block already carries its own <tr>/<td> wrapper. Plain
- # labels are auto-escaped. The form carries the GLPI CSRF token.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   form_action         : string
- #   hidden_resources_id : string   pre-rendered hidden input
- #   title               : string
- #   label_employer      : string
- #   employer_dropdown   : string   pre-rendered widget
- #   label_client        : string
- #   client_dropdown     : string   pre-rendered widget
- #   buttons_block       : string   pre-rendered <tr> action row (may be empty)
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <div class="center">
     <br>
     <form method="post" action="{{ form_action }}">

@@ -1,35 +1,33 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
-
-
 
 use Dropdown;
 use Group;
@@ -49,20 +47,21 @@ if (!defined('GLPI_ROOT')) {
  *   - actions
  *
  **/
-class RuleContracttypeReadonly extends Rule {
-
+class RuleContracttypeReadonly extends Rule
+{
     public static $rightname = 'plugin_resources';
 
-    public $can_sort=true;
+    public $can_sort = true;
 
     /**
      * Get title used in rule
      *
      * @return Title of the rule
      **/
-    function getTitle() {
+    public function getTitle()
+    {
 
-        return Resource::getTypeName(2)." ".__('Read only Fields', 'resources');
+        return Resource::getTypeName(2) . " " . __('Read only Fields', 'resources');
     }
 
     /**
@@ -74,7 +73,7 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @return booleen
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -85,7 +84,7 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @return booleen
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -93,14 +92,16 @@ class RuleContracttypeReadonly extends Rule {
     /**
      * @return bool
      */
-    function maybeRecursive() {
+    public function maybeRecursive()
+    {
         return true;
     }
 
     /**
      * @return bool
      */
-    function isEntityassign() {
+    public function isEntityassign()
+    {
         return true;
     }
 
@@ -112,14 +113,16 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @return booleen
      **/
-    function canUnrecurs() {
+    public function canUnrecurs()
+    {
         return true;
     }
 
     /**
      * @return int
      */
-    function maxCriteriasCount() {
+    public function maxCriteriasCount()
+    {
         return 1;
     }
 
@@ -128,7 +131,8 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @return the maximum number of actions
      **/
-    function maxActionsCount() {
+    public function maxActionsCount()
+    {
         return count($this->getActions());
     }
 
@@ -137,7 +141,8 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @param $params parameters
      **/
-    function addSpecificParamsForPreview($params) {
+    public function addSpecificParamsForPreview($params)
+    {
 
         if (!isset($params["entities_id"])) {
             $params["entities_id"] = $_SESSION["glpiactive_entity"];
@@ -150,7 +155,8 @@ class RuleContracttypeReadonly extends Rule {
      *
      * @param $fields fields values
      **/
-    function showSpecificCriteriasForPreview($fields) {
+    public function showSpecificCriteriasForPreview($fields)
+    {
 
         $entity_as_criteria = false;
         foreach ($this->criterias as $criteria) {
@@ -167,7 +173,8 @@ class RuleContracttypeReadonly extends Rule {
     /**
      * @return array
      */
-    function getCriterias() {
+    public function getCriterias()
+    {
 
         $criterias = [];
 
@@ -198,7 +205,8 @@ class RuleContracttypeReadonly extends Rule {
      * @param $value     the pattern (DEFAULT '')
      * @param $test      Is to test rule ? (false by default)
      **/
-    function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false) {
+    public function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)
+    {
 
         $PluginResourcesContractType = new ContractType();
         $Profile = new Profile();
@@ -207,22 +215,22 @@ class RuleContracttypeReadonly extends Rule {
         $crit    = $this->getCriteria($ID);
         $display = false;
         if (isset($crit['type'])
-            && ($test||$condition==Rule::PATTERN_IS || $condition==Rule::PATTERN_IS_NOT)) {
+            && ($test || $condition == Rule::PATTERN_IS || $condition == Rule::PATTERN_IS_NOT)) {
 
             switch ($crit['type']) {
-                case "dropdownContractType" :
+                case "dropdownContractType":
                     $PluginResourcesContractType->dropdownContractType($name);
                     $display = true;
                     break;
-                case "dropdownProfileType" :
-                    \Profile::dropdown(['name'=>$name, 'value'=>$value]);
+                case "dropdownProfileType":
+                    \Profile::dropdown(['name' => $name, 'value' => $value]);
                     $display = true;
                     break;
-                case "dropdownGroupType" :
-                    Group::dropdown(['name'=>$name, 'value'=>$value]);
+                case "dropdownGroupType":
+                    Group::dropdown(['name' => $name, 'value' => $value]);
                     $display = true;
                     break;
-                case "dropdownManagerType" :
+                case "dropdownManagerType":
                     Dropdown::showFromArray($name, [__('Resource manager', 'resources')]);
                     $display = true;
                     break;
@@ -237,21 +245,22 @@ class RuleContracttypeReadonly extends Rule {
      * @param $condition condition used
      * @param $pattern the pattern
      **/
-    function getCriteriaDisplayPattern($ID, $condition, $pattern) {
+    public function getCriteriaDisplayPattern($ID, $condition, $pattern)
+    {
 
-        if (($condition==Rule::PATTERN_IS || $condition==Rule::PATTERN_IS_NOT)) {
+        if (($condition == Rule::PATTERN_IS || $condition == Rule::PATTERN_IS_NOT)) {
             $crit = $this->getCriteria($ID);
             if (isset($crit['type'])) {
 
                 switch ($crit['type']) {
-                    case "dropdownContractType" :
+                    case "dropdownContractType":
                         $ContractType = new ContractType();
                         return $ContractType->getContractTypeName($pattern);
-                    case "dropdownProfileType" :
+                    case "dropdownProfileType":
                         return \Profile::getFriendlyNameById($pattern);
-                    case "dropdownGroupType" :
+                    case "dropdownGroupType":
                         return Group::getFriendlyNameById($pattern);
-                    case "dropdownManagerType" :
+                    case "dropdownManagerType":
                         return __('Resource manager', 'resources');
                 }
             }
@@ -262,7 +271,8 @@ class RuleContracttypeReadonly extends Rule {
     /**
      * @return array
      */
-    function getActions() {
+    public function getActions()
+    {
 
         $actions = [];
 
@@ -330,7 +340,7 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_comment']['type']  = "yesonly";
         $actions['readonlyfields_comment']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_matricule']['name']  = __('Matricule','resources');
+        $actions['readonlyfields_matricule']['name']  = __('Matricule', 'resources');
         $actions['readonlyfields_matricule']['type']  = "yesonly";
         $actions['readonlyfields_matricule']['force_actions'] = ['assign'];
 
@@ -342,11 +352,11 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_phone']['type']  = "yesonly";
         $actions['readonlyfields_phone']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_matricule_second']['name']  = __('Second matricule','resources');
+        $actions['readonlyfields_matricule_second']['name']  = __('Second matricule', 'resources');
         $actions['readonlyfields_matricule_second']['type']  = "yesonly";
         $actions['readonlyfields_matricule_second']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_plugin_resources_roles_id']['name']  = __('Role','resources');
+        $actions['readonlyfields_plugin_resources_roles_id']['name']  = __('Role', 'resources');
         $actions['readonlyfields_plugin_resources_roles_id']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_roles_id']['force_actions'] = ['assign'];
 
@@ -409,11 +419,11 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_plugin_resources_recruitingsources_id']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_recruitingsources_id']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_yearsexperience']['name']  = __('Number of years experience','resources');
+        $actions['readonlyfields_yearsexperience']['name']  = __('Number of years experience', 'resources');
         $actions['readonlyfields_yearsexperience']['type']  = "yesonly";
         $actions['readonlyfields_yearsexperience']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_reconversion']['name']  = __('Reconversion','resources');
+        $actions['readonlyfields_reconversion']['name']  = __('Reconversion', 'resources');
         $actions['readonlyfields_reconversion']['type']  = "yesonly";
         $actions['readonlyfields_reconversion']['force_actions'] = ['assign'];
 
@@ -453,11 +463,11 @@ class RuleContracttypeReadonly extends Rule {
         $actions['readonlyfields_company_name']['type']  = "yesonly";
         $actions['readonlyfields_company_name']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_plugin_resources_pay_gap']['name']  = __('Pay gap','resources');
+        $actions['readonlyfields_plugin_resources_pay_gap']['name']  = __('Pay gap', 'resources');
         $actions['readonlyfields_plugin_resources_pay_gap']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_pay_gap']['force_actions'] = ['assign'];
 
-        $actions['readonlyfields_plugin_resources_mission_lost']['name']  = __('Mission lost','resources');
+        $actions['readonlyfields_plugin_resources_mission_lost']['name']  = __('Mission lost', 'resources');
         $actions['readonlyfields_plugin_resources_mission_lost']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_mission_lost']['force_actions'] = ['assign'];
 
@@ -468,4 +478,3 @@ class RuleContracttypeReadonly extends Rule {
         return $actions;
     }
 }
-

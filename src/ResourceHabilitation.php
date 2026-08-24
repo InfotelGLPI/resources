@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -50,8 +50,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceHabilitation extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
     public $dohistory = true;
 
     /**
@@ -62,12 +61,12 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Habilitation', 'Habilitations', $nb, 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-lock";
     }
@@ -82,7 +81,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -93,7 +92,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -111,7 +110,7 @@ class ResourceHabilitation extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class
             && $this->canView()) {
@@ -135,16 +134,16 @@ class ResourceHabilitation extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
             $self = new self();
             $self->showItem($item);
         }
-//        if ($item->getType() == Resource::class) {
-//            $wizard = new Wizard();
-//            $wizard->wizardSixStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
-//        }
+        //        if ($item->getType() == Resource::class) {
+        //            $wizard = new Wizard();
+        //            $wizard->wizardSixStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
+        //        }
         return true;
     }
 
@@ -153,7 +152,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return int
      */
-    static function countForResource(Resource $item)
+    public static function countForResource(Resource $item)
     {
         $restrict = ["plugin_resources_resources_id" => $item->getField('id')];
         $dbu = new DbUtils();
@@ -167,7 +166,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return bool
      */
-    function showItem($item)
+    public function showItem($item)
     {
         if (!$this->canView()) {
             return false;
@@ -188,14 +187,14 @@ class ResourceHabilitation extends CommonDBTM
             echo "<div class='center'><table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th colspan='2'>" . __(
                 'Add additional habilitation',
-                'resources'
+                'resources',
             ) . "</th></tr>";
             echo "<tr class='tab_bg_1'><td class='center'>";
             echo self::getTypeName(1) . "</td>";
             echo "<td class='center'>";
             Dropdown::show(Habilitation::class, [
                 'used' => $used,
-                'entity' => $item->getField("entities_id")
+                'entity' => $item->getField("entities_id"),
             ]);
             echo "</td></tr>";
 
@@ -222,8 +221,8 @@ class ResourceHabilitation extends CommonDBTM
             $rand = mt_rand();
             echo "<div class='left'>";
             if ($canedit) {
-                Html::openMassiveActionsForm('masshabil' .  $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masshabil'  . $rand];
+                Html::openMassiveActionsForm('masshabil' . $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masshabil' . $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
             echo "<table class='tab_cadre_fixe'>";
@@ -232,7 +231,7 @@ class ResourceHabilitation extends CommonDBTM
             echo "</tr>";
             echo "<tr>";
             if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('masshabil' .  $rand) . "</th>";
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('masshabil' . $rand) . "</th>";
             }
             echo "<th>" . __('Name') . "</th>";
             foreach ($fields as $field) {
@@ -245,7 +244,7 @@ class ResourceHabilitation extends CommonDBTM
                 //DATA LINE
                 echo "<td class='left'>" . Dropdown::getDropdownName(
                     'glpi_plugin_resources_habilitations',
-                    $field['plugin_resources_habilitations_id']
+                    $field['plugin_resources_habilitations_id'],
                 ) . "</td>";
                 echo "</tr>";
             }
@@ -268,7 +267,7 @@ class ResourceHabilitation extends CommonDBTM
      * @since version 0.84
      *
      */
-    static function cloneItem($oldid, $newid)
+    public static function cloneItem($oldid, $newid)
     {
         global $DB;
 
@@ -279,7 +278,7 @@ class ResourceHabilitation extends CommonDBTM
                 ],
                 'FROM' => 'glpi_plugin_resources_resourcehabilitations',
                 'WHERE' => [
-                    'plugin_resources_resources_id' => $oldid
+                    'plugin_resources_resources_id' => $oldid,
                 ],
             ];
 
@@ -287,12 +286,12 @@ class ResourceHabilitation extends CommonDBTM
             $habilitation = new self();
             $habilitation->add([
                 'plugin_resources_resources_id' => $newid,
-                'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"]
+                'plugin_resources_habilitations_id' => $data["plugin_resources_habilitations_id"],
             ]);
         }
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         $changes[0] = 0;
         $changes[1] = '';
@@ -301,23 +300,23 @@ class ResourceHabilitation extends CommonDBTM
                 __('Adding the habilitation: %s', 'resources'),
                 Dropdown::getDropdownName(
                     'glpi_plugin_resources_habilitations',
-                    $this->input['plugin_resources_habilitations_id']
-                )
-            )
+                    $this->input['plugin_resources_habilitations_id'],
+                ),
+            ),
         );
         Log::history(
             $this->input['plugin_resources_resources_id'],
             Resource::class,
             $changes,
             '',
-            Log::HISTORY_LOG_SIMPLE_MESSAGE
+            Log::HISTORY_LOG_SIMPLE_MESSAGE,
         );
     }
 
     /**
      * @return void
      */
-    function post_deleteFromDB()
+    public function post_deleteFromDB()
     {
         $changes[0] = 0;
         $changes[1] = '';
@@ -326,16 +325,16 @@ class ResourceHabilitation extends CommonDBTM
                 __('Suppression of the habilitation: %s', 'resources'),
                 Dropdown::getDropdownName(
                     'glpi_plugin_resources_habilitations',
-                    $this->fields['plugin_resources_habilitations_id']
-                )
-            )
+                    $this->fields['plugin_resources_habilitations_id'],
+                ),
+            ),
         );
         Log::history(
             $this->fields['plugin_resources_resources_id'],
             Resource::class,
             $changes,
             '',
-            Log::HISTORY_LOG_SIMPLE_MESSAGE
+            Log::HISTORY_LOG_SIMPLE_MESSAGE,
         );
     }
 
@@ -346,7 +345,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @param $params
      */
-    function addResourceHabilitation($params)
+    public function addResourceHabilitation($params)
     {
         $habilitation_level = new HabilitationLevel();
 
@@ -372,7 +371,7 @@ class ResourceHabilitation extends CommonDBTM
      * @param $id
      * @param $params
      */
-    function addResourceHabilitationInDb($id, $params)
+    public function addResourceHabilitationInDb($id, $params)
     {
         $resourceHabilitation = new self();
         $habilitation = new Habilitation();
@@ -393,7 +392,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return bool
      */
-    function checkRequiredFields($params = [])
+    public function checkRequiredFields($params = [])
     {
 
         $resource = new Resource();
@@ -405,7 +404,7 @@ class ResourceHabilitation extends CommonDBTM
             $habilitation_level->getTable(),
             'entities_id',
             $resource->getEntityID(),
-            $habilitation_level->maybeRecursive()
+            $habilitation_level->maybeRecursive(),
         );
         $levels = $habilitation_level->find($condition, "name");
 
@@ -426,7 +425,7 @@ class ResourceHabilitation extends CommonDBTM
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         if ($item->getType() == Resource::class) {
             self::pdfForResource($pdf, $item);
@@ -442,7 +441,7 @@ class ResourceHabilitation extends CommonDBTM
      * @param $pdf object for the output
      * @param $appli Resource Class
      */
-    static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
+    public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
     {
         global $DB;
 
@@ -476,7 +475,7 @@ class ResourceHabilitation extends CommonDBTM
         $pdf->displaySpace();
     }
 
-    static function getHabilitationTxt($id)
+    public static function getHabilitationTxt($id)
     {
         $html = "";
         $habilitationsResource = new self();

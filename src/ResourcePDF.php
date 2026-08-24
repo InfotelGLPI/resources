@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -41,14 +41,12 @@ use PluginPdfSimplePDF;
  */
 class ResourcePDF extends PluginPdfCommon
 {
-
-
     /**
      * ResourcePDF constructor.
      *
      * @param \CommonGLPI|null $obj
      */
-    function __construct(CommonGLPI $obj = null)
+    public function __construct(CommonGLPI $obj = null)
     {
         $this->obj = ($obj ? $obj : new Resource());
     }
@@ -60,7 +58,7 @@ class ResourcePDF extends PluginPdfCommon
      *
      * @return bool
      */
-    static function pdfMain(PluginPdfSimplePDF $pdf, Resource $res)
+    public static function pdfMain(PluginPdfSimplePDF $pdf, Resource $res)
     {
         $ID = $res->getField('id');
         if (!$res->can($ID, READ)) {
@@ -73,8 +71,8 @@ class ResourcePDF extends PluginPdfCommon
             $users_id_recipient = new User();
             $users_id_recipient->getFromDB($res->fields["users_id_recipient"]);
             $col2 = __('Request date') . ' : ' . Html::convDate($res->fields["date_declaration"]) . ' ' . __(
-                    'Requester'
-                ) . ' ' . $users_id_recipient->getName();
+                'Requester',
+            ) . ' ' . $users_id_recipient->getName();
         } else {
             $col2 = '';
         }
@@ -82,17 +80,17 @@ class ResourcePDF extends PluginPdfCommon
 
         $pdf->displayLine(
             '<b><i>' . __('Surname') . ' :</i></b> ' . $res->fields['name'],
-            '<b><i>' . __('First name') . ' :</i></b> ' . $res->fields['firstname']
+            '<b><i>' . __('First name') . ' :</i></b> ' . $res->fields['firstname'],
         );
         $pdf->displayLine(
             '<b><i>' . __('Location') . ' :</i></b> ' . Dropdown::getDropdownName(
                 'glpi_locations',
-                $res->fields['locations_id']
+                $res->fields['locations_id'],
             ),
             '<b><i>' . ContractType::getTypeName(1) . ' :</i></b> ' . Dropdown::getDropdownName(
                 'glpi_plugin_resources_contracttypes',
-                $res->fields['plugin_resources_contracttypes_id']
-            )
+                $res->fields['plugin_resources_contracttypes_id'],
+            ),
         );
 
         $dbu = new DbUtils();
@@ -100,13 +98,13 @@ class ResourcePDF extends PluginPdfCommon
             '<b><i>' . __('Resource manager', 'resources') . ' :</i></b> ' . getUserName($res->fields["users_id"]),
             '<b><i>' . Department::getTypeName(1) . ' :</i></b> ' . Dropdown::getDropdownName(
                 'glpi_plugin_resources_departments',
-                $res->fields["plugin_resources_departments_id"]
-            )
+                $res->fields["plugin_resources_departments_id"],
+            ),
         );
 
         $pdf->displayLine(
             '<b><i>' . __('Arrival date', 'resources') . ' :</i></b> ' . Html::convDate($res->fields["date_begin"]),
-            '<b><i>' . __('Departure date', 'resources') . ' :</i></b> ' . Html::convDate($res->fields["date_end"])
+            '<b><i>' . __('Departure date', 'resources') . ' :</i></b> ' . Html::convDate($res->fields["date_end"]),
         );
 
         $pdf->setColumnsSize(100);
@@ -121,7 +119,7 @@ class ResourcePDF extends PluginPdfCommon
      *
      * @return mixed
      */
-    function defineAllTabsPDF($options = [])
+    public function defineAllTabsPDF($options = [])
     {
         $onglets = parent::defineAllTabsPDF($options);
         unset($onglets[Choice::class . '####1']);
@@ -137,14 +135,14 @@ class ResourcePDF extends PluginPdfCommon
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         switch ($tab) {
-            case '_main_' :
+            case '_main_':
                 $item->show_PDF($pdf);
                 break;
 
-            default :
+            default:
                 return false;
         }
         return true;

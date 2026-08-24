@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -56,53 +56,66 @@ $report = new AutoReport(__("Report listing departing resources with active empl
 // Columns title (optional), from $LANG
 $report->setColumns([
     new ColumnInteger(
-        'registration_number', _x('user', 'Administrative number'),
-        ['sorton' => 'registration_number']
+        'registration_number',
+        _x('user', 'Administrative number'),
+        ['sorton' => 'registration_number'],
     ),
     new ColumnLink(
-        'resource_id', __('Surname'), Resource::class,
-        ['sorton' => 'resource_name']
+        'resource_id',
+        __('Surname'),
+        Resource::class,
+        ['sorton' => 'resource_name'],
     ),
     new Column(
-        'firstname', __('First name'),
-        ['sorton' => 'firstname']
+        'firstname',
+        __('First name'),
+        ['sorton' => 'firstname'],
     ),
     new Column(
-        'resource_rank', Rank::getTypeName(1),
-        ['sorton' => 'resource_rank']
+        'resource_rank',
+        Rank::getTypeName(1),
+        ['sorton' => 'resource_rank'],
     ),
     new Column(
-        'resources_situation', ResourceSituation::getTypeName(1),
-        ['sorton' => 'resources_situation']
+        'resources_situation',
+        ResourceSituation::getTypeName(1),
+        ['sorton' => 'resources_situation'],
     ),
     new Column(
-        'resource_state', ResourceState::getTypeName(1),
-        ['sorton' => 'resource_state']
+        'resource_state',
+        ResourceState::getTypeName(1),
+        ['sorton' => 'resource_state'],
     ),
     new ColumnDate(
-        'date_begin', __('Arrival date', 'resources'),
-        ['sorton' => 'date_begin']
+        'date_begin',
+        __('Arrival date', 'resources'),
+        ['sorton' => 'date_begin'],
     ),
     new ColumnDate(
-        'date_end', __('Departure date', 'resources'),
-        ['sorton' => 'date_end']
+        'date_end',
+        __('Departure date', 'resources'),
+        ['sorton' => 'date_end'],
     ),
     new ColumnLink(
-        'employment_id', __('Name') . " - " . _n('Employment', 'Employments', 1, 'resources'),
-        Employment::class, ['sorton' => 'employment_name']
+        'employment_id',
+        __('Name') . " - " . _n('Employment', 'Employments', 1, 'resources'),
+        Employment::class,
+        ['sorton' => 'employment_name'],
     ),
     new Column(
         'employment_profession',
         _n('Employment', 'Employments', 1, 'resources') . " - " . _n('Profession', 'Professions', 2, 'resources'),
-        ['sorton' => 'employment_profession']
+        ['sorton' => 'employment_profession'],
     ),
     new Column(
-        'employment_state', _n('Employment state', 'Employment states', 1, 'resources'),
-        ['sorton' => 'employment_state']
+        'employment_state',
+        _n('Employment state', 'Employment states', 1, 'resources'),
+        ['sorton' => 'employment_state'],
     ),
     new Column(
-        'employer_name', __('Name') . " - " . _n('Employer', 'Employers', 1, 'resources'),
-        ['sorton' => 'employer_name']
+        'employer_name',
+        __('Name') . " - " . _n('Employer', 'Employers', 1, 'resources'),
+        ['sorton' => 'employer_name'],
     ),
 ]);
 
@@ -155,7 +168,6 @@ $query = "SELECT `glpi_users`.`registration_number`,
              " . $condition . " )
              GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`" .
     $report->getOrderBy('registration_number');
-
 
 $report->setSqlRequest($query);
 

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\BadRequestHttpException;
@@ -51,7 +51,7 @@ if (isset($_POST['save'])) {
 
                 $input = [
                     'resourceID' => $_POST['resource'][$key],
-                    'datas' => $_POST['import'][$key]
+                    'datas' => $_POST['import'][$key],
                 ];
 
                 $pluginResourcesResourceImport->update($input);
@@ -62,7 +62,7 @@ if (isset($_POST['save'])) {
                 $import->check(-1, CREATE, $_POST);
                 $input = [
                     'importID' => $key,
-                    'datas' => $_POST['import'][$key]
+                    'datas' => $_POST['import'][$key],
                 ];
 
                 $pluginResourcesResourceImport->add($input);
@@ -85,7 +85,7 @@ if (isset($_POST['save'])) {
             $pluginResourcesImportResource->check((int) $key, PURGE);
 
             $input = [
-                ImportResource::getIndexName() => $key
+                ImportResource::getIndexName() => $key,
             ];
 
             $pluginResourcesImportResource->delete($input);

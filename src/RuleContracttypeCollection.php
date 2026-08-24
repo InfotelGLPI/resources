@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -42,8 +42,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class RuleContracttypeCollection extends RuleCollection
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     // From RuleCollection
     public $stop_on_first_match = true;
@@ -54,7 +53,7 @@ class RuleContracttypeCollection extends RuleCollection
      *
      * @return string of the rule collection
      **/
-    function getTitle()
+    public function getTitle()
     {
         return __('Assignment rule of fields to a contract type', 'resources');
     }
@@ -64,7 +63,7 @@ class RuleContracttypeCollection extends RuleCollection
      *
      * @param int $entity
      */
-    function __construct($entity = 0)
+    public function __construct($entity = 0)
     {
         $this->entity = $entity;
     }
@@ -72,7 +71,7 @@ class RuleContracttypeCollection extends RuleCollection
     /**
      * @return bool
      */
-    function showInheritedTab()
+    public function showInheritedTab()
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && ($this->entity);
     }
@@ -80,11 +79,10 @@ class RuleContracttypeCollection extends RuleCollection
     /**
      * @return bool
      */
-    function showChildrensTab()
+    public function showChildrensTab()
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]) && (count(
-                    $_SESSION['glpiactiveentities']
-                ) > 1);
+            $_SESSION['glpiactiveentities'],
+        ) > 1);
     }
 }
-

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -148,7 +148,7 @@ class Metademand extends CommonGLPI
             $res .= __('Link a checklist in', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If the value selected equals the value to check, the checklist in will be add',
-                'resources'
+                'resources',
             ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
@@ -156,7 +156,7 @@ class Metademand extends CommonGLPI
                 $p["plugin_metademands_metademands_id"],
                 $p['checklist_in'],
                 $p["plugin_metademands_fields_id"],
-                false
+                false,
             );
             $res .= "</td></tr>";
 
@@ -164,7 +164,7 @@ class Metademand extends CommonGLPI
             $res .= __('Link a checklist out', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If the value selected equals the value to check, the checklist out will be add',
-                'resources'
+                'resources',
             ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
@@ -172,7 +172,7 @@ class Metademand extends CommonGLPI
                 $p["plugin_metademands_metademands_id"],
                 $p['checklist_out'],
                 $p["plugin_metademands_fields_id"],
-                false
+                false,
             );
             $res .= "</td></tr>";
 
@@ -181,7 +181,7 @@ class Metademand extends CommonGLPI
                 $res .= __('Habilitation', 'resources');
                 $res .= '</br><span class="metademands_wizard_comments">' . __(
                     'If the value selected equals the value to check, the habilitation will be add',
-                    'resources'
+                    'resources',
                 ) . '</span>';
                 $res .= '</td>';
                 $res .= "<td>";
@@ -189,7 +189,7 @@ class Metademand extends CommonGLPI
                     $p["plugin_metademands_metademands_id"],
                     $p['habilitation'],
                     $p["plugin_metademands_fields_id"],
-                    false
+                    false,
                 );
                 $res .= "</td></tr>";
             }
@@ -199,7 +199,7 @@ class Metademand extends CommonGLPI
             $res .= __('Leaving resource', 'resources');
             $res .= '</br><span class="metademands_wizard_comments">' . __(
                 'If yes, the resource will be declared as leaving',
-                'resources'
+                'resources',
             ) . '</span>';
             $res .= '</td>';
             $res .= "<td>";
@@ -274,7 +274,7 @@ class Metademand extends CommonGLPI
                     foreach ($line["form"] as $id => $v) {
                         if (isset($values["fields"]) && is_array($values["fields"]) && array_key_exists(
                             $v["id"],
-                            $values["fields"]
+                            $values["fields"],
                         )) {
                             $Pfield = new Linkmetademand();
                             if ($Pfield->getFromDBByCrit(["plugin_metademands_fields_id" => $v["id"]])) {
@@ -286,26 +286,26 @@ class Metademand extends CommonGLPI
                                 if (isset($checkvalues) && is_array($checkvalues)) {
                                     foreach ($checkvalues as $k => $checkvalue) {
                                         if ((!is_array(
-                                            $values["fields"][$v["id"]]
+                                            $values["fields"][$v["id"]],
                                         ) && $checkvalue == $values["fields"][$v["id"]])
                                             || (is_array($values["fields"][$v["id"]]) && in_array(
                                                 $checkvalue,
-                                                $values["fields"][$v["id"]]
+                                                $values["fields"][$v["id"]],
                                             ))
                                             || (isset($values["fields"][$v["id"] . "#red"]) && in_array(
                                                 $checkvalue,
-                                                $values["fields"][$v["id"] . "#red"]
+                                                $values["fields"][$v["id"] . "#red"],
                                             ))
                                             || (isset($values["fields"][$v["id"] . "#green"]) && in_array(
                                                 $checkvalue,
-                                                $values["fields"][$v["id"] . "#green"]
+                                                $values["fields"][$v["id"] . "#green"],
                                             ))) {
                                             if ($checklist_in[$k] != 0) {
                                                 $c = $checklist_in[$k];
                                                 $checklistConfig->addResourceChecklist(
                                                     $resource,
                                                     $c,
-                                                    Checklist::RESOURCES_CHECKLIST_IN
+                                                    Checklist::RESOURCES_CHECKLIST_IN,
                                                 );
                                             }
                                             if ($checklist_out[$k] != 0) {
@@ -313,7 +313,7 @@ class Metademand extends CommonGLPI
                                                 $checklistConfig->addResourceChecklist(
                                                     $resource,
                                                     $c,
-                                                    Checklist::RESOURCES_CHECKLIST_OUT
+                                                    Checklist::RESOURCES_CHECKLIST_OUT,
                                                 );
                                             }
                                             if ($habilitation[$k] != 0) {
@@ -322,15 +322,15 @@ class Metademand extends CommonGLPI
                                                 if ($config_data['show_form_changes']
                                                     && ((isset($values["fields"][$v["id"] . "#red"]) && in_array(
                                                         $checkvalue,
-                                                        $values["fields"][$v["id"] . "#red"]
+                                                        $values["fields"][$v["id"] . "#red"],
                                                     ))
                                                         || (isset($values["fields"][$v["id"] . "#green"]) && in_array(
                                                             $checkvalue,
-                                                            $values["fields"][$v["id"] . "#green"]
+                                                            $values["fields"][$v["id"] . "#green"],
                                                         )))) {
                                                     if (isset($values["fields"][$v["id"] . "#green"]) && in_array(
                                                         $checkvalue,
-                                                        $values["fields"][$v["id"] . "#green"]
+                                                        $values["fields"][$v["id"] . "#green"],
                                                     )) {
                                                         $habilitationConfig->add([
                                                             'plugin_resources_resources_id' => $idResource,
@@ -338,10 +338,10 @@ class Metademand extends CommonGLPI
                                                         ]);
                                                     } elseif (isset($values["fields"][$v["id"] . "#red"]) && in_array(
                                                         $checkvalue,
-                                                        $values["fields"][$v["id"] . "#red"]
+                                                        $values["fields"][$v["id"] . "#red"],
                                                     )) {
                                                         $sons = $habilitationResource->find(
-                                                            ["ancestors_cache" => ['LIKE', "%\"$c\"%"]]
+                                                            ["ancestors_cache" => ['LIKE', "%\"$c\"%"]],
                                                         );
                                                         foreach ($sons as $son) {
                                                             if ($habilitationConfig->getFromDBByCrit([
@@ -349,7 +349,7 @@ class Metademand extends CommonGLPI
                                                                 'plugin_resources_habilitations_id' => $son['id'],
                                                             ])) {
                                                                 $habilitationToDel[] = $habilitationConfig->getField(
-                                                                    'id'
+                                                                    'id',
                                                                 );
                                                             }
                                                         }
@@ -367,7 +367,7 @@ class Metademand extends CommonGLPI
                                                             'plugin_resources_habilitations_id' => $c,
                                                         ])) {
                                                             $habilitationToDelKeep[] = $habilitationConfig->getField(
-                                                                'id'
+                                                                'id',
                                                             );
                                                         }
                                                     }
@@ -413,7 +413,7 @@ class Metademand extends CommonGLPI
                                 [
                                     'plugin_resources_resources_id' => (int) $idResource,
                                     'NOT' => ['id' => array_map('intval', $habilitationToDelKeep)],
-                                ]
+                                ],
                             );
                         } elseif ($habilitationToDel && $config_data['show_form_changes']) {
                             $DB->delete(
@@ -421,7 +421,7 @@ class Metademand extends CommonGLPI
                                 [
                                     'plugin_resources_resources_id' => (int) $idResource,
                                     'id' => array_map('intval', $habilitationToDel),
-                                ]
+                                ],
                             );
                         }
                     }

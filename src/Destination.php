@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -43,15 +43,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Destination extends CommonDropdown
 {
-
-    var $can_be_translated = true;
+    public $can_be_translated = true;
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Destination', 'Destination', $nb, 'resources');
     }
@@ -62,7 +61,7 @@ class Destination extends CommonDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRight('dropdown', UPDATE);
     }
@@ -76,7 +75,7 @@ class Destination extends CommonDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight('plugin_resources_budget', READ);
     }
@@ -86,13 +85,13 @@ class Destination extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
-//          ['name'  => 'code',
-//                         'label' => __('Code', 'resources'),
-//                         'type'  => 'text',
-//                         'list'  => true],
+            //          ['name'  => 'code',
+            //                         'label' => __('Code', 'resources'),
+            //                         'type'  => 'text',
+            //                         'list'  => true],
         ];
     }
 
@@ -100,7 +99,7 @@ class Destination extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -108,7 +107,7 @@ class Destination extends CommonDropdown
             'id' => '14',
             'table' => $this->getTable(),
             'field' => 'name',
-            'name' => __('Name')
+            'name' => __('Name'),
         ];
 
         return $tab;
@@ -137,4 +136,3 @@ class Destination extends CommonDropdown
         }
     }
 }
-

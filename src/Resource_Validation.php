@@ -1,33 +1,34 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
+
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
@@ -43,23 +44,22 @@ if (!defined('GLPI_ROOT')) {
  */
 class Resource_Validation extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_validation';
+    public static $rightname = 'plugin_resources_validation';
 
     /**
      * @param int $nb
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         if ($nb == 1) {
-            return __('Validation','resources');
+            return __('Validation', 'resources');
         }
-        return __('AD Synchronization','resources');
+        return __('AD Synchronization', 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-checkbox";
     }
@@ -73,7 +73,7 @@ class Resource_Validation extends CommonDBTM
      *
      * @return booleen
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -84,7 +84,7 @@ class Resource_Validation extends CommonDBTM
      *
      * @return booleen
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -103,7 +103,8 @@ class Resource_Validation extends CommonDBTM
      *
      *  @return string tab name
      **/
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
         if ($item->getType() == Resource::class
             && $this->canView()
@@ -116,7 +117,8 @@ class Resource_Validation extends CommonDBTM
         return '';
     }
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
 
         if ($item->getType() == Resource::class) {
 
@@ -131,7 +133,8 @@ class Resource_Validation extends CommonDBTM
      * @param        $exist
      * @param string $withtemplate
      */
-    function showValidationForm($plugin_resources_resources_id) {
+    public function showValidationForm($plugin_resources_resources_id)
+    {
         if (!$this->canView()) {
             return false;
         }
@@ -139,13 +142,13 @@ class Resource_Validation extends CommonDBTM
         $canedit = $this->canCreate();
         $resources = new Resource();
 
-        $resources->getFromDB( $plugin_resources_resources_id);
+        $resources->getFromDB($plugin_resources_resources_id);
 
         if (!$resources->fields['valid_resource_information'] && (empty($resources->fields['users_id']) || $_SESSION['glpiID'] != $resources->fields['users_id'])) {
             echo "<div class='alert alert-info'>" . __(
-                    'The direct manager of the resource must validate the information before it can be synchronized.',
-                    'resources'
-                ) . "</div>";
+                'The direct manager of the resource must validate the information before it can be synchronized.',
+                'resources',
+            ) . "</div>";
             return false;
         }
 
@@ -159,7 +162,7 @@ class Resource_Validation extends CommonDBTM
                     'reloadonclose' => false,
                     'width' => 1180,
                     'height' => 500,
-                ]
+                ],
             );
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -168,7 +171,7 @@ class Resource_Validation extends CommonDBTM
             echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
             echo "<a class='btn btn-primary overflow-hidden text-nowrap' href='#' onclick='popupAnswer.show();' title='" . __("Validate", "resources") . "'>" . __("Validate", "resources") . "</a>";
             echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-           echo "</td></tr>";
+            echo "</td></tr>";
 
             echo Html::scriptBlock("
             function validinformation() {
@@ -190,7 +193,7 @@ class Resource_Validation extends CommonDBTM
             Html::closeForm();
         } else {
             if ($canedit) {
-                echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR. "/front/resource.form.php\">";
+                echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
 
                 echo "<div align='center'><table class='tab_cadre_fixe'>";
                 echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Active Directory synchronization', 'resources') . "</th></tr>";
@@ -203,9 +206,9 @@ class Resource_Validation extends CommonDBTM
                 Html::closeForm();
             } else {
                 echo "<div class='alert alert-danger'>" . __(
-                        'You are not able to synchronize this account.',
-                        'resources'
-                    ) . "</div>";
+                    'You are not able to synchronize this account.',
+                    'resources',
+                ) . "</div>";
                 return false;
             }
         }

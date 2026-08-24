@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -46,8 +46,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Directory extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
     protected static $notable = true;
     private $table = "glpi_users";
 
@@ -64,7 +63,7 @@ class Directory extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Resources directory', 'resources');
     }
@@ -78,7 +77,7 @@ class Directory extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -89,7 +88,7 @@ class Directory extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -106,13 +105,13 @@ class Directory extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
 
         $tab[] = [
@@ -120,7 +119,7 @@ class Directory extends CommonDBTM
             'table' => $this->table,
             'field' => 'registration_number',
             'name' => _x('user', 'Administrative number'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -129,7 +128,7 @@ class Directory extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'massiveaction' => false,
-            'datatype' => 'number'
+            'datatype' => 'number',
         ];
 
         $tab[] = [
@@ -137,7 +136,7 @@ class Directory extends CommonDBTM
             'table' => $this->table,
             'field' => 'realname',
             'name' => __('Surname'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -145,7 +144,7 @@ class Directory extends CommonDBTM
             'table' => $this->table,
             'field' => 'firstname',
             'name' => __('First name'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -156,17 +155,17 @@ class Directory extends CommonDBTM
             'datatype' => 'email',
             'joinparams' => ['jointype' => 'child'],
             'forcegroupby' => true,
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
-//        $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
+        //        $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
         $tab[] = [
             'id' => '6',
             'table' => $this->table,
             'field' => 'phone',
             'name' => __('Phone'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -174,7 +173,7 @@ class Directory extends CommonDBTM
             'table' => $this->table,
             'field' => 'phone2',
             'name' => __('Phone 2'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -182,7 +181,7 @@ class Directory extends CommonDBTM
             'table' => $this->table,
             'field' => 'mobile',
             'name' => __('Mobile phone'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab[] = [
@@ -190,7 +189,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_employers',
             'field' => 'completename',
             'name' => Employer::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -198,7 +197,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_clients',
             'field' => 'name',
             'name' => Client::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -206,7 +205,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_contracttypes',
             'field' => 'name',
             'name' => ContractType::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -215,7 +214,7 @@ class Directory extends CommonDBTM
             'field' => 'name',
             'name' => __('Resource manager', 'resources'),
             'searchtype' => 'contains',
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -223,7 +222,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'date_begin',
             'name' => __('Arrival date', 'resources'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -231,7 +230,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'date_end',
             'name' => __('Departure date', 'resources'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -239,7 +238,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_departments',
             'field' => 'name',
             'name' => Department::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -247,7 +246,7 @@ class Directory extends CommonDBTM
             'table' => 'glpi_plugin_resources_resourcestates',
             'field' => 'name',
             'name' => ResourceState::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         return $tab;
     }
@@ -260,7 +259,7 @@ class Directory extends CommonDBTM
      *
      * @return
      **/
-    static function showList($itemtype, $params)
+    public static function showList($itemtype, $params)
     {
         $data = Search::prepareDatasForSearch($itemtype, $params);
         Search::constructSQL($data);
@@ -283,7 +282,7 @@ class Directory extends CommonDBTM
      **@since version 0.85
      *
      */
-    static function constructSQL(array &$data)
+    public static function constructSQL(array &$data)
     {
         global $CFG_GLPI;
 
@@ -339,7 +338,7 @@ class Directory extends CommonDBTM
                     0,
                     0,
                     $searchopt[$val]["joinparams"],
-                    $searchopt[$val]["field"]
+                    $searchopt[$val]["field"],
                 );
             }
         }
@@ -359,7 +358,7 @@ class Directory extends CommonDBTM
                             0,
                             0,
                             $searchopt[$key]["joinparams"],
-                            $searchopt[$key]["field"]
+                            $searchopt[$key]["field"],
                         );
                     }
                 }
@@ -395,18 +394,18 @@ class Directory extends CommonDBTM
         }
 
         // Add Restrict to current entities
-//        if ($entity_restrict) {
-//            $LINK = " AND ";
-//            if ($first) {
-//                $LINK = " ";
-//                $first = false;
-//            }
+        //        if ($entity_restrict) {
+        //            $LINK = " AND ";
+        //            if ($first) {
+        //                $LINK = " ";
+        //                $first = false;
+        //            }
 
-//            $COMMONWHERE .= " `glpi_profiles_users`.`entities_id` IN ('" . implode(
-//                "','",
-//                $_SESSION['glpiactiveentities']
-//            ) . "')";
-//        }
+        //            $COMMONWHERE .= " `glpi_profiles_users`.`entities_id` IN ('" . implode(
+        //                "','",
+        //                $_SESSION['glpiactiveentities']
+        //            ) . "')";
+        //        }
         $WHERE = "";
         $HAVING = "";
 
@@ -447,7 +446,7 @@ class Directory extends CommonDBTM
                                 $criteria['searchtype'],
                                 $criteria['value'],
                                 0,
-                                $item_num
+                                $item_num,
                             );
                         } else {
                             // Manage Link if not first item
@@ -460,7 +459,7 @@ class Directory extends CommonDBTM
                                 $data['itemtype'],
                                 $criteria['field'],
                                 $criteria['searchtype'],
-                                $criteria['value']
+                                $criteria['value'],
                             );
                         }
                         // view and all search
@@ -532,7 +531,7 @@ class Directory extends CommonDBTM
                                         $data['itemtype'],
                                         $key2,
                                         $criteria['searchtype'],
-                                        $criteria['value']
+                                        $criteria['value'],
                                     );
                                 }
                             }
@@ -551,7 +550,7 @@ class Directory extends CommonDBTM
                     $data['itemtype'],
                     $data['search']['sort'],
                     $data['search']['order'],
-                    $key
+                    $key,
                 );
             }
         }
@@ -575,28 +574,28 @@ class Directory extends CommonDBTM
                         $metacriteria['itemtype'],
                         $metacriteria['field'],
                         1,
-                        $metacriteria['itemtype']
+                        $metacriteria['itemtype'],
                     );
 
                     // b - ADD LEFT JOIN
                     // Link reference tables
                     if (!in_array(
                         $dbu->getTableForItemType($metacriteria['itemtype']),
-                        $already_link_tables2
+                        $already_link_tables2,
                     )) {
                         $FROM .= Search::addMetaLeftJoin(
                             $data['itemtype'],
                             $metacriteria['itemtype'],
                             $already_link_tables2,
                             (($metacriteria['value'] == "NULL")
-                                || (strstr($metacriteria['link'], "NOT")))
+                                || (strstr($metacriteria['link'], "NOT"))),
                         );
                     }
 
                     // Link items tables
                     if (!in_array(
                         $sopt["table"] . "_" . $metacriteria['itemtype'],
-                        $already_link_tables2
+                        $already_link_tables2,
                     )) {
                         $FROM .= self::addLeftJoin(
                             $metacriteria['itemtype'],
@@ -607,7 +606,7 @@ class Directory extends CommonDBTM
                             1,
                             $metacriteria['itemtype'],
                             $sopt["joinparams"],
-                            $sopt["field"]
+                            $sopt["field"],
                         );
                     }
                     // Where
@@ -633,7 +632,7 @@ class Directory extends CommonDBTM
                             $metacriteria['searchtype'],
                             $metacriteria['value'],
                             1,
-                            $metanum
+                            $metanum,
                         );
                     } else { // Meta Where Search
                         $LINK = " ";
@@ -659,7 +658,7 @@ class Directory extends CommonDBTM
                             $metacriteria['field'],
                             $metacriteria['searchtype'],
                             $metacriteria['value'],
-                            1
+                            1,
                         );
                     }
                 }
@@ -750,7 +749,7 @@ class Directory extends CommonDBTM
                         $tmpquery = str_replace(
                             $CFG_GLPI["union_search_type"][$data['itemtype']],
                             $ctable,
-                            $tmpquery
+                            $tmpquery,
                         );
                         $tmpquery = str_replace($data['itemtype'], $ctype, $tmpquery);
                     } else {// Ref table case
@@ -766,7 +765,7 @@ class Directory extends CommonDBTM
                                 "`" . $CFG_GLPI["union_search_type"][$data['itemtype']] . "`.
                                                 `is_deleted`",
                                 "`$reftable`.`is_deleted`",
-                                $tmpquery
+                                $tmpquery,
                             );
                         }
 
@@ -778,12 +777,12 @@ class Directory extends CommonDBTM
                             "FROM `" .
                             $CFG_GLPI["union_search_type"][$data['itemtype']] . "`",
                             $replace,
-                            $tmpquery
+                            $tmpquery,
                         );
                         $tmpquery = str_replace(
                             $CFG_GLPI["union_search_type"][$data['itemtype']],
                             $ctable,
-                            $tmpquery
+                            $tmpquery,
                         );
                     }
                     $tmpquery = str_replace(
@@ -793,9 +792,9 @@ class Directory extends CommonDBTM
                             $ctable,
                             '',
                             '',
-                            $citem->maybeRecursive()
+                            $citem->maybeRecursive(),
                         ),
-                        $tmpquery
+                        $tmpquery,
                     );
 
                     // SOFTWARE HACK
@@ -839,7 +838,7 @@ class Directory extends CommonDBTM
      *
      * @return Left join string
      **/
-    static function addLeftJoin(
+    public static function addLeftJoin(
         $itemtype,
         $ref_table,
         array &$already_link_tables,
@@ -918,7 +917,7 @@ class Directory extends CommonDBTM
                     $ref_table,
                     $new_table,
                     $linkfield,
-                    $already_link_tables
+                    $already_link_tables,
                 );
             }
         }
@@ -934,7 +933,7 @@ class Directory extends CommonDBTM
                         $ref_table,
                         $new_table,
                         $linkfield,
-                        $already_link_tables
+                        $already_link_tables,
                     );
                 }
             }
@@ -969,7 +968,7 @@ class Directory extends CommonDBTM
                             $interlinkfield,
                             $meta,
                             $meta_type,
-                            $interjoinparams
+                            $interjoinparams,
                         );
                     }
 
@@ -1011,7 +1010,7 @@ class Directory extends CommonDBTM
                             'auths_id',
                             0,
                             0,
-                            $user_searchopt[30]['joinparams']
+                            $user_searchopt[30]['joinparams'],
                         );
                         $specific_leftjoin .= self::addLeftJoin(
                             $itemtype,
@@ -1021,7 +1020,7 @@ class Directory extends CommonDBTM
                             'auths_id',
                             0,
                             0,
-                            $user_searchopt[31]['joinparams']
+                            $user_searchopt[31]['joinparams'],
                         );
                         break;
                 }
@@ -1064,6 +1063,7 @@ class Directory extends CommonDBTM
                     case "mainitemtype_mainitem":
                         $addmain = 'main';
 
+                        // no break
                     case "itemtype_item":
                         if (!isset($addmain)) {
                             $addmain = '';
@@ -1118,7 +1118,7 @@ class Directory extends CommonDBTM
     /**
      * @since version 0.84
      * */
-    function getForbiddenStandardMassiveAction()
+    public function getForbiddenStandardMassiveAction()
     {
         $forbidden = parent::getForbiddenStandardMassiveAction();
         $forbidden[] = 'update';
@@ -1139,12 +1139,12 @@ class Directory extends CommonDBTM
      * This should be overloaded in Class
      *
      */
-    function getSpecificMassiveActions($checkitem = null)
+    public function getSpecificMassiveActions($checkitem = null)
     {
         $actions = [];
         if (Session::getCurrentInterface() == "central") {
             $actions['GlpiPlugin\Resources\Directory' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send'] = __(
-                'Send a notification'
+                'Send a notification',
             );
         }
         return $actions;
@@ -1155,7 +1155,7 @@ class Directory extends CommonDBTM
      *
      * @see CommonDBTM::processMassiveActionsForOneItemtype()
      * */
-    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
     {
         $input = $ma->getInput();
 
@@ -1178,7 +1178,7 @@ class Directory extends CommonDBTM
      *
      * @return bool
      */
-    function sendEmail($items)
+    public function sendEmail($items)
     {
         $User = new User();
         $mail = "";
@@ -1220,8 +1220,8 @@ class Directory extends CommonDBTM
                 'num' => 34,
                 'rank' => 1,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1231,8 +1231,8 @@ class Directory extends CommonDBTM
                 'num' => 9,
                 'rank' => 2,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1242,8 +1242,8 @@ class Directory extends CommonDBTM
                 'num' => 4320,
                 'rank' => 3,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1253,8 +1253,8 @@ class Directory extends CommonDBTM
                 'num' => 3,
                 'rank' => 4,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1264,8 +1264,8 @@ class Directory extends CommonDBTM
                 'num' => 5,
                 'rank' => 5,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1275,8 +1275,8 @@ class Directory extends CommonDBTM
                 'num' => 10,
                 'rank' => 6,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1286,8 +1286,8 @@ class Directory extends CommonDBTM
                 'num' => 6,
                 'rank' => 7,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1297,8 +1297,8 @@ class Directory extends CommonDBTM
                 'num' => 11,
                 'rank' => 8,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1308,8 +1308,8 @@ class Directory extends CommonDBTM
                 'num' => 4313,
                 'rank' => 9,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1319,8 +1319,8 @@ class Directory extends CommonDBTM
                 'num' => 4314,
                 'rank' => 10,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1330,8 +1330,8 @@ class Directory extends CommonDBTM
                 'num' => 4316,
                 'rank' => 11,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
     }
 }

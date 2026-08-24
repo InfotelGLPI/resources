@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -48,13 +48,12 @@ if (!defined('GLPI_ROOT')) {
  */
 class TaskPlanning extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_task';
+    public static $rightname = 'plugin_resources_task';
 
     /**
      * @return bool
      */
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return (Session::haveRight(self::$rightname, UPDATE));
     }
@@ -64,12 +63,12 @@ class TaskPlanning extends CommonDBTM
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return sprintf(
             __('%1$s - %2$s'),
             _n('Human resource', 'Human resources', $nb, 'resources'),
-            __('Tasks list', 'resources')
+            __('Tasks list', 'resources'),
         );
     }
 
@@ -78,7 +77,7 @@ class TaskPlanning extends CommonDBTM
      *
      * @return array|bool
      */
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         if (!isset($input["begin"]) || !isset($input["end"])) {
             return false;
@@ -100,7 +99,7 @@ class TaskPlanning extends CommonDBTM
         return $input;
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         global $CFG_GLPI;
 
@@ -121,7 +120,7 @@ class TaskPlanning extends CommonDBTM
      *
      * @return array|bool
      */
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         global $CFG_GLPI;
 
@@ -143,7 +142,7 @@ class TaskPlanning extends CommonDBTM
                 $fup->fields["users_id"],
                 $input["begin"],
                 $input["end"],
-                [Task::class => [$input["id"]]]
+                [Task::class => [$input["id"]]],
             );
         }
         // Restore fields
@@ -155,7 +154,7 @@ class TaskPlanning extends CommonDBTM
     /**
      * @param int $history
      */
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         global $CFG_GLPI;
 
@@ -175,7 +174,7 @@ class TaskPlanning extends CommonDBTM
      *
      * @return bool, true if exists
      */
-    function getFromDBbyTask($plugin_resources_tasks_id)
+    public function getFromDBbyTask($plugin_resources_tasks_id)
     {
         global $DB;
 
@@ -197,7 +196,7 @@ class TaskPlanning extends CommonDBTM
      * @param                      $resources
      * @param Task $task
      */
-    function showFormForTask($resources, Task $task)
+    public function showFormForTask($resources, Task $task)
     {
         global $CFG_GLPI;
 
@@ -214,7 +213,7 @@ class TaskPlanning extends CommonDBTM
                     'id' => $this->fields["id"],
                     'begin' => $this->fields["begin"],
                     'end' => $this->fields["end"],
-                    'entity' => $Resource->fields["entities_id"]
+                    'entity' => $Resource->fields["entities_id"],
                 ];
                 Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php", $params);
                 echo "}";
@@ -240,7 +239,7 @@ class TaskPlanning extends CommonDBTM
                 echo "$('#plan').css({'display':'none'});";
                 $params = [
                     'form' => 'followups',
-                    'entity' => $_SESSION["glpiactive_entity"]
+                    'entity' => $_SESSION["glpiactive_entity"],
                 ];
                 Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php", $params);
                 echo "};";
@@ -263,11 +262,11 @@ class TaskPlanning extends CommonDBTM
      *
      * @return boolean
      * */
-    function test_valid_date()
+    public function test_valid_date()
     {
         return (!empty($this->fields["begin"]) && !empty($this->fields["end"]) && strtotime(
-                $this->fields["begin"]
-            ) < strtotime($this->fields["end"]));
+            $this->fields["begin"],
+        ) < strtotime($this->fields["end"]));
     }
 
     /**
@@ -277,18 +276,18 @@ class TaskPlanning extends CommonDBTM
      *
      * @return nothing
      * */
-    static function displayError($type)
+    public static function displayError($type)
     {
         switch ($type) {
-            case "date" :
+            case "date":
                 Session::addMessageAfterRedirect(
                     __('Error in entering dates. The starting date is later than the ending date'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 break;
 
-            default :
+            default:
                 Session::addMessageAfterRedirect(__('Unknown error'), false, ERROR);
                 break;
         }
@@ -301,15 +300,15 @@ class TaskPlanning extends CommonDBTM
      *
      * @return Already planned information
      * */
-    static function getAlreadyPlannedInformation($val)
+    public static function getAlreadyPlannedInformation($val)
     {
         global $CFG_GLPI;
 
         $out = "";
 
         $out .= Resource::getTypeName() . " - " . Task::getTypeName() . ' : ' . Html::convDateTime(
-                $val["begin"]
-            ) . ' -> ' .
+            $val["begin"],
+        ) . ' -> ' .
             Html::convDateTime($val["end"]) . ' : ';
         $out .= "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" .
             $val["plugin_resources_tasks_id"] . "'>";
@@ -328,7 +327,7 @@ class TaskPlanning extends CommonDBTM
      *
      * @return array of planning item
      */
-    static function populatePlanning($parm)
+    public static function populatePlanning($parm)
     {
         global $DB, $CFG_GLPI;
 
@@ -362,7 +361,7 @@ class TaskPlanning extends CommonDBTM
                 'glpi_profiles_users',
                 '',
                 $_SESSION["glpiactive_entity"],
-                1
+                1,
             );
             if (count($entities_crit)) {
                 $sub_where[] = $entities_crit;
@@ -437,7 +436,8 @@ class TaskPlanning extends CommonDBTM
                 $output[$key]["resource"] = $data["resource"];
                 $output[$key]["content"] = Html::resume_text($data["comment"], $CFG_GLPI["cut"]);
                 $output[$key]["itemtype"] = TaskPlanning::class;
-                $output[$key]["url"] = PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $data['id'];;
+                $output[$key]["url"] = PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $data['id'];
+                ;
             }
         }
         return $output;
@@ -450,7 +450,7 @@ class TaskPlanning extends CommonDBTM
      *
      * @return  (display function)
      * */
-    static function displayPlanningItem(array $val, $who, $type = "", $complete = 0)
+    public static function displayPlanningItem(array $val, $who, $type = "", $complete = 0)
     {
         global $CFG_GLPI;
 
@@ -464,22 +464,22 @@ class TaskPlanning extends CommonDBTM
         $html .= ">";
 
         switch ($type) {
-            case "in" :
+            case "in":
                 //TRANS: %1$s is the start time of a planned item, %2$s is the end
                 $beginend = sprintf(
                     __('From %1$s to %2$s'),
                     date("H:i", strtotime($val["begin"])),
-                    date("H:i", strtotime($val["end"]))
+                    date("H:i", strtotime($val["end"])),
                 );
                 $html .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
 
                 break;
-            case "begin" :
+            case "begin":
                 $start = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
                 $html .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
                 break;
 
-            case "end" :
+            case "end":
                 $end = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
                 $html .= sprintf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
                 break;
@@ -538,4 +538,3 @@ class TaskPlanning extends CommonDBTM
     }
 
 }
-

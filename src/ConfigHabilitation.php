@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -51,12 +51,11 @@ if (!defined('GLPI_ROOT')) {
  */
 class ConfigHabilitation extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_habilitation';
+    public static $rightname = 'plugin_resources_habilitation';
     public $dohistory = true;
 
-    const ACTION_ADD = 1;
-    const ACTION_DELETE = 2;
+    public const ACTION_ADD = 1;
+    public const ACTION_DELETE = 2;
 
 
     /**
@@ -66,7 +65,7 @@ class ConfigHabilitation extends CommonDBTM
      * @param int $nb
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Super habilitation management', 'Super habilitations management', 2, 'resources');
     }
@@ -80,7 +79,7 @@ class ConfigHabilitation extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -91,7 +90,7 @@ class ConfigHabilitation extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -102,7 +101,7 @@ class ConfigHabilitation extends CommonDBTM
      * @param  $action
      * @return
      */
-    static function getNameAction($action)
+    public static function getNameAction($action)
     {
         switch ($action) {
             case self::ACTION_ADD:
@@ -113,7 +112,7 @@ class ConfigHabilitation extends CommonDBTM
     }
 
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-lock-down";
     }
@@ -130,7 +129,7 @@ class ConfigHabilitation extends CommonDBTM
      * @return bool
      * @see CommonGLPI::displayTabContentForItem()
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             $self = new self();
@@ -142,7 +141,7 @@ class ConfigHabilitation extends CommonDBTM
     /**
      * Display of the link to configure the super habilitation interface
      */
-    function showConfigForm()
+    public function showConfigForm()
     {
         TemplateRenderer::getInstance()->display('@resources/confighabilitation_config.html.twig', [
             'form_action' => self::getFormURL(),
@@ -157,7 +156,7 @@ class ConfigHabilitation extends CommonDBTM
      *
      * @return bool
      */
-    function showFormHabilitation()
+    public function showFormHabilitation()
     {
         if (!$this->canView()) {
             return false;
@@ -191,7 +190,7 @@ class ConfigHabilitation extends CommonDBTM
                         self::ACTION_ADD    => self::getNameAction(self::ACTION_ADD),
                         self::ACTION_DELETE => self::getNameAction(self::ACTION_DELETE),
                     ],
-                    ['used' => $used_data]
+                    ['used' => $used_data],
                 );
                 $action_dropdown = ob_get_clean();
 
@@ -231,8 +230,8 @@ class ConfigHabilitation extends CommonDBTM
             $rand = mt_rand();
             echo "<div class='left'>";
             if ($canedit) {
-                Html::openMassiveActionsForm('massHabilitation' .  $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massHabilitation' .  $rand];
+                Html::openMassiveActionsForm('massHabilitation' . $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massHabilitation' . $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
             echo "<table class='tab_cadre_fixe'>";
@@ -241,7 +240,7 @@ class ConfigHabilitation extends CommonDBTM
             echo "</tr>";
             echo "<tr>";
             if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('massHabilitation' .  $rand) . "</th>";
+                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('massHabilitation' . $rand) . "</th>";
             }
             echo "<th>" . __('Name') . "</th>";
             echo "<th>" . __('Action') . "</th>";
@@ -256,7 +255,7 @@ class ConfigHabilitation extends CommonDBTM
                 //DATA LINE
                 echo "<td>" . Dropdown::getDropdownName(
                     'glpi_plugin_metademands_metademands',
-                    $field['plugin_metademands_metademands_id']
+                    $field['plugin_metademands_metademands_id'],
                 ) . "</td>";
                 echo "<td>" . self::getNameAction($field['action']) . "</td>";
                 echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
@@ -275,7 +274,7 @@ class ConfigHabilitation extends CommonDBTM
     /**
      * Display Menu
      */
-    function showMenu()
+    public function showMenu()
     {
 
         $title = self::getTypeName(2);

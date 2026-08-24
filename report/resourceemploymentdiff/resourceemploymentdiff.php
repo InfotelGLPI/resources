@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
@@ -59,76 +59,96 @@ $report = new AutoReport(__("Report of pledges", "resources"));
 // Columns title (optional)
 $report->setColumns([
     new Column(
-        'registration_number', _x('user', 'Administrative number'),
-        ['sorton' => 'registration_number']
+        'registration_number',
+        _x('user', 'Administrative number'),
+        ['sorton' => 'registration_number'],
     ),
     new ColumnLink(
-        'resource_id', __('Surname'), Resource::class,
-        ['sorton' => 'resource_name']
+        'resource_id',
+        __('Surname'),
+        Resource::class,
+        ['sorton' => 'resource_name'],
     ),
     new Column(
-        'firstname', __('First name'),
-        ['sorton' => 'firstname']
+        'firstname',
+        __('First name'),
+        ['sorton' => 'firstname'],
     ),
     new ColumnInteger(
-        'quota', __('Quota', 'resources'),
-        ['sorton' => 'quota']
+        'quota',
+        __('Quota', 'resources'),
+        ['sorton' => 'quota'],
     ),
     new Column(
-        'resource_rank', __('Resource', 'resources') . " - " . Rank::getTypeName(1),
-        ['sorton' => 'resource_rank']
+        'resource_rank',
+        __('Resource', 'resources') . " - " . Rank::getTypeName(1),
+        ['sorton' => 'resource_rank'],
     ),
     new Column(
-        'resource_profession', __('Resource', 'resources') . " - " . Profession::getTypeName(1),
-        ['sorton' => 'resource_profession']
+        'resource_profession',
+        __('Resource', 'resources') . " - " . Profession::getTypeName(1),
+        ['sorton' => 'resource_profession'],
     ),
     new Column(
-        'resource_professionline', __('Resource', 'resources') . " - " . ProfessionLine::getTypeName(1),
-        ['sorton' => 'resource_professionline']
+        'resource_professionline',
+        __('Resource', 'resources') . " - " . ProfessionLine::getTypeName(1),
+        ['sorton' => 'resource_professionline'],
     ),
     new Column(
-        'resource_professioncategory', __('Resource', 'resources') . " - " . ProfessionCategory::getTypeName(1),
-        ['sorton' => 'resource_professioncategory']
+        'resource_professioncategory',
+        __('Resource', 'resources') . " - " . ProfessionCategory::getTypeName(1),
+        ['sorton' => 'resource_professioncategory'],
     ),
     new ColumnLink(
-        'employment_id', __('Name') . " - " . Employment::getTypeName(1),
-        Employment::class, ['sorton' => 'employment_name']
+        'employment_id',
+        __('Name') . " - " . Employment::getTypeName(1),
+        Employment::class,
+        ['sorton' => 'employment_name'],
     ),
     new ColumnFloat(
-        'ratio_employment_budget', __('Ratio Employment / Budget', 'resources'),
-        ['sorton' => 'ratio_employment_budget']
+        'ratio_employment_budget',
+        __('Ratio Employment / Budget', 'resources'),
+        ['sorton' => 'ratio_employment_budget'],
     ),
     new Column(
-        'employment_rank', Employment::getTypeName(1) . " - " . Rank::getTypeName(1),
-        ['sorton' => 'employment_rank']
+        'employment_rank',
+        Employment::getTypeName(1) . " - " . Rank::getTypeName(1),
+        ['sorton' => 'employment_rank'],
     ),
     new Column(
-        'employment_profession', Employment::getTypeName(1) . " - " . Profession::getTypeName(1),
-        ['sorton' => 'employment_profession']
+        'employment_profession',
+        Employment::getTypeName(1) . " - " . Profession::getTypeName(1),
+        ['sorton' => 'employment_profession'],
     ),
     new Column(
-        'employment_professionline', Employment::getTypeName(1) . " - " . ProfessionLine::getTypeName(1),
-        ['sorton' => 'employment_professionline']
+        'employment_professionline',
+        Employment::getTypeName(1) . " - " . ProfessionLine::getTypeName(1),
+        ['sorton' => 'employment_professionline'],
     ),
     new Column(
-        'employment_professioncategory', Employment::getTypeName(1) . " - " . ProfessionCategory::getTypeName(1),
-        ['sorton' => 'employment_professioncategory']
+        'employment_professioncategory',
+        Employment::getTypeName(1) . " - " . ProfessionCategory::getTypeName(1),
+        ['sorton' => 'employment_professioncategory'],
     ),
     new ColumnDate(
-        'begin_date', __('Begin date'),
-        ['sorton' => 'begin_date']
+        'begin_date',
+        __('Begin date'),
+        ['sorton' => 'begin_date'],
     ),
     new ColumnDate(
-        'end_date', __('End date'),
-        ['sorton' => 'end_date']
+        'end_date',
+        __('End date'),
+        ['sorton' => 'end_date'],
     ),
     new Column(
-        'employment_state', EmploymentState::getTypeName(1),
-        ['sorton' => 'employment_state']
+        'employment_state',
+        EmploymentState::getTypeName(1),
+        ['sorton' => 'employment_state'],
     ),
     new Column(
-        'employer_name', __('Name') . " - " . Employer::getTypeName(1),
-        ['sorton' => 'employer_name']
+        'employer_name',
+        __('Name') . " - " . Employer::getTypeName(1),
+        ['sorton' => 'employer_name'],
     ),
 ]);
 
@@ -196,7 +216,6 @@ $query = "SELECT `glpi_users`.`registration_number`,
                    HAVING (resource_profession <> employment_profession
                                  OR resource_rank <> employment_rank)" .
     $report->getOrderBy('registration_number');
-
 
 $report->setSqlRequest($query);
 

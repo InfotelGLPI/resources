@@ -1,14 +1,30 @@
 {#
- # "Create checklists" trigger form (resources plugin, Checklist::showAddForm).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # Standalone POST form targeting the Resource form URL. Plain text is
- # auto-escaped; the <form> carries the GLPI CSRF token.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   form_action : string   target URL
- #   title       : string   panel header
- #   id          : int      resource id carried through the post
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <form name="form" method="post" action="{{ form_action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="center">

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -46,15 +46,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceCard extends CommonDBTM
 {
+    public static $rightname = 'plugin_resources';
 
-    static $rightname = 'plugin_resources';
-
-    static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', Badge::class];
+    public static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', Badge::class];
 
     /**
      * @param $ID
      */
-    static function resourceCard($ID)
+    public static function resourceCard($ID)
     {
         global $CFG_GLPI;
 
@@ -64,7 +63,7 @@ class ResourceCard extends CommonDBTM
         $resource_item = new Resource_Item();
         $data = $resource_item->find([
             'itemtype' => 'User',
-            'plugin_resources_resources_id' => $ID
+            'plugin_resources_resources_id' => $ID,
         ], [], [1]);
 
         $data = reset($data);
@@ -104,11 +103,11 @@ class ResourceCard extends CommonDBTM
             echo "<ul class='plugin_resources_clearfix'>";
             echo "<li class='active'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#about'>" . __(
                 'About',
-                'resources'
+                'resources',
             ) . "</a></li>";
             echo "<li><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#inventory'>" . __(
                 'Inventory',
-                'resources'
+                'resources',
             ) . "</a></li>";
             echo "</ul>";
             echo "</nav>";
@@ -140,7 +139,7 @@ class ResourceCard extends CommonDBTM
      * @param $user
      * @param $resource
      */
-    static function showIdentity($resource, $user = false)
+    public static function showIdentity($resource, $user = false)
     {
         echo "<div id='plugin_resources_about' class='plugin_resources_content plugin_resources_clearfix'>";
 
@@ -150,7 +149,7 @@ class ResourceCard extends CommonDBTM
             echo "<p>";
             echo "<span class='b red'>" . __(
                 'Information, this resource is not linked to a user',
-                'resources'
+                'resources',
             ) . "</br>";
             echo "</p>";
 
@@ -170,14 +169,14 @@ class ResourceCard extends CommonDBTM
                 "</span>" .
                     Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
-                        $resource->fields['locations_id']
-                    )
+                        $resource->fields['locations_id'],
+                    ),
             ) . "</br>";
 
             echo "<p>" . sprintf(
                 __('%1$s: %2$s'),
                 "<span class='b'>" . __('Arrival date', 'resources'),
-                "</span>" . Html::convDate($resource->fields["date_begin"])
+                "</span>" . Html::convDate($resource->fields["date_begin"]),
             ) . "</br>";
             echo "</p>";
 
@@ -196,7 +195,7 @@ class ResourceCard extends CommonDBTM
                         echo "<tr class='tab_bg_1'>";
                         echo "<td class='center'>" . Dropdown::getDropdownName(
                             'glpi_plugin_resources_habilitations',
-                            $data['plugin_resources_habilitations_id']
+                            $data['plugin_resources_habilitations_id'],
                         ) . "</td>";
                         echo "</tr>";
                     }
@@ -220,17 +219,17 @@ class ResourceCard extends CommonDBTM
             echo "<p>" . sprintf(
                 __('%1$s: %2$s'),
                 "<span class='b'>" . __('Phone'),
-                "</span>" . $user->fields['phone']
+                "</span>" . $user->fields['phone'],
             ) . "</br>";
             echo sprintf(
                 __('%1$s: %2$s'),
                 "<span class='b'>" . __('Phone 2'),
-                "</span>" . $user->fields['phone2']
+                "</span>" . $user->fields['phone2'],
             ) . "</br>";
             echo sprintf(
                 __('%1$s: %2$s'),
                 "<span class='b'>" . __('Mobile phone'),
-                "</span>" . $user->fields['mobile']
+                "</span>" . $user->fields['mobile'],
             ) . "</br>";
             echo sprintf(
                 __('%1$s: %2$s'),
@@ -238,8 +237,8 @@ class ResourceCard extends CommonDBTM
                 "</span>" .
                     Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
-                        $user->fields['locations_id']
-                    )
+                        $user->fields['locations_id'],
+                    ),
             ) . "</br>";
 
             $emails = $user->getAllEmails($user->getID());
@@ -261,7 +260,7 @@ class ResourceCard extends CommonDBTM
             echo "<p>" . sprintf(
                 __('%1$s: %2$s'),
                 "<span class='b'>" . __('Arrival date', 'resources'),
-                "</span>" . Html::convDate($resource->fields["date_begin"])
+                "</span>" . Html::convDate($resource->fields["date_begin"]),
             ) . "</br>";
             echo "</p>";
 
@@ -280,7 +279,7 @@ class ResourceCard extends CommonDBTM
                         echo "<tr class='tab_bg_1'>";
                         echo "<td class='center'>" . Dropdown::getDropdownName(
                             'glpi_plugin_resources_habilitations',
-                            $data['plugin_resources_habilitations_id']
+                            $data['plugin_resources_habilitations_id'],
                         ) . "</td>";
                         echo "</tr>";
                     }
@@ -297,7 +296,7 @@ class ResourceCard extends CommonDBTM
     /**
      * @param $user
      */
-    static function showItems($user)
+    public static function showItems($user)
     {
         global $CFG_GLPI, $DB;
 

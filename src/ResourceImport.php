@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -46,8 +46,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceImport extends CommonDBChild
 {
-
-    static $rightname = 'plugin_resources_import';
+    public static $rightname = 'plugin_resources_import';
     public $dohistory = true;
 
     public static $itemtype = Resource::class;
@@ -59,12 +58,12 @@ class ResourceImport extends CommonDBChild
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Import', 'Imports', $nb, 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-transfer-in";
     }
@@ -82,7 +81,7 @@ class ResourceImport extends CommonDBChild
      * @since version 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         // can exists for template
         if ($item->getType() == Resource::class) {
@@ -93,8 +92,8 @@ class ResourceImport extends CommonDBChild
                     self::getTypeName(),
                     $dbu->countElementsInTable(
                         $table,
-                        [self::$items_id => $item->getID()]
-                    )
+                        [self::$items_id => $item->getID()],
+                    ),
                 );
             }
             return self::createTabEntry(self::getTypeName());
@@ -111,7 +110,7 @@ class ResourceImport extends CommonDBChild
      * @param bool $history
      * @return int|null
      */
-    function add(array $input, $options = [], $history = true)
+    public function add(array $input, $options = [], $history = true)
     {
         $importID = $input['importID'];
 
@@ -134,7 +133,7 @@ class ResourceImport extends CommonDBChild
             }
 
             if (!$pluginResourcesImportColumn->getFromDB(
-                $pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id')
+                $pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id'),
             )) {
                 throw new BadRequestHttpException('ImportColumn not found');
             }
@@ -143,12 +142,12 @@ class ResourceImport extends CommonDBChild
                 case "10": //others
                     $resourceImportInputs[] = [
                         'name' => $pluginResourcesImportResourceData->getField('name'),
-                        'value' => $inputValue
+                        'value' => $inputValue,
                     ];
                     break;
                 default:
                     $resourceTableColumnName = Resource::getResourceColumnNameFromDataNameID(
-                        $pluginResourcesImportColumn->getField('resource_column')
+                        $pluginResourcesImportColumn->getField('resource_column'),
                     );
                     $resourceInputs[$resourceTableColumnName] = $inputValue;
                     break;
@@ -187,7 +186,7 @@ class ResourceImport extends CommonDBChild
         }
     }
 
-    function update(array $input, $history = 1, $options = [])
+    public function update(array $input, $history = 1, $options = [])
     {
         $resourceID = $input['resourceID'];
 
@@ -203,7 +202,7 @@ class ResourceImport extends CommonDBChild
             }
 
             if (!$pluginResourcesImportColumn->getFromDB(
-                $pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id')
+                $pluginResourcesImportResourceData->getField('plugin_resources_importcolumns_id'),
             )) {
                 throw new BadRequestHttpException('ImportColumn not found');
             }
@@ -214,7 +213,7 @@ class ResourceImport extends CommonDBChild
                 case 10:
                     $criterias = [
                         ResourceImport::$items_id => $resourceID,
-                        'name' => $pluginResourcesImportResourceData->getField('name')
+                        'name' => $pluginResourcesImportResourceData->getField('name'),
                     ];
 
                     // Resource Import already exist
@@ -222,7 +221,7 @@ class ResourceImport extends CommonDBChild
                         $resourceImportInput = [
                             ResourceImport::getIndexName() => $pluginResourcesResourceImport->getID(),
                             "plugin_resources_resources_id" => $resourceID,
-                            'value' => $inputValue
+                            'value' => $inputValue,
                         ];
 
                         if (!parent::update($resourceImportInput)) {
@@ -233,7 +232,7 @@ class ResourceImport extends CommonDBChild
                         $resourceImportInput = [
                             "plugin_resources_resources_id" => $resourceID,
                             'name' => $pluginResourcesImportResourceData->getField('name'),
-                            'value' => $inputValue
+                            'value' => $inputValue,
                         ];
 
                         if (!parent::add($resourceImportInput)) {
@@ -244,7 +243,7 @@ class ResourceImport extends CommonDBChild
                 default:
                     // Get the column name from resource_column
                     $fieldName = Resource::getResourceColumnNameFromDataNameID(
-                        $pluginResourcesImportColumn->getField('resource_column')
+                        $pluginResourcesImportColumn->getField('resource_column'),
                     );
 
                     $resourceInputs[$fieldName] = $inputValue;
@@ -270,7 +269,7 @@ class ResourceImport extends CommonDBChild
      * @since version 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
             self::showImportResources($item, $withtemplate);
@@ -278,11 +277,11 @@ class ResourceImport extends CommonDBChild
         return true;
     }
 
-    static function showImportResources($item, $withtemplate)
+    public static function showImportResources($item, $withtemplate)
     {
         $pluginResourcesResourceImport = new ResourceImport();
         $resourceImports = $pluginResourcesResourceImport->find([
-            'plugin_resources_resources_id' => $item->getID()
+            'plugin_resources_resources_id' => $item->getID(),
         ]);
 
         TemplateRenderer::getInstance()->display('@resources/resourceimport_list.html.twig', [

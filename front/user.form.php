@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Event;
@@ -51,7 +51,7 @@ if (isset($_POST["update"])) {
         5,
         "setup",
         //TRANS: %s is the user login
-        sprintf(__('%s updates an item'), $_SESSION["glpiname"])
+        sprintf(__('%s updates an item'), $_SESSION["glpiname"]),
     );
     $resource = new Resource();
     $resource->getFromDB($_POST['idResource']);
@@ -71,7 +71,7 @@ if (isset($_POST["update"])) {
                 case 'phone':
                     $content .= __('Phone') . " : " . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . "<br />";
                     break;
-                case '_useremails' :
+                case '_useremails':
                     if (is_array($value) && !empty($value)) {
                         $content .= _n('Email', 'Emails', 1) . " : ";
                         foreach ($value as $email) {
@@ -89,11 +89,11 @@ if (isset($_POST["update"])) {
             if (Plugin::isPluginActive("escalade")) {
                 $first_history = PluginEscaladeHistory::getFirstLineForTicket($ticketResource['tickets_id']);
                 //add the first history group (if not already exist)
-                $group_ticket = new Group_Ticket;
+                $group_ticket = new Group_Ticket();
                 $condition = [
                     'tickets_id' => $ticketResource['tickets_id'],
                     'groups_id' => $first_history['groups_id'],
-                    'type' => CommonITILActor::ASSIGN
+                    'type' => CommonITILActor::ASSIGN,
                 ];
                 if (!$group_ticket->find($condition)) {
                     $group_ticket->add($condition);
@@ -103,7 +103,7 @@ if (isset($_POST["update"])) {
             $solution->add([
                 'itemtype' => 'Ticket',
                 'items_id' => $ticket->getField('id'),
-                'content' => $content
+                'content' => $content,
             ]);
         }
     }

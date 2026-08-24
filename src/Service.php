@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -44,15 +44,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Service extends CommonDropdown
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Service', 'Services', $nb, 'resources');
     }
@@ -60,7 +59,7 @@ class Service extends CommonDropdown
     /**
      * @return
      */
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -68,7 +67,7 @@ class Service extends CommonDropdown
     /**
      * @return
      */
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -78,14 +77,14 @@ class Service extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'departments_services',
                 'label' => Department_Service::getTypeName(2),
                 'type' => 'multiple_departments_services',
-                'list' => true
+                'list' => true,
             ],
         ];
     }
@@ -93,7 +92,7 @@ class Service extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -106,7 +105,7 @@ class Service extends CommonDropdown
      *
      * @return
      */
-    function post_getEmpty()
+    public function post_getEmpty()
     {
         $this->fields['is_active'] = 1;
     }
@@ -115,10 +114,10 @@ class Service extends CommonDropdown
      * @since 0.85
      * @see CommonDropdown::displaySpecificTypeField()
      **/
-    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    public function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            case 'multiple_departments_services' :
+            case 'multiple_departments_services':
                 $department = new Department();
                 $values = $department->find(['entities_id' => $_SESSION['glpiactiveentities']]);
                 $datas = [];
@@ -127,7 +126,7 @@ class Service extends CommonDropdown
                 }
                 $department_service = new Department_Service();
                 $department_service_values = $department_service->find(
-                    ['plugin_resources_services_id' => $this->fields['id']]
+                    ['plugin_resources_services_id' => $this->fields['id']],
                 );
                 $values_selected = [];
                 foreach ($department_service_values as $department_service_value) {
@@ -137,13 +136,13 @@ class Service extends CommonDropdown
                 Dropdown::showFromArray(
                     'departments_services',
                     $datas,
-                    ['values' => $values_selected, 'multiple' => true, 'display' => true]
+                    ['values' => $values_selected, 'multiple' => true, 'display' => true],
                 );
                 break;
         }
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         $test = true;
         $departments_services = $this->input["departments_services"];
@@ -153,14 +152,14 @@ class Service extends CommonDropdown
                 $department_service->add(
                     [
                         'plugin_resources_services_id' => $this->getID(),
-                        'plugin_resources_departments_id' => $id_department
-                    ]
+                        'plugin_resources_departments_id' => $id_department,
+                    ],
                 );
             }
         }
     }
 
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         $departments_services = $this->input["departments_services"];
         $department_service = new Department_Service();
@@ -172,13 +171,13 @@ class Service extends CommonDropdown
 
         foreach ($departments_services as $id_department) {
             if (!$department_service->getFromDBByCrit(
-                ['plugin_resources_services_id' => $this->getID(), 'plugin_resources_departments_id' => $id_department]
+                ['plugin_resources_services_id' => $this->getID(), 'plugin_resources_departments_id' => $id_department],
             )) {
                 $department_service->add(
                     [
                         'plugin_resources_services_id' => $this->getID(),
-                        'plugin_resources_departments_id' => $id_department
-                    ]
+                        'plugin_resources_departments_id' => $id_department,
+                    ],
                 );
             }
         }
@@ -188,21 +187,21 @@ class Service extends CommonDropdown
                 if ($department_service->getFromDBByCrit(
                     [
                         'plugin_resources_services_id' => $this->getID(),
-                        'plugin_resources_departments_id' => $id_department
-                    ]
+                        'plugin_resources_departments_id' => $id_department,
+                    ],
                 )) {
                     $department_service->deleteByCriteria(
                         [
                             'plugin_resources_services_id' => $this->getID(),
-                            'plugin_resources_departments_id' => $id_department
-                        ]
+                            'plugin_resources_departments_id' => $id_department,
+                        ],
                     );
                 }
             }
         }
     }
 
-    static function dropdownFromDepart($departments_id, $opt = [])
+    public static function dropdownFromDepart($departments_id, $opt = [])
     {
         $department_service = new Department_Service();
         $department_services = $department_service->find(['plugin_resources_departments_id' => $departments_id]);

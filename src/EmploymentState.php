@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -43,15 +43,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class EmploymentState extends CommonDropdown
 {
-
-    var $can_be_translated = true;
+    public $can_be_translated = true;
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Employment state', 'Employment states', $nb, 'resources');
     }
@@ -62,7 +61,7 @@ class EmploymentState extends CommonDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
     }
@@ -76,7 +75,7 @@ class EmploymentState extends CommonDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight('plugin_resources_employment', READ);
     }
@@ -86,24 +85,24 @@ class EmploymentState extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'short_name',
                 'label' => __('Short name', 'resources'),
                 'type' => 'text',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'is_active',
                 'label' => __('Active'),
-                'type' => 'bool'
+                'type' => 'bool',
             ],
             [
                 'name' => 'is_leaving_state',
                 'label' => __("Employment state at leaving's resource", "resources"),
-                'type' => 'bool'
+                'type' => 'bool',
             ],
         ];
     }
@@ -116,7 +115,7 @@ class EmploymentState extends CommonDropdown
      * @param $entity
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -124,7 +123,7 @@ class EmploymentState extends CommonDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {
@@ -145,7 +144,7 @@ class EmploymentState extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -153,14 +152,14 @@ class EmploymentState extends CommonDropdown
             'id' => '14',
             'table' => $this->getTable(),
             'field' => 'short_name',
-            'name' => __('Short name', 'resources')
+            'name' => __('Short name', 'resources'),
         ];
         $tab[] = [
             'id' => '15',
             'table' => $this->getTable(),
             'field' => 'is_active',
             'name' => __('Active'),
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
         $tab[] = [
             'id' => '17',
@@ -168,7 +167,7 @@ class EmploymentState extends CommonDropdown
             'field' => 'is_leaving_state',
             'name' => __("Employment state at leaving's resource", "resources"),
             'datatype' => 'bool',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         return $tab;
@@ -179,7 +178,7 @@ class EmploymentState extends CommonDropdown
      *
      * @return
      */
-    function post_addItem()
+    public function post_addItem()
     {
         global $DB;
 
@@ -187,7 +186,7 @@ class EmploymentState extends CommonDropdown
             $DB->update(
                 $this->getTable(),
                 ['is_leaving_state' => 0],
-                ['id' => ['<>', (int) $this->fields['id']]]
+                ['id' => ['<>', (int) $this->fields['id']]],
             );
         }
     }
@@ -199,7 +198,7 @@ class EmploymentState extends CommonDropdown
      * @param int $history
      * @return
      */
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         global $DB;
 
@@ -208,7 +207,7 @@ class EmploymentState extends CommonDropdown
                 $DB->update(
                     $this->getTable(),
                     ['is_leaving_state' => 0],
-                    ['id' => ['<>', (int) $this->input['id']]]
+                    ['id' => ['<>', (int) $this->input['id']]],
                 );
             } else {
                 Session::addMessageAfterRedirect(__('Be careful: there is no default value'), false, ERROR);
@@ -221,7 +220,7 @@ class EmploymentState extends CommonDropdown
      *
      * @return
      */
-    function post_getEmpty()
+    public function post_getEmpty()
     {
         $this->fields['is_active'] = 1;
     }
@@ -232,7 +231,7 @@ class EmploymentState extends CommonDropdown
      *
      * @return
      **/
-    static function getDefault()
+    public static function getDefault()
     {
         global $DB;
 
@@ -240,7 +239,7 @@ class EmploymentState extends CommonDropdown
             $DB->request([
                 'FROM' => 'glpi_plugin_resources_employmentstates',
                 'WHERE' => [
-                    'is_leaving_state' => 1
+                    'is_leaving_state' => 1,
                 ],
             ]) as $data
         ) {
@@ -279,4 +278,3 @@ class EmploymentState extends CommonDropdown
         }
     }
 }
-

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 global $HEADER_LOADED;
@@ -53,12 +53,16 @@ $report = new AutoReport(__("Summary by budget with total amount and quantity", 
 //Report's search criterias
 $datecrit = new DateCriteria($report, 'date_budget', '', Budget::getTypeName(1) . " - " . __('Date'));
 $professioncategory = new DropdownCriteria(
-    $report, 'plugin_resources_professioncategories_id',
-    'glpi_plugin_resources_professioncategories', ProfessionCategory::getTypeName(1)
+    $report,
+    'plugin_resources_professioncategories_id',
+    'glpi_plugin_resources_professioncategories',
+    ProfessionCategory::getTypeName(1),
 );
 $professionline = new DropdownCriteria(
-    $report, 'plugin_resources_professionlines_id',
-    'glpi_plugin_resources_professionlines', ProfessionLine::getTypeName(1)
+    $report,
+    'plugin_resources_professionlines_id',
+    'glpi_plugin_resources_professionlines',
+    ProfessionLine::getTypeName(1),
 );
 
 //Display criterias form is needed
@@ -80,17 +84,17 @@ $output_type = Search::HTML_OUTPUT;
 
 //If criterias have been validated
 if ($report->criteriasValidated()) {
-    if (isset ($_POST['list_limit'])) {
+    if (isset($_POST['list_limit'])) {
         $_SESSION['glpilist_limit'] = $_POST['list_limit'];
-        unset ($_POST['list_limit']);
+        unset($_POST['list_limit']);
     }
-    if (!isset ($_REQUEST['sort'])) {
+    if (!isset($_REQUEST['sort'])) {
         $_REQUEST['sort'] = "profession";
         $_REQUEST['order'] = "ASC";
     }
     $limit = $_SESSION['glpilist_limit'];
 
-    if (isset ($_POST["display_type"])) {
+    if (isset($_POST["display_type"])) {
         $output_type = $_POST["display_type"];
         if ($output_type < 0) {
             $output_type = -$output_type;
@@ -162,8 +166,8 @@ if ($report->criteriasValidated()) {
             Report::title();
         }
         echo "<div class='alert alert-danger center'><span style='color : red;font-weight:bold;'>" . __(
-                'No results found'
-            ) . "</span></div>";
+            'No results found',
+        ) . "</span></div>";
         Html::footer();
     } elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
         include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
@@ -183,14 +187,14 @@ if ($report->criteriasValidated()) {
                 foreach ($val as $k => $v) {
                     $name = $key . "[$k]";
                     echo Html::hidden($name, ['value' => $v]);
-                    if (!empty ($param)) {
+                    if (!empty($param)) {
                         $param .= "&";
                     }
                     $param .= $key . "[" . $k . "]=" . urlencode($v);
                 }
             } else {
                 echo Html::hidden($key, ['value' => $val]);
-                if (!empty ($param)) {
+                if (!empty($param)) {
                     $param .= "&";
                 }
                 $param .= "$key=" . urlencode($val);
@@ -250,25 +254,25 @@ if ($report->criteriasValidated()) {
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professioncategories', $data['professioncategory']),
                 $num,
-                $row_num
+                $row_num,
             );
             echo Search::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professionlines', $data['professionline']),
                 $num,
-                $row_num
+                $row_num,
             );
             echo Search::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professions', $data['profession']),
                 $num,
-                $row_num
+                $row_num,
             );
             echo Search::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_ranks', $data['rank']),
                 $num,
-                $row_num
+                $row_num,
             );
             echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $row_num);
             echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $row_num);
@@ -276,7 +280,7 @@ if ($report->criteriasValidated()) {
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_budgettypes', $data['budget_type']),
                 $num,
-                $row_num
+                $row_num,
             );
             echo Search::showItem($output_type, Html::formatNumber($data['qt_vol_budg_vot'], '', 0), $num, $row_num);
 
@@ -441,44 +445,44 @@ if ($report->criteriasValidated()) {
             $output_type,
             __('Total', 'resources') . " - " . __('Budget volume(qty)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Employment volume (qty)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Resource volume (qty)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem($output_type, '', $num, $row_num);
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Budget volume (€)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Employment volume (€)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Resource volume (€)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Remaining budget - employment (€)', 'resources'),
             $num,
-            $row_num
+            $row_num,
         );
         echo Search::showEndLine($output_type);
 
@@ -550,7 +554,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
         $num,
         $link,
         $issort,
-        ($order == 'ASC' ? 'DESC' : 'ASC')
+        ($order == 'ASC' ? 'DESC' : 'ASC'),
     );
 }
 
@@ -599,4 +603,3 @@ function getOrderByFields($default, $columns)
     }
     return [];
 }
-

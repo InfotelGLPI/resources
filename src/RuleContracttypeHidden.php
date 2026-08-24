@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -47,7 +47,6 @@ if (!defined('GLPI_ROOT')) {
  **/
 class RuleContracttypeHidden extends Rule
 {
-
     public static $rightname = 'plugin_resources';
 
     public $can_sort = true;
@@ -57,7 +56,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @return string of the rule
      **/
-    function getTitle()
+    public function getTitle()
     {
         return Resource::getTypeName(2) . " " . __('Hidden Fields', 'resources');
     }
@@ -71,7 +70,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -82,7 +81,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -90,7 +89,7 @@ class RuleContracttypeHidden extends Rule
     /**
      * @return bool
      */
-    function maybeRecursive()
+    public function maybeRecursive()
     {
         return true;
     }
@@ -98,7 +97,7 @@ class RuleContracttypeHidden extends Rule
     /**
      * @return bool
      */
-    function isEntityassign()
+    public function isEntityassign()
     {
         return true;
     }
@@ -111,7 +110,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @return true
      **/
-    function canUnrecurs()
+    public function canUnrecurs()
     {
         return true;
     }
@@ -119,7 +118,7 @@ class RuleContracttypeHidden extends Rule
     /**
      * @return int
      */
-    function maxCriteriasCount()
+    public function maxCriteriasCount()
     {
         return 1;
     }
@@ -129,7 +128,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @return int maximum number of actions
      **/
-    function maxActionsCount()
+    public function maxActionsCount()
     {
         return count($this->getActions());
     }
@@ -139,7 +138,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @param $params
      **/
-    function addSpecificParamsForPreview($params)
+    public function addSpecificParamsForPreview($params)
     {
         if (!isset($params["entities_id"])) {
             $params["entities_id"] = $_SESSION["glpiactive_entity"];
@@ -152,7 +151,7 @@ class RuleContracttypeHidden extends Rule
      *
      * @param $fields
      **/
-    function showSpecificCriteriasForPreview($fields)
+    public function showSpecificCriteriasForPreview($fields)
     {
         $entity_as_criteria = false;
         foreach ($this->criterias as $criteria) {
@@ -169,7 +168,7 @@ class RuleContracttypeHidden extends Rule
     /**
      * @return array
      */
-    function getCriterias()
+    public function getCriterias()
     {
         $criterias = [];
 
@@ -197,7 +196,7 @@ class RuleContracttypeHidden extends Rule
      * @param $value     the pattern (DEFAULT '')
      * @param $test      Is to test rule ? (false by default)
      **/
-    function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)
+    public function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)
     {
         $ContractType = new ContractType();
 
@@ -210,12 +209,12 @@ class RuleContracttypeHidden extends Rule
                     $ContractType->dropdownContractType($name);
                     $display = true;
                     break;
-                case "dropdownProfileType" :
-                    \Profile::dropdown(['name'=>$name, 'value'=>$value]);
+                case "dropdownProfileType":
+                    \Profile::dropdown(['name' => $name, 'value' => $value]);
                     $display = true;
                     break;
-                case "dropdownGroupType" :
-                    Group::dropdown(['name'=>$name, 'value'=>$value]);
+                case "dropdownGroupType":
+                    Group::dropdown(['name' => $name, 'value' => $value]);
                     $display = true;
                     break;
             }
@@ -229,7 +228,7 @@ class RuleContracttypeHidden extends Rule
      * @param $condition condition used
      * @param $pattern the pattern
      **/
-    function getCriteriaDisplayPattern($ID, $condition, $pattern)
+    public function getCriteriaDisplayPattern($ID, $condition, $pattern)
     {
         if (($condition == Rule::PATTERN_IS || $condition == Rule::PATTERN_IS_NOT)) {
             $crit = $this->getCriteria($ID);
@@ -238,9 +237,9 @@ class RuleContracttypeHidden extends Rule
                     case "dropdownContractType":
                         $ContractType = new ContractType();
                         return $ContractType->getContractTypeName($pattern);
-                    case "dropdownProfileType" :
+                    case "dropdownProfileType":
                         return \Profile::getFriendlyNameById($pattern);
-                    case "dropdownGroupType" :
+                    case "dropdownGroupType":
                         return Group::getFriendlyNameById($pattern);
                 }
             }
@@ -251,7 +250,7 @@ class RuleContracttypeHidden extends Rule
     /**
      * @return array
      */
-    function getActions()
+    public function getActions()
     {
         $actions = [];
 
@@ -390,9 +389,9 @@ class RuleContracttypeHidden extends Rule
         $actions['hiddenfields_interview_date']['type'] = "yesonly";
         $actions['hiddenfields_interview_date']['force_actions'] = ['assign'];
 
-//       $actions['hiddenfields_users_id']['name']  = __('Sales manager', 'resources');
-//       $actions['hiddenfields_users_id']['type']  = "yesonly";
-//       $actions['hiddenfields_users_id']['force_actions'] = ['assign'];
+        //       $actions['hiddenfields_users_id']['name']  = __('Sales manager', 'resources');
+        //       $actions['hiddenfields_users_id']['type']  = "yesonly";
+        //       $actions['hiddenfields_users_id']['force_actions'] = ['assign'];
 
         $actions['hiddenfields_plugin_resources_workprofiles_id']['name'] = WorkProfile::getTypeName(1);
         $actions['hiddenfields_plugin_resources_workprofiles_id']['type'] = "yesonly";

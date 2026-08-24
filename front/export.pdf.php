@@ -1,31 +1,34 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
+
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Resource;
 
 if (Session::getCurrentInterface()
     && (Session::getCurrentInterface() == "helpdesk")) {
@@ -45,8 +48,20 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
     if (Session::getCurrentInterface() === 'helpdesk') {
         $users_id = (int) Session::getLoginUserID();
     } else {
-        Session::checkRight('plugin_resources', READ);
         $users_id = (int) $_GET['users_id'];
+        // The global plugin_resources READ right does not enforce entity scope, so
+        // resolve the resource linked to the target user and require ->can($id, READ)
+        // (right + checkEntity) before exporting — mirroring the guard used by
+        // picture.send.php and ajax/showHabilitations.php — to prevent exporting an
+        // arbitrary user's equipment across entities (horizontal IDOR).
+        $resource    = new Resource();
+        $resource_id = 0;
+        foreach ($resource->find(['users_id' => $users_id], ['id ASC'], 1) as $row) {
+            $resource_id = (int) $row['id'];
+        }
+        if ($resource_id <= 0 || !$resource->can($resource_id, READ)) {
+            throw new AccessDeniedHttpException();
+        }
     }
     $PluginUseditemsexportExport = new PluginUseditemsexportExport();
     if ($PluginUseditemsexportExport::generatePDF($users_id)) {
@@ -57,10 +72,10 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
                 'SELECT' => 'documents_id',
                 'FROM' => $table,
                 'WHERE' => [
-                    'users_id' => $users_id
+                    'users_id' => $users_id,
                 ],
                 'ORDERBY' => 'id DESC',
-                'LIMIT' => 1
+                'LIMIT' => 1,
             ]) as $data
         ) {
             $doc = new Document();
@@ -78,7 +93,7 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
                     header("Content-disposition: filename=\"" . $doc->fields['filename'] . "\"");
                     header("Content-type: " . $doc->fields['mime']);
 
-                    readfile($file) or die ("Error opening file $file");
+                    readfile($file) or die("Error opening file $file");
                 }
             }
         }

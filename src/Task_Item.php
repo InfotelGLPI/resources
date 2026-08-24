@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -47,13 +47,12 @@ if (!defined('GLPI_ROOT')) {
  */
 class Task_Item extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_task';
+    public static $rightname = 'plugin_resources_task';
 
     /**
      * @return bool
      */
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -61,7 +60,7 @@ class Task_Item extends CommonDBTM
     /**
      * @return bool
      */
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -72,14 +71,14 @@ class Task_Item extends CommonDBTM
      *
      * @return array|string
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (!$withtemplate) {
             if ($item->getType() == Task::class) {
                 if ($_SESSION['glpishow_count_on_tabs']) {
                     return self::createTabEntry(
                         _n('Associated item', 'Associated items', 2),
-                        self::countForResourceTask($item)
+                        self::countForResourceTask($item),
                     );
                 }
                 return self::createTabEntry(_n('Associated item', 'Associated items', 2));
@@ -95,7 +94,7 @@ class Task_Item extends CommonDBTM
      *
      * @return bool
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         $self = new self();
         if ($item->getType() == Task::class) {
@@ -109,7 +108,7 @@ class Task_Item extends CommonDBTM
      *
      * @return int
      */
-    static function countForResourceTask(Task $item)
+    public static function countForResourceTask(Task $item)
     {
         $types = Resource::getTypes();
         if (count($types) == 0) {
@@ -120,8 +119,8 @@ class Task_Item extends CommonDBTM
             'glpi_plugin_resources_tasks_items',
             [
                 "plugin_resources_tasks_id" => $item->getID(),
-                "itemtype" => $types
-            ]
+                "itemtype" => $types,
+            ],
         );
     }
 
@@ -132,7 +131,7 @@ class Task_Item extends CommonDBTM
      *
      * @return bool
      */
-    function getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)
+    public function getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)
     {
         global $DB;
 
@@ -158,14 +157,14 @@ class Task_Item extends CommonDBTM
     /**
      * @param $values
      */
-    function addTaskItem($values)
+    public function addTaskItem($values)
     {
         $args = explode(",", $values['item_item']);
         if (isset($args[0]) && isset($args[1])) {
             $this->add([
                 'plugin_resources_tasks_id' => $values["plugin_resources_tasks_id"],
                 'items_id' => $args[0],
-                'itemtype' => $args[1]
+                'itemtype' => $args[1],
             ]);
         }
     }
@@ -177,7 +176,7 @@ class Task_Item extends CommonDBTM
      *
      * @return bool
      */
-    function deleteItemByTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)
+    public function deleteItemByTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)
     {
         if ($this->getFromDBbyTaskAndItem($plugin_resources_tasks_id, $items_id, $itemtype)) {
             return $this->delete(['id' => $this->fields["id"]]);
@@ -190,7 +189,7 @@ class Task_Item extends CommonDBTM
      * @param        $instID
      * @param string $withtemplate
      */
-    function showItemFromPlugin($instID, $withtemplate = '')
+    public function showItemFromPlugin($instID, $withtemplate = '')
     {
         global $DB, $CFG_GLPI;
 
@@ -285,7 +284,7 @@ class Task_Item extends CommonDBTM
                                         PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php',
                                         'deletetaskitem',
                                         _x('button', 'Delete permanently'),
-                                        ['id' => $data["items_id"]]
+                                        ['id' => $data["items_id"]],
                                     );
                                     echo "</td>";
                                 }

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -52,12 +52,11 @@ if (!defined('GLPI_ROOT')) {
  */
 class LinkAd extends CommonDBTM
 {
+    public static $rightname = 'plugin_resources_checklist';
 
-    static $rightname = 'plugin_resources_checklist';
-
-    const RESOURCES_CHECKLIST_IN = 1;
-    const RESOURCES_CHECKLIST_OUT = 2;
-    const RESOURCES_CHECKLIST_TRANSFER = 3;
+    public const RESOURCES_CHECKLIST_IN = 1;
+    public const RESOURCES_CHECKLIST_OUT = 2;
+    public const RESOURCES_CHECKLIST_TRANSFER = 3;
 
     /**
      * Return the localized name of the current Type
@@ -67,7 +66,7 @@ class LinkAd extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Update LDAP directory', 'resources');
     }
@@ -81,7 +80,7 @@ class LinkAd extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -92,7 +91,7 @@ class LinkAd extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
     }
@@ -111,7 +110,7 @@ class LinkAd extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (!$withtemplate) {
             if ($item->getType() == 'Ticket'
@@ -120,7 +119,7 @@ class LinkAd extends CommonDBTM
                 $items = new Item_Ticket();
                 if ($items->getFromDBByCrit([
                     "tickets_id" => $item->getID(),
-                    "itemtype" => Resource::getType()
+                    "itemtype" => Resource::getType(),
                 ])) {
                     $adConfig = new Adconfig();
                     $adConfig->getFromDB(1);
@@ -128,17 +127,17 @@ class LinkAd extends CommonDBTM
                     if ((is_array($adConfig->fields["creation_categories_id"])
                             && in_array(
                                 $item->getField('itilcategories_id'),
-                                $adConfig->getField("creation_categories_id")
+                                $adConfig->getField("creation_categories_id"),
                             ))
                         || (is_array($adConfig->fields["modification_categories_id"])
                             && in_array(
                                 $item->getField('itilcategories_id'),
-                                $adConfig->getField("modification_categories_id")
+                                $adConfig->getField("modification_categories_id"),
                             ))
                         || (is_array($adConfig->fields["deletion_categories_id"])
                             && in_array(
                                 $item->getField('itilcategories_id'),
-                                $adConfig->getField("deletion_categories_id")
+                                $adConfig->getField("deletion_categories_id"),
                             ))) {
                         if ($_SESSION['glpishow_count_on_tabs']) {
                             return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
@@ -162,7 +161,7 @@ class LinkAd extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         $ID = $item->getField('id');
 
@@ -183,7 +182,7 @@ class LinkAd extends CommonDBTM
      *
      * @return int
      */
-    static function countForItem($item)
+    public static function countForItem($item)
     {
         if ($item->getField('is_leaving') == 1) {
             $checklist_type = self::RESOURCES_CHECKLIST_OUT;
@@ -194,7 +193,7 @@ class LinkAd extends CommonDBTM
         $restrict = [
             "plugin_resources_resources_id" => $item->getField('id'),
             "checklist_type" => $checklist_type,
-            "NOT" => ["is_checked" => 1]
+            "NOT" => ["is_checked" => 1],
         ];
         $nb = $dbu->countElementsInTable(['glpi_plugin_resources_checklists'], $restrict);
 
@@ -205,7 +204,7 @@ class LinkAd extends CommonDBTM
     /**
      * @param $ID
      */
-    static function showAddForm($ID)
+    public static function showAddForm($ID)
     {
         echo "<div class='center'>";
         echo "<form action='" . Toolbox::getItemTypeFormURL(Resource::class) . "' method='post'>";
@@ -230,7 +229,7 @@ class LinkAd extends CommonDBTM
      *
      * @return bool
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         if (!$this->canView()) {
             return false;
@@ -269,7 +268,7 @@ class LinkAd extends CommonDBTM
         if ($ID > 0) {
             echo Html::hidden(
                 'plugin_resources_contracttypes_id',
-                ['value' => $this->fields["plugin_resources_contracttypes_id"]]
+                ['value' => $this->fields["plugin_resources_contracttypes_id"]],
             );
             echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
         } else {
@@ -332,7 +331,7 @@ class LinkAd extends CommonDBTM
      *
      * @return bool
      */
-    static function showFromResources($plugin_resources_resources_id, $ticket)
+    public static function showFromResources($plugin_resources_resources_id, $ticket)
     {
         global $CFG_GLPI;
 
@@ -369,7 +368,7 @@ class LinkAd extends CommonDBTM
             $linkAD->fields["role"] = $role;
             $service = Dropdown::getDropdownName(
                 Service::getTable(),
-                $resource->fields['plugin_resources_services_id']
+                $resource->fields['plugin_resources_services_id'],
             );
             $linkAD->fields["service"] = $service;
             $location = Dropdown::getDropdownName(Location::getTable(), $resource->fields['locations_id']);
@@ -409,13 +408,13 @@ class LinkAd extends CommonDBTM
                     [
                         'value' => Dropdown::getDropdownName(
                             'glpi_plugin_resources_departments',
-                            $resource->getField("plugin_resources_departments_id")
-                        )
-                    ]
+                            $resource->getField("plugin_resources_departments_id"),
+                        ),
+                    ],
                 );
                 echo Dropdown::getDropdownName(
                     'glpi_plugin_resources_departments',
-                    $resource->getField("plugin_resources_departments_id")
+                    $resource->getField("plugin_resources_departments_id"),
                 );
                 echo "</td>";
                 echo "</tr>";
@@ -425,7 +424,7 @@ class LinkAd extends CommonDBTM
                 $option = [
                     'rand' => $rand,
                     'value' => $resource->getField("name"),
-                    'onChange' => "\"javascript:this.value=this.value.toUpperCase();\" "
+                    'onChange' => "\"javascript:this.value=this.value.toUpperCase();\" ",
                 ];
                 echo Html::input('name', $option);
                 echo "</td>";
@@ -434,7 +433,7 @@ class LinkAd extends CommonDBTM
                 $option = [
                     'rand' => $rand,
                     'value' => $resource->getField("firstname"),
-                    'onchange' => "First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;'"
+                    'onchange' => "First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;'",
                 ];
                 echo Html::input('firstname', $option);
                 echo "</td>";
@@ -464,14 +463,14 @@ class LinkAd extends CommonDBTM
                     [
                         'value' => Dropdown::getDropdownName(
                             'glpi_plugin_resources_employers',
-                            $employee->getField("plugin_resources_employers_id")
-                        )
-                    ]
+                            $employee->getField("plugin_resources_employers_id"),
+                        ),
+                    ],
                 );
 
                 echo Dropdown::getDropdownName(
                     'glpi_plugin_resources_employers',
-                    $employee->getField("plugin_resources_employers_id")
+                    $employee->getField("plugin_resources_employers_id"),
                 );
                 echo "</td>";
                 echo "<td>" . _n('Contract type', 'Contract types', 1) . "</td>";
@@ -484,14 +483,14 @@ class LinkAd extends CommonDBTM
                     [
                         'value' => Dropdown::getDropdownName(
                             'glpi_plugin_resources_contracttypes',
-                            $resource->getField("plugin_resources_contracttypes_id")
-                        )
-                    ]
+                            $resource->getField("plugin_resources_contracttypes_id"),
+                        ),
+                    ],
                 );
 
                 echo Dropdown::getDropdownName(
                     'glpi_plugin_resources_contracttypes',
-                    $resource->getField("plugin_resources_contracttypes_id")
+                    $resource->getField("plugin_resources_contracttypes_id"),
                 );
                 echo "</td>";
 
@@ -528,39 +527,39 @@ class LinkAd extends CommonDBTM
 
 
                 if (!$islink && !$linkAD->fields["action_done"] && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $configAD->fields["creation_categories_id"]
-                    ) && $logAvailable) {
+                    $ticket->fields["itilcategories_id"],
+                    $configAD->fields["creation_categories_id"],
+                ) && $logAvailable) {
                     echo "<tr class='tab_bg_2'>";
                     echo "<td colspan='4' class='center'>";
                     echo Html::submit(
                         _sx('button', 'Create user in AD', 'resources'),
-                        ['name' => 'createAD', 'class' => 'btn btn-primary']
+                        ['name' => 'createAD', 'class' => 'btn btn-primary'],
                     );
                     echo "</td>";
                 }
                 if ($islink && !$linkAD->fields["action_done"] && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $configAD->fields["modification_categories_id"]
-                    )) {
+                    $ticket->fields["itilcategories_id"],
+                    $configAD->fields["modification_categories_id"],
+                )) {
                     echo "<tr class='tab_bg_2'>";
                     echo "<td colspan='4' class='center'>";
                     echo Html::submit(
                         _sx('button', 'Modify user in AD', 'resources'),
-                        ['name' => 'updateAD', 'class' => 'btn btn-primary']
+                        ['name' => 'updateAD', 'class' => 'btn btn-primary'],
                     );
                     echo "</td>";
                 }
 
                 if ($islink && !$linkAD->fields["action_done"] && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $configAD->fields["deletion_categories_id"]
-                    )) {
+                    $ticket->fields["itilcategories_id"],
+                    $configAD->fields["deletion_categories_id"],
+                )) {
                     echo "<tr class='tab_bg_2'>";
                     echo "<td colspan='4' class='center'>";
                     echo Html::submit(
                         _sx('button', 'Disable user in AD', 'resources'),
-                        ['name' => 'disableAD', 'class' => 'btn btn-primary']
+                        ['name' => 'disableAD', 'class' => 'btn btn-primary'],
                     );
                     echo "</td>";
                 }
@@ -574,14 +573,14 @@ class LinkAd extends CommonDBTM
     }
 
 
-    static function processLogin(Resource $resource)
+    public static function processLogin(Resource $resource)
     {
         $config = new Adconfig();
         $config->getFromDB(1);
         $login = self::getLoginFromRule(
             $resource->fields["firstname"],
             $resource->fields["name"],
-            $config->fields["first_form"]
+            $config->fields["first_form"],
         );
         $ldap = new LDAP();
         $exist = $ldap->existingUser($login);
@@ -589,7 +588,7 @@ class LinkAd extends CommonDBTM
             $login = self::getLoginFromRule(
                 $resource->fields["firstname"],
                 $resource->fields["name"],
-                $config->fields["second_form"]
+                $config->fields["second_form"],
             );
             $exist = $ldap->existingUser($login);
             if ($exist) {
@@ -602,7 +601,7 @@ class LinkAd extends CommonDBTM
         }
     }
 
-    static function processMail(Resource $resource, $login)
+    public static function processMail(Resource $resource, $login)
     {
         $config = new Adconfig();
         $config->getFromDB(1);
@@ -631,7 +630,7 @@ class LinkAd extends CommonDBTM
         return $mail;
     }
 
-    static function getLoginFromRule($firstname, $name, $conf)
+    public static function getLoginFromRule($firstname, $name, $conf)
     {
         switch ($conf) {
             case 1:
@@ -678,7 +677,7 @@ class LinkAd extends CommonDBTM
         return $login;
     }
 
-    static function getMapping($val)
+    public static function getMapping($val)
     {
         $mapping["logAD"] = "login";
         $mapping["nameAD"] = "name";
@@ -703,7 +702,7 @@ class LinkAd extends CommonDBTM
         return null;
     }
 
-    static function getNameMapping($val)
+    public static function getNameMapping($val)
     {
         $mapping["login"] = __('Login');
         $mapping["firstname"] = __('Firstname', 'resources');
@@ -734,7 +733,7 @@ class LinkAd extends CommonDBTM
      *
      * @return bool
      */
-    static function messageSolution($params)
+    public static function messageSolution($params)
     {
         if (isset($params['item'])) {
             $item = $params['item'];
@@ -751,7 +750,7 @@ class LinkAd extends CommonDBTM
      *
      * @return bool
      */
-    static function deleteButtton($params)
+    public static function deleteButtton($params)
     {
         if (isset($params['item'])) {
             $item = $params['item'];
@@ -771,7 +770,7 @@ class LinkAd extends CommonDBTM
      *
      * @return bool
      */
-    static function showMessage($params)
+    public static function showMessage($params)
     {
         if (isset($params['options'])) {
             $options = $params['options'];
@@ -785,17 +784,18 @@ class LinkAd extends CommonDBTM
                 $conf = new Config();
                 $conf->getFromDB(1);
                 if (is_array($adconfig->fields["creation_categories_id"]) && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $adconfig->fields["creation_categories_id"]
-                    )) {
-                    if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
+                    $ticket->fields["itilcategories_id"],
+                    $adconfig->fields["creation_categories_id"],
+                )) {
+                    if ($items->getFromDBByCrit(
+                        ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()],
                     )) {
                         if ($conf->fields["mandatory_adcreation"] == 1) {
                             if (!$linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) || ($linkad->getFromDBByCrit(
-                                        ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                    ) && $linkad->getField('action_done') == 0)) {
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) || ($linkad->getFromDBByCrit(
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) && $linkad->getField('action_done') == 0)) {
                                 $ldapaction = true;
                             }
                         }
@@ -805,8 +805,8 @@ class LinkAd extends CommonDBTM
                                 [
                                     "plugin_resources_resources_id" => $items->getField('items_id'),
                                     "is_checked" => 0,
-                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_IN
-                                ]
+                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_IN,
+                                ],
                             );
                             if (!empty($checklists)) {
                                 $checklistaction = true;
@@ -814,17 +814,18 @@ class LinkAd extends CommonDBTM
                         }
                     }
                 } elseif (is_array($adconfig->fields["deletion_categories_id"]) && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $adconfig->fields["deletion_categories_id"]
-                    )) {
-                    if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
+                    $ticket->fields["itilcategories_id"],
+                    $adconfig->fields["deletion_categories_id"],
+                )) {
+                    if ($items->getFromDBByCrit(
+                        ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()],
                     )) {
                         if ($conf->fields["mandatory_adcreation"] == 1) {
                             if (!$linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) || ($linkad->getFromDBByCrit(
-                                        ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                    ) && $linkad->getField('action_done') == 0)) {
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) || ($linkad->getFromDBByCrit(
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) && $linkad->getField('action_done') == 0)) {
                                 $ldapaction = true;
                             }
                         }
@@ -834,8 +835,8 @@ class LinkAd extends CommonDBTM
                                 [
                                     "plugin_resources_resources_id" => $items->getField('items_id'),
                                     "is_checked" => 0,
-                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_OUT
-                                ]
+                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_OUT,
+                                ],
                             );
                             if (!empty($checklists)) {
                                 $checklistaction = true;
@@ -847,7 +848,7 @@ class LinkAd extends CommonDBTM
                 if (isset($ldapaction) && isset($checklistaction)) {
                     $text = __(
                         'You have to perform the action on the LDAP directory before and you have to do all checklist in action before',
-                        'resources'
+                        'resources',
                     );
                 } elseif (isset($ldapaction)) {
                     $text = __('You have to perform the action on the LDAP directory before', 'resources');
@@ -861,7 +862,7 @@ class LinkAd extends CommonDBTM
         }
     }
 
-    static function cancelButtonSolution($params)
+    public static function cancelButtonSolution($params)
     {
         if (isset($params['options'])) {
             $options = $params['options'];
@@ -875,17 +876,18 @@ class LinkAd extends CommonDBTM
                 $conf = new Config();
                 $conf->getFromDB(1);
                 if (is_array($adconfig->fields["creation_categories_id"]) && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $adconfig->fields["creation_categories_id"]
-                    )) {
-                    if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
+                    $ticket->fields["itilcategories_id"],
+                    $adconfig->fields["creation_categories_id"],
+                )) {
+                    if ($items->getFromDBByCrit(
+                        ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()],
                     )) {
                         if ($conf->fields["mandatory_adcreation"] == 1) {
                             if (!$linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) || ($linkad->getFromDBByCrit(
-                                        ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                    ) && $linkad->getField('action_done') == 0)) {
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) || ($linkad->getFromDBByCrit(
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) && $linkad->getField('action_done') == 0)) {
                                 return true;
                             }
                         }
@@ -895,8 +897,8 @@ class LinkAd extends CommonDBTM
                                 [
                                     "plugin_resources_resources_id" => $items->getField('items_id'),
                                     "is_checked" => 0,
-                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_IN
-                                ]
+                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_IN,
+                                ],
                             );
                             if (!empty($checklists)) {
                                 return true;
@@ -912,17 +914,18 @@ class LinkAd extends CommonDBTM
                     //
                     //               }
                 } elseif (is_array($adconfig->fields["deletion_categories_id"]) && in_array(
-                        $ticket->fields["itilcategories_id"],
-                        $adconfig->fields["deletion_categories_id"]
-                    )) {
-                    if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()]
+                    $ticket->fields["itilcategories_id"],
+                    $adconfig->fields["deletion_categories_id"],
+                )) {
+                    if ($items->getFromDBByCrit(
+                        ["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()],
                     )) {
                         if ($conf->fields["mandatory_adcreation"] == 1) {
                             if (!$linkad->getFromDBByCrit(
-                                    ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                ) || ($linkad->getFromDBByCrit(
-                                        ['plugin_resources_resources_id' => $items->getField('items_id')]
-                                    ) && $linkad->getField('action_done') == 0)) {
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) || ($linkad->getFromDBByCrit(
+                                ['plugin_resources_resources_id' => $items->getField('items_id')],
+                            ) && $linkad->getField('action_done') == 0)) {
                                 return true;
                             }
                         }
@@ -932,8 +935,8 @@ class LinkAd extends CommonDBTM
                                 [
                                     "plugin_resources_resources_id" => $items->getField('items_id'),
                                     "is_checked" => 0,
-                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_OUT
-                                ]
+                                    "checklist_type" => Checklist::RESOURCES_CHECKLIST_OUT,
+                                ],
                             );
                             if (!empty($checklists)) {
                                 return true;

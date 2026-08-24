@@ -1,22 +1,30 @@
 {#
- # Checklist item edit rows (resources plugin, Checklist::showForm).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # Rendered between showFormHeader() and showFormButtons(), so it only emits the
- # <tr> rows (the surrounding <form>/<table> and CSRF token are handled by the
- # form header/footer helpers). GLPI widgets (inputs, yes/no dropdown, textarea)
- # are pre-rendered by PHP and injected with |raw; labels are auto-escaped.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   hidden_fields         : string   pre-rendered hidden inputs
- #   label_name            : string
- #   name_input            : string   Html::input widget
- #   label_important       : string
- #   tag_dropdown          : string   Dropdown::showYesNo widget
- #   label_link            : string
- #   address_input         : string   Html::input widget
- #   label_description     : string
- #   description_textarea  : string   Html::textarea widget
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 {{ hidden_fields|raw }}
 <tr class="tab_bg_1">
     <td>{{ label_name }}</td>

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -267,7 +267,7 @@ class Wizard extends CommonDBTM
                 $tableProfileUser,
                 'entities_id',
                 $_SESSION['glpiactive_entity'],
-                true
+                true,
             );
             $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
             $profiles_User = $profile_User->find($restrict);
@@ -295,7 +295,7 @@ class Wizard extends CommonDBTM
                 $tableProfileUser,
                 'entities_id',
                 $_SESSION['glpiactive_entity'],
-                true
+                true,
             );
             $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
             $profiles_User = $profile_User->find($restrict);
@@ -474,11 +474,11 @@ class Wizard extends CommonDBTM
             foreach ($choices as $choice_item) {
                 $used[] = $choice_item["plugin_resources_choiceitems_id"];
 
-//                if (!empty($choice_item["comment"])) {
-//                    Choice::showModifyCommentFrom($choice_item, $rand);
-//                } else {
-//                    Choice::showAddCommentForm($choice_item, $rand);
-//                }
+                //                if (!empty($choice_item["comment"])) {
+                //                    Choice::showModifyCommentFrom($choice_item, $rand);
+                //                } else {
+                //                    Choice::showAddCommentForm($choice_item, $rand);
+                //                }
 
                 $entries[] = [
                     'itemtype' => Choice::class,
@@ -486,11 +486,11 @@ class Wizard extends CommonDBTM
                     'row_class' => (isset($data['is_deleted']) && $data['is_deleted']) ? 'table-deleted' : '',
                     'name' => Dropdown::getDropdownName(
                         "glpi_plugin_resources_choiceitems",
-                        $choice_item["plugin_resources_choiceitems_id"]
+                        $choice_item["plugin_resources_choiceitems_id"],
                     ),
                     'comment' => Dropdown::getDropdownComments(
                         "glpi_plugin_resources_choiceitems",
-                        $choice_item["plugin_resources_choiceitems_id"]
+                        $choice_item["plugin_resources_choiceitems_id"],
                     ),
                     'delete_choice' => [
                         'content' => _x('button', 'Delete permanently'),
@@ -519,7 +519,9 @@ class Wizard extends CommonDBTM
         if ($spotted && $plugin_resources_resources_id) {
             $entity = $resource->fields["entities_id"];
 
-            TemplateRenderer::getInstance()->display('@resources/wizard_fourstep_choice.html.twig', [
+            TemplateRenderer::getInstance()->display(
+                '@resources/wizard_fourstep_choice.html.twig',
+                [
                     'can_edit' => Session::haveRight("plugin_resources", CREATE),
                     'can_purge' => Session::haveRight("plugin_resources", PURGE),
                     'item' => $resource,
@@ -545,13 +547,13 @@ class Wizard extends CommonDBTM
                         'footers' => $footers,
                         'total_number' => count($entries),
                         'filtered_number' => count($entries),
-//                        'showmassiveactions' => Session::haveRight("plugin_resources", CREATE),
-//                        'massiveactionparams' => [
-//                            'container' => 'massiveactioncontainer' . $rand,
-//                            'itemtype' => Choice::class,
-//                        ],
+                        //                        'showmassiveactions' => Session::haveRight("plugin_resources", CREATE),
+                        //                        'massiveactionparams' => [
+                        //                            'container' => 'massiveactioncontainer' . $rand,
+                        //                            'itemtype' => Choice::class,
+                        //                        ],
                     ],
-                ]
+                ],
             );
         }
         return true;
@@ -625,14 +627,14 @@ class Wizard extends CommonDBTM
             $habilitation_level->getTable(),
             'entities_id',
             $resource->getEntityID(),
-            $habilitation_level->maybeRecursive()
+            $habilitation_level->maybeRecursive(),
         );
         $levels = $habilitation_level->find($condition, "name");
 
         $habilitation_levels = [];
 
         $resource_habilitations = $resourcehabilitation->find(
-            ['plugin_resources_resources_id' => $plugin_resources_resources_id]
+            ['plugin_resources_resources_id' => $plugin_resources_resources_id],
         );
         foreach ($resource_habilitations as $k => $resource_habilitation) {
             if ($habilitation->getFromDB($resource_habilitation['plugin_resources_habilitations_id'])) {
@@ -655,7 +657,7 @@ class Wizard extends CommonDBTM
                     //list of habilitations according to level
                     $habilitations = $habilitation->getHabilitationsWithLevel(
                         $habilitation_level,
-                        $resource->fields["entities_id"]
+                        $resource->fields["entities_id"],
                     );
 
                     $habilitation_levels[] = [
@@ -743,19 +745,19 @@ class Wizard extends CommonDBTM
                     [
                         'name' => 'cancel_request',
                         'class' => 'btn btn-danger ms-1',
-                        'icon' => 'ti ti-x'
-                    ]
+                        'icon' => 'ti ti-x',
+                    ],
                 );
             }
             echo "&nbsp;";
             echo Html::submit(
                 "< " . _sx('button', 'Previous', 'resources'),
-                ['name' => 'undo_seven_step', 'class' => 'btn btn-primary']
+                ['name' => 'undo_seven_step', 'class' => 'btn btn-primary'],
             );
             echo "&nbsp;";
             echo Html::submit(
                 _sx('button', 'Next', 'resources') . " >",
-                ['name' => 'eight_step', 'class' => 'btn btn-success']
+                ['name' => 'eight_step', 'class' => 'btn btn-success'],
             );
             echo "</div>";
             echo "</div>";

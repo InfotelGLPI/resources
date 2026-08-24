@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -49,8 +49,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ImportColumn extends CommonDBChild
 {
-
-    static $rightname = 'plugin_resources_import';
+    public static $rightname = 'plugin_resources_import';
     public $dohistory = true;
 
     public static $itemtype = Import::class;
@@ -62,12 +61,12 @@ class ImportColumn extends CommonDBChild
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Column', 'Columns', $nb, 'resources');
     }
 
-    static function getColumnsTypes()
+    public static function getColumnsTypes()
     {
         return [
             __("Integer", "resources"),
@@ -80,7 +79,7 @@ class ImportColumn extends CommonDBChild
     /**
      * Alternative to find to order array by resource_column
      */
-    function getColumnsByImport($importID, $distinctResourceColumns = false)
+    public function getColumnsByImport($importID, $distinctResourceColumns = false)
     {
         global $DB;
 
@@ -118,7 +117,7 @@ class ImportColumn extends CommonDBChild
      * @since version 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         // can exists for template
         if ($item->getType() == self::$itemtype) {
@@ -129,8 +128,8 @@ class ImportColumn extends CommonDBChild
                     self::getTypeName(),
                     $dbu->countElementsInTable(
                         $table,
-                        [Import::$keyInOtherTables => $item->getID()]
-                    )
+                        [Import::$keyInOtherTables => $item->getID()],
+                    ),
                 );
             }
             return self::getTypeName();
@@ -149,7 +148,7 @@ class ImportColumn extends CommonDBChild
      * @since version 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == self::$itemtype) {
             self::showForImport($item, $withtemplate);
@@ -157,22 +156,22 @@ class ImportColumn extends CommonDBChild
         return true;
     }
 
-    static function getIdentifierNames()
+    public static function getIdentifierNames()
     {
         return [
             __("No Identifier", "resources"),
             __("Level 1 Identifier", "resources"),
-            __("Level 2 Identifier", "resources")
+            __("Level 2 Identifier", "resources"),
         ];
     }
 
-    function getIsIdentifierDropdown($value, $disabled = false)
+    public function getIsIdentifierDropdown($value, $disabled = false)
     {
         $names = self::getIdentifierNames();
 
         $param = [
             'value' => $value,
-            'disabled' => $disabled
+            'disabled' => $disabled,
         ];
 
         return Dropdown::showFromArray("is_identifier", $names, $param);
@@ -279,8 +278,8 @@ class ImportColumn extends CommonDBChild
             $array,
             [
                 'value' => $this->fields['type'],
-                'disabled' => true
-            ]
+                'disabled' => true,
+            ],
         );
 
         echo "</td>";
@@ -293,8 +292,8 @@ class ImportColumn extends CommonDBChild
             $array,
             [
                 'value' => $this->fields['resource_column'],
-                'disabled' => true
-            ]
+                'disabled' => true,
+            ],
         );
 
         echo "</td>";
@@ -349,7 +348,7 @@ class ImportColumn extends CommonDBChild
         Dropdown::showFromArray(
             'type',
             ImportColumn::getColumnsTypes(),
-            ['value' => $importColumn->fields['type']]
+            ['value' => $importColumn->fields['type']],
         );
 
         echo "</td>";
@@ -361,7 +360,7 @@ class ImportColumn extends CommonDBChild
         Dropdown::showFromArray(
             'resource_column',
             Resource::getDataNames(),
-            ['value' => $importColumn->fields['resource_column']]
+            ['value' => $importColumn->fields['resource_column']],
         );
 
         echo "</td>";
@@ -398,7 +397,7 @@ class ImportColumn extends CommonDBChild
             'type' => __CLASS__,
             'parenttype' => self::$itemtype,
             self::$items_id => $ID,
-            'id' => -1
+            'id' => -1,
         ];
         $url = $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php";
         Ajax::updateItemJsCode($viewDomElementName, $url, $params);
@@ -415,7 +414,7 @@ class ImportColumn extends CommonDBChild
             'type' => __CLASS__,
             'parenttype' => self::$itemtype,
             self::$items_id => $this->fields[self::$items_id],
-            'id' => $this->fields["id"]
+            'id' => $this->fields["id"],
         ];
 
         echo "\n<script type='text/javascript' >\n";

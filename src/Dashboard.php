@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -59,7 +59,6 @@ class Dashboard extends CommonGLPI
         $this->interfaces = ["central"];
     }
 
-
     /**
      * @return \array[][]
      */
@@ -70,12 +69,12 @@ class Dashboard extends CommonGLPI
                 $this->getType() . "1" => [
                     "title" => __('New resource - checklist needs to verificated', 'resources'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
                 $this->getType() . "2" => [
                     "title" => __('Leaving resource - checklist needs to verificated', 'resources'),
                     "type" => Widget::$TABLE,
-                    "comment" => ""
+                    "comment" => "",
                 ],
             ],
         ];
@@ -118,7 +117,7 @@ class Dashboard extends CommonGLPI
                         $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
                         $data["contracttypes"] = Dropdown::getDropdownName(
                             "glpi_plugin_resources_contracttypes",
-                            $checklist['plugin_resources_contracttypes_id']
+                            $checklist['plugin_resources_contracttypes_id'],
                         );
 
                         $datas[] = $data;
@@ -130,7 +129,7 @@ class Dashboard extends CommonGLPI
                     __('Arrival date', 'resources'),
                     __('Entity'),
                     __('Location'),
-                    ContractType::getTypeName(1)
+                    ContractType::getTypeName(1),
                 ];
 
                 $widget = new Datatable();
@@ -139,7 +138,7 @@ class Dashboard extends CommonGLPI
                 //               $widget->setOption("bSort", false);
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetTitle(
-                    __('New resource - checklist needs to verificated', 'resources') . " : " . count($datas)
+                    __('New resource - checklist needs to verificated', 'resources') . " : " . count($datas),
                 );
                 return $widget;
                 break;
@@ -167,7 +166,7 @@ class Dashboard extends CommonGLPI
                         $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
                         $data["contracttypes"] = Dropdown::getDropdownName(
                             "glpi_plugin_resources_contracttypes",
-                            $checklist['plugin_resources_contracttypes_id']
+                            $checklist['plugin_resources_contracttypes_id'],
                         );
 
                         $datas[] = $data;
@@ -178,7 +177,7 @@ class Dashboard extends CommonGLPI
                     __('Departure date', 'resources'),
                     __('Entity'),
                     __('Location'),
-                    ContractType::getTypeName(1)
+                    ContractType::getTypeName(1),
                 ];
 
                 $widget = new Datatable();
@@ -187,7 +186,7 @@ class Dashboard extends CommonGLPI
                 //               $widget->setOption("bSort", false);
                 $widget->toggleWidgetRefresh();
                 $widget->setWidgetTitle(
-                    __('Leaving resource - checklist needs to verificated', 'resources') . " : " . count($datas)
+                    __('Leaving resource - checklist needs to verificated', 'resources') . " : " . count($datas),
                 );
                 return $widget;
                 break;

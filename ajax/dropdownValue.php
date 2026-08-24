@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 // Direct access to file
@@ -119,7 +119,7 @@ if ($_GET['searchText'] == $CFG_GLPI["ajax_wildcard"]) {
     $LIMIT = "";
 }
 
-$where .= " AND `$table`.`id` NOT IN (" . (int)$_GET['value'];
+$where .= " AND `$table`.`id` NOT IN (" . (int) $_GET['value'];
 
 if (isset($_GET['used'])) {
     if (is_array($_GET['used'])) {
@@ -168,7 +168,7 @@ if ($item instanceof CommonTreeDropdown) {
                 $table,
                 '',
                 $_GET["entity_restrict"],
-                $recur
+                $recur,
             );
 
             if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"]) > 1) {
@@ -233,7 +233,7 @@ if ($item instanceof CommonTreeDropdown) {
         $display_selected = true;
 
         switch ($table) {
-            case "glpi_entities" :
+            case "glpi_entities":
                 // If entity=0 allowed
                 if (isset($_GET["entity_restrict"])
                     && (($_GET["entity_restrict"] <= 0 && in_array(0, $_SESSION['glpiactiveentities']))
@@ -248,7 +248,7 @@ if ($item instanceof CommonTreeDropdown) {
                 }
                 break;
 
-            default :
+            default:
                 if ($_GET['display_emptychoice']) {
                     echo "<option class='tree' value='0'>" . htmlescape($_GET['emptylabel']) . "</option>";
                 }
@@ -350,9 +350,9 @@ if ($item instanceof CommonTreeDropdown) {
 
                                     $to_display = "<option disabled value='$work_parentID' $class2
                                            title=\"" . htmlescape(
-                                            $item->fields['completename'] .
-                                            $addcomment
-                                        ) . "\">" .
+                                        $item->fields['completename'] .
+                                        $addcomment,
+                                    ) . "\">" .
                                         str_repeat("&nbsp;&nbsp;&nbsp;", $work_level) .
                                         $raquo2 . $output2 . "</option>" . $to_display;
 
@@ -395,9 +395,9 @@ if ($item instanceof CommonTreeDropdown) {
                     $addcomment = " - " . $data["comment"];
                 }
                 echo "<option value='$ID' $class title=\"" . htmlescape(
-                        $data['completename'] .
-                        $addcomment
-                    ) . "\">" . str_repeat("&nbsp;&nbsp;&nbsp;", $level) . $raquo . $output .
+                    $data['completename'] .
+                        $addcomment,
+                ) . "\">" . str_repeat("&nbsp;&nbsp;&nbsp;", $level) . $raquo . $output .
                     "</option>";
             }
             if ($multi) {
@@ -418,7 +418,7 @@ if ($item instanceof CommonTreeDropdown) {
                 $table,
                 "entities_id",
                 $_GET["entity_restrict"],
-                $multi
+                $multi,
             );
 
             if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"]) > 1) {
@@ -442,7 +442,7 @@ if ($item instanceof CommonTreeDropdown) {
     }
 
     switch ($_GET['itemtype']) {
-        default :
+        default:
             $query = "SELECT *
                    FROM `$table`
                    $where";
@@ -543,14 +543,14 @@ if ($item instanceof CommonTreeDropdown) {
 if (isset($_GET["comment"]) && $_GET["comment"]) {
     $paramscomment = [
         'value' => '__VALUE__',
-        'table' => $table
+        'table' => $table,
     ];
 
     Ajax::updateItemOnSelectEvent(
         "dropdown_" . $_GET["myname"] . $_GET["rand"],
         "comment_" . $_GET["myname"] . $_GET["rand"],
         $CFG_GLPI["root_doc"] . "/ajax/comments.php",
-        $paramscomment
+        $paramscomment,
     );
 }
 
@@ -564,14 +564,14 @@ if (isset($_GET["action"]) && $_GET["action"]) {
         $_GET['myname'] => '__VALUE__',
         'entity_restrict' => $_GET['entity_restrict'],
         'rand' => $_GET['rand'],
-        'sort' => $sort
+        'sort' => $sort,
     ];
 
     Ajax::updateItemOnSelectEvent(
         "dropdown_" . $_GET["myname"] . $_GET["rand"],
         $_GET['span'],
         $_GET['action'],
-        $params
+        $params,
     );
 }
 

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -50,8 +50,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Employee extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_employee';
+    public static $rightname = 'plugin_resources_employee';
 
     /**
      * Return the localized name of the current Type
@@ -61,16 +60,15 @@ class Employee extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Employee', 'Employees', $nb, 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-buildings";
     }
-
 
     /**
      * Have I the global right to "view" the Object
@@ -81,7 +79,7 @@ class Employee extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -92,7 +90,7 @@ class Employee extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -110,7 +108,7 @@ class Employee extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         $wizard_employee = ContractType::checkWizardSetup($item->getField('id'), "use_employee_wizard");
 
@@ -123,7 +121,6 @@ class Employee extends CommonDBTM
         return '';
     }
 
-
     /**
      * show Tab content
      *
@@ -135,20 +132,19 @@ class Employee extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
 
         if ($item->getType() == Resource::class) {
             $self = new self();
             $self->showEmployeeForm($item->getField('id'), 0, $withtemplate);
         }
-//        if ($item->getType() == Resource::class) {
-//            $wizard = new Wizard();
-//            $wizard->wizardThirdStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
-//        }
+        //        if ($item->getType() == Resource::class) {
+        //            $wizard = new Wizard();
+        //            $wizard->wizardThirdStep($item->getField('id'), ['default_button' => true, 'target' => 'item']);
+        //        }
         return true;
     }
-
 
     /**
      * Prepare input datas for adding the item
@@ -157,7 +153,7 @@ class Employee extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         // Not attached to resource -> not added
         if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
@@ -179,7 +175,7 @@ class Employee extends CommonDBTM
      **@since version 0.84
      *
      */
-    static function cloneItem($oldid, $newid)
+    public static function cloneItem($oldid, $newid)
     {
         global $DB;
 
@@ -190,7 +186,7 @@ class Employee extends CommonDBTM
                 ],
                 'FROM' => 'glpi_plugin_resources_employees',
                 'WHERE' => [
-                    'plugin_resources_resources_id' => $oldid
+                    'plugin_resources_resources_id' => $oldid,
                 ],
             ];
         foreach ($DB->request($query) as $data) {
@@ -198,7 +194,7 @@ class Employee extends CommonDBTM
             $employee->add([
                 'plugin_resources_resources_id' => $newid,
                 'plugin_resources_employers_id' => $data["plugin_resources_employers_id"],
-                'plugin_resources_clients_id' => $data["plugin_resources_clients_id"]
+                'plugin_resources_clients_id' => $data["plugin_resources_clients_id"],
             ]);
         }
     }
@@ -210,7 +206,7 @@ class Employee extends CommonDBTM
      *
      * @return bool
      */
-    function showEmployeeForm($plugin_resources_resources_id, $users_id, $withtemplate = '')
+    public function showEmployeeForm($plugin_resources_resources_id, $users_id, $withtemplate = '')
     {
         global $CFG_GLPI;
 
@@ -265,7 +261,7 @@ class Employee extends CommonDBTM
             'value'  => $this->fields['plugin_resources_employers_id'],
             'entity' => $entity,
             'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownLocation.php",
-            'span'   => 'span_location'
+            'span'   => 'span_location',
         ];
         $employer_dropdown = $capture(fn() => Resource::showGenericDropdown(Employer::class, $params));
 
@@ -286,8 +282,8 @@ class Employee extends CommonDBTM
             [
                 'value'     => $this->fields["plugin_resources_clients_id"],
                 'entity'    => $entity,
-                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);"
-            ]
+                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);",
+            ],
         ));
 
         if (Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
@@ -308,7 +304,7 @@ class Employee extends CommonDBTM
                         $buttons_cell .= "<div class='center'>";
                         $buttons_cell .= Html::submit(
                             _sx('button', 'Add'),
-                            ['name' => 'addemployee', 'class' => 'btn btn-primary']
+                            ['name' => 'addemployee', 'class' => 'btn btn-primary'],
                         );
                         $buttons_cell .= "</div>";
                     } else {
@@ -318,7 +314,7 @@ class Employee extends CommonDBTM
                         $buttons_cell .= "&nbsp;";
                         $buttons_cell .= Html::submit(
                             _sx('button', 'Add'),
-                            ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary']
+                            ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary'],
                         );
                         $buttons_cell .= "</div>";
                     }
@@ -328,18 +324,18 @@ class Employee extends CommonDBTM
                     $buttons_cell .= Html::hidden('id', ['value' => $ID]);
                     $buttons_cell .= Html::hidden(
                         'plugin_resources_resources_id',
-                        ['value' => $this->fields["plugin_resources_resources_id"]]
+                        ['value' => $this->fields["plugin_resources_resources_id"]],
                     );
                     $buttons_cell .= "<div class='center'>";
                     $buttons_cell .= Html::submit(
                         _sx('button', 'Update'),
-                        ['name' => 'updateemployee', 'class' => 'btn btn-primary']
+                        ['name' => 'updateemployee', 'class' => 'btn btn-primary'],
                     );
                     $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                     $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                     $buttons_cell .= Html::submit(
                         _sx('button', 'Delete permanently'),
-                        ['name' => 'deleteemployee', 'class' => 'btn btn-primary']
+                        ['name' => 'deleteemployee', 'class' => 'btn btn-primary'],
                     );
                     $buttons_cell .= "</div>";
                 }
@@ -368,14 +364,13 @@ class Employee extends CommonDBTM
         return true;
     }
 
-
     /**
      * @param $plugin_resources_resources_id
      * @param $exist
      *
      * @return bool
      */
-    function showFormHelpdesk($plugin_resources_resources_id, $exist)
+    public function showFormHelpdesk($plugin_resources_resources_id, $exist)
     {
 
         if (!$this->canView()) {
@@ -428,13 +423,13 @@ class Employee extends CommonDBTM
         $employer_dropdown = $capture(fn() => Dropdown::show(Employer::class, [
             'name'   => "plugin_resources_employers_id",
             'value'  => $this->fields["plugin_resources_employers_id"],
-            'entity' => $entity
+            'entity' => $entity,
         ]));
 
         $client_dropdown = $capture(fn() => Dropdown::show(Client::class, [
             'name'   => "plugin_resources_clients_id",
             'value'  => $this->fields["plugin_resources_clients_id"],
-            'entity' => $entity
+            'entity' => $entity,
         ]));
 
         // Conditional action row: each branch emits its own <tr>/<td> wrapper.
@@ -446,7 +441,7 @@ class Employee extends CommonDBTM
                 $buttons_block .= "<div class='center'>";
                 $buttons_block .= Html::submit(
                     _sx('button', 'Next step', 'resources'),
-                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
+                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary'],
                 );
                 $buttons_block .= "</td></tr>";
             } elseif (empty($ID)) {
@@ -454,7 +449,7 @@ class Employee extends CommonDBTM
                 $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
                 $buttons_block .= Html::submit(
                     _sx('button', 'Add'),
-                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary']
+                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary'],
                 );
                 $buttons_block .= "</td></tr>";
             } else {
@@ -465,7 +460,7 @@ class Employee extends CommonDBTM
                     $buttons_block .= "<div class='center'>";
                     $buttons_block .= Html::submit(
                         _sx('button', 'Update'),
-                        ['name' => 'updateemployee', 'class' => 'btn btn-primary']
+                        ['name' => 'updateemployee', 'class' => 'btn btn-primary'],
                     );
                     $buttons_block .= "</div>";
                     $buttons_block .= "</td></tr>";
@@ -494,7 +489,7 @@ class Employee extends CommonDBTM
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         if ($item->getType() == Resource::class) {
             self::pdfForResource($pdf, $item);
@@ -510,7 +505,7 @@ class Employee extends CommonDBTM
      * @param $pdf object for the output
      * @param $appli Resource Class
      */
-    static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
+    public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
     {
         global $DB;
 
@@ -537,7 +532,7 @@ class Employee extends CommonDBTM
         $pdf->displayTitle(
             '<b><i>' .
             Employer::getTypeName(1),
-            Client::getTypeName(1) . '</i></b>'
+            Client::getTypeName(1) . '</i></b>',
         );
 
         if (!$number) {
@@ -546,7 +541,7 @@ class Employee extends CommonDBTM
             foreach ($iterator as $data) {
                 $pdf->displayLine(
                     Dropdown::getDropdownName("glpi_plugin_resources_employers", $data["plugin_resources_employers_id"]),
-                    Dropdown::getDropdownName("glpi_plugin_resources_clients", $data["plugin_resources_clients_id"])
+                    Dropdown::getDropdownName("glpi_plugin_resources_clients", $data["plugin_resources_clients_id"]),
                 );
             }
         }
@@ -566,7 +561,7 @@ class Employee extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -575,14 +570,14 @@ class Employee extends CommonDBTM
             'table' => 'glpi_plugin_resources_employers',
             'field' => 'name',
             'name' => Employer::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '3',
             'table' => 'glpi_plugin_resources_clients',
             'field' => 'name',
             'name' => Client::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '31',
@@ -590,7 +585,7 @@ class Employee extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'datatype' => 'number',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         return $tab;

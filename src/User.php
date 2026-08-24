@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -48,23 +48,22 @@ if (!defined('GLPI_ROOT')) {
 
 class User extends \User
 {
-
     public static function getTable($classname = null)
     {
         return Resource_Item::getTable();
     }
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('User', 'Users', $nb);
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-user";
     }
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         switch ($item->getType()) {
             case Resource::class:
@@ -74,7 +73,7 @@ class User extends \User
     }
 
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
 
         switch ($item->getType()) {
@@ -83,7 +82,7 @@ class User extends \User
                 $resourceItem = new Resource_Item();
                 $resourceUsers = $resourceItem->find(
                     ['plugin_resources_resources_id' => $item->getID(), 'itemtype' => 'User'],
-                    'id DESC'
+                    'id DESC',
                 );
                 if (count($resourceUsers) > 0) {
                     //Get last user linked to resource
@@ -97,7 +96,7 @@ class User extends \User
         return false;
     }
 
-    function showForm($ID, array $options = [])
+    public function showForm($ID, array $options = [])
     {
         // Affiche un formulaire User simplifié
         if (!\User::canView()) {
@@ -120,7 +119,7 @@ class User extends \User
             //TRANS: %s is the date of last sync
             echo '<br>' . sprintf(
                 __('Last synchronization on %s'),
-                Html::convDateTime($user->fields["date_sync"])
+                Html::convDateTime($user->fields["date_sync"]),
             );
         }
         if (!empty($user->fields["user_dn"])) {
@@ -155,7 +154,7 @@ class User extends \User
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         if ($item->getType() == Resource::class) {
             self::pdfForResource($pdf, $item);
@@ -171,7 +170,7 @@ class User extends \User
      * @param $pdf object for the output
      * @param $appli Resource Class
      */
-    static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
+    public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
     {
         global $DB;
 
@@ -216,7 +215,7 @@ class User extends \User
                                 if ($fieldFields->getFromDBByCrit(['name' => $key])) {
                                     $item = [
                                         "itemtype" => "PluginFieldsField",
-                                        "id" => $fieldFields->getID()
+                                        "id" => $fieldFields->getID(),
                                     ];
                                     $addDisplayTitle[] = PluginFieldsLabelTranslation::getLabelFor($item);
                                     $addContent[] = $field;
@@ -233,7 +232,7 @@ class User extends \User
             __('Last synchronization'),
             __('User DN'),
             Phone::getTypeName(1),
-            _n('Email', 'Emails', Session::getPluralNumber())
+            _n('Email', 'Emails', Session::getPluralNumber()),
         ];
         $titles = array_merge($titles, $addDisplayTitle);
 
@@ -278,7 +277,7 @@ class User extends \User
                 $email = $userEmail->getName();
             }
 
-//         $pdf->displayLine($auth,$lastSync,$userDN,$phone,$email,$addContent[0],$addContent[1],$addContent[2]);
+            //         $pdf->displayLine($auth,$lastSync,$userDN,$phone,$email,$addContent[0],$addContent[1],$addContent[2]);
             $resultsDisplay = [$auth, $lastSync, $userDN, $phone, $email];
             $resultsDisplay = array_merge($resultsDisplay, $addContent);
             call_user_func_array([$pdf, "displayLine"], $resultsDisplay);

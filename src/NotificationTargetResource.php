@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -130,11 +130,11 @@ class NotificationTargetResource extends NotificationTarget
             $this->addTarget(self::RESOURCE_SOURCE_ENTITY_GROUP, __('Source entity group', 'resources'));
             $this->addTarget(
                 self::RESOURCE_SOURCE_ENTITY_GROUP_MANAGER,
-                __('Source entity group manager', 'resources')
+                __('Source entity group manager', 'resources'),
             );
             $this->addTarget(
                 self::RESOURCE_TARGET_ENTITY_GROUP_MANAGER,
-                __('Target entity group manager', 'resources')
+                __('Target entity group manager', 'resources'),
             );
         }
 
@@ -397,9 +397,9 @@ class NotificationTargetResource extends NotificationTarget
         if ($event == 'AlertExpiredTasks') {
             $this->data['##resource.entity##']
                 = Dropdown::getDropdownName(
-                'glpi_entities',
-                $options['entities_id']
-            );
+                    'glpi_entities',
+                    $options['entities_id'],
+                );
             $this->data['##lang.resource.entity##'] = __('Entity');
             $this->data['##resource.action##'] = __('List of not finished tasks', 'resources');
 
@@ -421,12 +421,12 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##task.name##'] = $task['name'];
                 $tmp['##task.type##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_tasktypes',
-                    $task['plugin_resources_tasktypes_id']
+                    $task['plugin_resources_tasktypes_id'],
                 );
                 $tmp['##task.users##'] = getUserName($task['users_id']);
                 $tmp['##task.groups##'] = Dropdown::getDropdownName(
                     'glpi_groups',
-                    $task['groups_id']
+                    $task['groups_id'],
                 );
                 $restrict = ["plugin_resources_tasks_id" => $task['id']];
                 $plans = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
@@ -448,7 +448,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##task.comment##'] = RichText::getTextFromHtml($comment);
                 $tmp['##task.resource##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resources',
-                    $task['plugin_resources_resources_id']
+                    $task['plugin_resources_resources_id'],
                 );
 
                 $this->data['tasks'][] = $tmp;
@@ -456,9 +456,9 @@ class NotificationTargetResource extends NotificationTarget
         } elseif ($event == 'AlertLeavingResources') {
             $this->data['##resource.entity##']
                 = Dropdown::getDropdownName(
-                'glpi_entities',
-                $options['entities_id']
-            );
+                    'glpi_entities',
+                    $options['entities_id'],
+                );
             $this->data['##lang.resource.entity##'] = __('Entity');
             $this->data['##resource.action##'] = __('These resources have normally left the company', 'resources');
 
@@ -493,7 +493,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##resource.firstname##'] = $resource['firstname'];
                 $tmp['##resource.type##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_contracttypes',
-                    $resource['plugin_resources_contracttypes_id']
+                    $resource['plugin_resources_contracttypes_id'],
                 );
                 $tmp['##resource.users##'] = getUserName($resource['users_id']);
                 $tmp['##resource.userssale##'] = getUserName($resource['users_id_sales']);
@@ -503,32 +503,38 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##resource.dateend##'] = Html::convDate($resource['date_end']);
                 $tmp['##resource.department##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_departments',
-                    $resource['plugin_resources_departments_id']
+                    $resource['plugin_resources_departments_id'],
                 );
-                $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
-                    $resource['plugin_resources_roles_id']);
-                $tmp['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
-                    $resource['plugin_resources_services_id']);
-                $tmp['##resource.function##']      = Dropdown::getDropdownName('glpi_plugin_resources_functions',
-                    $resource['plugin_resources_functions_id']);
+                $this->data['##resource.role##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_roles',
+                    $resource['plugin_resources_roles_id'],
+                );
+                $tmp['##resource.service##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_services',
+                    $resource['plugin_resources_services_id'],
+                );
+                $tmp['##resource.function##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_functions',
+                    $resource['plugin_resources_functions_id'],
+                );
                 $resourcehabilitation = new ResourceHabilitation();
                 $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource['id']]);
                 $tab = [];
                 foreach ($habilitations as $habilitation) {
                     $tab[] = Dropdown::getDropdownName(
-                            'glpi_plugin_resources_habilitations',
-                            $habilitation['plugin_resources_habilitations_id']
-                        ) . "\n";
+                        'glpi_plugin_resources_habilitations',
+                        $habilitation['plugin_resources_habilitations_id'],
+                    ) . "\n";
                 }
                 $tmp['##resource.habilitation##'] = implode(', ', $tab);
 
                 $tmp['##resource.status##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resourcestates',
-                    $resource['plugin_resources_resourcestates_id']
+                    $resource['plugin_resources_resourcestates_id'],
                 );
                 $tmp['##resource.location##'] = Dropdown::getDropdownName(
                     'glpi_locations',
-                    $resource['locations_id']
+                    $resource['locations_id'],
                 );
                 $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource['comment']));
                 $tmp['##resource.comment##'] = RichText::getTextFromHtml($comment);
@@ -537,11 +543,11 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
                 $tmp['##resource.leavingreason##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_leavingreasons',
-                    $resource['plugin_resources_leavingreasons_id']
+                    $resource['plugin_resources_leavingreasons_id'],
                 );
                 $tmp['##resource.helpdesk##'] = Dropdown::getYesNo($resource['is_helpdesk_visible']);
                 $tmp['##resource.url##'] = urldecode(
-                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_" . $resource['id']
+                    $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_" . $resource['id'],
                 );
 
                 $this->data['resources'][] = $tmp;
@@ -549,9 +555,9 @@ class NotificationTargetResource extends NotificationTarget
         } elseif ($event == 'AlertArrivalChecklists' || $event == 'AlertLeavingChecklists') {
             $this->data['##checklist.entity##']
                 = Dropdown::getDropdownName(
-                'glpi_entities',
-                $options['entities_id']
-            );
+                    'glpi_entities',
+                    $options['entities_id'],
+                );
             $this->data['##lang.checklist.entity##'] = __('Entity');
 
             if ($event == 'AlertArrivalChecklists') {
@@ -559,14 +565,14 @@ class NotificationTargetResource extends NotificationTarget
                 $this->data['##checklist.action##'] = __('Actions to do on these new resources', 'resources');
                 $this->data['##lang.checklist.title##'] = __(
                     'New resource - checklist needs to verificated',
-                    'resources'
+                    'resources',
                 );
             } else {
                 $checklist_type = Checklist::RESOURCES_CHECKLIST_OUT;
                 $this->data['##checklist.action##'] = __('Actions to do on these leaving resources', 'resources');
                 $this->data['##lang.checklist.title##'] = __(
                     'Leaving resource - checklist needs to verificated',
-                    'resources'
+                    'resources',
                 );
             }
             $this->data['##lang.checklist.title2##'] = __('Checklist needs to verificated', 'resources');
@@ -600,7 +606,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##checklist.firstname##'] = $checklist['resource_firstname'];
                 $tmp['##checklist.type##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_contracttypes',
-                    $checklist['plugin_resources_contracttypes_id']
+                    $checklist['plugin_resources_contracttypes_id'],
                 );
                 $tmp['##checklist.users##'] = getUserName($checklist['users_id']);
                 $tmp['##checklist.userssale##'] = getUserName($checklist['users_id_sales']);
@@ -610,33 +616,33 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##checklist.dateend##'] = Html::convDate($checklist['date_end']);
                 $tmp['##checklist.department##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_departments',
-                    $checklist['plugin_resources_departments_id']
+                    $checklist['plugin_resources_departments_id'],
                 );
                 $resourcehabilitation = new ResourceHabilitation();
                 $habilitations = $resourcehabilitation->find(
-                    ['plugin_resources_resources_id' => $checklist['plugin_resources_resources_id']]
+                    ['plugin_resources_resources_id' => $checklist['plugin_resources_resources_id']],
                 );
                 $tab = [];
                 foreach ($habilitations as $habilitation) {
                     $tab[] = Dropdown::getDropdownName(
-                            'glpi_plugin_resources_habilitations',
-                            $habilitation['plugin_resources_habilitations_id']
-                        ) . "\n";
+                        'glpi_plugin_resources_habilitations',
+                        $habilitation['plugin_resources_habilitations_id'],
+                    ) . "\n";
                 }
                 $tmp['##checklist.habilitation##'] = implode(', ', $tab);
                 $tmp['##checklist.status##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resourcestates',
-                    $checklist['plugin_resources_resourcestates_id']
+                    $checklist['plugin_resources_resourcestates_id'],
                 );
                 $tmp['##checklist.location##'] = Dropdown::getDropdownName(
                     'glpi_locations',
-                    $checklist['locations_id']
+                    $checklist['locations_id'],
                 );
                 $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $checklist['comment']));
                 $tmp['##checklist.comment##'] = RichText::getTextFromHtml($comment);
                 $tmp['##checklist.usersleaving##'] = getUserName($checklist['users_id_recipient_leaving']);
                 $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime(
-                    $checklist['date_declaration_leaving']
+                    $checklist['date_declaration_leaving'],
                 );
                 $tmp['##checklist.leaving##'] = Dropdown::getYesNo($checklist['is_leaving']);
                 //            $tmp['##checklist.leavingreason##'] = Dropdown::getDropdownName('glpi_plugin_resources_leavingreasons',
@@ -644,7 +650,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##checklist.helpdesk##'] = Dropdown::getYesNo($checklist['is_helpdesk_visible']);
                 $tmp['##checklist.url##'] = urldecode(
                     $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
-                    . $checklist['plugin_resources_resources_id']
+                    . $checklist['plugin_resources_resources_id'],
                 );
 
                 $query = Checklist::queryListChecklists($checklist['plugin_resources_resources_id'], $checklist_type);
@@ -663,15 +669,15 @@ class NotificationTargetResource extends NotificationTarget
         } elseif ($event == 'LeavingResource') {
             $this->data['##resource.entity##']
                 = Dropdown::getDropdownName(
-                'glpi_entities',
-                $this->obj->getField('entities_id')
-            );
+                    'glpi_entities',
+                    $this->obj->getField('entities_id'),
+                );
             $this->data['##lang.resource.entity##'] = __('Entity');
             $this->data['##lang.resource.title##'] = __('A resource has been declared leaving', 'resources');
 
             $this->data['##lang.resource.title2##'] = __(
                 'Please check the leaving checklist of the resource',
-                'resources'
+                'resources',
             );
 
             $this->data['##lang.resource.id##'] = "ID";
@@ -685,19 +691,19 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.type##'] = ContractType::getTypeName(1);
             $this->data['##resource.type##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_contracttypes',
-                $this->obj->getField('plugin_resources_contracttypes_id')
+                $this->obj->getField('plugin_resources_contracttypes_id'),
             );
 
             $this->data['##lang.resource.situation##'] = ResourceSituation::getTypeName(1);
             $this->data['##resource.situation##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcesituations',
-                $this->obj->getField('plugin_resources_resourcesituations_id')
+                $this->obj->getField('plugin_resources_resourcesituations_id'),
             );
 
             $this->data['##lang.resource.contractnature##'] = ContractNature::getTypeName(1);
             $this->data['##resource.contractnature##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_contractnatures',
-                $this->obj->getField('plugin_resources_contractnatures_id')
+                $this->obj->getField('plugin_resources_contractnatures_id'),
             );
 
             $this->data['##lang.resource.quota##'] = __('Quota', 'resources');
@@ -706,48 +712,55 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.department##'] = Department::getTypeName(1);
             $this->data['##resource.department##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_departments',
-                $this->obj->getField('plugin_resources_departments_id')
+                $this->obj->getField('plugin_resources_departments_id'),
             );
 
             $this->data['##lang.resource.service##'] = Service::getTypeName(1);
             $this->data['##lang.resource.function##']         = ResourceFunction::getTypeName(1);
-            $this->data['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
-                $this->obj->getField('plugin_resources_services_id'));
-            $this->data['##resource.function##']      = Dropdown::getDropdownName('glpi_plugin_resources_functions',
-                $this->obj->getField('plugin_resources_functions_id'));
+            $this->data['##resource.service##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_services',
+                $this->obj->getField('plugin_resources_services_id'),
+            );
+            $this->data['##resource.function##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_functions',
+                $this->obj->getField('plugin_resources_functions_id'),
+            );
             $this->data['##lang.resource.role##'] = Role::getTypeName(1);
-            $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
-                $this->obj->getField('plugin_resources_roles_id'));
+            $this->data['##resource.role##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_roles',
+                $this->obj->getField('plugin_resources_roles_id'),
+            );
 
             $resourcehabilitation = new ResourceHabilitation();
-            $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $this->obj->getField('id')]
+            $habilitations = $resourcehabilitation->find(
+                ['plugin_resources_resources_id' => $this->obj->getField('id')],
             );
             $tab = [];
             $this->data['##lang.resource.habilitation##'] = ResourceHabilitation::getTypeName(count($habilitations));
             foreach ($habilitations as $habilitation) {
                 $tab[] = Dropdown::getDropdownName(
-                        'glpi_plugin_resources_habilitations',
-                        $habilitation['plugin_resources_habilitations_id']
-                    ) . "\n";
+                    'glpi_plugin_resources_habilitations',
+                    $habilitation['plugin_resources_habilitations_id'],
+                ) . "\n";
             }
             $this->data['##resource.habilitation##'] = implode(', ', $tab);
 
             $this->data['##lang.resource.rank##'] = Rank::getTypeName(1);
             $this->data['##resource.rank##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_ranks',
-                $this->obj->getField('plugin_resources_ranks_id')
+                $this->obj->getField('plugin_resources_ranks_id'),
             );
 
             $this->data['##lang.resource.speciality##'] = ResourceSpeciality::getTypeName(1);
             $this->data['##resource.speciality##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcespecialities',
-                $this->obj->getField('plugin_resources_resourcespecialities_id')
+                $this->obj->getField('plugin_resources_resourcespecialities_id'),
             );
 
             $this->data['##lang.resource.status##'] = ResourceState::getTypeName(1);
             $this->data['##resource.status##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcestates',
-                $this->obj->getField('plugin_resources_resourcestates_id')
+                $this->obj->getField('plugin_resources_resourcestates_id'),
             );
 
             $this->data['##lang.resource.users##'] = __('Resource manager', 'resources');
@@ -771,7 +784,7 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.location##'] = __('Location');
             $this->data['##resource.location##'] = Dropdown::getDropdownName(
                 'glpi_locations',
-                $this->obj->getField('locations_id')
+                $this->obj->getField('locations_id'),
             );
 
             $this->data['##lang.resource.helpdesk##'] = __('Associable to a ticket');
@@ -783,7 +796,7 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.leavingreason##'] = LeavingReason::getTypeName(1);
             $this->data['##resource.leavingreason##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_leavingreasons',
-                $this->obj->getField('plugin_resources_leavingreasons_id')
+                $this->obj->getField('plugin_resources_leavingreasons_id'),
             );
 
             $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
@@ -791,7 +804,7 @@ class NotificationTargetResource extends NotificationTarget
 
             $this->data['##lang.resource.datedeclarationleaving##'] = __('Declaration of departure date', 'resources');
             $this->data['##resource.datedeclarationleaving##'] = Html::convDateTime(
-                $this->obj->getField('date_declaration_leaving')
+                $this->obj->getField('date_declaration_leaving'),
             );
 
             $this->data['##lang.resource.comment##'] = __('Description');
@@ -803,7 +816,7 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.url##'] = "URL";
             $this->data['##resource.url##'] = urldecode(
                 $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
-                . $this->obj->getField("id")
+                . $this->obj->getField("id"),
             );
 
             $this->data['##lang.resource.badge##'] = " ";
@@ -857,32 +870,38 @@ class NotificationTargetResource extends NotificationTarget
 
                 $tmp['##resource.type##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_contracttypes',
-                    $resource['plugin_resources_contracttypes_id']
+                    $resource['plugin_resources_contracttypes_id'],
                 );
 
                 $tmp['##resource.situation##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resourcesituations',
-                    $resource['plugin_resources_resourcesituations_id']
+                    $resource['plugin_resources_resourcesituations_id'],
                 );
 
                 $tmp['##resource.contractnature##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_contractnatures',
-                    $resource['plugin_resources_contractnatures_id']
+                    $resource['plugin_resources_contractnatures_id'],
                 );
 
                 $tmp['##resource.quota##'] = $resource['quota'];
 
                 $tmp['##resource.department##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_departments',
-                    $resource['plugin_resources_departments_id']
+                    $resource['plugin_resources_departments_id'],
                 );
 
-                $tmp['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
-                    $resource['plugin_resources_services_id']);
-                $tmp['##resource.function##']      = Dropdown::getDropdownName('glpi_plugin_resources_functions',
-                    $resource['plugin_resources_functions_id']);
-                $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
-                    $resource['plugin_resources_roles_id']);
+                $tmp['##resource.service##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_services',
+                    $resource['plugin_resources_services_id'],
+                );
+                $tmp['##resource.function##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_functions',
+                    $resource['plugin_resources_functions_id'],
+                );
+                $this->data['##resource.role##']      = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_roles',
+                    $resource['plugin_resources_roles_id'],
+                );
 
 
                 $resourcehabilitation = new ResourceHabilitation();
@@ -890,25 +909,25 @@ class NotificationTargetResource extends NotificationTarget
                 $tab = [];
                 foreach ($habilitations as $habilitation) {
                     $tab[] = Dropdown::getDropdownName(
-                            'glpi_plugin_resources_habilitations',
-                            $habilitation['plugin_resources_habilitations_id']
-                        ) . "\n";
+                        'glpi_plugin_resources_habilitations',
+                        $habilitation['plugin_resources_habilitations_id'],
+                    ) . "\n";
                 }
                 $tmp['##resource.habilitation##'] = implode(', ', $tab);
 
                 $tmp['##resource.rank##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_ranks',
-                    $resource['plugin_resources_ranks_id']
+                    $resource['plugin_resources_ranks_id'],
                 );
 
                 $tmp['##resource.speciality##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resourcespecialities',
-                    $resource['plugin_resources_resourcespecialities_id']
+                    $resource['plugin_resources_resourcespecialities_id'],
                 );
 
                 $tmp['##resource.status##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resourcestates',
-                    $resource['plugin_resources_resourcestates_id']
+                    $resource['plugin_resources_resourcestates_id'],
                 );
 
                 $tmp['##resource.users##'] = getUserName($resource["users_id"]);
@@ -925,7 +944,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $tmp['##resource.location##'] = Dropdown::getDropdownName(
                     'glpi_locations',
-                    $resource['locations_id']
+                    $resource['locations_id'],
                 );
 
                 $tmp['##resource.helpdesk##'] = Dropdown::getYesNo($resource['is_helpdesk_visible']);
@@ -934,7 +953,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $tmp['##resource.leavingreason##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_leavingreasons',
-                    $resource['plugin_resources_leavingreasons_id']
+                    $resource['plugin_resources_leavingreasons_id'],
                 );
 
                 $tmp['##resource.usersleaving##'] = getUserName($resource['users_id_recipient_leaving']);
@@ -946,7 +965,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $tmp['##resource.url##'] = urldecode(
                     $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
-                    . $resource["id"]
+                    . $resource["id"],
                 );
 
                 $this->data['commercials'][] = $tmp;
@@ -959,9 +978,9 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.entity##'] = __('Entity');
             $this->data['##resource.entity##']
                 = Dropdown::getDropdownName(
-                'glpi_entities',
-                $this->obj->getField('entities_id')
-            );
+                    'glpi_entities',
+                    $this->obj->getField('entities_id'),
+                );
             $this->data['##resource.id##'] = $this->obj->getField("id");
 
             $this->data['##lang.resource.name##'] = __('Surname');
@@ -973,19 +992,19 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.type##'] = ContractType::getTypeName(1);
             $this->data['##resource.type##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_contracttypes',
-                $this->obj->getField('plugin_resources_contracttypes_id')
+                $this->obj->getField('plugin_resources_contracttypes_id'),
             );
 
             $this->data['##lang.resource.situation##'] = ResourceSituation::getTypeName(1);
             $this->data['##resource.situation##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcesituations',
-                $this->obj->getField('plugin_resources_resourcesituations_id')
+                $this->obj->getField('plugin_resources_resourcesituations_id'),
             );
 
             $this->data['##lang.resource.contractnature##'] = ContractNature::getTypeName(1);
             $this->data['##resource.contractnature##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_contractnatures',
-                $this->obj->getField('plugin_resources_contractnatures_id')
+                $this->obj->getField('plugin_resources_contractnatures_id'),
             );
 
             $this->data['##lang.resource.quota##'] = __('Quota', 'resources');
@@ -1012,42 +1031,48 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.department##'] = Department::getTypeName(1);
             $this->data['##resource.department##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_departments',
-                $this->obj->getField('plugin_resources_departments_id')
+                $this->obj->getField('plugin_resources_departments_id'),
             );
 
             $this->data['##lang.resource.service##'] = Service::getTypeName(1);
-            $this->data['##resource.service##']      = Dropdown::getDropdownName('glpi_plugin_resources_services',
-                $this->obj->getField('plugin_resources_services_id'));
+            $this->data['##resource.service##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_services',
+                $this->obj->getField('plugin_resources_services_id'),
+            );
             $this->data['##lang.resource.function##']         = ResourceFunction::getTypeName(1);
-            $this->data['##resource.function##']      = Dropdown::getDropdownName('glpi_plugin_resources_functions',
-                $this->obj->getField('plugin_resources_functions_id'));
+            $this->data['##resource.function##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_functions',
+                $this->obj->getField('plugin_resources_functions_id'),
+            );
             $this->data['##lang.resource.role##'] = Role::getTypeName(1);
-            $this->data['##resource.role##']      = Dropdown::getDropdownName('glpi_plugin_resources_roles',
-                $this->obj->getField('plugin_resources_roles_id'));
+            $this->data['##resource.role##']      = Dropdown::getDropdownName(
+                'glpi_plugin_resources_roles',
+                $this->obj->getField('plugin_resources_roles_id'),
+            );
 
 
             $this->data['##lang.resource.rank##'] = Rank::getTypeName(1);
             $this->data['##resource.rank##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_ranks',
-                $this->obj->getField('plugin_resources_ranks_id')
+                $this->obj->getField('plugin_resources_ranks_id'),
             );
 
             $this->data['##lang.resource.speciality##'] = ResourceSpeciality::getTypeName(1);
             $this->data['##resource.speciality##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcespecialities',
-                $this->obj->getField('plugin_resources_resourcespecialities_id')
+                $this->obj->getField('plugin_resources_resourcespecialities_id'),
             );
 
             $this->data['##lang.resource.status##'] = ResourceState::getTypeName(1);
             $this->data['##resource.status##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_resourcestates',
-                $this->obj->getField('plugin_resources_resourcestates_id')
+                $this->obj->getField('plugin_resources_resourcestates_id'),
             );
 
             $this->data['##lang.resource.location##'] = __('Location');
             $this->data['##resource.location##'] = Dropdown::getDropdownName(
                 'glpi_locations',
-                $this->obj->getField('locations_id')
+                $this->obj->getField('locations_id'),
             );
 
             $this->data['##lang.resource.comment##'] = __('Description');
@@ -1059,16 +1084,16 @@ class NotificationTargetResource extends NotificationTarget
             if ($this->obj->getField('users_id_recipient_leaving')) {
                 $this->data['##lang.resource.usersleaving##'] = __('Informant of leaving', 'resources');
                 $this->data['##resource.usersleaving##'] = getUserName(
-                    $this->obj->getField("users_id_recipient_leaving")
+                    $this->obj->getField("users_id_recipient_leaving"),
                 );
             }
             if ($this->obj->getField('date_declaration_leaving')) {
                 $this->data['##lang.resource.datedeclarationleaving##'] = __(
                     'Declaration of departure date',
-                    'resources'
+                    'resources',
                 );
                 $this->data['##resource.datedeclarationleaving##'] = Html::convDateTime(
-                    $this->obj->getField('date_declaration_leaving')
+                    $this->obj->getField('date_declaration_leaving'),
                 );
             }
 
@@ -1079,25 +1104,26 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.leavingreason##'] = LeavingReason::getTypeName(1);
             $this->data['##resource.leavingreason##'] = Dropdown::getDropdownName(
                 'glpi_plugin_resources_leavingreasons',
-                $this->obj->getField('plugin_resources_leavingreasons_id')
+                $this->obj->getField('plugin_resources_leavingreasons_id'),
             );
 
             $resourcehabilitation = new ResourceHabilitation();
-            $habilitations = $resourcehabilitation->find(['plugin_resources_resources_id' => $this->obj->getField('id')]
+            $habilitations = $resourcehabilitation->find(
+                ['plugin_resources_resources_id' => $this->obj->getField('id')],
             );
             $this->data['##lang.resource.habilitation##'] = Habilitation::getTypeName(count($habilitations));
             $tab = [];
             foreach ($habilitations as $habilitation) {
                 $tab[] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_habilitations',
-                    $habilitation['plugin_resources_habilitations_id']
+                    $habilitation['plugin_resources_habilitations_id'],
                 );
             }
             $this->data['##resource.habilitation##'] = implode(', ', $tab);
 
             $this->data['##lang.resource.sensitizesecurity##'] = __('Sensitized to security', 'resources');
             $this->data['##resource.sensitizesecurity##'] = Dropdown::getYesNo(
-                $this->obj->getField('sensitize_security')
+                $this->obj->getField('sensitize_security'),
             );
 
             $this->data['##lang.resource.readchart##'] = __('Reading the security charter', 'resources');
@@ -1109,13 +1135,13 @@ class NotificationTargetResource extends NotificationTarget
             $this->data['##lang.resource.url##'] = "URL";
             $this->data['##resource.url##'] = urldecode(
                 $CFG_GLPI["url_base"] . "/index.php?redirect=" . Resource::class . "_"
-                . $this->obj->getField("id")
+                . $this->obj->getField("id"),
             );
 
             if ($event == 'report') {
                 $this->data['##lang.resource.creationtitle##'] = __(
                     'Creation report of the human resource',
-                    'resources'
+                    'resources',
                 );
 
                 $this->data['##resource.login##'] = "";
@@ -1123,7 +1149,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $restrict = [
                     "itemtype" => 'User',
-                    "plugin_resources_resources_id" => $this->obj->getField("id")
+                    "plugin_resources_resources_id" => $this->obj->getField("id"),
                 ];
                 $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                 if (!empty($items)) {
@@ -1153,12 +1179,13 @@ class NotificationTargetResource extends NotificationTarget
 
                 $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
                 $information = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information'])
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']),
                 );
                 $this->data['##resource.informations##'] = RichText::getTextFromHtml($information);
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment'])
+                $commentaire = stripslashes(
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']),
                 );
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
             }
@@ -1166,7 +1193,7 @@ class NotificationTargetResource extends NotificationTarget
             if ($event == 'transfer') {
                 $this->data['##lang.resource.transfertitle##'] = __(
                     'Transfer report of the human resource',
-                    'resources'
+                    'resources',
                 );
 
                 $this->data['##resource.login##'] = "";
@@ -1174,7 +1201,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $restrict = [
                     "itemtype" => 'User',
-                    "plugin_resources_resources_id" => $this->obj->getField("id")
+                    "plugin_resources_resources_id" => $this->obj->getField("id"),
                 ];
                 $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                 if (!empty($items)) {
@@ -1201,12 +1228,13 @@ class NotificationTargetResource extends NotificationTarget
 
                 $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
                 $information = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information'])
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']),
                 );
                 $this->data['##resource.informations##'] = RichText::getTextFromHtml($information);
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment'])
+                $commentaire = stripslashes(
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']),
                 );
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
@@ -1230,7 +1258,7 @@ class NotificationTargetResource extends NotificationTarget
                     'Non contract period management',
                     'Non contract periods management',
                     1,
-                    'resources'
+                    'resources',
                 );
 
                 $this->data['##lang.resource.resting##'] = __('Detail of non contract period', 'resources');
@@ -1243,7 +1271,7 @@ class NotificationTargetResource extends NotificationTarget
                 $this->data['##lang.resource.location##'] = __('Agency concerned', 'resources');
                 $this->data['##resource.location##'] = Dropdown::getDropdownName(
                     'glpi_locations',
-                    $ResourceResting->fields['locations_id']
+                    $ResourceResting->fields['locations_id'],
                 );
 
                 $this->data['##lang.resource.home##'] = __('At home', 'resources');
@@ -1259,7 +1287,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
                 $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceResting->fields['comment'])
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceResting->fields['comment']),
                 );
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
@@ -1294,7 +1322,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
                 $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceHoliday->fields['comment'])
+                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceHoliday->fields['comment']),
                 );
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
@@ -1338,7 +1366,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.type##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_contracttypes',
-                            $this->target_object->oldvalues['plugin_resources_contracttypes_id']
+                            $this->target_object->oldvalues['plugin_resources_contracttypes_id'],
                         );
                     }
                 }
@@ -1364,7 +1392,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.usersrecipient##'] = "---";
                     } else {
                         $tmp['##update.usersrecipient##'] = getUserName(
-                            $this->target_object->oldvalues['users_id_recipient']
+                            $this->target_object->oldvalues['users_id_recipient'],
                         );
                     }
                 }
@@ -1374,7 +1402,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.datedeclaration##'] = "---";
                     } else {
                         $tmp['##update.datedeclaration##'] = Html::convDate(
-                            $this->target_object->oldvalues['date_declaration']
+                            $this->target_object->oldvalues['date_declaration'],
                         );
                     }
                 }
@@ -1409,7 +1437,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.department##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_departments',
-                            $this->target_object->oldvalues['plugin_resources_departments_id']
+                            $this->target_object->oldvalues['plugin_resources_departments_id'],
                         );
                     }
                 }
@@ -1420,7 +1448,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.status##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_resourcestates',
-                            $this->target_object->oldvalues['plugin_resources_resourcestates_id']
+                            $this->target_object->oldvalues['plugin_resources_resourcestates_id'],
                         );
                     }
                 }
@@ -1431,7 +1459,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.situation##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_resourcesituations',
-                            $this->target_object->oldvalues['plugin_resources_resourcesituations_id']
+                            $this->target_object->oldvalues['plugin_resources_resourcesituations_id'],
                         );
                     }
                 }
@@ -1442,7 +1470,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.contractnature##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_contractnatures',
-                            $this->target_object->oldvalues['plugin_resources_contractnatures_id']
+                            $this->target_object->oldvalues['plugin_resources_contractnatures_id'],
                         );
                     }
                 }
@@ -1453,7 +1481,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.rank##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_ranks',
-                            $this->target_object->oldvalues['plugin_resources_ranks_id']
+                            $this->target_object->oldvalues['plugin_resources_ranks_id'],
                         );
                     }
                 }
@@ -1464,7 +1492,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.speciality##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_resourcespecialities',
-                            $this->target_object->oldvalues['plugin_resources_resourcespecialities_id']
+                            $this->target_object->oldvalues['plugin_resources_resourcespecialities_id'],
                         );
                     }
                 }
@@ -1475,7 +1503,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.location##'] = Dropdown::getDropdownName(
                             'glpi_locations',
-                            $this->target_object->oldvalues['locations_id']
+                            $this->target_object->oldvalues['locations_id'],
                         );
                     }
                 }
@@ -1485,7 +1513,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.comment##'] = "---";
                     } else {
                         $comment = stripslashes(
-                            str_replace(['\r\n', '\n', '\r'], "<br/>", $this->target_object->oldvalues['comment'])
+                            str_replace(['\r\n', '\n', '\r'], "<br/>", $this->target_object->oldvalues['comment']),
                         );
                         $tmp['##update.comment##'] = RichText::getTextFromHtml($comment);
                     }
@@ -1496,7 +1524,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.usersleaving##'] = "---";
                     } else {
                         $tmp['##update.usersleaving##'] = getUserName(
-                            $this->target_object->oldvalues['users_id_recipient_leaving']
+                            $this->target_object->oldvalues['users_id_recipient_leaving'],
                         );
                     }
                 }
@@ -1506,7 +1534,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.datedeclarationleaving##'] = "---";
                     } else {
                         $tmp['##update.datedeclarationleaving##'] = Html::convDateTime(
-                            $this->obj->getField('date_declaration_leaving')
+                            $this->obj->getField('date_declaration_leaving'),
                         );
                     }
                 }
@@ -1525,7 +1553,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.leavingreason##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_leavingreasons',
-                            $this->target_object->oldvalues['plugin_resources_leavingreasons_id']
+                            $this->target_object->oldvalues['plugin_resources_leavingreasons_id'],
                         );
                     }
                 }
@@ -1536,7 +1564,7 @@ class NotificationTargetResource extends NotificationTarget
                     } else {
                         $tmp['##update.leavingreason##'] = Dropdown::getDropdownName(
                             'glpi_plugin_resources_leavingreasons',
-                            $this->target_object->oldvalues['plugin_resources_leavingreasons_id']
+                            $this->target_object->oldvalues['plugin_resources_leavingreasons_id'],
                         );
                     }
                 }
@@ -1546,7 +1574,7 @@ class NotificationTargetResource extends NotificationTarget
                         $tmp['##update.helpdesk##'] = "---";
                     } else {
                         $tmp['##update.helpdesk##'] = Dropdown::getYesNo(
-                            $this->target_object->oldvalues['is_helpdesk_visible']
+                            $this->target_object->oldvalues['is_helpdesk_visible'],
                         );
                     }
                 }
@@ -1565,7 +1593,7 @@ class NotificationTargetResource extends NotificationTarget
             //task infos
             $restrict = [
                 "plugin_resources_resources_id" => $this->obj->getField('id'),
-                "is_deleted" => 0
+                "is_deleted" => 0,
             ];
 
             if (isset($options['tasks_id']) && is_array($options['tasks_id'])) {
@@ -1595,12 +1623,12 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##task.name##'] = $task['name'];
                 $tmp['##task.type##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_tasktypes',
-                    $task['plugin_resources_tasktypes_id']
+                    $task['plugin_resources_tasktypes_id'],
                 );
                 $tmp['##task.users##'] = getUserName($task['users_id']);
                 $tmp['##task.groups##'] = Dropdown::getDropdownName(
                     'glpi_groups',
-                    $task['groups_id']
+                    $task['groups_id'],
                 );
                 $restrict = ["plugin_resources_tasks_id" => $task['id']];
                 $plans = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
@@ -1698,13 +1726,13 @@ class NotificationTargetResource extends NotificationTarget
             'task.comment' => __('Description'),
             'task.resource' => Resource::getTypeName(1),
             'resouce.sourceentity' => __('Source entity', 'resources'),
-            'resouce.targetentity' => __('Target entity', 'resources')
+            'resouce.targetentity' => __('Target entity', 'resources'),
         ];
         foreach ($tags as $tag => $label) {
             $this->addTagToList([
                 'tag' => $tag,
                 'label' => $label,
-                'value' => true
+                'value' => true,
             ]);
         }
 
@@ -1723,22 +1751,22 @@ class NotificationTargetResource extends NotificationTarget
                 'deleteresting',
                 'newholiday',
                 'updateholiday',
-                'deleteholiday'
-            ]
+                'deleteholiday',
+            ],
         ]);
         $this->addTagToList([
             'tag' => 'updates',
             'label' => __('Modified fields', 'resources'),
             'value' => false,
             'foreach' => true,
-            'events' => ['update', 'updateresting', 'updateholiday']
+            'events' => ['update', 'updateresting', 'updateholiday'],
         ]);
         $this->addTagToList([
             'tag' => 'tasks',
             'label' => __('At creation, update, removal of a task', 'resources'),
             'value' => false,
             'foreach' => true,
-            'events' => ['newtask', 'updatetask', 'deletetask']
+            'events' => ['newtask', 'updatetask', 'deletetask'],
         ]);
 
         $this->addTagToList([
@@ -1746,7 +1774,7 @@ class NotificationTargetResource extends NotificationTarget
             'label' => __('Resources list of commercial manager', 'resources'),
             'value' => false,
             'foreach' => true,
-            'events' => ['AlertCommercialManager']
+            'events' => ['AlertCommercialManager'],
         ]);
 
         asort($this->tag_descriptions);
@@ -1781,7 +1809,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -1808,8 +1836,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -1826,7 +1854,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -1854,7 +1882,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -1909,8 +1937,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -1927,7 +1955,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -1956,7 +1984,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2005,8 +2033,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2023,7 +2051,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2052,7 +2080,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2118,8 +2146,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2136,7 +2164,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2165,7 +2193,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2210,8 +2238,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2228,7 +2256,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2265,7 +2293,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2313,8 +2341,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2331,7 +2359,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2360,7 +2388,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2405,8 +2433,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2423,7 +2451,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2459,7 +2487,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2520,8 +2548,8 @@ class NotificationTargetResource extends NotificationTarget
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2538,7 +2566,7 @@ class NotificationTargetResource extends NotificationTarget
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2575,7 +2603,7 @@ class NotificationTargetResource extends NotificationTarget
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2597,8 +2625,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2615,7 +2643,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2652,7 +2680,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2720,8 +2748,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2738,7 +2766,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2775,7 +2803,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             $translation = new NotificationTemplateTranslation();
             if (!$dbu->countElementsInTable(
                 $translation->getTable(),
-                ["notificationtemplates_id" => $templates_id]
+                ["notificationtemplates_id" => $templates_id],
             )) {
                 $tmp['notificationtemplates_id'] = $templates_id;
                 $tmp['language'] = '';
@@ -2818,8 +2846,8 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     "glpi_notifications",
                     [
                         "itemtype" => Resource::class,
-                        "event" => $name
-                    ]
+                        "event" => $name,
+                    ],
                 )) {
                     $tmp = [
                         'name' => $label,
@@ -2836,7 +2864,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
                     $notificationtemplate->add([
                         'notificationtemplates_id' => $templates_id,
                         'mode' => 'mailing',
-                        'notifications_id' => $notification_id
+                        'notifications_id' => $notification_id,
                     ]);
                 }
             }
@@ -2845,14 +2873,14 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
 
     public static function install()
     {
-        Global $DB;
+        global $DB;
 
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Resources',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         $DB->insert(
@@ -2860,7 +2888,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             [
                 'name' => 'Alert Resources Tasks',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         $DB->insert(
@@ -2868,7 +2896,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             [
                 'name' => 'Alert Leaving Resources',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         $DB->insert(
@@ -2876,7 +2904,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             [
                 'name' => 'Alert Resources Checklists',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         $DB->insert(
@@ -2884,7 +2912,7 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             [
                 'name' => 'Leaving Resource',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         $DB->insert(
@@ -2892,49 +2920,49 @@ La ressource ##resource.firstname## ##resource.name## a été transférée de l\
             [
                 'name' => 'Resource Report Creation',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Resource Resting',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Resource Holiday',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Resources list of commercial manager',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Send other resource notification',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Resource Transfer',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
         $DB->insert(
             'glpi_notificationtemplates',
             [
                 'name' => 'Alert for sales people',
                 'itemtype' => Resource::class,
-            ]
+            ],
         );
 
         self::update_notif();

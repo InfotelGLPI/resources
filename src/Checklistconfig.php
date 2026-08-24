@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -52,8 +52,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Checklistconfig extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_checklist';
+    public static $rightname = 'plugin_resources_checklist';
 
     /**
      * Return the localized name of the current Type
@@ -63,7 +62,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Checklist setup', 'Checklists setup', $nb, 'resources');
     }
@@ -77,7 +76,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -88,7 +87,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -106,7 +105,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -115,7 +114,7 @@ class Checklistconfig extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'comment',
             'name' => __('Description'),
-            'datatype' => 'text'
+            'datatype' => 'text',
         ];
 
         $tab[] = [
@@ -123,7 +122,7 @@ class Checklistconfig extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'tag',
             'name' => __('Important', 'resources'),
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
         $tab[] = [
@@ -132,7 +131,7 @@ class Checklistconfig extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'datatype' => 'number',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         return $tab;
@@ -144,7 +143,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @return bool
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
         $this->initForm($ID, $options);
@@ -158,7 +157,7 @@ class Checklistconfig extends CommonDBTM
         $addrand = Dropdown::showItemTypes(
             'itemtype',
             $types,
-            ['id' => 'itemtype', 'value' => $this->fields['itemtype']]
+            ['id' => 'itemtype', 'value' => $this->fields['itemtype']],
         );
         $itemtype_dropdown = ob_get_clean();
 
@@ -179,7 +178,7 @@ class Checklistconfig extends CommonDBTM
                 'values'       => $items,
             ],
             true,
-            false
+            false,
         );
         $linkitems_js .= Ajax::updateItemOnSelectEvent(
             'dropdown_itemtype' . $addrand,
@@ -190,7 +189,7 @@ class Checklistconfig extends CommonDBTM
                 'current_type' => $this->fields['itemtype'],
                 'values'       => $items,
             ],
-            false
+            false,
         );
 
         TemplateRenderer::getInstance()->display('@resources/checklistconfig_form.html.twig', [
@@ -223,7 +222,7 @@ class Checklistconfig extends CommonDBTM
      * @param $checklists_id
      * @param $checklist_type
      */
-    function addResourceChecklist($resource, $checklists_id, $checklist_type)
+    public function addResourceChecklist($resource, $checklists_id, $checklist_type)
     {
         $restrict = ["id" => $checklists_id];
         $dbu = new DbUtils();
@@ -264,7 +263,7 @@ class Checklistconfig extends CommonDBTM
      * @param $resource
      * @param $checklist_type
      */
-    function addChecklistsFromRules($resource, $checklist_type)
+    public function addChecklistsFromRules($resource, $checklist_type)
     {
         $rulecollection = new RuleChecklistCollection($resource->fields["entities_id"]);
 
@@ -278,7 +277,7 @@ class Checklistconfig extends CommonDBTM
         $checklists = [];
         $checklists = $rulecollection->processAllRules([
             "plugin_resources_contracttypes_id" => $contract,
-            "checklist_type" => $checklist_type
+            "checklist_type" => $checklist_type,
         ], $checklists, []);
 
         if (!empty($checklists)) {
@@ -294,7 +293,7 @@ class Checklistconfig extends CommonDBTM
      * @param  $ma
      * @param  $item
      */
-    function addRulesFromChecklists($data, $ma, $item)
+    public function addRulesFromChecklists($data, $ma, $item)
     {
         $rulecollection = new RuleChecklistCollection();
         $rulecollection->checkGlobal(UPDATE);
@@ -350,7 +349,7 @@ class Checklistconfig extends CommonDBTM
      * @return array array of massive actions
      * *@since version 0.84
      */
-    function getSpecificMassiveActions($checkitem = null)
+    public function getSpecificMassiveActions($checkitem = null)
     {
         $isadmin = static::canUpdate();
         $actions = parent::getSpecificMassiveActions($checkitem);
@@ -358,13 +357,13 @@ class Checklistconfig extends CommonDBTM
         if ($isadmin) {
             $actions['GlpiPlugin\Resources\Checklistconfig' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Generate_Rule'] = __(
                 'Generate a rule',
-                'resources'
+                'resources',
             );
 
             if (Session::haveRight('transfer', READ)
                 && Session::isMultiEntitiesMode()) {
                 $actions['GlpiPlugin\Resources\Checklistconfig' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
-                    'Transfer'
+                    'Transfer',
                 );
             }
         }
@@ -380,7 +379,7 @@ class Checklistconfig extends CommonDBTM
      **@since 0.85
      *
      */
-    static function showMassiveActionsSubForm(MassiveAction $ma)
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
     {
         $Checklist = new Checklist();
         $ContractType = new ContractType();
@@ -391,7 +390,7 @@ class Checklistconfig extends CommonDBTM
                 echo "&nbsp;";
                 RuleCriteria::dropdownConditions(RuleChecklist::class, [
                     'criterion' => 'plugin_resources_contracttypes_id',
-                    'allow_conditions' => [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT]
+                    'allow_conditions' => [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT],
                 ]);
                 echo "&nbsp;";
                 $ContractType->dropdownContractType("plugin_resources_contracttypes_id");
@@ -411,7 +410,7 @@ class Checklistconfig extends CommonDBTM
      *
      * @see CommonDBTM::processMassiveActionsForOneItemtype()
      * */
-    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
     {
         $input = $ma->getInput();
         $itemtype = $ma->getItemtype(false);
@@ -471,7 +470,7 @@ class Checklistconfig extends CommonDBTM
                     'num' => 2,
                     'rank' => 1,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -480,7 +479,7 @@ class Checklistconfig extends CommonDBTM
                     'num' => 3,
                     'rank' => 2,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -489,7 +488,7 @@ class Checklistconfig extends CommonDBTM
                     'num' => 4,
                     'rank' => 3,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
         }

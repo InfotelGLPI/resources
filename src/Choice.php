@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -50,17 +50,16 @@ if (!defined('GLPI_ROOT')) {
  */
 class Choice extends CommonDBTM
 {
+    public static $rightname = 'plugin_resources';
 
-    static $rightname = 'plugin_resources';
-
-    const TYPE_CHOICE = [1 => 'Element(s) to be affected', 2 => 'Specials requirements'];
+    public const TYPE_CHOICE = [1 => 'Element(s) to be affected', 2 => 'Specials requirements'];
 
     /**
      * @param int $nb
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Need', 'Needs', $nb, 'resources');
     }
@@ -74,7 +73,7 @@ class Choice extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -85,11 +84,10 @@ class Choice extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
-
 
     /**
      * Get Tab Name used for itemtype
@@ -104,7 +102,7 @@ class Choice extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         $config = new Config();
         $wizard_need = true;
@@ -124,7 +122,6 @@ class Choice extends CommonDBTM
         return '';
     }
 
-
     /**
      * show Tab content
      *
@@ -136,7 +133,7 @@ class Choice extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
             $self = new self();
@@ -145,7 +142,7 @@ class Choice extends CommonDBTM
         return true;
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-package-import";
     }
@@ -155,7 +152,7 @@ class Choice extends CommonDBTM
      *
      * @return int
      */
-    static function countForResource(Resource $item)
+    public static function countForResource(Resource $item)
     {
         $dbu = new DbUtils();
         $restrict = ["plugin_resources_resources_id" => $item->getField('id')];
@@ -167,19 +164,19 @@ class Choice extends CommonDBTM
     /**
      * @param $values
      */
-    function addHelpdeskItem($values)
+    public function addHelpdeskItem($values)
     {
         $this->add([
             'plugin_resources_resources_id' => $values["plugin_resources_resources_id"],
             'plugin_resources_choiceitems_id' => $values["plugin_resources_choiceitems_id"],
-            'comment' => ''
+            'comment' => '',
         ]);
     }
 
     /**
      * @param $values
      */
-    function addComment($values)
+    public function addComment($values)
     {
         $resource = new Resource();
         $resource->getFromDB($values['plugin_resources_resources_id']);
@@ -193,7 +190,7 @@ class Choice extends CommonDBTM
 
         $resource->update([
             'id' => $values['plugin_resources_resources_id'],
-            'comment' => addslashes($comment)
+            'comment' => addslashes($comment),
         ]);
 
     }
@@ -201,11 +198,11 @@ class Choice extends CommonDBTM
     /**
      * @param $values
      */
-    function addNeedComment($values)
+    public function addNeedComment($values)
     {
         $this->update([
             'id' => $values['id'],
-            'comment' => $values['commentneed']
+            'comment' => $values['commentneed'],
         ]);
     }
 
@@ -216,7 +213,7 @@ class Choice extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         $choice_item = new ChoiceItem();
         $choice_item->getfromDB($input['plugin_resources_choiceitems_id']);
@@ -225,7 +222,7 @@ class Choice extends CommonDBTM
             Session::addMessageAfterRedirect(
                 __("Cannot add a choice that contains children", "resources"),
                 true,
-                ERROR
+                ERROR,
             );
             return false;
         }
@@ -243,7 +240,7 @@ class Choice extends CommonDBTM
      **@since version 0.84
      *
      */
-    static function cloneItem($oldid, $newid)
+    public static function cloneItem($oldid, $newid)
     {
         global $DB;
 
@@ -254,7 +251,7 @@ class Choice extends CommonDBTM
                 ],
                 'FROM' => 'glpi_plugin_resources_choices',
                 'WHERE' => [
-                    'plugin_resources_resources_id' => $oldid
+                    'plugin_resources_resources_id' => $oldid,
                 ],
             ];
 
@@ -263,17 +260,16 @@ class Choice extends CommonDBTM
             $choice->add([
                 'plugin_resources_resources_id' => $newid,
                 'plugin_resources_choiceitems_id' => $data["plugin_resources_choiceitems_id"],
-                'comment' => $data["comment"]
+                'comment' => $data["comment"],
             ]);
         }
     }
-
 
     /**
      * @param $item
      * @param $rand
      */
-    static function showAddCommentForm($item, $rand)
+    public static function showAddCommentForm($item, $rand)
     {
 
         $items_id = $item['id'];
@@ -282,13 +278,13 @@ class Choice extends CommonDBTM
         echo "function viewAddNeedComment" . "$items_id(){\n";
         $params = [
             'id' => $items_id,
-            'rand' => $rand
+            'rand' => $rand,
         ];
         Ajax::UpdateItemJsCode(
             "addneedcomment" . "$items_id$rand",
             PLUGIN_RESOURCES_WEBDIR . "/ajax/addneedcomment.php",
             $params,
-            false
+            false,
         );
         echo "};";
         echo "</script>\n";
@@ -308,7 +304,7 @@ class Choice extends CommonDBTM
      * @param $item
      * @param $rand
      */
-    static function showModifyCommentFrom($item, $rand)
+    public static function showModifyCommentFrom($item, $rand)
     {
 
         $items_id = $item['id'];
@@ -319,13 +315,13 @@ class Choice extends CommonDBTM
 
         $params = [
             'name' => 'commentneed' . $items_id,
-            'data' => rawurlencode($item["comment"])
+            'data' => rawurlencode($item["comment"]),
         ];
         Ajax::UpdateItemJsCode(
             "viewcommentneed$items_id$rand",
             PLUGIN_RESOURCES_WEBDIR . "/ajax/inputtext.php",
             $params,
-            false
+            false,
         );
         echo "}";
         echo "</script>\n";
@@ -354,7 +350,7 @@ class Choice extends CommonDBTM
      * @param        $exist
      * @param string $withtemplate
      */
-    function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '')
+    public function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '')
     {
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
@@ -415,7 +411,8 @@ class Choice extends CommonDBTM
                     );
                     $items_comments = Dropdown::getDropdownComments(
                         "glpi_plugin_resources_choiceitems",
-                        $choice["plugin_resources_choiceitems_id"]);
+                        $choice["plugin_resources_choiceitems_id"],
+                    );
                     echo "<td class='left'>";
                     echo $items;
                     echo "</td>";
@@ -437,7 +434,7 @@ class Choice extends CommonDBTM
                             PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
                             'deletehelpdeskitem',
                             _x('button', 'Delete permanently'),
-                            ['id' => $choice["id"]]
+                            ['id' => $choice["id"]],
                         );
                         echo "</td>";
                     }
@@ -463,8 +460,8 @@ class Choice extends CommonDBTM
                         'entity' => $resource->getEntityID(),
                         'condition' => $condition,
                         'used' => $used,
-                        'addicon' => true
-                    ]
+                        'addicon' => true,
+                    ],
                 );
                 echo "</td></tr>";
                 echo "<tr class='tab_bg_1'>";
@@ -476,12 +473,12 @@ class Choice extends CommonDBTM
                     if ($exist != 1) {
                         echo Html::submit(
                             __('Terminate the declaration', 'resources'),
-                            ['name' => 'finish', 'class' => 'btn btn-primary']
+                            ['name' => 'finish', 'class' => 'btn btn-primary'],
                         );
                     } else {
                         echo Html::submit(
                             __('Resend the declaration', 'resources'),
-                            ['name' => 'resend', 'class' => 'btn btn-primary']
+                            ['name' => 'resend', 'class' => 'btn btn-primary'],
                         );
                     }
                 }
@@ -493,7 +490,7 @@ class Choice extends CommonDBTM
             echo "<br>";
         }
 
-        if (in_array(2,$configchoice)) {
+        if (in_array(2, $configchoice)) {
             echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
 
             echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -510,7 +507,8 @@ class Choice extends CommonDBTM
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
-            echo __('Softwares requirements', 'resources');;
+            echo __('Softwares requirements', 'resources');
+            ;
             echo "</td>";
             echo "<td>";
             Html::textarea(['name' => 'softwares_requirements', 'value' => $resource->fields['softwares_requirements'], 'rows' => 7]);
@@ -518,7 +516,8 @@ class Choice extends CommonDBTM
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
-            echo __('Furnitures needs', 'resources');;
+            echo __('Furnitures needs', 'resources');
+            ;
             echo "</td>";
             echo "<td>";
             Html::textarea(['name' => 'furnitures_needs', 'value' => $resource->fields['furnitures_needs'], 'rows' => 7]);
@@ -526,7 +525,8 @@ class Choice extends CommonDBTM
             echo "</tr>";
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
-            echo __('Other needs', 'resources');;
+            echo __('Other needs', 'resources');
+            ;
             echo "</td>";
             echo "<td>";
             Html::textarea(['name' => 'other_needs', 'value' => $resource->fields['other_needs'], 'rows' => 7]);
@@ -572,4 +572,3 @@ class Choice extends CommonDBTM
         }
     }
 }
-

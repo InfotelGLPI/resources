@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -43,14 +43,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Profession extends CommonDropdown
 {
-    static $rightname = 'plugin_resources';
-    var $can_be_translated = true;
+    public static $rightname = 'plugin_resources';
+    public $can_be_translated = true;
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Profession', 'Professions', $nb, 'resources');
     }
@@ -61,7 +61,7 @@ class Profession extends CommonDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
             && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
@@ -79,7 +79,7 @@ class Profession extends CommonDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         if (Session::haveRight(self::$rightname, READ)
             && Session::haveRight('plugin_resources_dropdown_public', READ)) {
@@ -93,50 +93,50 @@ class Profession extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'code',
                 'label' => __('Code', 'resources'),
                 'type' => 'text',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'short_name',
                 'label' => __('Short name', 'resources'),
                 'type' => 'text',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'plugin_resources_professionlines_id',
                 'label' => __('Profession line', 'resources'),
                 'type' => 'dropdownValue',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'plugin_resources_professioncategories_id',
                 'label' => __('Profession category', 'resources'),
                 'type' => 'dropdownValue',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'begin_date',
                 'label' => __('Begin date'),
                 'type' => 'date',
-                'list' => false
+                'list' => false,
             ],
             [
                 'name' => 'end_date',
                 'label' => __('End date'),
                 'type' => 'date',
-                'list' => false
+                'list' => false,
             ],
             [
                 'name' => 'is_active',
                 'label' => __('Active'),
                 'type' => 'bool',
-                'list' => true
+                'list' => true,
             ],
         ];
     }
@@ -149,7 +149,7 @@ class Profession extends CommonDropdown
      * @param $entity
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -158,7 +158,7 @@ class Profession extends CommonDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {
@@ -181,7 +181,7 @@ class Profession extends CommonDropdown
                 //transfer of the linked category
                 $category = ProfessionCategory::transfer(
                     $temp->fields["plugin_resources_professioncategories_id"],
-                    $entity
+                    $entity,
                 );
                 if ($category > 0) {
                     $values["id"] = $newID;
@@ -200,7 +200,7 @@ class Profession extends CommonDropdown
      *
      * @return
      */
-    function cleanDBonPurge()
+    public function cleanDBonPurge()
     {
         $temp = new Rank();
         $temp->deleteByCriteria(['plugin_resources_professions_id' => $this->fields['id']]);
@@ -209,7 +209,7 @@ class Profession extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -217,48 +217,48 @@ class Profession extends CommonDropdown
             'id' => '14',
             'table' => $this->getTable(),
             'field' => 'code',
-            'name' => __('Code', 'resources')
+            'name' => __('Code', 'resources'),
         ];
         $tab[] = [
             'id' => '15',
             'table' => $this->getTable(),
             'field' => 'short_name',
-            'name' => __('Short name', 'resources')
+            'name' => __('Short name', 'resources'),
         ];
         $tab[] = [
             'id' => '17',
             'table' => 'glpi_plugin_resources_professionlines',
             'field' => 'name',
             'name' => __('Profession line', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '18',
             'table' => 'glpi_plugin_resources_professioncategories',
             'field' => 'name',
             'name' => __('Profession category', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '19',
             'table' => $this->getTable(),
             'field' => 'is_active',
             'name' => __('Active'),
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
         $tab[] = [
             'id' => '20',
             'table' => $this->getTable(),
             'field' => 'begin_date',
             'name' => __('Begin date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
         $tab[] = [
             'id' => '21',
             'table' => $this->getTable(),
             'field' => 'end_date',
             'name' => __('End date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         return $tab;
@@ -269,7 +269,7 @@ class Profession extends CommonDropdown
      *
      * @return
      */
-    function post_getEmpty()
+    public function post_getEmpty()
     {
         $this->fields['is_active'] = 1;
     }
@@ -311,4 +311,3 @@ class Profession extends CommonDropdown
     }
 
 }
-

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -52,14 +52,13 @@ if (!defined('GLPI_ROOT')) {
  */
 class Config extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     /**
      * functions mandatory
      * getTypeName(), canCreate(), canView()
      * */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Setup');
     }
@@ -73,7 +72,7 @@ class Config extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -84,7 +83,7 @@ class Config extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -92,7 +91,7 @@ class Config extends CommonDBTM
     /**
      * Config constructor.
      */
-    function __construct()
+    public function __construct()
     {
         global $DB;
 
@@ -101,7 +100,7 @@ class Config extends CommonDBTM
         }
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-settings";
     }
@@ -123,7 +122,8 @@ class Config extends CommonDBTM
         }
     }
 
-    public static function getAvailablevariable() {
+    public static function getAvailablevariable()
+    {
         return [
             '##resource_gender##' => __('Gender', 'resources'),
             '##resource_name##' => __('Surname'),
@@ -157,7 +157,8 @@ class Config extends CommonDBTM
         ];
     }
 
-    public function getVariableToHide(){
+    public function getVariableToHide()
+    {
         return [
             'gender' => __('Gender', 'resources'),
             'name' => __('Surname'),
@@ -230,7 +231,7 @@ class Config extends CommonDBTM
         return $ong;
     }
 
-    function showWizardForm()
+    public function showWizardForm()
     {
         if (!$this->canView()) {
             return false;
@@ -274,7 +275,7 @@ class Config extends CommonDBTM
                 'widget' => $capture(fn() => Resource::dropdownTemplate(
                     "plugin_resources_resourcetemplates_id",
                     $this->fields["plugin_resources_resourcetemplates_id"],
-                    false
+                    false,
                 )),
             ];
             $rows[] = [
@@ -288,7 +289,7 @@ class Config extends CommonDBTM
                 'warning' => sprintf(
                     __('%1$s <br> %2$s'),
                     __('Display of four additional security fields in the clients', 'resources'),
-                    __('(If all four fields are enabled, the client is compliant with security)', 'resources')
+                    __('(If all four fields are enabled, the client is compliant with security)', 'resources'),
                 ),
             ];
 
@@ -301,7 +302,7 @@ class Config extends CommonDBTM
                 'widget' => Html::hidden("resource_manager") . $capture(fn() => Dropdown::showFromArray(
                     "resource_manager",
                     $possible_values,
-                    ['values' => $resource_manager_values, 'multiple' => 'multiples']
+                    ['values' => $resource_manager_values, 'multiple' => 'multiples'],
                 )),
             ];
 
@@ -314,7 +315,7 @@ class Config extends CommonDBTM
                 'widget' => Html::hidden("sales_manager") . $capture(fn() => Dropdown::showFromArray(
                     "sales_manager",
                     $possible_values,
-                    ['values' => $sales_manager_values, 'multiple' => 'multiples']
+                    ['values' => $sales_manager_values, 'multiple' => 'multiples'],
                 )),
             ];
 
@@ -352,7 +353,7 @@ class Config extends CommonDBTM
                 'widget' => $capture(fn() => Dropdown::showFromArray(
                     "view_needs_parts",
                     $possible_values_choice,
-                    ['values' => $view_needs_values, 'multiple' => 'multiples']
+                    ['values' => $view_needs_values, 'multiple' => 'multiples'],
                 )),
             ];
 
@@ -366,7 +367,7 @@ class Config extends CommonDBTM
                     'widget' => $capture(fn() => Dropdown::showFromArray(
                         "can_view_synchronisationAD",
                         $possible_values,
-                        ['values' => $synchro_values, 'multiple' => 'multiples']
+                        ['values' => $synchro_values, 'multiple' => 'multiples'],
                     )),
                 ];
             }
@@ -382,7 +383,7 @@ class Config extends CommonDBTM
     /**
      * @return bool
      */
-    function showWorkflowForm()
+    public function showWorkflowForm()
     {
         if (!$this->canView()) {
             return false;
@@ -424,14 +425,14 @@ class Config extends CommonDBTM
                 'label'  => __('Resource state for working people', 'resources'),
                 'widget' => $capture(fn() => ResourceState::dropdown([
                     'name' => 'plugin_resources_resourcestates_id_arrival',
-                    'value' => $this->fields['plugin_resources_resourcestates_id_arrival']
+                    'value' => $this->fields['plugin_resources_resourcestates_id_arrival'],
                 ])),
             ];
             $rows[] = [
                 'label'  => __('Resource state for left people', 'resources'),
                 'widget' => $capture(fn() => ResourceState::dropdown([
                     'name' => 'plugin_resources_resourcestates_id_departure',
-                    'value' => $this->fields['plugin_resources_resourcestates_id_departure']
+                    'value' => $this->fields['plugin_resources_resourcestates_id_departure'],
                 ])),
             ];
             $rows[] = [
@@ -453,7 +454,7 @@ class Config extends CommonDBTM
                     'values' => $values_used,
                     'width' => '250px',
                     'multiple' => true,
-                    'entity' => $_SESSION['glpiactiveentities']
+                    'entity' => $_SESSION['glpiactiveentities'],
                 ])),
             ];
 
@@ -468,7 +469,7 @@ class Config extends CommonDBTM
     /**
      * @return bool
      */
-    function showOtherForm()
+    public function showOtherForm()
     {
         if (!$this->canView()) {
             return false;
@@ -538,7 +539,7 @@ class Config extends CommonDBTM
                         'reloadonclose' => false,
                         'width' => 1180,
                         'height' => 500,
-                    ]
+                    ],
                 );
                 Html::requireJs('tinymce');
                 $rows[] = [
@@ -603,7 +604,7 @@ class Config extends CommonDBTM
     /**
      * @return bool
      */
-    function showMetademandsForm()
+    public function showMetademandsForm()
     {
         if (!$this->canView()) {
             return false;
@@ -633,7 +634,7 @@ class Config extends CommonDBTM
                 'widget'  => Dropdown::showFromArray(
                     'use_meta_for_changes',
                     $data,
-                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']]
+                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_changes']],
                 ),
                 'warning' => __('Replace change actions management', 'resources'),
             ];
@@ -646,7 +647,7 @@ class Config extends CommonDBTM
                 'widget'  => Dropdown::showFromArray(
                     'use_meta_for_leave',
                     $data,
-                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']]
+                    ['width' => 250, 'display' => false, 'value' => $this->fields['use_meta_for_leave']],
                 ),
                 'warning' => __('Replace default form for departure', 'resources'),
             ];
@@ -671,7 +672,7 @@ class Config extends CommonDBTM
     /**
      * @return mixed
      */
-    function useSecurity()
+    public function useSecurity()
     {
         return $this->fields['security_display'];
     }
@@ -679,18 +680,17 @@ class Config extends CommonDBTM
     /**
      * @return mixed
      */
-    function useSecurityCompliance()
+    public function useSecurityCompliance()
     {
         return $this->fields['security_compliance'];
     }
-
 
     /**
      * @param $input
      *
      * @return
      */
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         return $this->encodeSubtypes($input);
     }
@@ -700,7 +700,7 @@ class Config extends CommonDBTM
      *
      * @return
      */
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         return $this->encodeSubtypes($input);
     }
@@ -712,7 +712,7 @@ class Config extends CommonDBTM
      *
      * @return
      */
-    function encodeSubtypes($input)
+    public function encodeSubtypes($input)
     {
         if (!empty($input['resource_manager'])) {
             $input['resource_manager'] = json_encode(array_values($input['resource_manager']));
@@ -743,7 +743,7 @@ class Config extends CommonDBTM
     /**
      * @return mixed
      */
-    function useServiceDepartmentAD()
+    public function useServiceDepartmentAD()
     {
         return $this->fields['use_service_department_ad'];
     }
@@ -751,7 +751,7 @@ class Config extends CommonDBTM
     /**
      * @return mixed
      */
-    function useSecondaryService()
+    public function useSecondaryService()
     {
         return $this->fields['use_secondary_service'];
     }
@@ -825,7 +825,7 @@ class Config extends CommonDBTM
                     'create_ticket_departure_instructions' => 0,
                     'default_assignment_group' => 0,
                     'text_ticket_validation' => '',
-                    'hide_fieds_arrival_form' => '']
+                    'hide_fieds_arrival_form' => ''],
             );
 
         }

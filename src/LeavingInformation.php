@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -183,21 +183,21 @@ class LeavingInformation extends CommonDBTM
 
         $query
             = [
-            'SELECT' => [
-                '*',
-            ],
-            'FROM' => 'glpi_plugin_resources_employees',
-            'WHERE' => [
-                'plugin_resources_resources_id' => $oldid,
-            ],
-        ];
+                'SELECT' => [
+                    '*',
+                ],
+                'FROM' => 'glpi_plugin_resources_employees',
+                'WHERE' => [
+                    'plugin_resources_resources_id' => $oldid,
+                ],
+            ];
 
         foreach ($DB->request($query) as $data) {
             $employee = new self();
             $employee->add([
                 'plugin_resources_resources_id' => $newid,
                 'plugin_resources_employers_id' => $data["plugin_resources_employers_id"],
-                'plugin_resources_clients_id' => $data["plugin_resources_clients_id"]
+                'plugin_resources_clients_id' => $data["plugin_resources_clients_id"],
             ]);
         }
     }
@@ -252,7 +252,7 @@ class LeavingInformation extends CommonDBTM
                 $tableProfileUser,
                 'entities_id',
                 $resource->fields["entities_id"],
-                true
+                true,
             );
             $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
             $profiles_User = $profile_User->find($restrict);
@@ -584,8 +584,8 @@ class LeavingInformation extends CommonDBTM
                 'massiveaction' => false,
                 'datatype'      => 'bool',
                 'joinparams'    => [
-                    'jointype' => 'child'
-                ]
+                    'jointype' => 'child',
+                ],
             ];
         }
 
@@ -623,7 +623,8 @@ class LeavingInformation extends CommonDBTM
      *
      * @return array
      */
-    function getReadonlyFields($input) {
+    public function getReadonlyFields($input)
+    {
 
         $need           = [];
         $rulecollection = new RuleContracttypeReadonlyCollection($input['entities_id']);
@@ -690,7 +691,7 @@ class LeavingInformation extends CommonDBTM
                                 'company_name',
                                 'pay_gap',
                                 'mission_lost',
-                            ]
+                            ],
                         )
                     ) {
                     } else {

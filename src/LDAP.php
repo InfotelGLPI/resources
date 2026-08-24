@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -143,9 +143,7 @@ class LDAP extends CommonDBTM
     /**
      * PluginInsightvmInsightvm constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function connect($authsId)
     {
@@ -281,7 +279,8 @@ class LDAP extends CommonDBTM
         return $find;
     }
 
-    public function isSSLorTLSAD() {
+    public function isSSLorTLSAD()
+    {
         $adConfig = new Adconfig();
         $config = self::getConfig();
         return $config['use_tls'] || $config['use_ssl'];
@@ -339,13 +338,13 @@ class LDAP extends CommonDBTM
                 if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
                     try {
                         $newPassword = '';
-                        if($adConfig->fields['format_default_account_password'] == 1) {
+                        if ($adConfig->fields['format_default_account_password'] == 1) {
                             $newPassword = strtoupper(substr($data["firstname"], 0, 1))
                                 . strtolower(substr($data["name"], 0, 1));
                             if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
                                 $date = substr($data["begindate"], 0, 10);
                                 $date = explode('-', $date);
-                                $newPassword .= $date[2] .$date[1] . $date[0] ;
+                                $newPassword .= $date[2] . $date[1] . $date[0] ;
                             }
                             $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
 
@@ -353,11 +352,11 @@ class LDAP extends CommonDBTM
                             $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
                         }
                         if ($newPassword != '') {
-                            $user->changePassword('', $newPassword,true);
+                            $user->changePassword('', $newPassword, true);
                         }
                         return true;
                     } catch (Exception $ex) {
-                        Toolbox::logInFile('LDAPERROR', "Erreur LDAP : ". $ex->getMessage());
+                        Toolbox::logInFile('LDAPERROR', "Erreur LDAP : " . $ex->getMessage());
                         return false;
                     }
                 }

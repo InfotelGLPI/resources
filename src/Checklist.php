@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -63,12 +63,11 @@ if (!defined('GLPI_ROOT')) {
  */
 class Checklist extends CommonDBTM
 {
+    public static $rightname = 'plugin_resources_checklist';
 
-    static $rightname = 'plugin_resources_checklist';
-
-    const RESOURCES_CHECKLIST_IN = 1;
-    const RESOURCES_CHECKLIST_OUT = 2;
-    const RESOURCES_CHECKLIST_TRANSFER = 3;
+    public const RESOURCES_CHECKLIST_IN = 1;
+    public const RESOURCES_CHECKLIST_OUT = 2;
+    public const RESOURCES_CHECKLIST_TRANSFER = 3;
 
     /**
      * Return the localized name of the current Type
@@ -78,12 +77,12 @@ class Checklist extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Checklist', 'Checklists', $nb, 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-checkbox";
     }
@@ -97,7 +96,7 @@ class Checklist extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -108,7 +107,7 @@ class Checklist extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
     }
@@ -126,7 +125,7 @@ class Checklist extends CommonDBTM
      **@since 0.83
      *
      */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (!$withtemplate) {
             if ($item->getID() && $this->canView()) {
@@ -150,7 +149,7 @@ class Checklist extends CommonDBTM
      **@since 0.83
      *
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         $ID = $item->getField('id');
         if (self::checkifChecklistExist($ID, 0)) {
@@ -173,7 +172,7 @@ class Checklist extends CommonDBTM
      *
      * @return int
      */
-    static function countForItem($item)
+    public static function countForItem($item)
     {
         if ($item->getField('is_leaving') == 1) {
             $checklist_type = self::RESOURCES_CHECKLIST_OUT;
@@ -184,7 +183,7 @@ class Checklist extends CommonDBTM
         $restrict = [
             "plugin_resources_resources_id" => $item->getField('id'),
             "checklist_type" => $checklist_type,
-            "NOT" => ["is_checked" => 1]
+            "NOT" => ["is_checked" => 1],
         ];
         $nb = $dbu->countElementsInTable(['glpi_plugin_resources_checklists'], $restrict);
 
@@ -198,7 +197,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function checkifChecklistExist($ID, $type_checklist)
+    public static function checkifChecklistExist($ID, $type_checklist)
     {
         $restrict = ["plugin_resources_resources_id" => $ID];
         if ($type_checklist > 0) {
@@ -221,13 +220,13 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function checkifChecklistFinished($input)
+    public static function checkifChecklistFinished($input)
     {
         if (isset($input['plugin_resources_resources_id'])
             && isset($input['checklist_type'])) {
             $restrict = [
                 "plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
-                "checklist_type" => $input['checklist_type']
+                "checklist_type" => $input['checklist_type'],
             ];
             $dbu = new DbUtils();
             $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
@@ -256,11 +255,11 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    function openFinishedChecklist($input)
+    public function openFinishedChecklist($input)
     {
         $restrict = [
             "plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
-            "checklist_type" => $input['checklist_type']
+            "checklist_type" => $input['checklist_type'],
         ];
         $dbu = new DbUtils();
         $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
@@ -269,7 +268,7 @@ class Checklist extends CommonDBTM
             foreach ($checklists as $checklist) {
                 $this->update([
                     "id" => $checklist["id"],
-                    "is_checked" => 0
+                    "is_checked" => 0,
                 ]);
             }
         } else {
@@ -282,7 +281,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function createTicket($data)
+    public static function createTicket($data)
     {
         $result = false;
         $tt = new TicketTemplate();
@@ -308,7 +307,7 @@ class Checklist extends CommonDBTM
                 $input['time_to_resolve'] = Html::computeGenericDateTimeSearch(
                     $predefined['time_to_resolve'],
                     false,
-                    strtotime($createtime)
+                    strtotime($createtime),
                 );
             }
             // Set entity
@@ -367,7 +366,7 @@ class Checklist extends CommonDBTM
                 Resource::class,
                 $changes,
                 '',
-                Log::HISTORY_LOG_SIMPLE_MESSAGE
+                Log::HISTORY_LOG_SIMPLE_MESSAGE,
             );
         }
         return $result;
@@ -379,12 +378,12 @@ class Checklist extends CommonDBTM
      *
      * @return bool|int|string
      */
-    function dropdownChecklistType($name, $value = 0)
+    public function dropdownChecklistType($name, $value = 0)
     {
         $checklists = [
             self::RESOURCES_CHECKLIST_IN => __('At the arriving of a resource', 'resources'),
             self::RESOURCES_CHECKLIST_OUT => __('At the leaving of a resource', 'resources'),
-            self::RESOURCES_CHECKLIST_TRANSFER => __('At the transfer of a resource', 'resources')
+            self::RESOURCES_CHECKLIST_TRANSFER => __('At the transfer of a resource', 'resources'),
         ];
 
         if (!empty($checklists)) {
@@ -399,7 +398,7 @@ class Checklist extends CommonDBTM
      *
      * @return string
      */
-    static function getChecklistType($value)
+    public static function getChecklistType($value)
     {
         switch ($value) {
             case self::RESOURCES_CHECKLIST_IN:
@@ -420,13 +419,13 @@ class Checklist extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         global $DB;
 
         $iterator = $DB->request([
             'SELECT' => new QueryExpression(
-                'MAX(' . $DB->quoteName('rank') . ') AS ' . $DB->quoteName('maxrank')
+                'MAX(' . $DB->quoteName('rank') . ') AS ' . $DB->quoteName('maxrank'),
             ),
             'FROM'   => $this->getTable(),
             'WHERE'  => [
@@ -444,7 +443,7 @@ class Checklist extends CommonDBTM
     /**
      * @param $ID
      */
-    static function showAddForm($ID)
+    public static function showAddForm($ID)
     {
         TemplateRenderer::getInstance()->display('@resources/checklist_add_form.html.twig', [
             'form_action' => Toolbox::getItemTypeFormURL(Resource::class),
@@ -461,7 +460,7 @@ class Checklist extends CommonDBTM
      * @param $plugin_resources_resources_id the resources ID
      * @param $action up or down
      * */
-    function changeRank($input)
+    public function changeRank($input)
     {
         global $DB;
 
@@ -506,12 +505,12 @@ class Checklist extends CommonDBTM
                 $new_rank = $row['rank'];
 
                 return ($this->update([
-                        'id' => $input['id'],
-                        'rank' => $new_rank
-                    ]) && $this->update([
-                        'id' => $other_ID,
-                        'rank' => $current_rank
-                    ]));
+                    'id' => $input['id'],
+                    'rank' => $new_rank,
+                ]) && $this->update([
+                    'id' => $other_ID,
+                    'rank' => $current_rank,
+                ]));
             }
         }
         return false;
@@ -523,7 +522,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         if (!$this->canView()) {
             return false;
@@ -568,7 +567,7 @@ class Checklist extends CommonDBTM
         if ($ID > 0) {
             $hidden_fields .= Html::hidden(
                 'plugin_resources_contracttypes_id',
-                ['value' => $this->fields["plugin_resources_contracttypes_id"]]
+                ['value' => $this->fields["plugin_resources_contracttypes_id"]],
             );
             $hidden_fields .= Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
         } else {
@@ -607,7 +606,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function showFromResources($plugin_resources_resources_id, $checklist_type, $withtemplate = '')
+    public static function showFromResources($plugin_resources_resources_id, $checklist_type, $withtemplate = '')
     {
         global $CFG_GLPI;
 
@@ -694,13 +693,13 @@ class Checklist extends CommonDBTM
                 'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
                 'plugin_resources_resources_id' => $plugin_resources_resources_id,
                 'checklist_type' => $checklist_type,
-                'id' => -1
+                'id' => -1,
             ];
             Ajax::updateItemJsCode(
                 "viewchecklisttask" . "$rand",
                 PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php",
                 $params,
-                false
+                false,
             );
             echo "};";
             echo "</script>\n";
@@ -710,18 +709,18 @@ class Checklist extends CommonDBTM
 
         // Get check list
         $restrict = [
-                "entities_id" => $entities_id,
-                "plugin_resources_resources_id" => $plugin_resources_resources_id,
-                "checklist_type" => $checklist_type
-            ] +
+            "entities_id" => $entities_id,
+            "plugin_resources_resources_id" => $plugin_resources_resources_id,
+            "checklist_type" => $checklist_type,
+        ] +
             ["ORDER" => "rank"];
         $dbu = new DbUtils();
         $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
         $numrows = $dbu->countElementsInTable("glpi_plugin_resources_checklists", $restrict);
         if (!empty($checklists)) {
             if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                Html::openMassiveActionsForm('masschecklist'  . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masschecklist'  . $rand];
+                Html::openMassiveActionsForm('masschecklist' . $rand);
+                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masschecklist' . $rand];
                 Html::showMassiveActions($massiveactionparams);
             }
 
@@ -745,7 +744,7 @@ class Checklist extends CommonDBTM
                 echo "<td>";
                 Dropdown::show('TicketTemplate', [
                     'name' => 'tickettemplates_id',
-                    'entities_id' => $entities_id
+                    'entities_id' => $entities_id,
                 ]);
                 echo "</td>";
                 echo "<td>" . __('Assigned to') . "</td>";
@@ -823,7 +822,7 @@ class Checklist extends CommonDBTM
 
             Session::initNavigateListItems(
                 Checklist::class,
-                Resource::getTypeName(1) . " = " . $resource->fields['name']
+                Resource::getTypeName(1) . " = " . $resource->fields['name'],
             );
 
             $i = 0;
@@ -895,7 +894,7 @@ class Checklist extends CommonDBTM
                         'action' => 'up',
                         'id' => $ID,
                         'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                        'checklist_type' => $checklist_type
+                        'checklist_type' => $checklist_type,
                     ], 'fa-angle-double-up fa-1x');
                     echo "</td>";
                 } else {
@@ -908,7 +907,7 @@ class Checklist extends CommonDBTM
                         'action' => 'down',
                         'id' => $ID,
                         'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                        'checklist_type' => $checklist_type
+                        'checklist_type' => $checklist_type,
                     ], 'fa-angle-double-down fa-1x');
                     echo "</td>";
                 } else {
@@ -942,35 +941,35 @@ class Checklist extends CommonDBTM
      * *@since version 0.84
      *
      */
-    function getSpecificMassiveActions($checkitem = null)
+    public function getSpecificMassiveActions($checkitem = null)
     {
         $actions = parent::getSpecificMassiveActions($checkitem);
 
         if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'do_checklist'] = __(
                 'Mark as finished',
-                'resources'
+                'resources',
             );
         }
 
         if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'undo_checklist'] = __(
                 'Mark as unfinished',
-                'resources'
+                'resources',
             );
         }
 
         if (Session::haveRight("plugin_resources_task", UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'add_task'] = __(
                 'Link a task',
-                'resources'
+                'resources',
             );
         }
 
         if (Session::haveRight("ticket", Ticket::READALL)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'add_ticket'] = __(
                 'Add ticket',
-                'resources'
+                'resources',
             );
         }
 
@@ -982,7 +981,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function showMassiveActionsSubForm(MassiveAction $ma)
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
     {
         $input = $ma->getInput();
         foreach ($input as $key => $val) {
@@ -1006,7 +1005,7 @@ class Checklist extends CommonDBTM
      *
      * @see CommonDBTM::processMassiveActionsForOneItemtype()
      * */
-    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
     {
         global $CFG_GLPI;
 
@@ -1020,7 +1019,7 @@ class Checklist extends CommonDBTM
                         if ($item->can($key, UPDATE, $input)) {
                             if ($item->update([
                                 "id" => $key,
-                                "is_checked" => 1
+                                "is_checked" => 1,
                             ])) {
                                 $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                             } else {
@@ -1041,7 +1040,7 @@ class Checklist extends CommonDBTM
                         if ($item->can($key, UPDATE, $input)) {
                             if ($item->update([
                                 "id" => $key,
-                                "is_checked" => 0
+                                "is_checked" => 0,
                             ])) {
                                 $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                             } else {
@@ -1116,7 +1115,7 @@ class Checklist extends CommonDBTM
                                 $tasks_id[$newID] = $newID;
                                 if ($item->update([
                                     "id" => $key,
-                                    "plugin_resources_tasks_id" => $newID
+                                    "plugin_resources_tasks_id" => $newID,
                                 ])) {
                                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                                 } else {
@@ -1145,7 +1144,7 @@ class Checklist extends CommonDBTM
     /**
      * @return array
      */
-    function getForbiddenStandardMassiveAction()
+    public function getForbiddenStandardMassiveAction()
     {
         $forbidden = parent::getForbiddenStandardMassiveAction();
 
@@ -1158,7 +1157,7 @@ class Checklist extends CommonDBTM
     /**
      * @param $is_leaving
      */
-    function showOnCentral($is_leaving)
+    public function showOnCentral($is_leaving)
     {
         global $DB, $CFG_GLPI;
 
@@ -1241,7 +1240,7 @@ class Checklist extends CommonDBTM
                     echo "<td class='center'>";
                     echo Dropdown::getDropdownName(
                         "glpi_plugin_resources_contracttypes",
-                        $data['plugin_resources_contracttypes_id']
+                        $data['plugin_resources_contracttypes_id'],
                     );
                     echo "</td>";
 
@@ -1249,12 +1248,12 @@ class Checklist extends CommonDBTM
                     if ($is_leaving) {
                         $query_checklists = self::queryListChecklists(
                             $data["plugin_resources_resources_id"],
-                            self::RESOURCES_CHECKLIST_OUT
+                            self::RESOURCES_CHECKLIST_OUT,
                         );
                     } else {
                         $query_checklists = self::queryListChecklists(
                             $data["plugin_resources_resources_id"],
-                            self::RESOURCES_CHECKLIST_IN
+                            self::RESOURCES_CHECKLIST_IN,
                         );
                     }
                     $iteratorc = $DB->request($query_checklists);
@@ -1290,12 +1289,12 @@ class Checklist extends CommonDBTM
      *
      * @return array
      */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'ResourcesChecklist':
                 return [
-                    'description' => __('Checklists Verification', 'resources')
+                    'description' => __('Checklists Verification', 'resources'),
                 ];   // Optional
                 break;
         }
@@ -1308,7 +1307,7 @@ class Checklist extends CommonDBTM
      *
      * @return array
      */
-    static function queryChecklists($entity_restrict, $is_leaving = 0)
+    public static function queryChecklists($entity_restrict, $is_leaving = 0)
     {
         $resource = new Resource();
 
@@ -1341,16 +1340,16 @@ class Checklist extends CommonDBTM
                     'glpi_plugin_resources_resources.date_declaration_leaving',
                     'glpi_plugin_resources_resources.is_leaving',
                     'glpi_plugin_resources_resources.is_helpdesk_visible',
-                    'glpi_plugin_resources_resources.plugin_resources_contracttypes_id'
+                    'glpi_plugin_resources_resources.plugin_resources_contracttypes_id',
                 ],
                 'FROM' => 'glpi_plugin_resources_checklists',
                 'LEFT JOIN'       => [
                     'glpi_plugin_resources_resources' => [
                         'ON' => [
                             'glpi_plugin_resources_checklists' => 'plugin_resources_resources_id',
-                            'glpi_plugin_resources_resources'          => 'id'
-                        ]
-                    ]
+                            'glpi_plugin_resources_resources'          => 'id',
+                        ],
+                    ],
                 ],
                 'WHERE' => [
                     'glpi_plugin_resources_resources.is_leaving'    => $is_leaving,
@@ -1360,11 +1359,11 @@ class Checklist extends CommonDBTM
                     'glpi_plugin_resources_resources.is_template'    => 0,
                 ],
                 'GROUPBY' => ['glpi_plugin_resources_resources.id'],
-                'ORDERBY' => 'glpi_plugin_resources_resources.' . $field
+                'ORDERBY' => 'glpi_plugin_resources_resources.' . $field,
             ];
         $query['WHERE'] = $query['WHERE'] + getEntitiesRestrictCriteria(
-                'glpi_plugin_resources_resources'
-            );
+            'glpi_plugin_resources_resources',
+        );
 
         return $query;
     }
@@ -1375,7 +1374,7 @@ class Checklist extends CommonDBTM
      *
      * @return array
      */
-    static function queryListChecklists($ID, $checklist_type)
+    public static function queryListChecklists($ID, $checklist_type)
     {
 
         $query =
@@ -1388,9 +1387,9 @@ class Checklist extends CommonDBTM
                     'glpi_plugin_resources_resources' => [
                         'ON' => [
                             'glpi_plugin_resources_checklists' => 'plugin_resources_resources_id',
-                            'glpi_plugin_resources_resources'          => 'id'
-                        ]
-                    ]
+                            'glpi_plugin_resources_resources'          => 'id',
+                        ],
+                    ],
                 ],
                 'WHERE' => [
                     'glpi_plugin_resources_resources.id'    => $ID,
@@ -1399,7 +1398,7 @@ class Checklist extends CommonDBTM
                     'glpi_plugin_resources_resources.is_deleted'    => 0,
                     'glpi_plugin_resources_resources.is_template'    => 0,
                 ],
-                'ORDERBY' => 'glpi_plugin_resources_checklists.rank ASC'
+                'ORDERBY' => 'glpi_plugin_resources_checklists.rank ASC',
             ];
 
 
@@ -1412,7 +1411,7 @@ class Checklist extends CommonDBTM
      * @param $task for log, if NULL display
      *
      * */
-    static function cronResourcesChecklist($task = null)
+    public static function cronResourcesChecklist($task = null)
     {
         global $DB, $CFG_GLPI;
 
@@ -1454,8 +1453,8 @@ class Checklist extends CommonDBTM
                     [
                         'entities_id' => $entity,
                         'checklists' => $checklists,
-                        'tasklists' => $checklists
-                    ]
+                        'tasklists' => $checklists,
+                    ],
                 )) {
                     $message = $checklist_messages[$type][$entity];
                     $cron_status = 1;
@@ -1464,21 +1463,21 @@ class Checklist extends CommonDBTM
                         $task->addVolume(1);
                     } else {
                         Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName("glpi_entities", $entity) . ":  $message"
+                            Dropdown::getDropdownName("glpi_entities", $entity) . ":  $message",
                         );
                     }
                 } else {
                     if ($task) {
                         $task->log(
                             Dropdown::getDropdownName("glpi_entities", $entity) .
-                            ":  Send checklists resources alert failed\n"
+                            ":  Send checklists resources alert failed\n",
                         );
                     } else {
                         Session::addMessageAfterRedirect(
                             Dropdown::getDropdownName("glpi_entities", $entity) .
                             ":  Send checklists resources alert failed",
                             false,
-                            ERROR
+                            ERROR,
                         );
                     }
                 }
@@ -1495,7 +1494,7 @@ class Checklist extends CommonDBTM
      *
      * @return bool
      */
-    static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
+    public static function displayTabContentForPDF(PluginPdfSimplePDF $pdf, CommonGLPI $item, $tab)
     {
         if ($item->getType() == Resource::class) {
             self::pdfForResource($pdf, $item, self::RESOURCES_CHECKLIST_IN);
@@ -1513,7 +1512,7 @@ class Checklist extends CommonDBTM
      * @param $pdf object for the output
      * @param $ID of the resources
      */
-    static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli, $checklist_type)
+    public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli, $checklist_type)
     {
         global $DB;
 
@@ -1545,7 +1544,7 @@ class Checklist extends CommonDBTM
                 '<b><i>' .
                 __('Name'),
                 __('Linked task', 'resources'),
-                __('Checked', 'resources') . '</i></b>'
+                __('Checked', 'resources') . '</i></b>',
             );
 
             foreach ($iterator as $data) {
@@ -1557,7 +1556,7 @@ class Checklist extends CommonDBTM
                 $pdf->displayLine(
                     $data['name'],
                     Dropdown::getYesNo($data['plugin_resources_tasks_id']),
-                    $checked
+                    $checked,
                 );
             }
         } else {
@@ -1572,7 +1571,7 @@ class Checklist extends CommonDBTM
      *
      * @return mixed
      */
-    static function getMenuOptions($menu)
+    public static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/checklistconfig.php';
         $itemtype = self::getType();

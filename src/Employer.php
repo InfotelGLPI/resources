@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -45,15 +45,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Employer extends CommonTreeDropdown
 {
-
-    var $can_be_translated = true;
+    public $can_be_translated = true;
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Employer', 'Employers', $nb, 'resources');
     }
@@ -67,7 +66,7 @@ class Employer extends CommonTreeDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight('plugin_resources', READ);
     }
@@ -78,7 +77,7 @@ class Employer extends CommonTreeDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
     }
@@ -86,32 +85,32 @@ class Employer extends CommonTreeDropdown
     /**
      * Return Additional Fileds for this type
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => $this->getForeignKeyField(),
                 'label' => __('As child of'),
                 'type' => 'parent',
-                'list' => false
+                'list' => false,
             ],
             [
                 'name' => 'short_name',
                 'label' => __('Short name', 'resources'),
                 'type' => 'text',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'locations_id',
                 'label' => __('Location'),
                 'type' => 'dropdownValue',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'second_list',
                 'label' => __('Second part list of employer', 'resources'),
                 'type' => 'bool',
-                'list' => true
+                'list' => true,
             ],
 
         ];
@@ -122,7 +121,7 @@ class Employer extends CommonTreeDropdown
      *
      * @return array of search option
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -137,14 +136,14 @@ class Employer extends CommonTreeDropdown
             'table' => $this->getTable(),
             'field' => 'short_name',
             'name' => __('Short name', 'resources'),
-            'datatype' => 'text'
+            'datatype' => 'text',
         ];
         $tab[] = [
             'id' => '17',
             'table' => $this->getTable(),
             'field' => 'second_list',
             'name' => __('Second part list of employer', 'resources'),
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
         $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
@@ -158,7 +157,7 @@ class Employer extends CommonTreeDropdown
      *
      * @return
      */
-    static function getSpecificValueToDisplay($field, $values, array $options = [])
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
     {
         if (!is_array($values)) {
             $values = [$field => $values];
@@ -177,7 +176,7 @@ class Employer extends CommonTreeDropdown
      *
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -185,7 +184,7 @@ class Employer extends CommonTreeDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Application\View\TemplateRenderer;
@@ -50,7 +50,7 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
         if (($config->getField('sales_manager') != "")) {
             $tableProfileUser = Profile_User::getTable();
             $tableUser = User::getTable();
-            $profile_User = new  Profile_User();
+            $profile_User = new Profile_User();
             $prof = [];
             foreach (json_decode($config->getField('sales_manager')) as $profs) {
                 $prof[$profs] = $profs;
@@ -61,7 +61,7 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
                 $tableProfileUser,
                 'entities_id',
                 $resource->fields["entities_id"],
-                true
+                true,
             );
             $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
             $profiles_User = $profile_User->find($restrict);
@@ -80,7 +80,7 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
 
                 ],
             ]);
-//            Dropdown::showFromArray("users_id_sales", $used, ['value' => $resource->fields["users_id_sales"], 'display_emptychoice' => true]);;
+            //            Dropdown::showFromArray("users_id_sales", $used, ['value' => $resource->fields["users_id_sales"], 'display_emptychoice' => true]);;
         } else {
             TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
                 'item' => $leavinginformation,
@@ -91,11 +91,11 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
                 ],
             ]);
 
-//            User::dropdown(['value'       => $resource->fields["users_id_sales"],
-//                'name'        => "users_id_sales",
-//                'entity'      => $resource->fields["entities_id"],
-//                'entity_sons' => true,
-//                'right'       => 'all']);
+            //            User::dropdown(['value'       => $resource->fields["users_id_sales"],
+            //                'name'        => "users_id_sales",
+            //                'entity'      => $resource->fields["entities_id"],
+            //                'entity_sons' => true,
+            //                'right'       => 'all']);
         }
     } else {
         echo "<div class='row'>";
@@ -119,4 +119,3 @@ if ($_POST['plugin_resources_resources_id'] > 0) {
         echo "</div>";
     }
 }
-

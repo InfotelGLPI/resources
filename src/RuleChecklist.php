@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -46,8 +46,7 @@ if (!defined('GLPI_ROOT')) {
  **/
 class RuleChecklist extends Rule
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     // From Rule
     public $can_sort = true;
@@ -57,7 +56,7 @@ class RuleChecklist extends Rule
      *
      * @return string of the rule
      **/
-    function getTitle()
+    public function getTitle()
     {
         return Resource::getTypeName(2) . " " . Checklist::getTypeName(1);
     }
@@ -71,7 +70,7 @@ class RuleChecklist extends Rule
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -82,7 +81,7 @@ class RuleChecklist extends Rule
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -90,7 +89,7 @@ class RuleChecklist extends Rule
     /**
      * @return bool
      */
-    function maybeRecursive()
+    public function maybeRecursive()
     {
         return true;
     }
@@ -99,7 +98,7 @@ class RuleChecklist extends Rule
     /**
      * @return bool
      */
-    function isEntityAssign()
+    public function isEntityAssign()
     {
         return true;
     }
@@ -112,7 +111,7 @@ class RuleChecklist extends Rule
      *
      * @return
      **/
-    function canUnrecurs()
+    public function canUnrecurs()
     {
         return true;
     }
@@ -122,7 +121,7 @@ class RuleChecklist extends Rule
      *
      * @return int maximum number of actions
      **/
-    function maxActionsCount()
+    public function maxActionsCount()
     {
         return count($this->getActions());
     }
@@ -132,7 +131,7 @@ class RuleChecklist extends Rule
      *
      * @param $params parameters
      **/
-    function addSpecificParamsForPreview($params)
+    public function addSpecificParamsForPreview($params)
     {
         if (!isset($params["entities_id"])) {
             $params["entities_id"] = $_SESSION["glpiactive_entity"];
@@ -143,7 +142,7 @@ class RuleChecklist extends Rule
     /**
      * @return array
      */
-    function getCriterias()
+    public function getCriterias()
     {
         $criterias = [];
 
@@ -169,7 +168,7 @@ class RuleChecklist extends Rule
      * @param $value     the pattern (DEFAULT '')
      * @param $test      Is to test rule ? (false by default)
      **/
-    function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)
+    public function displayCriteriaSelectPattern($name, $ID, $condition, $value = "", $test = false)
     {
         $Checklist = new Checklist();
         $ContractType = new ContractType();
@@ -179,11 +178,11 @@ class RuleChecklist extends Rule
         if (isset($crit['type'])
             && ($test || $condition == Rule::PATTERN_IS || $condition == Rule::PATTERN_IS_NOT)) {
             switch ($crit['type']) {
-                case "dropdownChecklistType" :
+                case "dropdownChecklistType":
                     $Checklist->dropdownChecklistType($name);
                     $display = true;
                     break;
-                case "dropdownContractType" :
+                case "dropdownContractType":
                     $ContractType->dropdownContractType($name);
                     $display = true;
                     break;
@@ -207,16 +206,16 @@ class RuleChecklist extends Rule
      * @param $condition condition used
      * @param $pattern the pattern
      **/
-    function getCriteriaDisplayPattern($ID, $condition, $pattern)
+    public function getCriteriaDisplayPattern($ID, $condition, $pattern)
     {
         if (($condition == Rule::PATTERN_IS || $condition == Rule::PATTERN_IS_NOT)) {
             $crit = $this->getCriteria($ID);
             if (isset($crit['type'])) {
                 switch ($crit['type']) {
-                    case "dropdownChecklistType" :
+                    case "dropdownChecklistType":
                         $Checklist = new Checklist();
                         return $Checklist->getChecklistType($pattern);
-                    case "dropdownContractType" :
+                    case "dropdownContractType":
                         $ContractType = new ContractType();
                         return $ContractType->getContractTypeName($pattern);
                 }
@@ -228,7 +227,7 @@ class RuleChecklist extends Rule
     /**
      * @return array
      */
-    function getActions()
+    public function getActions()
     {
         $actions = [];
 
@@ -240,4 +239,3 @@ class RuleChecklist extends Rule
         return $actions;
     }
 }
-

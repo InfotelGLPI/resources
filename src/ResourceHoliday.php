@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -45,8 +45,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceHoliday extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_holiday';
+    public static $rightname = 'plugin_resources_holiday';
 
     public $dohistory = true;
 
@@ -58,7 +57,7 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Holiday', 'Holidays', $nb, 'resources');
     }
@@ -72,7 +71,7 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -83,7 +82,7 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -95,13 +94,13 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         if (!isset($input["date_begin"]) || $input["date_begin"] == 'NULL') {
             Session::addMessageAfterRedirect(
                 __('The begin date of the forced holiday period must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -109,7 +108,7 @@ class ResourceHoliday extends CommonDBTM
             Session::addMessageAfterRedirect(
                 __('The end date of the forced holiday period must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -117,7 +116,7 @@ class ResourceHoliday extends CommonDBTM
         return $input;
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         global $CFG_GLPI;
 
@@ -139,13 +138,13 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         if (!isset($input["date_begin"]) || $input["date_begin"] == 'NULL') {
             Session::addMessageAfterRedirect(
                 __('The begin date of the forced holiday period must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -153,7 +152,7 @@ class ResourceHoliday extends CommonDBTM
             Session::addMessageAfterRedirect(
                 __('The end date of the forced holiday period must be filled', 'resources'),
                 false,
-                ERROR
+                ERROR,
             );
             return [];
         }
@@ -175,14 +174,14 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return void
      **/
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         global $CFG_GLPI;
 
         if ($CFG_GLPI["notifications_mailing"] && count($this->updates)) {
             $options = [
                 'holiday_id' => $this->fields["id"],
-                'oldvalues' => $this->oldvalues
+                'oldvalues' => $this->oldvalues,
             ];
             $Resource = new Resource();
             if ($Resource->getFromDB($this->fields["plugin_resources_resources_id"])) {
@@ -197,7 +196,7 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return boolean true if item need to be deleted else false
      **/
-    function pre_deleteItem()
+    public function pre_deleteItem()
     {
         global $CFG_GLPI;
 
@@ -223,13 +222,13 @@ class ResourceHoliday extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
 
         $tab[] = [
@@ -238,13 +237,13 @@ class ResourceHoliday extends CommonDBTM
             'field' => 'name',
             'name' => __('Surname'),
             'datatype' => 'itemlink',
-            'itemlink_type' => $this->getType()
+            'itemlink_type' => $this->getType(),
         ];
 
         if (!Session::haveRight("plugin_resources_all", READ)) {
             $tab[] = [
                 'id' => '1',
-                'searchtype' => 'contains'
+                'searchtype' => 'contains',
             ];
         }
 
@@ -252,7 +251,7 @@ class ResourceHoliday extends CommonDBTM
             'id' => '2',
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'firstname',
-            'name' => __('First name')
+            'name' => __('First name'),
         ];
 
         $tab[] = [
@@ -260,7 +259,7 @@ class ResourceHoliday extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'date_begin',
             'name' => __('Begin date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -268,7 +267,7 @@ class ResourceHoliday extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'date_end',
             'name' => __('End date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -276,7 +275,7 @@ class ResourceHoliday extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'comment',
             'name' => __('Comments'),
-            'datatype' => 'text'
+            'datatype' => 'text',
         ];
 
         $tab[] = [
@@ -285,7 +284,7 @@ class ResourceHoliday extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'datatype' => 'number',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         return $tab;
@@ -294,7 +293,7 @@ class ResourceHoliday extends CommonDBTM
     /**
      *Menu
      */
-    function showMenu()
+    public function showMenu()
     {
         $title = __('Forced holiday management', 'resources');
         Wizard::WizardHeader($title);
@@ -308,17 +307,17 @@ class ResourceHoliday extends CommonDBTM
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./resourceholiday.form.php\">";
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png' alt='" . __(
-                    'Declare a forced holiday',
-                    'resources'
-                ) . "'>";
+                'Declare a forced holiday',
+                'resources',
+            ) . "'>";
             echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
             echo "</td>";
             echo "<td class='tab_td_menu center'>";
             echo "<a href=\"./resourceholiday.php\">";
             echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidaylist.png' alt='" . __(
-                    'List of forced holidays',
-                    'resources'
-                ) . "'>";
+                'List of forced holidays',
+                'resources',
+            ) . "'>";
             echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
             echo "</td>";
         }
@@ -332,7 +331,7 @@ class ResourceHoliday extends CommonDBTM
      * @param       $ID
      * @param array $options
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
 
         $this->initForm($ID, $options);
@@ -359,7 +358,7 @@ class ResourceHoliday extends CommonDBTM
             'name' => 'plugin_resources_resources_id',
             'display' => true,
             'value' => $this->fields["plugin_resources_resources_id"],
-            'entity' => $_SESSION['glpiactiveentities']
+            'entity' => $_SESSION['glpiactiveentities'],
         ]);
         echo "</div>";
         echo "</div>";
@@ -417,16 +416,16 @@ class ResourceHoliday extends CommonDBTM
             echo Html::hidden('id', ['value' => $ID]);
             echo Html::hidden(
                 'plugin_resources_resources_id',
-                ['value' => $this->fields["plugin_resources_resources_id"]]
+                ['value' => $this->fields["plugin_resources_resources_id"]],
             );
             echo Html::submit(
                 _sx('button', 'Update'),
-                ['name' => 'updateholidayresources', 'class' => 'btn btn-primary']
+                ['name' => 'updateholidayresources', 'class' => 'btn btn-primary'],
             );
             echo "&nbsp;&nbsp;";
             echo Html::submit(
                 _sx('button', 'Delete permanently'),
-                ['name' => 'deleteholidayresources', 'class' => 'btn btn-primary']
+                ['name' => 'deleteholidayresources', 'class' => 'btn btn-primary'],
             );
         } else {
             echo Html::submit(_sx('button', 'Add'), ['name' => 'addholidayresources', 'class' => 'btn btn-success']);
@@ -446,7 +445,7 @@ class ResourceHoliday extends CommonDBTM
      *
      * @return mixed
      */
-    static function getMenuOptions($menu)
+    public static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/resourceholiday.php';
         $itemtype = self::getType();
@@ -493,7 +492,7 @@ class ResourceHoliday extends CommonDBTM
                     'num' => 2,
                     'rank' => 1,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -502,7 +501,7 @@ class ResourceHoliday extends CommonDBTM
                     'num' => 3,
                     'rank' => 2,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -511,7 +510,7 @@ class ResourceHoliday extends CommonDBTM
                     'num' => 4,
                     'rank' => 3,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -520,7 +519,7 @@ class ResourceHoliday extends CommonDBTM
                     'num' => 5,
                     'rank' => 4,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
         }
     }

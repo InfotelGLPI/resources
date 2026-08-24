@@ -19,21 +19,21 @@ parameters:
 			path: ajax/checklistactions.php
 
 		-
-			message: '#^Offset ''comment'' does not exist on string\.$#'
-			identifier: offsetAccess.notFound
+			message: '#^Iterating over an object of an unknown class Glpi\\DBAL\\DBmysqlIterator\.$#'
+			identifier: class.notFound
 			count: 1
-			path: ajax/comments.php
-
-		-
-			message: '#^Parameter \#3 \$withcomment of static method Dropdown\:\:getDropdownName\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ajax/comments.php
+			path: ajax/dropdownResources.php
 
 		-
 			message: '#^Parameter \#1 \$ID of method DbUtils\:\:formatUserName\(\) expects int, string given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
+			path: ajax/dropdownResources.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, Glpi\\DBAL\\DBmysqlIterator given\.$#'
+			identifier: argument.type
+			count: 1
 			path: ajax/dropdownResources.php
 
 		-
@@ -127,8 +127,8 @@ parameters:
 			path: ajax/showHabilitations.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between true and false will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
 			path: ajax/showHabilitations.php
 
@@ -137,12 +137,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ajax/showHabilitations.php
-
-		-
-			message: '#^Offset ''ticket_id'' does not exist on array\{plugin_resources_resources_id\: mixed, tickets_id\: int\|false, plugin_resources_contracttypes_id\: mixed, entities_id\: mixed, enddate\: mixed, id\: int, login\: mixed, department\: string, \.\.\.\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: ajax/validinformation.php
 
 		-
 			message: '#^Property ITILTemplate\:\:\$predefined \(array\) in isset\(\) is not nullable\.$#'
@@ -307,12 +301,6 @@ parameters:
 			path: front/resource.form.php
 
 		-
-			message: '#^Offset ''ticket_id'' does not exist on array\{plugin_resources_resources_id\: mixed, tickets_id\: int\|false, plugin_resources_contracttypes_id\: mixed, entities_id\: mixed, enddate\: mixed, id\: int, login\: mixed, department\: string, \.\.\.\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: front/resource.form.php
-
-		-
 			message: '#^Offset mixed on array\{\} in isset\(\) does not exist\.$#'
 			identifier: isset.offset
 			count: 1
@@ -321,7 +309,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: front/resource.form.php
 
 		-
@@ -349,6 +337,18 @@ parameters:
 			path: front/resource.php
 
 		-
+			message: '#^Call to method ldapTimeToUnixTime\(\) on an unknown class LDAP\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Call to method updateUserAD\(\) on an unknown class LDAP\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
 			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
 			identifier: class.notFound
 			count: 1
@@ -357,6 +357,30 @@ parameters:
 		-
 			message: '#^Call to static method showNavBarFooter\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
 			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Instantiated class LDAP not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Offset ''firstname'' does not exist on array\{enddate\: mixed, id\: int, login\: mixed, action_done\: 1\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Offset ''name'' does not exist on array\{enddate\: mixed, id\: int, login\: mixed, action_done\: 1\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: front/resource.remove.php
+
+		-
+			message: '#^Offset ''ticket_id'' does not exist on array\{enddate\: mixed, id\: int, login\: mixed, action_done\: 1\}\.$#'
+			identifier: offsetAccess.notFound
 			count: 1
 			path: front/resource.remove.php
 
@@ -379,12 +403,6 @@ parameters:
 			path: front/resource.transfer.php
 
 		-
-			message: '#^Parameter \#2 \$right of static method Session\:\:haveRight\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: front/resource.transfer.php
-
-		-
 			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
 			identifier: class.notFound
 			count: 1
@@ -399,7 +417,7 @@ parameters:
 		-
 			message: '#^Call to method canView\(\) on an unknown class GlpiPlugin\\Badges\\Badge\.$#'
 			identifier: class.notFound
-			count: 3
+			count: 4
 			path: front/resourcebadge.form.php
 
 		-
@@ -541,30 +559,6 @@ parameters:
 			path: front/rule.test.php
 
 		-
-			message: '#^Method RuleCollection\:\:showRulesEnginePreviewCriteriasForm\(\) invoked with 3 parameters, 1\-2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: front/rulesengine.test.php
-
-		-
-			message: '#^Method RuleCollection\:\:showRulesEnginePreviewResultsForm\(\) invoked with 3 parameters, 1\-2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: front/rulesengine.test.php
-
-		-
-			message: '#^Parameter \#2 \$condition of method RuleCollection\:\:showRulesEnginePreviewCriteriasForm\(\) expects int, array\<string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: front/rulesengine.test.php
-
-		-
-			message: '#^Parameter \#2 \$condition of method RuleCollection\:\:showRulesEnginePreviewResultsForm\(\) expects int, array\<mixed, string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: front/rulesengine.test.php
-
-		-
 			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -621,12 +615,6 @@ parameters:
 		-
 			message: '#^Variable \$_FILES in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
-			count: 1
-			path: front/wizard.form.php
-
-		-
-			message: '#^Variable \$resources_id might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: front/wizard.form.php
 
@@ -715,12 +703,6 @@ parameters:
 			path: hook.php
 
 		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
-			count: 4
-			path: hook.php
-
-		-
 			message: '#^Class GlpiPlugin\\Behaviors\\Rule not found\.$#'
 			identifier: class.notFound
 			count: 4
@@ -733,86 +715,26 @@ parameters:
 			path: src/Actionprofile.php
 
 		-
-			message: '#^Access to offset ''creation_categories…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 4
-			path: src/Adconfig.php
-
-		-
-			message: '#^Access to offset ''deletion_categories…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 4
-			path: src/Adconfig.php
-
-		-
-			message: '#^Access to offset ''modification…'' on an unknown class GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 4
-			path: src/Adconfig.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) has invalid return type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) has invalid return type type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForUpdate\(\) should return array\<string, mixed\>\|false but returns GlpiPlugin\\Resources\\type\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Adconfig\:\:showConfigForm\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Adconfig.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\$input\)\: Unexpected token "\$input", expected type at offset 47 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Adconfig.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 77 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Adconfig.php
 
 		-
-			message: '#^Parameter \#1 \$input of method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) expects GlpiPlugin\\Resources\\type, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Adconfig.php
-
-		-
-			message: '#^Parameter \$input of method GlpiPlugin\\Resources\\Adconfig\:\:encodeSubtypes\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
+			identifier: phpDoc.parseError
 			count: 1
 			path: src/Adconfig.php
 
 		-
-			message: '#^Return type \(GlpiPlugin\\Resources\\type\|type\) of method GlpiPlugin\\Resources\\Adconfig\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonDBTM\:\:prepareInputForAdd\(\)$#'
-			identifier: method.childReturnType
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
+			identifier: phpDoc.parseError
 			count: 1
 			path: src/Adconfig.php
 
@@ -835,19 +757,19 @@ parameters:
 			path: src/Budget.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 118 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 112 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetType.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetType.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetType.php
@@ -859,19 +781,19 @@ parameters:
 			path: src/BudgetType.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 118 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 112 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetVolume.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetVolume.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BudgetVolume.php
@@ -883,13 +805,13 @@ parameters:
 			path: src/BudgetVolume.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BusinessUnit.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/BusinessUnit.php
@@ -901,13 +823,13 @@ parameters:
 			path: src/BusinessUnit.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Candidateorigin.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Candidateorigin.php
@@ -1105,13 +1027,13 @@ parameters:
 			path: src/Choice.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Choice.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Choice.php
@@ -1147,13 +1069,13 @@ parameters:
 			path: src/Choice.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ChoiceItem.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ChoiceItem.php
@@ -1165,19 +1087,19 @@ parameters:
 			path: src/ChoiceItem.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 69 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Client.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Client.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Client.php
@@ -1207,13 +1129,13 @@ parameters:
 			path: src/ClientInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 169 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ClientInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 123 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ClientInjection.php
@@ -1297,25 +1219,25 @@ parameters:
 			path: src/Config.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 49 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 46 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/Config.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 83 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 78 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Config.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Config.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Config.php
@@ -1561,25 +1483,25 @@ parameters:
 			path: src/DateCriteria.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(report              the report in which the criteria is added\)\: Unexpected token "the", expected variable at offset 58 on line 3$#'
+			message: '#^PHPDoc tag @param has invalid value \(report              the report in which the criteria is added\)\: Unexpected token "the", expected variable at offset 56 on line 3$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/DateCriteria.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/DateCriteria.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/DegreeGroup.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/DegreeGroup.php
@@ -1615,13 +1537,13 @@ parameters:
 			path: src/Department_Service.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Destination.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Destination.php
@@ -1792,25 +1714,13 @@ parameters:
 			path: src/Employee.php
 
 		-
-			message: '#^Method GlpiPlugin\\Resources\\Employee\:\:showEmployeeForm\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: src/Employee.php
-
-		-
-			message: '#^Method GlpiPlugin\\Resources\\Employee\:\:showFormHelpdesk\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: src/Employee.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Employee.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Employee.php
@@ -1972,43 +1882,43 @@ parameters:
 			path: src/EmploymentRank.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 136 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 130 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 68 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 98 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 94 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 108 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 105 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/EmploymentState.php
@@ -2026,19 +1936,19 @@ parameters:
 			path: src/EmploymentState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 86 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 81 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Habilitation.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Habilitation.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Habilitation.php
@@ -2068,13 +1978,13 @@ parameters:
 			path: src/HabilitationInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 169 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/HabilitationInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 123 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/HabilitationInjection.php
@@ -2092,19 +2002,19 @@ parameters:
 			path: src/HabilitationInjection.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 86 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 81 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/HabilitationLevel.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/HabilitationLevel.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/HabilitationLevel.php
@@ -2161,12 +2071,6 @@ parameters:
 			message: '#^Access to an undefined property GlpiPlugin\\Resources\\ImportResource\:\:\$existingImports\.$#'
 			identifier: property.notFound
 			count: 3
-			path: src/ImportResource.php
-
-		-
-			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
-			identifier: greater.alwaysTrue
-			count: 1
 			path: src/ImportResource.php
 
 		-
@@ -2386,6 +2290,12 @@ parameters:
 			path: src/LeavingInformation.php
 
 		-
+			message: '#^Iterating over an object of an unknown class GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/LeavingInformation.php
+
+		-
 			message: '#^Method GlpiPlugin\\Resources\\LeavingInformation\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
 			identifier: return.type
 			count: 2
@@ -2398,13 +2308,13 @@ parameters:
 			path: src/LeavingInformation.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/LeavingInformation.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/LeavingInformation.php
@@ -2512,13 +2422,13 @@ parameters:
 			path: src/LinkAd.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/LinkAd.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/LinkAd.php
@@ -2560,12 +2470,6 @@ parameters:
 			path: src/Manager.php
 
 		-
-			message: '#^Call to static method hidden\(\) on an unknown class GlpiPlugin\\Resources\\Html\.$#'
-			identifier: class.notFound
-			count: 2
-			path: src/Menu.php
-
-		-
 			message: '#^Constant PLUGIN_BADGES_WEBDIR not found\.$#'
 			identifier: constant.notFound
 			count: 1
@@ -2575,6 +2479,12 @@ parameters:
 			message: '#^Constant PLUGIN_METADEMANDS_WEBDIR not found\.$#'
 			identifier: constant.notFound
 			count: 2
+			path: src/Menu.php
+
+		-
+			message: '#^Variable \$actions_others in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
 			path: src/Menu.php
 
 		-
@@ -2700,7 +2610,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
 			identifier: method.notFound
-			count: 64
+			count: 70
 			path: src/NotificationTargetResource.php
 
 		-
@@ -2730,35 +2640,35 @@ parameters:
 		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
-			count: 12
+			count: 1
 			path: src/NotificationTargetResource.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 126 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Profession.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Profession.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 96 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 93 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Profession.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Profession.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Profession.php
@@ -2770,19 +2680,19 @@ parameters:
 			path: src/Profession.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 126 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionCategory.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionCategory.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionCategory.php
@@ -2794,19 +2704,19 @@ parameters:
 			path: src/ProfessionCategory.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 126 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionLine.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionLine.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ProfessionLine.php
@@ -2816,18 +2726,6 @@ parameters:
 			identifier: glpi.forbidExit
 			count: 1
 			path: src/ProfessionLine.php
-
-		-
-			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^Parameter \#2 \$openform \(bool\) of method GlpiPlugin\\Resources\\Profile\:\:showForm\(\) should be compatible with parameter \$options \(array\<string, mixed\>\) of method Profile\:\:showForm\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: src/Profile.php
 
 		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
@@ -2836,31 +2734,31 @@ parameters:
 			path: src/Profile.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 132 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 126 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Rank.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Rank.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 97 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 94 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Rank.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Rank.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Rank.php
@@ -2902,28 +2800,28 @@ parameters:
 			path: src/Recap.php
 
 		-
-			message: """
-				#^PHPDoc tag @return has invalid value \\(\r
-				\\*@since version 0\\.85\\)\\: Unexpected token "\\\\r\\\\n     \\*", expected type at offset 518 on line 12$#
-			"""
+			message: '''
+				#^PHPDoc tag @return has invalid value \(
+				\*@since version 0\.85\)\: Unexpected token "\\n     \*", expected type at offset 507 on line 12$#
+			'''
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Recap.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Recap.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Recap.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 217 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 211 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Recap.php
@@ -3001,13 +2899,13 @@ parameters:
 			path: src/Recipient_Leaving.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RecruitingSource.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RecruitingSource.php
@@ -3109,12 +3007,6 @@ parameters:
 			path: src/Resource.php
 
 		-
-			message: '#^Cannot call method fetchArray\(\) on mysqli_result\|true\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Resource.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Resource\:\:post_updateItem\(\) is incompatible with type bool\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -3136,6 +3028,12 @@ parameters:
 			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
 			identifier: glpi.forbidDynamicInstantiation
 			count: 2
+			path: src/Resource.php
+
+		-
+			message: '#^Iterating over an object of an unknown class GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
 			path: src/Resource.php
 
 		-
@@ -3188,6 +3086,18 @@ parameters:
 
 		-
 			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSpecificValueToDisplay\(\) should return GlpiPlugin\\Resources\\a but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSqlSearchResult\(\) has invalid return type Glpi\\DBAL\\DBmysqlIterator\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Resource.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\Resource\:\:getSqlSearchResult\(\) should return Glpi\\DBAL\\DBmysqlIterator but returns DBmysqlIterator\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Resource.php
@@ -3313,7 +3223,7 @@ parameters:
 			path: src/Resource.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\$action\)\: Unexpected token "\$action", expected type at offset 93 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(\$action\)\: Unexpected token "\$action", expected type at offset 88 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Resource.php
@@ -3321,18 +3231,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @return has invalid value \(\|null\)\: Unexpected token "\|", expected type at offset 187 on line 10$#'
 			identifier: phpDoc.parseError
-			count: 1
-			path: src/Resource.php
-
-		-
-			message: '#^Parameter \#1 \$ID of method CommonDBTM\:\:getFromDB\(\) expects int\|string, GlpiPlugin\\Resources\\type given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Resource.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strstr expects string, GlpiPlugin\\Resources\\type given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Resource.php
 
@@ -3355,12 +3253,6 @@ parameters:
 			path: src/Resource.php
 
 		-
-			message: '#^Parameter \#2 \$string of function explode expects string, GlpiPlugin\\Resources\\type given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Resource.php
-
-		-
 			message: '#^Parameter \#2 \$withtemplate \(bool\) of method GlpiPlugin\\Resources\\Resource\:\:getTabNameForItem\(\) should be compatible with parameter \$withtemplate \(int\) of method CommonGLPI\:\:getTabNameForItem\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -3369,24 +3261,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$input of method CommonDBTM\:\:can\(\) expects array\<string, mixed\>\|null, GlpiPlugin\\Resources\\Resource given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Resource.php
-
-		-
-			message: '#^Parameter \$entities_id of method GlpiPlugin\\Resources\\Resource\:\:transferResource\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Resource.php
-
-		-
-			message: '#^Parameter \$resources_id of method GlpiPlugin\\Resources\\Resource\:\:transferResource\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Resource.php
-
-		-
-			message: '#^Parameter \$type of method GlpiPlugin\\Resources\\Resource\:\:massiveActions\(\) has invalid type GlpiPlugin\\Resources\\type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Resource.php
 
@@ -3487,13 +3361,13 @@ parameters:
 			path: src/ResourceBadge.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceBadge.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceBadge.php
@@ -3517,19 +3391,13 @@ parameters:
 			path: src/ResourceCard.php
 
 		-
-			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/ResourceCard.php
-
-		-
 			message: '#^Parameter \#3 \$limit of method CommonDBTM\:\:find\(\) expects int\|null, array\<int, int\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ResourceCard.php
 
 		-
-			message: '#^Parameter \#4 \$value of method DbUtils\:\:getEntitiesRestrictRequest\(\) expects ''''\|array\<int\>\|int, bool given\.$#'
+			message: '#^Parameter \#3 \$value of method DbUtils\:\:getEntitiesRestrictCriteria\(\) expects ''''\|array\<int\>\|int, bool given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ResourceCard.php
@@ -3541,13 +3409,13 @@ parameters:
 			path: src/ResourceCard.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/ResourceFunction.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceFunction.php
@@ -3691,13 +3559,13 @@ parameters:
 			path: src/ResourceInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 173 on line 5$#'
+			message: '#^PHPDoc tag @param has invalid value \(options options used during creation\)\: Unexpected token "options", expected variable at offset 169 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceInjection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 126 on line 4$#'
+			message: '#^PHPDoc tag @param has invalid value \(values fields to add into glpi\)\: Unexpected token "fields", expected variable at offset 123 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceInjection.php
@@ -3799,19 +3667,19 @@ parameters:
 			path: src/ResourceResting.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceResting.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceResting.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 90 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 87 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceResting.php
@@ -3865,19 +3733,19 @@ parameters:
 			path: src/ResourceSituation.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 120 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 114 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceSpeciality.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceSpeciality.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceSpeciality.php
@@ -3889,13 +3757,13 @@ parameters:
 			path: src/ResourceSpeciality.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/ResourceState.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 69 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 65 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/ResourceState.php
@@ -3973,18 +3841,6 @@ parameters:
 			path: src/Resource_Item.php
 
 		-
-			message: '#^Parameter \#1 \$ID of function getUserName expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Resource_Item.php
-
-		-
-			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Resource_Item.php
-
-		-
 			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Resource_Item\:\:countForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4015,12 +3871,6 @@ parameters:
 			path: src/Resource_Item.php
 
 		-
-			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 8
-			path: src/Resource_Item.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
@@ -4029,7 +3879,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: src/Resource_Leaving.php
 
 		-
@@ -4075,9 +3925,15 @@ parameters:
 			path: src/Resource_Leaving.php
 
 		-
+			message: '#^Access to an undefined property CommonGLPI\:\:\$fields\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Resource_Validation.php
+
+		-
 			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: src/Resource_Validation.php
 
 		-
@@ -4135,7 +3991,7 @@ parameters:
 			path: src/Role.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/Role.php
@@ -4153,19 +4009,19 @@ parameters:
 			path: src/Role_Service.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklist.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 176 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 170 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklist.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklist.php
@@ -4207,19 +4063,19 @@ parameters:
 			path: src/RuleChecklistCollection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(input the input data used to check criterias\)\: Unexpected token "the", expected variable at offset 74 on line 4$#'
+			message: '#^PHPDoc tag @param has invalid value \(input the input data used to check criterias\)\: Unexpected token "the", expected variable at offset 71 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklistCollection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(output the initial ouput array used to be manipulate by actions\)\: Unexpected token "the", expected variable at offset 135 on line 5$#'
+			message: '#^PHPDoc tag @param has invalid value \(output the initial ouput array used to be manipulate by actions\)\: Unexpected token "the", expected variable at offset 131 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklistCollection.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(params parameters for all internal functions\)\: Unexpected token "parameters", expected variable at offset 214 on line 6$#'
+			message: '#^PHPDoc tag @param has invalid value \(params parameters for all internal functions\)\: Unexpected token "parameters", expected variable at offset 209 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleChecklistCollection.php
@@ -4231,19 +4087,19 @@ parameters:
 			path: src/RuleChecklistCollection.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleContracttype.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 176 on line 7$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 170 on line 7$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleContracttype.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleContracttype.php
@@ -4267,13 +4123,13 @@ parameters:
 			path: src/RuleContracttypeHidden.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleContracttypeHidden.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/RuleContracttypeHidden.php
@@ -4369,6 +4225,12 @@ parameters:
 			path: src/RuleContracttypeReadonly.php
 
 		-
+			message: '#^Default value of the parameter \#4 \$force_no_cache \(false\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:processAllRules\(\) is incompatible with type array\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
 			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:getTitle\(\) has invalid return type GlpiPlugin\\Resources\\Title\.$#'
 			identifier: class.notFound
 			count: 1
@@ -4381,7 +4243,49 @@ parameters:
 			path: src/RuleContracttypeReadonlyCollection.php
 
 		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:processAllRules\(\) has invalid return type GlpiPlugin\\Resources\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:processAllRules\(\) should return GlpiPlugin\\Resources\\the but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:processAllRules\(\) should return GlpiPlugin\\Resources\\the but returns array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(input the input data used to check criterias\)\: Unexpected token "the", expected variable at offset 71 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(output the initial ouput array used to be manipulate by actions\)\: Unexpected token "the", expected variable at offset 131 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(params parameters for all internal functions\)\: Unexpected token "parameters", expected variable at offset 209 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
 			message: '#^Return type \(GlpiPlugin\\Resources\\Title\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:getTitle\(\) should be compatible with return type \(string\) of method RuleCollection\:\:getTitle\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/RuleContracttypeReadonlyCollection.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Resources\\the\) of method GlpiPlugin\\Resources\\RuleContracttypeReadonlyCollection\:\:processAllRules\(\) should be compatible with return type \(array\) of method RuleCollection\:\:processAllRules\(\)$#'
 			identifier: method.childReturnType
 			count: 1
 			path: src/RuleContracttypeReadonlyCollection.php
@@ -4399,13 +4303,13 @@ parameters:
 			path: src/Service.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/Service.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Service.php
@@ -4435,12 +4339,6 @@ parameters:
 			path: src/Task.php
 
 		-
-			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Task.php
-
-		-
 			message: '#^Parameter \#1 \$history \(int\) of method GlpiPlugin\\Resources\\Task\:\:post_updateItem\(\) should be compatible with parameter \$history \(bool\) of method CommonDBTM\:\:post_updateItem\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -4462,12 +4360,6 @@ parameters:
 			message: '#^Parameter \#2 \$appli of static method GlpiPlugin\\Resources\\Task\:\:pdfForResource\(\) expects GlpiPlugin\\Resources\\Resource, CommonGLPI given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Task.php
-
-		-
-			message: '#^Parameter \#2 \$id of static method Dropdown\:\:getDropdownName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Task.php
 
 		-
@@ -4519,13 +4411,13 @@ parameters:
 			path: src/TaskPlanning.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\(display function\)\)\: Unexpected token "function", expected ''\)'' at offset 128 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(\(display function\)\)\: Unexpected token "function", expected ''\)'' at offset 123 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/TaskPlanning.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(bool, true if exists\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 166 on line 6$#'
+			message: '#^PHPDoc tag @return has invalid value \(bool, true if exists\)\: Unexpected token ",", expected TOKEN_HORIZONTAL_WS at offset 161 on line 6$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/TaskPlanning.php
@@ -4537,7 +4429,7 @@ parameters:
 			path: src/TaskPlanning.php
 
 		-
-			message: '#^Parameter \#5 \$is_recursive of method DbUtils\:\:getEntitiesRestrictRequest\(\) expects bool, int given\.$#'
+			message: '#^Parameter \#4 \$is_recursive of method DbUtils\:\:getEntitiesRestrictCriteria\(\) expects ''auto''\|bool, 1 given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/TaskPlanning.php
@@ -4579,12 +4471,6 @@ parameters:
 			path: src/Task_Item.php
 
 		-
-			message: '#^Parameter \#1 \$ID of method DbUtils\:\:getUserName\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Task_Item.php
-
-		-
 			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Resources\\Task_Item\:\:countForResourceTask\(\) expects GlpiPlugin\\Resources\\Task, CommonGLPI given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4603,13 +4489,13 @@ parameters:
 			path: src/Task_Item.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 19 on line 2$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 2
 			path: src/Team.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     ", expected type at offset 67 on line 4$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 64 on line 4$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/Team.php
@@ -4657,13 +4543,13 @@ parameters:
 			path: src/TransferEntity.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/TransferEntity.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/TransferEntity.php
@@ -4735,36 +4621,6 @@ parameters:
 			path: src/User.php
 
 		-
-			message: '#^Variable \$auth might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/User.php
-
-		-
-			message: '#^Variable \$email might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/User.php
-
-		-
-			message: '#^Variable \$lastSync might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/User.php
-
-		-
-			message: '#^Variable \$phone might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/User.php
-
-		-
-			message: '#^Variable \$userDN might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/User.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
@@ -4789,13 +4645,13 @@ parameters:
 			path: src/Wizard.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 136 on line 5$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 132 on line 5$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/WorkProfile.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\r\\n     \*", expected type at offset 203 on line 8$#'
+			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     \*", expected type at offset 196 on line 8$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: src/WorkProfile.php

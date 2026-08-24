@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -44,8 +44,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Linkmetademand extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_checklist';
+    public static $rightname = 'plugin_resources_checklist';
     // From CommonDBTM
     public $dohistory = true;
 
@@ -57,7 +56,7 @@ class Linkmetademand extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Link metademands', 'resources');
     }
@@ -71,7 +70,7 @@ class Linkmetademand extends CommonDBTM
      *
      * @return bool
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -82,7 +81,7 @@ class Linkmetademand extends CommonDBTM
      *
      * @return bool
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -96,11 +95,11 @@ class Linkmetademand extends CommonDBTM
      *
      * @return int|string
      */
-    static function showChecklistInDropdown($metademands_id, $selected_value, $idF, $display = true)
+    public static function showChecklistInDropdown($metademands_id, $selected_value, $idF, $display = true)
     {
         $fields = new self();
         $fields_data = $fields->find(
-            ['plugin_metademands_metademands_id' => $metademands_id, "plugin_metademands_fields_id" => $idF]
+            ['plugin_metademands_metademands_id' => $metademands_id, "plugin_metademands_fields_id" => $idF],
         );
         $data = [Dropdown::EMPTY_VALUE];
         $checlist = new Checklistconfig();
@@ -120,11 +119,11 @@ class Linkmetademand extends CommonDBTM
      *
      * @return int|string
      */
-    static function showChecklistOutDropdown($metademands_id, $selected_value, $idF, $display = true)
+    public static function showChecklistOutDropdown($metademands_id, $selected_value, $idF, $display = true)
     {
         $fields = new self();
         $fields_data = $fields->find(
-            ['plugin_metademands_metademands_id' => $metademands_id, "plugin_metademands_fields_id" => $idF]
+            ['plugin_metademands_metademands_id' => $metademands_id, "plugin_metademands_fields_id" => $idF],
         );
         $data = [Dropdown::EMPTY_VALUE];
         $checlist = new Checklistconfig();
@@ -145,7 +144,7 @@ class Linkmetademand extends CommonDBTM
      *
      * @return int|string
      */
-    static function showHabilitationDropdown($metademands_id, $selected_value, $idF, $display = true)
+    public static function showHabilitationDropdown($metademands_id, $selected_value, $idF, $display = true)
     {
         $fields = new self();
         $data = [Dropdown::EMPTY_VALUE];
@@ -186,4 +185,3 @@ class Linkmetademand extends CommonDBTM
         }
     }
 }
-

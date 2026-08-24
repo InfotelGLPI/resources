@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -44,15 +44,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Role extends CommonDropdown
 {
-
-    static $rightname = 'plugin_resources_role';
+    public static $rightname = 'plugin_resources_role';
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Role', 'Roles', $nb, 'resources');
     }
@@ -60,7 +59,7 @@ class Role extends CommonDropdown
     /**
      * @return
      */
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -68,7 +67,7 @@ class Role extends CommonDropdown
     /**
      * @return
      */
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -78,14 +77,14 @@ class Role extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'roles_services',
                 'label' => Role_Service::getTypeName(2),
                 'type' => 'multiple_roles_services',
-                'list' => true
+                'list' => true,
             ],
         ];
     }
@@ -93,7 +92,7 @@ class Role extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -109,7 +108,7 @@ class Role extends CommonDropdown
      *
      * @param $options
      */
-    static function showRank($options)
+    public static function showRank($options)
     {
         global $DB;
 
@@ -134,7 +133,7 @@ class Role extends CommonDropdown
 
                 Dropdown::show(Role::class, [
                     'entity' => $entity,
-                    'condition' => $condition
+                    'condition' => $condition,
                 ]);
             }
         } else {
@@ -150,7 +149,7 @@ class Role extends CommonDropdown
      *
      * @return nothing|void
      */
-    function post_getEmpty()
+    public function post_getEmpty()
     {
         $this->fields['is_active'] = 1;
     }
@@ -159,10 +158,10 @@ class Role extends CommonDropdown
      * @since 0.85
      * @see CommonDropdown::displaySpecificTypeField()
      **/
-    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    public function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            case 'multiple_roles_services' :
+            case 'multiple_roles_services':
                 $service = new Service();
                 $values = $service->find(['entities_id' => $_SESSION['glpiactiveentities']]);
                 $datas = [];
@@ -179,13 +178,13 @@ class Role extends CommonDropdown
                 Dropdown::showFromArray(
                     'roles_services',
                     $datas,
-                    ['values' => $values_selected, 'multiple' => true, 'display' => true]
+                    ['values' => $values_selected, 'multiple' => true, 'display' => true],
                 );
                 break;
         }
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         $test = true;
         $roles_services = $this->input["roles_services"];
@@ -193,13 +192,13 @@ class Role extends CommonDropdown
             $role_service = new Role_Service();
             foreach ($roles_services as $key => $id_service) {
                 $role_service->add(
-                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service]
+                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service],
                 );
             }
         }
     }
 
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         $roles_services = $this->input["roles_services"];
         $role_service = new Role_Service();
@@ -211,10 +210,10 @@ class Role extends CommonDropdown
 
         foreach ($roles_services as $id_service) {
             if (!$role_service->getFromDBByCrit(
-                ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service]
+                ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service],
             )) {
                 $role_service->add(
-                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service]
+                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service],
                 );
             }
         }
@@ -222,17 +221,17 @@ class Role extends CommonDropdown
         foreach ($current_roles_services as $id_service) {
             if (!in_array($id_service, $roles_services)) {
                 if ($role_service->getFromDBByCrit(
-                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service]
+                    ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service],
                 )) {
                     $role_service->deleteByCriteria(
-                        ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service]
+                        ['plugin_resources_roles_id' => $this->getID(), 'plugin_resources_services_id' => $id_service],
                     );
                 }
             }
         }
     }
 
-    static function dropdownFromService($services_id, $opt)
+    public static function dropdownFromService($services_id, $opt)
     {
         $role_service = new Role_Service();
         $role_services = $role_service->find(['plugin_resources_services_id' => $services_id]);

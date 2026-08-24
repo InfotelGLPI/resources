@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -44,15 +44,15 @@ if (!defined('GLPI_ROOT')) {
  */
 class ResourceSpeciality extends CommonDropdown
 {
-    static $rightname = 'plugin_resources';
-    var $can_be_translated = true;
+    public static $rightname = 'plugin_resources';
+    public $can_be_translated = true;
 
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Speciality', 'Specialities', $nb, 'resources');
     }
@@ -64,7 +64,7 @@ class ResourceSpeciality extends CommonDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
             && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
@@ -82,7 +82,7 @@ class ResourceSpeciality extends CommonDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         if (Session::haveRight(self::$rightname, READ)
             && Session::haveRight('plugin_resources_dropdown_public', READ)) {
@@ -96,14 +96,14 @@ class ResourceSpeciality extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'plugin_resources_ranks_id',
                 'label' => __('Rank', 'resources'),
                 'type' => 'dropdownValue',
-                'list' => true
+                'list' => true,
             ],
         ];
     }
@@ -114,7 +114,7 @@ class ResourceSpeciality extends CommonDropdown
      * @static
      * @param $options
      */
-    static function showSpeciality($options)
+    public static function showSpeciality($options)
     {
         $rankId = $options['plugin_resources_ranks_id'];
         $entity = $options['entity'];
@@ -125,7 +125,7 @@ class ResourceSpeciality extends CommonDropdown
 
             Dropdown::show(ResourceSpeciality::class, [
                 'entity' => $entity,
-                'condition' => $condition
+                'condition' => $condition,
             ]);
         } else {
             echo "<select class='form-select' name='plugin_resources_resourcespecialities_id'
@@ -142,7 +142,7 @@ class ResourceSpeciality extends CommonDropdown
      * @param $entity
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -150,7 +150,7 @@ class ResourceSpeciality extends CommonDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {
@@ -171,7 +171,7 @@ class ResourceSpeciality extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -180,7 +180,7 @@ class ResourceSpeciality extends CommonDropdown
             'table' => 'glpi_plugin_resources_ranks',
             'field' => 'name',
             'name' => __('Rank', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
@@ -214,4 +214,3 @@ class ResourceSpeciality extends CommonDropdown
         }
     }
 }
-

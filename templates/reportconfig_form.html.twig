@@ -1,10 +1,30 @@
 {#
- # Field rows for the report-notification config form (resources plugin).
- # Rendered between showFormHeader() and showFormButtons(), which provide the <form>
- # wrapper (with the GLPI CSRF token) and the surrounding <table>. GLPI widgets
- # (textareas, yes/no dropdowns, hidden input) are injected with |raw; plain text
- # is auto-escaped by Twig.
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 {{ resource_hidden|raw }}
 <tr class="tab_bg_1">
     <td>{{ label_comments }}</td>

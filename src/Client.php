@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -43,13 +43,12 @@ if (!defined('GLPI_ROOT')) {
  */
 class Client extends CommonDropdown
 {
-
     /**
      * @param $nb
      **@since 0.85
      *
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Affected client', 'Affected clients', $nb, 'resources');
     }
@@ -63,7 +62,7 @@ class Client extends CommonDropdown
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight('plugin_resources', READ);
     }
@@ -74,7 +73,7 @@ class Client extends CommonDropdown
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
     }
@@ -98,7 +97,7 @@ class Client extends CommonDropdown
      *
      * @return array
      **/
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         $config = new Config();
         if ($config->useSecurityCompliance()) {
@@ -107,25 +106,25 @@ class Client extends CommonDropdown
                     'name' => 'security_and',
                     'label' => __('AND - Certificate of non-dissimulation', 'resources'),
                     'type' => 'bool',
-                    'list' => true
+                    'list' => true,
                 ],
                 [
                     'name' => 'security_fifour',
                     'label' => __('FIFOUR - Supplier\'s sheet', 'resources'),
                     'type' => 'bool',
-                    'list' => true
+                    'list' => true,
                 ],
                 [
                     'name' => 'security_gisf',
                     'label' => __('GISF - Supplier security incident management', 'resources'),
                     'type' => 'bool',
-                    'list' => true
+                    'list' => true,
                 ],
                 [
                     'name' => 'security_cfi',
                     'label' => __('CFI - Supplier card', 'resources'),
                     'type' => 'bool',
-                    'list' => true
+                    'list' => true,
                 ],
             ];
         } else {
@@ -139,7 +138,7 @@ class Client extends CommonDropdown
      *
      * @return
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -147,7 +146,7 @@ class Client extends CommonDropdown
             $table = self::getTable();
             $iterator = $DB->request([
                 'FROM' => $table,
-                'WHERE' => ['id' => $ID]
+                'WHERE' => ['id' => $ID],
             ]);
 
             foreach ($iterator as $data) {
@@ -168,7 +167,7 @@ class Client extends CommonDropdown
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -178,7 +177,7 @@ class Client extends CommonDropdown
             'field' => 'security_and',
             'name' => __('AND - Certificate of non-dissimulation', 'resources'),
             'injectable' => true,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
         $tab[] = [
@@ -187,7 +186,7 @@ class Client extends CommonDropdown
             'field' => 'security_fifour',
             'name' => __('FIFOUR - Supplier\'s sheet', 'resources'),
             'injectable' => true,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
         $tab[] = [
@@ -196,7 +195,7 @@ class Client extends CommonDropdown
             'field' => 'security_gisf',
             'name' => __('GISF - Supplier security incident management', 'resources'),
             'injectable' => true,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
         $tab[] = [
@@ -205,7 +204,7 @@ class Client extends CommonDropdown
             'field' => 'security_cfi',
             'name' => __('CFI - Supplier card', 'resources'),
             'injectable' => true,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
         return $tab;
@@ -216,7 +215,7 @@ class Client extends CommonDropdown
      *
      * @return bool
      */
-    static function isSecurityCompliance($id)
+    public static function isSecurityCompliance($id)
     {
         $client = new self();
 
@@ -229,7 +228,7 @@ class Client extends CommonDropdown
      *
      * @return bool
      */
-    static function isSecurityAND($id)
+    public static function isSecurityAND($id)
     {
         $client = new self();
 
@@ -244,7 +243,7 @@ class Client extends CommonDropdown
      *
      * @return bool
      */
-    static function isSecurityFIFOUR($id)
+    public static function isSecurityFIFOUR($id)
     {
         $client = new self();
 
@@ -259,7 +258,7 @@ class Client extends CommonDropdown
      *
      * @return bool
      */
-    static function isSecurityGISF($id)
+    public static function isSecurityGISF($id)
     {
         $client = new self();
 
@@ -274,7 +273,7 @@ class Client extends CommonDropdown
      *
      * @return bool
      */
-    static function isSecurityCFI($id)
+    public static function isSecurityCFI($id)
     {
         $client = new self();
 
@@ -315,4 +314,3 @@ class Client extends CommonDropdown
         }
     }
 }
-

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -56,50 +56,49 @@ if (!defined('GLPI_ROOT')) {
  */
 class ImportResource extends CommonDBTM
 {
-
-    const UPDATE_RESOURCES = 0;
+    public const UPDATE_RESOURCES = 0;
 
     // Pages
-    const VERIFY_FILE = 1;
-    const VERIFY_GLPI = 2;
-    const IDENTICAL = 0;
-    const DIFFERENT = 1;
+    public const VERIFY_FILE = 1;
+    public const VERIFY_GLPI = 2;
+    public const IDENTICAL = 0;
+    public const DIFFERENT = 1;
 
     // Status
-    const NOT_IN_GLPI = 2;
-    const BEFORE = 0;
-    const AFTER = 1;
+    public const NOT_IN_GLPI = 2;
+    public const BEFORE = 0;
+    public const AFTER = 1;
 
     // Orders
-    const DEFAULT_LIMIT = 20;
-    const FILE_READ_MAX_LINE = 50;
-    const IMPORT_RECOVERY_LIMIT = 50;
+    public const DEFAULT_LIMIT = 20;
+    public const FILE_READ_MAX_LINE = 50;
+    public const IMPORT_RECOVERY_LIMIT = 50;
 
     // Limitation
-    const SELECTED_FILE_DROPDOWN_NAME = 'selected-file';
+    public const SELECTED_FILE_DROPDOWN_NAME = 'selected-file';
     // We read line by 50 iteration to don't use too much ram
-    const SELECTED_IMPORT_DROPDOWN_NAME = 'selected-import';
+    public const SELECTED_IMPORT_DROPDOWN_NAME = 'selected-import';
     // Number of import that can be recovered from the database at ones
-    const SESSION_IMPORT_ID = 'import-display-last-id';
-    const SESSION_IMPORT_START = 'import-display-last-start';
-    const FILE_IMPORTER = false;
+    public const SESSION_IMPORT_ID = 'import-display-last-id';
+    public const SESSION_IMPORT_START = 'import-display-last-start';
+    public const FILE_IMPORTER = false;
 
     // Display types
-    const DISPLAY_HTML = 0;
-    const DISPLAY_STATISTICS = 1;
-    const DISPLAY_CSV = 2;
+    public const DISPLAY_HTML = 0;
+    public const DISPLAY_STATISTICS = 1;
+    public const DISPLAY_CSV = 2;
 
-    static $rightname = 'plugin_resources_importresources';
-    static $keyInOtherTables = 'plugin_resources_importresources_id';
-    static $currentStart;
-    static $currentVerifiedFile;
+    public static $rightname = 'plugin_resources_importresources';
+    public static $keyInOtherTables = 'plugin_resources_importresources_id';
+    public static $currentStart;
+    public static $currentVerifiedFile;
 
     /**
      * @param $name
      *
      * @return array
      */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'ResourceImport':
@@ -117,7 +116,7 @@ class ImportResource extends CommonDBTM
      *
      * @global $DB
      */
-    static function cronResourceImport($task = null)
+    public static function cronResourceImport($task = null)
     {
         $CronTask = new CronTask();
         if ($CronTask->getFromDBbyName(ImportResource::class, 'ResourceImport')) {
@@ -135,7 +134,7 @@ class ImportResource extends CommonDBTM
     /**
      * @return string
      */
-    static function getLocationOfVerificationFiles()
+    public static function getLocationOfVerificationFiles()
     {
         return GLPI_PLUGIN_DOC_DIR . '/resources/import/verify';
     }
@@ -143,7 +142,7 @@ class ImportResource extends CommonDBTM
     /**
      * @return string
      */
-    static function getResourceImportFormUrl()
+    public static function getResourceImportFormUrl()
     {
         return ResourceImport::getFormURL(true);
     }
@@ -151,7 +150,7 @@ class ImportResource extends CommonDBTM
     /**
      * @return string
      */
-    static function getIndexUrl()
+    public static function getIndexUrl()
     {
         global $CFG_GLPI;
         return PLUGIN_RESOURCES_WEBDIR . '/front/importresource.php';
@@ -164,88 +163,88 @@ class ImportResource extends CommonDBTM
      * Change self reference to Html
      *
      **/
-//   static function showDateFieldWithoutDiv($name, $options = []) {
-//      $p['value'] = '';
-//      $p['maybeempty'] = true;
-//      $p['canedit'] = true;
-//      $p['min'] = '';
-//      $p['max'] = '';
-//      $p['showyear'] = true;
-//      $p['display'] = true;
-//      $p['rand'] = mt_rand();
-//      $p['yearrange'] = '';
-//
-//      foreach ($options as $key => $val) {
-//         if (isset($p[$key])) {
-//            $p[$key] = $val;
-//         }
-//      }
-//      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
-//      $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
-//      if ($p['maybeempty'] && $p['canedit']) {
-//         $output .= "<span class='ti ti-circle-x pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
-//      }
-//
-//      $js = '$(function(){';
-//      if ($p['maybeempty'] && $p['canedit']) {
-//         $js .= "$('#resetdate" . $p['rand'] . "').click(function(){
-//                  $('#showdate" . $p['rand'] . "').val('');
-//                  $('#hiddendate" . $p['rand'] . "').val('');
-//                  });";
-//      }
-//      $js .= "$( '#showdate" . $p['rand'] . "' ).datepicker({
-//                  altField: '#hiddendate" . $p['rand'] . "',
-//                  altFormat: 'yy-mm-dd',
-//                  firstDay: 1,
-//                  showOtherMonths: true,
-//                  selectOtherMonths: true,
-//                  showButtonPanel: true,
-//                  changeMonth: true,
-//                  changeYear: true,
-//                  showOn: 'both',
-//                  showWeek: true,
-//                  buttonText: '<i class=\'far fa-calendar-alt\'></i>'";
-//
-//      if (!$p['canedit']) {
-//         $js .= ',disabled: true';
-//      }
-//
-//      if (!empty($p['min'])) {
-//         $js .= ",minDate: '" . self::convDate($p['min']) . "'";
-//      }
-//
-//      if (!empty($p['max'])) {
-//         $js .= ",maxDate: '" . self::convDate($p['max']) . "'";
-//      }
-//
-//      if (!empty($p['yearrange'])) {
-//         $js .= ",yearRange: '" . $p['yearrange'] . "'";
-//      }
-//
-//      switch ($_SESSION['glpidate_format']) {
-//         case 1 :
-//            $p['showyear'] ? $format = 'dd-mm-yy' : $format = 'dd-mm';
-//            break;
-//
-//         case 2 :
-//            $p['showyear'] ? $format = 'mm-dd-yy' : $format = 'mm-dd';
-//            break;
-//
-//         default :
-//            $p['showyear'] ? $format = 'yy-mm-dd' : $format = 'mm-dd';
-//      }
-//      $js .= ",dateFormat: '" . $format . "'";
-//
-//      $js .= "}).next('.ui-datepicker-trigger').addClass('pointer');";
-//      $js .= "});";
-//      $output .= Html::scriptBlock($js);
-//
-//      if ($p['display']) {
-//         echo $output;
-//         return $p['rand'];
-//      }
-//      return $output;
-//   }
+    //   static function showDateFieldWithoutDiv($name, $options = []) {
+    //      $p['value'] = '';
+    //      $p['maybeempty'] = true;
+    //      $p['canedit'] = true;
+    //      $p['min'] = '';
+    //      $p['max'] = '';
+    //      $p['showyear'] = true;
+    //      $p['display'] = true;
+    //      $p['rand'] = mt_rand();
+    //      $p['yearrange'] = '';
+    //
+    //      foreach ($options as $key => $val) {
+    //         if (isset($p[$key])) {
+    //            $p[$key] = $val;
+    //         }
+    //      }
+    //      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
+    //      $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
+    //      if ($p['maybeempty'] && $p['canedit']) {
+    //         $output .= "<span class='ti ti-circle-x pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
+    //      }
+    //
+    //      $js = '$(function(){';
+    //      if ($p['maybeempty'] && $p['canedit']) {
+    //         $js .= "$('#resetdate" . $p['rand'] . "').click(function(){
+    //                  $('#showdate" . $p['rand'] . "').val('');
+    //                  $('#hiddendate" . $p['rand'] . "').val('');
+    //                  });";
+    //      }
+    //      $js .= "$( '#showdate" . $p['rand'] . "' ).datepicker({
+    //                  altField: '#hiddendate" . $p['rand'] . "',
+    //                  altFormat: 'yy-mm-dd',
+    //                  firstDay: 1,
+    //                  showOtherMonths: true,
+    //                  selectOtherMonths: true,
+    //                  showButtonPanel: true,
+    //                  changeMonth: true,
+    //                  changeYear: true,
+    //                  showOn: 'both',
+    //                  showWeek: true,
+    //                  buttonText: '<i class=\'far fa-calendar-alt\'></i>'";
+    //
+    //      if (!$p['canedit']) {
+    //         $js .= ',disabled: true';
+    //      }
+    //
+    //      if (!empty($p['min'])) {
+    //         $js .= ",minDate: '" . self::convDate($p['min']) . "'";
+    //      }
+    //
+    //      if (!empty($p['max'])) {
+    //         $js .= ",maxDate: '" . self::convDate($p['max']) . "'";
+    //      }
+    //
+    //      if (!empty($p['yearrange'])) {
+    //         $js .= ",yearRange: '" . $p['yearrange'] . "'";
+    //      }
+    //
+    //      switch ($_SESSION['glpidate_format']) {
+    //         case 1 :
+    //            $p['showyear'] ? $format = 'dd-mm-yy' : $format = 'dd-mm';
+    //            break;
+    //
+    //         case 2 :
+    //            $p['showyear'] ? $format = 'mm-dd-yy' : $format = 'mm-dd';
+    //            break;
+    //
+    //         default :
+    //            $p['showyear'] ? $format = 'yy-mm-dd' : $format = 'mm-dd';
+    //      }
+    //      $js .= ",dateFormat: '" . $format . "'";
+    //
+    //      $js .= "}).next('.ui-datepicker-trigger').addClass('pointer');";
+    //      $js .= "});";
+    //      $output .= Html::scriptBlock($js);
+    //
+    //      if ($p['display']) {
+    //         echo $output;
+    //         return $p['rand'];
+    //      }
+    //      return $output;
+    //   }
 
     public function purgeDatabase()
     {
@@ -259,14 +258,14 @@ class ImportResource extends CommonDBTM
      *
      * @return bool
      */
-    function importResourcesFromCSVFile($task)
+    public function importResourcesFromCSVFile($task)
     {
         // glpi files folder
         $path = GLPI_PLUGIN_DOC_DIR . '/resources/import/';
         // List of files in path
         $files = scandir($path);
         // Exclude dot and dotdot
-        $files = array_diff($files, array('.', '..'));
+        $files = array_diff($files, ['.', '..']);
 
         foreach ($files as $file) {
             $importSuccess = false;
@@ -321,7 +320,7 @@ class ImportResource extends CommonDBTM
      * @param $datas
      * @param $importID
      */
-    function manageImport($datas, $importID)
+    public function manageImport($datas, $importID)
     {
         $importResourceID = $this->isExistingImportResourceByDataFromFile($datas);
 
@@ -332,7 +331,7 @@ class ImportResource extends CommonDBTM
             // Create new Import Resource
             $importResourceInput = [
                 'date_creation' => date('Y-m-d H:i:s'),
-                Import::$keyInOtherTables => $importID
+                Import::$keyInOtherTables => $importID,
             ];
 
 
@@ -353,7 +352,7 @@ class ImportResource extends CommonDBTM
                     'name' => $data['name'],
                     'value' => $data['value'],
                     'type' => $data['plugin_resources_importcolumns_id'],
-                    'resource_column' => $ImportColumn->getField('resource_column')
+                    'resource_column' => $ImportColumn->getField('resource_column'),
                 ];
 
                 $allDatas[] = $element;
@@ -397,7 +396,7 @@ class ImportResource extends CommonDBTM
                         addslashes($item['name']),
                         addslashes($item['value']),
                         $newImportId,
-                        $item['plugin_resources_importcolumns_id']
+                        $item['plugin_resources_importcolumns_id'],
                     );
 
                     $importResourceData->add($importResourceDataInput);
@@ -412,7 +411,7 @@ class ImportResource extends CommonDBTM
      * @param $columnDatas
      * @return mixed|null
      */
-    function isExistingImportResourceByDataFromFile($columnDatas)
+    public function isExistingImportResourceByDataFromFile($columnDatas)
     {
         $ImportResourceData = new ImportResourceData();
 
@@ -422,7 +421,7 @@ class ImportResource extends CommonDBTM
         foreach ($this->existingImports as $existingImportResource) {
             $firstLevelIdentifiers = $ImportResourceData->getFromParentAndIdentifierLevel(
                 $existingImportResource['id'],
-                1
+                1,
             );
 
             $firstLevelIdentifierFounded = true;
@@ -446,7 +445,7 @@ class ImportResource extends CommonDBTM
 
             $secondLevelIdentifiers = $ImportResourceData->getFromParentAndIdentifierLevel(
                 $existingImportResource['id'],
-                2
+                2,
             );
             $secondLevelIdentifierFounded = true;
 
@@ -475,12 +474,12 @@ class ImportResource extends CommonDBTM
      * @param $datas
      * @param $importResourceID
      */
-    function updateDatas($datas, $importResourceID)
+    public function updateDatas($datas, $importResourceID)
     {
         $ImportResourceData = new ImportResourceData();
 
         $crit = [
-            ImportResourceData::$items_id => $importResourceID
+            ImportResourceData::$items_id => $importResourceID,
         ];
 
         $importResourceDatas = $ImportResourceData->find($crit);
@@ -497,7 +496,7 @@ class ImportResource extends CommonDBTM
 
                 $input = [
                     ImportResourceData::getIndexName() => $importResourceData['id'],
-                    'value' => addslashes($data['value'])
+                    'value' => addslashes($data['value']),
                 ];
 
                 $ImportResourceData->update($input);
@@ -509,7 +508,7 @@ class ImportResource extends CommonDBTM
     /**
      * @param array $params
      */
-    function importFileToVerify($params = [])
+    public function importFileToVerify($params = [])
     {
         // The uploaded filename is client-supplied: strip any directory component so a
         // crafted "../" value cannot escape the temporary upload directory.
@@ -554,7 +553,7 @@ class ImportResource extends CommonDBTM
      * @param $header
      * @return bool
      */
-    function checkHeader(&$header)
+    public function checkHeader(&$header)
     {
         $pluginResourcesImport = new Import();
         $ImportColumn = new ImportColumn();
@@ -563,7 +562,7 @@ class ImportResource extends CommonDBTM
 
         foreach ($imports as $import) {
             $columns = $ImportColumn->find([
-                Import::$keyInOtherTables => $import['id']
+                Import::$keyInOtherTables => $import['id'],
             ]);
 
             // Test number of columns
@@ -604,7 +603,7 @@ class ImportResource extends CommonDBTM
      * @param $filePath
      * @return int
      */
-    function countRowsInFile($filePath)
+    public function countRowsInFile($filePath)
     {
         if (file_exists($filePath)) {
             return count(file($filePath));
@@ -620,7 +619,7 @@ class ImportResource extends CommonDBTM
      * @param int $history
      * @return bool|void
      */
-    function delete(array $input, $force = 0, $history = 1)
+    public function delete(array $input, $force = 0, $history = 1)
     {
         if (!isset($input[self::getIndexName()])) {
             throw new BadRequestHttpException('Import resources not found');
@@ -629,7 +628,7 @@ class ImportResource extends CommonDBTM
         $ImportResourceData = new ImportResourceData();
 
         $dataCrit = [
-            self::$keyInOtherTables => $input[self::getIndexName()]
+            self::$keyInOtherTables => $input[self::getIndexName()],
         ];
 
         $datas = $ImportResourceData->find($dataCrit);
@@ -645,7 +644,7 @@ class ImportResource extends CommonDBTM
     /**
      * @param array $params
      */
-    function displayPageByType($params = [])
+    public function displayPageByType($params = [])
     {
         switch ($params['type']) {
             case self::VERIFY_FILE:
@@ -666,7 +665,7 @@ class ImportResource extends CommonDBTM
      * @param $type
      * @param $import
      */
-    function showHead($params)
+    public function showHead($params)
     {
         global $CFG_GLPI;
         $js = '';
@@ -683,7 +682,7 @@ class ImportResource extends CommonDBTM
                 $title = sprintf(
                     __('%1$s : %2$s'),
                     __('Be careful, new resources will be created in the entity', 'resources'),
-                    Dropdown::getDropdownName('glpi_entities', $_SESSION['glpiactive_entity'])
+                    Dropdown::getDropdownName('glpi_entities', $_SESSION['glpiactive_entity']),
                 );
 
                 echo "<br><span class='red'> " . $title . '</span></th>';
@@ -810,7 +809,7 @@ class ImportResource extends CommonDBTM
             echo Html::hidden('filename', ['value' => $params[self::SELECTED_FILE_DROPDOWN_NAME]]);
             echo Html::submit(
                 __('Validate and pre-import file', 'resources'),
-                ['name' => 'verify-file', 'class' => 'btn btn-primary']
+                ['name' => 'verify-file', 'class' => 'btn btn-primary'],
             );
             echo "</div>";
             Html::closeForm();
@@ -862,7 +861,7 @@ class ImportResource extends CommonDBTM
      * @param null $linkText
      * @param null $url
      */
-    function showErrorHeader($title, $linkText = null, $url = null)
+    public function showErrorHeader($title, $linkText = null, $url = null)
     {
         echo '<thead>';
         echo '<tr>';
@@ -881,7 +880,7 @@ class ImportResource extends CommonDBTM
         echo '</tr>';
     }
 
-    function showListHeader($params)
+    public function showListHeader($params)
     {
         switch ($params['type']) {
             case self::UPDATE_RESOURCES:
@@ -933,7 +932,7 @@ class ImportResource extends CommonDBTM
         }
     }
 
-    function displayCheckAll()
+    public function displayCheckAll()
     {
         $script = "function checkAll(state) {";
         $script .= "var cases = document.getElementsByTagName('input');";
@@ -949,8 +948,8 @@ class ImportResource extends CommonDBTM
         echo "<th class=''>";
         echo "<div class='form-group-checkbox'>";
         echo "<input title='" . __(
-                "Check all"
-            ) . "' type='checkbox' class='new_checkbox' name='checkall_imports' id='checkall_imports'";
+            "Check all",
+        ) . "' type='checkbox' class='new_checkbox' name='checkall_imports' id='checkall_imports'";
         echo "onclick='checkAll(this.checked);' >";
 
         echo "<label class='label-checkbox' for='checkall_imports' title='" . __("Check all") . "'>";
@@ -961,7 +960,7 @@ class ImportResource extends CommonDBTM
         echo "</th>";
     }
 
-    function validateDate($date, $delimiter = "/")
+    public function validateDate($date, $delimiter = "/")
     {
         $test_arr = explode($delimiter, $date);
         if (count($test_arr) == 3) {
@@ -980,7 +979,7 @@ class ImportResource extends CommonDBTM
      * @param $type
      * @param $resourceID
      */
-    function showOne($importResourceId, $type, $resourceID = null, $borderColor = false)
+    public function showOne($importResourceId, $type, $resourceID = null, $borderColor = false)
     {
         global $CFG_GLPI;
 
@@ -1053,11 +1052,11 @@ class ImportResource extends CommonDBTM
             echo "<span>";
 
             $oldValues = $resourceID && $Resource->hasDifferenciesWithValueByDataNameID(
-                    $resourceID,
-                    $data['resource_column'],
-                    $data['name'],
-                    $data['value']
-                );
+                $resourceID,
+                $data['resource_column'],
+                $data['name'],
+                $data['value'],
+            );
 
             switch ($data['resource_column']) {
                 case 0:
@@ -1094,7 +1093,7 @@ class ImportResource extends CommonDBTM
                             'name' => $hValue,
                             'value' => $data['value'],
                             'entity' => $_SESSION['glpiactive_entity'],
-                            'entity_sons' => true
+                            'entity_sons' => true,
                         ]);
                     }
 
@@ -1120,7 +1119,7 @@ class ImportResource extends CommonDBTM
                         'value' => $data['value'],
                         'entity' => $_SESSION['glpiactive_entity'],
                         'entity_sons' => true,
-                        'right' => 'all'
+                        'right' => 'all',
                     ]);
                     if ($oldValues) {
                         echo "</li>";
@@ -1144,7 +1143,7 @@ class ImportResource extends CommonDBTM
                         'name' => $hValue,
                         'value' => ($data['value'] == -1) ? 0 : $data['value'],
                         'entity' => $_SESSION['glpiactive_entity'],
-                        'entity_sons' => true
+                        'entity_sons' => true,
                     ]);
 
                     if ($oldValues) {
@@ -1168,7 +1167,7 @@ class ImportResource extends CommonDBTM
                     if ($config->getField('resource_manager') != "") {
                         $tableProfileUser = Profile_User::getTable();
                         $tableUser = User::getTable();
-                        $profile_User = new  Profile_User();
+                        $profile_User = new Profile_User();
                         $prof = [];
                         foreach (json_decode($config->getField('resource_manager')) as $profs) {
                             $prof[$profs] = $profs;
@@ -1178,7 +1177,7 @@ class ImportResource extends CommonDBTM
                             $tableProfileUser,
                             'entities_id',
                             $_SESSION['glpiactive_entity'],
-                            true
+                            true,
                         );
                         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
                         $profiles_User = $profile_User->find($restrict);
@@ -1193,7 +1192,7 @@ class ImportResource extends CommonDBTM
                         Dropdown::showFromArray(
                             $hValue,
                             $used,
-                            ['value' => $data['value'], 'display_emptychoice' => true]
+                            ['value' => $data['value'], 'display_emptychoice' => true],
                         );
                     } else {
                         User::dropdown([
@@ -1201,7 +1200,7 @@ class ImportResource extends CommonDBTM
                             'value' => $data['value'],
                             'entity' => $_SESSION['glpiactive_entity'],
                             'entity_sons' => true,
-                            'right' => 'all'
+                            'right' => 'all',
                         ]);
                     }
 
@@ -1227,7 +1226,7 @@ class ImportResource extends CommonDBTM
                         'name' => $hValue,
                         'value' => $data['value'],
                         'entity' => $_SESSION['glpiactive_entity'],
-                        'entity_sons' => true
+                        'entity_sons' => true,
                     ]);
                     if ($oldValues) {
                         echo "</li>";
@@ -1245,7 +1244,7 @@ class ImportResource extends CommonDBTM
                         echo "<li style='$newCSS'>";
                     }
                     Html::showDateField($hValue, ['value' => $data['value']]);
-//               $this->showDateFieldWithoutDiv($hValue, ['value' => $data['value']]);
+                    //               $this->showDateFieldWithoutDiv($hValue, ['value' => $data['value']]);
                     if ($oldValues) {
                         echo "</li>";
                         echo "</ul>";
@@ -1268,7 +1267,7 @@ class ImportResource extends CommonDBTM
                         echo "<div class='col-md-3 mb-2'>";
                         $tableProfileUser = Profile_User::getTable();
                         $tableUser = User::getTable();
-                        $profile_User = new  Profile_User();
+                        $profile_User = new Profile_User();
                         $prof = [];
                         foreach (json_decode($config->getField('sales_manager')) as $profs) {
                             $prof[$profs] = $profs;
@@ -1279,7 +1278,7 @@ class ImportResource extends CommonDBTM
                             $tableProfileUser,
                             'entities_id',
                             $_SESSION['glpiactive_entity'],
-                            true
+                            true,
                         );
                         $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
                         $profiles_User = $profile_User->find($restrict);
@@ -1293,15 +1292,16 @@ class ImportResource extends CommonDBTM
                         Dropdown::showFromArray(
                             $hValue,
                             $used,
-                            ['value' => $data['value'], 'display_emptychoice' => true]
-                        );;
+                            ['value' => $data['value'], 'display_emptychoice' => true],
+                        );
+                        ;
                     } else {
                         User::dropdown([
                             'name' => $hValue,
                             'value' => $data['value'],
                             'entity' => $_SESSION['glpiactive_entity'],
                             'entity_sons' => true,
-                            'right' => 'all'
+                            'right' => 'all',
                         ]);
                     }
 
@@ -1356,7 +1356,7 @@ class ImportResource extends CommonDBTM
                         'name' => $hValue,
                         'value' => $data['value'],
                         'entity' => $_SESSION['glpiactive_entity'],
-                        'entity_sons' => true
+                        'entity_sons' => true,
                     ]);
                     if ($oldValues) {
                         echo "</li>";
@@ -1459,7 +1459,7 @@ class ImportResource extends CommonDBTM
                         $absoluteFilePath,
                         $importId,
                         $params[self::SELECTED_FILE_DROPDOWN_NAME],
-                        self::DISPLAY_HTML
+                        self::DISPLAY_HTML,
                     );
 
                     switch ($params['type']) {
@@ -1507,7 +1507,7 @@ class ImportResource extends CommonDBTM
         $dropdownParams = [
             'name' => self::SELECTED_FILE_DROPDOWN_NAME,
             'folder' => $locationOfFiles,
-            'default' => $defaultFileSelected
+            'default' => $defaultFileSelected,
         ];
 
         ob_start();
@@ -1542,7 +1542,7 @@ class ImportResource extends CommonDBTM
             // List of files in path
             $files = scandir($absoluteFolderPath);
             // Exclude dot and dotdot
-            $files = array_diff($files, array('.', '..'));
+            $files = array_diff($files, ['.', '..']);
 
             foreach ($files as $key => $file) {
                 // Ignore directories
@@ -1564,14 +1564,14 @@ class ImportResource extends CommonDBTM
                 }
 
                 Dropdown::showFromArray($name, $names, [
-                    'value' => $defaultValue
+                    'value' => $defaultValue,
                 ]);
             }
         } else {
             echo "<p style='color:red'>" . __(
-                    "The folder you expected to display content doesn't exist.",
-                    'resources'
-                ) . "</p>";
+                "The folder you expected to display content doesn't exist.",
+                'resources',
+            ) . "</p>";
         }
     }
 
@@ -1625,7 +1625,7 @@ class ImportResource extends CommonDBTM
         }
 
         Dropdown::showFromArray(self::SELECTED_IMPORT_DROPDOWN_NAME, $names, [
-            'value' => $defaultValue
+            'value' => $defaultValue,
         ]);
     }
 
@@ -1638,7 +1638,7 @@ class ImportResource extends CommonDBTM
             'file-path' => $filePath,
             'import-id' => $importId,
             self::SELECTED_FILE_DROPDOWN_NAME => $fileSelected,
-            'display' => $display
+            'display' => $display,
         ];
     }
 
@@ -1685,7 +1685,7 @@ class ImportResource extends CommonDBTM
 
                 $listHeaderParams = [
                     'type' => $params['type'],
-                    'titles' => $header
+                    'titles' => $header,
                 ];
 
                 self::showListHeader($listHeaderParams);
@@ -1695,12 +1695,12 @@ class ImportResource extends CommonDBTM
                     'identical' => 0,
                     'different' => 0,
                     'not_found' => 0,
-                    'total' => 0
+                    'total' => 0,
                 ];
                 break;
         }
 
-//      $lines = array_slice($lines, 0, 50);
+        //      $lines = array_slice($lines, 0, 50);
 
         foreach ($lines as $line) {
             $datas = self::parseFileLine($header, $line, $importId);
@@ -1718,7 +1718,7 @@ class ImportResource extends CommonDBTM
                     'name' => $data['name'],
                     'value' => $data['value'],
                     'type' => $data['plugin_resources_importcolumns_id'],
-                    'resource_column' => $ImportColumn->getField('resource_column')
+                    'resource_column' => $ImportColumn->getField('resource_column'),
                 ];
 
                 $allDatas[] = $element;
@@ -1768,7 +1768,7 @@ class ImportResource extends CommonDBTM
                             echo "";
                         } else {
                             $dataType = $data['resource_column'] > count(
-                                Resource::getDataTypes()
+                                Resource::getDataTypes(),
                             ) ? null : Resource::getDataType($data['resource_column']);
 
                             switch ($dataType) {
@@ -1957,7 +1957,7 @@ class ImportResource extends CommonDBTM
 
             $crit = [
                 'name' => $utf8ColumnName,
-                Import::$keyInOtherTables => $importID
+                Import::$keyInOtherTables => $importID,
             ];
 
             if (!$column->getFromDBByCrit($crit)) {
@@ -1974,7 +1974,7 @@ class ImportResource extends CommonDBTM
             $datas[] = [
                 "name" => $column->getName(),
                 "value" => $value,
-                "plugin_resources_importcolumns_id" => intval($column->getID())
+                "plugin_resources_importcolumns_id" => intval($column->getID()),
             ];
 
             $headerIndex++;
@@ -2005,6 +2005,7 @@ class ImportResource extends CommonDBTM
                     case "Date":
                         return false;
                 }
+                // no break
             case 1: //Decimal
                 switch ($out) {
                     case "String":
@@ -2017,6 +2018,7 @@ class ImportResource extends CommonDBTM
                     case ContractType::class:
                         return false;
                 }
+                // no break
             case 2: //String
                 switch ($out) {
                     case Department::class:
@@ -2029,6 +2031,7 @@ class ImportResource extends CommonDBTM
                     case "Date":
                         return false;
                 }
+                // no break
             case 3: //Date
                 switch ($out) {
                     case "Date":
@@ -2067,11 +2070,13 @@ class ImportResource extends CommonDBTM
                     case Team::class:
                         return $value;
                 }
+                // no break
             case 1: //Decimal
                 switch ($out) {
                     case "String":
                         return $value;
                 }
+                // no break
             case 2: //String
                 $utf8String = $this->encodeUtf8($value);
 
@@ -2123,6 +2128,7 @@ class ImportResource extends CommonDBTM
                     case Department::class:
                         return $this->getObjectIDByClassNameAndName(Department::class, $utf8String);
                 }
+                // no break
             case 3: //Date
                 switch ($out) {
                     case "String":
@@ -2170,7 +2176,7 @@ class ImportResource extends CommonDBTM
             'WHERE'  => [
                 new QueryExpression(
                     'CONCAT(' . $DB->quoteName('firstname') . ', ' . $DB->quoteValue(' ')
-                    . ', ' . $DB->quoteName('realname') . ') LIKE ' . $DB->quoteValue($fullname)
+                    . ', ' . $DB->quoteName('realname') . ') LIKE ' . $DB->quoteValue($fullname),
                 ),
             ],
         ]);
@@ -2287,7 +2293,7 @@ class ImportResource extends CommonDBTM
                     'found_first_identifier' => 0,
                     'found_second_identifier' => 0,
                     'not_found' => 0,
-                    'total' => 0
+                    'total' => 0,
                 ];
                 break;
             case self::DISPLAY_HTML:
@@ -2295,7 +2301,7 @@ class ImportResource extends CommonDBTM
                 break;
         }
 
-        $nbOfResources = (new DBUtils)->countElementsInTable(Resource::getTable());
+        $nbOfResources = (new DBUtils())->countElementsInTable(Resource::getTable());
 
         switch ($display) {
             case self::DISPLAY_HTML:
@@ -2313,7 +2319,7 @@ class ImportResource extends CommonDBTM
                 echo "<table border='0' class='tab_cadre_fixe'>";
 
                 $listHeaderParams = [
-                    'type' => $params['type']
+                    'type' => $params['type'],
                 ];
 
                 self::showListHeader($listHeaderParams);
@@ -2335,7 +2341,7 @@ class ImportResource extends CommonDBTM
             // Name : name of the column in table
             $identifier = [
                 'target' => null,
-                'name' => null
+                'name' => null,
             ];
 
             switch ($column['resource_column']) {
@@ -2345,7 +2351,9 @@ class ImportResource extends CommonDBTM
                     break;
                 default:
                     $identifier['target'] = Resource::class;
-                    $identifier['name'] = Resource::getColumnName($column['resource_column'], ['date_declaration DESC']
+                    $identifier['name'] = Resource::getColumnName(
+                        $column['resource_column'],
+                        ['date_declaration DESC'],
                     );
                     break;
             }
@@ -2403,14 +2411,14 @@ class ImportResource extends CommonDBTM
                         case ResourceImport::class:
                             $crit = [
                                 'plugin_resources_resources_id' => $resource['id'],
-                                'name' => $ResourceImport->getField('name')
+                                'name' => $ResourceImport->getField('name'),
                             ];
 
                             if ($ResourceImport->getFromDBByCrit($crit)) {
                                 if (is_string($lineValue)) {
                                     $foundedFirstLevel = strcasecmp(
                                         $lineValue,
-                                        $ResourceImport->getField('value') == 0
+                                        $ResourceImport->getField('value') == 0,
                                     );
                                 } else {
                                     $foundedFirstLevel = ($lineValue == $firstLevelResourceColumn);
@@ -2455,14 +2463,14 @@ class ImportResource extends CommonDBTM
                             case ResourceImport::class:
                                 $crit = [
                                     'plugin_resources_resources_id' => $resource['id'],
-                                    'name' => $ResourceImport->getField('name')
+                                    'name' => $ResourceImport->getField('name'),
                                 ];
 
                                 if ($ResourceImport->getFromDBByCrit($crit)) {
                                     if (is_string($lineValue)) {
                                         $foundedSecondLevel = strcasecmp(
                                             $lineValue,
-                                            $ResourceImport->getField('value') == 0
+                                            $ResourceImport->getField('value') == 0,
                                         );
                                     } else {
                                         $foundedSecondLevel = ($lineValue == $secondLevelResourceColumn);
@@ -2647,7 +2655,7 @@ class ImportResource extends CommonDBTM
         $imports = $pluginResourcesImport->find(['is_active' => 1]);
 
         $additionalParams = [
-            'imports' => $imports
+            'imports' => $imports,
         ];
 
         $this->showHead(array_merge($params, $additionalParams));
@@ -2725,7 +2733,8 @@ class ImportResource extends CommonDBTM
                 $firstLevelIdentifiers = [];
                 $secondLevelIdentifiers = [];
 
-                $datas = $ImportResourceDataDBTM->find(["plugin_resources_importresources_id" => $importResource['id']]
+                $datas = $ImportResourceDataDBTM->find(
+                    ["plugin_resources_importresources_id" => $importResource['id']],
                 );
 
                 foreach ($datas as $data) {
@@ -2743,7 +2752,7 @@ class ImportResource extends CommonDBTM
                                 'name' => $data['name'],
                                 'value' => $data['value'],
                                 'type' => $data['plugin_resources_importcolumns_id'],
-                                'resource_column' => $column['resource_column']
+                                'resource_column' => $column['resource_column'],
                             ];
 
                             if (is_string($element['value']) && empty($element['value'])) {
@@ -2756,7 +2765,7 @@ class ImportResource extends CommonDBTM
                                 'name' => $data['name'],
                                 'value' => $data['value'],
                                 'type' => $data['plugin_resources_importcolumns_id'],
-                                'resource_column' => $column['resource_column']
+                                'resource_column' => $column['resource_column'],
                             ];
 
                             if (is_string($element['value']) && empty($element['value'])) {
@@ -2855,25 +2864,25 @@ class ImportResource extends CommonDBTM
             echo "</td>";
             echo "<td>";
             echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=deleted'>" . __(
-                    "Deleted resource",
-                    'resources'
-                ) . "</a>";
+                "Deleted resource",
+                'resources',
+            ) . "</a>";
             echo "</td>";
             echo "<td class='center' style='width: 10px;height: 10px;background-color:orange;'>";
             echo "</td>";
             echo "<td>";
             echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=update'>" . __(
-                    "Updated resource",
-                    'resources'
-                ) . "</a>";
+                "Updated resource",
+                'resources',
+            ) . "</a>";
             echo "</td>";
             echo "<td class='center' style='width: 10px;height: 10px;background-color:green;'>";
             echo "</td>";
             echo "<td>";
             echo "<a href='" . self::getResourceImportFormUrl() . "?" . $parameters . "&filter=new'>" . __(
-                    "New resource",
-                    'resources'
-                ) . "</a>";
+                "New resource",
+                'resources',
+            ) . "</a>";
             echo "</td>";
             echo "</tr>";
             echo "</table>";
@@ -2884,7 +2893,7 @@ class ImportResource extends CommonDBTM
 
             $headParams = [
                 'type' => $params['type'],
-                'import' => $pluginResourcesImportDBTM->fields
+                'import' => $pluginResourcesImportDBTM->fields,
             ];
 
             self::showListHeader($headParams);
@@ -2894,7 +2903,8 @@ class ImportResource extends CommonDBTM
                 $firstLevelIdentifiers = [];
                 $secondLevelIdentifiers = [];
 
-                $datas = $ImportResourceDataDBTM->find(["plugin_resources_importresources_id" => $importResource['id']]
+                $datas = $ImportResourceDataDBTM->find(
+                    ["plugin_resources_importresources_id" => $importResource['id']],
                 );
 
                 foreach ($datas as $data) {
@@ -2912,7 +2922,7 @@ class ImportResource extends CommonDBTM
                                 'name' => $data['name'],
                                 'value' => $data['value'],
                                 'type' => $data['plugin_resources_importcolumns_id'],
-                                'resource_column' => $column['resource_column']
+                                'resource_column' => $column['resource_column'],
                             ];
 
                             if (is_string($element['value']) && empty($element['value'])) {
@@ -2925,7 +2935,7 @@ class ImportResource extends CommonDBTM
                                 'name' => $data['name'],
                                 'value' => $data['value'],
                                 'type' => $data['plugin_resources_importcolumns_id'],
-                                'resource_column' => $column['resource_column']
+                                'resource_column' => $column['resource_column'],
                             ];
 
                             if (is_string($element['value']) && empty($element['value'])) {
@@ -2977,7 +2987,7 @@ class ImportResource extends CommonDBTM
         Html::closeForm();
     }
 
-////// CRON FUNCTIONS ///////
+    ////// CRON FUNCTIONS ///////
     //Cron action
 
     private function getImportResources($importID, $importId, $order, $limit = null)
@@ -3015,7 +3025,7 @@ class ImportResource extends CommonDBTM
         echo "</tr>";
     }
 
-    function setFileVerify($params)
+    public function setFileVerify($params)
     {
         // Reduce the client-supplied name to its basename so it cannot escape the
         // import directories (path traversal → arbitrary rename/move).
@@ -3023,7 +3033,7 @@ class ImportResource extends CommonDBTM
 
         Document::renameForce(
             GLPI_PLUGIN_DOC_DIR . "/resources/import/verify/" . $params['filename'],
-            GLPI_PLUGIN_DOC_DIR . "/resources/import/" . $params['filename']
+            GLPI_PLUGIN_DOC_DIR . "/resources/import/" . $params['filename'],
         );
 
         $importSuccess = false;
@@ -3071,7 +3081,7 @@ class ImportResource extends CommonDBTM
     }
 
 
-    static function deleteFile($filename)
+    public static function deleteFile($filename)
     {
         // Reduce the client-supplied name to its basename so it cannot escape the
         // verification directory (path traversal → arbitrary file delete).

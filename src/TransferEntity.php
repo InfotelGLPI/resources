@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -49,14 +49,13 @@ if (!defined('GLPI_ROOT')) {
  */
 class TransferEntity extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     /**
      * functions mandatory
      * getTypeName(), canCreate(), canView()
      * */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Transfer entities', 'resources');
     }
@@ -70,7 +69,7 @@ class TransferEntity extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -81,12 +80,12 @@ class TransferEntity extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-trending-up-2";
     }
@@ -104,7 +103,7 @@ class TransferEntity extends CommonDBTM
      * @return bool
      * @see CommonGLPI::displayTabContentForItem()
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             $self = new self();
@@ -118,7 +117,7 @@ class TransferEntity extends CommonDBTM
      *
      * @return bool
      */
-    function showConfigForm()
+    public function showConfigForm()
     {
         $target = Toolbox::getItemTypeFormURL(Config::class);
 
@@ -147,7 +146,7 @@ class TransferEntity extends CommonDBTM
             ob_start();
             $rand = Dropdown::show(
                 'Entity',
-                ['name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()']
+                ['name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()'],
             );
             $entity_dropdown = ob_get_clean();
 
@@ -157,7 +156,7 @@ class TransferEntity extends CommonDBTM
                 PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceinfo.php',
                 $params,
                 'dropdown_entities_id' . $rand,
-                false
+                false,
             );
             $entity_group_js = "<script type='text/javascript'>function entity_group(){" . $ajax . "}</script>";
 
@@ -184,7 +183,7 @@ class TransferEntity extends CommonDBTM
 
         echo "<div class='left'>";
         if ($canedit) {
-            Html::openMassiveActionsForm('massEntity'  . $rand);
+            Html::openMassiveActionsForm('massEntity' . $rand);
             $massiveactionparams = ['item' => __CLASS__, 'container' => 'massEntity' . $rand];
             Html::showMassiveActions($massiveactionparams);
         }
@@ -195,7 +194,7 @@ class TransferEntity extends CommonDBTM
         echo "<tr>";
         echo "<th width='10'>";
         if ($canedit) {
-            echo Html::getCheckAllAsCheckbox('massEntity'  . $rand);
+            echo Html::getCheckAllAsCheckbox('massEntity' . $rand);
         }
         echo "</th>";
         echo "<th>" . __('Entity') . "</th>";
@@ -233,13 +232,13 @@ class TransferEntity extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
 
         $tab[] = [
@@ -249,7 +248,7 @@ class TransferEntity extends CommonDBTM
             'name' => __('Name'),
             'datatype' => 'itemlink',
             'itemlink_type' => $this->getType(),
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         $tab[] = [
@@ -258,7 +257,7 @@ class TransferEntity extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'massiveaction' => false,
-            'datatype' => 'number'
+            'datatype' => 'number',
         ];
 
         $tab[] = [
@@ -267,7 +266,7 @@ class TransferEntity extends CommonDBTM
             'field' => 'name',
             'name' => __('Entity'),
             'massiveaction' => true,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -276,7 +275,7 @@ class TransferEntity extends CommonDBTM
             'field' => 'name',
             'name' => __('Group'),
             'massiveaction' => true,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         return $tab;
     }
@@ -288,7 +287,7 @@ class TransferEntity extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         if (!$this->checkMandatoryFields($input)) {
             return false;
@@ -304,7 +303,7 @@ class TransferEntity extends CommonDBTM
      *
      * @return array the modified $input array
      **/
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         if (!$this->checkMandatoryFields($input)) {
             return false;
@@ -318,7 +317,7 @@ class TransferEntity extends CommonDBTM
      *
      * @return bool
      */
-    function checkMandatoryFields($input)
+    public function checkMandatoryFields($input)
     {
         $msg = [];
         $checkKo = false;
@@ -338,7 +337,7 @@ class TransferEntity extends CommonDBTM
             Session::addMessageAfterRedirect(
                 sprintf(__("Mandatory fields are not filled. Please correct: %s"), implode(', ', $msg)),
                 false,
-                ERROR
+                ERROR,
             );
             return false;
         }

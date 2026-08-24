@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -51,8 +51,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Adconfig extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources';
 
     // Bind and default-account secrets are stored encrypted (GLPIKey); keep them out of
     // API/exports and out of the update history so the (encrypted) value is not disclosed.
@@ -70,7 +69,7 @@ class Adconfig extends CommonDBTM
      * functions mandatory
      * getTypeName(), canCreate(), canView()
      * */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Setup LDAP directory', 'resources');
     }
@@ -84,7 +83,7 @@ class Adconfig extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -95,12 +94,12 @@ class Adconfig extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
-    function __construct()
+    public function __construct()
     {
         global $DB;
 
@@ -109,7 +108,7 @@ class Adconfig extends CommonDBTM
         }
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-vocabulary";
     }
@@ -127,7 +126,7 @@ class Adconfig extends CommonDBTM
      * @return bool
      * @see CommonGLPI::displayTabContentForItem()
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Config::class) {
             $self = new self();
@@ -139,7 +138,7 @@ class Adconfig extends CommonDBTM
     /**
      * @return bool
      */
-    function showConfigForm()
+    public function showConfigForm()
     {
         if (!$this->canView()) {
             return false;
@@ -200,41 +199,41 @@ class Adconfig extends CommonDBTM
             // Directory + ITIL categories.
             'auth_dropdown' => $capture(fn() => Dropdown::show(
                 AuthLDAP::getType(),
-                ['name' => 'auth_id', 'value' => $this->getField('auth_id')]
+                ['name' => 'auth_id', 'value' => $this->getField('auth_id')],
             )),
             'creation_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'creation_categories_id',
                 $categories,
-                ['values' => $decodeValues($this->fields['creation_categories_id']), 'multiple' => 'multiples']
+                ['values' => $decodeValues($this->fields['creation_categories_id']), 'multiple' => 'multiples'],
             )),
             'modification_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'modification_categories_id',
                 $categories,
-                ['values' => $decodeValues($this->fields['modification_categories_id']), 'multiple' => 'multiples']
+                ['values' => $decodeValues($this->fields['modification_categories_id']), 'multiple' => 'multiples'],
             )),
             'deletion_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'deletion_categories_id',
                 $categories,
-                ['values' => $decodeValues($this->fields['deletion_categories_id']), 'multiple' => 'multiples']
+                ['values' => $decodeValues($this->fields['deletion_categories_id']), 'multiple' => 'multiples'],
             )),
 
             // Login creation.
             'first_form_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'first_form',
                 $this->loginForm(),
-                ['value' => $this->fields['first_form']]
+                ['value' => $this->fields['first_form']],
             )),
             'second_form_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'second_form',
                 $this->loginForm(),
-                ['value' => $this->fields['second_form']]
+                ['value' => $this->fields['second_form']],
             )),
 
             // Mail creation.
             'mail_prefix_dropdown' => $capture(fn() => Dropdown::showFromArray(
                 'mail_prefix',
                 $this->prefixForm(),
-                ['value' => $this->fields['mail_prefix']]
+                ['value' => $this->fields['mail_prefix']],
             )),
             'mail_suffix_field' => Html::input('mail_suffix', ['value' => $this->fields['mail_suffix']]),
         ];
@@ -243,7 +242,7 @@ class Adconfig extends CommonDBTM
         $data['ssl_tls'] = (new LDAP())->isSSLorTLSAD();
         if ($data['ssl_tls']) {
             $data['use_password_module_dropdown'] = $capture(
-                fn() => Dropdown::showYesNo('use_password_module', $this->fields['use_password_module'])
+                fn() => Dropdown::showYesNo('use_password_module', $this->fields['use_password_module']),
             );
             $data['show_format'] = (bool) $this->fields['use_password_module'];
 
@@ -255,7 +254,7 @@ class Adconfig extends CommonDBTM
                     1 => 'prefixe dynamique et suffixe statique',
                     2 => __('Static default password ', 'resources'),
                 ],
-                ['value' => $format]
+                ['value' => $format],
             ));
             $data['show_password_detail'] = ($format != 0);
             $data['is_prefix_format']     = ($format == 1);
@@ -266,7 +265,7 @@ class Adconfig extends CommonDBTM
                     1 => __('First name initial (uppercase) + last name initial (lowercase) + arrival date (DDMMYYYY)', 'resources'),
                     2 => __('First name initial (uppercase) + last name initial (lowercase)', 'resources'),
                 ],
-                ['value' => $this->fields['prefix_default_account_password']]
+                ['value' => $this->fields['prefix_default_account_password']],
             ));
             $data['password_detail_label'] = ($format == 2)
                 ? __('Default password', 'resources')
@@ -321,7 +320,7 @@ class Adconfig extends CommonDBTM
         return true;
     }
 
-    function loginForm()
+    public function loginForm()
     {
         $options[0] = Dropdown::EMPTY_VALUE;
         $options[1] = __("first letter of given name + name", 'resources');
@@ -331,7 +330,7 @@ class Adconfig extends CommonDBTM
         return $options;
     }
 
-    function prefixForm()
+    public function prefixForm()
     {
         $options[0] = Dropdown::EMPTY_VALUE;
         $options[1] = __("given name.name", 'resources');
@@ -345,11 +344,10 @@ class Adconfig extends CommonDBTM
      *
      * @return $input
      */
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         return $this->encodeSubtypes($input);
     }
-
 
     /**
      * Encode sub types
@@ -358,7 +356,7 @@ class Adconfig extends CommonDBTM
      *
      * @return
      */
-    function encodeSubtypes($input)
+    public function encodeSubtypes($input)
     {
         if (!empty($input['creation_categories_id'])) {
             $input['creation_categories_id'] = json_encode(array_values($input['creation_categories_id']));
@@ -379,8 +377,7 @@ class Adconfig extends CommonDBTM
         return $input;
     }
 
-
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         if (isset($input["password"])) {
             if (empty($input["password"])) {
@@ -405,14 +402,13 @@ class Adconfig extends CommonDBTM
 
         $input = $this->encodeSubtypes($input);
 
-
         return $input;
     }
 
     /**
      * @return mixed
      */
-    function useSecurity()
+    public function useSecurity()
     {
         return $this->fields['security_display'];
     }
@@ -420,13 +416,12 @@ class Adconfig extends CommonDBTM
     /**
      * @return mixed
      */
-    function useSecurityCompliance()
+    public function useSecurityCompliance()
     {
         return $this->fields['security_compliance'];
     }
 
-
-    function getArrayAttributes()
+    public function getArrayAttributes()
     {
         $array = [
             "logAD",
@@ -442,18 +437,16 @@ class Adconfig extends CommonDBTM
             "roleAD",
             "serviceAD",
             "locationAD",
-            "fonctionAD"
+            "fonctionAD",
         ];
         return $array;
     }
 
-    function prepareFields($fields)
+    public function prepareFields($fields)
     {
         $fields['creation_categories_id'] = json_decode($fields['creation_categories_id']);
 
-
         $fields['modification_categories_id'] = json_decode($fields['modification_categories_id']);
-
 
         $fields['deletion_categories_id'] = json_decode($fields['deletion_categories_id']);
 
@@ -531,7 +524,7 @@ class Adconfig extends CommonDBTM
                     'second_form' => 0,
                     'mail_prefix' => 0,
                     'mail_suffix' => '',
-                    'fonctionAD' => '']
+                    'fonctionAD' => ''],
             );
         }
     }

@@ -1,16 +1,30 @@
 {#
- # File upload form (resources plugin, ImportResource::showFileImporter).
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
  #
- # Multipart POST form carrying a native file input plus GLPI's file widget
- # (pre-rendered by PHP, injected with |raw). The <form> carries the GLPI CSRF
- # token. Replaces a legacy echo where the action attribute was accidentally
- # commented out inside the tag string.
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
  #
- # Expected data:
- #   form_action  : string   target URL
- #   file_widget  : string   pre-rendered Html::file() widget
- #   label_import : string   submit button label
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
+
 <form name="import_file_form" id="import_file_form" method="post" action="{{ form_action }}" enctype="multipart/form-data">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="center">

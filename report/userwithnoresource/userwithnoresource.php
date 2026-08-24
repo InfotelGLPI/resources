@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\DBAL\QuerySubQuery;
@@ -51,22 +51,27 @@ $report = new AutoReport(__("User without resource", "resources"));
 $report->setColumns(
     [
         new ColumnLink(
-            'user_id', _n('User', 'Users', 1), 'User',
-            ['sorton' => 'user_name']
+            'user_id',
+            _n('User', 'Users', 1),
+            'User',
+            ['sorton' => 'user_name'],
         ),
         new Column(
-            'realname', __('Surname'),
-            ['sorton' => 'realname']
+            'realname',
+            __('Surname'),
+            ['sorton' => 'realname'],
         ),
         new Column(
-            'firstname', __('First name'),
-            ['sorton' => 'firstname']
+            'firstname',
+            __('First name'),
+            ['sorton' => 'firstname'],
         ),
         new Column(
-            'location', __('Location'),
-            ['sorton' => 'location']
-        )
-    ]
+            'location',
+            __('Location'),
+            ['sorton' => 'location'],
+        ),
+    ],
 );
 
 $criteria = [
@@ -82,8 +87,8 @@ $criteria = [
         'glpi_locations' => [
             'ON' => [
                 'glpi_locations' => 'id',
-                'glpi_users' => 'locations_id'
-            ]
+                'glpi_users' => 'locations_id',
+            ],
         ],
     ],
     'WHERE' => [
@@ -97,10 +102,10 @@ $criteria = [
                         'SELECT' => ['items_id'],
                         'FROM'   => 'glpi_plugin_resources_resources_items',
                         'WHERE'  => [
-                            'itemtype' => 'User'
-                        ]
-                    ])
-                ]
+                            'itemtype' => 'User',
+                        ],
+                    ]),
+                ],
             ],
             [
                 'NOT' => [
@@ -112,21 +117,21 @@ $criteria = [
                             'glpi_plugin_resources_resources' => [
                                 'ON' => [
                                     'glpi_plugin_resources_resources'       => 'id',
-                                    'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id'
-                                ]
+                                    'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                                ],
                             ],
                         ],
 
                         'WHERE' => [
                             'glpi_plugin_resources_resources.is_leaving' => 0,
                             'glpi_plugin_resources_resources.is_deleted' => 0,
-                            'glpi_plugin_resources_resources.date_begin' => null
-                        ]
-                    ])
-                ]
-            ]
+                            'glpi_plugin_resources_resources.date_begin' => null,
+                        ],
+                    ]),
+                ],
+            ],
 
-        ]
+        ],
     ],
 ];
 

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Plugin\Hooks;
@@ -55,7 +55,7 @@ use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Reports\Report;
 
-define('PLUGIN_RESOURCES_VERSION', '4.0.17');
+define('PLUGIN_RESOURCES_VERSION', '4.0.18');
 
 global $CFG_GLPI;
 
@@ -124,13 +124,13 @@ function plugin_init_resources()
         ]);
 
         Plugin::registerClass(RuleContracttypeReadonlyCollection::class, [
-            'rulecollections_types' => true
+            'rulecollections_types' => true,
 
         ]);
 
         Plugin::registerClass(
             Profile::class,
-            ['addtabon' => 'Profile']
+            ['addtabon' => 'Profile'],
         );
 
         Plugin::registerClass(Employment::class, [
@@ -195,7 +195,8 @@ function plugin_init_resources()
                     "resourcewithoutuser" => __("Report listing resources without users", "resources"),
                     "userwithmorethanoneresource" => __("Report listing users linked to more than one resource", "resources"),
                     "userwithnoresource" => __("User without resource", "resources"),
-                    ]);
+                ],
+            );
         }
 
         // Resource menu
@@ -229,7 +230,6 @@ function plugin_init_resources()
             //            }
         }
 
-
         //TODO : Check
         $PLUGIN_HOOKS['plugin_pdf'][Resource::class] = ResourcePDF::class;
 
@@ -256,7 +256,6 @@ function plugin_init_resources()
 
         $PLUGIN_HOOKS['metademands']['resources'] = [Metademand::class];
     }
-
 
     // End init, when all types are registered
     $PLUGIN_HOOKS[Hooks::POST_INIT]['resources'] = 'plugin_resources_postinit';

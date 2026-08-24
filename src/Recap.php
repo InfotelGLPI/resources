@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -46,8 +46,7 @@ if (!defined('GLPI_ROOT')) {
  * */
 class Recap extends CommonDBTM
 {
-
-    static protected $notable = true;
+    protected static $notable = true;
     private $table = "glpi_users";
 
     public static function getTable($classname = null)
@@ -63,7 +62,7 @@ class Recap extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('List Employment / Resource', 'List Employments / Resources', $nb, 'resources');
     }
@@ -74,7 +73,7 @@ class Recap extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         if (Session::haveRight('plugin_resources_employment', UPDATE)) {
             return true;
@@ -91,7 +90,7 @@ class Recap extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         if (Session::haveRight('plugin_resources_employment', READ)) {
             return true;
@@ -111,13 +110,13 @@ class Recap extends CommonDBTM
      *
      * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
      **/
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
 
         $tab[] = [
@@ -125,7 +124,7 @@ class Recap extends CommonDBTM
             'table' => $this->table,
             'field' => 'registration_number',
             'name' => _x('user', 'Administrative number'),
-            'datatype' => 'string'
+            'datatype' => 'string',
         ];
 
         $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
@@ -136,7 +135,7 @@ class Recap extends CommonDBTM
             'field' => 'name',
             'name' => __('Surname'),
             'datatype' => 'itemlink',
-            'itemlink_type' => Resource::class
+            'itemlink_type' => Resource::class,
         ];
 
         $tab[] = [
@@ -144,7 +143,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'firstname',
             'name' => __('First name'),
-            'itemlink_type' => Resource::class
+            'itemlink_type' => Resource::class,
         ];
 
         $tab[] = [
@@ -152,7 +151,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'quota',
             'name' => __('Quota', 'resources'),
-            'datatype' => 'decimal'
+            'datatype' => 'decimal',
         ];
 
         $tab[] = [
@@ -160,7 +159,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resourcesituations',
             'field' => 'name',
             'name' => ResourceSituation::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -168,7 +167,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_contractnatures',
             'field' => 'name',
             'name' => ContractNature::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -176,7 +175,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_contracttypes',
             'field' => 'name',
             'name' => ContractType::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -184,7 +183,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resourcespecialities',
             'field' => 'name',
             'name' => ResourceSpeciality::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -192,7 +191,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_ranks',
             'field' => 'name',
             'name' => Rank::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -200,7 +199,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_professions',
             'field' => 'name',
             'name' => Profession::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -208,7 +207,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_professionlines',
             'field' => 'name',
             'name' => ProfessionLine::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -216,7 +215,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_professioncategories',
             'field' => 'name',
             'name' => ProfessionCategory::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -224,7 +223,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'date_begin',
             'name' => __('Arrival date', 'resources'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -232,7 +231,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'date_end',
             'name' => __('Departure date', 'resources'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -240,7 +239,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employments',
             'field' => 'name',
             'name' => __('Name') . " - " . Employment::getTypeName(1),
-            'forcegroupby' => true
+            'forcegroupby' => true,
         ];
 
         $tab[] = [
@@ -248,7 +247,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employments',
             'field' => 'ratio_employment_budget',
             'name' => __('Ratio Employment / Budget', 'resources'),
-            'datatype' => 'decimal'
+            'datatype' => 'decimal',
         ];
 
         $tab[] = [
@@ -256,7 +255,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employmentranks',
             'field' => 'name',
             'name' => Employment::getTypeName(1) . " - " . Rank::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -264,7 +263,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employmentprofessions',
             'field' => 'name',
             'name' => Employment::getTypeName(1) . " - " . Profession::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -272,7 +271,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employmentprofessionlines',
             'field' => 'name',
             'name' => Employment::getTypeName(1) . " - " . ProfessionLine::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -280,7 +279,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employmentprofessioncategories',
             'field' => 'name',
             'name' => Employment::getTypeName(1) . " - " . ProfessionCategory::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -288,7 +287,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employments',
             'field' => 'begin_date',
             'name' => __('Begin date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -296,7 +295,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employments',
             'field' => 'end_date',
             'name' => __('End date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
 
         $tab[] = [
@@ -304,7 +303,7 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employmentstates',
             'field' => 'name',
             'name' => EmploymentState::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -312,35 +311,35 @@ class Recap extends CommonDBTM
             'table' => 'glpi_plugin_resources_employers',
             'field' => 'completename',
             'name' => Employer::getTypeName(1),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
             'id' => '4372',
             'table' => 'glpi_plugin_resources_employmentranks',
             'field' => 'id',
-            'name' => Employment::getTypeName(1) . " - " . Rank::getTypeName(1) . " - " . __('ID')
+            'name' => Employment::getTypeName(1) . " - " . Rank::getTypeName(1) . " - " . __('ID'),
         ];
 
         $tab[] = [
             'id' => '4373',
             'table' => 'glpi_plugin_resources_employmentprofessions',
             'field' => 'id',
-            'name' => Employment::getTypeName(1) . " - " . Profession::getTypeName(1) . " - " . __('ID')
+            'name' => Employment::getTypeName(1) . " - " . Profession::getTypeName(1) . " - " . __('ID'),
         ];
 
         $tab[] = [
             'id' => '4374',
             'table' => 'glpi_plugin_resources_ranks',
             'field' => 'id',
-            'name' => Resource::getTypeName(1) . " - " . Rank::getTypeName(1) . " - " . __('ID')
+            'name' => Resource::getTypeName(1) . " - " . Rank::getTypeName(1) . " - " . __('ID'),
         ];
 
         $tab[] = [
             'id' => '4375',
             'table' => 'glpi_plugin_resources_professions',
             'field' => 'id',
-            'name' => Resource::getTypeName(1) . " - " . Profession::getTypeName(1) . " - " . __('ID')
+            'name' => Resource::getTypeName(1) . " - " . Profession::getTypeName(1) . " - " . __('ID'),
         ];
 
         return $tab;
@@ -349,7 +348,7 @@ class Recap extends CommonDBTM
     /**
      * @since version 0.84
      **/
-    function getForbiddenStandardMassiveAction()
+    public function getForbiddenStandardMassiveAction()
     {
         $forbidden = parent::getForbiddenStandardMassiveAction();
         $forbidden[] = 'update';
@@ -365,7 +364,7 @@ class Recap extends CommonDBTM
      *
      * @return
      **/
-    static function showList($itemtype, $params)
+    public static function showList($itemtype, $params)
     {
         $data = Search::prepareDatasForSearch($itemtype, $params);
         Search::constructSQL($data);
@@ -388,7 +387,7 @@ class Recap extends CommonDBTM
      **@since version 0.85
      *
      */
-    static function constructSQL(array &$data)
+    public static function constructSQL(array &$data)
     {
         global $CFG_GLPI;
 
@@ -451,7 +450,7 @@ class Recap extends CommonDBTM
                     0,
                     0,
                     $searchopt[$val]["joinparams"],
-                    $searchopt[$val]["field"]
+                    $searchopt[$val]["field"],
                 );
             }
         }
@@ -471,7 +470,7 @@ class Recap extends CommonDBTM
                             0,
                             0,
                             $searchopt[$key]["joinparams"],
-                            $searchopt[$key]["field"]
+                            $searchopt[$key]["field"],
                         );
                     }
                 }
@@ -522,7 +521,7 @@ class Recap extends CommonDBTM
                     $itemtable,
                     '',
                     '',
-                    $data['item']->maybeRecursive()
+                    $data['item']->maybeRecursive(),
                 );
             }
         }
@@ -566,7 +565,7 @@ class Recap extends CommonDBTM
                                 $criteria['searchtype'],
                                 $criteria['value'],
                                 0,
-                                $item_num
+                                $item_num,
                             );
                         } else {
                             // Manage Link if not first item
@@ -579,7 +578,7 @@ class Recap extends CommonDBTM
                                 $data['itemtype'],
                                 $criteria['field'],
                                 $criteria['searchtype'],
-                                $criteria['value']
+                                $criteria['value'],
                             );
                         }
                         // view and all search
@@ -590,23 +589,23 @@ class Recap extends CommonDBTM
 
                         if (isset($criteria['link'])) {
                             switch ($criteria['link']) {
-                                case "AND" :
+                                case "AND":
                                     $LINK = " OR ";
                                     $globallink = " AND ";
                                     break;
 
-                                case "AND NOT" :
+                                case "AND NOT":
                                     $LINK = " AND ";
                                     $NOT = 1;
                                     $globallink = " AND ";
                                     break;
 
-                                case "OR" :
+                                case "OR":
                                     $LINK = " OR ";
                                     $globallink = " OR ";
                                     break;
 
-                                case "OR NOT" :
+                                case "OR NOT":
                                     $LINK = " AND ";
                                     $NOT = 1;
                                     $globallink = " OR ";
@@ -651,7 +650,7 @@ class Recap extends CommonDBTM
                                         $data['itemtype'],
                                         $key2,
                                         $criteria['searchtype'],
-                                        $criteria['value']
+                                        $criteria['value'],
                                     );
                                 }
                             }
@@ -670,7 +669,7 @@ class Recap extends CommonDBTM
                     $data['itemtype'],
                     $data['search']['sort'],
                     $data['search']['order'],
-                    $key
+                    $key,
                 );
             }
         }
@@ -694,28 +693,28 @@ class Recap extends CommonDBTM
                         $metacriteria['itemtype'],
                         $metacriteria['field'],
                         1,
-                        $metacriteria['itemtype']
+                        $metacriteria['itemtype'],
                     );
 
                     // b - ADD LEFT JOIN
                     // Link reference tables
                     if (!in_array(
                         $dbu->getTableForItemType($metacriteria['itemtype']),
-                        $already_link_tables2
+                        $already_link_tables2,
                     )) {
                         $FROM .= Search::addMetaLeftJoin(
                             $data['itemtype'],
                             $metacriteria['itemtype'],
                             $already_link_tables2,
                             (($metacriteria['value'] == "NULL")
-                                || (strstr($metacriteria['link'], "NOT")))
+                                || (strstr($metacriteria['link'], "NOT"))),
                         );
                     }
 
                     // Link items tables
                     if (!in_array(
                         $sopt["table"] . "_" . $metacriteria['itemtype'],
-                        $already_link_tables2
+                        $already_link_tables2,
                     )) {
                         $FROM .= self::addLeftJoin(
                             $metacriteria['itemtype'],
@@ -726,7 +725,7 @@ class Recap extends CommonDBTM
                             1,
                             $metacriteria['itemtype'],
                             $sopt["joinparams"],
-                            $sopt["field"]
+                            $sopt["field"],
                         );
                     }
                     // Where
@@ -752,7 +751,7 @@ class Recap extends CommonDBTM
                             $metacriteria['searchtype'],
                             $metacriteria['value'],
                             1,
-                            $metanum
+                            $metanum,
                         );
                     } else { // Meta Where Search
                         $LINK = " ";
@@ -778,7 +777,7 @@ class Recap extends CommonDBTM
                             $metacriteria['field'],
                             $metacriteria['searchtype'],
                             $metacriteria['value'],
-                            1
+                            1,
                         );
                     }
                 }
@@ -869,7 +868,7 @@ class Recap extends CommonDBTM
                         $tmpquery = str_replace(
                             $CFG_GLPI["union_search_type"][$data['itemtype']],
                             $ctable,
-                            $tmpquery
+                            $tmpquery,
                         );
                         $tmpquery = str_replace($data['itemtype'], $ctype, $tmpquery);
                     } else {// Ref table case
@@ -885,7 +884,7 @@ class Recap extends CommonDBTM
                                 "`" . $CFG_GLPI["union_search_type"][$data['itemtype']] . "`.
                                                 `is_deleted`",
                                 "`$reftable`.`is_deleted`",
-                                $tmpquery
+                                $tmpquery,
                             );
                         }
 
@@ -897,12 +896,12 @@ class Recap extends CommonDBTM
                             "FROM `" .
                             $CFG_GLPI["union_search_type"][$data['itemtype']] . "`",
                             $replace,
-                            $tmpquery
+                            $tmpquery,
                         );
                         $tmpquery = str_replace(
                             $CFG_GLPI["union_search_type"][$data['itemtype']],
                             $ctable,
-                            $tmpquery
+                            $tmpquery,
                         );
                     }
                     $tmpquery = str_replace(
@@ -912,9 +911,9 @@ class Recap extends CommonDBTM
                             $ctable,
                             '',
                             '',
-                            $citem->maybeRecursive()
+                            $citem->maybeRecursive(),
                         ),
-                        $tmpquery
+                        $tmpquery,
                     );
 
                     // SOFTWARE HACK
@@ -959,7 +958,7 @@ class Recap extends CommonDBTM
      *
      * @return Left join string
      **/
-    static function addLeftJoin(
+    public static function addLeftJoin(
         $itemtype,
         $ref_table,
         array &$already_link_tables,
@@ -1036,7 +1035,7 @@ class Recap extends CommonDBTM
                     $ref_table,
                     $new_table,
                     $linkfield,
-                    $already_link_tables
+                    $already_link_tables,
                 );
             }
         }
@@ -1052,7 +1051,7 @@ class Recap extends CommonDBTM
                         $ref_table,
                         $new_table,
                         $linkfield,
-                        $already_link_tables
+                        $already_link_tables,
                     );
                 }
             }
@@ -1086,7 +1085,7 @@ class Recap extends CommonDBTM
                             $interlinkfield,
                             $meta,
                             $meta_type,
-                            $interjoinparams
+                            $interjoinparams,
                         );
                     }
 
@@ -1117,7 +1116,7 @@ class Recap extends CommonDBTM
             if (empty($specific_leftjoin)) {
                 switch ($new_table) {
                     // No link
-                    case "glpi_auth_tables" :
+                    case "glpi_auth_tables":
                         $user_searchopt = Search::getOptions('User');
 
                         $specific_leftjoin = self::addLeftJoin(
@@ -1128,7 +1127,7 @@ class Recap extends CommonDBTM
                             'auths_id',
                             0,
                             0,
-                            $user_searchopt[30]['joinparams']
+                            $user_searchopt[30]['joinparams'],
                         );
                         $specific_leftjoin .= self::addLeftJoin(
                             $itemtype,
@@ -1138,7 +1137,7 @@ class Recap extends CommonDBTM
                             'auths_id',
                             0,
                             0,
-                            $user_searchopt[31]['joinparams']
+                            $user_searchopt[31]['joinparams'],
                         );
                         break;
                 }
@@ -1146,7 +1145,7 @@ class Recap extends CommonDBTM
 
             if (empty($specific_leftjoin)) {
                 switch ($joinparams['jointype']) {
-                    case 'child' :
+                    case 'child':
                         $linkfield = $dbu->getForeignKeyFieldForTable($cleanrt);
                         if (isset($joinparams['linkfield'])) {
                             $linkfield = $joinparams['linkfield'];
@@ -1158,7 +1157,7 @@ class Recap extends CommonDBTM
                                                  $addcondition)";
                         break;
 
-                    case 'item_item' :
+                    case 'item_item':
                         // Item_Item join
                         $specific_leftjoin = " LEFT JOIN `$new_table` $AS
                                           ON ((`$rt`.`id`
@@ -1168,7 +1167,7 @@ class Recap extends CommonDBTM
                                               $addcondition)";
                         break;
 
-                    case 'item_item_revert' :
+                    case 'item_item_revert':
                         // Item_Item join reverting previous item_item
                         $specific_leftjoin = " LEFT JOIN `$new_table` $AS
                                           ON ((`$nt`.`id`
@@ -1178,10 +1177,11 @@ class Recap extends CommonDBTM
                                               $addcondition)";
                         break;
 
-                    case "mainitemtype_mainitem" :
+                    case "mainitemtype_mainitem":
                         $addmain = 'main';
 
-                    case "itemtype_item" :
+                        // no break
+                    case "itemtype_item":
                         if (!isset($addmain)) {
                             $addmain = '';
                         }
@@ -1197,7 +1197,7 @@ class Recap extends CommonDBTM
                                               $addcondition) ";
                         break;
 
-                    case "itemtypeonly" :
+                    case "itemtypeonly":
                         $used_itemtype = $itemtype;
                         if (isset($joinparams['specific_itemtype'])
                             && !empty($joinparams['specific_itemtype'])) {
@@ -1209,7 +1209,7 @@ class Recap extends CommonDBTM
                                               $addcondition) ";
                         break;
 
-                    default :
+                    default:
                         //                  // Standard join
                         //                  $specific_leftjoin = "LEFT JOIN `$new_table` $AS
                         //                                          ON (`$rt`.`$linkfield` = `$nt`.`id`
@@ -1242,7 +1242,7 @@ class Recap extends CommonDBTM
      * This should be overloaded in Class
      *
      */
-    function getSpecificMassiveActions($checkitem = null)
+    public function getSpecificMassiveActions($checkitem = null)
     {
         //To avoid masives action error as there is no table for recap.class.php
         return [];
@@ -1259,8 +1259,8 @@ class Recap extends CommonDBTM
                 'num' => 4350,
                 'rank' => 1,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1270,8 +1270,8 @@ class Recap extends CommonDBTM
                 'num' => 4351,
                 'rank' => 2,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1281,8 +1281,8 @@ class Recap extends CommonDBTM
                 'num' => 4352,
                 'rank' => 3,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1292,8 +1292,8 @@ class Recap extends CommonDBTM
                 'num' => 4353,
                 'rank' => 4,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1303,8 +1303,8 @@ class Recap extends CommonDBTM
                 'num' => 4354,
                 'rank' => 5,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1314,8 +1314,8 @@ class Recap extends CommonDBTM
                 'num' => 4355,
                 'rank' => 6,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1325,8 +1325,8 @@ class Recap extends CommonDBTM
                 'num' => 4356,
                 'rank' => 7,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1336,8 +1336,8 @@ class Recap extends CommonDBTM
                 'num' => 4357,
                 'rank' => 8,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1347,8 +1347,8 @@ class Recap extends CommonDBTM
                 'num' => 4358,
                 'rank' => 9,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1358,8 +1358,8 @@ class Recap extends CommonDBTM
                 'num' => 4359,
                 'rank' => 10,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1369,8 +1369,8 @@ class Recap extends CommonDBTM
                 'num' => 4360,
                 'rank' => 11,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1380,8 +1380,8 @@ class Recap extends CommonDBTM
                 'num' => 4361,
                 'rank' => 12,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1391,8 +1391,8 @@ class Recap extends CommonDBTM
                 'num' => 4362,
                 'rank' => 13,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1402,8 +1402,8 @@ class Recap extends CommonDBTM
                 'num' => 4363,
                 'rank' => 14,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1413,8 +1413,8 @@ class Recap extends CommonDBTM
                 'num' => 4364,
                 'rank' => 15,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1424,8 +1424,8 @@ class Recap extends CommonDBTM
                 'num' => 4365,
                 'rank' => 16,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1435,8 +1435,8 @@ class Recap extends CommonDBTM
                 'num' => 4366,
                 'rank' => 17,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1446,8 +1446,8 @@ class Recap extends CommonDBTM
                 'num' => 4367,
                 'rank' => 18,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1457,8 +1457,8 @@ class Recap extends CommonDBTM
                 'num' => 4368,
                 'rank' => 19,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1468,8 +1468,8 @@ class Recap extends CommonDBTM
                 'num' => 4369,
                 'rank' => 20,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
 
         $DB->insert(
@@ -1479,10 +1479,9 @@ class Recap extends CommonDBTM
                 'num' => 4370,
                 'rank' => 21,
                 'users_id' => 0,
-                'interface' => 'central'
-            ]
+                'interface' => 'central',
+            ],
         );
     }
 
 }
-

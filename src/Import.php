@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -45,19 +45,18 @@ if (!defined('GLPI_ROOT')) {
  */
 class Import extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_import';
+    public static $rightname = 'plugin_resources_import';
     public $dohistory = true;
 
-    static $keyInOtherTables = 'plugin_resources_imports_id';
+    public static $keyInOtherTables = 'plugin_resources_imports_id';
 
-    static function getFormUrl($full = true)
+    public static function getFormUrl($full = true)
     {
         global $CFG_GLPI;
         return PLUGIN_RESOURCES_WEBDIR . "/front/import.form.php";
     }
 
-    static function getIndexUrl()
+    public static function getIndexUrl()
     {
         global $CFG_GLPI;
         return PLUGIN_RESOURCES_WEBDIR . "/front/import.php";
@@ -69,7 +68,7 @@ class Import extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Import', 'Imports', $nb, 'resources');
     }
@@ -84,7 +83,7 @@ class Import extends CommonDBTM
      *
      * @return array containing the onglets
      **/
-    function defineTabs($options = [])
+    public function defineTabs($options = [])
     {
         $ong = [];
         $this->addDefaultFormTab($ong);
@@ -98,12 +97,12 @@ class Import extends CommonDBTM
      * @param $identifier
      * @return array
      */
-    function getChildColumns($importID, $identifier = null)
+    public function getChildColumns($importID, $identifier = null)
     {
         $column = new ImportColumn();
 
         $input = [
-            ImportColumn::$items_id => $importID
+            ImportColumn::$items_id => $importID,
         ];
 
         if (!is_null($identifier)) {
@@ -113,7 +112,7 @@ class Import extends CommonDBTM
         return $column->find($input);
     }
 
-    function showTitle($links = true, $display = true)
+    public function showTitle($links = true, $display = true)
     {
         $html = '<div class="center">';
         $title = '<h1>' . $this->getTypeName() . "</h1>";
@@ -124,8 +123,8 @@ class Import extends CommonDBTM
 
             if (Session::haveright(self::$rightname, CREATE)) {
                 $html .= '<a href="' . self::getFormUrl() . '" class="pointer" title="' . __(
-                        "Add an Import"
-                    ) . '"><i class="ti ti-plus fa-2x"></i>';
+                    "Add an Import",
+                ) . '"><i class="ti ti-plus fa-2x"></i>';
                 $html .= '</a>';
             }
         } else {
@@ -147,7 +146,7 @@ class Import extends CommonDBTM
      *
      * @return bool
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         if (!$this->canView()) {
             return false;

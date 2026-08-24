@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -272,7 +272,7 @@ class Task extends CommonDBTM
         $DB->update(
             'glpi_plugin_resources_checklists',
             ['plugin_resources_tasks_id' => 0],
-            ['plugin_resources_tasks_id' => (int) $this->fields["id"]]
+            ['plugin_resources_tasks_id' => (int) $this->fields["id"]],
         );
     }
 
@@ -510,7 +510,7 @@ class Task extends CommonDBTM
                 $restrictitems = ["plugin_resources_tasks_id" => $taskid];
                 $tasksitems = $dbu->getAllDataFromTable(
                     "glpi_plugin_resources_tasks_items",
-                    $restrictitems
+                    $restrictitems,
                 );
                 if (!empty($tasksitems)) {
                     foreach ($tasksitems as $tasksitem) {
@@ -611,7 +611,7 @@ class Task extends CommonDBTM
         echo "<td>" . TaskType::getTypeName(1) . "</td><td>";
         Dropdown::show(
             TaskType::class,
-            ['value' => $this->fields["plugin_resources_tasktypes_id"]]
+            ['value' => $this->fields["plugin_resources_tasktypes_id"]],
         );
         echo "</td>";
         echo "</tr>";
@@ -634,7 +634,7 @@ class Task extends CommonDBTM
         echo "<td>" . __('Group') . "</td><td>";
         Dropdown::show(
             'Group',
-            ['value' => $this->fields["groups_id"]]
+            ['value' => $this->fields["groups_id"]],
         );
         echo "</td>";
         echo "<td>" . __('Carried out task', 'resources') . "</td><td>";
@@ -706,12 +706,12 @@ class Task extends CommonDBTM
         switch ($state) {
             case self::STATE_OK:
                 $img = "<i style='color:green' class='ti ti-circle-check fa-2x' title='" . Task::getTaskStatus(
-                    $state
+                    $state,
                 ) . "'></i>";
                 break;
             case self::STATE_KO:
                 $img = "<i style='color:red' class='ti ti-circle-x fa-2x' title='" . Task::getTaskStatus(
-                    $state
+                    $state,
                 ) . "'></i>";
                 break;
         }
@@ -859,9 +859,9 @@ class Task extends CommonDBTM
                 echo "<tr><th colspan='" . (7 + $colsup) . "'>" . Resource::getTypeName(2)
                     . ": " . __(
                         'Tasks in progress',
-                        'resources'
+                        'resources',
                     ) . " <a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __(
-                        'All'
+                        'All',
                     ) . "</a></th></tr>";
                 echo "<tr><th>" . __('Name') . "</th>";
                 if (Session::isMultiEntitiesMode()) {
@@ -884,12 +884,12 @@ class Task extends CommonDBTM
                     if (Session::isMultiEntitiesMode()) {
                         echo "<td class='center'>" . Dropdown::getDropdownName(
                             "glpi_entities",
-                            $data['entities_id']
+                            $data['entities_id'],
                         ) . "</td>";
                     }
                     echo "<td class='center'>" . Dropdown::getDropdownName(
                         "glpi_plugin_resources_tasktypes",
-                        $data["plugin_resources_tasktypes_id"]
+                        $data["plugin_resources_tasktypes_id"],
                     ) . "</td>";
                     echo "<td class='center'>";
                     $restrict = ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']];
@@ -1001,7 +1001,7 @@ class Task extends CommonDBTM
                     [
                         'entities_id' => $entity,
                         'tasks' => $tasks,
-                    ]
+                    ],
                 )
                 ) {
                     $message = $task_messages[$type][$entity];
@@ -1010,30 +1010,30 @@ class Task extends CommonDBTM
                         $task->log(
                             Dropdown::getDropdownName(
                                 "glpi_entities",
-                                $entity
-                            ) . ":  $message\n"
+                                $entity,
+                            ) . ":  $message\n",
                         );
                         $task->addVolume(1);
                     } else {
                         Session::addMessageAfterRedirect(
                             Dropdown::getDropdownName(
                                 "glpi_entities",
-                                $entity
-                            ) . ":  $message"
+                                $entity,
+                            ) . ":  $message",
                         );
                     }
                 } else {
                     if ($task) {
                         $task->log(
                             Dropdown::getDropdownName("glpi_entities", $entity)
-                            . ":  Send tasks alert failed\n"
+                            . ":  Send tasks alert failed\n",
                         );
                     } else {
                         Session::addMessageAfterRedirect(
                             Dropdown::getDropdownName("glpi_entities", $entity)
                             . ":  Send tasks alert failed",
                             false,
-                            ERROR
+                            ERROR,
                         );
                     }
                 }
@@ -1102,17 +1102,17 @@ class Task extends CommonDBTM
         if ($isadmin) {
             $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Install'] = __('Associate');
             $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Desinstall'] = __(
-                'Dissociate'
+                'Dissociate',
             );
             $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate'] = _x(
                 'button',
-                'Duplicate'
+                'Duplicate',
             );
             if (Session::haveRight('transfer', READ)
                 && Session::isMultiEntitiesMode()
             ) {
                 $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
-                    'Transfer'
+                    'Transfer',
                 );
             }
         }
@@ -1171,7 +1171,7 @@ class Task extends CommonDBTM
                         $item->getFromDB($key);
                         $tasktype = TaskType::transfer(
                             $item->fields["plugin_resources_tasktypes_id"],
-                            $input['entities_id']
+                            $input['entities_id'],
                         );
                         if ($tasktype > 0) {
                             $values["id"] = $key;
@@ -1299,7 +1299,7 @@ class Task extends CommonDBTM
                 __('Duration'),
                 __('Planning'),
                 __('Resource manager', 'resources'),
-                __('Group') . '</i></b>'
+                __('Group') . '</i></b>',
             );
 
             $i++;
@@ -1348,7 +1348,7 @@ class Task extends CommonDBTM
                     $actiontime,
                     $planification,
                     $managers,
-                    Dropdown::getDropdownName("glpi_groups", $groups_id)
+                    Dropdown::getDropdownName("glpi_groups", $groups_id),
                 );
                 $j++;
             }
@@ -1402,7 +1402,7 @@ class Task extends CommonDBTM
                     'num' => 2,
                     'rank' => 1,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -1411,7 +1411,7 @@ class Task extends CommonDBTM
                     'num' => 3,
                     'rank' => 2,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -1420,7 +1420,7 @@ class Task extends CommonDBTM
                     'num' => 4,
                     'rank' => 3,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -1429,7 +1429,7 @@ class Task extends CommonDBTM
                     'num' => 6,
                     'rank' => 4,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -1438,7 +1438,7 @@ class Task extends CommonDBTM
                     'num' => 7,
                     'rank' => 5,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
         }

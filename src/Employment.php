@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- resources plugin for GLPI
- Copyright (C) 2015-2026 by the resources Development Team.
-
- https://github.com/InfotelGLPI/resources
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of resources.
-
- resources is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- resources is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with resources. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * resources plugin for GLPI
+ * Copyright (C) 2015-2026 by the resources Development Team.
+ *
+ * https://github.com/InfotelGLPI/resources
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of resources.
+ *
+ * resources is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * resources is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with resources. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Resources;
@@ -50,8 +50,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class Employment extends CommonDBTM
 {
-
-    static $rightname = 'plugin_resources_employment';
+    public static $rightname = 'plugin_resources_employment';
 
     public static $itemtype = Resource::class;
     public static $items_id = 'plugin_resources_resources_id';
@@ -67,12 +66,12 @@ class Employment extends CommonDBTM
      *
      * @return string
      **/
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Employment', 'Employments', $nb, 'resources');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-briefcase-2";
     }
@@ -86,7 +85,7 @@ class Employment extends CommonDBTM
      *
      * @return
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
     }
@@ -97,7 +96,7 @@ class Employment extends CommonDBTM
      *
      * @return
      **/
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
@@ -105,7 +104,7 @@ class Employment extends CommonDBTM
     /**
      * Display tab for each emplyment
      **/
-    function defineTabs($options = [])
+    public function defineTabs($options = [])
     {
         $ong = [];
 
@@ -119,11 +118,11 @@ class Employment extends CommonDBTM
     /**
      * Display employment's tab for each resource except template
      **/
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class
             && $this->canView()
-//          && $withtemplate == 0
+            //          && $withtemplate == 0
         ) {
             if ($_SESSION['glpishow_count_on_tabs']) {
                 $dbu = new DbUtils();
@@ -131,8 +130,8 @@ class Employment extends CommonDBTM
                     self::getTypeName(2),
                     $dbu->countElementsInTable(
                         $this->getTable(),
-                        ["plugin_resources_resources_id" => $item->getID()]
-                    )
+                        ["plugin_resources_resources_id" => $item->getID()],
+                    ),
                 );
             }
             return self::createTabEntry(self::getTypeName(2));
@@ -143,7 +142,7 @@ class Employment extends CommonDBTM
     /**
      * display tab's content for each resource
      */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
             if (Session::haveRight('plugin_resources_employment', UPDATE)) {
@@ -161,14 +160,12 @@ class Employment extends CommonDBTM
      *
      * @return nothing
      **/
-    function cleanDBonPurge()
-    {
-    }
+    public function cleanDBonPurge() {}
 
     /**
      * allow search management
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -178,7 +175,7 @@ class Employment extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'datatype' => 'number',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
         $tab[] = [
             'id' => '3',
@@ -186,7 +183,7 @@ class Employment extends CommonDBTM
             'field' => 'name',
             'name' => __('Human resource', 'resources'),
             'massiveaction' => false,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '4',
@@ -194,7 +191,7 @@ class Employment extends CommonDBTM
             'field' => 'name',
             'name' => __('Rank', 'resources'),
             'massiveaction' => false,
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '5',
@@ -209,42 +206,42 @@ class Employment extends CommonDBTM
             'table' => $this->getTable(),
             'field' => 'begin_date',
             'name' => __('Begin date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
         $tab[] = [
             'id' => '7',
             'table' => $this->getTable(),
             'field' => 'end_date',
             'name' => __('End date'),
-            'datatype' => 'date'
+            'datatype' => 'date',
         ];
         $tab[] = [
             'id' => '8',
             'table' => 'glpi_plugin_resources_employmentstates',
             'field' => 'name',
             'name' => __('Employment state', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '9',
             'table' => 'glpi_plugin_resources_employers',
             'field' => 'completename',
             'name' => __('Employer', 'resources'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
         $tab[] = [
             'id' => '10',
             'table' => $this->getTable(),
             'field' => 'ratio_employment_budget',
             'name' => __('Ratio Employment / Budget', 'resources'),
-            'datatype' => 'decimal'
+            'datatype' => 'decimal',
         ];
         $tab[] = [
             'id' => '13',
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'id',
             'name' => __('Human resource', 'resources') . __('ID'),
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
         $tab[] = [
             'id' => '14',
@@ -252,14 +249,14 @@ class Employment extends CommonDBTM
             'field' => 'date_mod',
             'name' => __('Last update'),
             'datatype' => 'datetime',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
         $tab[] = [
             'id' => '80',
             'table' => 'glpi_entities',
             'field' => 'completename',
             'name' => __('Entity'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
@@ -275,7 +272,7 @@ class Employment extends CommonDBTM
      *
      * @return boolean item found
      **/
-    function showForm($ID, $options = [""])
+    public function showForm($ID, $options = [""])
     {
         global $CFG_GLPI;
 
@@ -317,8 +314,8 @@ class Employment extends CommonDBTM
             Employer::class,
             [
                 'value' => $this->fields["plugin_resources_employers_id"],
-                'entity' => $this->fields["entities_id"]
-            ]
+                'entity' => $this->fields["entities_id"],
+            ],
         );
         echo "</td>";
         echo "</tr>";
@@ -332,7 +329,7 @@ class Employment extends CommonDBTM
             'entity' => $this->fields["entities_id"],
             'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
             'span' => 'span_rank',
-            'sort' => true
+            'sort' => true,
         ];
         Resource::showGenericDropdown(Profession::class, $params);
         echo "</td>";
@@ -341,7 +338,7 @@ class Employment extends CommonDBTM
         if ($this->fields["plugin_resources_ranks_id"] > 0) {
             echo Dropdown::getDropdownName(
                 'glpi_plugin_resources_ranks',
-                $this->fields["plugin_resources_ranks_id"]
+                $this->fields["plugin_resources_ranks_id"],
             );
         } else {
             echo __('None');
@@ -355,14 +352,14 @@ class Employment extends CommonDBTM
             EmploymentState::class,
             [
                 'value' => $this->fields["plugin_resources_employmentstates_id"],
-                'entity' => $this->fields["entities_id"]
-            ]
+                'entity' => $this->fields["entities_id"],
+            ],
         );
         echo "</td>";
         echo "<td>" . __('Ratio Employment / Budget', 'resources') . "</td><td>";
         echo Html::input(
             'ratio_employment_budget',
-            ['value' => Html::formatNumber($this->fields["ratio_employment_budget"], true), 'size' => 14]
+            ['value' => Html::formatNumber($this->fields["ratio_employment_budget"], true), 'size' => 14],
         );
         echo "</td></tr>";
 
@@ -385,7 +382,7 @@ class Employment extends CommonDBTM
             'name' => 'plugin_resources_resources_id',
             'display' => true,
             'value' => $resource,
-            'entity' => $this->fields["entities_id"]
+            'entity' => $this->fields["entities_id"],
         ]);
 
         echo "</td>";
@@ -421,7 +418,7 @@ class Employment extends CommonDBTM
      *
      * @param CommonGLPI $item
      */
-    static function addNewEmployments(CommonGLPI $item)
+    public static function addNewEmployments(CommonGLPI $item)
     {
         global $CFG_GLPI;
 
@@ -454,8 +451,8 @@ class Employment extends CommonDBTM
             Employment::class,
             [
                 'condition' => $restrict,
-                'entity' => $item->getField("entities_id")
-            ]
+                'entity' => $item->getField("entities_id"),
+            ],
         );
         echo "</td><td class='center' class='tab_bg_2'>";
         echo Html::submit(_sx('button', 'Add'), ['name' => 'add_item', 'class' => 'btn btn-primary']);
@@ -472,7 +469,7 @@ class Employment extends CommonDBTM
      *
      * @param CommonGLPI $item
      */
-    static function showMinimalList(Resource $item)
+    public static function showMinimalList(Resource $item)
     {
         $employemnt = new Employment();
 
@@ -481,7 +478,7 @@ class Employment extends CommonDBTM
             'start' => 0,
             'order' => 'DESC',
             'is_deleted' => 0,
-            'as_map' => 0
+            'as_map' => 0,
         ];
 
         $toview = null;
@@ -491,7 +488,7 @@ class Employment extends CommonDBTM
                     $params['criteria'][] = [
                         'field' => $option['id'],
                         'searchtype' => 'contains',
-                        'value' => $item->fields['id']
+                        'value' => $item->fields['id'],
                     ];
                     $toview = $option['id'];
                 }
@@ -518,15 +515,15 @@ class Employment extends CommonDBTM
      *
      * @return array
      */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'ResourcesLeaving':
                 return [
                     'description' => __(
                         'Updating leaving resources (declaring leaving, state of employment)',
-                        'resources'
-                    )
+                        'resources',
+                    ),
                 ];   // Optional
                 break;
         }
@@ -536,7 +533,7 @@ class Employment extends CommonDBTM
     /**
      * @return string
      */
-    function queryLeavingResources()
+    public function queryLeavingResources()
     {
         $date = date("Y-m-d H:i:s");
         $query = "SELECT *
@@ -556,7 +553,7 @@ class Employment extends CommonDBTM
      * @param $task for log, if NULL display
      *
      **/
-    static function cronResourcesLeaving($task = null)
+    public static function cronResourcesLeaving($task = null)
     {
         global $DB;
 
@@ -587,7 +584,7 @@ class Employment extends CommonDBTM
                     $values = [
                         'plugin_resources_employmentstates_id' => $default,
                         'end_date' => $data['date_end'],
-                        'id' => $employment['id']
+                        'id' => $employment['id'],
                     ];
                     $REmployment->update($values);
                 }
@@ -598,7 +595,7 @@ class Employment extends CommonDBTM
                     'is_leaving' => 1,
                     'id' => $data["id"],
                     'date_declaration_departure' => date('Y-m-d H:i:s'),
-                    'date_end' => $data['date_end']
+                    'date_end' => $data['date_end'],
                 ]);
                 $entity = $data['entities_id'];
                 if (!isset($message[$entity])) {
@@ -611,7 +608,7 @@ class Employment extends CommonDBTM
                 if (!isset($task_messages[$type][$entity])) {
                     $task_messages[$type][$entity] = __(
                         'These resources left the company, linked current employment have been updated',
-                        'resources'
+                        'resources',
                     ) . "<br />";
                 }
                 $task_messages[$type][$entity] .= $message[$entity];
@@ -628,16 +625,16 @@ class Employment extends CommonDBTM
                     $task->log(
                         Dropdown::getDropdownName(
                             "glpi_entities",
-                            $entity
-                        ) . ":  $message\n"
+                            $entity,
+                        ) . ":  $message\n",
                     );
                     $task->addVolume(count($resources));
                 } else {
                     Session::addMessageAfterRedirect(
                         Dropdown::getDropdownName(
                             "glpi_entities",
-                            $entity
-                        ) . ":  $message"
+                            $entity,
+                        ) . ":  $message",
                     );
                 }
             }
@@ -651,7 +648,7 @@ class Employment extends CommonDBTM
      *
      * @return mixed
      */
-    static function getMenuOptions($menu)
+    public static function getMenuOptions($menu)
     {
         $plugin_page = PLUGIN_RESOURCES_WEBDIR . '/front/employment.php';
         $itemtype = self::getType();
@@ -714,7 +711,7 @@ class Employment extends CommonDBTM
                     'num' => 9,
                     'rank' => 1,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -723,7 +720,7 @@ class Employment extends CommonDBTM
                     'num' => 5,
                     'rank' => 2,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -732,7 +729,7 @@ class Employment extends CommonDBTM
                     'num' => 4,
                     'rank' => 3,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -741,7 +738,7 @@ class Employment extends CommonDBTM
                     'num' => 6,
                     'rank' => 4,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -750,7 +747,7 @@ class Employment extends CommonDBTM
                     'num' => 7,
                     'rank' => 5,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
 
             $DB->insert(
@@ -759,7 +756,7 @@ class Employment extends CommonDBTM
                     'num' => 8,
                     'rank' => 6,
                     'users_id' => 0,
-                    'interface' => 'central']
+                    'interface' => 'central'],
             );
         }
     }
