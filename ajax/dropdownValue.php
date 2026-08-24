@@ -226,7 +226,7 @@ if ($item instanceof CommonTreeDropdown) {
             foreach ($toadd as $key => $val) {
                 echo "<option class='tree' " . ($_GET['value'] == $key ? 'selected' : '') .
                     " value='" . htmlescape($key) . "' title=\"" . htmlescape($val) . "\">" .
-                    Toolbox::substr($val, 0, $_GET["limit"]) . "</option>";
+                    htmlescape(Toolbox::substr($val, 0, (int) $_GET["limit"])) . "</option>";
             }
         }
 
@@ -480,9 +480,9 @@ if ($item instanceof CommonTreeDropdown) {
 
         if (count($toadd)) {
             foreach ($toadd as $key => $val) {
-                echo "<option title=\"" . htmlescape($val) . "\" value='$key' " .
+                echo "<option title=\"" . htmlescape($val) . "\" value='" . htmlescape($key) . "' " .
                     ($_GET['value'] == $key ? 'selected' : '') . ">" .
-                    Toolbox::substr($val, 0, $_GET["limit"]) . "</option>";
+                    htmlescape(Toolbox::substr($val, 0, (int) $_GET["limit"])) . "</option>";
             }
         }
 

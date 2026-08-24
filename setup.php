@@ -61,7 +61,7 @@ global $CFG_GLPI;
 
 if (!defined("PLUGIN_RESOURCES_DIR")) {
     define("PLUGIN_RESOURCES_DIR", Plugin::getPhpDir("resources"));
-    $root = $CFG_GLPI['root_doc'] . '/plugins/resources';
+    $root = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/resources';
     define("PLUGIN_RESOURCES_WEBDIR", $root);
 }
 
