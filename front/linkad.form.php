@@ -29,6 +29,7 @@
 
 use GlpiPlugin\Resources\LDAP;
 use GlpiPlugin\Resources\LinkAd;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
     $_GET["id"] = "";
@@ -43,10 +44,12 @@ if (isset($_POST["add"])) {
     $linkad->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
-    // check($id, UPDATE) instead of the global canCreate(): CommonDBTM::update() performs
-    // no per-item authorization, so without this any authenticated user holding the create
-    // right could update an arbitrary linkad by id (IDOR), regardless of its entity.
-    $linkad->check($_POST["id"], UPDATE, $_POST);
+    // LinkAd carries no entities_id of its own, so check($id, UPDATE) alone cannot scope
+    // this to the caller's entity: resolve the owning Resource via
+    // plugin_resources_resources_id and check the right on that instance instead.
+    $linkad->getFromDB((int) $_POST["id"]);
+    $resource = new Resource();
+    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
     $linkad->update($_POST);
     $ldap = new LDAP();
     $ldap->getUserInformation($_POST["auth_id"]);
@@ -85,10 +88,14 @@ if (isset($_POST["add"])) {
     }
     Html::back();
 } elseif (isset($_POST["updateAD"])) {
-    // Drives Active Directory account modification: require the plugin write right.
+    // Drives Active Directory account modification: require the plugin write right, and
+    // scope it to the Resource owning this LinkAd (see the "update" branch above for why
+    // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     $linkad->getFromDB($_POST['id']);
+    $resource = new Resource();
+    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->updateUserAD($_POST);
     if ($res[0]) {
@@ -138,10 +145,14 @@ if (isset($_POST["add"])) {
     }
     Html::back();
 } elseif (isset($_POST["disableAD"])) {
-    // Drives Active Directory account disabling/move: require the plugin write right.
+    // Drives Active Directory account disabling/move: require the plugin write right, and
+    // scope it to the Resource owning this LinkAd (see the "update" branch above for why
+    // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     $linkad->getFromDB($_POST['id']);
+    $resource = new Resource();
+    $resource->check($linkad->fields['plugin_resources_resources_id'], UPDATE);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->disableUserAD($_POST);
     if ($res) {

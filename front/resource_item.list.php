@@ -63,8 +63,12 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
 } elseif (isset($_POST["finish"])) {
     $resource->redirectToList();
 } elseif (isset($_POST["updateneedcomment"])) {
-    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    // updateneedcomment[] keys are Choice ids, not the checked Resource id: a caller could
+    // pass a Resource they own in plugin_resources_resources_id while listing Choice ids
+    // belonging to a different Resource, so each Choice's own parent must be re-checked.
     foreach ($_POST["updateneedcomment"] as $key => $val) {
+        $choice->getFromDB($key);
+        $resource->check($choice->fields['plugin_resources_resources_id'], UPDATE);
         $varcomment = "commentneed" . $key;
         $values['id'] = $key;
         $values['commentneed'] = $_POST[$varcomment];
@@ -73,8 +77,17 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     Html::back();
 } elseif (isset($_POST['updateSpecialRequirement'])) {
     $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
-    $_POST['id'] = $_POST['plugin_resources_resources_id'];
-    $resource->update($_POST);
+    // Whitelist to the fields actually exposed by this form (see the "Specials
+    // requirements" section of Choice::showItemHelpdesk()) to avoid mass-assigning
+    // unrelated Resource fields (entities_id, is_leaving, ...) via a crafted POST.
+    $input = [
+        'id' => $_POST['plugin_resources_resources_id'],
+        'computer_phone_equipment' => $_POST['computer_phone_equipment'] ?? '',
+        'softwares_requirements' => $_POST['softwares_requirements'] ?? '',
+        'furnitures_needs' => $_POST['furnitures_needs'] ?? '',
+        'other_needs' => $_POST['other_needs'] ?? '',
+    ];
+    $resource->update($input);
     Html::back();
 } else {
     //show form items needs from helpdesk
