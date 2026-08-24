@@ -46,35 +46,35 @@ $resource = new Resource();
 if (isset($_POST["addhelpdeskitem"])) {
     if ($_POST['plugin_resources_choiceitems_id'] > 0
         && $_POST['plugin_resources_resources_id'] > 0) {
-        if ($resource->canCreate()) {
-            $choice->addHelpdeskItem($_POST);
-        }
+        // check($id, UPDATE) instead of the global canCreate(): these branches mutate a
+        // specific Resource's data (directly, or its Choice rows), so the right must be
+        // re-checked on that instance, not just globally (IDOR otherwise).
+        $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+        $choice->addHelpdeskItem($_POST);
     }
     Html::back();
 } //delete items needs from helpdesk
 elseif (isset($_POST["deletehelpdeskitem"])) {
-    if ($resource->canCreate()) {
-        $choice->delete(['id' => $_POST["id"]]);
-    }
+    $choice->getFromDB($_POST["id"]);
+    $resource->check($choice->fields['plugin_resources_resources_id'], UPDATE);
+    $choice->delete(['id' => $_POST["id"]]);
     Html::back();
     //next step : email and finish resource creation
 } elseif (isset($_POST["finish"])) {
     $resource->redirectToList();
 } elseif (isset($_POST["updateneedcomment"])) {
-    if ($resource->canCreate()) {
-        foreach ($_POST["updateneedcomment"] as $key => $val) {
-            $varcomment = "commentneed" . $key;
-            $values['id'] = $key;
-            $values['commentneed'] = $_POST[$varcomment];
-            $choice->addNeedComment($values);
-        }
+    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    foreach ($_POST["updateneedcomment"] as $key => $val) {
+        $varcomment = "commentneed" . $key;
+        $values['id'] = $key;
+        $values['commentneed'] = $_POST[$varcomment];
+        $choice->addNeedComment($values);
     }
     Html::back();
 } elseif (isset($_POST['updateSpecialRequirement'])) {
-    if ($resource->canUpdate()) {
-        $_POST['id'] = $_POST['plugin_resources_resources_id'];
-        $resource->update($_POST);
-    }
+    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    $_POST['id'] = $_POST['plugin_resources_resources_id'];
+    $resource->update($_POST);
     Html::back();
 } else {
     //show form items needs from helpdesk

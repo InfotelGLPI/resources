@@ -98,6 +98,13 @@ if (isset($_GET["entity_restrict"])
     $_GET["entity_restrict"] = Toolbox::decodeArrayFromInput($_GET["entity_restrict"]);
 }
 
+// getEntitiesRestrictRequest() concatenates array values into the SQL IN(...) clause
+// without escaping (src/DbUtils.php), so every element must be cast to int here, before
+// either of this file's two call sites use it (mirrors the fix in dropdownResources.php).
+if (isset($_GET["entity_restrict"]) && is_array($_GET["entity_restrict"])) {
+    $_GET["entity_restrict"] = array_map('intval', $_GET["entity_restrict"]);
+}
+
 // Make a select box with preselected values
 if (!isset($_GET["limit"])) {
     $_GET["limit"] = $_SESSION["glpidropdown_chars_limit"];

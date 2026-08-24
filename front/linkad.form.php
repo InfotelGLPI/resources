@@ -43,9 +43,11 @@ if (isset($_POST["add"])) {
     $linkad->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
-    if ($linkad->canCreate()) {
-        $linkad->update($_POST);
-    }
+    // check($id, UPDATE) instead of the global canCreate(): CommonDBTM::update() performs
+    // no per-item authorization, so without this any authenticated user holding the create
+    // right could update an arbitrary linkad by id (IDOR), regardless of its entity.
+    $linkad->check($_POST["id"], UPDATE, $_POST);
+    $linkad->update($_POST);
     $ldap = new LDAP();
     $ldap->getUserInformation($_POST["auth_id"]);
     Html::back();

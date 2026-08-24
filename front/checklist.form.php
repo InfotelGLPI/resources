@@ -55,9 +55,11 @@ if (isset($_POST["add"])) {
     $checklist->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
-    if ($checklist->canCreate()) {
-        $checklist->update($_POST);
-    }
+    // check($id, UPDATE) instead of the global canCreate(): CommonDBTM::update() performs
+    // no per-item authorization, so without this any authenticated user holding the create
+    // right could update an arbitrary checklist by id (IDOR), regardless of its entity.
+    $checklist->check($_POST["id"], UPDATE, $_POST);
+    $checklist->update($_POST);
     Html::back();
 } else {
     $checklist->checkGlobal(READ);
