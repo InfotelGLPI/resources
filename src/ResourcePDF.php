@@ -46,7 +46,7 @@ class ResourcePDF extends PluginPdfCommon
      *
      * @param \CommonGLPI|null $obj
      */
-    public function __construct(CommonGLPI $obj = null)
+    public function __construct(?CommonGLPI $obj = null)
     {
         $this->obj = ($obj ? $obj : new Resource());
     }
