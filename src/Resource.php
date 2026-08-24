@@ -1362,11 +1362,19 @@ class Resource extends CommonDBTM
 
         imagecopyresampled($tmp, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
         $ext = 'jpg';
+        // The photo filename is derived from user-controlled resource fields (name/firstname).
+        // replace_accents() only transliterates accents — it leaves path separators (/, \, ..)
+        // untouched, so an unsanitized name lets the JPEG be written outside the pictures
+        // directory (path traversal on imagejpeg()/rename()). Strip every character outside
+        // [a-z0-9_-] from each component before building the path, mirroring the read-side
+        // hardening already applied in picture.send.php.
         $resources_name = str_replace(" ", "", strtolower($class->fields["name"]));
         $resources_firstname = str_replace(" ", "", strtolower($class->fields["firstname"]));
-        $name = $resources_name . "_" . $resources_firstname . "." . $ext;
 
-        $name = $this->replace_accents($name);
+        $resources_name = preg_replace('/[^a-z0-9_-]/', '', $this->replace_accents($resources_name));
+        $resources_firstname = preg_replace('/[^a-z0-9_-]/', '', $this->replace_accents($resources_firstname));
+
+        $name = $resources_name . "_" . $resources_firstname . "." . $ext;
 
         $tmpfile = GLPI_DOC_DIR . "/_uploads/" . $name;
         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $name;
@@ -1666,7 +1674,10 @@ class Resource extends CommonDBTM
         global $CFG_GLPI;
 
         if (isset($this->input['picture']) && $this->input['picture'] != "" && $this->input['picture'] != "null" && $this->input['picture'] != "NULL") {
-            $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->input['picture'];
+            // 'picture' is a flat filename (name_firstname.jpg); apply basename() so a crafted
+            // input (e.g. picture=../../config/glpicrypt.key posted on delete) cannot make
+            // unlink() remove an arbitrary file outside the pictures directory.
+            $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . basename((string) $this->input['picture']);
             unlink($filename);
         }
         if ($CFG_GLPI["notifications_mailing"]
@@ -4776,7 +4787,10 @@ class Resource extends CommonDBTM
             'Select the contract type',
             'resources',
         ) . "</div><br>";
-        echo "<a href='" . $target . "?reset=reset' target='_blank' title=\""
+        // $target is reflected into this href attribute; escape it to prevent a
+        // reflected XSS via an attribute breakout (the caller also whitelists it to
+        // an internal same-origin path, this is defense in depth at the sink).
+        echo "<a href='" . htmlescape($target) . "?reset=reset' target='_blank' title=\""
             . __s('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a>";
 
         echo "<div class='left' style='width:100%'>";

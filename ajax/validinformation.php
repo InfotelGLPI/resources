@@ -46,7 +46,15 @@ use GlpiPlugin\Resources\Config;
 
 Session::checkRight('plugin_resources', READ);
 
-$resource_id = (int) ($_REQUEST["plugin_resources_resources_id"] ?? 0);
+// This endpoint mutates a resource and creates tickets. GLPI's CheckCsrfListener only
+// validates the CSRF token on non-GET requests, so a state-changing action reachable
+// via GET escapes CSRF protection entirely. Require POST (the legitimate AJAX caller,
+// Resource_Validation.php, already posts) and read $_POST so the token is enforced.
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    throw new \Glpi\Exception\Http\BadRequestHttpException();
+}
+
+$resource_id = (int) ($_POST["plugin_resources_resources_id"] ?? 0);
 $resource = new Resource();
 $resource->check($resource_id, UPDATE);
 $resource->update(['id' => $resource_id, 'valid_resource_information' => 1]);
