@@ -31,8 +31,9 @@ jobs:
           coverage: none
 
       - name: Audit runtime dependencies
-        # Fail the build on any known security advisory. Abandoned packages
-        # (adldap2/adldap2, tightenco/collect) are a documented/accepted risk,
-        # tracked for migration to directorytree/ldaprecord, so they are only
-        # reported here — not treated as a build failure.
+        # Fail the build on any known security advisory. The LDAP client was
+        # migrated from the abandoned adldap2/adldap2 to the maintained
+        # directorytree/ldaprecord; --abandoned=report is kept as a defensive
+        # net (report only, not a build failure) in case a transitive package
+        # becomes abandoned later.
         run: composer audit --no-dev --locked --abandoned=report --ansi

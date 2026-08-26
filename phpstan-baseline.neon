@@ -2248,18 +2248,6 @@ parameters:
 			path: src/ImportResourceData.php
 
 		-
-			message: '#^Cannot call method getUserAccountControlObject\(\) on Adldap\\Models\\Model\|array\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/LDAP.php
-
-		-
-			message: '#^Cannot call method setUserAccountControl\(\) on Adldap\\Models\\Model\|array\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/LDAP.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1

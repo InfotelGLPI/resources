@@ -29,13 +29,16 @@
 
 namespace GlpiPlugin\Resources;
 
-use Adldap\Adldap;
-use Adldap\Auth\BindException;
-use Adldap\Models\ModelNotFoundException;
 use AuthLDAP;
 use CommonDBTM;
 use Exception;
 use GLPIKey;
+use LdapRecord\Auth\BindException;
+use LdapRecord\Connection;
+use LdapRecord\Container;
+use LdapRecord\Models\ActiveDirectory\User;
+use LdapRecord\Models\Attributes\AccountControl;
+use LdapRecord\Models\ModelNotFoundException;
 use Session;
 use Toolbox;
 
@@ -204,8 +207,6 @@ class LDAP extends CommonDBTM
 
     public function getUserInformation($authID)
     {
-        // Construct new Adldap instance.
-        $ad = new Adldap();
         $config_ldap = new AuthLDAP();
         $res = $config_ldap->getFromDB($authID);
 
@@ -244,15 +245,13 @@ class LDAP extends CommonDBTM
             'password' => (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd'] ?? ''),
         ];
 
-        // Add a connection provider to Adldap.
-        $ad->addProvider($config);
+        $connection = new Connection($config);
 
         try {
-            // If a successful connection is made to your server, the provider will be returned.
-            $provider = $ad->connect();
+            // Bind to the server to validate the connection settings.
+            $connection->connect();
         } catch (BindException $e) {
             // There was an issue binding / connecting to the server.
-
         }
     }
 
@@ -261,15 +260,11 @@ class LDAP extends CommonDBTM
         $find = false;
         $adConfig = new Adconfig();
         $adConfig->getFromDB(1);
-        $ad = new Adldap();
         $config = self::getConfig();
-        $ad->addProvider($config);
-
+        Container::addConnection(new Connection($config));
 
         try {
-            $provider = $ad->connect();
-            $search = $provider->search();
-            $record = $search->findByOrFail($adConfig->getField("logAD"), $login);
+            User::findByOrFail($adConfig->getField("logAD"), $login);
 
             $find = true;
         } catch (ModelNotFoundException $e) {
@@ -290,23 +285,17 @@ class LDAP extends CommonDBTM
     {
         $adConfig = new Adconfig();
         $adConfig->getFromDB(1);
-        $ad = new Adldap();
         $config = self::getConfig();
-        $ad->addProvider($config);
+        Container::addConnection(new Connection($config));
         try {
-            $provider = $ad->connect();
-            $user = $provider->make()->user();
+            $user = new User();
 
             // Create the users distinguished name.
             // We're adding an OU onto the users base DN to have it be saved in the specified OU.
-            //         $dn = $user->getDnBuilder()->addOu($adConfig->getField("ouUser")); // Built DN will be: "CN=John Doe,OU=Users,DC=acme,DC=org";
-            //         $dn->addCn($data["firstname"]." ".$data["name"]);
-            //         // Set the users DN, account name.
-            //         $user->setDn($dn);
             $dn = "CN=" . $data["name"] . " " . $data["firstname"] . "," . $adConfig->getField("ouUser");
             $user->setDn($dn);
-            $user->setAccountName($data['login']);
-            $user->setCommonName($data["name"] . " " . $data["firstname"]);
+            $user->samaccountname = $data['login'];
+            $user->cn = $data["name"] . " " . $data["firstname"];
 
 
             $attributes = [];
@@ -352,7 +341,9 @@ class LDAP extends CommonDBTM
                             $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
                         }
                         if ($newPassword != '') {
-                            $user->changePassword('', $newPassword, true);
+                            // Reset the password (unicodePwd is auto-encoded by the model).
+                            $user->unicodePwd = $newPassword;
+                            $user->save();
                         }
                         return true;
                     } catch (Exception $ex) {
@@ -374,16 +365,10 @@ class LDAP extends CommonDBTM
     {
         $adConfig = new Adconfig();
         $adConfig->getFromDB(1);
-        $ad = new Adldap();
         $config = self::getConfig();
-        $ad->addProvider($config);
+        Container::addConnection(new Connection($config));
         try {
-            $provider = $ad->connect();
-            $user = $provider->search()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
-
-            // Create the users distinguished name.
-            // We're adding an OU onto the users base DN to have it be saved in the specified OU.
-            //         $user->setCommonName($data["firstname"]." ".$data["name"]);
+            $user = User::query()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
 
 
             $attributes = [];
@@ -393,7 +378,8 @@ class LDAP extends CommonDBTM
                     $a = LinkAd::getMapping($at);
                     if (isset($data[$a])) {
                         if (empty($data[$a]) && $at != "contractEndAD") {
-                            $user->setAttribute($adConfig->getField($at), null);
+                            // An empty value marks the attribute for deletion on save.
+                            $user->setAttribute($adConfig->getField($at), []);
                             $attributes[$adConfig->getField($at)] = [];
                         } else {
                             if ($at == "contractEndAD") {
@@ -447,21 +433,19 @@ class LDAP extends CommonDBTM
     {
         $adConfig = new Adconfig();
         $adConfig->getFromDB(1);
-        $ad = new Adldap();
         $config = self::getConfig();
-        $ad->addProvider($config);
+        Container::addConnection(new Connection($config));
         try {
-            $provider = $ad->connect();
-            $user = $provider->search()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
+            $user = User::query()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
 
 
             $attributes = [];
             $attr = $adConfig->getArrayAttributes();
-            $ac = $user->getUserAccountControlObject();
+            $ac = new AccountControl((int) $user->getFirstAttribute('userAccountControl'));
 
-            // Mark the account as enabled (normal).
+            // Flip the disabled bit on the account control flags.
             $ac->accountIsDisabled();
-            $user->setUserAccountControl($ac);
+            $user->userAccountControl = $ac->getValue();
 
             if ($user->save()) {
                 //            $newParentDn = $user->getDnBuilder()->addOu($adConfig->getField("ouDesactivateUserAD"));
