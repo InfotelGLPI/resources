@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceBadge;
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -38,7 +40,15 @@ if (isset($_POST['action'])) {
     $badge = new ResourceBadge();
     switch ($_POST['action']) {
         case "loadBadge":
-            $badge->loadBadge($_POST['plugin_resources_resources_id']);
+            // Anti-IDOR: loadBadge() lists the badges/users linked to a resource id with no
+            // entity restriction. Confirm the caller may read that specific resource (right +
+            // entity scope) before disclosing them, like picture.send.php / showHabilitations.php.
+            $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+            $resource = new Resource();
+            if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                throw new NotFoundHttpException();
+            }
+            $badge->loadBadge($resources_id);
             break;
         case "loadBadgeRestitution":
             $badge->loadBadgeRestitution();

@@ -52,7 +52,17 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
                 $tmpname['link'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
                 $tmpname['comment'] = "";
             } else {
-                $tmpname = Resource::getResourceName($_REQUEST["value"], 2);
+                // Anti-IDOR: getResourceName() builds a WHERE on the resource id with no
+                // entity restriction, so the global plugin_resources READ alone would let a
+                // user read the free-text comment of a resource in another entity. Replay the
+                // per-record guard (right + entity scope) used by picture.send.php /
+                // showHabilitations.php before disclosing it.
+                $resources_id = (int) $_REQUEST["value"];
+                $resource = new Resource();
+                if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                    throw new NotFoundHttpException();
+                }
+                $tmpname = Resource::getResourceName($resources_id, 2);
             }
             echo htmlspecialchars((string) $tmpname["comment"], ENT_QUOTES, 'UTF-8');
 

@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Item;
 
 Session::checkRight('plugin_resources', READ);
@@ -35,11 +37,20 @@ global $CFG_GLPI, $DB;
 
 if (Plugin::isPluginActive("useditemsexport")) {
     if (isset($_POST['plugin_resources_resources_id'])) {
+        // Anti-IDOR: this endpoint discloses whether a resource's linked user owns equipment
+        // (and that users_id) with no entity restriction. Validate the resource id and confirm
+        // the caller may read that specific resource (right + entity scope) before proceeding,
+        // like picture.send.php / showHabilitations.php.
+        $resources_id = (int) $_POST['plugin_resources_resources_id'];
+        $resource_obj = new Resource();
+        if ($resources_id <= 0 || !$resource_obj->can($resources_id, READ)) {
+            throw new NotFoundHttpException();
+        }
         $resource_item = new Resource_Item();
         $resource = $resource_item->find(
             [
                 'itemtype' => 'User',
-                'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id'],
+                'plugin_resources_resources_id' => $resources_id,
             ],
             [],
             [1],
