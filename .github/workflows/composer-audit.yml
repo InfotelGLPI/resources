@@ -30,10 +30,17 @@ jobs:
           extensions: mbstring, openssl, ldap
           coverage: none
 
+      - name: Resolve runtime dependencies
+        # composer.lock is intentionally not tracked (GLPI plugin convention),
+        # so resolve the runtime tree at build time. This also means the weekly
+        # cron audits whatever versions the "^3.0" constraint resolves to today,
+        # not a pinned snapshot.
+        run: composer update --no-dev --no-progress --ansi
+
       - name: Audit runtime dependencies
         # Fail the build on any known security advisory. The LDAP client was
         # migrated from the abandoned adldap2/adldap2 to the maintained
         # directorytree/ldaprecord; --abandoned=report is kept as a defensive
         # net (report only, not a build failure) in case a transitive package
         # becomes abandoned later.
-        run: composer audit --no-dev --locked --abandoned=report --ansi
+        run: composer audit --no-dev --abandoned=report --ansi

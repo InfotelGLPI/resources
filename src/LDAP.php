@@ -36,6 +36,7 @@ use GLPIKey;
 use LdapRecord\Auth\BindException;
 use LdapRecord\Connection;
 use LdapRecord\Container;
+use LdapRecord\LdapRecordException;
 use LdapRecord\Models\ActiveDirectory\User;
 use LdapRecord\Models\Attributes\AccountControl;
 use LdapRecord\Models\ModelNotFoundException;
@@ -294,8 +295,8 @@ class LDAP extends CommonDBTM
             // We're adding an OU onto the users base DN to have it be saved in the specified OU.
             $dn = "CN=" . $data["name"] . " " . $data["firstname"] . "," . $adConfig->getField("ouUser");
             $user->setDn($dn);
-            $user->samaccountname = $data['login'];
-            $user->cn = $data["name"] . " " . $data["firstname"];
+            $user->setFirstAttribute('samaccountname', $data['login']);
+            $user->setFirstAttribute('cn', $data["name"] . " " . $data["firstname"]);
 
 
             $attributes = [];
@@ -323,40 +324,38 @@ class LDAP extends CommonDBTM
             $attributes['description'] = $data["role"];
             $user->fill($attributes);
 
-            if ($user->save()) {
-                if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
-                    try {
-                        $newPassword = '';
-                        if ($adConfig->fields['format_default_account_password'] == 1) {
-                            $newPassword = strtoupper(substr($data["firstname"], 0, 1))
-                                . strtolower(substr($data["name"], 0, 1));
-                            if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
-                                $date = substr($data["begindate"], 0, 10);
-                                $date = explode('-', $date);
-                                $newPassword .= $date[2] . $date[1] . $date[0] ;
-                            }
-                            $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
+            // save() returns void and throws LdapRecordException on failure.
+            $user->save();
+            if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
+                try {
+                    $newPassword = '';
+                    if ($adConfig->fields['format_default_account_password'] == 1) {
+                        $newPassword = strtoupper(substr($data["firstname"], 0, 1))
+                            . strtolower(substr($data["name"], 0, 1));
+                        if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
+                            $date = substr($data["begindate"], 0, 10);
+                            $date = explode('-', $date);
+                            $newPassword .= $date[2] . $date[1] . $date[0] ;
+                        }
+                        $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
 
-                        } elseif ($adConfig->fields['format_default_account_password'] == 2) {
-                            $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
-                        }
-                        if ($newPassword != '') {
-                            // Reset the password (unicodePwd is auto-encoded by the model).
-                            $user->unicodePwd = $newPassword;
-                            $user->save();
-                        }
-                        return true;
-                    } catch (Exception $ex) {
-                        Toolbox::logInFile('LDAPERROR', "Erreur LDAP : " . $ex->getMessage());
-                        return false;
+                    } elseif ($adConfig->fields['format_default_account_password'] == 2) {
+                        $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
                     }
+                    if ($newPassword != '') {
+                        // Reset the password. The 'unicodepwd' mutator auto-encodes it (UTF-16LE, quoted).
+                        $user->setAttribute('unicodepwd', $newPassword);
+                        $user->save();
+                    }
+                    return true;
+                } catch (Exception $ex) {
+                    Toolbox::logInFile('LDAPERROR', "Erreur LDAP : " . $ex->getMessage());
+                    return false;
                 }
-                return true;
-            } else {
-                return false;
             }
-        } catch (ModelNotFoundException $e) {
-            // Record wasn't found!
+            return true;
+        } catch (LdapRecordException $e) {
+            // Record wasn't found or the write failed.
             return false;
         }
     }
@@ -410,22 +409,17 @@ class LDAP extends CommonDBTM
                     $new_value[$k] = $attributesEnd[$k];
                 }
             }
-            if ($user->save()) {
-                if ($rename) {
-                    $ncn = "cn=" . $data["name"] . " " . $data["firstname"];
-                    if ($user->rename($ncn)) {
-                        return [true, $new_value];
-                    }
-                    return [false, $new_value];
-                }
-
-                return [true, $new_value];
-            } else {
-                return [false, $new_value];
+            // save() and rename() return void and throw LdapRecordException on failure.
+            $user->save();
+            if ($rename) {
+                $ncn = "cn=" . $data["name"] . " " . $data["firstname"];
+                $user->rename($ncn);
             }
-        } catch (ModelNotFoundException $e) {
-            // Record wasn't found!
-            return [false, []];
+
+            return [true, $new_value];
+        } catch (LdapRecordException $e) {
+            // Record wasn't found or the write failed.
+            return [false, $new_value ?? []];
         }
     }
 
@@ -444,23 +438,19 @@ class LDAP extends CommonDBTM
             $ac = new AccountControl((int) $user->getFirstAttribute('userAccountControl'));
 
             // Flip the disabled bit on the account control flags.
-            $ac->accountIsDisabled();
-            $user->userAccountControl = $ac->getValue();
+            $ac->setAccountIsDisabled();
+            $user->setAttribute('userAccountControl', $ac->getValue());
 
-            if ($user->save()) {
-                //            $newParentDn = $user->getDnBuilder()->addOu($adConfig->getField("ouDesactivateUserAD"));
-                //            $newParentDn = $newParentDn->removeOu($adConfig->getField("ouUser"));
-                //            $newParentDn = $newParentDn->removeCn($user->getCommonName());
-                $newParentDn = $adConfig->getField("ouDesactivateUserAD");
-                if ($user->move($newParentDn)) {
-                    return true;
-                }
-                return false;
-            } else {
-                return false;
-            }
-        } catch (ModelNotFoundException $e) {
-            // Record wasn't found!
+            // save() and move() return void and throw LdapRecordException on failure.
+            $user->save();
+            //            $newParentDn = $user->getDnBuilder()->addOu($adConfig->getField("ouDesactivateUserAD"));
+            //            $newParentDn = $newParentDn->removeOu($adConfig->getField("ouUser"));
+            //            $newParentDn = $newParentDn->removeCn($user->getCommonName());
+            $newParentDn = $adConfig->getField("ouDesactivateUserAD");
+            $user->move($newParentDn);
+            return true;
+        } catch (LdapRecordException $e) {
+            // Record wasn't found or the write failed.
             return false;
         }
     }
