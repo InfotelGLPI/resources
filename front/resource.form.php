@@ -231,6 +231,7 @@ elseif (isset($_POST["update"])) {
 
     if (count($required) > 0) {
         // Set default value...
+        $values = [];
         foreach ($_POST as $key => $val) {
             $values[$key] = $val;
         }

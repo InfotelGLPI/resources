@@ -95,6 +95,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     if (count($required) > 0) {
         // Set default value...
+        $values = [];
         foreach ($_POST as $key => $val) {
             $values[$key] = $val;
         }
@@ -172,6 +173,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             }
         } else {
 
+            $values = [];
             foreach ($_POST as $key => $val) {
                 $values[$key] = $val;
             }

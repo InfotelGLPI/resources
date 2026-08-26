@@ -53,11 +53,8 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
 
 
         $option["name"] = "items";
-        if (isset($values)) {
-            $option["value"] = $values;
-        } else {
-            $option["value"] = 0;
-        }
+        // $values is always defined above (defaults to 0), so use it directly.
+        $option["value"] = $values;
 
 
         $_POST["type"]::dropdown($option);
