@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Change;
 
 Session::checkRight('plugin_resources', READ);
@@ -51,5 +53,12 @@ if (isset($_POST['load_button_changeresources'])) {
             break;
     }
 } else {
-    $resource_change->setFieldByAction($_POST["id"], $_POST['plugin_resources_resources_id']);
+    // Enforce per-record read (right + entity) before setFieldByAction()
+    // discloses the resource's current manager name for the given id.
+    $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+    $resource = new Resource();
+    if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+        throw new NotFoundHttpException();
+    }
+    $resource_change->setFieldByAction($_POST["id"], $resources_id);
 }

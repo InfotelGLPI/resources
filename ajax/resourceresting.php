@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceResting;
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -38,7 +40,15 @@ if (isset($_POST['action'])) {
     $resting = new ResourceResting();
     switch ($_POST['action']) {
         case "loadResting":
-            $resting->loadResting($_POST['plugin_resources_resources_id']);
+            // Enforce per-record read (right + entity) before disclosing the
+            // resource name and bench/resting periods; the global READ check
+            // above does not restrict which resource id may be queried.
+            $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+            $resource = new Resource();
+            if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                throw new NotFoundHttpException();
+            }
+            $resting->loadResting($resources_id);
             break;
 
 

@@ -28,6 +28,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\LeavingInformation;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ContractType;
@@ -39,10 +40,16 @@ if (strpos($_SERVER['PHP_SELF'], "leavingform.php")) {
 }
 Session::checkRight('plugin_resources', READ);
 
-if ($_POST['plugin_resources_resources_id'] > 0) {
+$resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+if ($resources_id > 0) {
     $contracttype = new ContractType();
     $resource = new Resource();
-    $resource->getFromDB($_POST['plugin_resources_resources_id']);
+    // Enforce per-record read (right + entity) before loading the resource
+    // and rendering its contract-type-driven leaving form.
+    if (!$resource->can($resources_id, READ)) {
+        throw new NotFoundHttpException();
+    }
+    $resource->getFromDB($resources_id);
     $contracttype->getFromDB($resource->fields['plugin_resources_contracttypes_id']);
     if (isset($contracttype->fields['use_resignation_form']) && $contracttype->fields['use_resignation_form']) {
         $leavinginformation = new LeavingInformation();
