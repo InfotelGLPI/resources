@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-26 14:03+0000\n"
+"POT-Creation-Date: 2026-08-26 15:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -983,7 +983,7 @@ msgstr[1] ""
 #: src/NotificationTargetResource.php:853
 #: src/NotificationTargetResource.php:1028
 #: src/NotificationTargetResource.php:1677
-#: src/NotificationTargetResource.php:1708 ajax/leavingform.php:104
+#: src/NotificationTargetResource.php:1708 ajax/leavingform.php:111
 #: report/checkhabilitation/checkhabilitation.php:222
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:96
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:265
@@ -2239,7 +2239,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:848
 #: src/NotificationTargetResource.php:1013
 #: src/NotificationTargetResource.php:1673
-#: src/NotificationTargetResource.php:1704 ajax/leavingform.php:114
+#: src/NotificationTargetResource.php:1704 ajax/leavingform.php:121
 #: templates/wizard_secondstep_resource.html.twig:373
 #: templates/wizard_secondstep_resource.html.twig:398
 msgid "Resource manager"
