@@ -25,19 +25,28 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Inline selector: a dropdown followed by its actions. Each button carries its own
- # submit name, which the import controller dispatches on. #}
-<form name="file-selector" method="post" action="{{ form_action }}"
-      class="d-flex flex-wrap align-items-center gap-2 my-2">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+{# Cells of one import line, emitted inside a <tr> opened by the caller.
+ # Widgets are GLPI dropdowns/inputs rendered server-side, hence |raw. #}
+<td class="center" width="10"
+    {%- if border_color is not empty %} style="border-left:solid 5px {{ border_color }}"{% endif %}>
+    {{- checkbox|raw -}}
+</td>
 
-    <div class="flex-grow-1" style="min-width: 12rem;">{{ dropdown|raw }}</div>
+<td class="center">{{ resource_link|raw }}</td>
 
-    {% for btn in buttons %}
-        <button type="submit" name="{{ btn.name }}"
-                class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
-                {%- if btn.confirm is defined and btn.confirm is not empty %}
-                    onclick="return confirm('{{ btn.confirm|e('js') }}');"
-                {%- endif %}>{{ btn.label }}</button>
-    {% endfor %}
-</form>
+{% for cell in cells %}
+    <td class="center p-0">
+        <span>
+            {{- cell.hidden|default('')|raw }}
+            {% if cell.has_old %}
+                {# Old value struck above, new value below. #}
+                <ul class="list-unstyled mb-0">
+                    <li style="{{ old_style }}">{{ cell.old|raw }}</li>
+                    <li style="{{ new_style }}">{{ cell.widget|raw }}</li>
+                </ul>
+            {% else %}
+                {{ cell.widget|raw }}
+            {% endif %}
+        </span>
+    </td>
+{% endfor %}

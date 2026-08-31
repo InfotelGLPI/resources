@@ -25,19 +25,11 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Inline selector: a dropdown followed by its actions. Each button carries its own
- # submit name, which the import controller dispatches on. #}
-<form name="file-selector" method="post" action="{{ form_action }}"
-      class="d-flex flex-wrap align-items-center gap-2 my-2">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-
-    <div class="flex-grow-1" style="min-width: 12rem;">{{ dropdown|raw }}</div>
-
-    {% for btn in buttons %}
-        <button type="submit" name="{{ btn.name }}"
-                class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
-                {%- if btn.confirm is defined and btn.confirm is not empty %}
-                    onclick="return confirm('{{ btn.confirm|e('js') }}');"
-                {%- endif %}>{{ btn.label }}</button>
-    {% endfor %}
-</form>
+{# One "other" import value: its name, the value currently stored and the new one. #}
+<table class="tab_cadre_fixe" style="margin:0;width:100%;">
+    <tr>
+        <td>{{ name }}</td>
+        <td class="text-danger">{{ previous|raw }}</td>
+        <td class="text-success">{{ current }}</td>
+    </tr>
+</table>

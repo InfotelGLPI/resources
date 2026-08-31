@@ -25,19 +25,18 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Inline selector: a dropdown followed by its actions. Each button carries its own
- # submit name, which the import controller dispatches on. #}
-<form name="file-selector" method="post" action="{{ form_action }}"
-      class="d-flex flex-wrap align-items-center gap-2 my-2">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-
-    <div class="flex-grow-1" style="min-width: 12rem;">{{ dropdown|raw }}</div>
-
-    {% for btn in buttons %}
-        <button type="submit" name="{{ btn.name }}"
-                class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
-                {%- if btn.confirm is defined and btn.confirm is not empty %}
-                    onclick="return confirm('{{ btn.confirm|e('js') }}');"
-                {%- endif %}>{{ btn.label }}</button>
-    {% endfor %}
-</form>
+{# Table-row fragment: emitted inside the import list table, whose surrounding form
+ # dispatches on save / delete. #}
+<tr>
+    <td class="center" colspan="100">
+        {{ call('Html::submit', [_x('button', 'Save'), {
+            'name': 'save',
+            'class': 'btn btn-primary',
+        }])|raw }}
+        &nbsp;&nbsp;
+        {{ call('Html::submit', [_x('button', 'Remove an item'), {
+            'name': 'delete',
+            'class': 'btn btn-primary',
+        }])|raw }}
+    </td>
+</tr>

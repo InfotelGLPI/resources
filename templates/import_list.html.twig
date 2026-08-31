@@ -1,0 +1,69 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% if entries is empty %}
+    {# No import to show: only the error head, inside its own table so it stays valid. #}
+    <table class="tab_cadre_fixe">
+        {{ error_header|raw }}
+    </table>
+{% else %}
+    {{ pager|raw }}
+
+    <form name="form" method="post" id="import" action="{{ form_action }}">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+
+        {# Kept out of the table: an <input> is not valid as a direct child of <tr>. #}
+        {% for hidden in hidden_inputs %}
+            <input type="hidden" name="{{ hidden.name }}" value="{{ hidden.value }}">
+        {% endfor %}
+
+        <div class="center">
+            <table class="tab_cadre_fixe">
+                <tr class="center">
+                    <td class="center" colspan="100">
+                        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
+                            {% for legend in legends %}
+                                <span class="d-inline-block"
+                                      style="width:10px;height:10px;background-color:{{ legend.color }};"></span>
+                                <a href="{{ legend.url }}" class="me-3">{{ legend.label }}</a>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+
+                {{ buttons|raw }}
+                {{ list_header|raw }}
+
+                {% for entry in entries %}
+                    <tr>{{ entry.cells|raw }}</tr>
+                {% endfor %}
+
+                {{ buttons|raw }}
+            </table>
+        </div>
+    </form>
+{% endif %}
