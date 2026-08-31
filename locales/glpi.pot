@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 09:52+0000\n"
+"POT-Creation-Date: 2026-08-31 11:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,6 +156,7 @@ msgstr ""
 #: templates/resourcebadge_form.html.twig:43
 #: templates/task_item_form.html.twig:60
 #: templates/resourceresting_form.html.twig:77
+#: templates/checklist_from_resources.html.twig:81
 #: templates/wizard_fourstep_choice.html.twig:72
 #: templates/wizard_fourstep_choice.html.twig:107
 #: templates/choice_helpdesk_needs.html.twig:67
@@ -185,19 +186,23 @@ msgctxt "button"
 msgid "Add a new file"
 msgstr ""
 
+#: templates/task_add_link.html.twig:29
+msgid "Add a new task"
+msgstr ""
+
 #: src/ContractType.php:97 src/ContractType.php:174
 msgid "Add a picture"
 msgstr ""
 
-#: src/Checklist.php:633
+#: src/Checklist.php:605
 msgid "Add a task at the arriving checklist"
 msgstr ""
 
-#: src/Checklist.php:638
+#: src/Checklist.php:610
 msgid "Add a task at the leaving checklist"
 msgstr ""
 
-#: src/Checklist.php:643
+#: src/Checklist.php:615
 msgid "Add a task at the transfer checklist"
 msgstr ""
 
@@ -229,7 +234,7 @@ msgstr ""
 msgid "Add the photo of the resource"
 msgstr ""
 
-#: src/Checklist.php:971
+#: src/Checklist.php:856
 msgid "Add ticket"
 msgstr ""
 
@@ -265,7 +270,7 @@ msgid ""
 "Alert manager in charge to complete the departure form started by others"
 msgstr ""
 
-#: src/Task.php:864 templates/datatable.html.twig:199
+#: templates/datatable.html.twig:199
 msgid "All"
 msgstr ""
 
@@ -291,7 +296,7 @@ msgid "Arrival / Departure workflow"
 msgstr ""
 
 #: src/RuleContracttypeHidden.php:286 src/RuleContracttypeReadonly.php:327
-#: src/Config.php:140 src/Config.php:519 src/Checklist.php:1191
+#: src/Config.php:140 src/Config.php:519 src/Checklist.php:1105
 #: src/Resource_Item.php:984 src/Resource_Item.php:1508
 #: src/Resource_Item.php:1518 src/RuleContracttype.php:283
 #: src/Dashboard.php:129 src/ResourceCard.php:178 src/ResourceCard.php:262
@@ -319,6 +324,10 @@ msgstr ""
 
 #: src/Config.php:520
 msgid "Ascending"
+msgstr ""
+
+#: templates/checklist_from_resources.html.twig:71
+msgid "Assigned to"
 msgstr ""
 
 #: src/Config.php:564
@@ -508,9 +517,9 @@ msgstr ""
 msgid "Cannot add a choice that contains children"
 msgstr ""
 
-#: src/Task.php:401 src/Task.php:640 src/NotificationTargetResource.php:414
+#: src/Task.php:402 src/NotificationTargetResource.php:414
 #: src/NotificationTargetResource.php:1617
-#: src/NotificationTargetResource.php:1725
+#: src/NotificationTargetResource.php:1725 templates/task_form.html.twig:60
 msgid "Carried out task"
 msgstr ""
 
@@ -586,11 +595,11 @@ msgstr ""
 msgid "Check all"
 msgstr ""
 
-#: src/Checklist.php:660
+#: src/Checklist.php:633
 msgid "Check list done"
 msgstr ""
 
-#: src/Checklist.php:1547
+#: src/Checklist.php:1393
 msgid "Checked"
 msgstr ""
 
@@ -604,11 +613,11 @@ msgstr[1] ""
 msgid "Checklist action"
 msgstr ""
 
-#: src/Checklist.php:1198 src/NotificationTargetResource.php:578
+#: src/Checklist.php:1111 src/NotificationTargetResource.php:578
 msgid "Checklist needs to verificated"
 msgstr ""
 
-#: src/Checklistconfig.php:67
+#: src/Checklistconfig.php:66
 msgid "Checklist setup"
 msgid_plural "Checklists setup"
 msgstr[0] ""
@@ -618,7 +627,7 @@ msgstr[1] ""
 msgid "Checklist type"
 msgstr ""
 
-#: src/Checklist.php:1297 src/Checklist.php:1440
+#: src/Checklist.php:1143 src/Checklist.php:1286
 msgid "Checklists Verification"
 msgstr ""
 
@@ -674,7 +683,8 @@ msgid_plural "Comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/employment_form.html.twig:84
+#: templates/reportconfig_form.html.twig:34
+#: templates/employment_form.html.twig:84 templates/task_form.html.twig:75
 #: templates/resourceholiday_form.html.twig:51
 #: templates/import_form.html.twig:34
 #: templates/resourceresting_form.html.twig:60
@@ -682,7 +692,7 @@ msgstr[1] ""
 msgid "Comments"
 msgstr ""
 
-#: src/LinkAd.php:536 templates/linkad_resource_form.html.twig:78
+#: src/LinkAd.php:539 templates/linkad_resource_form.html.twig:78
 msgid "Company"
 msgstr ""
 
@@ -740,7 +750,8 @@ msgstr ""
 msgid "ContractType"
 msgstr ""
 
-#: src/Checklist.php:352 src/Checklist.php:740 src/ResourceBadge.php:491
+#: src/Checklist.php:352 src/ResourceBadge.php:491
+#: templates/checklist_from_resources.html.twig:66
 msgid "Create a end treatment ticket"
 msgstr ""
 
@@ -760,7 +771,7 @@ msgstr ""
 msgid "Create or delete user in ldap is mandatory to close ticket"
 msgstr ""
 
-#: src/LinkAd.php:342
+#: src/LinkAd.php:345
 msgctxt "button"
 msgid "Create user in AD"
 msgstr ""
@@ -945,7 +956,7 @@ msgstr ""
 msgid "Deletion category"
 msgstr ""
 
-#: src/Adconfig.php:285 src/LinkAd.php:537 src/Resource.php:180
+#: src/Adconfig.php:285 src/LinkAd.php:540 src/Resource.php:180
 #: src/Department.php:56 templates/linkad_resource_form.html.twig:49
 msgid "Department"
 msgid_plural "Departments"
@@ -953,10 +964,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/RuleContracttypeHidden.php:290 src/RuleContracttypeReadonly.php:331
-#: src/Adconfig.php:291 src/Config.php:141 src/Resource_Change.php:472
-#: src/Checklist.php:1189 src/Resource_Item.php:985 src/Resource_Item.php:1509
+#: src/Adconfig.php:291 src/Config.php:141 src/Resource_Change.php:474
+#: src/Checklist.php:1104 src/Resource_Item.php:985 src/Resource_Item.php:1509
 #: src/Resource_Item.php:1519 src/RuleContracttype.php:287
-#: src/Dashboard.php:177 src/LinkAd.php:539 src/Resource.php:182
+#: src/Dashboard.php:177 src/LinkAd.php:542 src/Resource.php:182
 #: src/Resource.php:506 src/Resource.php:2699 src/Resource.php:3673
 #: src/ResourcePDF.php:107 src/Recap.php:233 src/Directory.php:232
 #: src/NotificationTargetResource.php:474
@@ -990,8 +1001,9 @@ msgid "Descending"
 msgstr ""
 
 #: front/modalavailablevariable.php:42 src/Config.php:142
+#: templates/checklistconfig_form.html.twig:45
 #: templates/wizard_secondstep_resource.html.twig:738
-#: templates/linkad_form.html.twig:42
+#: templates/linkad_form.html.twig:42 templates/checklist_form.html.twig:42
 #: templates/choice_helpdesk_needs.html.twig:36
 msgid "Description"
 msgstr ""
@@ -1028,7 +1040,7 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: src/LinkAd.php:354
+#: src/LinkAd.php:357
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr ""
@@ -1049,7 +1061,7 @@ msgstr ""
 msgid "Displaying the security block on the resource"
 msgstr ""
 
-#: src/Task.php:1105
+#: src/Task.php:1047
 msgid "Dissociate"
 msgstr ""
 
@@ -1070,7 +1082,7 @@ msgstr ""
 msgid "Dropdown management"
 msgstr ""
 
-#: src/Task.php:1109
+#: src/Task.php:1051
 msgctxt "button"
 msgid "Duplicate"
 msgstr ""
@@ -1079,9 +1091,9 @@ msgstr ""
 msgid "Edit a column"
 msgstr ""
 
-#: src/Task.php:383 src/Task.php:645 src/NotificationTargetResource.php:413
+#: src/Task.php:384 src/NotificationTargetResource.php:413
 #: src/NotificationTargetResource.php:1616
-#: src/NotificationTargetResource.php:1724
+#: src/NotificationTargetResource.php:1724 templates/task_form.html.twig:65
 msgid "Effective duration"
 msgstr ""
 
@@ -1258,7 +1270,7 @@ msgid ""
 "date (DDMMYYYY)"
 msgstr ""
 
-#: src/Resource_Change.php:468 src/LinkAd.php:526 src/Resource.php:174
+#: src/Resource_Change.php:466 src/LinkAd.php:529 src/Resource.php:174
 #: templates/linkad_resource_form.html.twig:62
 msgid "Firstname"
 msgstr ""
@@ -1313,7 +1325,7 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: src/Checklistconfig.php:359
+#: src/Checklistconfig.php:337
 msgid "Generate a rule"
 msgstr ""
 
@@ -1323,6 +1335,10 @@ msgstr ""
 
 #: templates/resource_leaving_form.html.twig:35
 msgid "Give a leaving order"
+msgstr ""
+
+#: templates/task_form.html.twig:58
+msgid "Group"
 msgstr ""
 
 #: src/Habilitation.php:58 src/Metademand.php:181
@@ -1437,9 +1453,10 @@ msgstr ""
 msgid "Import resources"
 msgstr ""
 
-#: src/Checklistconfig.php:124 src/Checklistconfig.php:198
-#: src/Checklist.php:582 src/Checklist.php:814
+#: src/Checklistconfig.php:123 templates/checklistconfig_form.html.twig:34
 #: templates/linkad_form.html.twig:38
+#: templates/checklist_from_resources.html.twig:122
+#: templates/checklist_form.html.twig:38
 msgid "Important"
 msgstr ""
 
@@ -1461,6 +1478,12 @@ msgstr ""
 #: src/NotificationTargetResource.php:1713
 msgid "Informant of leaving"
 msgstr ""
+
+#: templates/reportconfig_form.html.twig:39
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/ResourceCard.php:151
 msgid "Information, this resource is not linked to a user"
@@ -1491,6 +1514,16 @@ msgstr ""
 
 #: src/ResourceSituation.php:114
 msgid "Is linked to a contract"
+msgstr ""
+
+#: templates/checklistconfig_form.html.twig:43
+msgid "Item"
+msgid_plural "Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/checklistconfig_form.html.twig:40
+msgid "Itemtype"
 msgstr ""
 
 #: src/LDAP.php:69
@@ -1529,7 +1562,7 @@ msgstr[1] ""
 msgid "Leaving resource"
 msgstr ""
 
-#: src/Checklist.php:1182 src/Dashboard.php:75 src/Dashboard.php:189
+#: src/Checklist.php:1115 src/Dashboard.php:75 src/Dashboard.php:189
 #: src/NotificationTargetResource.php:574
 msgid "Leaving resource - checklist needs to verificated"
 msgstr ""
@@ -1542,8 +1575,8 @@ msgstr ""
 msgid "Level 2 Identifier"
 msgstr ""
 
-#: src/Checklistconfig.php:200 src/Checklist.php:584
-#: templates/linkad_form.html.twig:40
+#: templates/checklistconfig_form.html.twig:36
+#: templates/linkad_form.html.twig:40 templates/checklist_form.html.twig:40
 msgid "Link"
 msgstr ""
 
@@ -1571,7 +1604,7 @@ msgstr ""
 msgid "Link a checklist out"
 msgstr ""
 
-#: src/Checklist.php:964
+#: src/Checklist.php:849
 msgid "Link a task"
 msgstr ""
 
@@ -1583,7 +1616,7 @@ msgstr ""
 msgid "Link with metademand"
 msgstr ""
 
-#: src/Checklist.php:816 src/Checklist.php:1546
+#: src/Checklist.php:1392 templates/checklist_from_resources.html.twig:124
 msgid "Linked task"
 msgstr ""
 
@@ -1673,11 +1706,11 @@ msgstr ""
 msgid "Mandatory when creating the resource"
 msgstr ""
 
-#: src/Checklist.php:950
+#: src/Checklist.php:835
 msgid "Mark as finished"
 msgstr ""
 
-#: src/Checklist.php:957
+#: src/Checklist.php:842
 msgid "Mark as unfinished"
 msgstr ""
 
@@ -1727,16 +1760,20 @@ msgstr ""
 msgid "Modified fields"
 msgstr ""
 
-#: src/LinkAd.php:348
+#: src/LinkAd.php:351
 msgctxt "button"
 msgid "Modify user in AD"
 msgstr ""
 
 #: src/Resource_Change.php:459 templates/employment_form.html.twig:32
+#: templates/checklistconfig_form.html.twig:32
 #: templates/linkad_resource_form.html.twig:57
-#: templates/budget_form.html.twig:32 templates/import_form.html.twig:32
-#: templates/importcolumn_form.html.twig:40 templates/cost_form.html.twig:35
-#: templates/task_item_form.html.twig:37 templates/linkad_form.html.twig:36
+#: templates/budget_form.html.twig:32 templates/task_form.html.twig:38
+#: templates/import_form.html.twig:32 templates/importcolumn_form.html.twig:40
+#: templates/cost_form.html.twig:35 templates/task_item_form.html.twig:37
+#: templates/linkad_form.html.twig:36
+#: templates/checklist_from_resources.html.twig:121
+#: templates/checklist_form.html.twig:36
 msgid "Name"
 msgstr ""
 
@@ -1754,7 +1791,7 @@ msgstr ""
 msgid "New resource"
 msgstr ""
 
-#: src/Checklist.php:1184 src/Dashboard.php:70 src/Dashboard.php:141
+#: src/Checklist.php:1116 src/Dashboard.php:70 src/Dashboard.php:141
 #: src/NotificationTargetResource.php:567
 msgid "New resource - checklist needs to verificated"
 msgstr ""
@@ -1813,7 +1850,7 @@ msgstr ""
 msgid "No advanced request found"
 msgstr ""
 
-#: src/Checklist.php:1563
+#: src/Checklist.php:1409
 msgid "No checklist found"
 msgstr ""
 
@@ -1857,7 +1894,7 @@ msgstr[1] ""
 msgid "Not defined"
 msgstr ""
 
-#: src/Task.php:947 src/Task.php:988
+#: src/Task.php:889 src/Task.php:930
 msgid "Not finished tasks"
 msgstr ""
 
@@ -1873,7 +1910,7 @@ msgstr ""
 msgid "Not in the file"
 msgstr ""
 
-#: src/ReportConfig.php:422
+#: src/ReportConfig.php:382
 msgid "Notification configuration"
 msgstr ""
 
@@ -1960,6 +1997,10 @@ msgstr ""
 msgid "Photo format : JPG"
 msgstr ""
 
+#: templates/task_form.html.twig:56
+msgid "Planning"
+msgstr ""
+
 #: front/adconfig.form.php:47 front/config.form.php:74
 msgid "Please activate the plugin"
 msgstr ""
@@ -1991,6 +2032,7 @@ msgstr ""
 msgid "Please select a resource"
 msgstr ""
 
+#: templates/checklist_from_resources.html.twig:90
 #: templates/checklist_add_form.html.twig:38
 msgctxt "button"
 msgid "Post"
@@ -2215,7 +2257,7 @@ msgstr ""
 msgid "Resend the declaration"
 msgstr ""
 
-#: src/Checklist.php:770
+#: templates/checklist_from_resources.html.twig:88
 msgid "Reset the checklist"
 msgstr ""
 
@@ -2255,8 +2297,8 @@ msgstr ""
 msgid "Resource files imports"
 msgstr ""
 
-#: hook.php:1467 src/RuleContracttypeHidden.php:274 src/Task.php:873
-#: src/Task.php:1301 src/RuleContracttypeReadonly.php:193
+#: hook.php:1467 src/RuleContracttypeHidden.php:274 src/Task.php:834
+#: src/Task.php:1243 src/RuleContracttypeReadonly.php:193
 #: src/RuleContracttypeReadonly.php:234 src/RuleContracttypeReadonly.php:264
 #: src/RuleContracttypeReadonly.php:315 src/Config.php:134 src/Config.php:506
 #: src/RuleContracttype.php:271 src/Resource.php:179 src/Resource.php:486
@@ -2334,7 +2376,7 @@ msgstr ""
 
 #: src/RuleContracttypeHidden.php:318 src/Profile.php:207
 #: src/RuleContracttypeReadonly.php:359 src/Adconfig.php:293 src/Role.php:56
-#: src/RuleContracttype.php:311 src/LinkAd.php:533
+#: src/RuleContracttype.php:311 src/LinkAd.php:536
 #: templates/linkad_resource_form.html.twig:93
 msgid "Role"
 msgid_plural "Roles"
@@ -2449,15 +2491,15 @@ msgstr ""
 msgid "Send an automatic notification on the \"declare an arrival\" form"
 msgstr ""
 
-#: src/ReportConfig.php:319 src/ReportConfig.php:427
+#: src/ReportConfig.php:387 templates/reportconfig_form.html.twig:60
 msgid "Send other notification"
 msgstr ""
 
-#: src/ReportConfig.php:315 src/ReportConfig.php:425
+#: src/ReportConfig.php:385 templates/reportconfig_form.html.twig:48
 msgid "Send resource creation report notification"
 msgstr ""
 
-#: src/ReportConfig.php:317 src/ReportConfig.php:426
+#: src/ReportConfig.php:386 templates/reportconfig_form.html.twig:54
 msgid "Send resource transfer notification"
 msgstr ""
 
@@ -2526,6 +2568,11 @@ msgstr ""
 msgid "Specific securities groups"
 msgstr ""
 
+#: templates/checklist_from_resources.html.twig:126
+msgctxt "location"
+msgid "State"
+msgstr ""
+
 #: src/Adconfig.php:255
 msgid "Static default password "
 msgstr ""
@@ -2588,7 +2635,7 @@ msgstr ""
 msgid "Task's responsible technician"
 msgstr ""
 
-#: src/Task.php:861
+#: src/Task.php:843
 msgid "Tasks in progress"
 msgstr ""
 
@@ -2604,6 +2651,14 @@ msgstr[1] ""
 
 #: src/Team.php:97
 msgid "Team code"
+msgstr ""
+
+#: templates/task_form.html.twig:51
+msgid "Technician"
+msgstr ""
+
+#: templates/checklist_from_resources.html.twig:69
+msgid "Templates"
 msgstr ""
 
 #: src/Choice.php:446
@@ -2632,8 +2687,8 @@ msgstr ""
 msgid "The begin date of the non contract period must be filled"
 msgstr ""
 
-#: src/Checklist.php:1034 src/Checklist.php:1055 src/Checklist.php:1097
-#: src/Checklist.php:1138
+#: src/Checklist.php:919 src/Checklist.php:940 src/Checklist.php:982
+#: src/Checklist.php:1023
 msgid "The checklist is finished"
 msgstr ""
 
@@ -2762,6 +2817,10 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
+#: templates/checklist_from_resources.html.twig:75
+msgid "Total duration"
+msgstr ""
+
 #: src/ImportResource.php:781
 msgid "Total lines in the file"
 msgstr ""
@@ -2770,7 +2829,7 @@ msgstr ""
 msgid "Trainee"
 msgstr ""
 
-#: src/Task.php:1115 src/Checklistconfig.php:366 src/Resource.php:3960
+#: src/Task.php:1057 src/Checklistconfig.php:344 src/Resource.php:3960
 msgid "Transfer"
 msgstr ""
 
@@ -2914,7 +2973,7 @@ msgstr ""
 msgid "User without resource"
 msgstr ""
 
-#: front/modalvalidationinfo.php:35 src/Resource_Leaving.php:173
+#: front/modalvalidationinfo.php:35
 #: templates/resource_validation_form.html.twig:40
 msgid "Validate"
 msgstr ""
@@ -2991,7 +3050,7 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:2949 src/LinkAd.php:674
+#: hook.php:2949 src/LinkAd.php:677
 msgid "You have to do all checklist in action before"
 msgstr ""
 
@@ -2999,11 +3058,11 @@ msgstr ""
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2931 hook.php:2979 src/LinkAd.php:672
+#: hook.php:2931 hook.php:2979 src/LinkAd.php:675
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: src/LinkAd.php:668
+#: src/LinkAd.php:671
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
@@ -3013,7 +3072,7 @@ msgstr ""
 msgid "You need rights into badges plugin"
 msgstr ""
 
-#: src/LinkAd.php:413
+#: src/LinkAd.php:416
 msgid "existing login"
 msgstr ""
 
