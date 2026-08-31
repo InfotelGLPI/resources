@@ -31,8 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use DBConnection;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Session;
 
@@ -252,82 +251,23 @@ class Budget extends CommonDBTM
      * */
     public function showForm($ID, $options = [""])
     {
-        global $CFG_GLPI;
-
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
+        $profession_rank = Resource::getProfessionRankFields($this->fields, true);
 
-        echo "<td>" . __('Budget type', 'resources') . "</td>";
-        echo "<td>";
-        Dropdown::show(BudgetType::class, [
-            'value' => $this->fields["plugin_resources_budgettypes_id"],
-            'entity' => $this->fields["entities_id"],
-        ]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Profession', 'resources') . "</td>";
-        echo "<td>";
-        $params = [
-            'name' => 'plugin_resources_professions_id',
-            'value' => $this->fields['plugin_resources_professions_id'],
-            'entityt' => $this->fields["entities_id"],
-            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
-            'span' => 'span_rank',
-            'sort' => true,
-        ];
-        Resource::showGenericDropdown(Profession::class, $params);
-
-        echo "</td>";
-        echo "<td>" . __('Rank', 'resources') . "</td><td>";
-        echo "<span id='span_rank' name='span_rank'>";
-        if ($this->fields["plugin_resources_ranks_id"] > 0) {
-            echo Dropdown::getDropdownName('glpi_plugin_resources_ranks', $this->fields["plugin_resources_ranks_id"]);
-        } else {
-            echo __('None');
-        }
-        echo "</span></td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Budget volume', 'resources') . "</td>";
-        echo "<td>";
-        $option = ['value' => 0];
-        echo Html::input('volume', $option);
-        echo "</td><td>" . __('Type of budget volume', 'resources') . "</td><td>";
-        Dropdown::show(BudgetVolume::class, [
-            'value' => $this->fields["plugin_resources_budgetvolumes_id"],
-            'entity' => $this->fields["entities_id"],
-        ]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Begin date') . "</td>";
-        echo "<td>";
-        Html::showDateField("begin_date", ['value' => $this->fields["begin_date"]]);
-        echo "</td>";
-        echo "<td>" . __('End date') . "</td>";
-        echo "<td>";
-        Html::showDateField("end_date", ['value' => $this->fields["end_date"]]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center' colspan='6'>";
-        printf(__('Last update on %s'), Html::convDateTime($this->fields["date_mod"]));
-        echo "</td>";
-        echo "</tr>";
-
+        $params = $options;
         if (Session::getCurrentInterface() != 'central') {
-            $options['candel'] = false;
+            $params['candel'] = false;
         }
-        $this->showFormButtons($options);
+
+        TemplateRenderer::getInstance()->display('@resources/budget_form.html.twig', [
+            'item'                => $this,
+            'params'              => $params,
+            'budgettype_class'    => BudgetType::class,
+            'budgetvolume_class'  => BudgetVolume::class,
+            'profession_dropdown' => $profession_rank['profession_dropdown'],
+            'rank_html'           => $profession_rank['rank_html'],
+        ]);
 
         return true;
     }

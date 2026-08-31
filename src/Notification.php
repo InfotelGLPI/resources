@@ -32,7 +32,7 @@ namespace GlpiPlugin\Resources;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Session;
 
@@ -92,48 +92,53 @@ class Notification extends CommonDBTM
      */
     public function listItems($ID)
     {
-        $rand = mt_rand();
-
         // Start
-        $start = 0;
-        if (isset($_REQUEST["start"])) {
-            $start = $_REQUEST["start"];
-        }
+        $start = (int) ($_REQUEST["start"] ?? 0);
 
         // Get data
         $data = $this->getItems($ID, $start);
-        if (!empty($data)) {
-            echo "<div class='center'>";
-            $dbu = new DbUtils();
-            Html::printAjaxPager(self::getTypeName(2), $start, $dbu->countElementsInTable($this->getTable()));
-            echo "<table class='tab_cadre_fixehov'>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<th colspan='3'>" . self::getTypeName(1) . "</th>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<th>" . __('User') . "</th>";
-            echo "<th>" . __('Date') . "</th>";
-            echo "<th>" . __('Type') . "</th>";
-            echo "</tr>";
+        if (empty($data)) {
+            return;
+        }
 
-            $dbu = new DbUtils();
+        $dbu = new DbUtils();
 
-            foreach ($data as $field) {
-                echo "<tr class='tab_bg_2'>";
-                // User
-                echo "<td>" . $dbu->formatUserName(
+        $entries = [];
+        foreach ($data as $field) {
+            $entries[] = [
+                'user' => $dbu->formatUserName(
                     $field['users_id'],
                     $field['name'],
                     $field['realname'],
                     $field['firstname'],
-                ) . "</td>";
-                echo "<td>" . Html::convDateTime($field['date_mod']) . "</td>";
-                echo "<td>" . self::getStatus($field['type']) . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-            echo "</div>";
+                ),
+                'date' => $field['date_mod'],
+                'type' => self::getStatus($field['type']),
+            ];
         }
+
+        // Scope the pager count to this resource: getItems() is already filtered on it.
+        $total = $dbu->countElementsInTable(
+            $this->getTable(),
+            ['plugin_resources_resources_id' => (int) $ID],
+        );
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'    => self::getTypeName(1),
+            'columns'         => [
+                'user' => __('User'),
+                'date' => __('Date'),
+                'type' => __('Type'),
+            ],
+            'formatters'      => ['date' => 'datetime'],
+            'entries'         => $entries,
+            'total_number'    => $total,
+            'filtered_number' => $total,
+            'start'           => $start,
+            'limit'           => (int) $_SESSION['glpilist_limit'],
+            'nofilter'        => true,
+            'nosort'          => true,
+        ]);
     }
 
     /**

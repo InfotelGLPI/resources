@@ -31,7 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
 use DBConnection;
-use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Session;
@@ -235,78 +235,22 @@ class Cost extends CommonDropdown
     public function showForm($ID, $options = [""])
     {
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        $fields = $this->getAdditionalFields();
-        $nb = count($fields);
+        $profession_rank = Resource::getProfessionRankFields($this->fields, false);
 
-        echo "<tr class='tab_bg_1'><td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td rowspan='" . ($nb + 1) . "'>";
-        echo __('Comments') . "</td>";
-        echo "<td rowspan='" . ($nb + 1) . "'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '45',
-            'rows' => ($nb + 2),
-            'display' => false,
-        ]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Profession', 'resources') . "</td>";
-        echo "<td>";
-        $params = [
-            'name' => 'plugin_resources_professions_id',
-            'value' => $this->fields['plugin_resources_professions_id'],
-            'entity' => $this->fields["entities_id"],
-            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
-            'span' => 'span_rank',
-            'sort' => false,
-        ];
-        Resource::showGenericDropdown(Profession::class, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Rank', 'resources') . "</td><td>";
-        echo "<span id='span_rank' name='span_rank'>";
-        if ($this->fields["plugin_resources_ranks_id"] > 0) {
-            echo Dropdown::getDropdownName(
-                'glpi_plugin_resources_ranks',
-                $this->fields["plugin_resources_ranks_id"],
-            );
-        } else {
-            echo __('None');
-        }
-        echo "</span></td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Begin date') . "</td>";
-        echo "<td>";
-        Html::showDateField("begin_date", ['value' => $this->fields["begin_date"]]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('End date') . "</td>";
-        echo "<td>";
-        Html::showDateField("end_date", ['value' => $this->fields["end_date"]]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Budget cost', 'resources') . "</td>";
-        echo "<td>";
-        echo Html::input('cost', ['value' => Html::formatNumber($this->fields["cost"], true), 'size' => 14]);
-        echo "</td></tr>";
-
+        $params = $options;
         if (isset($this->fields['is_protected']) && $this->fields['is_protected']) {
-            $options['candel'] = false;
+            $params['candel'] = false;
         }
-        $this->showFormButtons($options);
+
+        TemplateRenderer::getInstance()->display('@resources/cost_form.html.twig', [
+            'item'                => $this,
+            'params'              => $params,
+            'profession_dropdown' => $profession_rank['profession_dropdown'],
+            'rank_html'           => $profession_rank['rank_html'],
+            'cost_value'          => Html::formatNumber($this->fields["cost"], true),
+        ]);
+
         return true;
     }
 

@@ -59,7 +59,11 @@ if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_i
     Html::back();
 } elseif (isset($_POST["updaterestingresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $resting->check($_POST['id'], UPDATE);
+    // Check the currently owning Resource...
     Resource::checkChildOwnership($resting, $_POST['id']);
+    // ...and the posted one too, as the form allows reassigning the period to
+    // another Resource: checkChildOwnership() only validates the stored owner.
+    Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
     $resting->update($_POST);
     Html::back();
 } elseif (isset($_POST["addenddaterestingresources"]) && isset($_POST["date_end"])) {

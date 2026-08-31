@@ -1,0 +1,73 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div class="container">
+    {{ wizard_header|raw }}
+
+    <div class="row">
+        {% for action in actions %}
+            <div class="col-md-2 mb-2 center">
+                <div class="card" style="min-height: 140px;">
+                    <div class="card-body">
+                        <div class="card-text">
+                            {% set inner %}
+                                {% if action.icon is defined and action.icon is not empty %}
+                                    <i class="{{ action.icon }}" style="font-size: 3em"></i>
+                                {% elseif action.pics is defined and action.pics is not empty %}
+                                    <img src="{{ action.pics }}">
+                                {% endif %}
+                                <br>{{ action.title }}
+                            {% endset %}
+
+                            {% if action.post is defined and action.post is not empty %}
+                                {# Destructive actions must not be triggerable by a GET link (CSRF):
+                                 # render them as a CSRF-protected POST submit. The listener validates
+                                 # the token on POST; an optional 'confirm' adds a client-side guard. #}
+                                <form method="post" action="{{ action.url }}" class="d-inline"
+                                      {% if action.confirm is defined and action.confirm is not empty %}
+                                          onsubmit="return confirm('{{ action.confirm|e('js') }}');"
+                                      {% endif %}>
+                                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                                    {% for post_key, post_value in action.post %}
+                                        <input type="hidden" name="{{ post_key }}" value="{{ post_value }}">
+                                    {% endfor %}
+                                    {# .btn is inline-flex under Tabler, so the <br> in the label would not
+                                     # wrap the title below the icon: use a block-level column layout
+                                     # constrained to the card width (w-100) with centered, wrapping text. #}
+                                    <button type="submit"
+                                            class="btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap">{{ inner|raw }}</button>
+                                </form>
+                            {% else %}
+                                <a href="{{ action.url }}">{{ inner|raw }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

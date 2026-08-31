@@ -31,7 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Plugin;
 use Session;
 use Toolbox;
@@ -371,59 +371,14 @@ class Menu extends CommonGLPI
 
     public static function showMenuBlock($title, $icon, $actions)
     {
-        echo "<div class='container'>";
-
+        ob_start();
         Wizard::WizardHeader($title, "", $icon);
+        $wizard_header = (string) ob_get_clean();
 
-        echo "<div class='row'>";
-
-        foreach ($actions as $action => $labels) {
-
-            echo "<div class='col-md-2 mb-2 center'>";
-
-            echo "<div class='card' style='min-height: 140px;'>";
-            echo "<div class='card-body'>";
-            echo "<div class='card-text'>";
-
-            $inner = "";
-            if (isset($labels['icon']) && !empty($labels['icon'])) {
-                $inner .= "<i class='" . $labels['icon'] . "' style='font-size: 3em'></i>";
-            } elseif (isset($labels['pics']) && !empty($labels['pics'])) {
-                $inner .= "<img src='" . $labels['pics'] . "'>";
-            }
-            $inner .= "<br>" . $labels['title'];
-
-            if (!empty($labels['post']) && is_array($labels['post'])) {
-                // Destructive actions must not be triggerable by a GET link (CSRF): render
-                // them as a CSRF-protected POST submit. The listener validates the token on
-                // POST; an optional 'confirm' adds a client-side guard.
-                $confirm = isset($labels['confirm']) ? $labels['confirm'] : '';
-                echo "<form method='post' action='" . htmlescape($labels['url']) . "' class='d-inline'"
-                    . ($confirm ? " onsubmit=\"return confirm('" . htmlescape($confirm) . "');\"" : "") . ">";
-                echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-                foreach ($labels['post'] as $post_key => $post_value) {
-                    echo Html::hidden($post_key, ['value' => $post_value]);
-                }
-                // .btn is inline-flex under Tabler, so the <br> in $inner would not wrap the
-                // title below the icon: use a block-level column layout constrained to the
-                // card width (w-100) with centered, wrapping text so the label sits under the
-                // icon without overflowing card-text.
-                echo "<button type='submit' class='btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap'>"
-                    . $inner . "</button>";
-                echo "</form>";
-            } else {
-                echo "<a href='" . $labels['url'] . "'>" . $inner . "</a>";
-            }
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-
-            echo "</div>";
-        }
-
-        echo "</div>";
-
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/menu_block.html.twig', [
+            'wizard_header' => $wizard_header,
+            'actions'       => $actions,
+        ]);
     }
 
     /**

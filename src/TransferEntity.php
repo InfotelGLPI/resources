@@ -34,7 +34,6 @@ use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use Dropdown;
-use Html;
 use Migration;
 use Session;
 use Toolbox;
@@ -179,45 +178,31 @@ class TransferEntity extends CommonDBTM
      */
     private function listItems($fields, $canedit)
     {
-        $rand = mt_rand();
-
-        echo "<div class='left'>";
-        if ($canedit) {
-            Html::openMassiveActionsForm('massEntity' . $rand);
-            $massiveactionparams = ['item' => __CLASS__, 'container' => 'massEntity' . $rand];
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th colspan='3'>" . __('Entities allowed to transfer a resource', 'resources') . "</th>";
-        echo "</tr>";
-        echo "<tr>";
-        echo "<th width='10'>";
-        if ($canedit) {
-            echo Html::getCheckAllAsCheckbox('massEntity' . $rand);
-        }
-        echo "</th>";
-        echo "<th>" . __('Entity') . "</th>";
-        echo "<th>" . __('Group') . "</th>";
-        echo "</tr>";
+        $entries = [];
         foreach ($fields as $field) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td width='10'>";
-            if ($canedit) {
-                Html::showMassiveActionCheckBox(__CLASS__, $field['id']);
-            }
-            echo "</td>";
-            //DATA LINE
-            echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
-            echo "<td>" . Dropdown::getDropdownName('glpi_groups', $field['groups_id']) . "</td>";
-            echo "</tr>";
+            $entries[] = [
+                'itemtype' => self::class,
+                'id'       => $field['id'],
+                'entity'   => Dropdown::getDropdownName('glpi_entities', $field['entities_id']),
+                'group'    => Dropdown::getDropdownName('glpi_groups', $field['groups_id']),
+            ];
         }
-        echo "</table>";
-        if ($canedit) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "</div>";
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => __('Entities allowed to transfer a resource', 'resources'),
+            'columns'             => [
+                'entity' => __('Entity'),
+                'group'  => __('Group'),
+            ],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => 'massEntity' . mt_rand(),
+            ],
+        ]);
     }
 
     /**

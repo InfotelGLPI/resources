@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use Auth;
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Phone;
 use Plugin;
@@ -106,41 +107,44 @@ class User extends \User
 
         $user->initForm($ID, $options);
 
-        $plugin_resources_resources_id = $options['resourcesID'];
         $this->fields['id'] = 0;
         $this->showFormHeader($options);
-        echo Html::input('idResource', ['type' => 'hidden', 'value' => $options['resourcesID']]);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Authentication') . "</td>";
-        echo "<td>";
-        echo Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"]);
+        $auth_lines = [Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"])];
         if (!empty($user->fields["date_sync"])) {
             //TRANS: %s is the date of last sync
-            echo '<br>' . sprintf(
+            $auth_lines[] = sprintf(
                 __('Last synchronization on %s'),
                 Html::convDateTime($user->fields["date_sync"]),
             );
         }
         if (!empty($user->fields["user_dn"])) {
-            echo '<br>' . sprintf(__('%1$s: %2$s'), __('User DN'), $user->fields["user_dn"]);
+            $auth_lines[] = sprintf(__('%1$s: %2$s'), __('User DN'), $user->fields["user_dn"]);
         }
         if ($user->fields['is_deleted_ldap']) {
-            echo '<br>' . __('User missing in LDAP directory');
+            $auth_lines[] = __('User missing in LDAP directory');
         }
-        echo "</tr>";
 
         $phonerand = mt_rand();
-        echo "<tr class='tab_bg_1'>";
-        echo "<td><label for='textfield_phone$phonerand'>" . Phone::getTypeName(1) . "</label></td><td>";
-        echo Html::input('phone', ['value' => $user->fields['phone'], 'size' => 40, 'rand' => $phonerand]);
-        echo "</td>";
 
-        echo "<td>" . _n('Email', 'Emails', Session::getPluralNumber());
-        echo "</td><td>";
+        // showForUser() echoes directly, so capture it for the template.
+        ob_start();
         UserEmail::showForUser($user);
-        echo "</td>";
-        echo "</tr>";
+        $email_block = (string) ob_get_clean();
+
+        TemplateRenderer::getInstance()->display('@resources/user_form.html.twig', [
+            'resources_id' => $options['resourcesID'],
+            'auth_lines'   => $auth_lines,
+            'phone_label'  => Phone::getTypeName(1),
+            'phone_rand'   => $phonerand,
+            'phone_input'  => Html::input(
+                'phone',
+                ['value' => $user->fields['phone'], 'size' => 40, 'rand' => $phonerand],
+            ),
+            'email_label'  => _n('Email', 'Emails', Session::getPluralNumber()),
+            'email_block'  => $email_block,
+        ]);
+
         $user->showFormButtons($options);
 
         return true;

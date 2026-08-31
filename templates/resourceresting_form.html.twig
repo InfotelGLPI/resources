@@ -1,0 +1,100 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Standalone form: the submit names below (addrestingresources, ...) are the ones
+ # front/resourceresting.form.php dispatches on, so the generic form buttons
+ # component (which emits add/update/delete) cannot be used here. #}
+<div class="card container" style="min-width: 80%;">
+    {{ wizard_header|raw }}
+
+    <div class="card-body">
+        <form method="post" action="{{ form_action }}">
+            <div class="row">
+                {{ fields.dropdownField(
+                    resource_class,
+                    'plugin_resources_resources_id',
+                    item.fields['plugin_resources_resources_id'],
+                    resource_label,
+                    {'entity': resource_entities}
+                ) }}
+
+                {{ fields.dateField('date_begin', item.fields['date_begin'], __('Begin date')) }}
+
+                {{ fields.dateField('date_end', item.fields['date_end'], __('End date')) }}
+
+                {{ fields.dropdownField(
+                    location_class,
+                    'locations_id',
+                    item.fields['locations_id'],
+                    __('Agency concerned', 'resources')
+                ) }}
+
+                {{ fields.dropdownYesNo('at_home', item.fields['at_home'], __('At home', 'resources')) }}
+
+                {{ fields.textareaField('comment', item.fields['comment'], __('Comments')) }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="preview">
+                        <a href="./resourceresting.form.php">{{ __('Declare a non contract period', 'resources') }}</a>
+                        &nbsp;/&nbsp;
+                        <a href="./resourceresting.php">{{ __('List of non contract periods', 'resources') }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="next">
+                        {% if is_new %}
+                            {{ call('Html::submit', [_x('button', 'Add'), {
+                                'name': 'addrestingresources',
+                                'class': 'btn btn-success',
+                            }])|raw }}
+                        {% else %}
+                            <input type="hidden" name="id" value="{{ item.fields['id'] }}">
+                            {{ call('Html::submit', [_x('button', 'Update'), {
+                                'name': 'updaterestingresources',
+                                'class': 'btn btn-primary',
+                            }])|raw }}
+                            &nbsp;&nbsp;
+                            {{ call('Html::submit', [_x('button', 'Delete permanently'), {
+                                'name': 'deleterestingresources',
+                                'class': 'btn btn-primary',
+                            }])|raw }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        </form>
+    </div>
+</div>

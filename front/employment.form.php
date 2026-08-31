@@ -61,11 +61,17 @@ if (isset($_POST["add"])) {
     $employment->restore($_POST);
     $employment->redirectToList();
 } elseif (isset($_POST["add_item"])) {
-    if (!empty($_POST['itemtype'])) {
-        $input['id'] = $_POST['plugin_resources_employments_id'];
+    // The employment dropdown offers an empty choice: skip the submission instead of
+    // running check() on id 0, which would fail with an error page.
+    $employments_id = (int) ($_POST['plugin_resources_employments_id'] ?? 0);
+    if (!empty($_POST['itemtype']) && $employments_id > 0) {
+        $input['id'] = $employments_id;
         $input['plugin_resources_resources_id'] = $_POST['items_id'];
 
         $employment->check($input["id"], UPDATE);
+        // Employment has no entities_id of its own, so the check() above cannot enforce
+        // any entity boundary on the target: re-check it on the owning Resource.
+        Resource::checkOwnership($input['plugin_resources_resources_id']);
         $employment->update($input);
     }
     Html::back();

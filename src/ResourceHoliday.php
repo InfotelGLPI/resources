@@ -31,7 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use DBConnection;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use NotificationEvent;
 use Session;
@@ -295,34 +295,30 @@ class ResourceHoliday extends CommonDBTM
      */
     public function showMenu()
     {
-        $title = __('Forced holiday management', 'resources');
-        Wizard::WizardHeader($title);
+        ob_start();
+        Wizard::WizardHeader(__('Forced holiday management', 'resources'));
+        $wizard_header = (string) ob_get_clean();
 
-        echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
-
-        $canholiday = Session::haveright('plugin_resources_holiday', UPDATE);
-
-        echo "<tr class=''>";
-        if ($canholiday) {
-            echo "<td class='tab_td_menu center'>";
-            echo "<a href=\"./resourceholiday.form.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png' alt='" . __(
-                'Declare a forced holiday',
-                'resources',
-            ) . "'>";
-            echo "<br>" . __('Declare a forced holiday', 'resources') . "</a>";
-            echo "</td>";
-            echo "<td class='tab_td_menu center'>";
-            echo "<a href=\"./resourceholiday.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/holidaylist.png' alt='" . __(
-                'List of forced holidays',
-                'resources',
-            ) . "'>";
-            echo "<br>" . __('List of forced holidays', 'resources') . "</a>";
-            echo "</td>";
+        $tiles = [];
+        if (Session::haveright('plugin_resources_holiday', UPDATE)) {
+            $tiles = [
+                [
+                    'url'   => './resourceholiday.form.php',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png",
+                    'label' => __('Declare a forced holiday', 'resources'),
+                ],
+                [
+                    'url'   => './resourceholiday.php',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/holidaylist.png",
+                    'label' => __('List of forced holidays', 'resources'),
+                ],
+            ];
         }
-        echo "</tr></table>";
-        echo "</div>";
+
+        TemplateRenderer::getInstance()->display('@resources/wizard_tiles_menu.html.twig', [
+            'wizard_header' => $wizard_header,
+            'tiles'         => $tiles,
+        ]);
     }
 
     //Show form from helpdesk to add holiday of a resource
@@ -336,108 +332,24 @@ class ResourceHoliday extends CommonDBTM
 
         $this->initForm($ID, $options);
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
         $title = __('Declare a forced holiday', 'resources');
         if ($ID > 0) {
             $title = __('Detail of the forced holiday', 'resources');
         }
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png";
-        Wizard::WizardHeader($title, $img);
 
-        echo "<div class='card-body'>";
+        ob_start();
+        Wizard::WizardHeader($title, PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png");
+        $wizard_header = (string) ob_get_clean();
 
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceholiday.form.php\">";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Resource::getTypeName(1);
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Resource::dropdown([
-            'name' => 'plugin_resources_resources_id',
-            'display' => true,
-            'value' => $this->fields["plugin_resources_resources_id"],
-            'entity' => $_SESSION['glpiactiveentities'],
+        TemplateRenderer::getInstance()->display('@resources/resourceholiday_form.html.twig', [
+            'item'              => $this,
+            'wizard_header'     => $wizard_header,
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourceholiday.form.php",
+            'is_new'            => $ID <= 0,
+            'resource_class'    => Resource::class,
+            'resource_label'    => Resource::getTypeName(1),
+            'resource_entities' => $_SESSION['glpiactiveentities'],
         ]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Begin date');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('End date');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Comments');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '70',
-            'rows' => '4',
-            'display' => false,
-        ]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-        echo "<div class='preview'>";
-        echo "<a href=\"./resourceholiday.form.php\">";
-        echo __('Declare a forced holiday', 'resources');
-        echo "</a>";
-        echo "&nbsp;/&nbsp;<a href=\"./resourceholiday.php\">";
-        echo __('List of forced holidays', 'resources');
-        echo "</a>";
-        echo "</div>";
-        echo "</div></div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-        echo "<div class='next'>";
-
-        if ($ID > 0) {
-            echo Html::hidden('id', ['value' => $ID]);
-            echo Html::hidden(
-                'plugin_resources_resources_id',
-                ['value' => $this->fields["plugin_resources_resources_id"]],
-            );
-            echo Html::submit(
-                _sx('button', 'Update'),
-                ['name' => 'updateholidayresources', 'class' => 'btn btn-primary'],
-            );
-            echo "&nbsp;&nbsp;";
-            echo Html::submit(
-                _sx('button', 'Delete permanently'),
-                ['name' => 'deleteholidayresources', 'class' => 'btn btn-primary'],
-            );
-        } else {
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'addholidayresources', 'class' => 'btn btn-success']);
-        }
-
-        echo "</div>";
-        echo "</div></div>";
-
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
     }
 
     /**

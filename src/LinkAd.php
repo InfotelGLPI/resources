@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Item_Ticket;
 use Location;
@@ -204,23 +205,23 @@ class LinkAd extends CommonDBTM
     /**
      * @param $ID
      */
-    public static function showAddForm($ID)
-    {
-        echo "<div class='center'>";
-        echo "<form action='" . Toolbox::getItemTypeFormURL(Resource::class) . "' method='post'>";
-        echo "<table class='tab_cadre' width='50%'>";
-        echo "<tr>";
-        echo "<th colspan='2'>";
-        echo __('Create checklists', 'resources');
-        echo "</th></tr>";
-        echo "<tr class='tab_bg_2 center'>";
-        echo "<td colspan='2'>";
-        echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
-        echo Html::hidden('id', ['value' => $ID]);
-        echo "</td></tr></table>";
-        Html::closeForm();
-        echo "</div>";
-    }
+    //    public static function showAddForm($ID)
+    //    {
+    //        echo "<div class='center'>";
+    //        echo "<form action='" . Toolbox::getItemTypeFormURL(Resource::class) . "' method='post'>";
+    //        echo "<table class='tab_cadre' width='50%'>";
+    //        echo "<tr>";
+    //        echo "<th colspan='2'>";
+    //        echo __('Create checklists', 'resources');
+    //        echo "</th></tr>";
+    //        echo "<tr class='tab_bg_2 center'>";
+    //        echo "<td colspan='2'>";
+    //        echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
+    //        echo Html::hidden('id', ['value' => $ID]);
+    //        echo "</td></tr></table>";
+    //        Html::closeForm();
+    //        echo "</div>";
+    //    }
 
 
     /**
@@ -262,63 +263,16 @@ class LinkAd extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $this->showFormHeader($options);
-
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-        if ($ID > 0) {
-            echo Html::hidden(
-                'plugin_resources_contracttypes_id',
-                ['value' => $this->fields["plugin_resources_contracttypes_id"]],
-            );
-            echo Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
-        } else {
-            echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
-            echo Html::hidden('checklist_type', ['value' => $checklist_type]);
-        }
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td>";
-        echo __('Important', 'resources');
-        echo "</td><td>";
-        Dropdown::showYesNo("tag", $this->fields["tag"]);
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td >" . __('Link', 'resources') . "</td>";
-        echo "<td>";
-        echo Html::input('address', ['value' => $this->fields['address'], 'size' => 75]);
-        echo "</td>";
-
-        echo "<td></td>";
-        echo "<td></td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td class='left' colspan = '4'>";
-        echo __('Description') . "<br>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '150',
-            'rows' => '6',
-            'display' => false,
+        TemplateRenderer::getInstance()->display('@resources/linkad_form.html.twig', [
+            'item'              => $this,
+            'params'            => $options,
+            'resources_id'      => $plugin_resources_resources_id,
+            'contracttypes_id'  => $ID > 0
+                ? $this->fields["plugin_resources_contracttypes_id"]
+                : $plugin_resources_contracttypes_id,
+            'checklist_type'    => $ID > 0 ? $this->fields["checklist_type"] : $checklist_type,
         ]);
-        echo "</td>";
 
-        echo "</tr>";
-
-        $this->showFormButtons($options);
         return true;
     }
 
@@ -339,9 +293,6 @@ class LinkAd extends CommonDBTM
             return false;
         }
 
-        $target = "./resource.form.php";
-        $targetchecklist = "./checklist.form.php";
-        $targettask = "./task.form.php";
         $config = new Config();
         $configAD = new Adconfig();
         $config->getFromDB(1);
@@ -352,7 +303,6 @@ class LinkAd extends CommonDBTM
         $canedit = $resource->can($plugin_resources_resources_id, UPDATE);
         $entities_id = $resource->fields["entities_id"];
         $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
-        $rand = mt_rand();
         $enddate = $resource->getField("date_end");
         $linkAD = new self();
         $linkAD->getEmpty();
@@ -375,201 +325,69 @@ class LinkAd extends CommonDBTM
             $linkAD->fields["location"] = $location;
         }
         $ID = $linkAD->getID();
-        echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(self::getType()) . "'>";
-        echo "<table class='tab_cadre_fixe'>";
 
+        $employee = new Employee();
+        $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-        $dbu = new DbUtils();
-
-        if (($islink) || !$islink) {
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo Html::hidden('ticket_id', ['value' => $ticket->getID()]);
-            echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
-            echo Html::hidden('entities_id', ['value' => $entities_id]);
-            echo Html::hidden('enddate', ['value' => $enddate]);
-            echo Html::hidden('id', ['value' => $ID]);
-            // Actions on finished checklist
-            if (self::canCreate() && $canedit) {
-                echo "<tr><th colspan='4'>" . __('Resources data', 'resources') . "</th></tr>";
-                echo "<tr>";
-                echo "<td colspan = ''>" . __('Login') . "</td>";
-                echo "<td>";
-                $option = ['value' => $linkAD->fields["login"], "option" => "disabled"];
-                if (!$islink) {
-                    $option = ['value' => $linkAD->fields["login"]];
-                }
-                echo Html::input('login', $option);
-                echo "</td>";
-                echo "<td colspan = ''>" . __('Department', 'resources') . "</td>";
-
-                echo "<td>";
-                echo Html::hidden(
-                    'department',
-                    [
-                        'value' => Dropdown::getDropdownName(
-                            'glpi_plugin_resources_departments',
-                            $resource->getField("plugin_resources_departments_id"),
-                        ),
-                    ],
-                );
-                echo Dropdown::getDropdownName(
-                    'glpi_plugin_resources_departments',
-                    $resource->getField("plugin_resources_departments_id"),
-                );
-                echo "</td>";
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Name') . "</td>";
-                echo "<td>";
-                $option = [
-                    'rand' => $rand,
-                    'value' => $resource->getField("name"),
-                    'onChange' => "\"javascript:this.value=this.value.toUpperCase();\" ",
-                ];
-                echo Html::input('name', $option);
-                echo "</td>";
-                echo "<td>" . __('Firstname', 'resources') . "</td>";
-                echo "<td>";
-                $option = [
-                    'rand' => $rand,
-                    'value' => $resource->getField("firstname"),
-                    'onchange' => "First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;'",
-                ];
-                echo Html::input('firstname', $option);
-                echo "</td>";
-
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Phone', 'resources') . "</td>";
-
-                echo "<td>";
-                echo Html::input('phone', ['value' => $linkAD->fields["phone"]]);
-                echo "</td>";
-
-                echo "<td>" . __('Mail') . "</td>";
-
-                echo "<td>";
-                echo Html::input('mail', ['type' => 'email', 'value' => $linkAD->fields["mail"]]);
-                echo "</td>";
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Company', 'resources') . "</td>";
-                echo "<td>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-
-                echo Html::hidden(
-                    'company',
-                    [
-                        'value' => Dropdown::getDropdownName(
-                            'glpi_plugin_resources_employers',
-                            $employee->getField("plugin_resources_employers_id"),
-                        ),
-                    ],
-                );
-
-                echo Dropdown::getDropdownName(
-                    'glpi_plugin_resources_employers',
-                    $employee->getField("plugin_resources_employers_id"),
-                );
-                echo "</td>";
-                echo "<td>" . _n('Contract type', 'Contract types', 1) . "</td>";
-                echo "<td>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-
-                echo Html::hidden(
-                    'contract',
-                    [
-                        'value' => Dropdown::getDropdownName(
-                            'glpi_plugin_resources_contracttypes',
-                            $resource->getField("plugin_resources_contracttypes_id"),
-                        ),
-                    ],
-                );
-
-                echo Dropdown::getDropdownName(
-                    'glpi_plugin_resources_contracttypes',
-                    $resource->getField("plugin_resources_contracttypes_id"),
-                );
-                echo "</td>";
-
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Cell phone', 'resources') . "</td>";
-
-                echo "<td>";
-                echo Html::input('cellphone', ['value' => $linkAD->fields["cellphone"]]);
-                echo "</td>";
-
-                echo "<td>" . __('Role', 'resources') . "</td>";
-
-                echo "<td>";
-                echo Html::input('role', ['value' => $linkAD->fields["role"]]);
-                echo "</td>";
-
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . Service::getTypeName(1) . "</td>";
-
-                echo "<td>";
-                echo Html::input('service', ['value' => $linkAD->fields["service"]]);
-                echo "</td>";
-
-                echo "<td>" . Location::getTypeName(1) . "</td>";
-
-                echo "<td>";
-                echo Html::input('location', ['value' => $linkAD->fields["location"]]);
-                echo "</td>";
-
-                echo "</tr>";
-
-
-                if (!$islink && !$linkAD->fields["action_done"] && in_array(
-                    $ticket->fields["itilcategories_id"],
-                    $configAD->fields["creation_categories_id"],
-                ) && $logAvailable) {
-                    echo "<tr class='tab_bg_2'>";
-                    echo "<td colspan='4' class='center'>";
-                    echo Html::submit(
-                        _sx('button', 'Create user in AD', 'resources'),
-                        ['name' => 'createAD', 'class' => 'btn btn-primary'],
-                    );
-                    echo "</td>";
-                }
-                if ($islink && !$linkAD->fields["action_done"] && in_array(
-                    $ticket->fields["itilcategories_id"],
-                    $configAD->fields["modification_categories_id"],
-                )) {
-                    echo "<tr class='tab_bg_2'>";
-                    echo "<td colspan='4' class='center'>";
-                    echo Html::submit(
-                        _sx('button', 'Modify user in AD', 'resources'),
-                        ['name' => 'updateAD', 'class' => 'btn btn-primary'],
-                    );
-                    echo "</td>";
-                }
-
-                if ($islink && !$linkAD->fields["action_done"] && in_array(
-                    $ticket->fields["itilcategories_id"],
-                    $configAD->fields["deletion_categories_id"],
-                )) {
-                    echo "<tr class='tab_bg_2'>";
-                    echo "<td colspan='4' class='center'>";
-                    echo Html::submit(
-                        _sx('button', 'Disable user in AD', 'resources'),
-                        ['name' => 'disableAD', 'class' => 'btn btn-primary'],
-                    );
-                    echo "</td>";
-                }
-                echo "</tr>";
-            }
+        $login_option = ['value' => $linkAD->fields["login"], "option" => "disabled"];
+        if (!$islink) {
+            $login_option = ['value' => $linkAD->fields["login"]];
         }
 
-        echo "</table>";
-        Html::closeForm();
-        echo "<br>";
+        $ad_buttons = [];
+        if (!$islink && !$linkAD->fields["action_done"] && in_array(
+            $ticket->fields["itilcategories_id"],
+            $configAD->fields["creation_categories_id"],
+        ) && $logAvailable) {
+            $ad_buttons[] = ['name' => 'createAD', 'label' => _x('button', 'Create user in AD', 'resources')];
+        }
+        if ($islink && !$linkAD->fields["action_done"] && in_array(
+            $ticket->fields["itilcategories_id"],
+            $configAD->fields["modification_categories_id"],
+        )) {
+            $ad_buttons[] = ['name' => 'updateAD', 'label' => _x('button', 'Modify user in AD', 'resources')];
+        }
+        if ($islink && !$linkAD->fields["action_done"] && in_array(
+            $ticket->fields["itilcategories_id"],
+            $configAD->fields["deletion_categories_id"],
+        )) {
+            $ad_buttons[] = ['name' => 'disableAD', 'label' => _x('button', 'Disable user in AD', 'resources')];
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/linkad_resource_form.html.twig', [
+            'form_action'        => Toolbox::getItemTypeFormURL(self::getType()),
+            'resources_id'       => $plugin_resources_resources_id,
+            'ticket_id'          => $ticket->getID(),
+            'contracttypes_id'   => $plugin_resources_contracttypes_id,
+            'entities_id'        => $entities_id,
+            'enddate'            => $enddate,
+            'id'                 => $ID,
+            'can_edit'           => self::canCreate() && $canedit,
+            'login_input'        => Html::input('login', $login_option),
+            'department'         => Dropdown::getDropdownName(
+                'glpi_plugin_resources_departments',
+                $resource->getField("plugin_resources_departments_id"),
+            ),
+            'resource_name'      => $resource->getField("name"),
+            'resource_firstname' => $resource->getField("firstname"),
+            'phone_input'        => Html::input('phone', ['value' => $linkAD->fields["phone"]]),
+            'mail_input'         => Html::input('mail', ['type' => 'email', 'value' => $linkAD->fields["mail"]]),
+            'company'            => Dropdown::getDropdownName(
+                'glpi_plugin_resources_employers',
+                $employee->getField("plugin_resources_employers_id"),
+            ),
+            'contract'           => Dropdown::getDropdownName(
+                'glpi_plugin_resources_contracttypes',
+                $resource->getField("plugin_resources_contracttypes_id"),
+            ),
+            'cellphone_input'    => Html::input('cellphone', ['value' => $linkAD->fields["cellphone"]]),
+            'role_input'         => Html::input('role', ['value' => $linkAD->fields["role"]]),
+            'service_label'      => Service::getTypeName(1),
+            'service_input'      => Html::input('service', ['value' => $linkAD->fields["service"]]),
+            'location_label'     => Location::getTypeName(1),
+            'location_input'     => Html::input('location', ['value' => $linkAD->fields["location"]]),
+            'ad_buttons'         => $ad_buttons,
+        ]);
     }
 
 

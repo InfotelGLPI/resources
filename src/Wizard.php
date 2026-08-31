@@ -475,7 +475,7 @@ class Wizard extends CommonDBTM
                 $used[] = $choice_item["plugin_resources_choiceitems_id"];
 
                 //                if (!empty($choice_item["comment"])) {
-                //                    Choice::showModifyCommentFrom($choice_item, $rand);
+                //                    Choice::showModifyCommentForm($choice_item, $rand);
                 //                } else {
                 //                    Choice::showAddCommentForm($choice_item, $rand);
                 //                }

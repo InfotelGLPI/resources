@@ -1,0 +1,85 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<form method="post" action="{{ form_action }}">
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th colspan="4">{{ __('Element(s) to be affected', 'resources') }}</th>
+            </tr>
+            <tr>
+                <th>{{ __('Type') }}</th>
+                <th>{{ __('Description') }}</th>
+                <th>{{ __('Comments') }}</th>
+                {% if canedit %}
+                    <th>&nbsp;</th>
+                {% endif %}
+            </tr>
+
+            {% for row in rows %}
+                <tr class="tab_bg_1">
+                    <td class="left">{{ row.name }}</td>
+                    {# Already escaped in PHP (htmlescape then nl2br). #}
+                    <td class="left">{{ row.comments|raw }}</td>
+                    <td class="center">{{ row.comment_cell|raw }}</td>
+                    {% if canedit %}
+                        <td class="center">{{ row.delete_form|raw }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+            {% if canedit %}
+                <tr class="tab_bg_1">
+                    <th colspan="4">{{ __('Add a need', 'resources') }} :</th>
+                </tr>
+                <tr class="tab_bg_1">
+                    <td colspan="4" class="center">
+                        <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                        {{ choiceitem_dropdown|raw }}
+                    </td>
+                </tr>
+                <tr class="tab_bg_1">
+                    <td class="center" colspan="4">
+                        {{ call('Html::submit', [_x('button', 'Add'), {
+                            'name': 'addhelpdeskitem',
+                            'class': 'btn btn-primary',
+                        }])|raw }}
+                        <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {% if declaration_button is not empty %}
+                            {{ call('Html::submit', [declaration_button.label, {
+                                'name': declaration_button.name,
+                                'class': 'btn btn-primary',
+                            }])|raw }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+</form>

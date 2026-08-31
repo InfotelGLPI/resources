@@ -33,6 +33,7 @@ use Ajax;
 use CommonDBTM;
 use DBConnection;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Location;
 use Migration;
@@ -291,49 +292,37 @@ class ResourceResting extends CommonDBTM
      */
     public function showMenu()
     {
+        ob_start();
+        Wizard::WizardHeader(
+            _n('Non contract period management', 'Non contract periods management', 2, 'resources'),
+        );
+        $wizard_header = (string) ob_get_clean();
 
-        $title = _n('Non contract period management', 'Non contract periods management', 2, 'resources');
-        Wizard::WizardHeader($title);
-
-        echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
-
-        $canresting = Session::haveright('plugin_resources_resting', UPDATE);
-
-        echo "<tr class=''>";
-        if ($canresting) {
-            //Add resting resource
-            echo "<td class='tab_td_menu center'>";
-            echo "<a href=\"./resourceresting.form.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png' alt='" . __(
-                'Declare a non contract period',
-                'resources',
-            ) . "'>";
-            echo "<br>" . __('Declare a non contract period', 'resources') . "</a>";
-            echo "</td>";
-
-            //delete resting resource
-            echo "<td class='tab_td_menu center'>";
-            echo "<a href=\"./resourceresting.form.php?end\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/closeresting.png' alt='" . __(
-                'Declaring the end of non contract periods',
-                'resources',
-            ) . "'>";
-            echo "<br>" . __('Declaring the end of non contract periods', 'resources') . "</a>";
-            echo "</td>";
-
-            //List resting resource
-            echo "<td class='tab_td_menu center'>";
-            echo "<a href=\"./resourceresting.php\">";
-            echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/restinglist.png' alt='" . __(
-                'List of non contract periods',
-                'resources',
-            ) . "'>";
-            echo "<br>" . __('List of non contract periods', 'resources') . "</a>";
-            echo "</td>";
+        $tiles = [];
+        if (Session::haveright('plugin_resources_resting', UPDATE)) {
+            $tiles = [
+                [
+                    'url'   => './resourceresting.form.php',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png",
+                    'label' => __('Declare a non contract period', 'resources'),
+                ],
+                [
+                    'url'   => './resourceresting.form.php?end',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/closeresting.png",
+                    'label' => __('Declaring the end of non contract periods', 'resources'),
+                ],
+                [
+                    'url'   => './resourceresting.php',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/restinglist.png",
+                    'label' => __('List of non contract periods', 'resources'),
+                ],
+            ];
         }
-        echo "</tr></table>";
 
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/wizard_tiles_menu.html.twig', [
+            'wizard_header' => $wizard_header,
+            'tiles'         => $tiles,
+        ]);
     }
 
     /**
@@ -344,130 +333,27 @@ class ResourceResting extends CommonDBTM
      */
     public function showForm($ID, $options = [])
     {
-        global $CFG_GLPI;
-
         $this->initForm($ID, $options);
-
-        echo "<div class='card container' style='min-width: 80%;'>";
 
         $title = __('Declare a non contract period', 'resources');
         if ($ID > 0) {
             $title = __('Detail of non contract period', 'resources');
         }
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
-        Wizard::WizardHeader($title, $img);
 
-        echo "<div class='card-body'>";
+        ob_start();
+        Wizard::WizardHeader($title, PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png");
+        $wizard_header = (string) ob_get_clean();
 
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Resource::getTypeName(1);
-
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Resource::dropdown([
-            'name' => 'plugin_resources_resources_id',
-            'display' => true,
-            'value' => $this->fields["plugin_resources_resources_id"],
-            'entity' => $_SESSION['glpiactiveentities'],
+        TemplateRenderer::getInstance()->display('@resources/resourceresting_form.html.twig', [
+            'item'              => $this,
+            'wizard_header'     => $wizard_header,
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php",
+            'is_new'            => $ID <= 0,
+            'resource_class'    => Resource::class,
+            'resource_label'    => Resource::getTypeName(1),
+            'resource_entities' => $_SESSION['glpiactiveentities'],
+            'location_class'    => Location::class,
         ]);
-
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Begin date');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_begin", ['value' => $this->fields["date_begin"]]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('End date');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_end", ['value' => $this->fields["date_end"]]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Agency concerned', 'resources');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Dropdown::show('Location', ['value' => $this->fields["locations_id"]]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('At home', 'resources');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Dropdown::showYesNo('at_home', $this->fields['at_home']);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Comments');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '70',
-            'rows' => '4',
-            'display' => false,
-        ]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-        echo "<div class='preview'>";
-        echo "<a href=\"./resourceresting.form.php\">";
-        echo __('Declare a non contract period', 'resources');
-        echo "</a>";
-        echo "&nbsp;/&nbsp;<a href=\"./resourceresting.php\">";
-        echo __('List of non contract periods', 'resources');
-        echo "</a>";
-        echo "</div>";
-        echo "</div></div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-        echo "<div class='next'>";
-        if ($ID > 0) {
-            echo Html::hidden('id', ['value' => $ID]);
-            echo Html::hidden(
-                'plugin_resources_resources_id',
-                ['value' => $this->fields["plugin_resources_resources_id"]],
-            );
-            echo Html::submit(
-                _sx('button', 'Update'),
-                ['name' => 'updaterestingresources', 'class' => 'btn btn-primary'],
-            );
-            echo "&nbsp;&nbsp;";
-            echo Html::submit(
-                _sx('button', 'Delete permanently'),
-                ['name' => 'deleterestingresources', 'class' => 'btn btn-primary'],
-            );
-        } else {
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'addrestingresources', 'class' => 'btn btn-success']);
-        }
-        echo "</div>";
-        echo "</div></div>";
-
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
     }
 
     /**
@@ -478,72 +364,40 @@ class ResourceResting extends CommonDBTM
      */
     public function showFormEnd($ID, $options = [])
     {
-        global $CFG_GLPI;
-
         $this->initForm($ID, $options);
 
-        echo "<div class='card container' style='min-width: 80%;'>";
+        ob_start();
+        Wizard::WizardHeader(
+            __('Declaring the end of non contract periods', 'resources'),
+            PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png",
+        );
+        $wizard_header = (string) ob_get_clean();
 
-        $title = __('Declaring the end of non contract periods', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png";
-        Wizard::WizardHeader($title, $img);
+        // The rand is imposed here so the generated JS can observe the dropdown id.
+        $rand = mt_rand();
 
-        echo "<div class='card-body'>";
-
-        echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php\">";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo Resource::getTypeName(1);
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        $rand = Resource::dropdown([
-            'name' => 'plugin_resources_resources_id',
-            'on_change' => 'plugin_resources_load_user_resting()',
-            'entity' => $_SESSION['glpiactiveentities'],
-            'display' => true,
+        TemplateRenderer::getInstance()->display('@resources/resourceresting_end_form.html.twig', [
+            'wizard_header'     => $wizard_header,
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php",
+            'rand'              => $rand,
+            'resource_class'    => Resource::class,
+            'resource_label'    => Resource::getTypeName(1),
+            'resource_entities' => $_SESSION['glpiactiveentities'],
         ]);
 
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_user_resting(){";
-        $params = [
-            'action' => 'loadResting',
-            'plugin_resources_resources_id' => '__VALUE__',
-        ];
-        Ajax::updateItemJsCode(
+        $js = "function plugin_resources_load_user_resting(){";
+        $js .= Ajax::updateItemJsCode(
             'plugin_resources_resting',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            $params,
+            [
+                'action' => 'loadResting',
+                'plugin_resources_resources_id' => '__VALUE__',
+            ],
             'dropdown_plugin_resources_resources_id' . $rand,
+            false,
         );
-        echo "}";
-
-        echo "</script>";
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div id='plugin_resources_resting'>";
-        echo "</div>";
-
-        echo "<div id='plugin_resources_endate_resting'>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-        echo "<div class='col-md-12 mb-2'>";
-        echo "<div class='preview'>";
-        echo "<a href=\"./resourceresting.php\">";
-        echo __('List of non contract periods', 'resources');
-        echo "</a>";
-        echo "</div>";
-        echo "<div class='next' id='plugin_resources_button_resting'>";
-        //      echo "<input type='submit' name='addenddaterestingresources' value='" . _sx('button', 'Save') . "' class='submit' />";
-        echo "</div>";
-        echo "</div></div>";
-
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
+        $js .= "}";
+        echo Html::scriptBlock($js);
     }
 
     /**
@@ -553,8 +407,6 @@ class ResourceResting extends CommonDBTM
      */
     public function loadResting($plugin_resources_resources_id)
     {
-        global $CFG_GLPI;
-
         $resting = new ResourceResting();
         $restrict = [
             'plugin_resources_resources_id' => $plugin_resources_resources_id,
@@ -577,39 +429,33 @@ class ResourceResting extends CommonDBTM
             );
         }
 
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Choosing the intercontrat', 'resources');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        $rand = Dropdown::showFromArray(
-            'plugin_resources_resting_id',
-            $elements,
-            ['on_change' => "plugin_resources_load_end_date_resting()"],
-        );
-        echo "</div>";
-        echo "</div>";
+        // The rand is imposed here so the generated JS can observe the dropdown id.
+        $rand = mt_rand();
+
+        TemplateRenderer::getInstance()->display('@resources/resourceresting_choice.html.twig', [
+            'elements' => $elements,
+            'rand'     => $rand,
+        ]);
 
         //script for display of end date
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_end_date_resting(){";
-        $params = ['action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
+        $observed = 'dropdown_plugin_resources_resting_id' . $rand;
+        $js = "function plugin_resources_load_end_date_resting(){";
+        $js .= Ajax::updateItemJsCode(
             'plugin_resources_endate_resting',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            $params,
-            'dropdown_plugin_resources_resting_id' . $rand,
+            ['action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__'],
+            $observed,
+            false,
         );
-        $params = ['action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
+        $js .= Ajax::updateItemJsCode(
             'plugin_resources_button_resting',
             PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            $params,
-            'dropdown_plugin_resources_resting_id' . $rand,
+            ['action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__'],
+            $observed,
+            false,
         );
-        echo "}";
-
-        echo "</script>";
+        $js .= "}";
+        echo Html::scriptBlock($js);
     }
 
     /**
@@ -619,15 +465,9 @@ class ResourceResting extends CommonDBTM
      */
     public function loadEndDateResting($plugin_resources_resting_id)
     {
-        echo "<div class='row'>";
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('End date');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_end");
-        echo Html::hidden('id', ['value' => $plugin_resources_resting_id]);
-        echo "</div>";
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/resourceresting_end_date.html.twig', [
+            'resting_id' => $plugin_resources_resting_id,
+        ]);
     }
 
     /**
@@ -637,10 +477,7 @@ class ResourceResting extends CommonDBTM
      */
     public function loadButtonResting($plugin_resources_resting_id)
     {
-        echo Html::submit(
-            _sx('button', 'Save'),
-            ['name' => 'addenddaterestingresources', 'class' => 'btn btn-success'],
-        );
+        TemplateRenderer::getInstance()->display('@resources/resourceresting_end_button.html.twig');
     }
 
     /**

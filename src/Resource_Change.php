@@ -218,114 +218,87 @@ class Resource_Change extends CommonDBTM
      */
     public static function setFieldByAction($action_id, $plugin_resources_resources_id)
     {
-        global $CFG_GLPI, $DB;
+        global $DB;
 
         if ($plugin_resources_resources_id == 0) {
-            echo "<span class='red'>" . __('Please select a resource', 'resources') . "</span>";
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'danger',
+                'message' => __('Please select a resource', 'resources'),
+            ]);
             return;
         }
+
         $resource = new Resource();
         $resource->getFromDB($plugin_resources_resources_id);
 
         $dbu = new DbUtils();
 
+        // GLPI dropdowns echo their markup and return their rand: capture both, so the
+        // markup can be injected as |raw and the rand can anchor the generated JS.
+        $captureRand = static function (callable $renderer, &$rand): string {
+            ob_start();
+            $rand = $renderer();
+            return (string) ob_get_clean();
+        };
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
+
+        $rand       = 0;
+        $rows       = [];
+        $js         = '';
+        $row_class  = 'row';
+        $cell_class = 'col-md-4 mb-2';
+
         //Display for each action
         switch ($action_id) {
             case self::CHANGE_RESOURCEMANAGER:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Manager for the current resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id'));
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource manager', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = User::dropdown([
-                    'name' => "users_id",
-                    'entity' => $resource->fields["entities_id"],
-                    //                                    'entity_sons' => true,
-                    'right' => 'all',
-                    'used' => [$resource->getField('users_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_manager()',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_manager(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCEMANAGER,
-                    'users_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Manager for the current resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape($dbu->getUserName($resource->getField('users_id'))),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource manager', 'resources'),
+                    'widget' => $captureRand(fn() => User::dropdown([
+                        'name' => "users_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('users_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_manager()',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_manager',
+                    ['action' => self::CHANGE_RESOURCEMANAGER, 'users_id' => '__VALUE__'],
                     'dropdown_users_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
 
             case self::CHANGE_RESOURCESALE:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Sales manager for the current resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . $dbu->getUserName($resource->getField('users_id_sales'));
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource sales manager', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = User::dropdown([
-                    'name' => "users_id_sales",
-                    'entity' => $resource->fields["entities_id"],
-                    //                                    'entity_sons' => true,
-                    'right' => 'all',
-                    'used' => [$resource->getField('users_id_sales')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_sale()',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_sale(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCESALE,
-                    'users_id_sales' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Sales manager for the current resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape($dbu->getUserName($resource->getField('users_id_sales'))),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource sales manager', 'resources'),
+                    'widget' => $captureRand(fn() => User::dropdown([
+                        'name' => "users_id_sales",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('users_id_sales')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_sale()',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_sale',
+                    ['action' => self::CHANGE_RESOURCESALE, 'users_id_sales' => '__VALUE__'],
                     'dropdown_users_id_sales' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
 
             case self::CHANGE_ACCESSPROFIL:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current access profile of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-
                 $criteria = [
                     'SELECT' => [
                         'glpi_plugin_resources_habilitations.id',
@@ -352,20 +325,18 @@ class Resource_Change extends CommonDBTM
                 ];
 
                 $used = [];
+                $current = '';
                 foreach ($DB->request($criteria) as $data) {
-                    echo "&nbsp;" . Dropdown::getDropdownName(
+                    $current .= '&nbsp;' . htmlescape(Dropdown::getDropdownName(
                         'glpi_plugin_resources_habilitations',
                         $data['id'],
-                    ) . "<br>";
+                    )) . '<br>';
                     $used[] = $data['id'];
                 }
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New access profile of the resource', 'resources');
-                echo "</div>";
+                $rows[] = [
+                    'label'  => __("Current access profile of the resource", "resources"),
+                    'widget' => $current,
+                ];
 
                 //level
                 $habilitationlevel = new HabilitationLevel();
@@ -375,646 +346,442 @@ class Resource_Change extends CommonDBTM
                     $condition["plugin_resources_habilitationlevels_id"] = $level['id'];
                 }
 
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Habilitation::dropdown([
-                    'name' => "plugin_resources_habilitations_id",
-                    'entity' => $resource->fields["entities_id"],
-                    'right' => 'all',
-                    'condition' => $condition,
-                    'used' => $used,
-                    'on_change' => 'plugin_resources_load_button_changeresources_profil()',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_profil(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_ACCESSPROFIL,
-                    'plugin_resources_habilitations_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __('New access profile of the resource', 'resources'),
+                    'widget' => $captureRand(fn() => Habilitation::dropdown([
+                        'name' => "plugin_resources_habilitations_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'condition' => $condition,
+                        'used' => $used,
+                        'on_change' => 'plugin_resources_load_button_changeresources_profil()',
+                    ]), $rand),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_profil',
+                    [
+                        'action' => self::CHANGE_ACCESSPROFIL,
+                        'plugin_resources_habilitations_id' => '__VALUE__',
+                    ],
                     'dropdown_plugin_resources_habilitations_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_CONTRACTTYPE:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current contract type of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_contracttypes',
-                    $resource->getField('plugin_resources_contracttypes_id'),
-                );
-
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New type of contract', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = ContractType::dropdown([
-                    'name' => "plugin_resources_contracttypes_id",
-                    'entity' => $resource->fields["entities_id"],
-                    'right' => 'all',
-                    'used' => [$resource->getField('plugin_resources_contracttypes_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_contract()',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_contract(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_CONTRACTTYPE,
-                    'plugin_resources_contracttypes_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current contract type of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_contracttypes',
+                        $resource->getField('plugin_resources_contracttypes_id'),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New type of contract', 'resources'),
+                    'widget' => $captureRand(fn() => ContractType::dropdown([
+                        'name' => "plugin_resources_contracttypes_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('plugin_resources_contracttypes_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_contract()',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_contract',
+                    [
+                        'action' => self::CHANGE_CONTRACTTYPE,
+                        'plugin_resources_contracttypes_id' => '__VALUE__',
+                    ],
                     'dropdown_plugin_resources_contracttypes_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('Date of contract type change', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                Html::showDateField("date_of_change");
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
-                break;
-            case self::CHANGE_AGENCY:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current agency of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id'));
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource agency', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Location::dropdown([
-                    'name' => "locations_id",
-                    'entity' => $resource->fields["entities_id"],
-                    'right' => 'all',
-                    'used' => [$resource->getField('locations_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_agency();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_agency(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_AGENCY,
-                    'locations_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __('Date of contract type change', 'resources'),
+                    'widget' => $capture(fn() => Html::showDateField("date_of_change")),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                break;
+
+            case self::CHANGE_AGENCY:
+                $rows[] = [
+                    'label'  => __("Current agency of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(
+                        Dropdown::getDropdownName('glpi_locations', $resource->getField('locations_id')),
+                    ),
+                ];
+                $rows[] = [
+                    'label'  => __('New resource agency', 'resources'),
+                    'widget' => $captureRand(fn() => Location::dropdown([
+                        'name' => "locations_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('locations_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_agency();',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_agency',
+                    ['action' => self::CHANGE_AGENCY, 'locations_id' => '__VALUE__'],
                     'dropdown_locations_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
 
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current team of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_teams',
-                    $resource->getField('plugin_resources_teams_id'),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource team', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Team::dropdown([
-                    'name' => "plugin_resources_teams_id",
-                    'entity' => $resource->fields["entities_id"],
-                    'right' => 'all',
-                    'used' => [$resource->getField('plugin_resources_teams_id')],
-                ]);
-
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('Date of location change', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                Html::showDateField("date_of_change");
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
+                $rows[] = [
+                    'label'  => __("Current team of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_teams',
+                        $resource->getField('plugin_resources_teams_id'),
+                    )),
+                ];
+                $rows[] = [
+                    'label'  => __('New resource team', 'resources'),
+                    'widget' => $captureRand(fn() => Team::dropdown([
+                        'name' => "plugin_resources_teams_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('plugin_resources_teams_id')],
+                    ]), $rand),
+                ];
+                $rows[] = [
+                    'label'  => __('Date of location change', 'resources'),
+                    'widget' => $capture(fn() => Html::showDateField("date_of_change")),
+                ];
                 break;
 
             case self::CHANGE_TRANSFER:
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_transfer(){";
-                $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_TRANSFER];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_transfer',
+                    ['action' => self::CHANGE_TRANSFER],
                     "",
                 );
-                echo "}";
-                echo "plugin_resources_load_button_changeresources_transfer();";
-                echo "</script>";
+                $js .= "plugin_resources_load_button_changeresources_transfer();";
                 break;
 
             case self::CHANGE_RESOURCEINFORMATIONS:
-                //            echo "<div class='row'>";
-                //            echo "<div class='col-md-4 mb-2'>";
-                //            echo __("Current name of the resource", "resources");
-                //            echo "</div>";
-                //            echo "<div class='col-md-4 mb-2'>";
-                //            echo "&nbsp;" . $resource->getField('name');
-                //
-                //            echo "</div>";
-                //            echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('Name', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
                 $rand = mt_rand();
-                $option = [
-                    'rand' => $rand,
-                    'value' => $resource->fields["name"],
+                $rows[] = [
+                    'label'  => __('Name', 'resources'),
+                    'widget' => Html::input('name', [
+                        'rand'  => $rand,
+                        'value' => $resource->fields["name"],
+                    ]),
                 ];
-                echo Html::input('name', $option);
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('Firstname', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $option = [
-                    'rand' => $rand,
-                    'value' => $resource->fields["firstname"],
-                    'onChange' => "'First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();' style='text-transform:capitalize;' ",
+                // NOTE: the legacy code built the firstname input but never printed it,
+                // and the JS below sends the stored firstname rather than a typed one.
+                $rows[] = [
+                    'label'  => __('Firstname', 'resources'),
+                    'widget' => '',
                 ];
-                $rand2 = Html::input('firstname', $option);
-                echo "</div>";
-                echo "</div>";
+                $rows[] = [
+                    'label'  => __('Departure date', 'resources'),
+                    'widget' => $capture(fn() => Html::showDateField(
+                        "date_end",
+                        ['value' => $resource->fields["date_end"]],
+                    )),
+                ];
 
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('Departure date', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $option = ['onChange' => "javascript:this.value=this.value.toUpperCase();"];
-                $rand3 = Html::showDateField("date_end", ['value' => $resource->fields["date_end"]]);
-                //            $rand = Html::autocompletionTextField($resource, "firstname", $option);
-                echo "</div>";
-
-                echo "</div>";
-
-                echo "<script type='text/javascript'>";
-                echo "$('input[name=\"date_end\"]').change(function() {
-                  plugin_resources_load_button_changeresources_information();
-            });
-            $('input[name=\"name\"]').on(\"input\", function() {
-             this.value = this.value.toUpperCase();
-                  plugin_resources_load_button_changeresources_information();
-            });";
-                echo "function plugin_resources_load_button_changeresources_information(){";
                 $root_doc = PLUGIN_RESOURCES_WEBDIR;
-                echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
-               ,{load_button_changeresources:true,action:8,name:$('input[name=\"name\"]').val(),firstname:" . json_encode((string) $resource->fields["firstname"], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",date_end:$('input[name=\"date_end\"]').val()}
-               )";
-
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
+                $action = self::CHANGE_RESOURCEINFORMATIONS;
+                $firstname = json_encode(
+                    (string) $resource->fields["firstname"],
+                    JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP,
+                );
+                $js .= <<<JAVASCRIPT
+                    $('input[name="date_end"]').change(function() {
+                        plugin_resources_load_button_changeresources_information();
+                    });
+                    $('input[name="name"]').on("input", function() {
+                        this.value = this.value.toUpperCase();
+                        plugin_resources_load_button_changeresources_information();
+                    });
+                    function plugin_resources_load_button_changeresources_information(){
+                        $('#plugin_resources_buttonchangeresources').load('{$root_doc}/ajax/resourcechange.php', {
+                            load_button_changeresources: true,
+                            action: {$action},
+                            name: $('input[name="name"]').val(),
+                            firstname: {$firstname},
+                            date_end: $('input[name="date_end"]').val()
+                        });
+                    }
+                    JAVASCRIPT;
                 break;
+
             case self::CHANGE_NAME:
+                $row_class  = 'form-row';
+                $cell_class = 'bt-feature col-md-4';
+                $rand       = mt_rand();
+                $rows[] = [
+                    'label'  => __('Name', 'resources'),
+                    'widget' => Html::input('name', [
+                        'rand'     => $rand,
+                        'value'    => $resource->fields["name"],
+                        'onChange' => "javascript:this.value=this.value.toUpperCase(); "
+                            . "plugin_resources_load_button_changeresources_information(); ",
+                    ]),
+                ];
 
-                echo "<div class=\"form-row\">";
-                echo "<div class=\"bt-feature col-md-4 \">";
-                echo __('Name', 'resources');
-                echo "</div>";
-                echo "<div class=\"bt-feature col-md-4 \">";
-                $rand   = mt_rand();
-                $option = ['rand'     => $rand,
-                    'value'    => $resource->fields["name"],
-                    'onChange' => "javascript:this.value=this.value.toUpperCase(); plugin_resources_load_button_changeresources_information(); "];
-                echo Html::input('name', $option);
-                echo "</div>";
-                echo "</div>";
-
-                echo "<script type='text/javascript'>";
-                echo "$('input[name=\"name\"]').change(function() {
-                 plugin_resources_load_button_changeresources_information();
-           });";
-                echo "function plugin_resources_load_button_changeresources_information(){";
                 $root_doc = PLUGIN_RESOURCES_WEBDIR;
-                echo "$('#plugin_resources_buttonchangeresources').load('$root_doc/ajax/resourcechange.php'
-              ,{load_button_changeresources:true,action:17,name:$('input[name=\"name\"]').val()}
-              )";
-
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
+                $action = self::CHANGE_NAME;
+                $js .= <<<JAVASCRIPT
+                    $('input[name="name"]').change(function() {
+                        plugin_resources_load_button_changeresources_information();
+                    });
+                    function plugin_resources_load_button_changeresources_information(){
+                        $('#plugin_resources_buttonchangeresources').load('{$root_doc}/ajax/resourcechange.php', {
+                            load_button_changeresources: true,
+                            action: {$action},
+                            name: $('input[name="name"]').val()
+                        });
+                    }
+                    JAVASCRIPT;
                 break;
+
             case self::CHANGE_RESOURCECOMPANY:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current company of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
                 $employee = new Employee();
                 $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_employers',
-                    $employee->getField("plugin_resources_employers_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource company', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Employer::dropdown([
-                    'name' => "employer_id",
-                    'right' => 'all',
-                    'used' => [$employee->getField('plugin_resources_employers_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_company();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_company(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCECOMPANY,
-                    'plugin_resources_employers_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current company of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_employers',
+                        $employee->getField("plugin_resources_employers_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource company', 'resources'),
+                    'widget' => $captureRand(fn() => Employer::dropdown([
+                        'name' => "employer_id",
+                        'right' => 'all',
+                        'used' => [$employee->getField('plugin_resources_employers_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_company();',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_company',
+                    [
+                        'action' => self::CHANGE_RESOURCECOMPANY,
+                        'plugin_resources_employers_id' => '__VALUE__',
+                    ],
                     'dropdown_employer_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_RESOURCEDEPARTMENT:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current department of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_departments',
-                    $resource->getField("plugin_resources_departments_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource department', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Department::dropdown([
-                    'name' => "department_id",
-                    'entity' => $resource->fields["entities_id"],
-                    // TODO relink departement with resource employer and department with no employer
-                    //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                    'right' => 'all',
-                    'used' => [$resource->getField('plugin_resources_departments_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_department();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_department(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCEDEPARTMENT,
-                    'plugin_resources_departments_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current department of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_departments',
+                        $resource->getField("plugin_resources_departments_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource department', 'resources'),
+                    'widget' => $captureRand(fn() => Department::dropdown([
+                        'name' => "department_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('plugin_resources_departments_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_department();',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_department',
+                    [
+                        'action' => self::CHANGE_RESOURCEDEPARTMENT,
+                        'plugin_resources_departments_id' => '__VALUE__',
+                    ],
                     'dropdown_department_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_RESOURCESERVICE:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current service of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_services',
-                    $resource->getField("plugin_resources_services_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource service', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Service::dropdownFromDepart(
-                    $resource->fields["plugin_resources_departments_id"],
-                    [
-                        'name' => "service_id",
-                        'value' => $resource->fields["plugin_resources_services_id"],
-                        'entity' => $resource->fields["entities_id"],
-                        'right' => 'all',
-                        'used' => [$resource->getField('plugin_resources_services_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_service();',
-                    ],
-                );
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_service(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCESERVICE,
-                    'plugin_resources_services_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current service of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_services',
+                        $resource->getField("plugin_resources_services_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource service', 'resources'),
+                    'widget' => $captureRand(fn() => Service::dropdownFromDepart(
+                        $resource->fields["plugin_resources_departments_id"],
+                        [
+                            'name' => "service_id",
+                            'value' => $resource->fields["plugin_resources_services_id"],
+                            'entity' => $resource->fields["entities_id"],
+                            'right' => 'all',
+                            'used' => [$resource->getField('plugin_resources_services_id')],
+                            'on_change' => 'plugin_resources_load_button_changeresources_service();',
+                        ],
+                    ), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_service',
+                    [
+                        'action' => self::CHANGE_RESOURCESERVICE,
+                        'plugin_resources_services_id' => '__VALUE__',
+                    ],
                     'dropdown_service_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_RESOURCEROLE:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current role of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_roles',
-                    $resource->getField("plugin_resources_roles_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource role', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Role::dropdownFromService(
-                    $resource->fields["plugin_resources_services_id"],
-                    [
-                        'name' => "role_id",
-                        'value' => $resource->fields["plugin_resources_roles_id"],
-                        'entity' => $resource->fields["entities_id"],
-                        'right' => 'all',
-                        'used' => [$resource->getField('plugin_resources_roles_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_role();',
-                    ],
-                );
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_role(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCEROLE,
-                    'plugin_resources_roles_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current role of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_roles',
+                        $resource->getField("plugin_resources_roles_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource role', 'resources'),
+                    'widget' => $captureRand(fn() => Role::dropdownFromService(
+                        $resource->fields["plugin_resources_services_id"],
+                        [
+                            'name' => "role_id",
+                            'value' => $resource->fields["plugin_resources_roles_id"],
+                            'entity' => $resource->fields["entities_id"],
+                            'right' => 'all',
+                            'used' => [$resource->getField('plugin_resources_roles_id')],
+                            'on_change' => 'plugin_resources_load_button_changeresources_role();',
+                        ],
+                    ), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_role',
+                    ['action' => self::CHANGE_RESOURCEROLE, 'plugin_resources_roles_id' => '__VALUE__'],
                     'dropdown_role_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_RESOURCEFUNCTION:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current function of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_functions_id" => $resource->getID()]);
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_resourcefunctions',
-                    $resource->getField("plugin_functions_functions_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource function', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = ResourceFunction::dropdown([
-                    'name' => "function_id",
-                    'entity' => $resource->fields["entities_id"],
-                    // TODO relink departement with resource employer and department with no employer
-                    //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                    'right' => 'all',
-                    'used' => [$resource->getField('plugin_resources_functions_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_function();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_function(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCEFUNCTION,
-                    'plugin_resources_functions_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current function of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_resourcefunctions',
+                        $resource->getField("plugin_functions_functions_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource function', 'resources'),
+                    'widget' => $captureRand(fn() => ResourceFunction::dropdown([
+                        'name' => "function_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('plugin_resources_functions_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_function();',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_function',
+                    [
+                        'action' => self::CHANGE_RESOURCEFUNCTION,
+                        'plugin_resources_functions_id' => '__VALUE__',
+                    ],
                     'dropdown_function_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
+
             case self::CHANGE_RESOURCETEAM:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Current team of the resource", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo "&nbsp;" . Dropdown::getDropdownName(
-                    'glpi_plugin_resources_teams',
-                    $resource->getField("plugin_functions_teams_id"),
-                );
-                echo "</div>";
-                echo "</div>";
-
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New resource function', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $rand = Team::dropdown([
-                    'name' => "team_id",
-                    'entity' => $resource->fields["entities_id"],
-                    // TODO relink departement with resource employer and department with no employer
-                    //                                                       'condition' => ["plugin_resources_employers_id"=>$employee->getField("plugin_resources_employers_id")],
-                    'right' => 'all',
-                    'used' => [$resource->getField('plugin_resources_teams_id')],
-                    'on_change' => 'plugin_resources_load_button_changeresources_team();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_team(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCETEAM,
-                    'plugin_resources_teams_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __("Current team of the resource", "resources"),
+                    'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
+                        'glpi_plugin_resources_teams',
+                        $resource->getField("plugin_functions_teams_id"),
+                    )),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $rows[] = [
+                    'label'  => __('New resource function', 'resources'),
+                    'widget' => $captureRand(fn() => Team::dropdown([
+                        'name' => "team_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => [$resource->getField('plugin_resources_teams_id')],
+                        'on_change' => 'plugin_resources_load_button_changeresources_team();',
+                    ]), $rand),
+                ];
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_team',
+                    ['action' => self::CHANGE_RESOURCETEAM, 'plugin_resources_teams_id' => '__VALUE__'],
                     'dropdown_team_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
                 break;
-            case self::CHANGE_RESOURCEMATERIAL:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __("Change material", "resources");
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                Html::textarea(['name' => "content"]);
-                //            echo "<script type='text/javascript'>";
 
-                $params = ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL];
-                //            Ajax::updateItemJsCode();
-                echo Ajax::updateItemOnInputTextEvent(
+            case self::CHANGE_RESOURCEMATERIAL:
+                $material = $capture(fn() => Html::textarea(['name' => "content"]));
+                $material .= Ajax::updateItemOnInputTextEvent(
                     'content',
                     'plugin_resources_buttonchangeresources',
                     PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                    ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL],
                 );
-
-                //            echo "</script>";
-                echo "</div>";
-                echo "</div>";
-
+                $rows[] = [
+                    'label'  => __("Change material", "resources"),
+                    'widget' => $material,
+                ];
                 break;
-            case self::CHANGE_RESOURCEITEMAPPLICATION:
-                echo "<div class='row'>";
-                echo "<div class='col-md-4 mb-2'>";
-                echo __('New Application to add to the resource', 'resources');
-                echo "</div>";
-                echo "<div class='col-md-4 mb-2'>";
-                $appliance = new Appliance();
-                $resource_item = new Resource_Item();
 
+            case self::CHANGE_RESOURCEITEMAPPLICATION:
+                $resource_item = new Resource_Item();
                 $resource_items = $resource_item->find(
                     ['plugin_resources_resources_id' => $resource->fields['id'], 'itemtype' => Appliance::getType()],
                 );
                 $appliances = [];
                 foreach ($resource_items as $it) {
-                    array_push($appliances, $it["items_id"]);
+                    $appliances[] = $it["items_id"];
                 }
-                $rand = Appliance::dropdown([
-                    'name' => "appliances_id",
-                    'entity' => $resource->fields["entities_id"],
-                    'right' => 'all',
-                    'used' => $appliances,
-                    'on_change' => 'plugin_resources_load_button_changeresources_application();',
-                ]);
-
-                echo "<script type='text/javascript'>";
-                echo "function plugin_resources_load_button_changeresources_application(){";
-                $params = [
-                    'load_button_changeresources' => true,
-                    'action' => self::CHANGE_RESOURCEITEMAPPLICATION,
-                    'appliances_id' => '__VALUE__',
+                $rows[] = [
+                    'label'  => __('New Application to add to the resource', 'resources'),
+                    'widget' => $captureRand(fn() => Appliance::dropdown([
+                        'name' => "appliances_id",
+                        'entity' => $resource->fields["entities_id"],
+                        'right' => 'all',
+                        'used' => $appliances,
+                        'on_change' => 'plugin_resources_load_button_changeresources_application();',
+                    ]), $rand),
                 ];
-                Ajax::updateItemJsCode(
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    $params,
+                $js .= self::loadButtonJs(
+                    'plugin_resources_load_button_changeresources_application',
+                    [
+                        'action' => self::CHANGE_RESOURCEITEMAPPLICATION,
+                        'appliances_id' => '__VALUE__',
+                    ],
                     'dropdown_appliances_id' . $rand,
                 );
-                echo "}";
-                echo "</script>";
-                echo "</div>";
-                echo "</div>";
                 break;
         }
+
+        if (!empty($rows)) {
+            TemplateRenderer::getInstance()->display('@resources/resource_change_fields.html.twig', [
+                'rows'       => $rows,
+                'row_class'  => $row_class,
+                'cell_class' => $cell_class,
+            ]);
+        }
+
+        if ($js !== '') {
+            echo Html::scriptBlock($js);
+        }
+    }
+
+    /**
+     * Build the JS function reloading the action button area when a field changes.
+     *
+     * @param string $function_name name of the generated JS function
+     * @param array  $params        AJAX parameters, merged after load_button_changeresources
+     * @param string $observed      id of the input whose change feeds __VALUE__
+     *
+     * @return string the function declaration, to be emitted in a script block
+     */
+    private static function loadButtonJs(string $function_name, array $params, string $observed): string
+    {
+        $js = "function {$function_name}(){";
+        $js .= Ajax::updateItemJsCode(
+            'plugin_resources_buttonchangeresources',
+            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+            ['load_button_changeresources' => true] + $params,
+            $observed,
+            false,
+        );
+        $js .= "}";
+
+        return $js;
     }
 
     /**

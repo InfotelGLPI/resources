@@ -1,0 +1,36 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Label/widget rows shared by every branch of Resource_Change::setFieldByAction().
+ # Widgets are GLPI dropdowns/inputs already rendered server-side, hence |raw;
+ # plain text put in a widget must be escaped by the caller. #}
+{% for row in rows %}
+    <div class="{{ row_class|default('row') }}">
+        <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.label }}</div>
+        <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.widget|raw }}</div>
+    </div>
+{% endfor %}

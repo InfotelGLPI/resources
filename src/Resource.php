@@ -5014,6 +5014,48 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Build the Profession/Rank pair shared by the Budget, Cost and Employment forms.
+     *
+     * The Profession dropdown wires an AJAX refresh of the rank span through
+     * showGenericDropdown(), and Rank is displayed read-only because it follows the
+     * selected profession. Neither fits a plain fields.dropdownField macro, so both
+     * are returned as ready-to-render HTML for fields.htmlField().
+     *
+     * @param array $fields  Item fields, holding plugin_resources_professions_id,
+     *                       plugin_resources_ranks_id and entities_id
+     * @param bool  $sort    Whether the profession dropdown is sorted
+     *
+     * @return array{profession_dropdown: string, rank_html: string}
+     */
+    public static function getProfessionRankFields(array $fields, bool $sort = true): array
+    {
+        ob_start();
+        self::showGenericDropdown(Profession::class, [
+            'name'   => 'plugin_resources_professions_id',
+            'value'  => $fields['plugin_resources_professions_id'],
+            'entity' => $fields['entities_id'],
+            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
+            'span'   => 'span_rank',
+            'sort'   => $sort,
+        ]);
+        $profession_dropdown = (string) ob_get_clean();
+
+        if ($fields['plugin_resources_ranks_id'] > 0) {
+            $rank_label = Dropdown::getDropdownName(
+                'glpi_plugin_resources_ranks',
+                $fields['plugin_resources_ranks_id'],
+            );
+        } else {
+            $rank_label = __('None');
+        }
+
+        return [
+            'profession_dropdown' => $profession_dropdown,
+            'rank_html'           => "<span id='span_rank' name='span_rank'>" . $rank_label . "</span>",
+        ];
+    }
+
+    /**
      * Display information on treeview plugin
      *
      * @params itemtype, id, pic, url, name

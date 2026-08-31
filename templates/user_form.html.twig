@@ -1,0 +1,47 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Rows only: the surrounding form is opened by showFormHeader() and closed by
+ # showFormButtons(), which are driven by two different objects here (see
+ # GlpiPlugin\Resources\User::showForm()). #}
+<input type="hidden" name="idResource" value="{{ resources_id }}">
+
+<tr class="tab_bg_1">
+    <td>{{ __('Authentication') }}</td>
+    <td>
+        {% for line in auth_lines %}
+            {{- line }}{% if not loop.last %}<br>{% endif %}
+        {% endfor %}
+    </td>
+</tr>
+
+<tr class="tab_bg_1">
+    <td><label for="textfield_phone{{ phone_rand }}">{{ phone_label }}</label></td>
+    <td>{{ phone_input|raw }}</td>
+    <td>{{ email_label }}</td>
+    <td>{{ email_block|raw }}</td>
+</tr>

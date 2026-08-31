@@ -33,7 +33,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 
 if (!defined('GLPI_ROOT')) {
@@ -57,66 +57,47 @@ class Contracttypeprofile extends CommonDBTM
      */
     public static function addContracttype($profiles_id, $canedit)
     {
-
-        if ($canedit) {
-            echo "<form method='post' action='" . PLUGIN_RESOURCES_WEBDIR . "/front/contracttypeprofile.form.php" . "'>";
-            echo Html::hidden('profiles_id', ['value' => $profiles_id]);
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='4'>";
-            echo __('Contract type authorization', 'resources');
-            echo "</th></tr>";
-
-            echo "<tr class='tab_bg_1'><td>";
-
-            echo "<td>";
-            echo __('Available contract type', 'resources');
-            echo "</td><td>";
-            $contracttypeprofile = new self();
-            $plugin_resources_contracttypes_id = [];
-            if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
-                $plugin_resources_contracttypes_id = json_decode(
-                    $contracttypeprofile->fields['plugin_resources_contracttypes_id'],
-                );
-            }
-            //         Group::dropdown(['entity' => $_SESSION['glpiactive_entity'],
-            //                          'name'   => 'groups_id',
-            //                          'value'  => $groups_id]);
-
-            $dbu = new DbUtils();
-            $result = $dbu->getAllDataFromTable(ContractType::getTable());
-            //         $pref = json_decode($groupprofile->fields['prefered_group']);
-
-            $temp = [];
-            $temp[0] = __("Without contract", 'resources');
-            foreach ($result as $item) {
-                $temp[$item['id']] = $item['name'];
-            }
-
-            $params = [
-                "name" => 'plugin_resources_contracttypes_id',
-                'entity' => $_SESSION['glpiactive_entity'],
-                "display" => false,
-                "multiple" => true,
-                "width" => '200px',
-                'values' => isset($plugin_resources_contracttypes_id) ? $plugin_resources_contracttypes_id : [],
-                'display_emptychoice' => true,
-            ];
-
-
-            $dropdown = Dropdown::showFromArray("plugin_resources_contracttypes_id", $temp, $params);
-
-            echo $dropdown;
-
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'addContracttype', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-
-            echo "</table></div>";
-            Html::closeForm();
+        if (!$canedit) {
+            return;
         }
+
+        $contracttypeprofile = new self();
+        $plugin_resources_contracttypes_id = [];
+        if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
+            $plugin_resources_contracttypes_id = json_decode(
+                $contracttypeprofile->fields['plugin_resources_contracttypes_id'],
+            );
+        }
+
+        $dbu = new DbUtils();
+        $result = $dbu->getAllDataFromTable(ContractType::getTable());
+
+        $temp = [];
+        $temp[0] = __("Without contract", 'resources');
+        foreach ($result as $item) {
+            $temp[$item['id']] = $item['name'];
+        }
+
+        $params = [
+            "name" => 'plugin_resources_contracttypes_id',
+            'entity' => $_SESSION['glpiactive_entity'],
+            "display" => false,
+            "multiple" => true,
+            "width" => '200px',
+            'values' => $plugin_resources_contracttypes_id,
+            'display_emptychoice' => true,
+        ];
+
+        $dropdown = Dropdown::showFromArray("plugin_resources_contracttypes_id", $temp, $params);
+
+        TemplateRenderer::getInstance()->display('@resources/profile_authorization_form.html.twig', [
+            'profiles_id' => $profiles_id,
+            'form_action' => PLUGIN_RESOURCES_WEBDIR . "/front/contracttypeprofile.form.php",
+            'title'       => __('Contract type authorization', 'resources'),
+            'label'       => __('Available contract type', 'resources'),
+            'dropdown'    => $dropdown,
+            'submit_name' => 'addContracttype',
+        ]);
     }
 
     public static function install(Migration $migration)

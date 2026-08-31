@@ -1,0 +1,121 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Standalone form shown on the ticket side: front/linkad.form.php dispatches on
+ # createAD / updateAD / disableAD, so the generic form buttons cannot be used.
+ # The read-only cells (department, company, contract) carry a hidden twin so the
+ # value still reaches the controller. #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+    <input type="hidden" name="ticket_id" value="{{ ticket_id }}">
+    <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
+    <input type="hidden" name="entities_id" value="{{ entities_id }}">
+    <input type="hidden" name="enddate" value="{{ enddate }}">
+    <input type="hidden" name="id" value="{{ id }}">
+
+    <table class="tab_cadre_fixe">
+        {% if can_edit %}
+            <tr>
+                <th colspan="4">{{ __('Resources data', 'resources') }}</th>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ __('Login') }}</td>
+                <td>{{ login_input|raw }}</td>
+                <td>{{ __('Department', 'resources') }}</td>
+                <td>
+                    <input type="hidden" name="department" value="{{ department }}">
+                    {{ department }}
+                </td>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ __('Name') }}</td>
+                <td>
+                    <input type="text" class="form-control" name="name" value="{{ resource_name }}"
+                           onchange="this.value = this.value.toUpperCase();">
+                </td>
+                <td>{{ __('Firstname', 'resources') }}</td>
+                <td>
+                    <input type="text" class="form-control" name="firstname" value="{{ resource_firstname }}"
+                           style="text-transform: capitalize;"
+                           onchange="First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();">
+                </td>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ __('Phone', 'resources') }}</td>
+                <td>{{ phone_input|raw }}</td>
+                <td>{{ __('Mail') }}</td>
+                <td>{{ mail_input|raw }}</td>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ __('Company', 'resources') }}</td>
+                <td>
+                    <input type="hidden" name="company" value="{{ company }}">
+                    {{ company }}
+                </td>
+                <td>{{ _n('Contract type', 'Contract types', 1) }}</td>
+                <td>
+                    <input type="hidden" name="contract" value="{{ contract }}">
+                    {{ contract }}
+                </td>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ __('Cell phone', 'resources') }}</td>
+                <td>{{ cellphone_input|raw }}</td>
+                <td>{{ __('Role', 'resources') }}</td>
+                <td>{{ role_input|raw }}</td>
+            </tr>
+
+            <tr class="tab_bg_1">
+                <td>{{ service_label }}</td>
+                <td>{{ service_input|raw }}</td>
+                <td>{{ location_label }}</td>
+                <td>{{ location_input|raw }}</td>
+            </tr>
+
+            {% if ad_buttons is not empty %}
+                <tr class="tab_bg_2">
+                    <td colspan="4" class="center">
+                        {% for button in ad_buttons %}
+                            {{ call('Html::submit', [button.label, {
+                                'name': button.name,
+                                'class': 'btn btn-primary',
+                            }])|raw }}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endif %}
+    </table>
+
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+</form>
+<br>

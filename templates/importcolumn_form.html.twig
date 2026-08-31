@@ -1,0 +1,67 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Standalone form AJAX-loaded into the columns tab: front/importcolumn.form.php
+ # dispatches on `add` / `update`, so the generic form buttons cannot be used. #}
+<form name="form" method="post" action="{{ form_action }}">
+    <input type="hidden" name="id" value="{{ column_id }}">
+    <input type="hidden" name="{{ items_id_field }}" value="{{ items_id }}">
+
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th colspan="4">{{ title }}</th>
+            </tr>
+            <tr class="tab_bg_1">
+                <td>{{ __('Name') }}</td>
+                <td>{{ name_input|raw }}</td>
+            </tr>
+            <tr class="tab_bg_1">
+                <td>{{ __('Type') }}</td>
+                <td>{{ type_dropdown|raw }}</td>
+            </tr>
+            <tr class="tab_bg_1">
+                <td>{{ __('Resource Attribute', 'resources') }}</td>
+                <td>{{ attribute_dropdown|raw }}</td>
+            </tr>
+            <tr class="tab_bg_1">
+                <td>{{ __('Identifiers', 'resources') }}</td>
+                <td>{{ identifier_dropdown|raw }}</td>
+            </tr>
+            <tr>
+                <td class="tab_bg_2 center" colspan="4">
+                    {{ call('Html::submit', [submit_label, {
+                        'name': submit_name,
+                        'class': 'btn btn-primary',
+                    }])|raw }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+</form>

@@ -32,7 +32,7 @@ namespace GlpiPlugin\Resources;
 use CommonDBTM;
 use DBConnection;
 use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 
 /**
@@ -49,62 +49,46 @@ class Actionprofile extends CommonDBTM
     public $dohistory = true;
 
     /**
-     * Add a category to profile
+     * Add an action authorization to profile
      * @param   $profiles_id
      * @param   $canedit
-     * @global  $CFG_GLPI
      *
      */
     public static function addAction($profiles_id, $canedit)
     {
-        global $CFG_GLPI;
-
-        if ($canedit) {
-            echo "<form method='post' action='" . PLUGIN_RESOURCES_WEBDIR . "/front/actionprofile.form.php" . "'>";
-            echo Html::hidden('profiles_id', ['value' => $profiles_id]);
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='4'>";
-            echo __('Action authorization', 'resources');
-            echo "</th></tr>";
-
-            echo "<tr class='tab_bg_1'><td>";
-
-            echo "<td>";
-            echo __('Available actions', 'resources');
-            echo "</td><td>";
-            $actionprofile = new self();
-            if ($actionprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
-                $actions_id = json_decode($actionprofile->fields['actions_id']);
-            }
-
-
-            $temp = Resource_Change::getAllActions(false);
-            unset($temp[0]);
-
-
-            $params = [
-                "name" => 'actions_id',
-                'entity' => $_SESSION['glpiactive_entity'],
-                "display" => false,
-                "multiple" => true,
-                "width" => '200px',
-                'values' => isset($actions_id) ? $actions_id : [],
-                'display_emptychoice' => true,
-            ];
-
-            $dropdown = Dropdown::showFromArray("actions_id", $temp, $params);
-
-            echo $dropdown;
-
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_2'><td colspan='4' style='text-align:center'>";
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'addAction', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-
-            echo "</table></div>";
-            Html::closeForm();
+        if (!$canedit) {
+            return;
         }
+
+        $actionprofile = new self();
+        $actions_id = [];
+        if ($actionprofile->getFromDBByCrit(['profiles_id' => $profiles_id])) {
+            $actions_id = json_decode($actionprofile->fields['actions_id']);
+        }
+
+        $temp = Resource_Change::getAllActions(false);
+        unset($temp[0]);
+
+        $params = [
+            "name" => 'actions_id',
+            'entity' => $_SESSION['glpiactive_entity'],
+            "display" => false,
+            "multiple" => true,
+            "width" => '200px',
+            'values' => $actions_id,
+            'display_emptychoice' => true,
+        ];
+
+        $dropdown = Dropdown::showFromArray("actions_id", $temp, $params);
+
+        TemplateRenderer::getInstance()->display('@resources/profile_authorization_form.html.twig', [
+            'profiles_id' => $profiles_id,
+            'form_action' => PLUGIN_RESOURCES_WEBDIR . "/front/actionprofile.form.php",
+            'title'       => __('Action authorization', 'resources'),
+            'label'       => __('Available actions', 'resources'),
+            'dropdown'    => $dropdown,
+            'submit_name' => 'addAction',
+        ]);
     }
 
     public static function install(Migration $migration)

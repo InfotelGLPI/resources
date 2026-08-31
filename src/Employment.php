@@ -35,6 +35,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Plugin;
@@ -274,8 +275,6 @@ class Employment extends CommonDBTM
      **/
     public function showForm($ID, $options = [""])
     {
-        global $CFG_GLPI;
-
         //validation des droits
         if (!$this->canView()) {
             return false;
@@ -294,119 +293,30 @@ class Employment extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $this->showFormHeader($options);
-
         if ($ID > 0) {
             $resource = $this->fields["plugin_resources_resources_id"];
         } else {
             $resource = $plugin_resources_resources_id;
         }
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
+        $profession_rank = Resource::getProfessionRankFields($this->fields, true);
 
-        echo "<td>" . __('Employer', 'resources') . "</td>";
-        echo "<td>";
-        Dropdown::show(
-            Employer::class,
-            [
-                'value' => $this->fields["plugin_resources_employers_id"],
-                'entity' => $this->fields["entities_id"],
-            ],
-        );
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Profession', 'resources') . "</td>";
-        echo "<td>";
-        $params = [
-            'name' => 'plugin_resources_professions_id',
-            'value' => $this->fields['plugin_resources_professions_id'],
-            'entity' => $this->fields["entities_id"],
-            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRank.php",
-            'span' => 'span_rank',
-            'sort' => true,
-        ];
-        Resource::showGenericDropdown(Profession::class, $params);
-        echo "</td>";
-        echo "<td>" . __('Rank', 'resources') . "</td><td>";
-        echo "<span id='span_rank' name='span_rank'>";
-        if ($this->fields["plugin_resources_ranks_id"] > 0) {
-            echo Dropdown::getDropdownName(
-                'glpi_plugin_resources_ranks',
-                $this->fields["plugin_resources_ranks_id"],
-            );
-        } else {
-            echo __('None');
-        }
-        echo "</span></td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Employment state', 'resources') . "</td>";
-        echo "<td>";
-        Dropdown::show(
-            EmploymentState::class,
-            [
-                'value' => $this->fields["plugin_resources_employmentstates_id"],
-                'entity' => $this->fields["entities_id"],
-            ],
-        );
-        echo "</td>";
-        echo "<td>" . __('Ratio Employment / Budget', 'resources') . "</td><td>";
-        echo Html::input(
-            'ratio_employment_budget',
-            ['value' => Html::formatNumber($this->fields["ratio_employment_budget"], true), 'size' => 14],
-        );
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Begin date') . "</td>";
-        echo "<td>";
-        Html::showDateField("begin_date", ['value' => $this->fields["begin_date"]]);
-        echo "</td>";
-        echo "<td>" . __('End date') . "</td>";
-        echo "<td>";
-        Html::showDateField("end_date", ['value' => $this->fields["end_date"]]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Human resource', 'resources') . "</td>";
-        echo "<td>";
-
-        Resource::dropdown([
-            'name' => 'plugin_resources_resources_id',
-            'display' => true,
-            'value' => $resource,
-            'entity' => $this->fields["entities_id"],
-        ]);
-
-        echo "</td>";
-        echo "<td>" . __('Comments') . "</td>";
-        echo "<td>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '45',
-            'rows' => '5',
-            'display' => false,
-        ]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center' colspan='6'>";
-        printf(__('Last update on %s'), Html::convDateTime($this->fields["date_mod"]));
-        echo "</td>";
-        echo "</tr>";
-
+        $params = $options;
         if (Session::getCurrentInterface() != 'central') {
-            $options['candel'] = false;
+            $params['candel'] = false;
         }
-        $this->showFormButtons($options);
+
+        TemplateRenderer::getInstance()->display('@resources/employment_form.html.twig', [
+            'item'                  => $this,
+            'params'                => $params,
+            'employer_class'        => Employer::class,
+            'employmentstate_class' => EmploymentState::class,
+            'resource_class'        => Resource::class,
+            'resource_value'        => $resource,
+            'profession_dropdown'   => $profession_rank['profession_dropdown'],
+            'rank_html'             => $profession_rank['rank_html'],
+            'ratio_value'           => Html::formatNumber($this->fields["ratio_employment_budget"], true),
+        ]);
 
         return true;
     }
@@ -420,46 +330,28 @@ class Employment extends CommonDBTM
      */
     public static function addNewEmployments(CommonGLPI $item)
     {
-        global $CFG_GLPI;
-
         $ID = $item->getField('id');
 
-        $canedit = $item->can($ID, UPDATE);
-        if (Session::haveRight('employment', UPDATE) && $canedit) {
-            echo "<div class='center'>";
-            echo "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/employment.form.php?plugin_resources_resources_id=" .
-                $ID . "' >" . __('Declare a new employment', 'resources') . "</a></div>";
-            echo "</div>";
-        }
-
-        echo "<div class='center'>";
-        echo "<form method='post' name='addemployment' id='addemployment' action='" .
-            PLUGIN_RESOURCES_WEBDIR . "/front/employment.form.php'>";
-
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th colspan='2'>";
-        echo __('To affect an employment', 'resources') . "</th>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo Html::hidden('items_id', ['value' => $ID]);
-        echo Html::hidden('itemtype', ['value' => $item->getType()]);
-        echo "<td class='center' class='tab_bg_2'>";
-        echo self::getTypeName(1);
-        $restrict = ["plugin_resources_resources_id" => '0'];
+        ob_start();
         Dropdown::show(
             Employment::class,
             [
-                'condition' => $restrict,
-                'entity' => $item->getField("entities_id"),
+                'condition' => ["plugin_resources_resources_id" => '0'],
+                'entity'    => $item->getField("entities_id"),
             ],
         );
-        echo "</td><td class='center' class='tab_bg_2'>";
-        echo Html::submit(_sx('button', 'Add'), ['name' => 'add_item', 'class' => 'btn btn-primary']);
-        echo "</td></tr></table>";
+        $employment_dropdown = (string) ob_get_clean();
 
-        Html::closeForm();
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/employment_add_form.html.twig', [
+            'can_declare'         => Session::haveRight(self::$rightname, UPDATE) && $item->can($ID, UPDATE),
+            'declare_url'         => PLUGIN_RESOURCES_WEBDIR
+                . "/front/employment.form.php?plugin_resources_resources_id=" . $ID,
+            'form_action'         => PLUGIN_RESOURCES_WEBDIR . "/front/employment.form.php",
+            'items_id'            => $ID,
+            'itemtype'            => $item->getType(),
+            'employment_label'    => self::getTypeName(1),
+            'employment_dropdown' => $employment_dropdown,
+        ]);
     }
 
     /**

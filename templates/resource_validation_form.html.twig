@@ -1,0 +1,66 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% if not validated %}
+    {# Not a form: the button only opens the confirmation modal, which posts through
+     # the validinformation() AJAX call declared alongside this template. #}
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr class="tab_bg_1">
+                <th colspan="2">{{ __('Validation', 'resources') }}</th>
+            </tr>
+            <tr class="tab_bg_1">
+                <td colspan="2" class="tab_bg_2 center">
+                    <a class="btn btn-primary overflow-hidden text-nowrap" href="#"
+                       onclick="popupAnswer.show(); return false;"
+                       title="{{ __('Validate', 'resources') }}">{{ __('Validate', 'resources') }}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% else %}
+    {# Standalone form: front/resource.form.php dispatches on synchActiveDirectory. #}
+    <form name="form" method="post" action="{{ form_action }}">
+        <div class="center">
+            <table class="tab_cadre_fixe">
+                <tr class="tab_bg_1">
+                    <th colspan="2">{{ __('Active Directory synchronization', 'resources') }}</th>
+                </tr>
+                <tr class="tab_bg_1">
+                    <td colspan="2" class="tab_bg_2 center">
+                        <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                        {{ call('Html::submit', [sync_label, {
+                            'name': 'synchActiveDirectory',
+                            'class': 'btn btn-primary',
+                        }])|raw }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    </form>
+{% endif %}

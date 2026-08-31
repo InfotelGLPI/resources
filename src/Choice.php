@@ -35,6 +35,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use MassiveAction;
 use Migration;
@@ -271,78 +272,73 @@ class Choice extends CommonDBTM
      */
     public static function showAddCommentForm($item, $rand)
     {
-
         $items_id = $item['id'];
-        echo "<div class='center' id='addneedcomment" . "$items_id$rand'></div>\n";
-        echo "<script type='text/javascript' >\n";
-        echo "function viewAddNeedComment" . "$items_id(){\n";
-        $params = [
-            'id' => $items_id,
-            'rand' => $rand,
-        ];
-        Ajax::UpdateItemJsCode(
-            "addneedcomment" . "$items_id$rand",
+
+        $show_js = "function viewAddNeedComment$items_id(){\n";
+        $show_js .= Ajax::updateItemJsCode(
+            "addneedcomment$items_id$rand",
             PLUGIN_RESOURCES_WEBDIR . "/ajax/addneedcomment.php",
-            $params,
+            [
+                'id' => $items_id,
+                'rand' => $rand,
+            ],
+            false,
             false,
         );
-        echo "};";
-        echo "</script>\n";
-        echo "<p class='center'><a href='javascript:viewAddNeedComment" . "$items_id();'>";
-        echo __('Add a comment', 'resources');
-        echo "</a></p>\n";
+        $show_js .= "};";
+        echo Html::scriptBlock($show_js);
 
-        echo "<script type='text/javascript' >\n";
-        echo "function hideAddForm$items_id() {\n";
-        echo "$('#addcommentneed$items_id$rand').hide();";
-        echo "$('#viewaccept$items_id').hide();";
-        echo "}\n";
-        echo "</script>\n";
+        TemplateRenderer::getInstance()->display('@resources/choice_add_comment_form.html.twig', [
+            'items_id' => $items_id,
+            'rand'     => $rand,
+        ]);
+
+        $hide_js = "function hideAddForm$items_id() {\n";
+        $hide_js .= "$('#addcommentneed$items_id$rand').hide();";
+        $hide_js .= "$('#viewaccept$items_id').hide();";
+        $hide_js .= "}\n";
+        echo Html::scriptBlock($hide_js);
     }
 
     /**
      * @param $item
      * @param $rand
      */
-    public static function showModifyCommentFrom($item, $rand)
+    public static function showModifyCommentForm($item, $rand)
     {
 
         $items_id = $item['id'];
-        echo "<script type='text/javascript' >\n";
-        echo "function showComment$items_id () {\n";
-        echo "$('#commentneed$items_id$rand').hide();";
-        echo "$('#viewaccept$items_id$rand').show();";
 
         $params = [
             'name' => 'commentneed' . $items_id,
             'data' => rawurlencode($item["comment"]),
         ];
-        Ajax::UpdateItemJsCode(
+
+        $show_js = "function showComment$items_id () {\n";
+        $show_js .= "$('#commentneed$items_id$rand').hide();";
+        $show_js .= "$('#viewaccept$items_id$rand').show();";
+        $show_js .= Ajax::updateItemJsCode(
             "viewcommentneed$items_id$rand",
             PLUGIN_RESOURCES_WEBDIR . "/ajax/inputtext.php",
             $params,
             false,
+            false,
         );
-        echo "}";
-        echo "</script>\n";
-        echo "<div id='commentneed$items_id$rand' class='center' onClick='showComment$items_id()'>\n";
-        echo nl2br(htmlescape($item["comment"]));
-        echo "</div>\n";
-        echo "<div id='viewcommentneed$items_id$rand'>\n";
-        echo "</div>\n";
-        echo "<div id='viewaccept$items_id$rand' style='display:none;' class='center'>";
-        echo "<p><input type='submit' name='updateneedcomment[" . $items_id . "]' value=\"" .
-            _sx('button', 'Update') . "\" class='submit btn btn-primary'>";
-        echo "&nbsp;<input type='button' onclick=\"hideForm$items_id();\" value=\"" .
-            _sx('button', 'Cancel') . "\" class='submit btn btn-primary'></p>";
-        echo "</div>";
-        echo "<script type='text/javascript' >\n";
-        echo "function hideForm$items_id() {\n";
-        echo "$('#viewcommentneed$items_id$rand textarea').remove();";
-        echo "$('#commentneed$items_id$rand').show();";
-        echo "$('#viewaccept$items_id$rand').hide();";
-        echo "}\n";
-        echo "</script>\n";
+        $show_js .= "}";
+        echo Html::scriptBlock($show_js);
+
+        TemplateRenderer::getInstance()->display('@resources/choice_comment_form.html.twig', [
+            'items_id' => $items_id,
+            'rand'     => $rand,
+            'comment'  => nl2br(htmlescape($item["comment"])),
+        ]);
+
+        $hide_js = "function hideForm$items_id() {\n";
+        $hide_js .= "$('#viewcommentneed$items_id$rand textarea').remove();";
+        $hide_js .= "$('#commentneed$items_id$rand').show();";
+        $hide_js .= "$('#viewaccept$items_id$rand').hide();";
+        $hide_js .= "}\n";
+        echo Html::scriptBlock($hide_js);
     }
 
     /**
@@ -379,81 +375,62 @@ class Choice extends CommonDBTM
         $canedit = $resource->can($plugin_resources_resources_id, UPDATE)
             && $withtemplate < 2
             && $resource->fields["is_leaving"] != 1;
+        // Capture GLPI helpers that echo directly, so they can be injected as |raw.
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
+
         if (in_array(1, $configchoice)) {
-            if ($exist == 0) {
-                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
-            } elseif ($exist == 1) {
-                echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-            }
-
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='4'>" . __('Element(s) to be affected', 'resources') . "</th>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<th>" . __('Type') . "</th>";
-            echo "<th>" . __('Description') . "</th>";
-            echo "<th>" . __('Comments') . "</th>";
-            if ($canedit) {
-                echo "<th>&nbsp;</th>";
-            }
-            echo "</tr>";
-
             $used = [];
-            if (!empty($choices)) {
-                foreach ($choices as $choice) {
-                    $used[] = $choice["plugin_resources_choiceitems_id"];
-                    echo "<tr class='tab_bg_1'>";
+            $rows = [];
+            foreach ($choices as $choice) {
+                $used[] = $choice["plugin_resources_choiceitems_id"];
 
-                    $items = Dropdown::getDropdownName(
-                        "glpi_plugin_resources_choiceitems",
-                        $choice["plugin_resources_choiceitems_id"],
-                    );
-                    $items_comments = Dropdown::getDropdownComments(
-                        "glpi_plugin_resources_choiceitems",
-                        $choice["plugin_resources_choiceitems_id"],
-                    );
-                    echo "<td class='left'>";
-                    echo $items;
-                    echo "</td>";
-                    echo "<td class='left'>";
-                    echo nl2br(htmlescape($items_comments));
-                    echo "</td>";
-                    echo "<td class='center'>";
+                $items_comments = Dropdown::getDropdownComments(
+                    "glpi_plugin_resources_choiceitems",
+                    $choice["plugin_resources_choiceitems_id"],
+                );
 
-                    $rand = mt_rand();
+                $rand = mt_rand();
+                $comment_cell = $capture(static function () use ($choice, $rand) {
                     if (!empty($choice["comment"])) {
-                        self::showModifyCommentFrom($choice, $rand);
+                        self::showModifyCommentForm($choice, $rand);
                     } else {
                         self::showAddCommentForm($choice, $rand);
                     }
-                    echo "</td>";
-                    if ($canedit) {
-                        echo "<td class='center' class='tab_bg_2'>";
-                        Html::showSimpleForm(
-                            PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
-                            'deletehelpdeskitem',
-                            _x('button', 'Delete permanently'),
-                            ['id' => $choice["id"]],
-                        );
-                        echo "</td>";
-                    }
-                    echo "</tr>";
-                }
-            }
-            if ($canedit) {
-                echo "<tr class='tab_bg_1'>";
-                echo "<th colspan='4'>" . __('Add a need', 'resources') . " :</th>";
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td colspan='4' class='center'>";
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
+                });
 
+                $delete_form = '';
+                if ($canedit) {
+                    $delete_form = Html::getSimpleForm(
+                        PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
+                        'deletehelpdeskitem',
+                        _x('button', 'Delete permanently'),
+                        ['id' => $choice["id"]],
+                    );
+                }
+
+                $rows[] = [
+                    'name' => Dropdown::getDropdownName(
+                        "glpi_plugin_resources_choiceitems",
+                        $choice["plugin_resources_choiceitems_id"],
+                    ),
+                    'comments'     => nl2br(htmlescape($items_comments)),
+                    'comment_cell' => $comment_cell,
+                    'delete_form'  => $delete_form,
+                ];
+            }
+
+            $choiceitem_dropdown = '';
+            $declaration_button  = [];
+            if ($canedit) {
                 $condition = [];
                 if (Session::getCurrentInterface() != 'central') {
                     $condition = ['is_helpdesk_visible' => 1];
                 }
-                Dropdown::show(
+                $choiceitem_dropdown = $capture(static fn() => Dropdown::show(
                     ChoiceItem::class,
                     [
                         'name' => 'plugin_resources_choiceitems_id',
@@ -462,89 +439,60 @@ class Choice extends CommonDBTM
                         'used' => $used,
                         'addicon' => true,
                     ],
-                );
-                echo "</td></tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td class='center' colspan='4'>";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'addhelpdeskitem', 'class' => 'btn btn-primary']);
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                ));
+
                 if (Session::getCurrentInterface() != 'central') {
-                    if ($exist != 1) {
-                        echo Html::submit(
-                            __('Terminate the declaration', 'resources'),
-                            ['name' => 'finish', 'class' => 'btn btn-primary'],
-                        );
-                    } else {
-                        echo Html::submit(
-                            __('Resend the declaration', 'resources'),
-                            ['name' => 'resend', 'class' => 'btn btn-primary'],
-                        );
-                    }
+                    $declaration_button = $exist != 1
+                        ? ['name' => 'finish', 'label' => __('Terminate the declaration', 'resources')]
+                        : ['name' => 'resend', 'label' => __('Resend the declaration', 'resources')];
                 }
-                echo "</td>";
-                echo "</tr>";
             }
-            echo "</table></div>";
-            Html::closeForm();
-            echo "<br>";
+
+            $needs_action = $exist == 1
+                ? PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php"
+                : PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php";
+
+            TemplateRenderer::getInstance()->display('@resources/choice_helpdesk_needs.html.twig', [
+                'form_action'         => $needs_action,
+                'canedit'             => $canedit,
+                'rows'                => $rows,
+                'resources_id'        => $plugin_resources_resources_id,
+                'choiceitem_dropdown' => $choiceitem_dropdown,
+                'declaration_button'  => $declaration_button,
+            ]);
         }
 
         if (in_array(2, $configchoice)) {
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php\">";
-
-            echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='4'>" . __('Specials requirements', 'resources') . "</th>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Computer and phone equipment needs', 'resources');
-            echo "</td>";
-            echo "<td>";
-            Html::textarea(['name' => 'computer_phone_equipment', 'value' => $resource->fields['computer_phone_equipment'], 'rows' => 7]);
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Softwares requirements', 'resources');
-            ;
-            echo "</td>";
-            echo "<td>";
-            Html::textarea(['name' => 'softwares_requirements', 'value' => $resource->fields['softwares_requirements'], 'rows' => 7]);
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Furnitures needs', 'resources');
-            ;
-            echo "</td>";
-            echo "<td>";
-            Html::textarea(['name' => 'furnitures_needs', 'value' => $resource->fields['furnitures_needs'], 'rows' => 7]);
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Other needs', 'resources');
-            ;
-            echo "</td>";
-            echo "<td>";
-            Html::textarea(['name' => 'other_needs', 'value' => $resource->fields['other_needs'], 'rows' => 7]);
-            echo "</td>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td class='center' colspan='2'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            if (!in_array("special_need", $readonly)) {
-                if (!$config->fields['use_module_validation'] || !$config->fields['freeze_form_after_validation'] || !$resource->fields['valid_resource_information']) {
-                    echo Html::submit(_sx('button', 'Save'), ['name' => 'updateSpecialRequirement', 'class' => 'btn btn-primary']);
-                }
+            $textareas = [];
+            $requirement_fields = [
+                'computer_phone_equipment' => __('Computer and phone equipment needs', 'resources'),
+                'softwares_requirements'   => __('Softwares requirements', 'resources'),
+                'furnitures_needs'         => __('Furnitures needs', 'resources'),
+                'other_needs'              => __('Other needs', 'resources'),
+            ];
+            foreach ($requirement_fields as $field => $label) {
+                $textareas[] = [
+                    'label'    => $label,
+                    'textarea' => Html::textarea([
+                        'name'    => $field,
+                        'value'   => $resource->fields[$field],
+                        'rows'    => 7,
+                        'display' => false,
+                    ]),
+                ];
             }
-            echo "</td>";
-            echo "</tr>";
-            echo "</table></div>";
 
-            Html::closeForm();
+            $can_save = !in_array("special_need", $readonly)
+                && (!$config->fields['use_module_validation']
+                    || !$config->fields['freeze_form_after_validation']
+                    || !$resource->fields['valid_resource_information']);
+
+            TemplateRenderer::getInstance()->display('@resources/choice_helpdesk_requirements.html.twig', [
+                'form_action'  => PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php",
+                'textareas'    => $textareas,
+                'resources_id' => $plugin_resources_resources_id,
+                'can_save'     => $can_save,
+            ]);
         }
     }
 

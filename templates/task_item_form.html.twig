@@ -1,0 +1,71 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Standalone form: front/task.form.php dispatches on addtaskitem. Each row's delete
+ # affordance is a self-contained form built by Html::getSimpleForm(). #}
+<form method="post" name="addtaskitem" action="{{ form_action }}">
+    <table class="tab_cadre_fixe">
+        <tr>
+            <th colspan="{{ can_edit ? 3 : 2 }}">{{ _n('Associated item', 'Associated items', 2) }}</th>
+        </tr>
+        <tr>
+            <th>{{ _n('Type', 'Types', 2) }}</th>
+            <th>{{ __('Name') }}</th>
+            {% if can_edit %}
+                <th>&nbsp;</th>
+            {% endif %}
+        </tr>
+
+        {% for row in rows %}
+            <tr class="tab_bg_1">
+                <td class="center">{{ row.type }}</td>
+                <td class="center{{ row.is_deleted ? ' tab_bg_2_2' : '' }}">{{ row.link|raw }}</td>
+                {% if can_edit %}
+                    <td class="center">{{ row.delete_form|raw }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+
+        {% if can_edit %}
+            <tr class="tab_bg_1">
+                <td colspan="2" class="right">
+                    <input type="hidden" name="plugin_resources_tasks_id" value="{{ tasks_id }}">
+                    {{ items_dropdown|raw }}
+                </td>
+                <td class="center tab_bg_2">
+                    {{ call('Html::submit', [_x('button', 'Add'), {
+                        'name': 'addtaskitem',
+                        'class': 'btn btn-primary',
+                    }])|raw }}
+                </td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+</form>
+<br>

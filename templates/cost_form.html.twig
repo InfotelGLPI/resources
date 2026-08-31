@@ -1,0 +1,61 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% extends 'dropdown_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# The Profession/Rank pair is rendered by hand instead of relying on the generic
+ # additional_fields loop: Profession drives an AJAX refresh of the Rank span, and
+ # Rank is read-only here (it follows the selected profession). #}
+{% block form_fields %}
+    {{ fields.autoNameField('name', item, __('Name'), withtemplate) }}
+
+    {{ fields.textareaField(
+        'comment',
+        item.fields['comment'],
+        _n('Comment', 'Comments', get_plural_number())
+    ) }}
+
+    {{ fields.htmlField(
+        'plugin_resources_professions_id',
+        profession_dropdown,
+        __('Profession', 'resources'),
+        {'wrapper_class': ''}
+    ) }}
+
+    {{ fields.htmlField(
+        'plugin_resources_ranks_id',
+        rank_html,
+        __('Rank', 'resources')
+    ) }}
+
+    {{ fields.dateField('begin_date', item.fields['begin_date'], __('Begin date')) }}
+
+    {{ fields.dateField('end_date', item.fields['end_date'], __('End date')) }}
+
+    {{ fields.textField('cost', cost_value, __('Budget cost', 'resources')) }}
+{% endblock %}

@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Session;
 
@@ -140,45 +141,37 @@ class Resource_Leaving extends CommonDBTM
         $resources->getFromDB($plugin_resources_resources_id);
 
         if (empty($resources->fields['date_declaration_leaving'])) {
-            echo "<div class='alert alert-info'>" . __(
-                'The resource is not leaving',
-                'resources',
-            ) . "</div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'info',
+                'message' => __('The resource is not leaving', 'resources'),
+            ]);
             return false;
         }
 
-
         if (empty($resources->fields['remove_manager']) || $_SESSION['glpiID'] != $resources->fields['remove_manager']) {
-            echo "<div class='alert alert-danger'>" . __(
-                'You are not the manager of this resource departure',
-                'resources',
-            ) . "</div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'danger',
+                'message' => __('You are not the manager of this resource departure', 'resources'),
+            ]);
             return false;
         }
 
         if ($canedit) {
-            echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-
-            echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Give a leaving order', 'resources') . "</th></tr>";
-            echo "<tr class='tab_bg_1'><td class='tab_bg_2'>";
-            echo __('Departure date', 'resources');
-            echo "</td><td class='tab_bg_2'>";
-            echo Html::input('date_end', ['value' => $resources->fields['date_end'], 'readonly' => true]);
-            echo "</td></tr>";
-            echo "<tr class='tab_bg_1'><td class='tab_bg_2'>";
-            echo __('Order', 'resources');
-            echo "</td><td class='tab_bg_2 center'>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            Html::textarea(['name' => 'remove_order', 'value' => $resources->fields['remove_order']]);
-            echo "</td></tr>";
-            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-            if (empty($resources->fields['remove_order'])) {
-                echo Html::submit(_sx('button', __('Validate', 'resources')), ['name' => 'validOrderLeaving', 'class' => 'btn btn-primary']);
-            }
-            echo "</td></tr>";
-            echo "</table></div>";
-            Html::closeForm();
+            TemplateRenderer::getInstance()->display('@resources/resource_leaving_form.html.twig', [
+                'form_action'    => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
+                'resources_id'   => $plugin_resources_resources_id,
+                'date_end_input' => Html::input(
+                    'date_end',
+                    ['value' => $resources->fields['date_end'], 'readonly' => true],
+                ),
+                'order_textarea' => Html::textarea([
+                    'name'    => 'remove_order',
+                    'value'   => $resources->fields['remove_order'],
+                    'display' => false,
+                ]),
+                'can_validate'   => empty($resources->fields['remove_order']),
+                'validate_label' => __('Validate', 'resources'),
+            ]);
         }
     }
 }

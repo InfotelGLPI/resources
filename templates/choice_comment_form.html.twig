@@ -1,0 +1,43 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Already escaped in PHP (htmlescape then nl2br), so the <br> tags survive. #}
+<div id="commentneed{{ items_id }}{{ rand }}" class="center" onclick="showComment{{ items_id }}()">
+    {{ comment|raw }}
+</div>
+
+<div id="viewcommentneed{{ items_id }}{{ rand }}"></div>
+
+<div id="viewaccept{{ items_id }}{{ rand }}" style="display:none;" class="center">
+    <p>
+        <input type="submit" name="updateneedcomment[{{ items_id }}]"
+               value="{{ _x('button', 'Update') }}" class="submit btn btn-primary">
+        &nbsp;
+        <input type="button" onclick="hideForm{{ items_id }}();"
+               value="{{ _x('button', 'Cancel') }}" class="submit btn btn-primary">
+    </p>
+</div>

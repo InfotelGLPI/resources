@@ -33,6 +33,7 @@ use Ajax;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QuerySubQuery;
 use Html;
 use Migration;
@@ -198,61 +199,59 @@ class TaskPlanning extends CommonDBTM
      */
     public function showFormForTask($resources, Task $task)
     {
-        global $CFG_GLPI;
 
         $Resource = new Resource();
         $Resource->getFromDB($resources);
         $taskid = $task->getField('id');
-        if ($taskid > 0 && $this->getFromDBbyTask($taskid)) {
-            if ($this->canCreate()) {
-                echo "<script type='text/javascript' >\n";
-                echo "function showPlan" . $taskid . "(){\n";
-                echo "$('#plan').css({'display':'none'});";
-                $params = [
-                    'form' => 'followups',
-                    'id' => $this->fields["id"],
-                    'begin' => $this->fields["begin"],
-                    'end' => $this->fields["end"],
-                    'entity' => $Resource->fields["entities_id"],
-                ];
-                Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php", $params);
-                echo "}";
-                echo "</script>\n";
-                echo "<div id='plan' onClick='showPlan" . $taskid . "()'>\n";
-                echo "<span class='showplan'>";
-            }
+
+        $can_create = $this->canCreate();
+        $is_planned = $taskid > 0 && $this->getFromDBbyTask($taskid);
+
+        if ($is_planned) {
+            $js_function = 'showPlan' . $taskid;
+            $params = [
+                'form' => 'followups',
+                'id' => $this->fields["id"],
+                'begin' => $this->fields["begin"],
+                'end' => $this->fields["end"],
+                'entity' => $Resource->fields["entities_id"],
+            ];
+
             if ($this->fields["begin"] && $this->fields["end"]) {
-                echo Html::convDateTime($this->fields["begin"]) .
-                    "&nbsp;->&nbsp;" . Html::convDateTime($this->fields["end"]);
+                $label = Html::convDateTime($this->fields["begin"])
+                    . "&nbsp;-&gt;&nbsp;"
+                    . Html::convDateTime($this->fields["end"]);
             } else {
-                echo __('Plan this task');
-            }
-            if ($this->canCreate()) {
-                echo "</span>";
-                echo "</div>\n";
-                echo "<div id='viewplan'></div>\n";
+                $label = htmlescape(__('Plan this task'));
             }
         } else {
-            if ($this->canCreate()) {
-                echo "<script type='text/javascript' >\n";
-                echo "function showPlanUpdate(){\n";
-                echo "$('#plan').css({'display':'none'});";
-                $params = [
-                    'form' => 'followups',
-                    'entity' => $_SESSION["glpiactive_entity"],
-                ];
-                Ajax::updateItemJsCode('viewplan', PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php", $params);
-                echo "};";
-                echo "</script>";
-
-                echo "<div id='plan'  onClick='showPlanUpdate()'>\n";
-                echo "<span class='showplan'>" . __('Plan this task') . "</span>";
-                echo "</div>\n";
-                echo "<div id='viewplan'></div>\n";
-            } else {
-                echo __('None');
-            }
+            $js_function = 'showPlanUpdate';
+            $params = [
+                'form' => 'followups',
+                'entity' => $_SESSION["glpiactive_entity"],
+            ];
+            $label = htmlescape($can_create ? __('Plan this task') : __('None'));
         }
+
+        if ($can_create) {
+            $js = "function {$js_function}(){\n";
+            $js .= "$('#plan').css({'display':'none'});";
+            $js .= Ajax::updateItemJsCode(
+                'viewplan',
+                PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php",
+                $params,
+                '',
+                false,
+            );
+            $js .= "}";
+            echo Html::scriptBlock($js);
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/taskplanning_plan.html.twig', [
+            'can_create'  => $can_create,
+            'js_function' => $js_function,
+            'label'       => $label,
+        ]);
     }
 
     // SPECIFIC FUNCTIONS
@@ -302,7 +301,6 @@ class TaskPlanning extends CommonDBTM
      * */
     public static function getAlreadyPlannedInformation($val)
     {
-        global $CFG_GLPI;
 
         $out = "";
 

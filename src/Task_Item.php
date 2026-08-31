@@ -33,6 +33,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Session;
@@ -191,125 +192,116 @@ class Task_Item extends CommonDBTM
      */
     public function showItemFromPlugin($instID, $withtemplate = '')
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
         if (empty($withtemplate)) {
             $withtemplate = 0;
         }
 
         $Task = new Task();
-        if ($Task->getFromDB($instID)) {
-            $plugin_resources_resources_id = $Task->fields["plugin_resources_resources_id"];
-            $Resource = new Resource();
-            $Resource->getFromDB($plugin_resources_resources_id);
-
-            $canedit = $Resource->can($plugin_resources_resources_id, UPDATE);
-
-            $iterator = $DB->request([
-                'SELECT' => ['items_id', 'itemtype'],
-                'FROM'   => $this->getTable(),
-                'WHERE'  => ['plugin_resources_tasks_id' => (int) $instID],
-                'ORDER'  => 'itemtype',
-            ]);
-            $rows   = iterator_to_array($iterator, false);
-            $number = count($rows);
-
-            echo "<form method='post' name='addtaskitem' action=\"./task.form.php\">";
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='" . ($canedit ? 3 : 2) . "'>" . _n('Associated item', 'Associated items', 2);
-            echo "</th></tr>";
-            echo "<tr><th>" . _n('Type', 'Types', 2) . "</th>";
-            echo "<th>" . __('Name') . "</th>";
-            if ($canedit && $this->canCreate() && $withtemplate < 2) {
-                echo "<th>&nbsp;</th>";
-            }
-            echo "</tr>";
-            $used = [];
-            $dbu = new DbUtils();
-            if ($number != "0") {
-                for ($i = 0; $i < $number; $i++) {
-                    $type = $rows[$i]["itemtype"];
-                    $items_id = $rows[$i]["items_id"];
-                    if (!class_exists($type)) {
-                        continue;
-                    }
-                    $item = new $type();
-                    if ($item->canView()) {
-                        $table = $dbu->getTableForItemType($type);
-                        $iterator_linked = $DB->request([
-                            'SELECT'     => [
-                                "$table.*",
-                                $this->getTable() . '.id AS items_id',
-                            ],
-                            'FROM'       => $this->getTable(),
-                            'INNER JOIN' => [
-                                $table => [
-                                    'ON' => [
-                                        $table            => 'id',
-                                        $this->getTable() => 'items_id',
-                                    ],
-                                ],
-                            ],
-                            'WHERE'      => [
-                                $this->getTable() . '.itemtype'                  => $type,
-                                $this->getTable() . '.items_id'                  => (int) $items_id,
-                                $this->getTable() . '.plugin_resources_tasks_id' => (int) $instID,
-                            ],
-                            'ORDER'      => "$table.name",
-                        ]);
-
-                        if (count($iterator_linked)) {
-                            foreach ($iterator_linked as $data) {
-                                $ID = "";
-                                $itemID = $data["id"];
-                                $used[] = $itemID;
-                                if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                                    $ID = " (" . $data["id"] . ")";
-                                }
-                                $itemname = $data["name"];
-                                if ($type == 'User') {
-                                    $itemname = $dbu->getUserName($itemID);
-                                }
-
-                                $link = Toolbox::getItemTypeFormURL($type);
-                                $name = "<a href=\"" . $link . "\">" . $itemname . "$ID</a>";
-                                echo "<tr class='tab_bg_1'>";
-                                echo "<td class='center'>" . $item->getTypeName() . "</td>";
-
-                                echo "<td class='center' " . (isset($data['is_deleted']) && $data['is_deleted'] == '1' ? "class='tab_bg_2_2'" : "") . ">" . $name . "</td>";
-                                if ($canedit && $this->canCreate() && $withtemplate < 2) {
-                                    echo "<td class='center' class='tab_bg_2'>";
-                                    Html::showSimpleForm(
-                                        PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php',
-                                        'deletetaskitem',
-                                        _x('button', 'Delete permanently'),
-                                        ['id' => $data["items_id"]],
-                                    );
-                                    echo "</td>";
-                                }
-                                echo "</tr>";
-                            }
-                        }
-                    }
-                }
-            }
-            if ($canedit && $this->canCreate() && $withtemplate < 2) {
-                echo "<tr class='tab_bg_1'><td colspan='2' class='right'>";
-                echo Html::hidden('plugin_resources_tasks_id', ['value' => $instID]);
-                $Resource_Item = new Resource_Item();
-                $Resource_Item->dropdownItems($plugin_resources_resources_id, $used);
-                echo "</td>";
-                echo "<td class='center' colspan='2' class='tab_bg_2'>";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'addtaskitem', 'class' => 'btn btn-primary']);
-                echo "</td></tr>";
-                echo "</table></div>";
-            } else {
-                echo "</table></div>";
-            }
-            Html::closeForm();
-            echo "<br>";
+        if (!$Task->getFromDB($instID)) {
+            return;
         }
+
+        $plugin_resources_resources_id = $Task->fields["plugin_resources_resources_id"];
+        $Resource = new Resource();
+        $Resource->getFromDB($plugin_resources_resources_id);
+
+        $canedit = $Resource->can($plugin_resources_resources_id, UPDATE)
+            && $this->canCreate()
+            && $withtemplate < 2;
+
+        $iterator = $DB->request([
+            'SELECT' => ['items_id', 'itemtype'],
+            'FROM'   => $this->getTable(),
+            'WHERE'  => ['plugin_resources_tasks_id' => (int) $instID],
+            'ORDER'  => 'itemtype',
+        ]);
+
+        $used = [];
+        $rows = [];
+        $dbu  = new DbUtils();
+
+        foreach ($iterator as $line) {
+            $type = $line["itemtype"];
+            if (!class_exists($type)) {
+                continue;
+            }
+            $item = new $type();
+            if (!$item->canView()) {
+                continue;
+            }
+
+            $table = $dbu->getTableForItemType($type);
+            $iterator_linked = $DB->request([
+                'SELECT'     => [
+                    "$table.*",
+                    $this->getTable() . '.id AS items_id',
+                ],
+                'FROM'       => $this->getTable(),
+                'INNER JOIN' => [
+                    $table => [
+                        'ON' => [
+                            $table            => 'id',
+                            $this->getTable() => 'items_id',
+                        ],
+                    ],
+                ],
+                'WHERE'      => [
+                    $this->getTable() . '.itemtype'                  => $type,
+                    $this->getTable() . '.items_id'                  => (int) $line["items_id"],
+                    $this->getTable() . '.plugin_resources_tasks_id' => (int) $instID,
+                ],
+                'ORDER'      => "$table.name",
+            ]);
+
+            foreach ($iterator_linked as $data) {
+                $ID = "";
+                $itemID = $data["id"];
+                $used[] = $itemID;
+                if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
+                    $ID = " (" . $data["id"] . ")";
+                }
+                $itemname = $data["name"];
+                if ($type == 'User') {
+                    $itemname = $dbu->getUserName($itemID);
+                }
+
+                $delete_form = '';
+                if ($canedit) {
+                    $delete_form = Html::getSimpleForm(
+                        PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php',
+                        'deletetaskitem',
+                        _x('button', 'Delete permanently'),
+                        ['id' => $data["items_id"]],
+                    );
+                }
+
+                $rows[] = [
+                    'type'        => $item->getTypeName(),
+                    'link'        => '<a href="' . htmlescape(Toolbox::getItemTypeFormURL($type)) . '">'
+                        . htmlescape($itemname . $ID) . '</a>',
+                    'is_deleted'  => isset($data['is_deleted']) && $data['is_deleted'] == '1',
+                    'delete_form' => $delete_form,
+                ];
+            }
+        }
+
+        $items_dropdown = '';
+        if ($canedit) {
+            // dropdownItems() echoes directly, so capture it for the template.
+            ob_start();
+            (new Resource_Item())->dropdownItems($plugin_resources_resources_id, $used);
+            $items_dropdown = (string) ob_get_clean();
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/task_item_form.html.twig', [
+            'form_action'    => "./task.form.php",
+            'can_edit'       => $canedit,
+            'rows'           => $rows,
+            'tasks_id'       => $instID,
+            'items_dropdown' => $items_dropdown,
+        ]);
     }
 
     public static function install(Migration $migration)

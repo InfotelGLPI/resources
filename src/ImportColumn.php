@@ -35,6 +35,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Session;
@@ -190,200 +191,139 @@ class ImportColumn extends CommonDBChild
         $canedit = Session::haveRight(self::$rightname, UPDATE);
         $canpurge = Session::haveRight(self::$rightname, PURGE);
 
-        echo "<div id='$viewDomElementName'></div>\n";
+        TemplateRenderer::getInstance()->display('@resources/importcolumn_add_link.html.twig', [
+            'dom_id'      => $viewDomElementName,
+            'can_add'     => $canadd,
+            'js_function' => $jsFunctionName,
+        ]);
+
         if ($canadd) {
             $importInstance->addEvent($sID, $jsFunctionName, $viewDomElementName);
-
-            echo "<div class='center'>";
-            echo "<a href='javascript:$jsFunctionName();'>";
-            echo __('Add a column', 'resources');
-            echo "</a></div><br>\n";
         }
+
         // Display existing columns
         $columns = $importInstance->find([self::$items_id => $sID], 'id');
         if (count($columns) == 0) {
-            echo "<table class='tab_cadre_fixe'><tr class='tab_bg_2'>";
-            echo "<th class='b'>" . __('No columns for this import', 'resources') . "</th>";
-            echo "</tr></table>";
-        } else {
-            $rand = mt_rand();
-            if ($canpurge) {
-                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
-                Html::showMassiveActions($massiveactionparams);
-            }
-            echo "<table class='tab_cadre_fixehov'>";
-            // Title
-            echo "<tr>";
-            echo "<th colspan='5'>" . self::getTypeName(2) . "</th>";
-            echo "</tr>";
-
-            // Columns
-            echo "<tr>";
-            if ($canpurge) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-            }
-
-            // Columns
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Type') . "</th>";
-            echo "<th>" . __('Resource Attribute', 'resources') . "</th>";
-            echo "<th>" . __('Identifiers', 'resources') . "</th>";
-            echo "</tr>";
-            foreach ($columns as $column) {
-                if ($importInstance->getFromDB($column['id'])) {
-                    $importInstance->showOne($viewDomElementName, $canedit, $canpurge, $rand);
-                }
-            }
-            echo "</table>";
-            if ($canpurge) {
-                $paramsma['ontop'] = false;
-                Html::showMassiveActions($paramsma);
-                Html::closeForm();
-            }
-        }
-    }
-
-    public function showOne($viewDomElementName, $canedit, $canpurge, $rand)
-    {
-        $jsFunctionName = "viewEditColumn" . $this->fields[self::$items_id] . $this->fields['id'] . $rand;
-
-        if ($canedit) {
-            $style = "style='cursor:pointer'";
-            $event = "onclick='$jsFunctionName()'";
-        } else {
-            $style = '';
-            $event = '';
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'info',
+                'message' => __('No columns for this import', 'resources'),
+            ]);
+            return;
         }
 
-        echo "<tr class='tab_bg_2' $style $event>";
+        $types       = self::getColumnsTypes();
+        $data_names  = Resource::getDataNames();
+        $identifiers = self::getIdentifierNames();
 
-        if ($canpurge) {
-            echo "<td width='10'>";
-            Html::showMassiveActionCheckBox(__CLASS__, $this->fields["id"]);
-            echo "</td>";
+        $entries = [];
+        $edit_js = '';
+        foreach ($columns as $column) {
+            if (!$importInstance->getFromDB($column['id'])) {
+                continue;
+            }
+
+            // The name cell doubles as the edit affordance, so it carries markup.
+            $name = nl2br(htmlescape((string) $importInstance->fields['name']));
+            if ($canedit) {
+                $editFunctionName = "viewEditColumn"
+                    . $importInstance->fields[self::$items_id] . $importInstance->fields['id'] . $rand;
+                $edit_js .= $importInstance->editEvent($editFunctionName, $viewDomElementName);
+                $name = '<a href="javascript:' . $editFunctionName . '();">' . $name . '</a>';
+            }
+
+            $entries[] = [
+                'itemtype'        => self::class,
+                'id'              => $importInstance->fields['id'],
+                'name'            => $name,
+                'type'            => $types[$importInstance->fields['type']] ?? '',
+                'resource_column' => $data_names[$importInstance->fields['resource_column']] ?? '',
+                'is_identifier'   => $identifiers[$importInstance->fields['is_identifier']] ?? '',
+            ];
         }
-        if ($canedit) {
-            $this->editEvent($jsFunctionName, $viewDomElementName);
+
+        if ($edit_js !== '') {
+            echo Html::scriptBlock($edit_js);
         }
 
-        // NAME
-        echo "<td class='left' style='text-align:center'>" . nl2br(htmlescape((string) $this->fields["name"])) . "</td>";
-
-        // Type
-        $array = ImportColumn::getColumnsTypes();
-        echo "<td style='text-align:center'>";
-        Dropdown::showFromArray(
-            'type',
-            $array,
-            [
-                'value' => $this->fields['type'],
-                'disabled' => true,
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => self::getTypeName(2),
+            'columns'             => [
+                'name'            => __('Name'),
+                'type'            => __('Type'),
+                'resource_column' => __('Resource Attribute', 'resources'),
+                'is_identifier'   => __('Identifiers', 'resources'),
             ],
-        );
-
-        echo "</td>";
-
-        // Resource attribute
-        $array = Resource::getDataNames();
-        echo "<td style='text-align:center'>";
-        Dropdown::showFromArray(
-            'resource_column',
-            $array,
-            [
-                'value' => $this->fields['resource_column'],
-                'disabled' => true,
+            'formatters'          => ['name' => 'raw_html'],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canpurge,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                // Backslashes of the namespaced class would break the jQuery selector.
+                'container'     => 'mass' . str_replace('\\', '', self::class) . $rand,
             ],
-        );
-
-        echo "</td>";
-
-        echo "<td style='text-align:center'>";
-        self::getIsIdentifierDropdown($this->getField('is_identifier'), true);
-        echo "</td>";
-
-        echo "</tr>";
+        ]);
     }
 
     public function showForm($ID, $options = [])
     {
-        if (isset($options['parent']) && !empty($options['parent'])) {
-            $import = $options['parent'];
-        }
-
         $importColumn = new self();
-        if ($ID <= 0) {
-            $importColumn->getEmpty();
-            $title = "<tr><th colspan='4'>" . __('Add a column', 'resources') . "</th></tr>";
-            $name = "";
-            $submitButton = Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-        } else {
-            $importColumn->getFromDB($ID);
-            $title = "<tr><th colspan='4'>" . __('Edit a column', 'resources') . "</th></tr>";
-            $name = $importColumn->getField('name');
-            $submitButton = Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-        }
         if (!$importColumn->canView()) {
             return false;
         }
 
-        echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(self::getType()) . "'>";
+        // The parent Import is required to build the relation hidden field.
+        if (!isset($options['parent']) || !($options['parent'] instanceof Import)) {
+            return false;
+        }
+        $import = $options['parent'];
 
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
+        if ($ID <= 0) {
+            $importColumn->getEmpty();
+            $title = __('Add a column', 'resources');
+            $name = "";
+            $submit_name = 'add';
+            $submit_label = _x('button', 'Add');
+        } else {
+            $importColumn->getFromDB($ID);
+            $title = __('Edit a column', 'resources');
+            $name = $importColumn->getField('name');
+            $submit_name = 'update';
+            $submit_label = _x('button', 'Save');
+        }
 
-        echo Html::hidden('id', ['value' => $importColumn->getID()]);
-        echo Html::hidden(self::$items_id, ['value' => $import->getID()]);
+        // Capture GLPI dropdowns that echo directly, so they can be injected as |raw.
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
 
-        echo $title;
+        TemplateRenderer::getInstance()->display('@resources/importcolumn_form.html.twig', [
+            'form_action'         => Toolbox::getItemTypeFormURL(self::getType()),
+            'column_id'           => $importColumn->getID(),
+            'items_id_field'      => self::$items_id,
+            'items_id'            => $import->getID(),
+            'title'               => $title,
+            'name_input'          => Html::input('name', ['value' => $name]),
+            'type_dropdown'       => $capture(fn() => Dropdown::showFromArray(
+                'type',
+                self::getColumnsTypes(),
+                ['value' => $importColumn->fields['type']],
+            )),
+            'attribute_dropdown'  => $capture(fn() => Dropdown::showFromArray(
+                'resource_column',
+                Resource::getDataNames(),
+                ['value' => $importColumn->fields['resource_column']],
+            )),
+            'identifier_dropdown' => $capture(
+                fn() => $this->getIsIdentifierDropdown($importColumn->getField('is_identifier'), false),
+            ),
+            'submit_name'         => $submit_name,
+            'submit_label'        => $submit_label,
+        ]);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $name]);
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Type') . "</td>";
-        echo "<td>";
-        Dropdown::showFromArray(
-            'type',
-            ImportColumn::getColumnsTypes(),
-            ['value' => $importColumn->fields['type']],
-        );
-
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Resource Attribute', 'resources') . "</td>";
-        echo "<td>";
-        Dropdown::showFromArray(
-            'resource_column',
-            Resource::getDataNames(),
-            ['value' => $importColumn->fields['resource_column']],
-        );
-
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr>";
-        echo "<td>" . __('Identifiers', 'resources') . "</td>";
-        echo "<td>";
-        $this->getIsIdentifierDropdown($importColumn->getField('is_identifier'), false);
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "<tr>";
-        echo "<td class='tab_bg_2 center' colspan='4'>";
-
-        echo $submitButton;
-
-        echo "</td>";
-        echo "</tr>";
-
-        echo "</table></div>";
-        Html::closeForm();
         return true;
     }
 
@@ -391,38 +331,50 @@ class ImportColumn extends CommonDBChild
     private function addEvent($ID, $jsFunctionName, $viewDomElementName)
     {
         global $CFG_GLPI;
-        echo "<script type='text/javascript' >\n";
-        echo "function $jsFunctionName() {\n";
-        $params = [
-            'type' => __CLASS__,
-            'parenttype' => self::$itemtype,
-            self::$items_id => $ID,
-            'id' => -1,
-        ];
-        $url = $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php";
-        Ajax::updateItemJsCode($viewDomElementName, $url, $params);
-        echo "};";
-        echo "</script>\n";
+
+        $js = "function $jsFunctionName() {\n";
+        $js .= Ajax::updateItemJsCode(
+            $viewDomElementName,
+            $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
+            [
+                'type' => self::class,
+                'parenttype' => self::$itemtype,
+                self::$items_id => $ID,
+                'id' => -1,
+            ],
+            '',
+            false,
+        );
+        $js .= "};";
+
+        echo Html::scriptBlock($js);
     }
 
-    private function editEvent($jsFunctionName, $viewDomElementName)
+    /**
+     * Build the JS opening the edit form of the current column.
+     *
+     * @return string the function declaration, to be emitted in a script block
+     */
+    private function editEvent($jsFunctionName, $viewDomElementName): string
     {
         global $CFG_GLPI;
-        $url = $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php";
 
-        $params = [
-            'type' => __CLASS__,
-            'parenttype' => self::$itemtype,
-            self::$items_id => $this->fields[self::$items_id],
-            'id' => $this->fields["id"],
-        ];
+        $js = "function $jsFunctionName(){\n";
+        $js .= Ajax::updateItemJsCode(
+            $viewDomElementName,
+            $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
+            [
+                'type' => self::class,
+                'parenttype' => self::$itemtype,
+                self::$items_id => $this->fields[self::$items_id],
+                'id' => $this->fields["id"],
+            ],
+            '',
+            false,
+        );
+        $js .= "};";
 
-        echo "\n<script type='text/javascript' >\n";
-        echo "function $jsFunctionName(){\n";
-        echo "console.log('EDIT CALLED');\n";
-        Ajax::updateItemJsCode($viewDomElementName, $url, $params);
-        echo "};";
-        echo "</script>\n";
+        return $js;
     }
 
     public static function install(Migration $migration)

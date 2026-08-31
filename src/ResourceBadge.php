@@ -211,47 +211,41 @@ class ResourceBadge extends CommonDBTM
      */
     private function listItems($fields, $canedit)
     {
-        if (!empty($fields)) {
-            $rand = mt_rand();
-            echo "<div class='center'>";
-            if ($canedit) {
-                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'mass' . __CLASS__ . $rand];
-                Html::showMassiveActions($massiveactionparams);
-            }
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='3'>" . __('Meta-demands linked', 'metademands') . "</th>";
-            echo "</tr>";
-            echo "<tr>";
-            if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-            }
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Entity') . "</th>";
-            foreach ($fields as $field) {
-                echo "<tr class='tab_bg_1'>";
-                if ($canedit) {
-                    echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $field['id']);
-                    echo "</td>";
-                }
-                //DATA LINE
-                echo "<td>" . Dropdown::getDropdownName(
+        if (empty($fields)) {
+            return;
+        }
+
+        $entries = [];
+        foreach ($fields as $field) {
+            $entries[] = [
+                'itemtype' => self::class,
+                'id'       => $field['id'],
+                'name'     => Dropdown::getDropdownName(
                     'glpi_plugin_metademands_metademands',
                     $field['plugin_metademands_metademands_id'],
-                ) . "</td>";
-                echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
-                echo "</tr>";
-            }
-
-            if ($canedit) {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-                Html::closeForm();
-            }
-            echo "</div>";
+                ),
+                'entity'   => Dropdown::getDropdownName('glpi_entities', $field['entities_id']),
+            ];
         }
+
+        // Backslashes of the namespaced class would break the jQuery container selector.
+        $container = 'mass' . str_replace('\\', '', self::class) . mt_rand();
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => __('Meta-demands linked', 'metademands'),
+            'columns'             => [
+                'name'   => __('Name'),
+                'entity' => __('Entity'),
+            ],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => $container,
+            ],
+        ]);
     }
 
     /**
@@ -259,36 +253,34 @@ class ResourceBadge extends CommonDBTM
      */
     public function showMenu()
     {
+        ob_start();
+        Wizard::WizardHeader(_n('Badge management', 'Badges management', 2, 'resources'));
+        $wizard_header = (string) ob_get_clean();
 
-        $title = _n('Badge management', 'Badges management', 2, 'resources');
-        Wizard::WizardHeader($title);
-
-        echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
-
-        $canbadges = Session::haveright('plugin_resources', UPDATE);
-
-        echo "<tr class=''>";
-        if ($canbadges) {
+        $tiles = [];
+        if (Session::haveright('plugin_resources', UPDATE)) {
             $colspan = 1;
             if (Plugin::isPluginActive("metademands")) {
-                echo "<td class='tab_td_menu center'>";
-                echo "<a href=\"./resourcebadge.form.php?new\">";
-                echo "<i class='ti ti-id-badge-2' style='font-size:6em'></i>";
-                echo "<br>" . __('Request new badge', 'resources') . "</a>";
-                echo "</td>";
+                $tiles[] = [
+                    'url'   => './resourcebadge.form.php?new',
+                    'icon'  => 'ti ti-id-badge-2',
+                    'label' => __('Request new badge', 'resources'),
+                ];
             } else {
                 $colspan = 2;
             }
-            echo "<td class='tab_td_menu center' colspan='$colspan'>";
-            echo "<a href=\"./resourcebadge.form.php\">";
-            echo "<i class='ti ti-circle-arrow-left' style='font-size:6em'></i>";
-            echo "<br>" . __('Badge restitution', 'resources') . "</a>";
-            echo "</td>";
+            $tiles[] = [
+                'url'     => './resourcebadge.form.php',
+                'icon'    => 'ti ti-circle-arrow-left',
+                'label'   => __('Badge restitution', 'resources'),
+                'colspan' => $colspan,
+            ];
         }
-        echo "</tr></table>";
-        Html::closeForm();
 
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/wizard_tiles_menu.html.twig', [
+            'wizard_header' => $wizard_header,
+            'tiles'         => $tiles,
+        ]);
     }
 
     /**

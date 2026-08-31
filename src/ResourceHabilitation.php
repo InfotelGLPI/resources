@@ -34,7 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Log;
 use Migration;
 use PluginPdfSimplePDF;
@@ -181,30 +181,20 @@ class ResourceHabilitation extends CommonDBTM
             foreach ($data as $habilitation) {
                 $used[] = $habilitation['plugin_resources_habilitations_id'];
             }
-            echo "<form name='form' method='post' action='" .
-                Toolbox::getItemTypeFormURL(ResourceHabilitation::class) . "'>";
-
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='2'>" . __(
-                'Add additional habilitation',
-                'resources',
-            ) . "</th></tr>";
-            echo "<tr class='tab_bg_1'><td class='center'>";
-            echo self::getTypeName(1) . "</td>";
-            echo "<td class='center'>";
+            // Capture the GLPI dropdown, which echoes directly, for the template.
+            ob_start();
             Dropdown::show(Habilitation::class, [
-                'used' => $used,
+                'used'   => $used,
                 'entity' => $item->getField("entities_id"),
             ]);
-            echo "</td></tr>";
+            $habilitation_dropdown = (string) ob_get_clean();
 
-            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $item->getField('id')]);
-
-            echo "</td></tr>";
-            echo "</table></div>";
-            Html::closeForm();
+            TemplateRenderer::getInstance()->display('@resources/resourcehabilitation_add_form.html.twig', [
+                'form_action'           => Toolbox::getItemTypeFormURL(ResourceHabilitation::class),
+                'habilitation_label'    => self::getTypeName(1),
+                'habilitation_dropdown' => $habilitation_dropdown,
+                'resources_id'          => $item->getField('id'),
+            ]);
         }
         $this->listItems($data, $canedit);
     }
@@ -217,45 +207,34 @@ class ResourceHabilitation extends CommonDBTM
      */
     private function listItems($fields, $canedit)
     {
-        if (!empty($fields)) {
-            $rand = mt_rand();
-            echo "<div class='left'>";
-            if ($canedit) {
-                Html::openMassiveActionsForm('masshabil' . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masshabil' . $rand];
-                Html::showMassiveActions($massiveactionparams);
-            }
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='2'>" . self::getTypeName() . "</th>";
-            echo "</tr>";
-            echo "<tr>";
-            if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('masshabil' . $rand) . "</th>";
-            }
-            echo "<th>" . __('Name') . "</th>";
-            foreach ($fields as $field) {
-                echo "<tr class='tab_bg_1'>";
-                if ($canedit) {
-                    echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $field['id']);
-                    echo "</td>";
-                }
-                //DATA LINE
-                echo "<td class='left'>" . Dropdown::getDropdownName(
+        if (empty($fields)) {
+            return;
+        }
+
+        $entries = [];
+        foreach ($fields as $field) {
+            $entries[] = [
+                'itemtype' => self::class,
+                'id'       => $field['id'],
+                'name'     => Dropdown::getDropdownName(
                     'glpi_plugin_resources_habilitations',
                     $field['plugin_resources_habilitations_id'],
-                ) . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-            if ($canedit) {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-                Html::closeForm();
-            }
-            echo "</div>";
+                ),
+            ];
         }
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => self::getTypeName(),
+            'columns'             => ['name' => __('Name')],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => 'masshabil' . mt_rand(),
+            ],
+        ]);
     }
 
     /**

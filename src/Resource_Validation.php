@@ -32,6 +32,7 @@ namespace GlpiPlugin\Resources;
 use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Session;
 
@@ -145,15 +146,17 @@ class Resource_Validation extends CommonDBTM
         $resources->getFromDB($plugin_resources_resources_id);
 
         if (!$resources->fields['valid_resource_information'] && (empty($resources->fields['users_id']) || $_SESSION['glpiID'] != $resources->fields['users_id'])) {
-            echo "<div class='alert alert-info'>" . __(
-                'The direct manager of the resource must validate the information before it can be synchronized.',
-                'resources',
-            ) . "</div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'info',
+                'message' => __(
+                    'The direct manager of the resource must validate the information before it can be synchronized.',
+                    'resources',
+                ),
+            ]);
             return false;
         }
 
         if (!$resources->fields['valid_resource_information']) {
-
             echo Ajax::createModalWindow(
                 'popupAnswer',
                 PLUGIN_RESOURCES_WEBDIR . '/front/modalvalidationinfo.php',
@@ -165,52 +168,45 @@ class Resource_Validation extends CommonDBTM
                 ],
             );
 
-            echo "<div align='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Validation', 'resources') . "</th></tr>";
+            TemplateRenderer::getInstance()->display('@resources/resource_validation_form.html.twig', [
+                'validated' => false,
+            ]);
 
-            echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-            echo "<a class='btn btn-primary overflow-hidden text-nowrap' href='#' onclick='popupAnswer.show();' title='" . __("Validate", "resources") . "'>" . __("Validate", "resources") . "</a>";
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo "</td></tr>";
+            // Called by the confirmation modal loaded above.
+            $url = PLUGIN_RESOURCES_WEBDIR;
+            $resources_id = (int) $plugin_resources_resources_id;
+            echo Html::scriptBlock(<<<JAVASCRIPT
+                function validinformation() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{$url}/ajax/validinformation.php',
+                        data: {
+                            'plugin_resources_resources_id': {$resources_id},
+                            'validSaisie': 1
+                        },
+                        success: function() {
+                            window.location.reload();
+                        }
+                    });
+                }
+                JAVASCRIPT);
 
-            echo Html::scriptBlock("
-            function validinformation() {
-               $.ajax({
-                   type: 'POST',
-                   url: '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/validinformation.php',
-                   data:{
-                       'plugin_resources_resources_id' : " . $plugin_resources_resources_id . ",
-                       'validSaisie' : 1,
-                   },
-                   success: function(){
-                    window.location.reload();
-                   },
-               });
-
-
-       }
-            ");
-            Html::closeForm();
-        } else {
-            if ($canedit) {
-                echo "<form name='form' method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php\">";
-
-                echo "<div align='center'><table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th colspan='2'>" . __('Active Directory synchronization', 'resources') . "</th></tr>";
-
-                echo "<tr class='tab_bg_1'><td colspan='2' class='tab_bg_2 center'>";
-                echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                echo Html::submit(_sx('button', __('Synchronize with Active Directory', 'resources')), ['name' => 'synchActiveDirectory', 'class' => 'btn btn-primary']);
-                echo "</td></tr>";
-                echo "</table></div>";
-                Html::closeForm();
-            } else {
-                echo "<div class='alert alert-danger'>" . __(
-                    'You are not able to synchronize this account.',
-                    'resources',
-                ) . "</div>";
-                return false;
-            }
+            return;
         }
+
+        if (!$canedit) {
+            TemplateRenderer::getInstance()->display('@resources/alert_message.html.twig', [
+                'level'   => 'danger',
+                'message' => __('You are not able to synchronize this account.', 'resources'),
+            ]);
+            return false;
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/resource_validation_form.html.twig', [
+            'validated'    => true,
+            'form_action'  => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
+            'resources_id' => $plugin_resources_resources_id,
+            'sync_label'   => __('Synchronize with Active Directory', 'resources'),
+        ]);
     }
 }

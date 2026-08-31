@@ -1,0 +1,43 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div class="center mb-3">
+    {% if links %}
+        <a href="{{ index_url }}" class="btn btn-primary me-2" title="{{ __('List of Imports', 'resources') }}">
+            <i class="ti ti-list me-1"></i>{{ title }}
+        </a>
+        {% if can_create %}
+            <a href="{{ form_url }}" class="btn btn-primary"
+               title="{{ __('Add an Import', 'resources') }}"
+               aria-label="{{ __('Add an Import', 'resources') }}">
+                <i class="ti ti-plus"></i>
+            </a>
+        {% endif %}
+    {% else %}
+        <h2>{{ title }}</h2>
+    {% endif %}
+</div>

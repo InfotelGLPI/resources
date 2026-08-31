@@ -31,8 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBTM;
 use DBConnection;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Migration;
 use Session;
 
@@ -114,28 +113,19 @@ class Import extends CommonDBTM
 
     public function showTitle($links = true, $display = true)
     {
-        $html = '<div class="center">';
-        $title = '<h1>' . $this->getTypeName() . "</h1>";
-
-        if ($links) {
-            $html .= '<a href="' . self::getIndexUrl() . '" class="pointer" title="' . __("List of Imports") . '">';
-            $html .= $title . '</a>';
-
-            if (Session::haveright(self::$rightname, CREATE)) {
-                $html .= '<a href="' . self::getFormUrl() . '" class="pointer" title="' . __(
-                    "Add an Import",
-                ) . '"><i class="ti ti-plus fa-2x"></i>';
-                $html .= '</a>';
-            }
-        } else {
-            $html .= $title;
-        }
-
-        $html .= '<br></div>';
+        $html = TemplateRenderer::getInstance()->render('@resources/import_title.html.twig', [
+            'title'      => $this->getTypeName(),
+            'links'      => $links,
+            'index_url'  => self::getIndexUrl(),
+            'form_url'   => self::getFormUrl(),
+            'can_create' => Session::haveright(self::$rightname, CREATE),
+        ]);
 
         if ($display) {
             echo $html;
         }
+
+        return $html;
     }
 
     /**
@@ -152,32 +142,12 @@ class Import extends CommonDBTM
             return false;
         }
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-        echo "<td>" . __('Comments') . "</td>";
-        echo "<td>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '60',
-            'rows' => '6',
-            'display' => false,
+        TemplateRenderer::getInstance()->display('@resources/import_form.html.twig', [
+            'item'   => $this,
+            'params' => $options,
         ]);
-        echo "</td></tr>";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Active') . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo("is_active", $this->fields["is_active"]);
-        echo "</td><td colspan='2'></td></tr>";
-
-        $this->showFormButtons($options);
-        Html::closeForm();
         return true;
     }
 

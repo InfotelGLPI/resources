@@ -1024,7 +1024,7 @@ class ImportResource extends CommonDBTM
 
         $Resource = new Resource();
         if ($Resource->getFromDB($resourceID)) {
-            $link = Toolbox::getItemTypeFormURL(Resource::getType());
+            $link = Toolbox::getItemTypeFormURL(Resource::class);
             $link .= "?id=$resourceID";
 
             echo "<td style='text-align:center'><a href='$link'>" . $resourceID . "</a></td>";
@@ -2530,7 +2530,7 @@ class ImportResource extends CommonDBTM
                     }
                     echo ">";
 
-                    $link = Toolbox::getItemTypeFormURL(Resource::getType());
+                    $link = Toolbox::getItemTypeFormURL(Resource::class);
                     $link .= "?id=" . $resource['id'];
                     echo "<a href='$link'>" . $resource['id'] . "</a>";
                     echo "</td>";

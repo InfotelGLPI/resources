@@ -35,7 +35,6 @@ use DBConnection;
 use Dropdown;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Metademand_Resource;
-use Html;
 use Migration;
 use Plugin;
 use Session;
@@ -226,49 +225,40 @@ class ConfigHabilitation extends CommonDBTM
      */
     private function listItems($fields, $canedit)
     {
-        if (!empty($fields)) {
-            $rand = mt_rand();
-            echo "<div class='left'>";
-            if ($canedit) {
-                Html::openMassiveActionsForm('massHabilitation' . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massHabilitation' . $rand];
-                Html::showMassiveActions($massiveactionparams);
-            }
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='4'>" . __('Meta-demands linked', 'metademands') . "</th>";
-            echo "</tr>";
-            echo "<tr>";
-            if ($canedit) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('massHabilitation' . $rand) . "</th>";
-            }
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Action') . "</th>";
-            echo "<th>" . __('Entity') . "</th>";
-            foreach ($fields as $field) {
-                echo "<tr class='tab_bg_1'>";
-                if ($canedit) {
-                    echo "<td width='10'>";
-                    Html::showMassiveActionCheckBox(__CLASS__, $field['id']);
-                    echo "</td>";
-                }
-                //DATA LINE
-                echo "<td>" . Dropdown::getDropdownName(
+        if (empty($fields)) {
+            return;
+        }
+
+        $entries = [];
+        foreach ($fields as $field) {
+            $entries[] = [
+                'itemtype' => self::class,
+                'id'       => $field['id'],
+                'name'     => Dropdown::getDropdownName(
                     'glpi_plugin_metademands_metademands',
                     $field['plugin_metademands_metademands_id'],
-                ) . "</td>";
-                echo "<td>" . self::getNameAction($field['action']) . "</td>";
-                echo "<td>" . Dropdown::getDropdownName('glpi_entities', $field['entities_id']) . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-            if ($canedit) {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-                Html::closeForm();
-            }
-            echo "</div>";
+                ),
+                'action'   => self::getNameAction($field['action']),
+                'entity'   => Dropdown::getDropdownName('glpi_entities', $field['entities_id']),
+            ];
         }
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => __('Meta-demands linked', 'metademands'),
+            'columns'             => [
+                'name'   => __('Name'),
+                'action' => __('Action'),
+                'entity' => __('Entity'),
+            ],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => 'massHabilitation' . mt_rand(),
+            ],
+        ]);
     }
 
     /**
@@ -276,40 +266,33 @@ class ConfigHabilitation extends CommonDBTM
      */
     public function showMenu()
     {
+        ob_start();
+        Wizard::WizardHeader(self::getTypeName(2));
+        $wizard_header = (string) ob_get_clean();
 
-        $title = self::getTypeName(2);
-        Wizard::WizardHeader($title);
-
-        echo "<div class='center'><table class='tab_menu' width='30%' cellpadding='5'>";
-
-        $canresting = Session::haveright('plugin_resources_habilitation', UPDATE);
-
-        echo "<tr class=''>";
-        if ($canresting) {
-            $colspan = 1;
-            if (Plugin::isPluginActive("metademands")) {
-                //new habilitation
-                echo "<td class='tab_td_menu center'>";
-                echo "<a href=\"./confighabilitation.form.php?new\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationnew.png'
-                  alt='" . __('Declare a super habilitation', 'resources') . "'>";
-                echo "<br>" . __('Declare a super habilitation', 'resources') . "</a>";
-                echo "</td>";
-
-                //delete habilitation
-                echo "<td class='tab_td_menu center' colspan='$colspan'>";
-                echo "<a href=\"./confighabilitation.form.php?delete\">";
-                echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationdelete.png'
-                  alt='" . __('Remove a super habilitation', 'resources') . "'>";
-                echo "<br>" . __('Remove a super habilitation', 'resources') . "</a>";
-                echo "</td>";
-            } else {
-                echo "<td class='center' colspan='3'>";
-                echo "</td>";
-            }
+        $tiles = [];
+        if (
+            Session::haveright('plugin_resources_habilitation', UPDATE)
+            && Plugin::isPluginActive("metademands")
+        ) {
+            $tiles = [
+                [
+                    'url'   => './confighabilitation.form.php?new',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationnew.png",
+                    'label' => __('Declare a super habilitation', 'resources'),
+                ],
+                [
+                    'url'   => './confighabilitation.form.php?delete',
+                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationdelete.png",
+                    'label' => __('Remove a super habilitation', 'resources'),
+                ],
+            ];
         }
-        echo "</tr></table>";
-        echo "</div>";
+
+        TemplateRenderer::getInstance()->display('@resources/wizard_tiles_menu.html.twig', [
+            'wizard_header' => $wizard_header,
+            'tiles'         => $tiles,
+        ]);
     }
 
     public static function install(Migration $migration)
