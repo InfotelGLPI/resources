@@ -555,45 +555,16 @@ class Checklist extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $this->showFormHeader($options);
-
-        $capture = static function (callable $renderer): string {
-            ob_start();
-            $renderer();
-            return (string) ob_get_clean();
-        };
-
-        $hidden_fields = Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-        if ($ID > 0) {
-            $hidden_fields .= Html::hidden(
-                'plugin_resources_contracttypes_id',
-                ['value' => $this->fields["plugin_resources_contracttypes_id"]],
-            );
-            $hidden_fields .= Html::hidden('checklist_type', ['value' => $this->fields["checklist_type"]]);
-        } else {
-            $hidden_fields .= Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
-            $hidden_fields .= Html::hidden('checklist_type', ['value' => $checklist_type]);
-        }
-
         TemplateRenderer::getInstance()->display('@resources/checklist_form.html.twig', [
-            'hidden_fields'        => $hidden_fields,
-            'label_name'           => __('Name'),
-            'name_input'           => Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
-            'label_important'      => __('Important', 'resources'),
-            'tag_dropdown'         => $capture(fn() => Dropdown::showYesNo("tag", $this->fields["tag"])),
-            'label_link'           => __('Link', 'resources'),
-            'address_input'        => Html::input('address', ['value' => $this->fields['address'], 'size' => 75]),
-            'label_description'    => __('Description'),
-            'description_textarea' => Html::textarea([
-                'name'    => 'comment',
-                'value'   => $this->fields["comment"],
-                'cols'    => '150',
-                'rows'    => '6',
-                'display' => false,
-            ]),
+            'item'             => $this,
+            'params'           => $options,
+            'resources_id'     => $plugin_resources_resources_id,
+            'contracttypes_id' => $ID > 0
+                ? $this->fields["plugin_resources_contracttypes_id"]
+                : $plugin_resources_contracttypes_id,
+            'checklist_type'   => $ID > 0 ? $this->fields["checklist_type"] : $checklist_type,
         ]);
 
-        $this->showFormButtons($options);
         return true;
     }
 
@@ -608,8 +579,6 @@ class Checklist extends CommonDBTM
      */
     public static function showFromResources($plugin_resources_resources_id, $checklist_type, $withtemplate = '')
     {
-        global $CFG_GLPI;
-
         if (!self::canView()) {
             return false;
         }
@@ -617,15 +586,18 @@ class Checklist extends CommonDBTM
         $target = "./resource.form.php";
         $targetchecklist = "./checklist.form.php";
         $targettask = "./task.form.php";
+
         $resource = new Resource();
         $resource->getFromDB($plugin_resources_resources_id);
         $canedit = $resource->can($plugin_resources_resources_id, UPDATE);
         $entities_id = $resource->fields["entities_id"];
         $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
         $rand = mt_rand();
-        $title = null;
 
         // Check type values
+        $viewId = '';
+        $viewId_finished = '';
+        $addLinkName = '';
         switch ($checklist_type) {
             case self::RESOURCES_CHECKLIST_IN:
                 $viewId = 'checklist_view_in_mode';
@@ -645,66 +617,41 @@ class Checklist extends CommonDBTM
         }
 
         // Is check list finished ?
-        $values = [];
-        $values["checklist_type"] = $checklist_type;
-        $values["plugin_resources_resources_id"] = $plugin_resources_resources_id;
-        $values["plugin_resources_contracttypes_id"] = $plugin_resources_contracttypes_id;
-        $values["entities_id"] = $entities_id;
-        $isfinished = self::checkifChecklistFinished($values);
+        $isfinished = self::checkifChecklistFinished([
+            "checklist_type" => $checklist_type,
+            "plugin_resources_resources_id" => $plugin_resources_resources_id,
+            "plugin_resources_contracttypes_id" => $plugin_resources_contracttypes_id,
+            "entities_id" => $entities_id,
+        ]);
 
+        $title = '';
         if ($isfinished) {
-            $title = "<i style='color:green' class='ti ti-circle-check fa-2x' ></i>";
+            $title = "<i style='color:green' class='ti ti-circle-check fa-2x'></i>";
         }
-        $title .= self::getChecklistType($checklist_type);
+        $title .= htmlescape(self::getChecklistType($checklist_type));
         if ($isfinished) {
-            $title .= " - " . __('Check list done', 'resources');
+            $title .= " - " . htmlescape(__('Check list done', 'resources'));
         }
 
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr>";
-        echo "<th width='15px'>";
-        // Show / hide checklist
-        echo "<span id='menu_navigate'>";
-        echo "<a href=\"javascript:showHideDiv('$viewId',
-                        'checklistimg$rand','ti-chevrons-down fa-2x',
-                        'ti-chevrons-up fa-2x')\">";
-        echo "<i id='checklistimg$rand' style='color:orange' class='ti ti-chevrons-up fa-2x' ></i>";
-        echo "</a>";
-        echo "</span>";
-        echo "</th>";
-        echo "<th height='30px'>";
-        echo $title;
-        echo "</th>";
-        echo "</tr>";
-
-        echo "<tr>";
-        echo "<td class='center' colspan='2'>";
-        echo "<div align='left' id='$viewId'>";
-
-        // New check form
-        if (self::canCreate() && $canedit) {
-            echo "<div id='viewchecklisttask" . "$rand'></div>\n";
-            echo "<div style='margin:10px'>";
-            echo "<script type='text/javascript' >\n";
-            echo "function viewAddChecklistTask" . "$rand(){\n";
-            $params = [
-                'type' => __CLASS__,
-                'target' => $targetchecklist,
-                'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
-                'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                'checklist_type' => $checklist_type,
-                'id' => -1,
-            ];
-            Ajax::updateItemJsCode(
-                "viewchecklisttask" . "$rand",
+        $can_add = self::canCreate() && $canedit;
+        if ($can_add) {
+            $js = "function viewAddChecklistTask{$rand}(){\n";
+            $js .= Ajax::updateItemJsCode(
+                "viewchecklisttask" . $rand,
                 PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php",
-                $params,
+                [
+                    'type' => self::class,
+                    'target' => $targetchecklist,
+                    'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
+                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                    'checklist_type' => $checklist_type,
+                    'id' => -1,
+                ],
+                '',
                 false,
             );
-            echo "};";
-            echo "</script>\n";
-            echo "<a class='submit btn btn-primary' href='javascript:viewAddChecklistTask" . "$rand();'>$addLinkName</a>";
-            echo "</div>";
+            $js .= "};";
+            echo Html::scriptBlock($js);
         }
 
         // Get check list
@@ -712,224 +659,162 @@ class Checklist extends CommonDBTM
             "entities_id" => $entities_id,
             "plugin_resources_resources_id" => $plugin_resources_resources_id,
             "checklist_type" => $checklist_type,
-        ] +
-            ["ORDER" => "rank"];
+        ] + ["ORDER" => "rank"];
         $dbu = new DbUtils();
         $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
-        $numrows = $dbu->countElementsInTable("glpi_plugin_resources_checklists", $restrict);
+        $numrows = count($checklists);
+
+        $can_massive = !$isfinished
+            && self::canCreate()
+            && $canedit
+            && Session::getCurrentInterface() == "central";
+        $show_close_panel = $isfinished && self::canCreate() && $canedit;
+
+        // Capture GLPI helpers that echo directly, so they can be injected as |raw.
+        $capture = static function (callable $renderer): string {
+            ob_start();
+            $renderer();
+            return (string) ob_get_clean();
+        };
+
+        // The form is only opened when there is something to submit; emit the matching
+        // closing part in the same condition so no orphan </form> or CSRF token is left.
+        $form_open  = '';
+        $form_close = '';
+        $check_all  = '';
         if (!empty($checklists)) {
-            if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                Html::openMassiveActionsForm('masschecklist' . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'masschecklist' . $rand];
-                Html::showMassiveActions($massiveactionparams);
+            $massiveactionparams = ['item' => self::class, 'container' => 'masschecklist' . $rand];
+            if ($can_massive) {
+                $form_open = $capture(static function () use ($rand, $massiveactionparams) {
+                    Html::openMassiveActionsForm('masschecklist' . $rand);
+                    Html::showMassiveActions($massiveactionparams);
+                });
+                $form_close = $capture(static function () use ($massiveactionparams) {
+                    $params = $massiveactionparams;
+                    $params['ontop'] = false;
+                    Html::showMassiveActions($params);
+                    Html::closeForm();
+                });
+                $check_all = Html::getCheckAllAsCheckbox('masschecklist' . $rand);
+            } elseif ($isfinished) {
+                $form_open = "<form name='form' method='post' action='"
+                    . htmlescape(Toolbox::getItemTypeFormURL(Resource::class)) . "'>";
+                $form_close = $capture(static fn() => Html::closeForm());
             }
-
-            if ($isfinished) {
-                echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(Resource::class) . "'>";
-            }
-
-            echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-            echo Html::hidden('checklist_type', ['value' => $checklist_type]);
-            echo Html::hidden('plugin_resources_contracttypes_id', ['value' => $plugin_resources_contracttypes_id]);
-            echo Html::hidden('entities_id', ['value' => $entities_id]);
-
-            // Actions on finished checklist
-            if ($isfinished && self::canCreate() && $canedit) {
-                echo "<table class='tab_cadre' width='100%'>";
-                echo "<tr>";
-                echo "<th colspan = '4'>" . __('Create a end treatment ticket', 'resources') . "</th>";
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Templates') . "</td>";
-                echo "<td>";
-                Dropdown::show('TicketTemplate', [
-                    'name' => 'tickettemplates_id',
-                    'entities_id' => $entities_id,
-                ]);
-                echo "</td>";
-                echo "<td>" . __('Assigned to') . "</td>";
-                echo "<td>";
-                User::dropdown(['name' => "users_id", 'right' => 'interface']);
-                echo "</td>";
-
-                echo "</tr>";
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>" . __('Total duration') . "</td>";
-                echo "<td>";
-                Dropdown::showTimeStamp('actiontime', ['addfirstminutes' => true]);
-                echo "</td>";
-                echo "<td colspan='2'></td>";
-                echo "</tr>";
-                echo "<tr class='tab_bg_2'>";
-                echo "<td colspan='4' class='center'>";
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'close_checklist', 'class' => 'btn btn-primary']);
-                echo "</td>";
-                echo "</tr>";
-
-                echo "<tr class='tab_bg_2'>";
-                echo "<th colspan = '2'>" . __('Reset the checklist', 'resources') . "</th>";
-                echo "<td colspan='2' class='center'>";
-                echo Html::submit(_sx('button', 'Post'), ['name' => 'open_checklist', 'class' => 'btn btn-primary']);
-                echo "</td>";
-                echo "</tr>";
-
-                echo "</table>";
-            }
-
-            $style = '';
-
-            // Display list
-            if ($isfinished) {
-                echo "<br>";
-                echo "<table class='tab_cadre_fixe'>";
-                echo "<tr>";
-                echo "<th width='15px'>";
-                echo "<span id='menu_navigate'>";
-                echo "<a href=\"javascript:showHideDiv('$viewId_finished',
-                        'checklistfinished$rand','ti-eye fa-2x',
-                        'ti-eye-closed fa-2x')\">";
-                echo "<i id='checklistfinished$rand' style='color:black' class='ti ti-eye fa-2x'></i>";
-                echo "</a>";
-                echo "</span>";
-                echo "</th>";
-                echo "<th height='30px' colspan='4'>";
-                echo Checklist::getTypeName(0);
-                echo "</th>";
-                echo "</tr>";
-                echo "</table>";
-
-                $style = 'style="display: none;"';
-            }
-            echo "<div class='center' id='$viewId_finished' $style>";
-            echo "<table class='tab_cadre' width='100%'>";
-            echo "<tr>";
-            if (!$isfinished) {
-                echo "<th width='10'>";
-                if (self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                    echo Html::getCheckAllAsCheckbox('masschecklist' . $rand);
-                }
-                echo "</th>";
-            }
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Important', 'resources') . "</th>";
-            if (Session::haveRight("plugin_resources_task", UPDATE) && $canedit) {
-                echo "<th>" . __('Linked task', 'resources') . "</th>";
-            }
-            echo "<th>" . _x('location', 'State') . "</th>";
-            echo "<th>&nbsp;</th>";
-            echo "<th>&nbsp;</th>";
-            echo "</tr>";
-
-            Session::initNavigateListItems(
-                Checklist::class,
-                Resource::getTypeName(1) . " = " . $resource->fields['name'],
-            );
-
-            $i = 0;
-            foreach ($checklists as $checklist) {
-                $ID = $checklist["id"];
-
-                Session::addToNavigateListItems(Checklist::class, $ID);
-
-                echo "<tr class='tab_bg_1'>";
-                if (!$isfinished) {
-                    echo "<td width='10'>";
-                    if (self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                        Html::showMassiveActionCheckBox(__CLASS__, $ID);
-                    }
-                    echo "</td>";
-                }
-
-                echo "<td width='30%'>";
-                echo "<a href='" . $targetchecklist . "?id=" . $ID . "&amp;plugin_resources_resources_id=" .
-                    $plugin_resources_resources_id . "&amp;plugin_resources_contracttypes_id=" .
-                    $plugin_resources_contracttypes_id . "&amp;checklist_type=" . $checklist_type . "' >";
-                echo htmlescape($checklist["name"]);
-                echo "</a>&nbsp;";
-
-                echo Html::hidden('comment', ['value' => $checklist["comment"]]);
-
-                if (!empty($checklist["address"])) {
-                    echo "&nbsp;";
-                    $link = str_replace("&", "&amp;", $checklist["address"]);
-                    Html::showToolTip($checklist["address"], ['link' => $link, 'linktarget' => '_blank']);
-                }
-                echo "</td>";
-
-                echo "<td>";
-                if ($checklist["tag"]) {
-                    echo "<span class='plugin_resources_date_over_color'>";
-                }
-                echo nl2br(htmlescape($checklist["comment"]));
-                if ($checklist["tag"]) {
-                    echo "</span>";
-                }
-                echo "</td>";
-
-                if (Session::haveRight("plugin_resources_task", UPDATE) && $canedit) {
-                    echo "<td class='center'>";
-                    if (!empty($checklist["plugin_resources_tasks_id"])) {
-                        echo "<a href='" . $targettask . "?id=" . $checklist["plugin_resources_tasks_id"] . "&amp;plugin_resources_resources_id=" . $plugin_resources_resources_id . "&amp;central=1'>";
-                    }
-                    echo Dropdown::getYesNo($checklist["plugin_resources_tasks_id"]);
-                    if (!empty($checklist["plugin_resources_tasks_id"])) {
-                        echo "</a>";
-                    }
-                    echo "</td>";
-                }
-
-                echo "<td class='center'>";
-                echo "<input type='checkbox' disabled='true' name='is_checked' ";
-                if ($checklist["is_checked"]) {
-                    echo "checked";
-                }
-                echo " >";
-                $name = 'is_checked' . $ID;
-                echo Html::hidden($name, ['value' => (($checklist["is_checked"] > 0) ? 0 : 1)]);
-                echo "</td>";
-
-                if ($i != 0 && self::canCreate() && $canedit && !$isfinished) {
-                    echo "<td>";
-                    Html::showSimpleForm($target, 'move', __('Bring up'), [
-                        'action' => 'up',
-                        'id' => $ID,
-                        'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                        'checklist_type' => $checklist_type,
-                    ], 'fa-angle-double-up fa-1x');
-                    echo "</td>";
-                } else {
-                    echo "<td>&nbsp;</td>";
-                }
-
-                if ($i != $numrows - 1 && self::canCreate() && $canedit && !$isfinished) {
-                    echo "<td>";
-                    Html::showSimpleForm($target, 'move', __('Bring down'), [
-                        'action' => 'down',
-                        'id' => $ID,
-                        'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                        'checklist_type' => $checklist_type,
-                    ], 'fa-angle-double-down fa-1x');
-                    echo "</td>";
-                } else {
-                    echo "<td>&nbsp;</td>";
-                }
-                echo "</tr>";
-
-                $i++;
-            }
-            echo "</table>";
-            echo "</div>";
-            if (!$isfinished && self::canCreate() && $canedit && Session::getCurrentInterface() == "central") {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-            }
-            Html::closeForm();
         }
-        echo "</div>";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
-        echo "<br>";
+
+        $show_task_column = Session::haveRight("plugin_resources_task", UPDATE) && $canedit;
+
+        Session::initNavigateListItems(
+            self::class,
+            Resource::getTypeName(1) . " = " . $resource->fields['name'],
+        );
+
+        $entries = [];
+        $i = 0;
+        foreach ($checklists as $checklist) {
+            $ID = $checklist["id"];
+            Session::addToNavigateListItems(self::class, $ID);
+
+            $name = '<a href="' . htmlescape(
+                $targetchecklist . "?id=" . $ID
+                . "&plugin_resources_resources_id=" . $plugin_resources_resources_id
+                . "&plugin_resources_contracttypes_id=" . $plugin_resources_contracttypes_id
+                . "&checklist_type=" . $checklist_type,
+            ) . '">' . htmlescape($checklist["name"]) . '</a>&nbsp;';
+            if (!empty($checklist["address"])) {
+                $name .= '&nbsp;' . $capture(static fn() => Html::showToolTip(
+                    $checklist["address"],
+                    ['link' => $checklist["address"], 'linktarget' => '_blank'],
+                ));
+            }
+
+            $task = '';
+            if ($show_task_column) {
+                $has_task = !empty($checklist["plugin_resources_tasks_id"]);
+                if ($has_task) {
+                    $task = '<a href="' . htmlescape(
+                        $targettask . "?id=" . $checklist["plugin_resources_tasks_id"]
+                        . "&plugin_resources_resources_id=" . $plugin_resources_resources_id
+                        . "&central=1",
+                    ) . '">';
+                }
+                $task .= htmlescape(Dropdown::getYesNo($checklist["plugin_resources_tasks_id"]));
+                if ($has_task) {
+                    $task .= '</a>';
+                }
+            }
+
+            $move_up = '&nbsp;';
+            if ($i != 0 && self::canCreate() && $canedit && !$isfinished) {
+                $move_up = Html::getSimpleForm($target, 'move', __('Bring up'), [
+                    'action' => 'up',
+                    'id' => $ID,
+                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                    'checklist_type' => $checklist_type,
+                ], 'fa-angle-double-up fa-1x');
+            }
+
+            $move_down = '&nbsp;';
+            if ($i != $numrows - 1 && self::canCreate() && $canedit && !$isfinished) {
+                $move_down = Html::getSimpleForm($target, 'move', __('Bring down'), [
+                    'action' => 'down',
+                    'id' => $ID,
+                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                    'checklist_type' => $checklist_type,
+                ], 'fa-angle-double-down fa-1x');
+            }
+
+            $entries[] = [
+                'id'               => $ID,
+                'massive_checkbox' => $can_massive
+                    ? $capture(static fn() => Html::showMassiveActionCheckBox(self::class, $ID))
+                    : '',
+                'name'             => $name,
+                'tag'              => (bool) $checklist["tag"],
+                'comment'          => nl2br(htmlescape((string) $checklist["comment"])),
+                'task'             => $task,
+                'is_checked'       => (bool) $checklist["is_checked"],
+                'move_up'          => $move_up,
+                'move_down'        => $move_down,
+            ];
+
+            $i++;
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/checklist_from_resources.html.twig', [
+            'rand'                => $rand,
+            'view_id'             => $viewId,
+            'view_id_finished'    => $viewId_finished,
+            'title'               => $title,
+            'finished_title'      => self::getTypeName(0),
+            'can_add'             => $can_add,
+            'add_link_name'       => $addLinkName,
+            'is_finished'         => $isfinished,
+            'show_close_panel'    => $show_close_panel,
+            'show_task_column'    => $show_task_column,
+            'resources_id'        => $plugin_resources_resources_id,
+            'checklist_type'      => $checklist_type,
+            'contracttypes_id'    => $plugin_resources_contracttypes_id,
+            'entities_id'         => $entities_id,
+            'form_open'           => $form_open,
+            'form_close'          => $form_close,
+            'check_all'           => $check_all,
+            'entries'             => $entries,
+            'template_dropdown'   => $show_close_panel ? $capture(static fn() => Dropdown::show(
+                'TicketTemplate',
+                ['name' => 'tickettemplates_id', 'entities_id' => $entities_id],
+            )) : '',
+            'user_dropdown'       => $show_close_panel ? $capture(static fn() => User::dropdown(
+                ['name' => "users_id", 'right' => 'interface'],
+            )) : '',
+            'actiontime_dropdown' => $show_close_panel ? $capture(static fn() => Dropdown::showTimeStamp(
+                'actiontime',
+                ['addfirstminutes' => true],
+            )) : '',
+        ]);
+
+        return true;
     }
 
     /**
@@ -1159,127 +1044,88 @@ class Checklist extends CommonDBTM
      */
     public function showOnCentral($is_leaving)
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        if ($this->canView()) {
-            if (Session::isMultiEntitiesMode()) {
-                $colsup = 1;
-            } else {
-                $colsup = 0;
-            }
-
-            if ($is_leaving) {
-                $criteria = self::queryChecklists(true, 1);
-            } else {
-                $criteria = self::queryChecklists(true);
-            }
-
-            $iterator = $DB->request($criteria);
-
-            if (count($iterator) > 0) {
-                echo "<div class='center'><table class='tab_cadre' width='100%'>";
-                if ($is_leaving) {
-                    $title = __('Leaving resource - checklist needs to verificated', 'resources');
-                } else {
-                    $title = __('New resource - checklist needs to verificated', 'resources');
-                }
-                echo "<tr><th colspan='" . (5 + $colsup) . "'>" . $title . " </th></tr>";
-                echo "<tr><th>" . Resource::getTypeName(1) . "</th>";
-                if ($is_leaving) {
-                    echo "<th>" . __('Departure date', 'resources') . "</th>";
-                } else {
-                    echo "<th>" . __('Arrival date', 'resources') . "</th>";
-                }
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<th>" . __('Entity') . "</th>";
-                }
-                echo "<th>" . __('Location') . "</th>";
-                echo "<th>" . ContractType::getTypeName(1) . "</th>";
-                echo "<th>" . __('Checklist needs to verificated', 'resources') . "</th></tr>";
-
-                foreach ($iterator as $data) {
-                    echo "<tr class='tab_bg_1'>";
-
-                    echo "<td class='center'>";
-                    echo "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $data["plugin_resources_resources_id"] . "'>";
-                    echo htmlescape($data["resource_name"]) . " " . htmlescape($data["resource_firstname"]);
-                    if ($_SESSION["glpiis_ids_visible"]) {
-                        echo " (" . $data["plugin_resources_resources_id"] . ")";
-                    }
-                    echo "</a></td>";
-
-                    echo "<td class='center'>";
-                    if ($is_leaving) {
-                        if ($data["date_end"] <= date('Y-m-d') && !empty($data["date_end"])) {
-                            echo "<div class='deleted'>" . Html::convDate($data["date_end"]) . "</div>";
-                        } else {
-                            echo "<div class='plugin_resources_date_day_color'>";
-                            echo Html::convDate($data["date_end"]);
-                            echo "</div>";
-                        }
-                    } else {
-                        if ($data["date_begin"] <= date('Y-m-d') && !empty($data["date_begin"])) {
-                            echo "<div class='deleted'>" . Html::convDate($data["date_begin"]) . "</div>";
-                        } else {
-                            echo "<div class='plugin_resources_date_day_color'>";
-                            echo Html::convDate($data["date_begin"]);
-                            echo "</div>";
-                        }
-                    }
-                    echo "</td>";
-
-                    if (Session::isMultiEntitiesMode()) {
-                        echo "<td class='center'>";
-                        echo Dropdown::getDropdownName("glpi_entities", $data['entities_id']);
-                        echo "</td>";
-                    }
-                    echo "<td class='center'>";
-                    echo Dropdown::getDropdownName("glpi_locations", $data['locations_id']);
-                    echo "</td>";
-
-                    echo "<td class='center'>";
-                    echo Dropdown::getDropdownName(
-                        "glpi_plugin_resources_contracttypes",
-                        $data['plugin_resources_contracttypes_id'],
-                    );
-                    echo "</td>";
-
-                    echo "<td width='40%'>";
-                    if ($is_leaving) {
-                        $query_checklists = self::queryListChecklists(
-                            $data["plugin_resources_resources_id"],
-                            self::RESOURCES_CHECKLIST_OUT,
-                        );
-                    } else {
-                        $query_checklists = self::queryListChecklists(
-                            $data["plugin_resources_resources_id"],
-                            self::RESOURCES_CHECKLIST_IN,
-                        );
-                    }
-                    $iteratorc = $DB->request($query_checklists);
-
-                    echo "<table class='tab_cadre' width='100%'>";
-                    foreach ($iteratorc as $data_checklists) {
-                        echo "<tr class='tab_bg_1'><td>";
-                        if ($data_checklists["tag"]) {
-                            echo "<span class='plugin_resources_date_over_color'>";
-                        }
-                        echo htmlescape($data_checklists["name"]);
-                        if ($_SESSION["glpiis_ids_visible"]) {
-                            echo " (" . $data_checklists["id"] . ")";
-                        }
-                        if ($data_checklists["tag"]) {
-                            echo "</span>";
-                        }
-                        echo "</td>";
-                        echo "</tr>";
-                    }
-                    echo "</table>";
-                    echo "</td></tr>";
-                }
-                echo "</table></div>";
-            }
+        if (!$this->canView()) {
+            return;
         }
+
+        $criteria = $is_leaving ? self::queryChecklists(true, 1) : self::queryChecklists(true);
+        $iterator = $DB->request($criteria);
+
+        if (count($iterator) === 0) {
+            return;
+        }
+
+        $date_field = $is_leaving ? "date_end" : "date_begin";
+        $list_type  = $is_leaving ? self::RESOURCES_CHECKLIST_OUT : self::RESOURCES_CHECKLIST_IN;
+
+        $entries = [];
+        foreach ($iterator as $data) {
+            $resource_label = htmlescape($data["resource_name"]) . " " . htmlescape($data["resource_firstname"]);
+            if ($_SESSION["glpiis_ids_visible"]) {
+                $resource_label .= " (" . $data["plugin_resources_resources_id"] . ")";
+            }
+
+            // Past dates are flagged, upcoming ones use the "day" colour.
+            $date_class = (!empty($data[$date_field]) && $data[$date_field] <= date('Y-m-d'))
+                ? 'deleted'
+                : 'plugin_resources_date_day_color';
+
+            $sublist = [];
+            foreach ($DB->request(self::queryListChecklists($data["plugin_resources_resources_id"], $list_type)) as $c) {
+                $label = htmlescape($c["name"]);
+                if ($_SESSION["glpiis_ids_visible"]) {
+                    $label .= " (" . $c["id"] . ")";
+                }
+                $sublist[] = ['label' => $label, 'tag' => (bool) $c["tag"]];
+            }
+
+            $entries[] = [
+                'resource'  => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id='
+                    . (int) $data["plugin_resources_resources_id"] . '">' . $resource_label . '</a>',
+                'date'      => '<div class="' . $date_class . '">'
+                    . Html::convDate($data[$date_field]) . '</div>',
+                'entity'    => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                'location'  => Dropdown::getDropdownName("glpi_locations", $data['locations_id']),
+                'contract'  => Dropdown::getDropdownName(
+                    "glpi_plugin_resources_contracttypes",
+                    $data['plugin_resources_contracttypes_id'],
+                ),
+                'checklist' => TemplateRenderer::getInstance()->render(
+                    '@resources/checklist_central_sublist.html.twig',
+                    ['entries' => $sublist],
+                ),
+            ];
+        }
+
+        $columns = ['resource' => Resource::getTypeName(1)];
+        $columns['date'] = $is_leaving
+            ? __('Departure date', 'resources')
+            : __('Arrival date', 'resources');
+        if (Session::isMultiEntitiesMode()) {
+            $columns['entity'] = __('Entity');
+        }
+        $columns['location']  = __('Location');
+        $columns['contract']  = ContractType::getTypeName(1);
+        $columns['checklist'] = __('Checklist needs to verificated', 'resources');
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'    => $is_leaving
+                ? __('Leaving resource - checklist needs to verificated', 'resources')
+                : __('New resource - checklist needs to verificated', 'resources'),
+            'columns'         => $columns,
+            'formatters'      => [
+                'resource'  => 'raw_html',
+                'date'      => 'raw_html',
+                'checklist' => 'raw_html',
+            ],
+            'entries'         => $entries,
+            'total_number'    => count($entries),
+            'filtered_number' => count($entries),
+            'nofilter'        => true,
+            'nosort'          => true,
+        ]);
     }
 
     // Cron action

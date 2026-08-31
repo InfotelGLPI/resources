@@ -30,14 +30,47 @@
 
 {% block form_fields %}
     <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
-    <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
-    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
+    <input type="hidden" name="withtemplate" value="{{ withtemplate_value }}">
+
+    {# Read-only link to the owning resource. #}
+    {{ fields.htmlField('', resource_link, resource_label) }}
 
     {{ fields.autoNameField('name', item, __('Name'), withtemplate, field_options) }}
 
-    {{ fields.dropdownYesNo('tag', item.fields['tag'], __('Important', 'resources')) }}
+    {{ fields.dropdownField(
+        tasktype_class,
+        'plugin_resources_tasktypes_id',
+        item.fields['plugin_resources_tasktypes_id'],
+        tasktype_label
+    ) }}
 
-    {{ fields.textField('address', item.fields['address'], __('Link', 'resources')) }}
+    {{ fields.dropdownField(
+        'User',
+        'users_id',
+        item.fields['users_id'],
+        __('Technician'),
+        {'right': 'interface'}
+    ) }}
 
-    {{ fields.textareaField('comment', item.fields['comment'], __('Description'), {'full_width': true}) }}
+    {# TaskPlanning renders its own clickable block plus the JS that drives it. #}
+    {{ fields.htmlField('', planning_block, __('Planning'), {'wrapper_class': ''}) }}
+
+    {{ fields.dropdownField('Group', 'groups_id', item.fields['groups_id'], __('Group')) }}
+
+    {{ fields.dropdownYesNo('is_finished', item.fields['is_finished'], __('Carried out task', 'resources')) }}
+
+    {{ fields.dropdownTimestampField(
+        'actiontime',
+        item.fields['actiontime'],
+        __('Effective duration', 'resources'),
+        {
+            'min': 0,
+            'max': max_actiontime,
+            'addfirstminutes': true,
+            'inhours': true,
+            'toadd': actiontime_toadd,
+        }
+    ) }}
+
+    {{ fields.textareaField('comment', item.fields['comment'], __('Comments'), {'full_width': true}) }}
 {% endblock %}

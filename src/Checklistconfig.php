@@ -34,7 +34,6 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
-use Html;
 use MassiveAction;
 use Migration;
 use Rule;
@@ -145,25 +144,19 @@ class Checklistconfig extends CommonDBTM
      */
     public function showForm($ID, $options = [])
     {
-        global $CFG_GLPI;
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
         $types = Resource::getTypes();
 
-        // Capture the GLPI widgets that echo their own HTML so they can be injected
-        // into the Twig row fragment with |raw.
+        // showItemTypes() echoes its markup and returns its rand: capture both, so the
+        // markup can be injected as |raw and the rand can anchor the generated JS.
         ob_start();
         $addrand = Dropdown::showItemTypes(
             'itemtype',
             $types,
             ['id' => 'itemtype', 'value' => $this->fields['itemtype']],
         );
-        $itemtype_dropdown = ob_get_clean();
-
-        ob_start();
-        Dropdown::showYesNo('tag', $this->fields['tag']);
-        $tag_dropdown = ob_get_clean();
+        $itemtype_dropdown = (string) ob_get_clean();
 
         $items = $this->fields['items'];
 
@@ -193,27 +186,12 @@ class Checklistconfig extends CommonDBTM
         );
 
         TemplateRenderer::getInstance()->display('@resources/checklistconfig_form.html.twig', [
-            'label_name'        => __('Name'),
-            'name_field'        => Html::input('name', ['value' => $this->fields['name'], 'size' => 40]),
-            'label_important'   => __('Important', 'resources'),
-            'tag_dropdown'      => $tag_dropdown,
-            'label_link'        => __('Link', 'resources'),
-            'address_field'     => Html::input('address', ['value' => $this->fields['address'], 'size' => 75]),
-            'label_itemtype'    => __('Itemtype'),
+            'item'              => $this,
+            'params'            => $options,
             'itemtype_dropdown' => $itemtype_dropdown,
-            'label_item'        => _n('Item', 'Items', Session::getPluralNumber()),
             'linkitems_js'      => $linkitems_js,
-            'label_description' => __('Description'),
-            'comment_field'     => Html::textarea([
-                'name'    => 'comment',
-                'value'   => $this->fields['comment'],
-                'cols'    => '125',
-                'rows'    => '6',
-                'display' => false,
-            ]),
         ]);
 
-        $this->showFormButtons($options);
         return true;
     }
 

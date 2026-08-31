@@ -462,11 +462,13 @@ class Resource_Change extends CommonDBTM
                         'value' => $resource->fields["name"],
                     ]),
                 ];
-                // NOTE: the legacy code built the firstname input but never printed it,
-                // and the JS below sends the stored firstname rather than a typed one.
                 $rows[] = [
                     'label'  => __('Firstname', 'resources'),
-                    'widget' => '',
+                    'widget' => Html::input('firstname', [
+                        'rand'  => $rand,
+                        'value' => $resource->fields["firstname"],
+                        'style' => 'text-transform: capitalize;',
+                    ]),
                 ];
                 $rows[] = [
                     'label'  => __('Departure date', 'resources'),
@@ -478,10 +480,6 @@ class Resource_Change extends CommonDBTM
 
                 $root_doc = PLUGIN_RESOURCES_WEBDIR;
                 $action = self::CHANGE_RESOURCEINFORMATIONS;
-                $firstname = json_encode(
-                    (string) $resource->fields["firstname"],
-                    JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP,
-                );
                 $js .= <<<JAVASCRIPT
                     $('input[name="date_end"]').change(function() {
                         plugin_resources_load_button_changeresources_information();
@@ -490,12 +488,16 @@ class Resource_Change extends CommonDBTM
                         this.value = this.value.toUpperCase();
                         plugin_resources_load_button_changeresources_information();
                     });
+                    $('input[name="firstname"]').on("change", function() {
+                        this.value = First2UpperCase(this.value);
+                        plugin_resources_load_button_changeresources_information();
+                    });
                     function plugin_resources_load_button_changeresources_information(){
                         $('#plugin_resources_buttonchangeresources').load('{$root_doc}/ajax/resourcechange.php', {
                             load_button_changeresources: true,
                             action: {$action},
                             name: $('input[name="name"]').val(),
-                            firstname: {$firstname},
+                            firstname: $('input[name="firstname"]').val(),
                             date_end: $('input[name="date_end"]').val()
                         });
                     }
@@ -655,7 +657,7 @@ class Resource_Change extends CommonDBTM
                     'label'  => __("Current function of the resource", "resources"),
                     'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
                         'glpi_plugin_resources_resourcefunctions',
-                        $resource->getField("plugin_functions_functions_id"),
+                        $resource->getField("plugin_resources_functions_id"),
                     )),
                 ];
                 $rows[] = [
@@ -683,7 +685,7 @@ class Resource_Change extends CommonDBTM
                     'label'  => __("Current team of the resource", "resources"),
                     'widget' => '&nbsp;' . htmlescape(Dropdown::getDropdownName(
                         'glpi_plugin_resources_teams',
-                        $resource->getField("plugin_functions_teams_id"),
+                        $resource->getField("plugin_resources_teams_id"),
                     )),
                 ];
                 $rows[] = [

@@ -37,7 +37,6 @@ use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Session;
-use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -279,7 +278,7 @@ class Task_Item extends CommonDBTM
 
                 $rows[] = [
                     'type'        => $item->getTypeName(),
-                    'link'        => '<a href="' . htmlescape(Toolbox::getItemTypeFormURL($type)) . '">'
+                    'link'        => '<a href="' . htmlescape($type::getFormURLWithID($itemID)) . '">'
                         . htmlescape($itemname . $ID) . '</a>',
                     'is_deleted'  => isset($data['is_deleted']) && $data['is_deleted'] == '1',
                     'delete_form' => $delete_form,

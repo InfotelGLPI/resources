@@ -1,0 +1,164 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# `form_open` / `form_close` are produced by Html::openMassiveActionsForm() +
+ # showMassiveActions() (pending checklist) or by a plain <form> (finished one).
+ # They are emitted as a matched pair by the caller, or both empty. #}
+<table class="tab_cadre_fixe">
+    <tr>
+        <th width="15px">
+            <span id="menu_navigate">
+                <a href="javascript:showHideDiv('{{ view_id }}', 'checklistimg{{ rand }}', 'ti-chevrons-down fa-2x', 'ti-chevrons-up fa-2x')">
+                    <i id="checklistimg{{ rand }}" style="color:orange" class="ti ti-chevrons-up fa-2x"></i>
+                </a>
+            </span>
+        </th>
+        <th height="30px">{{ title|raw }}</th>
+    </tr>
+    <tr>
+        <td class="center" colspan="2">
+            <div class="text-start" id="{{ view_id }}">
+
+                {% if can_add %}
+                    {# AJAX target for the "add a task" sub-form. #}
+                    <div id="viewchecklisttask{{ rand }}"></div>
+                    <div style="margin:10px">
+                        <a class="submit btn btn-primary"
+                           href="javascript:viewAddChecklistTask{{ rand }}();">{{ add_link_name }}</a>
+                    </div>
+                {% endif %}
+
+                {% if entries is not empty %}
+                    {{ form_open|raw }}
+
+                    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
+                    <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
+                    <input type="hidden" name="entities_id" value="{{ entities_id }}">
+
+                    {% if show_close_panel %}
+                        <table class="tab_cadre" width="100%">
+                            <tr>
+                                <th colspan="4">{{ __('Create a end treatment ticket', 'resources') }}</th>
+                            </tr>
+                            <tr class="tab_bg_1">
+                                <td>{{ __('Templates') }}</td>
+                                <td>{{ template_dropdown|raw }}</td>
+                                <td>{{ __('Assigned to') }}</td>
+                                <td>{{ user_dropdown|raw }}</td>
+                            </tr>
+                            <tr class="tab_bg_1">
+                                <td>{{ __('Total duration') }}</td>
+                                <td>{{ actiontime_dropdown|raw }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr class="tab_bg_2">
+                                <td colspan="4" class="center">
+                                    {{ call('Html::submit', [_x('button', 'Add'), {
+                                        'name': 'close_checklist',
+                                        'class': 'btn btn-primary',
+                                    }])|raw }}
+                                </td>
+                            </tr>
+                            <tr class="tab_bg_2">
+                                <th colspan="2">{{ __('Reset the checklist', 'resources') }}</th>
+                                <td colspan="2" class="center">
+                                    {{ call('Html::submit', [_x('button', 'Post'), {
+                                        'name': 'open_checklist',
+                                        'class': 'btn btn-primary',
+                                    }])|raw }}
+                                </td>
+                            </tr>
+                        </table>
+                    {% endif %}
+
+                    {% if is_finished %}
+                        <br>
+                        <table class="tab_cadre_fixe">
+                            <tr>
+                                <th width="15px">
+                                    <span id="menu_navigate">
+                                        <a href="javascript:showHideDiv('{{ view_id_finished }}', 'checklistfinished{{ rand }}', 'ti-eye fa-2x', 'ti-eye-closed fa-2x')">
+                                            <i id="checklistfinished{{ rand }}" style="color:black" class="ti ti-eye fa-2x"></i>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th height="30px" colspan="4">{{ finished_title }}</th>
+                            </tr>
+                        </table>
+                    {% endif %}
+
+                    <div class="center" id="{{ view_id_finished }}"{% if is_finished %} style="display: none;"{% endif %}>
+                        <table class="tab_cadre" width="100%">
+                            <tr>
+                                {% if not is_finished %}
+                                    <th width="10">{{ check_all|raw }}</th>
+                                {% endif %}
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Important', 'resources') }}</th>
+                                {% if show_task_column %}
+                                    <th>{{ __('Linked task', 'resources') }}</th>
+                                {% endif %}
+                                <th>{{ _x('location', 'State') }}</th>
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                            </tr>
+
+                            {% for entry in entries %}
+                                <tr class="tab_bg_1">
+                                    {% if not is_finished %}
+                                        <td width="10">{{ entry.massive_checkbox|raw }}</td>
+                                    {% endif %}
+                                    <td width="30%">{{ entry.name|raw }}</td>
+                                    <td>
+                                        {% if entry.tag %}
+                                            <span class="plugin_resources_date_over_color">{{ entry.comment|raw }}</span>
+                                        {% else %}
+                                            {{ entry.comment|raw }}
+                                        {% endif %}
+                                    </td>
+                                    {% if show_task_column %}
+                                        <td class="center">{{ entry.task|raw }}</td>
+                                    {% endif %}
+                                    <td class="center">
+                                        <input type="checkbox" disabled name="is_checked"{{ entry.is_checked ? ' checked' : '' }}>
+                                        <input type="hidden" name="is_checked{{ entry.id }}" value="{{ entry.is_checked ? 0 : 1 }}">
+                                    </td>
+                                    <td>{{ entry.move_up|raw }}</td>
+                                    <td>{{ entry.move_down|raw }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    {{ form_close|raw }}
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+</table>
+<br>

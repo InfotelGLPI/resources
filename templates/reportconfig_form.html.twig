@@ -25,24 +25,38 @@
  # --------------------------------------------------------------------------
  #}
 
-{{ resource_hidden|raw }}
-<tr class="tab_bg_1">
-    <td>{{ label_comments }}</td>
-    <td>{{ comment_field|raw }}</td>
-</tr>
-<tr class="tab_bg_1">
-    <td>{{ label_information }}</td>
-    <td>{{ information_field|raw }}</td>
-</tr>
-<tr class="tab_bg_2">
-    <td>{{ label_send_report }}</td>
-    <td>{{ send_report_dropdown|raw }}</td>
-</tr>
-<tr class="tab_bg_2">
-    <td>{{ label_send_transfer }}</td>
-    <td>{{ send_transfer_dropdown|raw }}</td>
-</tr>
-<tr class="tab_bg_2">
-    <td>{{ label_send_other }}</td>
-    <td>{{ send_other_dropdown|raw }}</td>
-</tr>
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% block form_fields %}
+    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+
+    {{ fields.textareaField('comment', item.fields['comment'], __('Comments'), {'full_width': true}) }}
+
+    {{ fields.textareaField(
+        'information',
+        item.fields['information'],
+        _n('Information', 'Informations', 2),
+        {'full_width': true}
+    ) }}
+
+    {# Field names must match the columns: send_report_notif / send_transfer_notif /
+     # send_other_notif. #}
+    {{ fields.dropdownYesNo(
+        'send_report_notif',
+        item.fields['send_report_notif'],
+        __('Send resource creation report notification', 'resources')
+    ) }}
+
+    {{ fields.dropdownYesNo(
+        'send_transfer_notif',
+        item.fields['send_transfer_notif'],
+        __('Send resource transfer notification', 'resources')
+    ) }}
+
+    {{ fields.dropdownYesNo(
+        'send_other_notif',
+        item.fields['send_other_notif'],
+        __('Send other notification', 'resources')
+    ) }}
+{% endblock %}

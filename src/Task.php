@@ -35,6 +35,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QuerySubQuery;
 use Html;
 use MassiveAction;
@@ -531,23 +532,19 @@ class Task extends CommonDBTM
      */
     public static function addNewTasks(CommonDBTM $item, $withtemplate = '')
     {
-        global $CFG_GLPI;
-
-        $rand = mt_rand();
-
         $ID = $item->getField('id');
-        $entities_id = $item->getField('entities_id');
-        $canedit = $item->can($ID, UPDATE);
-        if (Session::haveRight(self::$rightname, READ)
-            && $canedit
-            && $withtemplate < 2
+
+        if (!Session::haveRight(self::$rightname, READ)
+            || !$item->can($ID, UPDATE)
+            || $withtemplate >= 2
         ) {
-            echo "<div class='center'>";
-            echo "<a href='"
-                . PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?plugin_resources_resources_id=" . $ID
-                . "&entities_id=" . $entities_id . "' >" . __('Add a new task') . "</a></div>";
-            echo "</div>";
+            return;
         }
+
+        TemplateRenderer::getInstance()->display('@resources/task_add_link.html.twig', [
+            'url' => PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?plugin_resources_resources_id=" . $ID
+                . "&entities_id=" . $item->getField('entities_id'),
+        ]);
     }
 
     /**
@@ -584,96 +581,36 @@ class Task extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $this->showFormHeader($options);
-
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . Resource::getTypeName(2) . "&nbsp;</td><td>";
-
         $user = Resource::getResourceName($plugin_resources_resources_id, 2);
-        $out = "<a href='" . $user['link'] . "'>";
-        $out .= $user["name"];
+        $resource_link = '<a href="' . htmlescape($user['link']) . '">' . htmlescape($user["name"]);
         if ($_SESSION["glpiis_ids_visible"]) {
-            $out .= " (" . $plugin_resources_resources_id . ")";
+            $resource_link .= ' (' . $plugin_resources_resources_id . ')';
         }
-        $out .= "</a>";
-        echo $out;
-        echo "</td>";
-        echo "<td colspan='2'>";
-        echo "</td>";
-        echo "</tr>";
+        $resource_link .= '</a>';
 
-        echo "<tr class='tab_bg_1'><td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 50]);
-        echo "</td>";
-        echo "<td>" . TaskType::getTypeName(1) . "</td><td>";
-        Dropdown::show(
-            TaskType::class,
-            ['value' => $this->fields["plugin_resources_tasktypes_id"]],
-        );
-        echo "</td>";
-        echo "</tr>";
+        // TaskPlanning echoes its block and the JS driving it: capture both.
+        ob_start();
+        (new TaskPlanning())->showFormForTask($plugin_resources_resources_id, $this);
+        $planning_block = (string) ob_get_clean();
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Technician') . "</td><td>";
-        User::dropdown([
-            'name' => "users_id",
-            'value' => $this->fields["users_id"],
-            'right' => 'interface',
-        ]);
-        echo "</td>";
-        echo "<td>" . __('Planning') . "</td>";
-        echo "<td>";
-        $plan = new TaskPlanning();
-        $plan->showFormForTask($plugin_resources_resources_id, $this);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Group') . "</td><td>";
-        Dropdown::show(
-            'Group',
-            ['value' => $this->fields["groups_id"]],
-        );
-        echo "</td>";
-        echo "<td>" . __('Carried out task', 'resources') . "</td><td>";
-        Dropdown::showYesNo("is_finished", $this->fields["is_finished"]);
-        echo "</td>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Effective duration', 'resources') . "</td><td>";
         $toadd = [];
         for ($i = 9; $i <= 100; $i++) {
             $toadd[] = $i * HOUR_TIMESTAMP;
         }
 
-        Dropdown::showTimeStamp("actiontime", [
-            'min' => 0,
-            'max' => 8 * HOUR_TIMESTAMP,
-            'value' => $this->fields["actiontime"],
-            'addfirstminutes' => true,
-            'inhours' => true,
-            'toadd' => $toadd,
+        TemplateRenderer::getInstance()->display('@resources/task_form.html.twig', [
+            'item'               => $this,
+            'params'             => $options,
+            'resources_id'       => $plugin_resources_resources_id,
+            'withtemplate_value' => $options['withtemplate'] ?? '',
+            'resource_label'     => Resource::getTypeName(2),
+            'resource_link'      => $resource_link,
+            'tasktype_class'     => TaskType::class,
+            'tasktype_label'     => TaskType::getTypeName(1),
+            'planning_block'     => $planning_block,
+            'max_actiontime'     => 8 * HOUR_TIMESTAMP,
+            'actiontime_toadd'   => $toadd,
         ]);
-
-        echo "</td><td colspan='2'></td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='4'>" . __('Comments') . "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'><td colspan='4'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '130',
-            'rows' => '4',
-            'display' => false,
-        ]);
-        echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
-        echo "</td></tr>";
-
-        $this->showFormButtons($options);
 
         return true;
     }
@@ -782,18 +719,13 @@ class Task extends CommonDBTM
      */
     public function showCentral($who)
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        echo "<table class='tab_cadre_central'><tr><td>";
+        // The datatable component echoes: buffer it so the wrapper template owns the markup.
+        ob_start();
 
         if ($this->canView()) {
             $who = Session::getLoginUserID();
-
-            if (Session::isMultiEntitiesMode()) {
-                $colsup = 1;
-            } else {
-                $colsup = 0;
-            }
 
             $dbu = new DbUtils();
             $self_table = $this->getTable();
@@ -852,84 +784,94 @@ class Task extends CommonDBTM
                 'ORDER'      => 'glpi_plugin_resources_resources.name DESC',
                 'LIMIT'      => 10,
             ]);
-            $number = count($iterator);
-
-            if ($number > 0) {
-                echo "<div class='center'><table class='tab_cadre' width='100%'>";
-                echo "<tr><th colspan='" . (7 + $colsup) . "'>" . Resource::getTypeName(2)
-                    . ": " . __(
-                        'Tasks in progress',
-                        'resources',
-                    ) . " <a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0'>" . __(
-                        'All',
-                    ) . "</a></th></tr>";
-                echo "<tr><th>" . __('Name') . "</th>";
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<th>" . __('Entity') . "</th>";
+            $entries = [];
+            foreach ($iterator as $data) {
+                $task_label = htmlescape($data["name_task"]);
+                $resource_label = htmlescape($data["name"] . " " . $data["firstname"]);
+                if ($_SESSION["glpiis_ids_visible"]) {
+                    $task_label .= ' (' . $data["plugin_resources_tasks_id"] . ')';
+                    $resource_label .= ' (' . $data["id"] . ')';
                 }
-                echo "<th>" . TaskType::getTypeName(2) . "</th>";
-                echo "<th>" . __('Planning') . "</th>";
-                echo "<th>" . Resource::getTypeName(1) . "</th>";
-                echo "<th>" . __('Resource manager', 'resources') . "</th>";
-                echo "<th>" . __('User') . "</th>";
-                echo "</tr>";
 
-                foreach ($iterator as $data) {
-                    echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
-                    echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $data["plugin_resources_tasks_id"] . "'>" . $data["name_task"];
-                    if ($_SESSION["glpiis_ids_visible"]) {
-                        echo " (" . $data["plugin_resources_tasks_id"] . ")";
-                    }
-                    echo "</a></td>";
-                    if (Session::isMultiEntitiesMode()) {
-                        echo "<td class='center'>" . Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $data['entities_id'],
-                        ) . "</td>";
-                    }
-                    echo "<td class='center'>" . Dropdown::getDropdownName(
+                $plans = $dbu->getAllDataFromTable(
+                    "glpi_plugin_resources_taskplannings",
+                    ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']],
+                );
+                $planning = '';
+                foreach ($plans as $plan) {
+                    $planning .= Html::convDateTime($plan["begin"]) . "&nbsp;-&gt;&nbsp;"
+                        . Html::convDateTime($plan["end"]);
+                }
+                if ($planning === '') {
+                    $planning = __('None');
+                }
+
+                $entries[] = [
+                    'row_class' => $data["is_deleted"] == '1' ? 'tab_bg_1_2' : 'tab_bg_1',
+                    'name'      => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php?id='
+                        . (int) $data["plugin_resources_tasks_id"] . '">' . $task_label . '</a>',
+                    'entity'    => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                    'tasktype'  => Dropdown::getDropdownName(
                         "glpi_plugin_resources_tasktypes",
                         $data["plugin_resources_tasktypes_id"],
-                    ) . "</td>";
-                    echo "<td class='center'>";
-                    $restrict = ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']];
-                    $dbu = new DbUtils();
+                    ),
+                    'planning'  => $planning,
+                    'resource'  => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id='
+                        . (int) $data["id"] . '">' . $resource_label . '</a>',
+                    'manager'   => $dbu->getUserName($data["users_id"]),
+                    'user'      => $dbu->getUserName($data["users_id_task"]),
+                ];
+            }
 
-                    $plans = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
-
-                    if (!empty($plans)) {
-                        foreach ($plans as $plan) {
-                            echo Html::convDateTime($plan["begin"]) . "&nbsp;->&nbsp;"
-                                . Html::convDateTime($plan["end"]);
-                        }
-                    } else {
-                        echo __('None');
-                    }
-                    echo "</td>";
-
-                    echo "<td class='center'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $data["id"] . "'>" . $data["name"] . " " . $data["firstname"];
-                    if ($_SESSION["glpiis_ids_visible"]) {
-                        echo " (" . $data["id"] . ")";
-                    }
-                    echo "</a></td>";
-
-                    echo "<td class='center'>" . $dbu->getUserName($data["users_id"]) . "</td>";
-
-                    echo "<td class='center'>" . $dbu->getUserName($data["users_id_task"]) . "</td>";
-
-                    echo "</tr>";
+            if (count($entries) > 0) {
+                $columns = ['name' => __('Name')];
+                if (Session::isMultiEntitiesMode()) {
+                    $columns['entity'] = __('Entity');
                 }
+                $columns['tasktype'] = TaskType::getTypeName(2);
+                $columns['planning'] = __('Planning');
+                $columns['resource'] = Resource::getTypeName(1);
+                $columns['manager']  = __('Resource manager', 'resources');
+                $columns['user']     = __('User');
 
-                echo "</table></div><br>";
+                $all_url = PLUGIN_RESOURCES_WEBDIR
+                    . '/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0';
+
+                TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+                    'super_header'    => [
+                        'label'  => Resource::getTypeName(2) . ': '
+                            . __('Tasks in progress', 'resources')
+                            . ' <a href="' . $all_url . '">' . __('All') . '</a>',
+                        'is_raw' => true,
+                    ],
+                    'columns'         => $columns,
+                    'formatters'      => [
+                        'name'     => 'raw_html',
+                        'resource' => 'raw_html',
+                        'planning' => 'raw_html',
+                    ],
+                    'entries'         => $entries,
+                    'total_number'    => count($entries),
+                    'filtered_number' => count($entries),
+                    'nofilter'        => true,
+                    'nosort'          => true,
+                ]);
             }
         }
 
+        $tasks_list = (string) ob_get_clean();
+
+        ob_start();
         $Checklist = new Checklist();
         $Checklist->showOnCentral(false);
         echo "<br>";
         $Checklist->showOnCentral(true);
+        $checklists = (string) ob_get_clean();
 
-        echo "</td></tr></table>";
+        TemplateRenderer::getInstance()->display('@resources/task_central.html.twig', [
+            'tasks_list' => $tasks_list,
+            'checklists' => $checklists,
+        ]);
     }
 
     // Cron action

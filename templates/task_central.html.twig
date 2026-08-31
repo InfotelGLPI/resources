@@ -25,19 +25,13 @@
  # --------------------------------------------------------------------------
  #}
 
-{% extends 'generic_show_form.html.twig' %}
-{% import 'components/form/fields_macros.html.twig' as fields %}
-
-{% block form_fields %}
-    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
-    <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
-    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
-
-    {{ fields.autoNameField('name', item, __('Name'), withtemplate, field_options) }}
-
-    {{ fields.dropdownYesNo('tag', item.fields['tag'], __('Important', 'resources')) }}
-
-    {{ fields.textField('address', item.fields['address'], __('Link', 'resources')) }}
-
-    {{ fields.textareaField('comment', item.fields['comment'], __('Description'), {'full_width': true}) }}
-{% endblock %}
+{# Central-page cell. `tasks_list` is the datatable component and `checklists` the
+ # Checklist blocks, both rendered upstream, hence |raw. #}
+<table class="tab_cadre_central">
+    <tr>
+        <td>
+            {{ tasks_list|raw }}
+            {{ checklists|raw }}
+        </td>
+    </tr>
+</table>

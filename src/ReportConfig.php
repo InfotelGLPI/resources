@@ -274,54 +274,14 @@ class ReportConfig extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $options["colspan"] = 1;
-        //$this->showTabs($options);
-        $this->showFormHeader($options);
-
-        // Capture the GLPI yes/no dropdowns as HTML fragments for the template.
-        ob_start();
-        Dropdown::showYesNo('send_report', $this->fields["send_report_notif"]);
-        $send_report_dropdown = ob_get_clean();
-
-        ob_start();
-        Dropdown::showYesNo('send_transfer_notif', $this->fields["send_transfer_notif"]);
-        $send_transfer_dropdown = ob_get_clean();
-
-        ob_start();
-        Dropdown::showYesNo('send_report', $this->fields["send_other_notif"]);
-        $send_other_dropdown = ob_get_clean();
+        $params = $options;
+        $params['candel'] = false;
 
         TemplateRenderer::getInstance()->display('@resources/reportconfig_form.html.twig', [
-            'resource_hidden'        => Html::hidden(
-                'plugin_resources_resources_id',
-                ['value' => $plugin_resources_resources_id],
-            ),
-            'label_comments'         => __('Comments'),
-            'comment_field'          => Html::textarea([
-                'name'    => 'comment',
-                'value'   => $this->fields["comment"],
-                'cols'    => '100',
-                'rows'    => '6',
-                'display' => false,
-            ]),
-            'label_information'      => _n('Information', 'Informations', 2),
-            'information_field'      => Html::textarea([
-                'name'    => 'information',
-                'value'   => $this->fields["information"],
-                'cols'    => '100',
-                'rows'    => '6',
-                'display' => false,
-            ]),
-            'label_send_report'      => __('Send resource creation report notification', 'resources'),
-            'send_report_dropdown'   => $send_report_dropdown,
-            'label_send_transfer'    => __('Send resource transfer notification', 'resources'),
-            'send_transfer_dropdown' => $send_transfer_dropdown,
-            'label_send_other'       => __('Send other notification', 'resources'),
-            'send_other_dropdown'    => $send_other_dropdown,
+            'item'         => $this,
+            'params'       => $params,
+            'resources_id' => $plugin_resources_resources_id,
         ]);
-
-        $options['candel'] = false;
-        $this->showFormButtons($options);
 
         return true;
     }

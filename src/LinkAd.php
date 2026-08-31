@@ -329,9 +329,12 @@ class LinkAd extends CommonDBTM
         $employee = new Employee();
         $employee->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()]);
 
-        $login_option = ['value' => $linkAD->fields["login"], "option" => "disabled"];
-        if (!$islink) {
-            $login_option = ['value' => $linkAD->fields["login"]];
+        $login_option = ['value' => $linkAD->fields["login"]];
+        if ($islink) {
+            // The AD account already exists, so its login is fixed. Read-only rather than
+            // disabled: the field keeps being posted, and front/linkad.form.php overwrites
+            // it from the stored value on updateAD/disableAD anyway.
+            $login_option['readonly'] = 'readonly';
         }
 
         $ad_buttons = [];

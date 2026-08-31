@@ -25,29 +25,22 @@
  # --------------------------------------------------------------------------
  #}
 
-<tr class="tab_bg_1">
-    <td>{{ label_name }}</td>
-    <td>{{ name_field|raw }}</td>
-    <td>{{ label_important }}</td>
-    <td>{{ tag_dropdown|raw }}</td>
-</tr>
-<tr class="tab_bg_1">
-    <td>{{ label_link }}</td>
-    <td>{{ address_field|raw }}</td>
-    <td></td>
-    <td></td>
-</tr>
-<tr class="tab_bg_1">
-    <td>{{ label_itemtype }}</td>
-    <td>{{ itemtype_dropdown|raw }}</td>
-    <td>{{ label_item }}</td>
-    <td id="linkitems">{{ linkitems_js|raw }}</td>
-</tr>
-<tr class="tab_bg_1">
-    <td colspan="4">
-        <table cellpadding="2" cellspacing="2" border="0">
-            <tr><td>{{ label_description }}</td></tr>
-            <tr><td class="center">{{ comment_field|raw }}</td></tr>
-        </table>
-    </td>
-</tr>
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% block form_fields %}
+    {{ fields.autoNameField('name', item, __('Name'), withtemplate, field_options) }}
+
+    {{ fields.dropdownYesNo('tag', item.fields['tag'], __('Important', 'resources')) }}
+
+    {{ fields.textField('address', item.fields['address'], __('Link', 'resources')) }}
+
+    {# Itemtype drives an AJAX refresh of the linked-items block below, and its select id
+     # is what the generated script observes, so it is rendered outside the macro. #}
+    {{ fields.htmlField('itemtype', itemtype_dropdown, __('Itemtype'), {'wrapper_class': ''}) }}
+
+    {# Container the linked items are loaded into; it carries its own bootstrap script. #}
+    {{ fields.ajaxField('linkitems', linkitems_js, _n('Item', 'Items', get_plural_number())) }}
+
+    {{ fields.textareaField('comment', item.fields['comment'], __('Description'), {'full_width': true}) }}
+{% endblock %}

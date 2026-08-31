@@ -170,7 +170,8 @@ class Resource_Leaving extends CommonDBTM
                     'display' => false,
                 ]),
                 'can_validate'   => empty($resources->fields['remove_order']),
-                'validate_label' => __('Validate', 'resources'),
+                // 'Validate' has no entry in the plugin domain: use the core button context.
+                'validate_label' => _x('button', 'Validate'),
             ]);
         }
     }
