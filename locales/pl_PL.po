@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 11:10+0000\n"
+"POT-Creation-Date: 2026-09-01 14:42+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/infotelGLPI/"
@@ -429,7 +429,7 @@ msgstr ""
 msgid "At the transfer of a resource"
 msgstr ""
 
-#: templates/user_form.html.twig:34
+#: templates/user_form.html.twig:40
 msgid "Authentication"
 msgstr ""
 
@@ -441,7 +441,7 @@ msgstr ""
 msgid "Available contract type"
 msgstr ""
 
-#: src/ResourceBadge.php:77 src/ResourceBadge.php:257 src/Menu.php:271
+#: src/ResourceBadge.php:77 src/ResourceBadge.php:241 src/Menu.php:271
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] ""
@@ -449,9 +449,9 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Resource_Change.php:187 src/ResourceBadge.php:275
-#: src/ResourceBadge.php:294 src/ResourceBadge.php:481
-#: src/ResourceBadge.php:484
+#: src/Resource_Change.php:187 src/ResourceBadge.php:259
+#: src/ResourceBadge.php:278 src/ResourceBadge.php:465
+#: src/ResourceBadge.php:468
 msgid "Badge restitution"
 msgstr ""
 
@@ -618,9 +618,8 @@ msgstr ""
 msgid "Change the sales manager"
 msgstr ""
 
-#: templates/import_check_all_header.html.twig:33
-#: templates/import_check_all_header.html.twig:34
-#: templates/datatable.html.twig:102
+#: templates/import_list_header.html.twig:37
+#: templates/import_list_header.html.twig:38 templates/datatable.html.twig:102
 msgid "Check all"
 msgstr ""
 
@@ -721,7 +720,7 @@ msgstr[3] ""
 msgid "Comments"
 msgstr ""
 
-#: src/LinkAd.php:539 templates/linkad_resource_form.html.twig:78
+#: src/LinkAd.php:517 templates/linkad_resource_form.html.twig:78
 msgid "Company"
 msgstr ""
 
@@ -779,7 +778,7 @@ msgstr ""
 msgid "ContractType"
 msgstr ""
 
-#: src/Checklist.php:352 src/ResourceBadge.php:496
+#: src/Checklist.php:352 src/ResourceBadge.php:480
 #: templates/checklist_from_resources.html.twig:66
 msgid "Create a end treatment ticket"
 msgstr "Utwórz zgłoszenie zabiegu końcowego"
@@ -800,7 +799,7 @@ msgstr ""
 msgid "Create or delete user in ldap is mandatory to close ticket"
 msgstr ""
 
-#: src/LinkAd.php:345
+#: src/LinkAd.php:323
 msgctxt "button"
 msgid "Create user in AD"
 msgstr ""
@@ -978,7 +977,7 @@ msgstr ""
 msgid "Deletion category"
 msgstr ""
 
-#: src/Adconfig.php:285 src/LinkAd.php:540 src/Resource.php:180
+#: src/Adconfig.php:285 src/LinkAd.php:518 src/Resource.php:180
 #: src/Department.php:56 templates/linkad_resource_form.html.twig:49
 #: templates/resource_form.html.twig:161
 msgid "Department"
@@ -992,7 +991,7 @@ msgstr[3] ""
 #: src/Adconfig.php:291 src/Config.php:141 src/Resource_Change.php:474
 #: src/Checklist.php:1104 src/Resource_Item.php:721 src/Resource_Item.php:995
 #: src/Resource_Item.php:1005 src/RuleContracttype.php:287
-#: src/Dashboard.php:177 src/LinkAd.php:542 src/Resource.php:182
+#: src/Dashboard.php:177 src/LinkAd.php:520 src/Resource.php:182
 #: src/Resource.php:506 src/ResourcePDF.php:107 src/Recap.php:233
 #: src/Directory.php:232 src/NotificationTargetResource.php:474
 #: src/NotificationTargetResource.php:589
@@ -1000,7 +999,7 @@ msgstr[3] ""
 #: src/NotificationTargetResource.php:853
 #: src/NotificationTargetResource.php:1028
 #: src/NotificationTargetResource.php:1677
-#: src/NotificationTargetResource.php:1708 ajax/leavingform.php:111
+#: src/NotificationTargetResource.php:1708
 #: report/checkhabilitation/checkhabilitation.php:222
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:96
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:265
@@ -1010,6 +1009,7 @@ msgstr[3] ""
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:95
 #: report/checkmissingN0group/checkmissingN0group.php:219
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:267
+#: templates/leaving_departure_form.html.twig:33
 #: templates/wizard_secondstep_resource.html.twig:681
 #: templates/resource_remove_form.html.twig:53
 #: templates/resource_leaving_form.html.twig:38
@@ -1073,7 +1073,7 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: src/LinkAd.php:357
+#: src/LinkAd.php:335
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr ""
@@ -1094,7 +1094,7 @@ msgstr ""
 msgid "Displaying the security block on the resource"
 msgstr ""
 
-#: src/Task.php:1047
+#: src/Task.php:1053
 msgid "Dissociate"
 msgstr ""
 
@@ -1107,7 +1107,7 @@ msgstr ""
 msgid "Do you verify all the information listed on this resource?"
 msgstr ""
 
-#: ajax/pdfresource.php:98
+#: templates/resource_restitution_pdf.html.twig:40
 msgid "Download the restitution form"
 msgstr "Pobierz formularz zwrotu"
 
@@ -1115,7 +1115,7 @@ msgstr "Pobierz formularz zwrotu"
 msgid "Dropdown management"
 msgstr ""
 
-#: src/Task.php:1051
+#: src/Task.php:1057
 msgctxt "button"
 msgid "Duplicate"
 msgstr ""
@@ -1308,7 +1308,7 @@ msgid ""
 "date (DDMMYYYY)"
 msgstr ""
 
-#: src/Resource_Change.php:466 src/LinkAd.php:529 src/Resource.php:174
+#: src/Resource_Change.php:466 src/LinkAd.php:507 src/Resource.php:174
 #: templates/linkad_resource_form.html.twig:62
 msgid "Firstname"
 msgstr ""
@@ -1426,7 +1426,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Metademand.php:79 setup.php:271
+#: src/Metademand.php:79 setup.php:272
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Zasób ludzki"
@@ -1696,7 +1696,7 @@ msgstr ""
 msgid "List of Imports"
 msgstr ""
 
-#: src/ResourceBadge.php:333
+#: src/ResourceBadge.php:317
 msgid "List of badges"
 msgstr ""
 
@@ -1783,7 +1783,7 @@ msgstr ""
 msgid "Matricule"
 msgstr ""
 
-#: src/ConfigHabilitation.php:247 src/ResourceBadge.php:235
+#: src/ConfigHabilitation.php:247 src/ResourceBadge.php:219
 msgid "Meta-demands linked"
 msgstr ""
 
@@ -1827,7 +1827,7 @@ msgstr ""
 msgid "Modified fields"
 msgstr ""
 
-#: src/LinkAd.php:351
+#: src/LinkAd.php:329
 msgctxt "button"
 msgid "Modify user in AD"
 msgstr ""
@@ -1907,8 +1907,8 @@ msgstr ""
 msgid "No Identifier"
 msgstr ""
 
-#: front/resourcebadge.form.php:88 front/confighabilitation.form.php:89
-#: front/confighabilitation.form.php:110
+#: front/resourcebadge.form.php:91 front/confighabilitation.form.php:91
+#: front/confighabilitation.form.php:115
 msgid "No advanced request found"
 msgstr "Nie znaleziono żadnego zaawansowanego zapytania"
 
@@ -1967,7 +1967,7 @@ msgstr[3] ""
 msgid "Not defined"
 msgstr "Nie określono"
 
-#: src/Task.php:889 src/Task.php:930
+#: src/Task.php:895 src/Task.php:936
 msgid "Not finished tasks"
 msgstr ""
 
@@ -2053,6 +2053,10 @@ msgstr ""
 msgid "Pay gap"
 msgstr ""
 
+#: templates/taskplanning_planning.html.twig:42
+msgid "Period"
+msgstr ""
+
 #: templates/linkad_resource_form.html.twig:71
 #: templates/wizard_secondstep_resource.html.twig:201
 #: templates/resource_form.html.twig:78
@@ -2076,13 +2080,13 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr "Aktywuj plugin"
 
-#: front/resourcebadge.form.php:129
+#: front/resourcebadge.form.php:135
 msgid "Please activate the plugin badge"
 msgstr "Aktywuj plugin badge"
 
-#: front/resourcebadge.form.php:75 front/resourcebadge.form.php:93
-#: front/confighabilitation.form.php:74 front/confighabilitation.form.php:94
-#: front/confighabilitation.form.php:115
+#: front/resourcebadge.form.php:77 front/resourcebadge.form.php:98
+#: front/confighabilitation.form.php:75 front/confighabilitation.form.php:98
+#: front/confighabilitation.form.php:122
 msgid "Please activate the plugin metademand"
 msgstr "Aktywuj metadane plugin"
 
@@ -2095,7 +2099,7 @@ msgstr ""
 msgid "Please correct: %s"
 msgstr ""
 
-#: ajax/pdfresource.php:89
+#: templates/resource_restitution_pdf.html.twig:33
 msgid "Please ensure that the return form is signed by the employee"
 msgstr "Upewnij się, że formularz zwrotu jest podpisany przez pracownika"
 
@@ -2331,7 +2335,7 @@ msgstr ""
 msgid "Request date"
 msgstr ""
 
-#: src/ResourceBadge.php:267
+#: src/ResourceBadge.php:251
 msgid "Request new badge"
 msgstr ""
 
@@ -2397,7 +2401,7 @@ msgid "Resource files imports"
 msgstr ""
 
 #: hook.php:1467 src/RuleContracttypeHidden.php:274 src/Task.php:834
-#: src/Task.php:1243 src/RuleContracttypeReadonly.php:193
+#: src/Task.php:1249 src/RuleContracttypeReadonly.php:193
 #: src/RuleContracttypeReadonly.php:234 src/RuleContracttypeReadonly.php:264
 #: src/RuleContracttypeReadonly.php:315 src/Config.php:134 src/Config.php:506
 #: src/RuleContracttype.php:271 src/Resource.php:179 src/Resource.php:486
@@ -2409,7 +2413,8 @@ msgstr ""
 #: src/NotificationTargetResource.php:848
 #: src/NotificationTargetResource.php:1013
 #: src/NotificationTargetResource.php:1673
-#: src/NotificationTargetResource.php:1704 ajax/leavingform.php:121
+#: src/NotificationTargetResource.php:1704
+#: templates/leaving_departure_form.html.twig:38
 #: templates/wizard_secondstep_resource.html.twig:373
 #: templates/wizard_secondstep_resource.html.twig:383
 #: templates/wizard_secondstep_resource.html.twig:398
@@ -2479,7 +2484,7 @@ msgstr ""
 
 #: src/RuleContracttypeHidden.php:318 src/Profile.php:207
 #: src/RuleContracttypeReadonly.php:359 src/Adconfig.php:293 src/Role.php:57
-#: src/RuleContracttype.php:311 src/LinkAd.php:536
+#: src/RuleContracttype.php:311 src/LinkAd.php:514
 #: templates/linkad_resource_form.html.twig:93
 #: templates/resource_form.html.twig:183
 msgid "Role"
@@ -2687,6 +2692,10 @@ msgstr "Szczegółowe prawa sieciowe"
 msgid "Specific securities groups"
 msgstr "Szczegółowe uprawnienia grupy"
 
+#: templates/taskplanning_planning.html.twig:37
+msgid "Start date"
+msgstr ""
+
 #: templates/checklist_from_resources.html.twig:126
 msgctxt "location"
 msgid "State"
@@ -2827,7 +2836,7 @@ msgstr ""
 msgid "The checklist is not finished"
 msgstr "Lista kontrolna nie jest gotowa"
 
-#: src/ConfigHabilitation.php:182 src/ResourceBadge.php:181
+#: src/ConfigHabilitation.php:182 src/ResourceBadge.php:165
 msgid "The current entity is already linked to a meta-demand"
 msgstr ""
 
@@ -2882,7 +2891,7 @@ msgstr ""
 msgid "The resource is not leaving"
 msgstr ""
 
-#: ajax/pdfresource.php:92
+#: templates/resource_restitution_pdf.html.twig:36
 msgid ""
 "The sales manager is responsible for the complete return of the company's "
 "equipment held by the outgoing employee (badge, PC, smartphone, etc.)"
@@ -2968,7 +2977,7 @@ msgstr ""
 msgid "Trainee"
 msgstr "Stażysta"
 
-#: src/Task.php:1057 src/Checklistconfig.php:344 src/Resource.php:3272
+#: src/Task.php:1063 src/Checklistconfig.php:344 src/Resource.php:3272
 msgid "Transfer"
 msgstr ""
 
@@ -3205,7 +3214,7 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:2949 src/LinkAd.php:677
+#: hook.php:2949 src/LinkAd.php:655
 msgid "You have to do all checklist in action before"
 msgstr ""
 
@@ -3213,21 +3222,21 @@ msgstr ""
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2931 hook.php:2979 src/LinkAd.php:675
+#: hook.php:2931 hook.php:2979 src/LinkAd.php:653
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
-#: src/LinkAd.php:671
+#: src/LinkAd.php:649
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
 msgstr ""
 
-#: front/resourcebadge.form.php:65
+#: front/resourcebadge.form.php:66
 msgid "You need rights into badges plugin"
 msgstr ""
 
-#: src/LinkAd.php:416
+#: src/LinkAd.php:394
 msgid "existing login"
 msgstr ""
 
