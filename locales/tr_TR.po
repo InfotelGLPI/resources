@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 10:49+0000\n"
+"POT-Creation-Date: 2026-08-31 14:55+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/Resource_Change.php:189
@@ -46,8 +47,7 @@ msgid "%1$s %2$s have been updated in the LDAP directory"
 msgstr "%1$s %2$s LDAP dizininde güncellendi"
 
 #: src/Config.php:292
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
 
 #: src/Adconfig.php:328
@@ -82,8 +82,7 @@ msgstr "Sözleşmesiz dönem güncellendi"
 msgid "A resource has been added by"
 msgstr "Şu kişi tarafından bir kaynak eklendi"
 
-#: src/NotificationTargetResource.php:86
-#: src/NotificationTargetResource.php:676
+#: src/NotificationTargetResource.php:86 src/NotificationTargetResource.php:676
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
@@ -107,7 +106,7 @@ msgstr "Şu kişi tarafından bir görev silindi"
 msgid "A task has been updated by"
 msgstr "Şu kişi tarafından bir görev güncellendi"
 
-#: src/Profile.php:263 src/Resource_Validation.php:59
+#: src/Profile.php:263 src/Resource_Validation.php:60
 msgid "AD Synchronization"
 msgstr "Aktif Dizin eşitlemesi"
 
@@ -127,7 +126,7 @@ msgstr "Gereksinimler sekmesi erişimi"
 msgid "Access to the applications"
 msgstr "Uygulama erişimi"
 
-#: src/Actionprofile.php:67
+#: src/Actionprofile.php:87
 msgid "Action authorization"
 msgstr "İşlem yetkilendirmesi"
 
@@ -135,37 +134,46 @@ msgstr "İşlem yetkilendirmesi"
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:85
-#: src/NotificationTargetResource.php:572
+#: src/NotificationTargetResource.php:85 src/NotificationTargetResource.php:572
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:84
-#: src/NotificationTargetResource.php:565
+#: src/NotificationTargetResource.php:84 src/NotificationTargetResource.php:565
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
-#: src/Resource_Validation.php:199
+#: templates/import_form.html.twig:36
+msgid "Active"
+msgstr ""
+
+#: templates/resource_validation_form.html.twig:51
 msgid "Active Directory synchronization"
 msgstr "Aktif Dizin eşitlemesi"
 
+#: templates/resourcehabilitation_add_form.html.twig:43
 #: templates/wizard_fivestep_photo.html.twig:64
 #: templates/ticketcategory_config.html.twig:55
+#: templates/resourceholiday_form.html.twig:68
 #: templates/confighabilitation_form.html.twig:44
 #: templates/item_resource.html.twig:58
 #: templates/transferentity_config.html.twig:46
+#: templates/employment_add_form.html.twig:50
 #: templates/resourcebadge_form.html.twig:43
+#: templates/task_item_form.html.twig:60
+#: templates/resourceresting_form.html.twig:77
+#: templates/checklist_from_resources.html.twig:81
 #: templates/wizard_fourstep_choice.html.twig:72
 #: templates/wizard_fourstep_choice.html.twig:107
+#: templates/choice_helpdesk_needs.html.twig:67
 msgctxt "button"
 msgid "Add"
 msgstr "Ekle"
 
-#: src/ImportColumn.php:199 src/ImportColumn.php:317
+#: src/ImportColumn.php:284 templates/importcolumn_add_link.html.twig:33
 msgid "Add a column"
 msgstr "Bir sütun ekle"
 
-#: src/Choice.php:292
+#: templates/choice_add_comment_form.html.twig:32
 msgid "Add a comment"
 msgstr "Açıklama ekle"
 
@@ -173,7 +181,8 @@ msgstr "Açıklama ekle"
 msgid "Add a document"
 msgstr "Belge ekle"
 
-#: src/Choice.php:446 templates/wizard_fourstep_choice.html.twig:61
+#: templates/wizard_fourstep_choice.html.twig:61
+#: templates/choice_helpdesk_needs.html.twig:57
 msgid "Add a need"
 msgstr "Gereksinim ekle"
 
@@ -182,37 +191,37 @@ msgctxt "button"
 msgid "Add a new file"
 msgstr "Yeni bir dosya ekle"
 
+#: templates/task_add_link.html.twig:29
+msgid "Add a new task"
+msgstr ""
+
 #: src/ContractType.php:97 src/ContractType.php:174
 msgid "Add a picture"
 msgstr "Görsel ekle"
 
-#: src/Checklist.php:633
+#: src/Checklist.php:605
 msgid "Add a task at the arriving checklist"
 msgstr "Gelme kontrol listesine görev ekle"
 
-#: src/Checklist.php:638
+#: src/Checklist.php:610
 msgid "Add a task at the leaving checklist"
 msgstr "Ayrılma kontrol listesine görev ekle"
 
-#: src/Checklist.php:643
+#: src/Checklist.php:615
 msgid "Add a task at the transfer checklist"
 msgstr "Aktarım kontrol listesine görev ekle"
 
-#: src/Resource.php:3964 src/ResourceHabilitation.php:189
+#: src/Resource.php:3964 templates/resourcehabilitation_add_form.html.twig:34
 msgid "Add additional habilitation"
 msgstr "Ek güçler ekle"
 
-#: src/Import.php:126
+#: templates/import_title.html.twig:35 templates/import_title.html.twig:36
 msgid "Add an Import"
 msgstr "Bir içe aktarma ekle"
 
 #: src/Resource_Change.php:199
 msgid "Add application"
 msgstr "Uygulama ekle"
-
-#: src/Resource_Change.php:1461
-msgid "Add application for"
-msgstr "Şunun için uygulama ekle"
 
 #: src/Wizard.php:719
 msgid "Add documents to the resource"
@@ -230,11 +239,11 @@ msgstr "Kaynağa işe alım bilgilerini ekle"
 msgid "Add the photo of the resource"
 msgstr "Kaynağa fotoğraf ekle"
 
-#: src/Checklist.php:971
+#: src/Checklist.php:856
 msgid "Add ticket"
 msgstr "Destek kaydı ekle"
 
-#: src/ResourceHabilitation.php:300
+#: src/ResourceHabilitation.php:279
 #, php-format
 msgid "Adding the habilitation: %s"
 msgstr "Güç ekleme: %s"
@@ -256,7 +265,8 @@ msgid_plural "Affected clients"
 msgstr[0] "Etkilenen müşteri"
 msgstr[1] "Etkilenen müşteriler"
 
-#: src/ResourceResting.php:400 src/NotificationTargetResource.php:1271
+#: src/NotificationTargetResource.php:1271
+#: templates/resourceresting_form.html.twig:55
 msgid "Agency concerned"
 msgstr "Sorumlu temsilci"
 
@@ -267,7 +277,7 @@ msgstr ""
 "Sorumlu yönetici, başkaları tarafından başlatılan gidiş formunu doldurması "
 "için uyarılsın"
 
-#: src/Task.php:864 templates/datatable.html.twig:199
+#: templates/datatable.html.twig:199
 msgid "All"
 msgstr "Tümü"
 
@@ -286,7 +296,7 @@ msgstr "Tüm kaynaklara erişim"
 msgid "Annuary"
 msgstr "Yıllık"
 
-#: src/Config.php:538 src/Resource_Validation.php:161
+#: src/Config.php:538 src/Resource_Validation.php:164
 msgid "Are you sure?"
 msgstr "Emin misiniz?"
 
@@ -295,7 +305,7 @@ msgid "Arrival / Departure workflow"
 msgstr "Başlama / Ayrılma iş akışı"
 
 #: src/RuleContracttypeHidden.php:286 src/RuleContracttypeReadonly.php:327
-#: src/Config.php:140 src/Config.php:519 src/Checklist.php:1191
+#: src/Config.php:140 src/Config.php:519 src/Checklist.php:1105
 #: src/Resource_Item.php:984 src/Resource_Item.php:1508
 #: src/Resource_Item.php:1518 src/RuleContracttype.php:283
 #: src/Dashboard.php:129 src/ResourceCard.php:178 src/ResourceCard.php:262
@@ -324,6 +334,10 @@ msgstr "Şunun başlaması"
 #: src/Config.php:520
 msgid "Ascending"
 msgstr "Artan"
+
+#: templates/checklist_from_resources.html.twig:71
+msgid "Assigned to"
+msgstr ""
 
 #: src/Config.php:564
 msgid "Assignment group for the second ticket"
@@ -362,6 +376,12 @@ msgstr "Var olan bir belge ile ilişkilendir"
 msgid "Associated Human Resource"
 msgstr "İlgili insan kaynağı"
 
+#: templates/task_item_form.html.twig:33
+msgid "Associated item"
+msgid_plural "Associated items"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/NotificationTargetResource.php:1607
 msgid "Associated tasks"
 msgstr "Verilen görevler"
@@ -378,8 +398,8 @@ msgstr "Kaynak oluşturulduğunda, güncellendiğinde, silindiğinde"
 msgid "At creation, update, removal of a task"
 msgstr "Görev oluşturulduğunda, güncellendiğinde, silindiğinde"
 
-#: src/ResourceResting.php:265 src/ResourceResting.php:409
-#: src/NotificationTargetResource.php:1277
+#: src/ResourceResting.php:266 src/NotificationTargetResource.php:1277
+#: templates/resourceresting_form.html.twig:58
 msgid "At home"
 msgstr "Evde"
 
@@ -395,51 +415,62 @@ msgstr "Kaynak ayrıldığında"
 msgid "At the transfer of a resource"
 msgstr "Bir kaynak aktarıldığında"
 
-#: src/Actionprofile.php:73
+#: templates/user_form.html.twig:34
+msgid "Authentication"
+msgstr ""
+
+#: src/Actionprofile.php:88
 msgid "Available actions"
 msgstr "Kullanılabilecek işlemler"
 
-#: src/Contracttypeprofile.php:73
+#: src/Contracttypeprofile.php:97
 msgid "Available contract type"
 msgstr "Kullanılabilecek kişi türü"
 
-#: src/ResourceBadge.php:77 src/ResourceBadge.php:263 src/Menu.php:271
+#: src/ResourceBadge.php:77 src/ResourceBadge.php:257 src/Menu.php:271
 msgid "Badge management"
 msgid_plural "Badges management"
 msgstr[0] "Yaka kartı yönetimi"
 msgstr[1] "Yaka kartları yönetimi"
 
-#: src/Resource_Change.php:187 src/ResourceBadge.php:285
-#: src/ResourceBadge.php:302 src/ResourceBadge.php:484
-#: src/ResourceBadge.php:487
+#: src/Resource_Change.php:187 src/ResourceBadge.php:275
+#: src/ResourceBadge.php:294 src/ResourceBadge.php:476
+#: src/ResourceBadge.php:479
 msgid "Badge restitution"
 msgstr "Yaka kartı iadesi"
 
-#: src/ImportResource.php:684
+#: src/ImportResource.php:687
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Dikkatli olun, birim içinde yeni kaynaklar oluşturulacak"
+
+#: templates/employment_form.html.twig:71 templates/budget_form.html.twig:66
+#: templates/resourceholiday_form.html.twig:47 templates/cost_form.html.twig:56
+#: templates/resourceresting_form.html.twig:47
+msgid "Begin date"
+msgstr ""
 
 #: src/Resource.php:3544
 msgid "Blank Template"
 msgstr "Boş kalıp"
 
-#: src/Cost.php:58 src/Cost.php:170 src/Cost.php:220 src/Cost.php:301
+#: src/Cost.php:58 src/Cost.php:170 src/Cost.php:220
+#: templates/cost_form.html.twig:60
 msgid "Budget cost"
 msgid_plural "Budget costs"
 msgstr[0] "Bütçe masrafı"
 msgstr[1] "Bütçe masrafları"
 
-#: src/Menu.php:302 src/Menu.php:488
+#: src/Menu.php:302 src/Menu.php:443
 msgid "Budget management"
 msgstr "Bütçe yönetimi"
 
-#: src/Budget.php:188 src/Budget.php:266 src/BudgetType.php:55
+#: src/Budget.php:187 src/BudgetType.php:55 templates/budget_form.html.twig:38
 msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] "Bütçe türü"
 msgstr[1] "Bütçe türleri"
 
-#: src/Budget.php:212 src/Budget.php:299
+#: src/Budget.php:211 templates/budget_form.html.twig:56
 msgid "Budget volume"
 msgstr "Bütçe hacmi"
 
@@ -463,7 +494,7 @@ msgstr[1] "İş birimleri"
 msgid "CFI - Supplier card"
 msgstr "CFI - Hizmet sağlayıcı kartı"
 
-#: src/ImportResource.php:749 src/ImportResource.php:785
+#: templates/import_head.html.twig:57
 msgid "Calculate"
 msgstr "Hesapla"
 
@@ -474,6 +505,11 @@ msgstr "Aktif Dizin eşitleme sekmesini görüntüleyebilir"
 #: src/Config.php:339
 msgid "Can view notification tab"
 msgstr "Bildirim sekmesini görüntüleyebilir"
+
+#: templates/choice_comment_form.html.twig:41
+msgctxt "button"
+msgid "Cancel"
+msgstr ""
 
 #: src/Wizard.php:744
 #: templates/wizard_eightstep_recruitinginformation.html.twig:132
@@ -486,13 +522,13 @@ msgctxt "button"
 msgid "Cancel the request"
 msgstr "İsteği iptal et"
 
-#: src/Choice.php:223
+#: src/Choice.php:224
 msgid "Cannot add a choice that contains children"
 msgstr "Alt ögeleri olan bir seçenek eklenemez"
 
-#: src/Task.php:401 src/Task.php:640 src/NotificationTargetResource.php:414
+#: src/Task.php:402 src/NotificationTargetResource.php:414
 #: src/NotificationTargetResource.php:1617
-#: src/NotificationTargetResource.php:1725
+#: src/NotificationTargetResource.php:1725 templates/task_form.html.twig:60
 msgid "Carried out task"
 msgstr "Yapılan görev"
 
@@ -504,7 +540,7 @@ msgstr "Oluşturulmuş destek kayıtlarının kategorisi"
 msgid "Category of departure ticket"
 msgstr "Ayrılma destek kaydının kategorisi"
 
-#: src/LinkAd.php:500
+#: templates/linkad_resource_form.html.twig:91
 msgid "Cell phone"
 msgstr "Cep telefonu"
 
@@ -532,62 +568,17 @@ msgstr "Yönü değiştir (değişiklik)"
 msgid "Change function"
 msgstr "İşlevi değiştir"
 
-#: src/Resource_Change.php:1309 src/Resource_Change.php:1311
-#: src/Resource_Change.php:1333 src/Resource_Change.php:1335
-msgid "Change information for"
-msgstr "Şunun bilgilerini değiştir"
-
 #: src/Resource_Change.php:175
 msgid "Change manager"
 msgstr "Sorumluyu değiştir"
 
-#: src/Resource_Change.php:1181 src/Resource_Change.php:1183
-msgid "Change manager for"
-msgstr "Şunun sorumlusunu değiştir"
-
-#: src/Resource_Change.php:197 src/Resource_Change.php:955
+#: src/Resource_Change.php:197
 msgid "Change material"
 msgstr "Malzemeyi değiştir"
-
-#: src/Resource_Change.php:1455
-msgid "Change material for"
-msgstr "Şunun malzemesini değiştir"
 
 #: src/Resource_Change.php:183
 msgid "Change of agency"
 msgstr "Temsilci değişimi"
-
-#: src/Resource_Change.php:1277 src/Resource_Change.php:1279
-msgid "Change of agency for"
-msgstr "Şunun temsilcsini değiştir"
-
-#: src/Resource_Change.php:1345 src/Resource_Change.php:1347
-msgid "Change of company for"
-msgstr "Şunun kuruluşunu değiştir"
-
-#: src/Resource_Change.php:1366 src/Resource_Change.php:1368
-msgid "Change of department for"
-msgstr "Şunun bölümünü değiştir"
-
-#: src/Resource_Change.php:1420 src/Resource_Change.php:1422
-msgid "Change of function for"
-msgstr "Şunun işlevini değiştir"
-
-#: src/Resource_Change.php:1402 src/Resource_Change.php:1404
-msgid "Change of role for"
-msgstr "Şunun rolünü değiştir"
-
-#: src/Resource_Change.php:1194 src/Resource_Change.php:1196
-msgid "Change of sales manager for"
-msgstr "Şunun satış sorumlusunu değiştir"
-
-#: src/Resource_Change.php:1384 src/Resource_Change.php:1386
-msgid "Change of service for"
-msgstr "Şunun hizmetini değiştir"
-
-#: src/Resource_Change.php:1438 src/Resource_Change.php:1440
-msgid "Change of team for"
-msgstr "Şunun takımını değiştir"
 
 #: src/Resource_Change.php:203
 msgid "Change role"
@@ -605,31 +596,25 @@ msgstr "Takım değiştir"
 msgid "Change the access profil"
 msgstr "Erişim profilini değiştir"
 
-#: src/Resource_Change.php:1206 src/Resource_Change.php:1208
-msgid "Change the access profile for"
-msgstr "Şunun erişim profilini değiştir"
-
 #: src/Resource_Change.php:177
 msgid "Change the sales manager"
 msgstr "Satış sorumlusunu değiştir"
 
-#: src/Resource_Change.php:1254 src/Resource_Change.php:1256
-msgid "Change the type of contract for"
-msgstr "Şunun sözleşme türünü değiştir"
-
-#: src/ImportResource.php:951 templates/datatable.html.twig:102
+#: templates/import_check_all_header.html.twig:33
+#: templates/import_check_all_header.html.twig:34
+#: templates/datatable.html.twig:102
 msgid "Check all"
 msgstr "Tümünü seç"
 
-#: src/Checklist.php:660
+#: src/Checklist.php:633
 msgid "Check list done"
 msgstr "Kontrol listesi tamamlandı"
 
-#: src/Checklist.php:1547
+#: src/Checklist.php:1393
 msgid "Checked"
 msgstr "Tamamlandı"
 
-#: src/Profile.php:195 src/Checklist.php:82 src/Menu.php:504
+#: src/Profile.php:195 src/Checklist.php:82 src/Menu.php:459
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Kontrol listesi"
@@ -639,11 +624,11 @@ msgstr[1] "Kontrol listeleri"
 msgid "Checklist action"
 msgstr "Kontrol listesi işlemi"
 
-#: src/Checklist.php:1198 src/NotificationTargetResource.php:578
+#: src/Checklist.php:1111 src/NotificationTargetResource.php:578
 msgid "Checklist needs to verificated"
 msgstr "Kontrol listesi doğrulanmalıdır"
 
-#: src/Checklistconfig.php:67
+#: src/Checklistconfig.php:66
 msgid "Checklist setup"
 msgid_plural "Checklists setup"
 msgstr[0] "Kontrol listesi ayarları"
@@ -653,19 +638,15 @@ msgstr[1] "Kontrol listeleri ayarları"
 msgid "Checklist type"
 msgstr "Kontrol listesi türü"
 
-#: src/Checklist.php:1297 src/Checklist.php:1440
+#: src/Checklist.php:1143 src/Checklist.php:1286
 msgid "Checklists Verification"
 msgstr "Kontrol listesi doğrulama"
-
-#: src/ImportResource.php:1605
-msgid "Choose"
-msgstr "Seçin"
 
 #: src/Resource.php:3532
 msgid "Choose a template"
 msgstr "Bir kalıp seçin"
 
-#: src/ResourceResting.php:582
+#: templates/resourceresting_choice.html.twig:37
 msgid "Choosing the intercontrat"
 msgstr "Ara sözleşme seçimi"
 
@@ -686,8 +667,8 @@ msgstr "Kapat"
 #: src/BudgetVolume.php:93 src/BudgetVolume.php:145 src/Rank.php:103
 #: src/Rank.php:151 src/ProfessionLine.php:100 src/ProfessionLine.php:152
 #: src/BudgetType.php:93 src/BudgetType.php:145 src/ProfessionCategory.php:102
-#: src/ProfessionCategory.php:154 src/Profession.php:101
-#: src/Profession.php:220 src/ContractNature.php:99 src/ContractNature.php:184
+#: src/ProfessionCategory.php:154 src/Profession.php:101 src/Profession.php:220
+#: src/ContractNature.php:99 src/ContractNature.php:184
 #: report/professionwithoutvolume/professionwithoutvolume.php:313
 #: report/professionwithoutvolume/professionwithoutvolume.php:318
 #: report/professionwithoutcost/professionwithoutcost.php:307
@@ -697,13 +678,28 @@ msgstr "Kapat"
 msgid "Code"
 msgstr "Kod"
 
-#: src/ImportColumn.php:66
+#: src/ImportColumn.php:67
 msgid "Column"
 msgid_plural "Columns"
 msgstr[0] "Sütun"
 msgstr[1] "Sütunlar"
 
-#: src/LinkAd.php:456 src/LinkAd.php:718
+#: templates/cost_form.html.twig:40
+msgid "Comment"
+msgid_plural "Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/reportconfig_form.html.twig:34
+#: templates/employment_form.html.twig:84 templates/task_form.html.twig:75
+#: templates/resourceholiday_form.html.twig:51
+#: templates/import_form.html.twig:34
+#: templates/resourceresting_form.html.twig:60
+#: templates/choice_helpdesk_needs.html.twig:37
+msgid "Comments"
+msgstr ""
+
+#: src/LinkAd.php:539 templates/linkad_resource_form.html.twig:78
 msgid "Company"
 msgstr "Kuruluş"
 
@@ -713,7 +709,7 @@ msgstr "Kuruluş"
 msgid "Company name"
 msgstr "Kuruluş adı"
 
-#: src/ImportResource.php:691
+#: src/ImportResource.php:692
 msgid "Compare File with GLPI Resources"
 msgstr "Dosyayı GLPI kaynakları ile karşılaştır"
 
@@ -721,7 +717,7 @@ msgstr "Dosyayı GLPI kaynakları ile karşılaştır"
 msgid "Compare GLPI Resources with File"
 msgstr "GLPI kaynaklarını dosya ile karşılaştır"
 
-#: src/Choice.php:502
+#: src/Choice.php:468
 msgid "Computer and phone equipment needs"
 msgstr "Bilgisayar ve telefon aygıtı gereksinimleri"
 
@@ -733,10 +729,6 @@ msgstr "Bilgisayar ve telefon aygıtı gereksinimleri"
 msgid "Configure Imports"
 msgstr "İçe aktarmaları yapılandır"
 
-#: src/ImportResource.php:1589
-msgid "Configure a new import"
-msgstr "Yeni bir içe aktarma yapılandırın"
-
 #: src/Menu.php:342
 msgid "Confirm the purge of all imported resources?"
 msgstr "İçe aktarılmış tüm kaynakların silineceğini onaylıyor musunuz?"
@@ -747,7 +739,13 @@ msgid_plural "Contract natures"
 msgstr[0] "Sözleşme içeriği"
 msgstr[1] "Sözleşme içerikleri"
 
-#: src/Contracttypeprofile.php:67
+#: templates/linkad_resource_form.html.twig:83
+msgid "Contract type"
+msgid_plural "Contract types"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Contracttypeprofile.php:96
 msgid "Contract type authorization"
 msgstr "Kişi türü kimlik doğrulaması"
 
@@ -755,8 +753,8 @@ msgstr "Kişi türü kimlik doğrulaması"
 msgid "ContractType"
 msgstr "Sözleşme türü"
 
-#: src/Resource_Change.php:1770 src/Checklist.php:352 src/Checklist.php:740
-#: src/ResourceBadge.php:499
+#: src/Checklist.php:352 src/ResourceBadge.php:491
+#: templates/checklist_from_resources.html.twig:66
 msgid "Create a end treatment ticket"
 msgstr "Onarım sonu destek kaydı ekle"
 
@@ -768,7 +766,7 @@ msgstr "Ayrılma ile bir destek kaydı oluştur"
 msgid "Create a ticket with departure and instructions"
 msgstr "Ayrılma ile bir destek kaydı ve yönergeleri oluştur"
 
-#: src/Checklist.php:450 src/LinkAd.php:214
+#: src/Checklist.php:450
 msgid "Create checklists"
 msgstr "Kontrol listeleri oluştur"
 
@@ -778,7 +776,7 @@ msgstr ""
 "Destek kaydının kapatılabilmesi için LDAP üzerindeki kullanıcı hesabını "
 "ekleyin ya da silin"
 
-#: src/LinkAd.php:536
+#: src/LinkAd.php:345
 msgctxt "button"
 msgid "Create user in AD"
 msgstr "Aktif dizin kullanıcısı ekle"
@@ -792,56 +790,23 @@ msgstr "Kategori oluşturma"
 msgid "Creation report of the human resource"
 msgstr "İnsan kaynaklarına rapor oluşturulması"
 
-#: src/Resource_Change.php:325 src/Resource_Change.php:1211
+#: src/Resource_Change.php:337
 msgid "Current access profile of the resource"
 msgstr "Kaynağın geçerli erişim profili"
 
-#: src/Resource_Change.php:465 src/Resource_Change.php:1281
+#: src/Resource_Change.php:404
 msgid "Current agency of the resource"
 msgstr "Kaynağın geçerli temsilcisi"
 
-#: src/Resource_Change.php:662 src/Resource_Change.php:1351
-msgid "Current company of the resource"
-msgstr "Kaynağın geçerli kuruluşu"
-
-#: src/Resource_Change.php:410 src/Resource_Change.php:1258
+#: src/Resource_Change.php:372
 msgid "Current contract type of the resource"
 msgstr "Kaynağın geçerli sözleşme türü"
-
-#: src/Resource_Change.php:708 src/Resource_Change.php:1372
-msgid "Current department of the resource"
-msgstr "Kaynağın geçerli bölümü"
-
-#: src/Resource_Change.php:1323
-msgid "Current departure date of the resource"
-msgstr "Kaynağın geçerli ayrılma tarihi"
 
 #: src/Resource.php:3864
 msgid "Current entity"
 msgstr "Geçerli birim"
 
-#: src/Resource_Change.php:1318
-msgid "Current firstname of the resource"
-msgstr "Kaynağın geçerli adı"
-
-#: src/Resource_Change.php:859 src/Resource_Change.php:1426
-msgid "Current function of the resource"
-msgstr "Kaynağın geçerli işlevi"
-
-#: src/Resource_Change.php:1313 src/Resource_Change.php:1337
-msgid "Current name of the resource"
-msgstr "Kaynağın geçerli adı"
-
-#: src/Resource_Change.php:808 src/Resource_Change.php:1408
-msgid "Current role of the resource"
-msgstr "Kaynağın geçerli rolü"
-
-#: src/Resource_Change.php:757 src/Resource_Change.php:1390
-msgid "Current service of the resource"
-msgstr "Kaynağın geçerli hizmeti"
-
-#: src/Resource_Change.php:505 src/Resource_Change.php:908
-#: src/Resource_Change.php:1286 src/Resource_Change.php:1443
+#: src/Resource_Change.php:426
 msgid "Current team of the resource"
 msgstr "Kaynağın geçerli takımı"
 
@@ -853,11 +818,7 @@ msgstr "Veri türü bulunamadı"
 msgid "Data changed"
 msgstr "Veriler değişti"
 
-#: src/ImportResource.php:1930
-msgid "Data from file"
-msgstr "Dosyadaki veriler"
-
-#: src/ImportColumn.php:75
+#: src/ImportColumn.php:76
 msgid "Date"
 msgstr "Tarih"
 
@@ -867,7 +828,7 @@ msgstr "Tarih"
 msgid "Date agreement candidate"
 msgstr "Aday anlaşma tarihi"
 
-#: src/Resource_Change.php:453
+#: src/Resource_Change.php:397
 msgid "Date of contract type change"
 msgstr "Sözleşme türü değişikliği tarihi"
 
@@ -879,11 +840,11 @@ msgstr "Son sözleşme türünün tarihi"
 msgid "Date of last location"
 msgstr "Son çalıştığı yerin tarihi"
 
-#: src/Resource_Change.php:532
+#: src/Resource_Change.php:442
 msgid "Date of location change"
 msgstr "Konum değişikliği tarihi"
 
-#: src/ImportColumn.php:73
+#: src/ImportColumn.php:74
 msgid "Decimal"
 msgstr "Ondalık"
 
@@ -909,22 +870,21 @@ msgstr "Değişiklik bildirin"
 msgid "Declare a departure"
 msgstr "Ayrılış bildirin"
 
-#: src/ResourceHoliday.php:310 src/ResourceHoliday.php:313
-#: src/ResourceHoliday.php:341 src/ResourceHoliday.php:403
+#: src/ResourceHoliday.php:308 src/ResourceHoliday.php:335
+#: templates/resourceholiday_form.html.twig:57
 msgid "Declare a forced holiday"
 msgstr "Zorunlu tatil bildirin"
 
-#: src/Employment.php:431
+#: templates/employment_add_form.html.twig:30
 msgid "Declare a new employment"
 msgstr "Yeni bir iş bildirin"
 
-#: src/ResourceResting.php:308 src/ResourceResting.php:311
-#: src/ResourceResting.php:353 src/ResourceResting.php:435
+#: src/ResourceResting.php:307 src/ResourceResting.php:338
+#: templates/resourceresting_form.html.twig:66
 msgid "Declare a non contract period"
 msgstr "Sözleşmesiz dönemi bildirin"
 
-#: src/ConfigHabilitation.php:108 src/ConfigHabilitation.php:295
-#: src/ConfigHabilitation.php:296
+#: src/ConfigHabilitation.php:107 src/ConfigHabilitation.php:282
 msgid "Declare a super habilitation"
 msgstr "Süper güç ata"
 
@@ -951,8 +911,7 @@ msgstr "Bir iş bildirin"
 msgid "Declared as leaving"
 msgstr "Ayrılacağı bildirildi"
 
-#: src/ResourceResting.php:318 src/ResourceResting.php:321
-#: src/ResourceResting.php:487
+#: src/ResourceResting.php:312 src/ResourceResting.php:371
 msgid "Declaring the end of non contract periods"
 msgstr "Sözleşmesiz dönemlerin sonu bildiriliyor"
 
@@ -968,10 +927,6 @@ msgstr "Varsayılan sözleşme kalıbı seçildi"
 msgid "Default password"
 msgstr "Varsayılan parola"
 
-#: src/Resource_Change.php:1559
-msgid "Define entity & ticket category for each change action"
-msgstr "Her değişiklik işlemi için birimi ve bilet kategorisini tanımlayın"
-
 #: src/TicketCategory.php:139
 msgid "Define ticket category from checklist creation"
 msgstr "Kontrol listesi oluşturmadan bilet kategorisini tanımlayın"
@@ -982,37 +937,30 @@ msgid_plural "Degrees Groups"
 msgstr[0] "Derece grubu"
 msgstr[1] "Derece grupları"
 
-#: src/ImportResource.php:1522
-msgid "Delete file"
-msgstr "Dosyayı sil"
-
 #: templates/reportconfig_reports.html.twig:71
 #: templates/ticketcategory_config.html.twig:44
+#: templates/resourceholiday_form.html.twig:79
+#: templates/resourceresting_form.html.twig:88
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Kalıcı olarak sil"
-
-#: src/ImportResource.php:2867
-msgid "Deleted resource"
-msgstr "Kaynak silindi"
 
 #: src/Adconfig.php:184
 msgid "Deletion category"
 msgstr "Kategori silme"
 
-#: src/Adconfig.php:285 src/LinkAd.php:403 src/LinkAd.php:719
-#: src/Resource.php:180 src/Department.php:56
+#: src/Adconfig.php:285 src/LinkAd.php:540 src/Resource.php:180
+#: src/Department.php:56 templates/linkad_resource_form.html.twig:49
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] "Bölüm"
 msgstr[1] "Bölümler"
 
 #: src/RuleContracttypeHidden.php:290 src/RuleContracttypeReadonly.php:331
-#: src/Adconfig.php:291 src/Resource_Leaving.php:165 src/Config.php:141
-#: src/Resource_Change.php:598 src/Checklist.php:1189
-#: src/Resource_Item.php:985 src/Resource_Item.php:1509
+#: src/Adconfig.php:291 src/Config.php:141 src/Resource_Change.php:474
+#: src/Checklist.php:1104 src/Resource_Item.php:985 src/Resource_Item.php:1509
 #: src/Resource_Item.php:1519 src/RuleContracttype.php:287
-#: src/Dashboard.php:177 src/LinkAd.php:721 src/Resource.php:182
+#: src/Dashboard.php:177 src/LinkAd.php:542 src/Resource.php:182
 #: src/Resource.php:506 src/Resource.php:2699 src/Resource.php:3673
 #: src/ResourcePDF.php:107 src/Recap.php:233 src/Directory.php:232
 #: src/NotificationTargetResource.php:474
@@ -1032,6 +980,7 @@ msgstr[1] "Bölümler"
 #: report/checkmissingN0group/checkmissingN0group.php:219
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:267
 #: templates/wizard_secondstep_resource.html.twig:681
+#: templates/resource_leaving_form.html.twig:38
 msgid "Departure date"
 msgstr "Ayrılma tarihi"
 
@@ -1045,7 +994,10 @@ msgid "Descending"
 msgstr "Azalan"
 
 #: front/modalavailablevariable.php:42 src/Config.php:142
+#: templates/checklistconfig_form.html.twig:45
 #: templates/wizard_secondstep_resource.html.twig:738
+#: templates/linkad_form.html.twig:42 templates/checklist_form.html.twig:42
+#: templates/choice_helpdesk_needs.html.twig:36
 msgid "Description"
 msgstr "Açıklama"
 
@@ -1063,25 +1015,25 @@ msgstr "Oluşturulurken kullanıcının ekleneceği OU"
 msgid "Destination OU on user deactivation"
 msgstr "Etkisizleştirildiğinde kullanıcının taşınacağı OU"
 
-#: src/ResourceResting.php:355 src/NotificationTargetResource.php:1264
+#: src/ResourceResting.php:340 src/NotificationTargetResource.php:1264
 #: src/NotificationTargetResource.php:1685
 msgid "Detail of non contract period"
 msgstr "Sözleşmesiz dönem ayrıntıları"
 
 #: src/NotificationTargetResource.php:1308
-#: src/NotificationTargetResource.php:1695 src/ResourceHoliday.php:343
+#: src/NotificationTargetResource.php:1695 src/ResourceHoliday.php:337
 msgid "Detail of the forced holiday"
 msgstr "Zorunlu tatil ayrıntıları"
 
-#: src/ImportResource.php:741 src/ImportResource.php:2263
+#: src/ImportResource.php:719
 msgid "Different to GLPI"
 msgstr "GLPI ile aynı değil"
 
-#: src/Menu.php:453
+#: src/Menu.php:408
 msgid "Directory"
 msgstr "Dizin"
 
-#: src/LinkAd.php:561
+#: src/LinkAd.php:357
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr "Aktif dizin kullanıcısını devre dışı bırak"
@@ -1102,7 +1054,7 @@ msgstr "Bir kaynakta iki ek güvenlik alanı görüntülensin"
 msgid "Displaying the security block on the resource"
 msgstr "Kaynak üzerindeki güvenlik bloğu görüntüleniyor"
 
-#: src/Task.php:1105
+#: src/Task.php:1047
 msgid "Dissociate"
 msgstr "Ayrıştır"
 
@@ -1123,18 +1075,18 @@ msgstr "İade formunu indir"
 msgid "Dropdown management"
 msgstr "Açılan kutu yönetimi"
 
-#: src/Task.php:1109
+#: src/Task.php:1051
 msgctxt "button"
 msgid "Duplicate"
 msgstr "Çoğalt"
 
-#: src/ImportColumn.php:322
+#: src/ImportColumn.php:290
 msgid "Edit a column"
 msgstr "Bir sütunu düzenle"
 
-#: src/Task.php:383 src/Task.php:645 src/NotificationTargetResource.php:413
+#: src/Task.php:384 src/NotificationTargetResource.php:413
 #: src/NotificationTargetResource.php:1616
-#: src/NotificationTargetResource.php:1724
+#: src/NotificationTargetResource.php:1724 templates/task_form.html.twig:65
 msgid "Effective duration"
 msgstr "Etkin süre"
 
@@ -1144,7 +1096,7 @@ msgstr "Etkin süre"
 msgid "Effective leaving date"
 msgstr "Gerçek ayrılma tarihi"
 
-#: src/Choice.php:391
+#: templates/choice_helpdesk_needs.html.twig:32
 msgid "Element(s) to be affected"
 msgstr "Etkilenen bileşenler"
 
@@ -1154,15 +1106,16 @@ msgid_plural "Employees"
 msgstr[0] "Çalışan"
 msgstr[1] "Çalışanlar"
 
-#: hook.php:1458 src/Employer.php:57 src/Employment.php:229
-#: src/Employment.php:311 src/Department.php:84 src/Department.php:117
+#: hook.php:1458 src/Employer.php:57 src/Employment.php:230
+#: src/Department.php:84 src/Department.php:117
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
+#: templates/employment_form.html.twig:38
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşveren"
 msgstr[1] "İşverenler"
 
-#: src/Profile.php:232 src/Employment.php:71
+#: src/Profile.php:232 src/Employment.php:72
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:101
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:107
 msgid "Employment"
@@ -1170,12 +1123,13 @@ msgid_plural "Employments"
 msgstr[0] "İş"
 msgstr[1] "İşler"
 
-#: src/Menu.php:295 src/Menu.php:476
+#: src/Menu.php:295 src/Menu.php:431
 msgid "Employment management"
 msgstr "İş yönetimi"
 
-#: src/Employment.php:222 src/Employment.php:349 src/EmploymentState.php:55
+#: src/Employment.php:223 src/EmploymentState.php:55
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:112
+#: templates/employment_form.html.twig:61
 msgid "Employment state"
 msgid_plural "Employment states"
 msgstr[0] "İş durumu"
@@ -1202,6 +1156,13 @@ msgstr "İş / bütçe yönetimi"
 #: src/Resource.php:2701 templates/wizard_secondstep_resource.html.twig:685
 msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
+
+#: templates/employment_form.html.twig:73 templates/budget_form.html.twig:68
+#: templates/resourceholiday_form.html.twig:49 templates/cost_form.html.twig:58
+#: templates/resourceresting_form.html.twig:49
+#: templates/resourceresting_end_date.html.twig:33
+msgid "End date"
+msgstr ""
 
 #: src/Resource.php:1517
 msgid "End date was not completed. Please try again."
@@ -1263,7 +1224,7 @@ msgstr "Dosya gönderilemedi"
 msgid "Failed to send the file (probably too large)"
 msgstr "Dosya gönderilemedi (çok büyük olabilir)"
 
-#: src/Resource.php:5459 src/Resource.php:5471
+#: src/Resource.php:5501 src/Resource.php:5513
 msgid "Female"
 msgstr "Dişi"
 
@@ -1271,18 +1232,9 @@ msgstr "Dişi"
 msgid "Field mapping"
 msgstr "Alan eşleşmesi"
 
-#: src/ImportResource.php:1442
-msgid "File not found"
-msgstr "Dosya bulunamadı"
-
 #: templates/datatable.html.twig:137
 msgid "Filter"
 msgstr "Süz"
-
-#: src/ImportResource.php:2555
-#, php-format
-msgid "Find in file with %s identifier"
-msgstr "Dosyada %s belirteci ile bul"
 
 #: src/Adconfig.php:186
 msgid "First Form"
@@ -1303,8 +1255,8 @@ msgid ""
 msgstr ""
 "Adın ilk harfi (büyük) + Soyadın ilk harfi (küçük) + geliş tarihi (GGAAYYYY)"
 
-#: src/Resource_Change.php:584 src/LinkAd.php:431 src/LinkAd.php:708
-#: src/Resource.php:174
+#: src/Resource_Change.php:466 src/LinkAd.php:529 src/Resource.php:174
+#: templates/linkad_resource_form.html.twig:62
 msgid "Firstname"
 msgstr "Ad"
 
@@ -1318,7 +1270,7 @@ msgstr "Zorunlu tatil kaynağa bildirildi"
 
 #: src/NotificationTargetResource.php:1306
 #: src/NotificationTargetResource.php:1694 src/Menu.php:251
-#: src/ResourceHoliday.php:298
+#: src/ResourceHoliday.php:299
 msgid "Forced holiday management"
 msgstr "Zorunlu tatil yönetimi"
 
@@ -1326,11 +1278,11 @@ msgstr "Zorunlu tatil yönetimi"
 msgid "Format password"
 msgstr "Parola biçimi"
 
-#: src/ImportResource.php:773
+#: src/ImportResource.php:726
 msgid "Found in file with second level id"
 msgstr "Dosyada ikinci düzey bir kimlik ile bulundu"
 
-#: src/ImportResource.php:769
+#: src/ImportResource.php:725
 msgid "Found in the file with a top level id"
 msgstr "Dosyada birinci düzey bir kimlik ile bulundu"
 
@@ -1344,7 +1296,7 @@ msgid_plural "Functions"
 msgstr[0] "İşlev"
 msgstr[1] "İşlevler"
 
-#: src/Config.php:155 src/Choice.php:519
+#: src/Config.php:155 src/Choice.php:470
 msgid "Furnitures needs"
 msgstr "Mobilya gereksinimleri"
 
@@ -1358,7 +1310,7 @@ msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 msgid "Gender"
 msgstr "Cinsiyet"
 
-#: src/Checklistconfig.php:359
+#: src/Checklistconfig.php:337
 msgid "Generate a rule"
 msgstr "Bir kural oluştur"
 
@@ -1366,9 +1318,13 @@ msgstr "Bir kural oluştur"
 msgid "Generate resources"
 msgstr "Kaynakları oluşturun"
 
-#: src/Resource_Leaving.php:163
+#: templates/resource_leaving_form.html.twig:35
 msgid "Give a leaving order"
 msgstr "Bir ayrılma emri ver"
+
+#: templates/task_form.html.twig:58
+msgid "Group"
+msgstr ""
 
 #: src/Habilitation.php:58 src/Metademand.php:181
 #: src/ResourceHabilitation.php:66
@@ -1412,9 +1368,9 @@ msgid_plural "Human Resources"
 msgstr[0] "İnsan kaynağı"
 msgstr[1] "İnsan kaynakları"
 
-#: src/Profile.php:177 src/Employment.php:184 src/Employment.php:243
-#: src/Employment.php:378 src/Resource.php:119 src/TaskPlanning.php:70
-#: src/Menu.php:361
+#: src/Profile.php:177 src/Employment.php:185 src/Employment.php:244
+#: src/Resource.php:119 src/TaskPlanning.php:71 src/Menu.php:361
+#: templates/employment_form.html.twig:80
 msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "İnsan kaynağı"
@@ -1424,15 +1380,11 @@ msgstr[1] "İnsan kaynakları"
 msgid "IT needs identified"
 msgstr "Belirlenen bilişim gereksinimleri"
 
-#: src/ImportResource.php:733 src/ImportResource.php:2261
+#: src/ImportResource.php:717
 msgid "Identical to GLPI"
 msgstr "GLPI ile aynı"
 
-#: src/ImportResource.php:924
-msgid "Identification"
-msgstr "Belirleme"
-
-#: src/ImportColumn.php:231 src/ImportColumn.php:370
+#: src/ImportColumn.php:254 templates/importcolumn_form.html.twig:52
 msgid "Identifiers"
 msgstr "Belirteçler"
 
@@ -1442,8 +1394,7 @@ msgstr "başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
 
 #: src/Metademand.php:150
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
@@ -1458,8 +1409,7 @@ msgstr ""
 
 #: src/Metademand.php:183
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
@@ -1467,13 +1417,13 @@ msgstr ""
 msgid "If yes, the resource will be declared as leaving"
 msgstr "Bu seçenek etkinleştirildiğinde, kaynak ayrılıyor olarak bildirilir"
 
-#: src/Import.php:73 src/ResourceImport.php:63
+#: src/Import.php:72 src/ResourceImport.php:63
 msgid "Import"
 msgid_plural "Imports"
 msgstr[0] "İçe aktarma"
 msgstr[1] "İçe aktarmalar"
 
-#: src/Menu.php:527
+#: src/Menu.php:482
 msgid "Import configuration"
 msgstr "İçe aktarma yapılandırması"
 
@@ -1481,16 +1431,14 @@ msgstr "İçe aktarma yapılandırması"
 msgid "Import external"
 msgstr "Dış verileri içe aktar"
 
-#: src/ImportResource.php:1491
-msgid "Import file"
-msgstr "Dosyayı içe aktar"
-
 #: src/Menu.php:112 src/Menu.php:346
 msgid "Import resources"
 msgstr "İçe aktarma kaynakları"
 
-#: src/Checklistconfig.php:124 src/Checklistconfig.php:198
-#: src/Checklist.php:582 src/Checklist.php:814 src/LinkAd.php:287
+#: src/Checklistconfig.php:123 templates/checklistconfig_form.html.twig:34
+#: templates/linkad_form.html.twig:38
+#: templates/checklist_from_resources.html.twig:122
+#: templates/checklist_form.html.twig:38
 msgid "Important"
 msgstr "Önemli"
 
@@ -1513,20 +1461,22 @@ msgstr "Şu bileşende"
 msgid "Informant of leaving"
 msgstr "Ayrılma bilgileri"
 
+#: templates/reportconfig_form.html.twig:39
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/ResourceCard.php:151
 msgid "Information, this resource is not linked to a user"
 msgstr "Bilgi, bu kaynak bir kullanıcı ile ilişkilendirilmemiş"
-
-#: src/ImportResource.php:928
-msgid "Informations from file"
-msgstr "Dosyadaki bilgiler"
 
 #: src/NotificationTargetResource.php:1169
 #: src/NotificationTargetResource.php:1218
 msgid "Informations of the created user"
 msgstr "Oluşturulan bu kullanıcı hakkındaki bilgiler"
 
-#: src/ImportColumn.php:72
+#: src/ImportColumn.php:73
 msgid "Integer"
 msgstr "Tam sayı"
 
@@ -1544,6 +1494,16 @@ msgstr "Envanter"
 msgid "Is linked to a contract"
 msgstr "sözleşmeli"
 
+#: templates/checklistconfig_form.html.twig:43
+msgid "Item"
+msgid_plural "Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/checklistconfig_form.html.twig:40
+msgid "Itemtype"
+msgstr ""
+
 #: src/LDAP.php:69
 msgid "LDAP"
 msgstr "LDAP"
@@ -1560,7 +1520,7 @@ msgstr "Son çalıştığı yer"
 msgid "Lastname"
 msgstr "Soyad"
 
-#: src/Resource_Leaving.php:56
+#: src/Resource_Leaving.php:57
 msgid "Leaving"
 msgstr "Ayrılıyor"
 
@@ -1580,20 +1540,21 @@ msgstr[1] "Ayrılma nedenleri"
 msgid "Leaving resource"
 msgstr "Ayrılan kaynak"
 
-#: src/Checklist.php:1182 src/Dashboard.php:75 src/Dashboard.php:189
+#: src/Checklist.php:1115 src/Dashboard.php:75 src/Dashboard.php:189
 #: src/NotificationTargetResource.php:574
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Ayrılan kaynak - kontrol listesi doğrulanmalıdır"
 
-#: src/ImportColumn.php:163
+#: src/ImportColumn.php:164
 msgid "Level 1 Identifier"
 msgstr "1. düzey belirteç"
 
-#: src/ImportColumn.php:164
+#: src/ImportColumn.php:165
 msgid "Level 2 Identifier"
 msgstr "2. düzey belirteç"
 
-#: src/Checklistconfig.php:200 src/Checklist.php:584 src/LinkAd.php:296
+#: templates/checklistconfig_form.html.twig:36
+#: templates/linkad_form.html.twig:40 templates/checklist_form.html.twig:40
 msgid "Link"
 msgstr "Bağlantı"
 
@@ -1621,7 +1582,7 @@ msgstr "Kontrol listesi girişi ile bağlantı kur"
 msgid "Link a checklist out"
 msgstr "Kontrol listesi çıkışı ile bağlantı kur"
 
-#: src/Checklist.php:964
+#: src/Checklist.php:849
 msgid "Link a task"
 msgstr "Bir göre ile ilişkilendir"
 
@@ -1633,7 +1594,7 @@ msgstr "Bağlantı üst istekleri"
 msgid "Link with metademand"
 msgstr "Metademand bağlantısı"
 
-#: src/Checklist.php:816 src/Checklist.php:1546
+#: src/Checklist.php:1392 templates/checklist_from_resources.html.twig:124
 msgid "Linked task"
 msgstr "Bağlantılı görev"
 
@@ -1643,26 +1604,30 @@ msgid_plural "List Employments / Resources"
 msgstr[0] "İş / kaynak listesi"
 msgstr[1] "İşler / kaynaklar listesi"
 
-#: src/Menu.php:309 src/Menu.php:480
+#: src/Menu.php:309 src/Menu.php:435
 msgid "List Employments / Resources"
 msgstr "İşleri / kaynakları listele"
 
-#: src/ResourceBadge.php:341
+#: templates/import_title.html.twig:30
+msgid "List of Imports"
+msgstr ""
+
+#: src/ResourceBadge.php:333
 msgid "List of badges"
 msgstr "Yaka kartı listesi"
 
-#: src/Menu.php:468 src/ResourceHoliday.php:318 src/ResourceHoliday.php:321
-#: src/ResourceHoliday.php:406
+#: src/Menu.php:423 src/ResourceHoliday.php:313
+#: templates/resourceholiday_form.html.twig:59
 msgid "List of forced holidays"
 msgstr "Zorunlu tatil günleri"
 
-#: src/ResourceResting.php:328 src/ResourceResting.php:331
-#: src/ResourceResting.php:438 src/ResourceResting.php:535 src/Menu.php:460
+#: src/ResourceResting.php:317 src/Menu.php:415
+#: templates/resourceresting_end_form.html.twig:61
+#: templates/resourceresting_form.html.twig:68
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:404
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:404
 #: src/NotificationTargetResource.php:1665
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
@@ -1675,6 +1640,10 @@ msgstr "Atanmış kaynaklarınızın listesi"
 msgid "Location"
 msgstr "Konum"
 
+#: templates/linkad_resource_form.html.twig:47
+msgid "Login"
+msgstr ""
+
 #: src/Adconfig.php:185
 msgid "Login Creation"
 msgstr "Oturum oluşturma"
@@ -1683,11 +1652,15 @@ msgstr "Oturum oluşturma"
 msgid "Long term contract"
 msgstr "Uzun dönemli sözleşme"
 
+#: templates/linkad_resource_form.html.twig:73
+msgid "Mail"
+msgstr ""
+
 #: src/Adconfig.php:192
 msgid "Mail Creation"
 msgstr "E-posta oluşturma"
 
-#: src/Resource.php:5458 src/Resource.php:5468
+#: src/Resource.php:5500 src/Resource.php:5510
 msgid "Male"
 msgstr "Erkek"
 
@@ -1695,7 +1668,7 @@ msgstr "Erkek"
 msgid "Manage human resources"
 msgstr "İnsan kaynakları yönetimi"
 
-#: src/Resource_Change.php:237 src/Resource_Change.php:1185
+#: src/Resource_Change.php:259
 msgid "Manager for the current resource"
 msgstr "Geçerli kaynağın sorumlusu"
 
@@ -1703,8 +1676,7 @@ msgstr "Geçerli kaynağın sorumlusu"
 msgid "Manager of the team"
 msgstr "Takım yöneticisi"
 
-#: src/Resource_Change.php:91 src/Resource_Change.php:1499
-#: src/Resource_Change.php:1560
+#: src/Resource_Change.php:91
 msgid "Managing change actions"
 msgstr "Değişiklik işlemleri yönetimi"
 
@@ -1712,11 +1684,11 @@ msgstr "Değişiklik işlemleri yönetimi"
 msgid "Mandatory when creating the resource"
 msgstr "Kaynak oluşturmak için zorunludur"
 
-#: src/Checklist.php:950
+#: src/Checklist.php:835
 msgid "Mark as finished"
 msgstr "Tamamlanmış olarak işaretle"
 
-#: src/Checklist.php:957
+#: src/Checklist.php:842
 msgid "Mark as unfinished"
 msgstr "Tamamlanmamış olarak işaretle"
 
@@ -1727,7 +1699,7 @@ msgstr "Tamamlanmamış olarak işaretle"
 msgid "Matricule"
 msgstr "Kayıt defteri"
 
-#: src/ConfigHabilitation.php:239 src/ResourceBadge.php:224
+#: src/ConfigHabilitation.php:247 src/ResourceBadge.php:235
 msgid "Meta-demands linked"
 msgstr "Bağlantılı meta-demands"
 
@@ -1766,93 +1738,55 @@ msgstr "İlgili kullanıcı konumunda değişiklik"
 msgid "Modified fields"
 msgstr "Değiştirilen alanlar"
 
-#: src/LinkAd.php:548
+#: src/LinkAd.php:351
 msgctxt "button"
 msgid "Modify user in AD"
 msgstr "Aktif dizin kullanıcısını düzenle"
 
-#: src/Resource_Change.php:570 src/Resource_Change.php:632
+#: src/Resource_Change.php:459 templates/employment_form.html.twig:32
+#: templates/checklistconfig_form.html.twig:32
+#: templates/linkad_resource_form.html.twig:57
+#: templates/budget_form.html.twig:32 templates/task_form.html.twig:38
+#: templates/import_form.html.twig:32 templates/importcolumn_form.html.twig:40
+#: templates/cost_form.html.twig:35 templates/task_item_form.html.twig:37
+#: templates/linkad_form.html.twig:36
+#: templates/checklist_from_resources.html.twig:121
+#: templates/checklist_form.html.twig:36
 msgid "Name"
 msgstr "Ad"
 
-#: src/Choice.php:64
+#: src/Choice.php:65
 msgid "Need"
 msgid_plural "Needs"
 msgstr[0] "Gereksinim"
 msgstr[1] "Gereksinimler"
 
-#: src/Resource_Change.php:978
-msgid "New Application to add to the resource"
-msgstr "Kaynağa eklenecek yeni uygulama"
-
-#: src/Resource_Change.php:367 src/Resource_Change.php:1245
+#: src/Resource_Change.php:350
 msgid "New access profile of the resource"
 msgstr "Kaynağın yeni erişim profili"
 
-#: src/ImportResource.php:1032 src/ImportResource.php:2883
-msgid "New resource"
-msgstr "Yeni kaynak"
-
-#: src/Checklist.php:1184 src/Dashboard.php:70 src/Dashboard.php:141
+#: src/Checklist.php:1116 src/Dashboard.php:70 src/Dashboard.php:141
 #: src/NotificationTargetResource.php:567
 msgid "New resource - checklist needs to verificated"
 msgstr "Yeni kaynak - kontrol listesi doğrulanmalıdır"
 
-#: src/Resource_Change.php:474 src/Resource_Change.php:1283
+#: src/Resource_Change.php:410
 msgid "New resource agency"
 msgstr "Yeni kaynak temsilcisi"
 
-#: src/Resource_Change.php:676 src/Resource_Change.php:1356
-msgid "New resource company"
-msgstr "Yeni kaynak kuruluşu"
-
-#: src/Resource_Change.php:722 src/Resource_Change.php:1377
-msgid "New resource department"
-msgstr "Yeni kaynak bölümü"
-
-#: src/Resource_Change.php:1325
-msgid "New resource departure date"
-msgstr "Yeni kaynak ayrılma tarihi"
-
-#: src/Resource_Change.php:1320
-msgid "New resource firstname"
-msgstr "Yeni kaynak adı"
-
-#: src/Resource_Change.php:873 src/Resource_Change.php:920
-#: src/Resource_Change.php:1431
-msgid "New resource function"
-msgstr "Yeni kaynak işlevi"
-
-#: src/Resource_Change.php:246 src/Resource_Change.php:1187
+#: src/Resource_Change.php:263
 msgid "New resource manager"
 msgstr "Yeni kaynak yöneticisi"
 
-#: src/Resource_Change.php:1315 src/Resource_Change.php:1339
-msgid "New resource name"
-msgstr "Yeni kaynak adı"
-
-#: src/Resource_Change.php:822 src/Resource_Change.php:1413
-msgid "New resource role"
-msgstr "Yeni kaynak rolü"
-
-#: src/Resource_Change.php:290
+#: src/Resource_Change.php:285
 msgid "New resource sales manager"
 msgstr "Yeni kaynak satış sorumlusu"
 
-#: src/Resource_Change.php:771 src/Resource_Change.php:1395
-msgid "New resource service"
-msgstr "Yeni kaynak hizmeti"
-
-#: src/Resource_Change.php:517 src/Resource_Change.php:1291
-#: src/Resource_Change.php:1448
+#: src/Resource_Change.php:433
 msgid "New resource team"
 msgstr "Yeni kaynak takımı"
 
-#: src/Resource_Change.php:1200
-msgid "New sales manager for the resource"
-msgstr "Kaynağın yeni satış sorumlusu"
-
-#: src/Resource_Change.php:423 src/Resource_Change.php:1263
+#: src/Resource_Change.php:379
 msgid "New type of contract"
 msgstr "Yeni sözleşme türü"
 
@@ -1877,24 +1811,20 @@ msgstr "Sonraki adım"
 msgid "No"
 msgstr "Hayır"
 
-#: src/ImportColumn.php:162
+#: src/ImportColumn.php:163
 msgid "No Identifier"
 msgstr "Belirteç yok"
-
-#: src/ImportResource.php:2840
-msgid "No Imports"
-msgstr "Herhangi bir içe aktarma yok"
 
 #: front/resourcebadge.form.php:88 front/confighabilitation.form.php:89
 #: front/confighabilitation.form.php:110
 msgid "No advanced request found"
 msgstr "Henüz gelişmiş bir istek yok"
 
-#: src/Checklist.php:1563
+#: src/Checklist.php:1409
 msgid "No checklist found"
 msgstr "Henüz bir kontrol listesi yok"
 
-#: src/ImportColumn.php:206
+#: src/ImportColumn.php:209
 msgid "No columns for this import"
 msgstr "Bu içe aktarmada herhangi bir sütun yok"
 
@@ -1904,27 +1834,23 @@ msgstr ""
 "Herhangi bir güç düzeyi olmadığından bu kaynak için bir süper güç "
 "ekleyemezsiniz."
 
-#: src/ImportResource.php:1588
-msgid "No imports configured"
-msgstr "Henüz bir içe aktarma yapılandırılmamış"
-
 #: report/budgetsummary/budgetsummary.php:169
 #: report/checkgroup/checkgroup.php:224 templates/datatable.html.twig:64
 #: templates/datatable.html.twig:361
 msgid "No results found"
 msgstr "Herhangi bir sonuç bulunamadı"
 
-#: src/ResourceResting.php:62
+#: src/ResourceResting.php:63
 msgid "Non contract period"
 msgid_plural "Non contract periods"
 msgstr[0] "Sözleşmesiz dönem"
 msgstr[1] "Sözleşmesiz dönemler"
 
-#: src/ResourceResting.php:120
+#: src/ResourceResting.php:121
 msgid "Non contract period declaration of a resource performed"
 msgstr "Kaynağa sözleşmesiz dönemin başladığı bildirildi"
 
-#: src/Profile.php:214 src/ResourceResting.php:295
+#: src/Profile.php:214 src/ResourceResting.php:297
 #: src/NotificationTargetResource.php:1258
 #: src/NotificationTargetResource.php:1684 src/Menu.php:239
 msgid "Non contract period management"
@@ -1936,23 +1862,19 @@ msgstr[1] "Sözleşmesiz dönemler yönetimi"
 msgid "Not defined"
 msgstr "Belirtilmemiş"
 
-#: src/Task.php:947 src/Task.php:988
+#: src/Task.php:889 src/Task.php:930
 msgid "Not finished tasks"
 msgstr "Bitmemiş görevler"
 
-#: src/ImportResource.php:737 src/ImportResource.php:2265
+#: src/ImportResource.php:718
 msgid "Not in GLPI"
 msgstr "GLPI üzerinde yok"
 
-#: src/ImportResource.php:2546
-msgid "Not in file"
-msgstr "Dosyada yok"
-
-#: src/ImportResource.php:777
+#: src/ImportResource.php:727
 msgid "Not in the file"
 msgstr "Dosyada yok"
 
-#: src/ReportConfig.php:422
+#: src/ReportConfig.php:382
 msgid "Notification configuration"
 msgstr "Bildirim ayarları"
 
@@ -1963,10 +1885,6 @@ msgstr "Bildirim geçmişi"
 #: front/resource.form.php:445
 msgid "Notification sent"
 msgstr "Bildirim gönderildi"
-
-#: src/ImportResource.php:2642
-msgid "Number of titles and values of tooltip doesn't match"
-msgstr "İpuçlarının başlıkları ile değerleri eşleşmiyor"
 
 #: src/RuleContracttypeHidden.php:380 src/RuleContracttypeReadonly.php:422
 #: src/RuleContracttype.php:342 src/Resource.php:882
@@ -1982,7 +1900,7 @@ msgstr "Gereksinimler sekmesinde, bölümler görüntülensin"
 msgid "One or more mandatory fields are empty."
 msgstr "Doldurulması zorunlu olan bir ya da birkaç alan boş."
 
-#: front/resource.form.php:611 src/Resource_Leaving.php:170
+#: front/resource.form.php:611 templates/resource_leaving_form.html.twig:42
 msgid "Order"
 msgstr "Sıra"
 
@@ -1990,12 +1908,12 @@ msgstr "Sıra"
 msgid "Order resources by"
 msgstr "Kaynak sıralaması"
 
-#: src/Config.php:115 src/Config.php:597 src/Notification.php:208
-#: src/Resource.php:184 src/Resource.php:5460 src/Resource.php:5474
+#: src/Config.php:115 src/Config.php:597 src/Notification.php:213
+#: src/Resource.php:184 src/Resource.php:5502 src/Resource.php:5516
 msgid "Other"
 msgstr "Diğer"
 
-#: src/Choice.php:528
+#: src/Choice.php:471
 msgid "Other needs"
 msgstr "Diğer gereksinimler"
 
@@ -2011,7 +1929,7 @@ msgstr "Diğer işlemler"
 msgid "Others declarations"
 msgstr "Diğer bildirimler"
 
-#: hook.php:597 src/Config.php:156 src/Choice.php:188
+#: hook.php:597 src/Config.php:156 src/Choice.php:189
 #: templates/wizard_fourstep_choice.html.twig:92
 msgid "Others needs"
 msgstr "Diğer gereksinimler"
@@ -2026,7 +1944,8 @@ msgstr "Parola oluşturma"
 msgid "Pay gap"
 msgstr "Ücret farkı"
 
-#: src/LinkAd.php:443 templates/wizard_secondstep_resource.html.twig:201
+#: templates/linkad_resource_form.html.twig:71
+#: templates/wizard_secondstep_resource.html.twig:201
 msgid "Phone"
 msgstr "Telefon"
 
@@ -2037,6 +1956,10 @@ msgstr "Fotoğraf"
 #: templates/wizard_fivestep_photo.html.twig:56
 msgid "Photo format : JPG"
 msgstr "Fotoğraf biçimi : JPG"
+
+#: templates/task_form.html.twig:56
+msgid "Planning"
+msgstr ""
 
 #: front/adconfig.form.php:47 front/config.form.php:74
 msgid "Please activate the plugin"
@@ -2064,13 +1987,13 @@ msgstr "Lütfen düzeltin: %s"
 #: ajax/pdfresource.php:89
 msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
-"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin "
-"olun"
+"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin olun"
 
-#: src/Resource_Change.php:224
+#: src/Resource_Change.php:226
 msgid "Please select a resource"
 msgstr "Lütfen bir kaynak seçin"
 
+#: templates/checklist_from_resources.html.twig:90
 #: templates/checklist_add_form.html.twig:38
 msgctxt "button"
 msgid "Post"
@@ -2092,10 +2015,11 @@ msgctxt "button"
 msgid "Previous"
 msgstr "Önceki"
 
-#: src/Budget.php:179 src/Budget.php:276 src/Employment.php:200
-#: src/Employment.php:324 src/Rank.php:115 src/Rank.php:163 src/Cost.php:146
-#: src/Cost.php:188 src/Cost.php:261 src/Profession.php:55
+#: src/Budget.php:178 src/Employment.php:201 src/Rank.php:115 src/Rank.php:163
+#: src/Cost.php:146 src/Cost.php:188 src/Profession.php:55
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:107
+#: templates/employment_form.html.twig:47 templates/budget_form.html.twig:46
+#: templates/cost_form.html.twig:46
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] "Meslek"
@@ -2137,16 +2061,17 @@ msgid "Quota"
 msgstr "Kota"
 
 #: src/ResourceSpeciality.php:104 src/ResourceSpeciality.php:182
-#: src/Budget.php:170 src/Budget.php:289 src/Employment.php:192
-#: src/Employment.php:336 src/Rank.php:56 src/Cost.php:152 src/Cost.php:196
-#: src/Cost.php:275
+#: src/Budget.php:169 src/Employment.php:193 src/Rank.php:56 src/Cost.php:152
+#: src/Cost.php:196 templates/employment_form.html.twig:54
+#: templates/budget_form.html.twig:53 templates/cost_form.html.twig:53
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Dilim"
 msgstr[1] "Dilimler"
 
-#: src/Employment.php:236 src/Employment.php:359 src/Recap.php:249
+#: src/Employment.php:237 src/Recap.php:249
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:110
+#: templates/employment_form.html.twig:68
 msgid "Ratio Employment / Budget"
 msgstr "İş / bütçe oranı"
 
@@ -2187,10 +2112,14 @@ msgstr "Kalan bütçe - iş (adet)"
 msgid "Remaining budget - employment (€)"
 msgstr "Kalan bütçe - iş (€)"
 
-#: src/ConfigHabilitation.php:110 src/ConfigHabilitation.php:303
-#: src/ConfigHabilitation.php:304
+#: src/ConfigHabilitation.php:109 src/ConfigHabilitation.php:287
 msgid "Remove a super habilitation"
 msgstr "Süper gücü geri al"
+
+#: templates/import_list_buttons.html.twig:37
+msgctxt "button"
+msgid "Remove an item"
+msgstr ""
 
 #: src/Config.php:656
 msgid "Remove habilitation when update resource"
@@ -2270,7 +2199,7 @@ msgstr "Verilen sözler raporu"
 msgid "Reported by"
 msgstr "Bildiren"
 
-#: src/ResourceBadge.php:277
+#: src/ResourceBadge.php:267
 msgid "Request new badge"
 msgstr "Yeni yaka kartı iste"
 
@@ -2290,11 +2219,11 @@ msgstr "Zorunlu alanlar"
 msgid "Required fields are not filled. Please try again."
 msgstr "Zorunlu alanlar doldurulmamış. Lütfen yeniden deneyin."
 
-#: src/Choice.php:480
+#: src/Choice.php:447
 msgid "Resend the declaration"
 msgstr "Duyuruyu yeniden gönder"
 
-#: src/Checklist.php:770
+#: templates/checklist_from_resources.html.twig:88
 msgid "Reset the checklist"
 msgstr "Kontrol listesini sıfırla"
 
@@ -2310,7 +2239,6 @@ msgstr[1] "İstifa nedenleri"
 msgid "Resignation date"
 msgstr "İstifa tarihi"
 
-#: src/ImportResource.php:890
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:84
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:89
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:94
@@ -2318,7 +2246,7 @@ msgstr "İstifa tarihi"
 msgid "Resource"
 msgstr "Kaynak"
 
-#: src/ImportColumn.php:230 src/ImportColumn.php:358
+#: src/ImportColumn.php:253 templates/importcolumn_form.html.twig:48
 msgid "Resource Attribute"
 msgstr "Kaynak özniteliği"
 
@@ -2326,7 +2254,7 @@ msgstr "Kaynak özniteliği"
 msgid "Resource column name not found"
 msgstr "Kaynak sütunu adı bulunamadı"
 
-#: src/Notification.php:207
+#: src/Notification.php:212
 msgid "Resource creation"
 msgstr "Kaynak oluşturma"
 
@@ -2334,8 +2262,8 @@ msgstr "Kaynak oluşturma"
 msgid "Resource files imports"
 msgstr "Kaynak dosyaları içe aktarmaları"
 
-#: hook.php:1467 src/RuleContracttypeHidden.php:274 src/Task.php:873
-#: src/Task.php:1301 src/RuleContracttypeReadonly.php:193
+#: hook.php:1467 src/RuleContracttypeHidden.php:274 src/Task.php:834
+#: src/Task.php:1243 src/RuleContracttypeReadonly.php:193
 #: src/RuleContracttypeReadonly.php:234 src/RuleContracttypeReadonly.php:264
 #: src/RuleContracttypeReadonly.php:315 src/Config.php:134 src/Config.php:506
 #: src/RuleContracttype.php:271 src/Resource.php:179 src/Resource.php:486
@@ -2386,7 +2314,7 @@ msgstr "Kaynak hacmi (adet)"
 msgid "Resource volume (€)"
 msgstr "Kaynak hacmi (€)"
 
-#: src/LinkAd.php:393
+#: templates/linkad_resource_form.html.twig:43
 msgid "Resources data"
 msgstr "Kaynak verileri"
 
@@ -2394,7 +2322,7 @@ msgstr "Kaynak verileri"
 msgid "Resources directory"
 msgstr "Kaynaklar dizini"
 
-#: src/Resource.php:5134
+#: src/Resource.php:5176
 msgid "Resources list"
 msgstr "Kaynak listesi"
 
@@ -2413,7 +2341,8 @@ msgstr "Ayrılmayacağı söylenen kaynaklar"
 
 #: src/RuleContracttypeHidden.php:318 src/Profile.php:207
 #: src/RuleContracttypeReadonly.php:359 src/Adconfig.php:293 src/Role.php:56
-#: src/RuleContracttype.php:311 src/LinkAd.php:506 src/LinkAd.php:715
+#: src/RuleContracttype.php:311 src/LinkAd.php:536
+#: templates/linkad_resource_form.html.twig:93
 msgid "Role"
 msgid_plural "Roles"
 msgstr[0] "Rol"
@@ -2437,7 +2366,7 @@ msgstr[1] "Roller"
 msgid "Sales manager"
 msgstr "Satış sorumlusu"
 
-#: src/Resource_Change.php:281 src/Resource_Change.php:1198
+#: src/Resource_Change.php:281
 msgid "Sales manager for the current resource"
 msgstr "Geçerli kaynağın satış sorumlusu"
 
@@ -2445,7 +2374,11 @@ msgstr "Geçerli kaynağın satış sorumlusu"
 msgid "Sales managers selection : only these users with these profiles"
 msgstr "Satış yöneticileri seçimi : Yalnız bu profillerdeki bu kullanıcılar"
 
-#: templates/reportconfig_reports.html.twig:61 templates/profile.html.twig:34
+#: templates/reportconfig_reports.html.twig:61
+#: templates/resourceresting_end_button.html.twig:30
+#: templates/choice_helpdesk_requirements.html.twig:46
+#: templates/profile.html.twig:34 templates/import_list_buttons.html.twig:32
+#: templates/profile_authorization_form.html.twig:44
 msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
@@ -2523,15 +2456,15 @@ msgstr "Ticari sorumluya uyarı gönder"
 msgid "Send an automatic notification on the \"declare an arrival\" form"
 msgstr "\"Bir başlama bildir\" formunda otomatik bildirim gönderilsin"
 
-#: src/ReportConfig.php:319 src/ReportConfig.php:427
+#: src/ReportConfig.php:387 templates/reportconfig_form.html.twig:60
 msgid "Send other notification"
 msgstr "Diğer bildirim gönderilsin"
 
-#: src/ReportConfig.php:315 src/ReportConfig.php:425
+#: src/ReportConfig.php:385 templates/reportconfig_form.html.twig:48
 msgid "Send resource creation report notification"
 msgstr "Kaynak oluşturma raporu bildirimi gönderilsin"
 
-#: src/ReportConfig.php:317 src/ReportConfig.php:426
+#: src/ReportConfig.php:386 templates/reportconfig_form.html.twig:54
 msgid "Send resource transfer notification"
 msgstr "Kaynak aktarımı bildirimi gönderilsin"
 
@@ -2560,7 +2493,7 @@ msgstr "LDAP dizinini kur"
 msgid "Short name"
 msgstr "Kısa ad"
 
-#: src/Config.php:154 src/Choice.php:510
+#: src/Config.php:154 src/Choice.php:469
 msgid "Softwares requirements"
 msgstr "Yazılım gereksinimleri"
 
@@ -2583,7 +2516,8 @@ msgid_plural "Specialities"
 msgstr[0] "Özellik"
 msgstr[1] "Özellikler"
 
-#: src/RuleContracttypeReadonly.php:474 src/Choice.php:498
+#: src/RuleContracttypeReadonly.php:474
+#: templates/choice_helpdesk_requirements.html.twig:32
 msgid "Specials requirements"
 msgstr "Özel gereksinimler"
 
@@ -2599,15 +2533,16 @@ msgstr "Özel ağ hakları"
 msgid "Specific securities groups"
 msgstr "Özel güvenlik grupları"
 
-#: src/Resource_Change.php:1133
-msgid "Starting change"
-msgstr "Değişiklik başlatılıyor"
+#: templates/checklist_from_resources.html.twig:126
+msgctxt "location"
+msgid "State"
+msgstr ""
 
 #: src/Adconfig.php:255
 msgid "Static default password "
 msgstr "Sabit varsayılan parola"
 
-#: src/ImportColumn.php:74
+#: src/ImportColumn.php:75
 msgid "String"
 msgstr "Dizge"
 
@@ -2629,13 +2564,13 @@ msgid_plural "Super habilitations"
 msgstr[0] "Super güç"
 msgstr[1] "Super güçler"
 
-#: src/ConfigHabilitation.php:70
+#: src/ConfigHabilitation.php:69
 msgid "Super habilitation management"
 msgid_plural "Super habilitations management"
 msgstr[0] "Süper güç yönetimi"
 msgstr[1] "Süper güçler yönetimi"
 
-#: src/ResourceHabilitation.php:325
+#: src/ResourceHabilitation.php:304
 #, php-format
 msgid "Suppression of the habilitation: %s"
 msgstr "Güç azaltma: %s"
@@ -2643,10 +2578,6 @@ msgstr "Güç azaltma: %s"
 #: templates/wizard_secondstep_resource.html.twig:115
 msgid "Surname"
 msgstr "Soyad"
-
-#: src/Resource_Validation.php:203
-msgid "Synchronize with Active Directory"
-msgstr "Aktif Dizin ile eşitle"
 
 #: src/Resource.php:3873 src/NotificationTargetResource.php:1241
 #: src/NotificationTargetResource.php:1729
@@ -2669,11 +2600,11 @@ msgstr "Görevden sorumlu grup"
 msgid "Task's responsible technician"
 msgstr "Görevden sorumlu teknisyen"
 
-#: src/Task.php:861
+#: src/Task.php:843
 msgid "Tasks in progress"
 msgstr "İşlenen görevler"
 
-#: src/TaskPlanning.php:71 src/Menu.php:496
+#: src/TaskPlanning.php:72 src/Menu.php:451
 msgid "Tasks list"
 msgstr "Görev listesi"
 
@@ -2687,7 +2618,15 @@ msgstr[1] "Takımlar"
 msgid "Team code"
 msgstr "Takım kodu"
 
-#: src/Choice.php:475
+#: templates/task_form.html.twig:51
+msgid "Technician"
+msgstr ""
+
+#: templates/checklist_from_resources.html.twig:69
+msgid "Templates"
+msgstr ""
+
+#: src/Choice.php:446
 msgid "Terminate the declaration"
 msgstr "Duyuruyu kaldır"
 
@@ -2697,8 +2636,8 @@ msgstr "Doğrulama sonrası kaynak oluşturma destek kaydındaki yazı"
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken "
 "aralarına tire \"-\" koyun."
@@ -2707,21 +2646,16 @@ msgstr ""
 msgid "Thanks to recover his badges"
 msgstr "Kimlik kartlarını geri verdiği için teşekkür"
 
-#: src/Resource_Change.php:1464
-#, php-format
-msgid "The added appliance is %s "
-msgstr "Eklenen aygıt %s"
-
 #: src/ResourceHoliday.php:101 src/ResourceHoliday.php:145
 msgid "The begin date of the forced holiday period must be filled"
 msgstr "Zorunlu tatil döneminin başlangıç tarihi yazılmalıdır"
 
-#: src/ResourceResting.php:101 src/ResourceResting.php:142
+#: src/ResourceResting.php:102 src/ResourceResting.php:143
 msgid "The begin date of the non contract period must be filled"
 msgstr "Sözleşmesiz dönemin başlangıcı yazılmalıdır"
 
-#: src/Checklist.php:1034 src/Checklist.php:1055 src/Checklist.php:1097
-#: src/Checklist.php:1138
+#: src/Checklist.php:919 src/Checklist.php:940 src/Checklist.php:982
+#: src/Checklist.php:1023
 msgid "The checklist is finished"
 msgstr "Kontol listesi tamamlanmış"
 
@@ -2729,11 +2663,11 @@ msgstr "Kontol listesi tamamlanmış"
 msgid "The checklist is not finished"
 msgstr "Kontrol listesi tamamlanmamış"
 
-#: src/ConfigHabilitation.php:183 src/ResourceBadge.php:181
+#: src/ConfigHabilitation.php:182 src/ResourceBadge.php:181
 msgid "The current entity is already linked to a meta-demand"
 msgstr "Geçerli birim zaten bir meta-demand ile bağlantılı"
 
-#: src/Resource_Validation.php:149
+#: src/Resource_Validation.php:152
 msgid ""
 "The direct manager of the resource must validate the information before it "
 "can be synchronized."
@@ -2744,17 +2678,9 @@ msgstr ""
 msgid "The end date of the forced holiday period must be filled"
 msgstr "Zorunlu tatil döneminin bitiş tarihi yazılmalıdır"
 
-#: src/ImportResource.php:525 src/ImportResource.php:3079
+#: src/ImportResource.php:525
 msgid "The file does not match any template"
 msgstr "Dosya herhangi bir kalıp ile eşleşmiyor"
-
-#: src/ImportResource.php:3074
-msgid "The file has been pre-import"
-msgstr "Dosya içe aktarılmaya hazırlanmış"
-
-#: src/ImportResource.php:1572
-msgid "The folder you expected to display content doesn't exist."
-msgstr "İçeriği görüntülenmesi beklenen bir klasör bulunamadı."
 
 #: front/resource.form.php:448 src/Resource.php:4491
 msgid ""
@@ -2767,7 +2693,7 @@ msgstr ""
 msgid "The plugin schema is good"
 msgstr "Eklenti şeması iyi"
 
-#: src/Budget.php:119 src/Budget.php:140 src/Cost.php:105 src/Cost.php:126
+#: src/Budget.php:118 src/Budget.php:139 src/Cost.php:105 src/Cost.php:126
 msgid "The profession for the budget must be filled"
 msgstr "Bütçenin mesleği doldurulmalıdır"
 
@@ -2775,7 +2701,7 @@ msgstr "Bütçenin mesleği doldurulmalıdır"
 msgid "The resource is also created if not existent"
 msgstr "Kaynak yoksa oluşturulacak"
 
-#: src/Resource_Leaving.php:144
+#: src/Resource_Leaving.php:146
 msgid "The resource is not leaving"
 msgstr "Kaynak ayrılmıyor"
 
@@ -2786,10 +2712,6 @@ msgid ""
 msgstr ""
 "Ayrılan çalışanın kuruluş aygıtını (yaka kartı, bilgisayar, telefon, vb) "
 "geri getirmesinden satış müdürü sorumludur"
-
-#: src/ImportResource.php:1452
-msgid "The selected file doesn't match any configured import"
-msgstr "Seçilmiş dosya herhangi bir içe aktarma yapılandırması ile eşleşmiyor"
 
 #: front/wizard.form.php:141
 msgid "The start date must be greater than the end date"
@@ -2808,10 +2730,9 @@ msgstr "Doğru bir sorun var"
 msgid "These resources have normally left the company"
 msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
-#: src/Employment.php:610
+#: src/Employment.php:502
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr "Bu kaynaklar kurumdan ayrıldığından, geçerli işleri güncellendi"
 
 #: src/Resource.php:4106 src/Resource.php:4131
@@ -2838,7 +2759,7 @@ msgstr "Bu yardımcı yeni GLPI kaynakları oluşturulmasını sağlar"
 msgid "Time to remove ressource"
 msgstr "Kaynağın kaldırılma zamanı"
 
-#: src/Employment.php:442
+#: templates/employment_add_form.html.twig:40
 msgid "To affect an employment"
 msgstr "Bir işi etkilemek için"
 
@@ -2846,7 +2767,7 @@ msgstr "Bir işi etkilemek için"
 msgid "To begin, select type of contract"
 msgstr "Sözleşme türünü seçerek başlayın"
 
-#: src/ImportResource.php:745 report/budgetsummary/budgetsummary.php:446
+#: src/ImportResource.php:720 report/budgetsummary/budgetsummary.php:446
 #: report/budgetsummary/budgetsummary.php:452
 #: report/budgetsummary/budgetsummary.php:458
 #: report/budgetsummary/budgetsummary.php:465
@@ -2856,7 +2777,11 @@ msgstr "Sözleşme türünü seçerek başlayın"
 msgid "Total"
 msgstr "Toplam"
 
-#: src/ImportResource.php:781
+#: templates/checklist_from_resources.html.twig:75
+msgid "Total duration"
+msgstr ""
+
+#: src/ImportResource.php:728
 msgid "Total lines in the file"
 msgstr "Dosyadaki satır sayısı"
 
@@ -2864,11 +2789,11 @@ msgstr "Dosyadaki satır sayısı"
 msgid "Trainee"
 msgstr "Stajer"
 
-#: src/Task.php:1115 src/Checklistconfig.php:366 src/Resource.php:3960
+#: src/Task.php:1057 src/Checklistconfig.php:344 src/Resource.php:3960
 msgid "Transfer"
 msgstr "Aktar"
 
-#: src/TransferEntity.php:60
+#: src/TransferEntity.php:59
 msgid "Transfer entities"
 msgstr "Birimleri aktar"
 
@@ -2880,7 +2805,16 @@ msgstr "İnsan kaynağının aktarımı raporu"
 msgid "Transfer resource notification"
 msgstr "Kaynak aktarımı bildirimi"
 
-#: src/Budget.php:219 src/Budget.php:303 src/BudgetVolume.php:55
+#: templates/importcolumn_form.html.twig:44
+#: templates/task_item_form.html.twig:36
+#: templates/choice_helpdesk_needs.html.twig:35
+msgid "Type"
+msgid_plural "Types"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Budget.php:218 src/BudgetVolume.php:55
+#: templates/budget_form.html.twig:62
 msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
 msgstr[0] "Bütçe hacmi türü"
@@ -2908,17 +2842,20 @@ msgstr[1] "Görev türleri"
 msgid "Unlimited number of selectable habilitations "
 msgstr "Sınırsız sayıda seçilebilir güçler"
 
+#: templates/resourceholiday_form.html.twig:74
 #: templates/config_setup_form.html.twig:51
+#: templates/choice_comment_form.html.twig:38
+#: templates/resourceresting_form.html.twig:83
 #: templates/adconfig_config.html.twig:112
 msgctxt "button"
 msgid "Update"
 msgstr "Güncelle"
 
-#: src/ImportResource.php:680 src/Menu.php:320
+#: src/ImportResource.php:684 src/Menu.php:320
 msgid "Update GLPI Resources"
 msgstr "GLPI kaynaklarını güncelle"
 
-#: src/LinkAd.php:71
+#: src/LinkAd.php:72
 msgid "Update LDAP directory"
 msgstr "LDAP dizinini güncelle"
 
@@ -2926,11 +2863,7 @@ msgstr "LDAP dizinini güncelle"
 msgid "Update Resources state"
 msgstr "Kaynak durumunu güncelle"
 
-#: src/ImportResource.php:2875
-msgid "Updated resource"
-msgstr "Kaynak güncellendi"
-
-#: src/Employment.php:524
+#: src/Employment.php:416
 msgid "Updating leaving resources (declaring leaving, state of employment)"
 msgstr "Ayrılan kaynaklar güncelleniyor (ayrılma bildirimi, iş durumu)"
 
@@ -2996,16 +2929,17 @@ msgstr "Planlamada kullanılacak"
 msgid "User without resource"
 msgstr "Kaynağı olmayan kullanıcı"
 
-#: front/modalvalidationinfo.php:35 src/Resource_Leaving.php:177
-#: src/Resource_Validation.php:172
+#: front/modalvalidationinfo.php:35
+#: templates/resource_validation_form.html.twig:40
 msgid "Validate"
 msgstr "Doğrula"
 
-#: src/ImportResource.php:811
+#: src/ImportResource.php:744
 msgid "Validate and pre-import file"
 msgstr "Dosyayı doğrula ve içe aktarmaya hazırlan"
 
-#: src/Resource_Validation.php:57 src/Resource_Validation.php:169
+#: src/Resource_Validation.php:58
+#: templates/resource_validation_form.html.twig:34
 msgid "Validation"
 msgstr "Doğrulama"
 
@@ -3021,15 +2955,11 @@ msgstr "CSV dosyasını doğrula"
 msgid "Verify GLPI resources"
 msgstr "GLPI kaynaklarını doğrula"
 
-#: src/ImportResource.php:1521
-msgid "Verify file"
-msgstr "Dosyayı doğrula"
-
 #: front/resource.php:58 front/resource.php:61 front/resource.php:68
 msgid "View by contract type"
 msgstr "Sözleşme türüne göre bakın"
 
-#: src/Config.php:496 src/Config.php:509 src/Menu.php:219 src/Menu.php:521
+#: src/Config.php:496 src/Config.php:509 src/Menu.php:219 src/Menu.php:476
 msgid "View my resources as a commercial"
 msgstr "Kaynaklarım ticari olarak görüntülensin"
 
@@ -3046,7 +2976,7 @@ msgstr "İstenilen ayrılma tarihi"
 #: front/resource.remove.php:181 front/resource.form.php:295
 #: front/resource.form.php:609 src/ContractType.php:270
 #: src/ContractType.php:290 src/Resource.php:1758
-#: src/Contracttypeprofile.php:91
+#: src/Contracttypeprofile.php:76
 msgid "Without contract"
 msgstr "Sözleşmesiz"
 
@@ -3068,15 +2998,11 @@ msgstr[1] "Çalışma profilleri"
 msgid "Yes"
 msgstr "Evet"
 
-#: src/Resource_Validation.php:209
-msgid "You are not able to synchronize this account."
-msgstr "Bu hesabı eşitleyemezsiniz."
-
-#: src/Resource_Leaving.php:153
+#: src/Resource_Leaving.php:154
 msgid "You are not the manager of this resource departure"
 msgstr "Bu kaynak ayrılmasının yöneticisi değilsiniz"
 
-#: hook.php:2949 src/LinkAd.php:856
+#: hook.php:2949 src/LinkAd.php:677
 msgid "You have to do all checklist in action before"
 msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 
@@ -3084,11 +3010,11 @@ msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 msgid "You have to do all checklist out action before"
 msgstr "Önce kontrol listesindeki tüm çıkış işlemleri tamamlanmalıdır"
 
-#: hook.php:2931 hook.php:2979 src/LinkAd.php:854
+#: hook.php:2931 hook.php:2979 src/LinkAd.php:675
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "İşlemi önce LDAP dizini üzerinde yapmalısınız"
 
-#: src/LinkAd.php:850
+#: src/LinkAd.php:671
 msgid ""
 "You have to perform the action on the LDAP directory before and you have to "
 "do all checklist in action before"
@@ -3100,17 +3026,13 @@ msgstr ""
 msgid "You need rights into badges plugin"
 msgstr "Yaka kartları eklentisini kullanma izniniz olmalıdır"
 
-#: src/LinkAd.php:595
+#: src/LinkAd.php:416
 msgid "existing login"
 msgstr "var olan kullanıcı adı"
 
 #: src/Adconfig.php:326
 msgid "first letter of given name + name"
 msgstr "belirtilen adın ilk harfi + ad"
-
-#: src/ImportResource.php:2550
-msgid "first level"
-msgstr "birinci düzey"
 
 #: src/Adconfig.php:327
 msgid "given name + name"
@@ -3124,14 +3046,6 @@ msgstr "belirtilen ad.ad"
 #: front/resource.form.php:602
 msgid "leave on"
 msgstr "ayrılma zamanı"
-
-#: src/ImportResource.php:1555
-msgid "no file to compare"
-msgstr "karşılaştırılacak bir dosya yok"
-
-#: src/ImportResource.php:2552
-msgid "second level"
-msgstr "ikinci düzey"
 
 #: front/linkad.form.php:87 front/resource.form.php:546
 msgid "the user has been added to the LDAP directory"
@@ -3158,3 +3072,186 @@ msgstr "kullanıcı etkisizleştirilmesi ve LDAP dizinine taşınmadı"
 #: front/linkad.form.php:145 front/resource.form.php:567
 msgid "the user has not been updated to the LDAP directory"
 msgstr "kullanıcı LDAP dizininde güncellenmedi"
+
+#~ msgid "Add application for"
+#~ msgstr "Şunun için uygulama ekle"
+
+#~ msgid "Change information for"
+#~ msgstr "Şunun bilgilerini değiştir"
+
+#~ msgid "Change manager for"
+#~ msgstr "Şunun sorumlusunu değiştir"
+
+#~ msgid "Change material for"
+#~ msgstr "Şunun malzemesini değiştir"
+
+#~ msgid "Change of agency for"
+#~ msgstr "Şunun temsilcsini değiştir"
+
+#~ msgid "Change of company for"
+#~ msgstr "Şunun kuruluşunu değiştir"
+
+#~ msgid "Change of department for"
+#~ msgstr "Şunun bölümünü değiştir"
+
+#~ msgid "Change of function for"
+#~ msgstr "Şunun işlevini değiştir"
+
+#~ msgid "Change of role for"
+#~ msgstr "Şunun rolünü değiştir"
+
+#~ msgid "Change of sales manager for"
+#~ msgstr "Şunun satış sorumlusunu değiştir"
+
+#~ msgid "Change of service for"
+#~ msgstr "Şunun hizmetini değiştir"
+
+#~ msgid "Change of team for"
+#~ msgstr "Şunun takımını değiştir"
+
+#~ msgid "Change the access profile for"
+#~ msgstr "Şunun erişim profilini değiştir"
+
+#~ msgid "Change the type of contract for"
+#~ msgstr "Şunun sözleşme türünü değiştir"
+
+#~ msgid "Choose"
+#~ msgstr "Seçin"
+
+#~ msgid "Configure a new import"
+#~ msgstr "Yeni bir içe aktarma yapılandırın"
+
+#~ msgid "Current company of the resource"
+#~ msgstr "Kaynağın geçerli kuruluşu"
+
+#~ msgid "Current department of the resource"
+#~ msgstr "Kaynağın geçerli bölümü"
+
+#~ msgid "Current departure date of the resource"
+#~ msgstr "Kaynağın geçerli ayrılma tarihi"
+
+#~ msgid "Current firstname of the resource"
+#~ msgstr "Kaynağın geçerli adı"
+
+#~ msgid "Current function of the resource"
+#~ msgstr "Kaynağın geçerli işlevi"
+
+#~ msgid "Current name of the resource"
+#~ msgstr "Kaynağın geçerli adı"
+
+#~ msgid "Current role of the resource"
+#~ msgstr "Kaynağın geçerli rolü"
+
+#~ msgid "Current service of the resource"
+#~ msgstr "Kaynağın geçerli hizmeti"
+
+#~ msgid "Data from file"
+#~ msgstr "Dosyadaki veriler"
+
+#~ msgid "Define entity & ticket category for each change action"
+#~ msgstr "Her değişiklik işlemi için birimi ve bilet kategorisini tanımlayın"
+
+#~ msgid "Delete file"
+#~ msgstr "Dosyayı sil"
+
+#~ msgid "Deleted resource"
+#~ msgstr "Kaynak silindi"
+
+#~ msgid "File not found"
+#~ msgstr "Dosya bulunamadı"
+
+#, php-format
+#~ msgid "Find in file with %s identifier"
+#~ msgstr "Dosyada %s belirteci ile bul"
+
+#~ msgid "Identification"
+#~ msgstr "Belirleme"
+
+#~ msgid "Import file"
+#~ msgstr "Dosyayı içe aktar"
+
+#~ msgid "Informations from file"
+#~ msgstr "Dosyadaki bilgiler"
+
+#~ msgid "New Application to add to the resource"
+#~ msgstr "Kaynağa eklenecek yeni uygulama"
+
+#~ msgid "New resource"
+#~ msgstr "Yeni kaynak"
+
+#~ msgid "New resource company"
+#~ msgstr "Yeni kaynak kuruluşu"
+
+#~ msgid "New resource department"
+#~ msgstr "Yeni kaynak bölümü"
+
+#~ msgid "New resource departure date"
+#~ msgstr "Yeni kaynak ayrılma tarihi"
+
+#~ msgid "New resource firstname"
+#~ msgstr "Yeni kaynak adı"
+
+#~ msgid "New resource function"
+#~ msgstr "Yeni kaynak işlevi"
+
+#~ msgid "New resource name"
+#~ msgstr "Yeni kaynak adı"
+
+#~ msgid "New resource role"
+#~ msgstr "Yeni kaynak rolü"
+
+#~ msgid "New resource service"
+#~ msgstr "Yeni kaynak hizmeti"
+
+#~ msgid "New sales manager for the resource"
+#~ msgstr "Kaynağın yeni satış sorumlusu"
+
+#~ msgid "No Imports"
+#~ msgstr "Herhangi bir içe aktarma yok"
+
+#~ msgid "No imports configured"
+#~ msgstr "Henüz bir içe aktarma yapılandırılmamış"
+
+#~ msgid "Not in file"
+#~ msgstr "Dosyada yok"
+
+#~ msgid "Number of titles and values of tooltip doesn't match"
+#~ msgstr "İpuçlarının başlıkları ile değerleri eşleşmiyor"
+
+#~ msgid "Starting change"
+#~ msgstr "Değişiklik başlatılıyor"
+
+#~ msgid "Synchronize with Active Directory"
+#~ msgstr "Aktif Dizin ile eşitle"
+
+#, php-format
+#~ msgid "The added appliance is %s "
+#~ msgstr "Eklenen aygıt %s"
+
+#~ msgid "The file has been pre-import"
+#~ msgstr "Dosya içe aktarılmaya hazırlanmış"
+
+#~ msgid "The folder you expected to display content doesn't exist."
+#~ msgstr "İçeriği görüntülenmesi beklenen bir klasör bulunamadı."
+
+#~ msgid "The selected file doesn't match any configured import"
+#~ msgstr ""
+#~ "Seçilmiş dosya herhangi bir içe aktarma yapılandırması ile eşleşmiyor"
+
+#~ msgid "Updated resource"
+#~ msgstr "Kaynak güncellendi"
+
+#~ msgid "Verify file"
+#~ msgstr "Dosyayı doğrula"
+
+#~ msgid "You are not able to synchronize this account."
+#~ msgstr "Bu hesabı eşitleyemezsiniz."
+
+#~ msgid "first level"
+#~ msgstr "birinci düzey"
+
+#~ msgid "no file to compare"
+#~ msgstr "karşılaştırılacak bir dosya yok"
+
+#~ msgid "second level"
+#~ msgstr "ikinci düzey"
