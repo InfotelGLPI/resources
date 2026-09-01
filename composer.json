@@ -18,7 +18,7 @@
     },
     "require": {
         "php": ">=8.2",
-        "directorytree/ldaprecord": "^3.0"
+        "directorytree/ldaprecord": "^4.0"
     },
     "scripts": {
         "lint": "parallel-lint --exclude vendor --exclude node_modules .",
