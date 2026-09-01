@@ -25,22 +25,17 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="alert alert-warning">{{ alert_text }}</div>
-<form name="form" method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-    <div class="center">
-        <table class="tab_cadre_fixe">
-            <tr>
-                <th colspan="3">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_1">
-                <td class="center">
-                    <span class="me-1">{{ action_label }}</span>{{ action_dropdown|raw }}
-                    {{ action_script|raw }}
-                </td>
-                <td class="center" id="plugin_resources_entity_itil_categories"></td>
-                <td class="center" id="plugin_resources_button_add"></td>
-            </tr>
-        </table>
-    </div>
-</form>
+{# Restitution block injected into #resource_pdf by ajax/pdfresource.php when the
+ # outgoing resource's linked user still holds equipment. It is rendered *inside* the
+ # departure form of resource_remove_form.html.twig, so it must not open a form of its
+ # own: the download link targets a separate page in a new tab. #}
+
+<p>{{ __('Please ensure that the return form is signed by the employee', 'resources') }}</p>
+
+<div class="alert alert-important alert-warning d-flex">
+    {{ __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources') }}
+</div>
+
+<a class="btn btn-warning" href="{{ pdf_url }}" target="_blank" rel="noopener">
+    {{ __('Download the restitution form', 'resources') }}
+</a>

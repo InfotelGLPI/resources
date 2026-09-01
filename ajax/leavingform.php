@@ -105,24 +105,17 @@ if ($resources_id > 0) {
             //                'right'       => 'all']);
         }
     } else {
-        echo "<div class='row'>";
-
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Departure date', 'resources');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        Html::showDateField("date_end", ['value' => date("Y-m-d")]);
-        echo "</div>";
-        echo "</div>";
-
-        echo "<div class='row'>";
-
-        echo "<div class='col-md-4 mb-2'>";
-        echo __('Resource manager', 'resources');
-        echo "</div>";
-        echo "<div class='col-md-4 mb-2'>";
-        User::dropdown(['name' => 'remove_manager', 'right' => 'all', 'value' => $resource->fields['users_id']]);
-        echo "</div>";
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/leaving_departure_form.html.twig', [
+            'date_field' => (string) Html::showDateField("date_end", [
+                'value'   => date("Y-m-d"),
+                'display' => false,
+            ]),
+            'manager_field' => (string) User::dropdown([
+                'name'    => 'remove_manager',
+                'right'   => 'all',
+                'value'   => $resource->fields['users_id'],
+                'display' => false,
+            ]),
+        ]);
     }
 }

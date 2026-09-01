@@ -171,56 +171,6 @@ if (!function_exists('dpuser_cmp')) {
 
 // Sort non case sensitive
 usort($users, 'dpuser_cmp');
-//
-//echo "<select id='dropdown_".$_GET["name"].$_GET["rand"]."' name='".$_GET['name']."'";
-//
-//if (isset($_GET["on_change"]) && !empty($_GET["on_change"])) {
-//   echo " onChange='".$_GET["on_change"]."'";
-//}
-//
-//echo ">";
-//
-//if ($_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]
-//    && $DB->numrows($result)==$CFG_GLPI["dropdown_max"]) {
-//
-//   echo "<option value='0'>--".__('Limited view')."--</option>";
-//}
-//
-//if ($_GET['all']==0) {
-//   echo "<option value='0'>".Dropdown::EMPTY_VALUE."</option>";
-//} else if ($_GET['all']==1) {
-//   echo "<option value='0'>[".__('All')."]</option>";
-//}
-//
-//if (isset($_GET['value2'])) {
-//   $output = Resource::getResourceName($_GET['value2']);
-//
-//   if (!empty($output) && $output!="&nbsp;") {
-//      echo "<option selected value='".$_GET['value2']."'>".$output."</option>";
-//   }
-//}
-//
-//if (count($users)) {
-//   foreach ($users as $ID => $output) {
-//      echo "<option value='$ID' title=\"".htmlescape($output." - ".$logins[$ID])."\">".
-//             Toolbox::substr($output, 0, $_SESSION["glpidropdown_chars_limit"])."</option>";
-//   }
-//}
-//echo "</select>";
-//
-//if (isset($_GET["comment"]) && $_GET["comment"]) {
-//   $paramscomment = array('value' => '__VALUE__',
-//                          'table' => "glpi_plugin_resources_resources");
-//
-//   if (isset($_GET['update_link'])) {
-//      $paramscomment['withlink'] = "comment_link_".$_GET["name"].$_GET["rand"];
-//   }
-//   Ajax::updateItemOnSelectEvent("dropdown_".$_GET["name"].$_GET["rand"],
-//                                 "comment_".$_GET["name"].$_GET["rand"],
-//                                PLUGIN_RESOURCES_WEBDIR."/ajax/comments.php", $paramscomment);
-//}
-//
-//Ajax::commonDropdownUpdateItem($_GET);
 
 $ret['results'] = $users;
 $ret['count'] = count($users);

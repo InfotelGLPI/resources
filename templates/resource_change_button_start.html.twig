@@ -25,22 +25,12 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="alert alert-warning">{{ alert_text }}</div>
-<form name="form" method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-    <div class="center">
-        <table class="tab_cadre_fixe">
-            <tr>
-                <th colspan="3">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_1">
-                <td class="center">
-                    <span class="me-1">{{ action_label }}</span>{{ action_dropdown|raw }}
-                    {{ action_script|raw }}
-                </td>
-                <td class="center" id="plugin_resources_entity_itil_categories"></td>
-                <td class="center" id="plugin_resources_button_add"></td>
-            </tr>
-        </table>
+{# Submit button of the change wizard, reloaded over AJAX by ajax/resourcechange.php
+ # once the fields the selected action depends on are all filled in. #}
+{% if display %}
+    <div class="next">
+        <button type="submit" name="changeresources" class="btn btn-success" value="{{ label }}">
+            <span>{{ label }}</span>
+        </button>
     </div>
-</form>
+{% endif %}

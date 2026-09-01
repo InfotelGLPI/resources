@@ -56,7 +56,7 @@
                 </tr>
 
                 {{ buttons|raw }}
-                {{ list_header|raw }}
+                {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
 
                 {% for entry in entries %}
                     <tr>{{ entry.cells|raw }}</tr>

@@ -99,16 +99,13 @@ class User extends \User
 
     public function showForm($ID, array $options = [])
     {
-        // Affiche un formulaire User simplifié
+        // Simplified User form, shown as a tab of a human resource.
         if (!\User::canView()) {
             return false;
         }
         $user = new \User();
 
         $user->initForm($ID, $options);
-
-        $this->fields['id'] = 0;
-        $this->showFormHeader($options);
 
         $auth_lines = [Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"])];
         if (!empty($user->fields["date_sync"])) {
@@ -125,27 +122,29 @@ class User extends \User
             $auth_lines[] = __('User missing in LDAP directory');
         }
 
-        $phonerand = mt_rand();
-
         // showForUser() echoes directly, so capture it for the template.
         ob_start();
         UserEmail::showForUser($user);
         $email_block = (string) ob_get_clean();
 
+        $params = $options;
+        // The form is posted to the plugin controller, which turns the update into a
+        // solution on the tickets of the resource (front/user.form.php); the core user
+        // form URL would silently drop that behaviour.
+        $params['target'] = self::getFormURL();
+        // Only a couple of fields are editable from this tab: deleting the user here
+        // would be surprising, and the core form is one click away for that.
+        $params['candel'] = false;
+
         TemplateRenderer::getInstance()->display('@resources/user_form.html.twig', [
+            'item'         => $user,
+            'params'       => $params,
             'resources_id' => $options['resourcesID'],
             'auth_lines'   => $auth_lines,
             'phone_label'  => Phone::getTypeName(1),
-            'phone_rand'   => $phonerand,
-            'phone_input'  => Html::input(
-                'phone',
-                ['value' => $user->fields['phone'], 'size' => 40, 'rand' => $phonerand],
-            ),
             'email_label'  => _n('Email', 'Emails', Session::getPluralNumber()),
             'email_block'  => $email_block,
         ]);
-
-        $user->showFormButtons($options);
 
         return true;
     }

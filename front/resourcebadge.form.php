@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Resources\ResourceBadge;
 use GlpiPlugin\Servicecatalog\Main;
@@ -61,8 +62,9 @@ if (Plugin::isPluginActive("badges")) {
         if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
             $badge->showMenu();
         } else {
-            echo "<div class='alert alert-important alert-warning d-flex'>";
-            echo "<b>" . __('You need rights into badges plugin', 'resources') . "</b></div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message' => __('You need rights into badges plugin', 'resources'),
+            ]);
         }
     } elseif (isset($_GET['config'])) {
         if (Plugin::isPluginActive("metademands")) {
@@ -71,8 +73,9 @@ if (Plugin::isPluginActive("badges")) {
             }
         } else {
             Html::header(__('Setup'), '', "config", "plugin");
-            echo "<div class='alert alert-important alert-warning d-flex'>";
-            echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message' => __('Please activate the plugin metademand', 'resources'),
+            ]);
         }
     } elseif (isset($_GET['new'])) {
         if (Plugin::isPluginActive("metademands")) {
@@ -84,13 +87,16 @@ if (Plugin::isPluginActive("badges")) {
                     PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2",
                 );
             } else {
-                echo "<div class='center'><br><br>";
-                echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+                TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                    'message'  => __('No advanced request found', 'resources'),
+                    'centered' => true,
+                ]);
             }
         } else {
             Html::header(__('Setup'), '', "config", "plugin");
-            echo "<div class='alert alert-important alert-warning d-flex'>";
-            echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message' => __('Please activate the plugin metademand', 'resources'),
+            ]);
         }
     } elseif (isset($_POST['plugin_resources_badge_restitution'])) {
         // The target resource id comes straight from $_POST and createTicket() opens a
@@ -125,6 +131,7 @@ if (Plugin::isPluginActive("badges")) {
     }
 } else {
     Html::header(__('Setup'), '', "config", "plugin");
-    echo "<div class='alert alert-important alert-warning d-flex'>";
-    echo "<b>" . __('Please activate the plugin badge', 'resources') . "</b></div>";
+    TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+        'message' => __('Please activate the plugin badge', 'resources'),
+    ]);
 }

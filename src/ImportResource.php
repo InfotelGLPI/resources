@@ -802,72 +802,53 @@ class ImportResource extends CommonDBTM
         ]);
     }
 
-    public function showListHeader($params)
+    /**
+     * Describe the header columns of an import list.
+     *
+     * The columns are returned as data rather than as markup so the list templates can
+     * render the header row themselves (see import_list_header.html.twig): a `type` of
+     * `check_all` is the box that selects every line, `file` is a column read from the
+     * imported CSV, and a column without a type is a plain label.
+     *
+     * @param array $params
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getListHeaderColumns($params)
     {
+        $columns = [];
+
         switch ($params['type']) {
             case self::UPDATE_RESOURCES:
-                echo '<tr>';
-                self::displayCheckAll();
-                echo '<th>';
-                echo __('Resource', 'resources');
-                echo '</th>';
-                self::displayImportColumnNames($params['import']);
-                echo '</tr>';
+                $columns[] = ['type' => 'check_all'];
+                $columns[] = ['label' => __('Resource', 'resources')];
+                $csv_icon  = PLUGIN_RESOURCES_WEBDIR . "/pics/csv_file.png";
+                $csv_title = __("Data from file", "resources");
+                foreach ($this->getImportColumnNames($params['import']) as $name) {
+                    $columns[] = [
+                        'type'       => 'file',
+                        'label'      => $name,
+                        'icon'       => $csv_icon,
+                        'icon_title' => $csv_title,
+                    ];
+                }
                 break;
             case self::VERIFY_FILE:
-                echo '<tr>';
-                foreach ($params['titles'] as $key => $title) {
-                    echo '<th>';
-                    echo $this->encodeUtf8($title);
-                    echo '</th>';
+                foreach ($params['titles'] as $title) {
+                    $columns[] = ['label' => $this->encodeUtf8($title)];
                 }
-
-                echo '<th>';
-                echo __('Status');
-                echo '</th>';
-
-                echo '</tr>';
+                $columns[] = ['label' => __('Status')];
                 break;
             case self::VERIFY_GLPI:
-                echo '<tr>';
-                echo '<th>';
-                echo 'ID';
-                echo '</th>';
-
-                echo '<th>';
-                echo __('Last name');
-                echo '</th>';
-
-                echo '<th>';
-                echo __('First name');
-                echo '</th>';
-
-                echo '<th>';
-                echo __('Identification', 'resources');
-                echo '</th>';
-
-                echo '<th>';
-                echo __('Informations from file', 'resources');
-                echo '</th>';
-                echo '</tr>';
+                $columns[] = ['label' => 'ID'];
+                $columns[] = ['label' => __('Last name')];
+                $columns[] = ['label' => __('First name')];
+                $columns[] = ['label' => __('Identification', 'resources')];
+                $columns[] = ['label' => __('Informations from file', 'resources')];
                 break;
         }
-    }
 
-    public function displayCheckAll()
-    {
-        $script = "function checkAll(state) {";
-        $script .= "var cases = document.getElementsByTagName('input');";
-        $script .= "for(var i=0; i<cases.length; i++){";
-        $script .= "if(cases[i].type == 'checkbox'){";
-        $script .= "cases[i].checked = state;";
-        $script .= "}";
-        $script .= "}";
-        $script .= "}";
-
-        echo Html::scriptBlock($script);
-
-        TemplateRenderer::getInstance()->display('@resources/import_check_all_header.html.twig');
+        return $columns;
     }
 
     public function validateDate($date, $delimiter = "/")
@@ -1534,14 +1515,12 @@ class ImportResource extends CommonDBTM
         Html::printPager($start, $nbLines, self::getIndexUrl(), $parameters);
         $pager = (string) ob_get_clean();
 
-        ob_start();
-        self::showListHeader(['type' => $params['type'], 'titles' => $header]);
-        $list_header = (string) ob_get_clean();
+        $header_columns = $this->getListHeaderColumns(['type' => $params['type'], 'titles' => $header]);
 
         TemplateRenderer::getInstance()->display('@resources/import_verification_list.html.twig', [
             'form_action' => self::getIndexUrl() . "?" . $parameters,
             'pager'       => $pager,
-            'list_header' => $list_header,
+            'header_columns' => $header_columns,
             'entries'     => $entries,
         ]);
     }
@@ -1656,19 +1635,21 @@ class ImportResource extends CommonDBTM
     }
 
     /**
-     * @param $import
+     * Names of the CSV columns mapped by an import, in mapping order.
+     *
+     * @param array|null $import
+     *
+     * @return array<int, string>
      */
-    private function displayImportColumnNames($import)
+    private function getImportColumnNames($import)
     {
-        global $CFG_GLPI;
-
         if (is_null($import)) {
-            return;
+            return [];
         }
+
         $resourceColumnNames = Resource::getDataNames();
 
-        $ImportColumn = new ImportColumn();
-
+        $ImportColumn  = new ImportColumn();
         $importColumns = $ImportColumn->getColumnsByImport($import['id'], true);
 
         $names = [];
@@ -1676,11 +1657,7 @@ class ImportResource extends CommonDBTM
             $names[] = $resourceColumnNames[$importColumn['resource_column']] ?? '';
         }
 
-        TemplateRenderer::getInstance()->display('@resources/import_column_headers.html.twig', [
-            'columns'    => $names,
-            'icon'       => PLUGIN_RESOURCES_WEBDIR . "/pics/csv_file.png",
-            'icon_title' => __("Data from file", "resources"),
-        ]);
+        return $names;
     }
 
     /**
@@ -2283,14 +2260,12 @@ class ImportResource extends CommonDBTM
         Html::printPager($start, $nbOfResources, self::getIndexUrl(), $parameters);
         $pager = (string) ob_get_clean();
 
-        ob_start();
-        self::showListHeader(['type' => $params['type']]);
-        $list_header = (string) ob_get_clean();
+        $header_columns = $this->getListHeaderColumns(['type' => $params['type']]);
 
         TemplateRenderer::getInstance()->display('@resources/import_verification_list.html.twig', [
             'form_action' => self::getIndexUrl() . "?" . $parameters,
             'pager'       => $pager,
-            'list_header' => $list_header,
+            'header_columns' => $header_columns,
             'entries'     => $entries,
         ]);
     }
@@ -2531,12 +2506,10 @@ class ImportResource extends CommonDBTM
         self::showImportListButtons();
         $buttons = (string) ob_get_clean();
 
-        ob_start();
-        self::showListHeader([
-            'type' => $params['type'],
+        $header_columns = $this->getListHeaderColumns([
+            'type'   => $params['type'],
             'import' => $pluginResourcesImportDBTM->fields,
         ]);
-        $list_header = (string) ob_get_clean();
 
         $hidden_inputs = [];
         $entries = [];
@@ -2572,7 +2545,7 @@ class ImportResource extends CommonDBTM
             'pager'         => $pager,
             'legends'       => $legends,
             'buttons'       => $buttons,
-            'list_header'   => $list_header,
+            'header_columns' => $header_columns,
             'hidden_inputs' => $hidden_inputs,
             'entries'       => $entries,
         ]);

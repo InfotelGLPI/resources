@@ -219,6 +219,7 @@ function plugin_init_resources()
             $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'] = ["css/resources.css"];
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
                 "resources.js",
+                "scripts/import.js",
                 "lib/plugins/jquery.address.js",
                 "lib/plugins/jquery.mousewheel.js",
                 "lib/plugins/jquery.scroll.js",

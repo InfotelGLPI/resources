@@ -25,6 +25,16 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="alert alert-important alert-warning d-flex">
-    <b>{{ message }}</b>
+{# Departure block injected by ajax/leavingform.php for the contract types that do not
+ # use the resignation form: just a departure date and the manager the resource is
+ # handed over to. #}
+
+<div class="row">
+    <div class="col-md-4 mb-2">{{ __('Departure date', 'resources') }}</div>
+    <div class="col-md-4 mb-2">{{ date_field|raw }}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-2">{{ __('Resource manager', 'resources') }}</div>
+    <div class="col-md-4 mb-2">{{ manager_field|raw }}</div>
 </div>

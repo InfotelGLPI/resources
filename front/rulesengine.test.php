@@ -53,20 +53,17 @@ if ($rulecollection->isRuleRecursive()) {
 }
 $rulecollection->checkGlobal(READ);
 
-Html::popHeader(__('Setup'), $_SERVER['PHP_SELF']);
+// The preview is opened in an iframe modal by the core rule list, which appends
+// _in_modal=1: honour it so the page does not repeat the whole application chrome.
+$in_modal = isset($_REQUEST['_in_modal']) ? (bool) $_REQUEST['_in_modal'] : false;
+Html::popHeader(__('Setup'), '', $in_modal);
 
-// Need for RuleEngines
-foreach ($_POST as $key => $val) {
-    $_POST[$key] = stripslashes($_POST[$key]);
-}
-$input = $rulecollection->showRulesEnginePreviewCriteriasForm($_POST, $condition);
+$rulecollection->showRulesEnginePreviewCriteriasForm($_POST, $condition);
 
 if (isset($_POST["test_all_rules"])) {
     //Unset values that must not be processed by the rule
-    unset($_POST["sub_type"]);
-    unset($_POST["test_all_rules"]);
+    unset($_POST["sub_type"], $_POST["test_all_rules"]);
 
-    echo "<br>";
     $rulecollection->showRulesEnginePreviewResultsForm($_POST, $condition);
 }
 

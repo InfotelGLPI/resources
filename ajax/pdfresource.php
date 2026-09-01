@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Item;
@@ -83,23 +84,9 @@ if (Plugin::isPluginActive("useditemsexport")) {
             }
 
             if ($total_numrows > 0) {
-                $rand = mt_rand();
-
-                $url = PLUGIN_RESOURCES_WEBDIR . "/front/export.pdf.php";
-                echo __('Please ensure that the return form is signed by the employee', 'resources') . "<br><br>";
-                echo "<span class='red'>" .
-                    __(
-                        "The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)",
-                        'resources',
-                    ) .
-                    "</span><br><br>";
-
-                echo "<a class='submit btn btn-warning' style='color: white;' href='$url?generate_pdf&users_id=$users_id' target=\"_blank\">" . __(
-                    'Download the restitution form',
-                    'resources',
-                ) . "</a>";
-
-                Html::closeForm();
+                TemplateRenderer::getInstance()->display('@resources/resource_restitution_pdf.html.twig', [
+                    'pdf_url' => PLUGIN_RESOURCES_WEBDIR . '/front/export.pdf.php?generate_pdf&users_id=' . $users_id,
+                ]);
             }
         }
     }

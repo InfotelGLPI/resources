@@ -25,13 +25,15 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Central-page cell. `tasks_list` is the datatable component and `checklists` the
- # Checklist blocks, both rendered upstream, hence |raw. #}
+{# Central-page cell. `tasks_list` is the datatable component and the two `checklist_*`
+ # variables are the Checklist blocks, all rendered upstream, hence |raw. #}
 <table class="tab_cadre_central">
     <tr>
         <td>
             {{ tasks_list|raw }}
-            {{ checklists|raw }}
+
+            <div class="mt-3">{{ checklist_todo|raw }}</div>
+            <div class="mt-3">{{ checklist_done|raw }}</div>
         </td>
     </tr>
 </table>

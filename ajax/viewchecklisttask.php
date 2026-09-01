@@ -46,13 +46,10 @@ if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklis
         'plugin_resources_resources_id' => $_POST["plugin_resources_resources_id"],
     ];
 
-    echo "<table class='tab_cadre'>";
-    echo "<tr class='tab_bg_1'>";
-    echo "<td>";
+    // Checklist::showForm() renders generic_show_form.html.twig, which already provides
+    // its own card: the legacy tab_cadre wrapper this endpoint used to echo around it
+    // only nested a table inside that card.
     $item->showForm($_POST["id"], $options);
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
 } else {
     throw new AccessDeniedHttpException();
 }

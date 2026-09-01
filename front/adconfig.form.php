@@ -43,7 +43,7 @@ if (Plugin::isPluginActive("resources")) {
     }
 } else {
     Html::header(__s('Setup'), '', "config", "plugin");
-    TemplateRenderer::getInstance()->display('@resources/plugin_inactive.html.twig', [
+    TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
         'message' => __('Please activate the plugin', 'resources'),
     ]);
     Html::footer();

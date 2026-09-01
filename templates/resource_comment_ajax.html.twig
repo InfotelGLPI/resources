@@ -25,22 +25,15 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="alert alert-warning">{{ alert_text }}</div>
-<form name="form" method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-    <div class="center">
-        <table class="tab_cadre_fixe">
-            <tr>
-                <th colspan="3">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_1">
-                <td class="center">
-                    <span class="me-1">{{ action_label }}</span>{{ action_dropdown|raw }}
-                    {{ action_script|raw }}
-                </td>
-                <td class="center" id="plugin_resources_entity_itil_categories"></td>
-                <td class="center" id="plugin_resources_button_add"></td>
-            </tr>
-        </table>
-    </div>
-</form>
+{# Comment fragment served by ajax/comments.php to the resource dropdown.
+ #
+ # `link_script` is an inline <script> because the fragment is injected with jQuery
+ # .load(), which evaluates the scripts it finds in the response: there is no static
+ # file that could carry the per-request element id and href. It is built in PHP with
+ # json_encode(JSON_HEX_TAG | JSON_HEX_AMP), so it cannot break out of the block. #}
+
+{{ comment }}
+
+{% if link_script %}
+    <script type="text/javascript">{{ link_script|raw }}</script>
+{% endif %}

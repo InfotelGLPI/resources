@@ -25,11 +25,23 @@
  # --------------------------------------------------------------------------
  #}
 
-{# One header cell per import column, flagged as coming from the CSV file. #}
-{% for column in columns %}
-    <th>
-        <img src="{{ icon }}" alt="{{ icon_title }}" title="{{ icon_title }}"
-             width="30" height="30" style="vertical-align: middle;">
-        <span style="vertical-align: middle;">{{ column }}</span>
-    </th>
-{% endfor %}
+{# Planning block injected into #viewplan by ajax/planning.php: a start date and a
+ # duration. Picking a duration of "Specify an end date" swaps the end-date container
+ # below for an explicit end-date field, reloaded over AJAX. #}
+
+{% if plan_id > 0 %}
+    <input type="hidden" name="plan[id]" value="{{ plan_id }}">
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 mb-2">{{ __('Start date') }}</div>
+    <div class="col-md-4 mb-2">{{ begin_field|raw }}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-2">{{ __('Period') }}</div>
+    <div class="col-md-4 mb-2">
+        {{ duration_field|raw }}
+        <div id="date_end{{ rand }}" class="mt-2"></div>
+    </div>
+</div>

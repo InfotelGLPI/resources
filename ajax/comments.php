@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
@@ -64,17 +65,23 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
                 }
                 $tmpname = Resource::getResourceName($resources_id, 2);
             }
-            echo htmlspecialchars((string) $tmpname["comment"], ENT_QUOTES, 'UTF-8');
-
+            $link_script = '';
             if (isset($_REQUEST['withlink'])) {
                 // withlink is reflected into a jQuery selector ($('#...')): restrict it to
                 // a safe id pattern so a crafted GET value cannot break out and inject JS.
-                // json_encode() emits the link as a properly-quoted JS string literal.
+                // json_encode() emits the link as a properly-quoted JS string literal, with
+                // HEX_TAG/HEX_AMP so it cannot close the surrounding <script> block either.
                 $withlink = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $_REQUEST['withlink']);
-                echo "<script type='text/javascript' >\n";
-                echo Resource::jsGetElementbyID($withlink) . ".attr('href', " . json_encode($tmpname['link']) . ");";
-                echo "</script>\n";
+                $link_script = Resource::jsGetElementbyID($withlink)
+                    . ".attr('href', "
+                    . json_encode($tmpname['link'], JSON_HEX_TAG | JSON_HEX_AMP)
+                    . ");";
             }
+
+            TemplateRenderer::getInstance()->display('@resources/resource_comment_ajax.html.twig', [
+                'comment' => (string) $tmpname["comment"],
+                'link_script' => $link_script,
+            ]);
             break;
 
         default:

@@ -25,15 +25,9 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Header cell holding the "check all" box; the checkAll() helper is emitted
- # alongside this template. #}
-<th>
-    <div class="form-group-checkbox">
-        <input type="checkbox" class="new_checkbox" name="checkall_imports" id="checkall_imports"
-               title="{{ __('Check all') }}" onclick="checkAll(this.checked);">
-        <label class="label-checkbox" for="checkall_imports" title="{{ __('Check all') }}">
-            <span class="check"></span>
-            <span class="box"></span>
-        </label>
-    </div>
-</th>
+{# Add button of the change-action form, reloaded over AJAX when the category changes. #}
+{% if display %}
+    <button type="submit" name="add_entity_category" class="btn btn-primary" value="{{ label }}">
+        <span>{{ label }}</span>
+    </button>
+{% endif %}

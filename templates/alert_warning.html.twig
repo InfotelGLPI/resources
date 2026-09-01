@@ -25,22 +25,19 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="alert alert-warning">{{ alert_text }}</div>
-<form name="form" method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+{# Standalone message block used by the front controllers that can only tell the user
+ # why the page they asked for cannot be rendered: an inactive plugin, a missing right
+ # or a missing configuration.
+ #
+ # `centered` switches to the plain centered variant used when nothing is actually
+ # misconfigured -- there is simply nothing to show yet. #}
+{% if centered ?? false %}
     <div class="center">
-        <table class="tab_cadre_fixe">
-            <tr>
-                <th colspan="3">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_1">
-                <td class="center">
-                    <span class="me-1">{{ action_label }}</span>{{ action_dropdown|raw }}
-                    {{ action_script|raw }}
-                </td>
-                <td class="center" id="plugin_resources_entity_itil_categories"></td>
-                <td class="center" id="plugin_resources_button_add"></td>
-            </tr>
-        </table>
+        <br><br>
+        <b>{{ message }}</b>
     </div>
-</form>
+{% else %}
+    <div class="alert alert-important alert-warning d-flex">
+        <b>{{ message }}</b>
+    </div>
+{% endif %}

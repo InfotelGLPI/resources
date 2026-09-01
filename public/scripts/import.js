@@ -1,5 +1,3 @@
-<?php
-
 /**
  * -------------------------------------------------------------------------
  * resources plugin for GLPI
@@ -27,23 +25,28 @@
  * --------------------------------------------------------------------------
  */
 
-if (isset($_GET["popup"])) {
-    $_SESSION["glpipopup"]["name"] = $_GET["popup"];
-}
-
-if (isset($_SESSION["glpipopup"]["name"])) {
-    switch ($_SESSION["glpipopup"]["name"]) {
-        case "test_rule":
-            Html::popHeader(__('Test'), $_SERVER['PHP_SELF']);
-            include GLPI_ROOT . "/front/rule.test.php";
-            break;
-
-        case "test_all_rules":
-            Html::popHeader(__('Test rules engine'), $_SERVER['PHP_SELF']);
-            include GLPI_ROOT . "/front/rulesengine.test.php";
-            break;
+/**
+ * Import lists: the header box ticks or unticks every line of its own list.
+ *
+ * The listener is delegated on the document because the header is re-rendered by the
+ * pager without a full page load. Only the checkboxes of the form the header belongs
+ * to are touched: the previous inline helper walked every input of the page, which
+ * also reached the boxes of the surrounding screens.
+ */
+document.addEventListener('change', (event) => {
+    const master = event.target;
+    if (!(master instanceof HTMLInputElement) || master.id !== 'checkall_imports') {
+        return;
     }
-    echo "<div class='center'><br><a href='javascript:window.close()'>" . __('Close') . "</a>";
-    echo "</div>";
-    Html::popFooter();
-}
+
+    const form = master.form || master.closest('form');
+    if (form === null) {
+        return;
+    }
+
+    form.querySelectorAll('input[type="checkbox"]').forEach((box) => {
+        if (box !== master) {
+            box.checked = master.checked;
+        }
+    });
+});

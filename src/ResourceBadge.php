@@ -130,22 +130,6 @@ class ResourceBadge extends CommonDBTM
     }
 
     /**
-     * Display of the link to configure the badge interface
-     */
-    //    function showConfigForm()
-    //    {
-    //        echo "<br>";
-    //        echo "<form name='form' method='post' action='" . self::getFormURL() . "'>";
-    //        echo "<div class='center'><table class='tab_cadre_fixe'>";
-    //        echo "<tr><th>" . self::getTypeName(2) . "</th></tr>";
-    //        echo "<tr class='tab_bg_1'><td class='center'>";
-    //        echo "<a href=\"./resourcebadge.form.php?config\">" . Metademand_Resource::getTypeName(2) . "</a>";
-    //        echo "</td></tr></table></div>";
-    //        Html::closeForm();
-    //        echo "<br>";
-    //    }
-
-    /**
      * Choose link with metademand
      *
      * @return bool

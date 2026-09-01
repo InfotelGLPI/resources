@@ -25,23 +25,23 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Rows only: the surrounding form is opened by showFormHeader() and closed by
- # showFormButtons(), which are driven by two different objects here (see
- # GlpiPlugin\Resources\User::showForm()). #}
-<input type="hidden" name="idResource" value="{{ resources_id }}">
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-    <td>{{ __('Authentication') }}</td>
-    <td>
+{% block form_fields %}
+    {# The controller turns the update into a solution on the tickets of that resource. #}
+    {{ fields.hiddenField('idResource', resources_id) }}
+
+    {% set auth_html %}
         {% for line in auth_lines %}
             {{- line }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
-    </td>
-</tr>
+    {% endset %}
+    {{ fields.htmlField('authtype', auth_html, __('Authentication'), field_options) }}
 
-<tr class="tab_bg_1">
-    <td><label for="textfield_phone{{ phone_rand }}">{{ phone_label }}</label></td>
-    <td>{{ phone_input|raw }}</td>
-    <td>{{ email_label }}</td>
-    <td>{{ email_block|raw }}</td>
-</tr>
+    {{ fields.textField('phone', item.fields['phone'], phone_label, field_options) }}
+
+    {# UserEmail::showForUser() renders the whole repeatable email block with its own
+     # add and remove controls: there is no macro equivalent for it. #}
+    {{ fields.htmlField('_useremails', email_block, email_label, field_options) }}
+{% endblock %}

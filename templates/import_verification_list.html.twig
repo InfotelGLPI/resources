@@ -26,8 +26,9 @@
  #}
 
 {# Shared by both verification reports (file vs GLPI, GLPI vs file).
- # `list_header` is the <thead> built by showListHeader(); cell contents are escaped
- # server-side because some of them are links or tooltips, hence |raw. #}
+ # `header_columns` describes the header row (ImportResource::getListHeaderColumns());
+ # cell contents are escaped server-side because some of them are links or tooltips,
+ # hence |raw. #}
 <form name="form" method="post" id="verify" action="{{ form_action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
@@ -35,7 +36,7 @@
         {{ pager|raw }}
 
         <table class="tab_cadre_fixe">
-            {{ list_header|raw }}
+            {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
 
             {% for entry in entries %}
                 <tr>

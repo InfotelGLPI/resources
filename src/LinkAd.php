@@ -203,28 +203,6 @@ class LinkAd extends CommonDBTM
 
 
     /**
-     * @param $ID
-     */
-    //    public static function showAddForm($ID)
-    //    {
-    //        echo "<div class='center'>";
-    //        echo "<form action='" . Toolbox::getItemTypeFormURL(Resource::class) . "' method='post'>";
-    //        echo "<table class='tab_cadre' width='50%'>";
-    //        echo "<tr>";
-    //        echo "<th colspan='2'>";
-    //        echo __('Create checklists', 'resources');
-    //        echo "</th></tr>";
-    //        echo "<tr class='tab_bg_2 center'>";
-    //        echo "<td colspan='2'>";
-    //        echo Html::submit(_sx('button', 'Post'), ['name' => 'add_checklist_resources', 'class' => 'btn btn-primary']);
-    //        echo Html::hidden('id', ['value' => $ID]);
-    //        echo "</td></tr></table>";
-    //        Html::closeForm();
-    //        echo "</div>";
-    //    }
-
-
-    /**
      * @param       $ID
      * @param array $options
      *
@@ -677,7 +655,11 @@ class LinkAd extends CommonDBTM
                     $text = __('You have to do all checklist in action before', 'resources');
                 }
                 if (!empty($text)) {
-                    echo "<tr class='tab_bg_1 warning'><td colspan='4'>$text</td></tr>";
+                    // Emitted through PRE_ITEM_FORM on ITILSolution, i.e. outside any table:
+                    // the legacy <tr class='warning'> wrapper could never style anything there.
+                    TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                        'message' => $text,
+                    ]);
                 }
             }
         }

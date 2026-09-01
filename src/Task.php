@@ -861,16 +861,22 @@ class Task extends CommonDBTM
 
         $tasks_list = (string) ob_get_clean();
 
-        ob_start();
         $Checklist = new Checklist();
+
+        // Captured separately so the spacing between the two blocks belongs to the
+        // template instead of an echoed <br>.
+        ob_start();
         $Checklist->showOnCentral(false);
-        echo "<br>";
+        $checklist_todo = (string) ob_get_clean();
+
+        ob_start();
         $Checklist->showOnCentral(true);
-        $checklists = (string) ob_get_clean();
+        $checklist_done = (string) ob_get_clean();
 
         TemplateRenderer::getInstance()->display('@resources/task_central.html.twig', [
-            'tasks_list' => $tasks_list,
-            'checklists' => $checklists,
+            'tasks_list'     => $tasks_list,
+            'checklist_todo' => $checklist_todo,
+            'checklist_done' => $checklist_done,
         ]);
     }
 

@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\ConfigHabilitation;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
@@ -70,8 +71,9 @@ if (isset($_POST['add_metademand'])) {
         }
     } else {
         Html::header(__('Setup'), '', "config", "plugin");
-        echo "<div class='alert alert-important alert-warning d-flex'>";
-        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+        TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+            'message' => __('Please activate the plugin metademand', 'resources'),
+        ]);
     }
 } elseif (isset($_GET['new'])) {
     if (Plugin::isPluginActive("metademands")) {
@@ -85,13 +87,16 @@ if (isset($_POST['add_metademand'])) {
                 PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2",
             );
         } else {
-            echo "<div class='center'><br><br>";
-            echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message'  => __('No advanced request found', 'resources'),
+                'centered' => true,
+            ]);
         }
     } else {
         Html::header(__('Setup'), '', "config", "plugin");
-        echo "<div class='alert alert-important alert-warning d-flex'>";
-        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+        TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+            'message' => __('Please activate the plugin metademand', 'resources'),
+        ]);
     }
 } elseif (isset($_GET['delete'])) {
     if (Plugin::isPluginActive("metademands")) {
@@ -106,13 +111,16 @@ if (isset($_POST['add_metademand'])) {
                 PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?metademands_id=" . $data["plugin_metademands_metademands_id"] . "&tickets_id=0&step=2",
             );
         } else {
-            echo "<div class='center'><br><br>";
-            echo "<b>" . __('No advanced request found', 'resources') . "</b></div>";
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message'  => __('No advanced request found', 'resources'),
+                'centered' => true,
+            ]);
         }
     } else {
         Html::header(__('Setup'), '', "config", "");
-        echo "<div class='alert alert-important alert-warning d-flex'>";
-        echo "<b>" . __('Please activate the plugin metademand', 'resources') . "</b></div>";
+        TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+            'message' => __('Please activate the plugin metademand', 'resources'),
+        ]);
     }
 }
 

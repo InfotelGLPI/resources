@@ -905,14 +905,10 @@ class Resource_Change extends CommonDBTM
                 break;
         }
 
-        if ($display) {
-            echo "<div class='next'>";
-            echo Html::submit(
-                __s('Starting change', 'resources'),
-                ['name' => 'changeresources', 'class' => 'btn btn-success'],
-            );
-            echo "</div>";
-        }
+        TemplateRenderer::getInstance()->display('@resources/resource_change_button_start.html.twig', [
+            'display' => $display,
+            'label' => __('Starting change', 'resources'),
+        ]);
     }
 
     /**
@@ -1302,41 +1298,46 @@ class Resource_Change extends CommonDBTM
 
         $canedit = true;
 
-        // Build the action cell (label + dropdown + AJAX reload script). The
-        // script depends on the rand returned by the dropdown, so both are
-        // captured together as a single trusted HTML fragment.
-        ob_start();
-        echo __('Action') . '&nbsp;';
-        $rand = Dropdown::showFromArray('actions_id', $actions, ['on_change' => 'plugin_resources_load_entity();']);
-        // Dropdown list according to the entity
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_entity(){";
-        $params = ['action'     => 'loadEntity',
-            'actions_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
-            'plugin_resources_entity_itil_categories',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-            $params,
-            'dropdown_actions_id' . $rand,
+        // The reload script targets the dropdown by id, so fix the rand instead of
+        // reading it back from Dropdown::showFromArray(), which returns the markup
+        // when display is off.
+        $rand = mt_rand();
+
+        $dropdown = (string) Dropdown::showFromArray('actions_id', $actions, [
+            'on_change' => 'plugin_resources_load_entity();',
+            'rand'      => $rand,
+            'display'   => false,
+        ]);
+
+        // Reloading the entity dropdown also clears the add button, which no longer
+        // applies to the newly selected action.
+        $script = Html::scriptBlock(
+            'function plugin_resources_load_entity(){'
+            . Ajax::updateItemJsCode(
+                'plugin_resources_entity_itil_categories',
+                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                ['action' => 'loadEntity', 'actions_id' => '__VALUE__'],
+                'dropdown_actions_id' . $rand,
+                false,
+            )
+            . ';'
+            . Ajax::updateItemJsCode(
+                'plugin_resources_button_add',
+                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                ['action' => 'clean', 'actions_id' => '__VALUE__'],
+                'dropdown_actions_id' . $rand,
+                false,
+            )
+            . '}',
         );
-        echo ";";
-        $params = ['action'     => 'clean',
-            'actions_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
-            'plugin_resources_button_add',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-            $params,
-            'dropdown_actions_id' . $rand,
-        );
-        echo "}";
-        echo "</script>";
-        $action_cell = (string) ob_get_clean();
 
         TemplateRenderer::getInstance()->display('@resources/resource_change_actions_form.html.twig', [
-            'form_action' => self::getFormURL(),
-            'alert_text'  => __('Define entity & ticket category for each change action', 'resources'),
-            'title'       => __("Managing change actions", 'resources'),
-            'action_cell' => $action_cell,
+            'form_action'     => self::getFormURL(),
+            'alert_text'      => __('Define entity & ticket category for each change action', 'resources'),
+            'title'           => __("Managing change actions", 'resources'),
+            'action_label'    => __('Action'),
+            'action_dropdown' => $dropdown,
+            'action_script'   => $script,
         ]);
 
         self::listItems($canedit);
@@ -1390,8 +1391,6 @@ class Resource_Change extends CommonDBTM
      */
     public function loadEntity($actions_id)
     {
-        global $CFG_GLPI;
-
         // Entity already added for this action
         $datas = $this->find(['actions_id' => $actions_id]);
 
@@ -1402,37 +1401,46 @@ class Resource_Change extends CommonDBTM
             }
         }
 
-        echo __('Entity') . '&nbsp;';
-        $mrand = Dropdown::show("Entity", [
-            'name' => 'entities_id',
-            'used' => $used_entities,
+        // Same reason as in displayCategory(): the reload script targets the dropdown
+        // by id, so the rand is fixed here rather than read back from Dropdown::show().
+        $rand = mt_rand();
+
+        $dropdown = (string) Dropdown::show(Entity::class, [
+            'name'      => 'entities_id',
+            'used'      => $used_entities,
             'on_change' => 'plugin_resources_load_category();',
+            'rand'      => $rand,
+            'display'   => false,
         ]);
 
-        //Dropdown list according to the entity
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_category(){";
-        $params = ['action' => 'loadCategory', 'entities_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
-            'plugin_resource_itil_categories',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-            $params,
-            'dropdown_entities_id' . $mrand,
+        // Dropdown list according to the entity
+        $script = Html::scriptBlock(
+            'function plugin_resources_load_category(){' . Ajax::updateItemJsCode(
+                'plugin_resource_itil_categories',
+                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                ['action' => 'loadCategory', 'entities_id' => '__VALUE__'],
+                'dropdown_entities_id' . $rand,
+                false,
+            ) . '}',
         );
-        echo "};";
-        echo "</script>";
 
-        echo "<span id='plugin_resource_itil_categories'>";
-        self::displayCategory($_SESSION['glpiactive_entity']);
-        echo "</span>";
+        TemplateRenderer::getInstance()->display('@resources/resource_change_entity.html.twig', [
+            'label'    => __('Entity'),
+            'dropdown' => $dropdown,
+            'script'   => $script,
+            'category' => self::getCategoryFields($_SESSION['glpiactive_entity']),
+        ]);
     }
 
     /**
-     * Display dropdown list of the category
+     * Build the category dropdown of a change action, with the script reloading the
+     * add button when the category changes.
      *
      * @param $entities_id
+     *
+     * @return array<string, string>
      */
-    public static function displayCategory($entities_id)
+    private static function getCategoryFields($entities_id)
     {
         // The reload script has to target the dropdown by id, so fix the rand instead of
         // reading it back from Dropdown::show(), which returns the markup when display is off.
@@ -1457,11 +1465,24 @@ class Resource_Change extends CommonDBTM
             ) . '}',
         );
 
-        TemplateRenderer::getInstance()->display('@resources/resource_change_category.html.twig', [
+        return [
             'label'    => __('Category'),
             'dropdown' => $dropdown,
             'script'   => $script,
-        ]);
+        ];
+    }
+
+    /**
+     * Display dropdown list of the category
+     *
+     * @param $entities_id
+     */
+    public static function displayCategory($entities_id)
+    {
+        TemplateRenderer::getInstance()->display(
+            '@resources/resource_change_category.html.twig',
+            self::getCategoryFields($entities_id),
+        );
     }
 
     /**
@@ -1469,9 +1490,11 @@ class Resource_Change extends CommonDBTM
      */
     public static function displayButtonAdd($itilcategories_id)
     {
-        if ($itilcategories_id != 0) {
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_entity_category', 'class' => 'btn btn-primary']);
-        }
+        TemplateRenderer::getInstance()->display('@resources/resource_change_button_add.html.twig', [
+            // No category picked yet: there is nothing to add, so the area stays empty.
+            'display' => $itilcategories_id != 0,
+            'label'   => _x('button', 'Add'),
+        ]);
     }
 
     /**
