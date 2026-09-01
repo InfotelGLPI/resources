@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 14:45+0000\n"
+"POT-Creation-Date: 2026-09-01 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -648,7 +648,7 @@ msgstr ""
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Resource.php:4195 src/Directory.php:1200
+#: src/Resource.php:4396 src/Directory.php:1200
 msgid "Click here to send your email"
 msgstr ""
 
@@ -1234,7 +1234,7 @@ msgstr ""
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:4775 src/Resource.php:4787
+#: src/Resource.php:4977 src/Resource.php:4989
 msgid "Female"
 msgstr ""
 
@@ -1673,7 +1673,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:4774 src/Resource.php:4784
+#: src/Resource.php:4976 src/Resource.php:4986
 msgid "Male"
 msgstr ""
 
@@ -1941,7 +1941,7 @@ msgid "Order resources by"
 msgstr ""
 
 #: src/Config.php:115 src/Config.php:597 src/Notification.php:213
-#: src/Resource.php:184 src/Resource.php:4776 src/Resource.php:4790
+#: src/Resource.php:184 src/Resource.php:4978 src/Resource.php:4992
 msgid "Other"
 msgstr ""
 
@@ -2372,7 +2372,7 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:4471
+#: src/Resource.php:4673
 msgid "Resources list"
 msgstr ""
 
@@ -2485,7 +2485,7 @@ msgstr ""
 msgid "Select item"
 msgstr ""
 
-#: templates/resource_tree.html.twig:34
+#: templates/resource_tree.html.twig:39
 msgid "Select the contract type"
 msgstr ""
 
@@ -2549,7 +2549,7 @@ msgstr ""
 msgid "Short name"
 msgstr ""
 
-#: templates/resource_tree.html.twig:38 templates/resource_tree.html.twig:39
+#: templates/resource_tree.html.twig:51 templates/resource_tree.html.twig:52
 msgid "Show all"
 msgstr ""
 
@@ -3036,7 +3036,7 @@ msgstr ""
 msgid "Verify GLPI resources"
 msgstr ""
 
-#: front/resource.php:58 front/resource.php:66
+#: front/resource.php:58 front/resource.php:68 ajax/resourcetree.php:53
 msgid "View by contract type"
 msgstr ""
 
