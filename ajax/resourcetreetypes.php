@@ -29,58 +29,12 @@
 
 use GlpiPlugin\Resources\Resource;
 
-$AJAX_INCLUDE = 1;
-
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
-global $DB;
-
 Session::checkRight('plugin_resources', READ);
 
-if (isset($_GET['node'])) {
-    $target = "resource.php";
-
-    $nodes = [];
-
-    // Root node
-    if ($_REQUEST['node'] == -1) {
-        $entity = $_SESSION['glpiactive_entity'];
-        $dbu = new DbUtils();
-
-        $iterator = $DB->request(
-            [
-                'SELECT' => 'plugin_resources_contracttypes_id',
-                'DISTINCT' => true,
-                'FROM' => 'glpi_plugin_resources_contracttypes',
-                'INNER JOIN' => [
-                    'glpi_plugin_resources_resources' => [
-                        'FKEY' => [
-                            'glpi_plugin_resources_contracttypes' => 'id',
-                            'glpi_plugin_resources_resources' => 'plugin_resources_contracttypes_id',
-                        ],
-                    ],
-                ],
-                'WHERE' => [
-                    'is_deleted' => 0,
-                ],
-                'ORDER' => 'glpi_plugin_resources_contracttypes.name',
-            ],
-        );
-
-        foreach ($iterator as $contract) {
-            $ID = $contract['plugin_resources_contracttypes_id'];
-            $value = Dropdown::getDropdownName("glpi_plugin_resources_contracttypes", $ID);
-            $nodes[] = [
-                'id' => $ID,
-                'text' => $value,
-                'a_attr' => [
-                    "onclick" => 'window.open("' . PLUGIN_RESOURCES_WEBDIR . '/front/' . $target .
-                        '?criteria[0][field]=37&criteria[0][searchtype]=contains&criteria[0][value]=^' .
-                        rawurlencode($value) . '&start=0")',
-                ],
-            ];
-        }
-    }
-    echo json_encode($nodes);
-}
+// fancytree asks for the root level without a node key, then for the key of the node it
+// lazy-loads. Resource::getTreeNodes() validates that key and applies the same visibility
+// criteria as the resource list, so the endpoint stays a thin dispatcher.
+echo json_encode(Resource::getTreeNodes($_GET['node'] ?? '-1'));

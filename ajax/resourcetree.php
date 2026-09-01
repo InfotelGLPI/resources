@@ -29,8 +29,6 @@
 
 use GlpiPlugin\Resources\Resource;
 
-$AJAX_INCLUDE = 1;
-header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
@@ -49,4 +47,11 @@ if (
     $_GET['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
 }
 
+// The page is loaded in the iframe of a modal: emit the standard modal document so the
+// tree inherits the whole GLPI stylesheet (Tabler) and the core bundles carrying
+// fancytree, instead of rendering a bare fragment in quirks mode.
+Html::popHeader(__('View by contract type', 'resources'), '', true);
+
 Resource::showSelector($_GET['target']);
+
+Html::popFooter();

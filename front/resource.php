@@ -57,8 +57,10 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
             [
                 'title' => __('View by contract type', 'resources'),
                 'display' => false,
-                'width' => 600,
-                'height' => 500,
+                // createIframeModalWindow() accepts width/height but never emits them: the
+                // iframe is hardcoded to height="400". Only the dialog class reaches the
+                // markup, the rest of the sizing is done in css/resources.css.
+                'dialog_class' => 'modal-xl modal-dialog-centered plugin_resources_tree_dialog',
             ],
         );
 

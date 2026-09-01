@@ -2503,7 +2503,7 @@ class Resource extends CommonDBTM
      *
      * @static
      *
-     * @param array ($myname,$value,$entity_restrict)
+     * @param array $options
      */
 
     public static function dropdown($options = [])
@@ -3222,9 +3222,9 @@ class Resource extends CommonDBTM
     /**
      * Massive actions to be added
      *
-     * @param $type
+     * @param string $type
      *
-     * @return $action
+     * @return array
      */
     public function massiveActions($type)
     {
@@ -4124,10 +4124,210 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Maximum number of resources listed under a contract type node.
+     *
+     * The tree has no paging: past that count, a trailing node links to the filtered
+     * search list instead.
+     */
+    public const TREE_CHILDREN_LIMIT = 50;
+
+    /**
+     * Search criteria restricting the contract type tree to what the user may see.
+     *
+     * Mirrors plugin_resources_addDefaultWhere() (hook.php) so the tree exposes exactly
+     * what the resource list would: entity scope, plus the "own resources only"
+     * restriction when the profile lacks the plugin_resources_all right. The tree is
+     * opened from a page gated on that right, but its endpoint is reachable on its own.
+     *
+     * @return array
+     */
+    private static function getTreeVisibilityCriteria()
+    {
+        $table = self::getTable();
+
+        // Kept as an AND list rather than merged: getEntitiesRestrictCriteria() returns
+        // an 'OR' key of its own when the entity is recursive, which would collide with
+        // the ownership clause below.
+        $criteria = [
+            'AND' => [
+                ["$table.is_deleted" => 0],
+                ["$table.is_template" => 0],
+                getEntitiesRestrictCriteria($table, '', '', true),
+            ],
+        ];
+
+        if (!Session::haveRight('plugin_resources_all', READ)) {
+            $who = Session::getLoginUserID();
+            $criteria['AND'][] = [
+                'OR' => [
+                    "$table.users_id_recipient" => $who,
+                    "$table.users_id"           => $who,
+                ],
+            ];
+        }
+
+        return $criteria;
+    }
+
+    /**
+     * URL of the resource list filtered on a contract type.
+     *
+     * Search option 37 is a dropdown on glpi_plugin_resources_contracttypes, so the
+     * "equals" search type matches on the identifier: no name is interpolated into
+     * the URL any more.
+     *
+     * @param int $contracttypes_id
+     *
+     * @return string
+     */
+    private static function getTreeSearchUrl($contracttypes_id)
+    {
+        return PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?' . http_build_query([
+            'criteria' => [
+                [
+                    'field'      => 37,
+                    'searchtype' => 'equals',
+                    'value'      => (int) $contracttypes_id,
+                ],
+            ],
+            'start' => 0,
+        ]);
+    }
+
+    /**
+     * Build the fancytree nodes of the contract type browser.
+     *
+     * The root level lists the contract types holding at least one visible resource;
+     * expanding one lazy-loads its resources. Leaf nodes carry their target URL in
+     * data.url, which the script opens on activation, so no event handler is built
+     * server side any more.
+     *
+     * @param string $node fancytree key of the node being expanded, '-1' for the root
+     *
+     * @return array
+     */
+    public static function getTreeNodes($node)
+    {
+        if ((string) $node === '-1') {
+            return self::getContractTypeTreeNodes();
+        }
+
+        // Child keys are built below as "contracttype-<id>"; nothing else has children.
+        if (preg_match('/^contracttype-(\d+)$/', (string) $node, $matches) !== 1) {
+            return [];
+        }
+
+        return self::getResourceTreeNodes((int) $matches[1]);
+    }
+
+    /**
+     * Root level of the tree: the contract types holding at least one visible resource.
+     *
+     * Contract types carry no URL on purpose: activating one only unfolds it. The
+     * filtered list is reachable from the "Show all" child node built below.
+     *
+     * @return array
+     */
+    private static function getContractTypeTreeNodes()
+    {
+        global $DB;
+
+        $table = self::getTable();
+        $types = ContractType::getTable();
+
+        $iterator = $DB->request([
+            'SELECT'     => [
+                "$types.id AS id",
+                "$types.name AS name",
+                QueryFunction::count("$table.id", false, 'nb'),
+            ],
+            'FROM'       => $types,
+            'INNER JOIN' => [
+                $table => [
+                    'FKEY' => [
+                        $types => 'id',
+                        $table => 'plugin_resources_contracttypes_id',
+                    ],
+                ],
+            ],
+            'WHERE'      => self::getTreeVisibilityCriteria(),
+            'GROUPBY'    => ["$types.id", "$types.name"],
+            'ORDER'      => "$types.name",
+        ]);
+
+        $nodes = [];
+        foreach ($iterator as $contract) {
+            $nodes[] = [
+                'key'     => 'contracttype-' . $contract['id'],
+                'title'   => sprintf(__('%1$s (%2$s)'), $contract['name'], $contract['nb']),
+                'folder'  => true,
+                'lazy'    => true,
+                'tooltip' => ContractType::getTypeName(1) . ' - ' . $contract['name'],
+            ];
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * Second level of the tree: the resources of a contract type.
+     *
+     * The listing is capped by TREE_CHILDREN_LIMIT; the leading "Show all" node links
+     * to the filtered search list, which is both the way to reach the whole set and
+     * the way to reach the resources the cap left out.
+     *
+     * @param int $contracttypes_id
+     *
+     * @return array
+     */
+    private static function getResourceTreeNodes($contracttypes_id)
+    {
+        global $DB;
+
+        $table = self::getTable();
+
+        $criteria = self::getTreeVisibilityCriteria();
+        $criteria['AND'][] = ["$table.plugin_resources_contracttypes_id" => $contracttypes_id];
+
+        $total = countElementsInTable($table, $criteria);
+
+        $nodes = [
+            [
+                'key'   => 'contracttype-' . $contracttypes_id . '-all',
+                'title' => sprintf(__('%1$s (%2$s)'), __('Show all'), $total),
+                'icon'  => 'ti ti-list-search',
+                'data'  => ['url' => self::getTreeSearchUrl($contracttypes_id)],
+            ],
+        ];
+
+        $iterator = $DB->request([
+            'SELECT' => ["$table.id AS id", "$table.name AS name", "$table.firstname AS firstname"],
+            'FROM'   => $table,
+            'WHERE'  => $criteria,
+            'ORDER'  => ["$table.name", "$table.firstname"],
+            'LIMIT'  => self::TREE_CHILDREN_LIMIT,
+        ]);
+
+        foreach ($iterator as $resource) {
+            $nodes[] = [
+                'key'   => 'resource-' . $resource['id'],
+                'title' => trim($resource['name'] . ' ' . $resource['firstname']),
+                'icon'  => 'ti ti-user',
+                'data'  => [
+                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id=' . $resource['id'],
+                ],
+            ];
+        }
+
+        return $nodes;
+    }
+
+    /**
      * Show the contract type tree used to filter the resource list.
      *
-     * Rendered inside an iframe modal, in a page that goes through none of the usual
-     * header: the stylesheets and the scripts it needs are pulled here.
+     * Rendered inside the iframe of a modal, in a page emitted by Html::popHeader():
+     * the GLPI stylesheet and the core bundles are already there, only the tree own
+     * assets are pulled here.
      *
      * @param string $target front page the "Show all" link points back to
      *
@@ -4137,18 +4337,19 @@ class Resource extends CommonDBTM
     {
         Plugin::loadLang('resources');
 
-        $assets = Html::css("lib/base.css")
-            . Html::script("lib/base.js")
-            . Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/themes/default/style.min.css")
-            . Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/jstree-glpi.css")
-            . Html::script(PLUGIN_RESOURCES_WEBDIR . "/scripts/resourcetree.js", [], false);
+        // The page goes through Html::popHeader(), which already brings the whole GLPI
+        // stylesheet and the core bundles carrying fancytree: only the tree own assets
+        // are left to pull.
+        $assets = Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/resourcetree.css", [], false)
+            . Html::script(PLUGIN_RESOURCES_WEBDIR . "/scripts/resourcetree.js", ['type' => 'module'], false);
 
         TemplateRenderer::getInstance()->display('@resources/resource_tree.html.twig', [
-            'assets'    => $assets,
-            'rand'      => mt_rand(),
-            'target'    => $target,
-            'root_doc'  => PLUGIN_RESOURCES_WEBDIR,
-            'more_text' => __('Load more...'),
+            'assets'         => $assets,
+            'rand'           => mt_rand(),
+            'target'         => $target,
+            'root_doc'       => PLUGIN_RESOURCES_WEBDIR,
+            'no_data_text'   => __('No item found'),
+            'search_label'   => __('Search'),
         ]);
     }
 
@@ -4258,7 +4459,8 @@ class Resource extends CommonDBTM
      *
      * @static
      *
-     * @param array ($itemtype,$myname,$value,$entity_restrict,$action,$span)
+     * @param string $itemtype
+     * @param array  $options
      */
     public static function showGenericDropdown($itemtype, $options = [])
     {
@@ -4493,7 +4695,7 @@ class Resource extends CommonDBTM
      *
      * @param array $identifiers
      *
-     * @return |null
+     * @return int|null
      */
     public function isExistingResourceByIdentifier($identifiers = [])
     {
@@ -4568,9 +4770,9 @@ class Resource extends CommonDBTM
     /**
      * Test if a resource exist in database by testing (1st and 2nd level) identifiers of importResource
      *
-     * @param $importResourceID
+     * @param int $importResourceID
      *
-     * @return bool|null
+     * @return int|false
      */
     public function isExistingResourceByImportResourceID($importResourceID)
     {

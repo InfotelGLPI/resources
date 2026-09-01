@@ -25,23 +25,39 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Contract type tree used to filter the resource list. It is served inside an iframe modal,
- # in a page that goes through none of the usual header, so the assets come with it. The tree
- # itself is wired by scripts/resourcetree.js from the data attributes of its container. #}
+{# Contract type tree used to filter the resource list. It is served inside the iframe of a
+ # modal through Html::popHeader(), so Tabler and the core bundles are already loaded: the
+ # assets below are only the tree own stylesheet and script. The tree itself is wired by
+ # scripts/resourcetree.js from the data attributes of its container, fancytree comes from
+ # the core bundle. #}
 {{ assets|raw }}
 
-<div class="alert alert-important alert-info d-flex">
-    {{ __('Select the contract type', 'resources') }}
-</div>
-<br>
+<div class="plugin_resources_tree_page">
+    <div class="plugin_resources_tree_head">
+        <div class="alert alert-info d-flex align-items-center mb-3 py-2">
+            <i class="ti ti-info-circle me-2"></i>
+            {{ __('Select the contract type', 'resources') }}
+        </div>
 
-<a href="{{ target }}?reset=reset" target="_blank" class="text-nowrap" title="{{ __('Show all') }}">
-    {{ __('Show all') }}
-</a>
+        <div class="d-flex align-items-center gap-2">
+            <div class="input-icon flex-fill">
+                <span class="input-icon-addon">
+                    <i class="ti ti-search"></i>
+                </span>
+                <input type="search" id="tree_resourcetypes_search{{ rand }}" class="form-control"
+                       placeholder="{{ search_label }}" aria-label="{{ search_label }}">
+            </div>
+            <a href="{{ target }}?reset=reset" target="_blank"
+               class="btn btn-outline-primary text-nowrap" title="{{ __('Show all') }}">
+                <i class="ti ti-list me-1"></i>{{ __('Show all') }}
+            </a>
+        </div>
+    </div>
 
-<div class="left" style="width:100%">
     <div id="tree_resourcetypes{{ rand }}"
+         class="plugin_resources_tree"
          data-plugin-resources-tree
          data-root-doc="{{ root_doc }}"
-         data-more-text="{{ more_text }}"></div>
+         data-search-id="tree_resourcetypes_search{{ rand }}"
+         data-no-data-text="{{ no_data_text }}"></div>
 </div>

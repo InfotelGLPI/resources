@@ -32,49 +32,126 @@
  *
  * Served inside an iframe modal, in a page loaded outside of the usual GLPI header: the
  * plugin scripts registered through the ADD_JAVASCRIPT hook are not present there, so
- * resource_tree.html.twig pulls this file explicitly and the tree reads its parameters
+ * resource_tree.html.twig pulls this module explicitly and the tree reads its parameters
  * from the data attributes of its container rather than from an inline script block.
+ *
+ * Built on the fancytree widget bundled in the core base.js (same as Glpi\Features\TreeBrowse),
+ * so nothing extra is downloaded. Contract types are the root level; expanding one lazy-loads
+ * its resources. fancytree is exposed as a jQuery widget only, hence the jQuery calls below --
+ * there is no other way to drive the bundled build.
  */
-(function () {
-    function initTree(container) {
-        var rootDoc = container.dataset.rootDoc;
-        var typesUrl = rootDoc + '/ajax/resourcetreetypes.php';
 
-        $.getScript(rootDoc + '/lib/jstree/jstree.js', function () {
-            $(container).jstree({
-                plugins: ['search', 'qload'],
-                search: {
-                    case_insensitive: true,
-                    show_only_matches: true,
-                    ajax: {
-                        type: 'POST',
-                        url: typesUrl,
-                    },
-                },
-                qload: {
-                    prevLimit: 50,
-                    nextLimit: 30,
-                    moreText: container.dataset.moreText,
-                },
-                core: {
-                    animation: 0,
-                    data: {
-                        url: function (node) {
-                            return typesUrl + '?node=' + (node.id === '#' ? '-1' : node.id);
-                        },
-                    },
-                },
-            });
-        });
+/*
+ * Tabler glyph map for fancytree. The `preset` option is mandatory for the glyph extension,
+ * but every one of its entries is overridden here: the core ships Tabler icons, not Font
+ * Awesome.
+ */
+const TABLER_GLYPHS = {
+    _addClass: 'ti',
+    checkbox: 'ti-square',
+    checkboxSelected: 'ti-square-check',
+    checkboxUnknown: 'ti-square-minus fancytree-helper-indeterminate-cb',
+    radio: 'ti-circle',
+    radioSelected: 'ti-circle-dot',
+    radioUnknown: 'ti-circle-dot',
+    dragHelper: 'ti-arrow-right',
+    dropMarker: 'ti-arrow-narrow-right',
+    error: 'ti-alert-triangle',
+    expanderClosed: 'ti-chevron-right',
+    expanderLazy: 'ti-chevron-right',
+    expanderOpen: 'ti-chevron-down',
+    loading: 'ti-loader-2 fancytree-helper-spin',
+    nodata: 'ti-mood-empty',
+    noExpander: '',
+    doc: 'ti-file',
+    docOpen: 'ti-file',
+    folder: 'ti-folder',
+    folderOpen: 'ti-folder-open',
+};
+
+/**
+ * Open the page a node points to, if it carries one.
+ *
+ * @param {object} node fancytree node
+ */
+const openNode = (node) => {
+    const url = node.data ? node.data.url : null;
+
+    if (url) {
+        window.open(url);
+    }
+};
+
+/**
+ * Wire the filter input attached to a tree, if the template rendered one.
+ *
+ * @param {HTMLElement} container tree container
+ */
+const bindFilter = (container) => {
+    const search = document.getElementById(container.dataset.searchId);
+
+    if (!search) {
+        return;
     }
 
-    function initAll() {
-        document.querySelectorAll('[data-plugin-resources-tree]').forEach(initTree);
-    }
+    search.addEventListener('keyup', () => {
+        const tree = $.ui.fancytree.getTree(container);
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAll);
-    } else {
-        initAll();
-    }
-})();
+        if (search.value.length === 0) {
+            tree.clearFilter();
+        } else {
+            tree.filterNodes(search.value);
+        }
+    });
+};
+
+/**
+ * Build the tree inside a container.
+ *
+ * @param {HTMLElement} container tree container carrying the data- parameters
+ */
+const initTree = (container) => {
+    const typesUrl = `${container.dataset.rootDoc}/ajax/resourcetreetypes.php`;
+
+    $(container).fancytree({
+        extensions: ['filter', 'glyph'],
+        autoScroll: true,
+
+        // Contract types carry no URL: a click on one unfolds it instead of leaving the tree.
+        clickFolderMode: 3,
+
+        glyph: {
+            preset: 'awesome4',
+            map: TABLER_GLYPHS,
+        },
+
+        // Root level; each folder node then lazy-loads its own children.
+        source: {
+            url: typesUrl,
+            data: {node: -1},
+            cache: false,
+        },
+        lazyLoad: (event, data) => {
+            data.result = {
+                url: typesUrl,
+                data: {node: data.node.key},
+                cache: false,
+            };
+        },
+
+        filter: {
+            mode: 'hide',
+            autoExpand: true,
+            nodata: container.dataset.noDataText,
+        },
+
+        // The target URL travels in the node payload, so the server never emits an event
+        // handler of its own.
+        activate: (event, data) => openNode(data.node),
+    });
+
+    bindFilter(container);
+};
+
+// Modules are deferred, so the container is already parsed when this runs.
+document.querySelectorAll('[data-plugin-resources-tree]').forEach(initTree);

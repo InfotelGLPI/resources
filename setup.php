@@ -218,7 +218,7 @@ function plugin_init_resources()
         if (Session::haveRight("plugin_resources", READ)) {
             $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'] = ["css/resources.css"];
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
-                "resources.js",
+                "scripts/resources.js",
                 "scripts/import.js",
                 "lib/plugins/jquery.address.js",
                 "lib/plugins/jquery.mousewheel.js",
