@@ -1107,81 +1107,33 @@ class Resource extends CommonDBTM
     public function checkRequiredFields($input)
     {
         $need = [];
-        $rulecollection = new RuleContracttypeCollection($input['entities_id']);
+        if (isset($input['entities_id'])) {
+            $rulecollection = new RuleContracttypeCollection($input['entities_id']);
 
-        $fields = [];
-        $fields = $rulecollection->processAllRules($input, $fields, []);
+            $fields = [];
+            $fields = $rulecollection->processAllRules($input, $fields, []);
 
-        $rank = new Rank();
+            $rank = new Rank();
 
-        $field = [];
+            $field = [];
 
-        foreach ($fields as $key => $val) {
-            $required = explode("requiredfields_", $key);
-            if (isset($required[1])) {
-                $field[] = $required[1];
+            foreach ($fields as $key => $val) {
+                $required = explode("requiredfields_", $key);
+                if (isset($required[1])) {
+                    $field[] = $required[1];
+                }
             }
-        }
 
-        if (count($field) > 0) {
-            foreach ($field as $key => $val) {
-                if (!isset($input[$val])
-                    || empty($input[$val])
-                    || is_null($input[$val])
-                    || $input[$val] == "NULL"
-                ) {
-                    if (isset($input['more_information'])) {
-                        if (!$rank->canCreate()
-                            && !in_array(
-                                $val,
-                                [
-                                    'date_agreement_candidate',
-                                    'plugin_resources_degreegroups_id',
-                                    'plugin_resources_recruitingsources_id',
-                                    'yearsexperience',
-                                    'reconversion',
-                                    'interview_date',
-                                    'plugin_resources_workprofiles_id',
-                                    'plugin_resources_clients_id',
-                                    'resignation_date',
-                                    'wished_leaving_date',
-                                    'effective_leaving_date',
-                                    'plugin_resources_destinations_id',
-                                    'plugin_resources_leavingreasons_id',
-                                    'company_name',
-                                    'pay_gap',
-                                    'mission_lost',
-                                ],
-                            )
-                        ) {
-                        } else {
-                            $need[] = $val;
-                        }
-                    } else {
-                        if ((!$rank->canCreate()
-                                && in_array(
-                                    $val,
-                                    [
-                                        'plugin_resources_ranks_id',
-                                        'plugin_resources_resourcesituations_id',
-                                        'date_agreement_candidate',
-                                        'plugin_resources_degreegroups_id',
-                                        'plugin_resources_recruitingsources_id',
-                                        'yearsexperience',
-                                        'reconversion',
-                                        'interview_date',
-                                        'plugin_resources_workprofiles_id',
-                                        'plugin_resources_clients_id',
-                                        'resignation_date',
-                                        'wished_leaving_date',
-                                        'effective_leaving_date',
-                                        'plugin_resources_destinations_id',
-                                        'plugin_resources_leavingreasons_id',
-                                        'company_name',
-                                        'pay_gap',
-                                        'mission_lost',
-                                    ],
-                                )) || in_array(
+            if (count($field) > 0) {
+                foreach ($field as $key => $val) {
+                    if (!isset($input[$val])
+                        || empty($input[$val])
+                        || is_null($input[$val])
+                        || $input[$val] == "NULL"
+                    ) {
+                        if (isset($input['more_information'])) {
+                            if (!$rank->canCreate()
+                                && !in_array(
                                     $val,
                                     [
                                         'date_agreement_candidate',
@@ -1202,15 +1154,64 @@ class Resource extends CommonDBTM
                                         'mission_lost',
                                     ],
                                 )
-                        ) {
+                            ) {
+                            } else {
+                                $need[] = $val;
+                            }
                         } else {
-                            $need[] = $val;
+                            if ((!$rank->canCreate()
+                                    && in_array(
+                                        $val,
+                                        [
+                                            'plugin_resources_ranks_id',
+                                            'plugin_resources_resourcesituations_id',
+                                            'date_agreement_candidate',
+                                            'plugin_resources_degreegroups_id',
+                                            'plugin_resources_recruitingsources_id',
+                                            'yearsexperience',
+                                            'reconversion',
+                                            'interview_date',
+                                            'plugin_resources_workprofiles_id',
+                                            'plugin_resources_clients_id',
+                                            'resignation_date',
+                                            'wished_leaving_date',
+                                            'effective_leaving_date',
+                                            'plugin_resources_destinations_id',
+                                            'plugin_resources_leavingreasons_id',
+                                            'company_name',
+                                            'pay_gap',
+                                            'mission_lost',
+                                        ],
+                                    )) || in_array(
+                                        $val,
+                                        [
+                                            'date_agreement_candidate',
+                                            'plugin_resources_degreegroups_id',
+                                            'plugin_resources_recruitingsources_id',
+                                            'yearsexperience',
+                                            'reconversion',
+                                            'interview_date',
+                                            'plugin_resources_workprofiles_id',
+                                            'plugin_resources_clients_id',
+                                            'resignation_date',
+                                            'wished_leaving_date',
+                                            'effective_leaving_date',
+                                            'plugin_resources_destinations_id',
+                                            'plugin_resources_leavingreasons_id',
+                                            'company_name',
+                                            'pay_gap',
+                                            'mission_lost',
+                                        ],
+                                    )
+                            ) {
+                            } else {
+                                $need[] = $val;
+                            }
                         }
                     }
                 }
             }
         }
-
         return $need;
     }
 
@@ -1262,13 +1263,13 @@ class Resource extends CommonDBTM
         }
         //Add picture of the resource
         $input['picture'] = "NULL";
-        if (isset($_FILES['_uploader_picture']['tmp_name'][0])
-            && is_uploaded_file($_FILES['_uploader_picture']['tmp_name'][0])) {
-            if (exif_imagetype($_FILES['_uploader_picture']['tmp_name'][0]) === IMAGETYPE_JPEG) {
+        $uploadedfile = self::getUploadedPicturePath($input);
+        if ($uploadedfile !== '') {
+            if (exif_imagetype($uploadedfile) === IMAGETYPE_JPEG) {
                 $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-                if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
+                if (filesize($uploadedfile) <= $max_size) {
                     if (is_writable(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/")) {
-                        $input['picture'] = $this->addPhoto($this);
+                        $input['picture'] = $this->addPhoto($this, $uploadedfile);
                     }
                 } else {
                     Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);
@@ -1377,18 +1378,59 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Resolve the picture sent by the asynchronous uploader of Html::file().
+     *
+     * jQuery File Upload replaces the file input as soon as it is filled, so $_FILES is
+     * always empty when the form is finally submitted: the file has already been moved to
+     * GLPI_TMP_DIR and only its name is posted in _picture[0]. Containment is enforced with
+     * realpath() so a crafted name cannot escape the temporary directory.
+     *
+     * @param array $input
+     *
+     * @return string Absolute path of the temporary file, or an empty string when there is none
+     */
+    public static function getUploadedPicturePath(array $input): string
+    {
+        // The uploader posts _picture as an array, but a hand crafted request may send a scalar:
+        // do not index it blindly, "abc"[0] would silently yield "a" instead of falling back.
+        $picture = $input['_picture'] ?? '';
+        if (is_array($picture)) {
+            $picture = reset($picture);
+        }
+        $filename = is_string($picture) ? $picture : '';
+        if ($filename === '') {
+            return '';
+        }
+
+        $tmp_dir  = realpath(GLPI_TMP_DIR);
+        $fullpath = realpath(GLPI_TMP_DIR . "/" . $filename);
+
+        if ($tmp_dir === false
+            || $fullpath === false
+            || !str_starts_with($fullpath, $tmp_dir . DIRECTORY_SEPARATOR)) {
+            return '';
+        }
+
+        return $fullpath;
+    }
+
+    /**
      * @param $class
+     * @param $uploadedfile Absolute path of the uploaded temporary file
      *
      * @return mixed|string
      */
-    public function addPhoto($class)
+    public function addPhoto($class, $uploadedfile = null)
     {
-        $uploadedfile = $_FILES['_uploader_picture']['tmp_name'][0] ?? '';
+        if ($uploadedfile === null) {
+            $uploadedfile = self::getUploadedPicturePath(is_array($this->input) ? $this->input : []);
+        }
 
         // Fail-closed defense in depth: never trust the caller's pre-checks. Only process a
-        // real uploaded temp file that GD confirms is a genuine JPEG, so a spoofed
-        // Content-Type or a missing/forged temp path cannot reach imagecreatefromjpeg().
-        if (!is_uploaded_file($uploadedfile)
+        // file that GD confirms is a genuine JPEG, so a spoofed Content-Type or a forged
+        // temp path cannot reach imagecreatefromjpeg(). Containment inside GLPI_TMP_DIR is
+        // guaranteed by getUploadedPicturePath().
+        if ($uploadedfile === '' || !is_file($uploadedfile)
             || exif_imagetype($uploadedfile) !== IMAGETYPE_JPEG) {
             return '';
         }
@@ -1424,6 +1466,9 @@ class Resource extends CommonDBTM
 
         rename($tmpfile, $filename);
 
+        // The uploader left the source file in GLPI_TMP_DIR: the resized copy is stored, drop it.
+        @unlink($uploadedfile);
+
         imagedestroy($src);
         imagedestroy($tmp);
 
@@ -1452,19 +1497,23 @@ class Resource extends CommonDBTM
 
         $this->getFromDB($input["id"]);
 
-        if (!isset($input['_UpdateFromUser_'])
-            && isset($_FILES['_uploader_picture']['tmp_name'][0])
-            && is_uploaded_file($_FILES['_uploader_picture']['tmp_name'][0])) {
-            if (exif_imagetype($_FILES['_uploader_picture']['tmp_name'][0]) === IMAGETYPE_JPEG) {
+        $uploadedfile = self::getUploadedPicturePath($input);
+        if (!isset($input['_UpdateFromUser_']) && $uploadedfile !== '') {
+            if (exif_imagetype($uploadedfile) === IMAGETYPE_JPEG) {
                 $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-                if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
-                    $input['picture'] = $this->addPhoto($this);
+                if (filesize($uploadedfile) <= $max_size) {
+                    $input['picture'] = $this->addPhoto($this, $uploadedfile);
                 } else {
                     Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);
                 }
             } else {
                 Session::addMessageAfterRedirect(__('Invalid filename'), false, ERROR);
             }
+        } elseif (isset($input['picture']) && $input['picture'] != "NULL") {
+            // The posted "picture" field only feeds the delete_picture action of the front
+            // controller, which sets it to NULL. Outside that case the stored file name is
+            // never client supplied, so drop the value instead of writing it back.
+            unset($input['picture']);
         }
 
         $input["_old_name"] = $this->fields["name"];
@@ -1808,969 +1857,363 @@ class Resource extends CommonDBTM
     public function showForm($ID, $options = [])
     {
         $this->initForm($ID, $options);
-        $options['formoptions'] = " enctype='multipart/form-data'";
-        $this->showFormHeader($options);
 
         $config = new Config();
 
-        if (isset($this->fields["entities_id"])) {
-            $input['entities_id'] = $this->fields["entities_id"];
-        } else {
-            $input['entities_id'] = $_SESSION['glpiactive_entity'];
-        }
-        $input['plugin_resources_contracttypes_id'] = $this->fields["plugin_resources_contracttypes_id"];
-        $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
-        $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
-        $input['plugin_resources_users_id'] = Session::getLoginUserID();
-        $input['plugin_resources_users_id_reel'] = $this->fields['users_id'];
-        $hidden = $this->getHiddenFields($input);
-        $readonly = $this->getReadonlyFields($input);
-        $required = $this->checkRequiredFields($input);
-        $alert = " style='color:red' ";
-
-        $tohide = [];
-        foreach ($this->fields as $k => $f) {
-            $tohide[$k] = "";
-            if (in_array($k, $hidden)) {
-                $tohide[$k] = "hidden";
-            }
-        }
-        $tohide['plugin_resources_employers_id'] = "";
-        if (in_array('plugin_resources_employers_id', $hidden) && in_array('plugin_resources_employers_id', $readonly)) {
-            $tohide['plugin_resources_employers_id'] = "hidden readonly";
-        } elseif (in_array('plugin_resources_employers_id', $hidden)) {
-            $tohide['plugin_resources_employers_id'] = "hidden";
-        } elseif (in_array('plugin_resources_employers_id', $readonly)) {
-            $tohide['plugin_resources_employers_id'] = "readonly";
-        }
-
-        $config = new Config();
-        if ($config->useSecurity()) {
-            $tohide["security"] = "";
-            $tohide["charter"] = "";
-            if (in_array("security", $hidden) && in_array("security", $readonly)) {
-                $tohide["security"] = "hidden readonly";
-            } elseif (in_array("security", $hidden)) {
-                $tohide["security"] = "hidden";
-            } elseif (in_array("security", $readonly)) {
-                $tohide["security"] = "readonly";
-            }
-
-            if (in_array("charter", $hidden) && in_array("charter", $readonly)) {
-                $tohide["charter"] = "hidden readonly";
-            } elseif (in_array("charter", $hidden)) {
-                $tohide["charter"] = "hidden";
-            } elseif (in_array("charter", $readonly)) {
-                $tohide["charter"] = "readonly";
-            }
-        }
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td " . $tohide['gender'] . "";
-        if (in_array("gender", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Gender', 'resources') . "</td>";
-        echo "<td " . $tohide['gender'] . ">";
-        $genders = self::getGenders();
-        $option = ['value' => $this->fields["gender"] ?? 0];
-        if (in_array("gender", $readonly)) {
-            $option['readonly'] = true;
-        }
-        Dropdown::showFromArray('gender', $genders, $option);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr  class='tab_bg_1'>";
-
-        echo "<td " . $tohide['name'] . "";
-        if (in_array("name", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Surname') . "</td>";
-        echo "<td " . $tohide['name'] . ">";
-        $option = ['value' => $this->fields['name'], 'onchange' => "javascript:this.value=this.value.toUpperCase();"];
-        if (in_array("name", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('name', $option);
-        echo "</td>";
-
-        if ($tohide["name"] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-
-        echo "<td rowspan='8' colspan='2' class='center'>";
-        if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
-            $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"];
-            if (file_exists($path)) {
-                echo "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
-             <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR
-                    . "/front/picture.send.php?file=" . $this->fields["picture"] . "'>
-            </object> ";
-                echo Html::hidden('picture', ['value' => $this->fields["picture"]]);
-            } else {
-                echo "<img src='../pics/nobody.png'>";
-            }
-        } else {
-            echo "<img src='../pics/nobody.png'>";
-        }
-
-        echo "<br>" . __('Photo', 'resources') . "<br>";
-        //      echo Html::file(['name' => 'picture', 'display' => false, 'onlyimages' => true]); //'value' => $this->fields["picture"],
-        echo "<input class='form-control' type='file' name='picture'>";
-        echo "&nbsp;";
-        echo "(" . Document::getMaxUploadSize() . ")&nbsp;";
-        if (isset($this->fields["picture"]) && !empty($this->fields["picture"])) {
-            Html::showSimpleForm(
-                PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
-                'delete_picture',
-                _x('button', 'Delete permanently'),
-                [
-                    'id' => $ID,
-                    'picture' => $this->fields["picture"],
-                ],
-                'ti-circle-x',
-            );
-        }
-        echo "</td></tr>";
-
-        echo "<tr " . $tohide['firstname'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("firstname", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('First name') . "</td>";
-        echo "<td>";
-        $option = [
-            'value' => $this->fields['firstname'],
-            'onchange' => "First2UpperCase(this.value);' style='text-transform:capitalize;'",
+        $input = [
+            'entities_id'                       => $this->fields["entities_id"] ?? $_SESSION['glpiactive_entity'],
+            'plugin_resources_contracttypes_id' => $this->fields["plugin_resources_contracttypes_id"],
+            'plugin_resources_profiletypes_id'  => $_SESSION["glpiactiveprofile"]['id'],
+            'plugin_resources_grouptypes_id'    => $_SESSION["glpigroups"],
+            'plugin_resources_users_id'         => Session::getLoginUserID(),
+            'plugin_resources_users_id_reel'    => $this->fields['users_id'],
         ];
-        if (in_array("firstname", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('firstname', $option);
-        echo "</td></tr>";
 
-        echo "<tr " . $tohide['matricule'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("matricule", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Matricule', 'resources') . "</td>";
-        echo "<td>";
-        $option = ['value' => $this->fields['matricule']];
-        if (in_array("matricule", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('matricule', $option);
-        echo "</td>";
-        echo "</tr>";
+        // The rule collections return flat lists of field names. Flipping them into maps lets the
+        // template test them with "hidden.<field> is defined", the way the wizard already does.
+        $hidden    = array_flip($this->getHiddenFields($input));
+        $readonly  = array_flip($this->getReadonlyFields($input));
+        $mandatory = array_flip($this->checkRequiredFields($input));
 
-        echo "<tr " . $tohide['phone'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("phone", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Phone') . "</td>";
-        echo "<td>";
-        $option = ['value' => $this->fields['phone']];
-        if (in_array("phone", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('phone', $option);
-        echo "</td></tr>";
+        $is_central   = Session::getCurrentInterface() == 'central';
+        $withtemplate = $options['withtemplate'] ?? 0;
 
-        echo "<tr " . $tohide['cellphone'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("cellphone", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Mobile phone') . "</td>";
-        echo "<td>";
-        $option = ['value' => $this->fields['cellphone']];
-        if (in_array("cellphone", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('cellphone', $option);
-        echo "</td></tr>";
-
-        $contractType = new ContractType();
+        $contracttype     = new ContractType();
         $second_matricule = false;
-        if ($contractType->getFromDB($this->fields["plugin_resources_contracttypes_id"])) {
-            if ($contractType->fields["use_second_matricule"] > 0) {
-                $second_matricule = true;
-            }
-        }
-        if ($second_matricule === true) {
-            echo "<tr " . $tohide['matricule_second'] . " class='tab_bg_1'>";
-            echo "<td";
-            if (in_array("matricule_second", $required)) {
-                echo $alert;
-            }
-            echo ">";
-            echo __('Second matricule', 'resources') . "</td>";
-            echo "<td>";
-            $option = ['value' => $this->fields['matricule']];
-            if (in_array("matricule_second", $readonly)) {
-                $option['readonly'] = true;
-            }
-            echo Html::input('matricule_second', $option);
-            echo "</td>";
-            echo "</tr>";
-        }
-
-        echo "<tr class='tab_bg_1'><td>" . ResourceState::getTypeName(1) . "</td>";
-        echo "<td>";
-        if (Session::getCurrentInterface() == 'central') {
-            $option = ['value'  => $this->fields["plugin_resources_resourcestates_id"],
-                'entity' => $this->fields["entities_id"]];
-            if (in_array('plugin_resources_resourcestates_id', $readonly)) {
-                $option['readonly'] = true;
-            }
-            Dropdown::show(
-                ResourceState::class,
-                $option,
-            );
-        } else {
-            echo Dropdown::getDropdownName(
-                "glpi_plugin_resources_resourcestates",
-                $this->fields["plugin_resources_resourcestates_id"],
-            );
-        }
-        echo "</td></tr>";
-
-        echo "<tr  " . $tohide['plugin_resources_contracttypes_id'] . " class='tab_bg_1'><td>" . ContractType::getTypeName(
-            1,
-        ) . "</td>";
-        echo "<td>";
-
-        $option = ['value'  => $this->fields["plugin_resources_contracttypes_id"],
-            'entity' => $this->fields["entities_id"]];
-        if (in_array('plugin_resources_contracttypes_id', $readonly)) {
-            $option['readonly'] = true;
-        }
-        Dropdown::show(
-            ContractType::class,
-            $option,
-        );
-        echo "</td></tr>";
-
-        echo "<tr " . $tohide['quota'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("quota", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Quota', 'resources') . "</td>";
-        echo "<td>";
-        $option = ['value' => Html::formatNumber($this->fields["quota"], true, 4), 'size' => 14];
-        if (in_array("quota", $readonly)) {
-            $option['readonly'] = true;
-        }
-        echo Html::input('quota', $option);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "</table><table class='tab_cadre_fixe'>";
-        $rank = new Rank();
-        if ($rank->canView()) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td " . $tohide['plugin_resources_resourcesituations_id'] . " ";
-            if (in_array("plugin_resources_resourcesituations_id", $required)) {
-                echo $alert;
-            }
-            echo ">";
-            echo ResourceSituation::getTypeName(1) . "</td>";
-            echo "<td " . $tohide['plugin_resources_resourcesituations_id'] . ">";
-
-            $params = [
-                'name' => 'plugin_resources_resourcesituations_id',
-                'value' => $this->fields['plugin_resources_resourcesituations_id'],
-                'entity' => $this->fields["entities_id"],
-                'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownContractnature.php",
-                'span' => 'span_contractnature',
-            ];
-            self::showGenericDropdown(ResourceSituation::class, $params);
-            echo '</td>';
-            if ($tohide['plugin_resources_resourcesituations_id'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "<td  " . $tohide['plugin_resources_contractnatures_id'] . "";
-            if (in_array("plugin_resources_contractnatures_id", $required)) {
-                echo $alert;
-            }
-            echo ">";
-
-            echo ContractNature::getTypeName(1) . "</td>";
-
-            echo "<td " . $tohide['plugin_resources_contractnatures_id'] . ">";
-            echo "<span id='span_contractnature' name='span_contractnature'>";
-            if ($this->fields["plugin_resources_contractnatures_id"] > 0) {
-                echo Dropdown::getDropdownName(
-                    'glpi_plugin_resources_contractnatures',
-                    $this->fields["plugin_resources_contractnatures_id"],
-                );
-            } else {
-                echo __('None');
-            }
-            echo "</span>";
-            echo "</td>";
-            if ($tohide['plugin_resources_contractnatures_id'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "</tr>";
-
-            echo "<tr class='tab_bg_1'>";
-            echo "<td " . $tohide['plugin_resources_ranks_id'] . "";
-            if (in_array("plugin_resources_ranks_id", $required)) {
-                echo $alert;
-            }
-            echo ">";
-            echo Rank::getTypeName(1) . "</td>";
-            echo "<td " . $tohide['plugin_resources_ranks_id'] . " >";
-
-            $params = [
-                'name' => 'plugin_resources_ranks_id',
-                'value' => $this->fields['plugin_resources_ranks_id'],
-                'entity' => $this->fields["entities_id"],
-                'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownSpeciality.php",
-                'span' => 'span_speciality',
-            ];
-            self::showGenericDropdown(Rank::class, $params);
-            echo "</td>";
-
-            if ($tohide['plugin_resources_ranks_id'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "<td " . $tohide['plugin_resources_resourcespecialities_id'] . " ";
-            if (in_array("plugin_resources_resourcespecialities_id", $required)) {
-                echo $alert;
-            }
-            echo ">";
-            echo ResourceSpeciality::getTypeName(1) . "</td>";
-            echo "<td " . $tohide['plugin_resources_resourcespecialities_id'] . " >";
-            echo "<span id='span_speciality' name='span_speciality'>";
-            if ($this->fields["plugin_resources_resourcespecialities_id"] > 0) {
-                echo Dropdown::getDropdownName(
-                    'glpi_plugin_resources_resourcespecialities',
-                    $this->fields["plugin_resources_resourcespecialities_id"],
-                );
-            } else {
-                echo __('None');
-            }
-            echo "</span>";
-            echo "</td>";
-            if ($tohide['plugin_resources_resourcespecialities_id'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "</tr>";
-            echo "</table><table class='tab_cadre_fixe'>";
-        }
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td " . $tohide['locations_id'] . " ";
-        if (in_array("locations_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Location') . "</td>";
-        echo "<td " . $tohide['locations_id'] . " >";
-        $option = ['value'  => $this->fields["locations_id"],
-            'entity' => $this->fields["entities_id"]];
-        if (in_array("locations_id", $readonly)) {
-            $option['readonly'] = true;
-        }
-        Dropdown::show(
-            'Location',
-            $option,
-        );
-        echo "</td>";
-        if ($tohide['locations_id'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        echo "<td " . $tohide['plugin_resources_departments_id'] . " ";
-        if (in_array("plugin_resources_departments_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo Department::getTypeName(1) . "</td>";
-        echo "<td " . $tohide['plugin_resources_departments_id'] . ">";
-        $rand = mt_rand();
-
-        if ($config->useServiceDepartmentAD()) {
-            $option = ['name' => "plugin_resources_departments_id", 'value' => $this->fields["plugin_resources_departments_id"], 'rand' => $rand];
-            if (in_array("plugin_resources_departments_id", $readonly)) {
-                $option['readonly'] = true;
-            }
-            UserTitle::dropdown($option);
-        } else {
-            $option = ['value'  => $this->fields["plugin_resources_departments_id"],
-                'entity' => $this->fields["entities_id"],
-                'rand'   => $rand];
-            if (in_array("plugin_resources_departments_id", $readonly)) {
-                $option['readonly'] = true;
-            }
-            Dropdown::show(
-                Department::class,
-                $option,
-            );
-        }
-        echo "</td>";
-        if ($tohide['plugin_resources_departments_id'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td " . $tohide['plugin_resources_services_id'] . " ";
-        if (in_array("plugin_resources_services_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo Service::getTypeName(0) . "</td>";
-
-        echo "<td " . $tohide['plugin_resources_services_id'] . " >";
-        echo "<div id='show_services'>";
-        if ($config->useServiceDepartmentAD()) {
-            $option = ['name' => "plugin_resources_services_id", 'value' => $this->fields["plugin_resources_services_id"], 'rand' => $rand];
-            if (in_array("plugin_resources_services_id", $readonly)) {
-                $option['readonly'] = true;
-            }
-            UserCategory::dropdown($option);
-        } else {
-            $option = ['name'   => "plugin_resources_services_id",
-                'value'  => $this->fields["plugin_resources_services_id"],
-                'entity' => $_SESSION['glpiactiveentities'],
-                'rand'   => $rand];
-            if (in_array("plugin_resources_services_id", $readonly)) {
-                $option['readonly'] = true;
-            }
-            Service::dropdownFromDepart($this->fields["plugin_resources_departments_id"], $option);
-            $params = [
-                'plugin_resources_services_id' => '__VALUE__',
-                'rand' => $rand,
-            ];
-            Ajax::updateItemOnSelectEvent(
-                "dropdown_plugin_resources_services_id$rand",
-                "show_roles",
-                "../ajax/dropdownRole.php",
-                $params,
-            );
-        }
-        echo "</div>";
-        echo "</td>";
-        $params = [
-            'plugin_resources_departments_id' => '__VALUE__',
-            'rand' => $rand,
-        ];
-        Ajax::updateItemOnSelectEvent(
-            "dropdown_plugin_resources_departments_id$rand",
-            "show_services",
-            "../ajax/dropdownService.php",
-            $params,
-        );
-        echo "<td " . $tohide['plugin_resources_roles_id'] . " ";
-        if (in_array("plugin_resources_roles_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo Role::getTypeName(0) . "</td>";
-        echo "<td " . $tohide['plugin_resources_roles_id'] . " >";
-        echo "<div id='show_roles'>";
-        //      Dropdown::show(Role::class,
-        //                     ['value'  => $this->fields["plugin_resources_roles_id"],
-        //                      'entity' => $this->fields["entities_id"]]);
-        $option = ['name'   => "plugin_resources_roles_id",
-            'value'  => $this->fields["plugin_resources_roles_id"],
-            'entity' => $_SESSION['glpiactiveentities'],
-            'rand'   => $rand];
-        if (in_array("plugin_resources_roles_id", $readonly)) {
-            $option['readonly'] = true;
-        }
-        Role::dropdownFromService($this->fields['plugin_resources_services_id'], $option);
-        echo "</div>";
-        echo "</td>";
-
-        if ($config->useSecondaryService() && $config->useServiceDepartmentAD()) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>";
-            echo __('Secondaries services', 'resources');
-            echo "</td>";
-            echo "<td>";
-
-            $services = [];
-            $userCat = new UserCategory();
-            $usersCat = $userCat->find();
-            foreach ($usersCat as $res) {
-                $services[$res['id']] = $res['name'];
-            }
-            $second = [];
-            if (!empty($this->fields['secondary_services'])) {
-                $second =  json_decode($this->fields['secondary_services'], true);
-            }
-            if (!is_array($second)) {
-                $second = [];
-            }
-
-            Dropdown::showFromArray(
-                "secondary_services",
-                $services,
-                [
-                    'values' => $second,
-                    'multiple' => true,
-                ],
-            );
-            echo "</td>";
-            echo "</tr>";
-        }
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td " . $tohide['plugin_resources_functions_id'] . " ";
-        if (in_array("plugin_resources_functions_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo ResourceFunction::getTypeName(0) . "</td>";
-        echo "<td " . $tohide['plugin_resources_functions_id'] . " >";
-        $option = ['value'  => $this->fields["plugin_resources_functions_id"],
-            'entity' => $this->fields["entities_id"]];
-        if (in_array("plugin_resources_functions_id", $readonly)) {
-            $option['readonly'] = true;
-        }
-        Dropdown::show(
-            ResourceFunction::class,
-            $option,
-        );
-        echo "</td>";
-
-        echo "<td " . $tohide['plugin_resources_teams_id'] . " ";
-        if (in_array("plugin_resources_teams_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo Team::getTypeName(0) . "</td>";
-        echo "<td " . $tohide['plugin_resources_teams_id'] . " >";
-        $option = ['value'  => $this->fields["plugin_resources_teams_id"],
-            'entity' => $this->fields["entities_id"]];
-        if (in_array("plugin_resources_teams_id", $readonly)) {
-            $option['readonly'] = true;
-        }
-        Dropdown::show(
-            Team::class,
-            $option,
-        );
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        $contractType = new ContractType();
         $display_employee = false;
-        $condition_emp = ['second_list' => 0];
-        if ($contractType->getFromDB($this->fields["plugin_resources_contracttypes_id"])) {
-            if ($contractType->fields["use_employee_wizard"] > 0) {
-                $display_employee = true;
-            }
-            if ($contractType->fields["use_second_list_employer"] > 0) {
+        $condition_emp    = ['second_list' => 0];
+        if ($contracttype->getFromDB($this->fields["plugin_resources_contracttypes_id"])) {
+            $second_matricule = $contracttype->fields["use_second_matricule"] > 0;
+            $display_employee = $contracttype->fields["use_employee_wizard"] > 0;
+            if ($contracttype->fields["use_second_list_employer"] > 0) {
                 $condition_emp = ['second_list' => 1];
             }
         }
 
-        if (Session::haveRight('plugin_resources_employee_core_form', READ) && !$display_employee) {
+        // The employer is not a resource column: it is carried by the Employee relation.
+        $employers_id      = 0;
+        $can_read_employee = Session::haveRight('plugin_resources_employee_core_form', READ) && !$display_employee;
+        if ($can_read_employee) {
             $employee = new Employee();
-            $this->fields["plugin_resources_employers_id"] = 0;
             if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $this->getID()])) {
-                $this->fields["plugin_resources_employers_id"] = $employee->fields['plugin_resources_employers_id'];
+                $employers_id = $employee->fields['plugin_resources_employers_id'];
             }
-            echo "<td " . $tohide['plugin_resources_employers_id'] . " ";
-            if (in_array("plugin_resources_employers_id", $required)) {
-                echo $alert;
+        }
+
+        $use_secondary_services = $config->useSecondaryService() && $config->useServiceDepartmentAD();
+        $secondary_services     = [];
+        $secondary_values       = [];
+        if ($use_secondary_services) {
+            $usercategory = new UserCategory();
+            foreach ($usercategory->find() as $category) {
+                $secondary_services[$category['id']] = $category['name'];
             }
-            echo ">";
-            echo Employer::getTypeName(1) . "</td>";
-            echo "<td " . $tohide['plugin_resources_employers_id'] . " >";
-            $option = ['value'     => $this->fields["plugin_resources_employers_id"],
-                'entity'    => $this->fields["entities_id"],
-                'condition' => $condition_emp,
-            ];
-            if (in_array("plugin_resources_employers_id", $readonly)) {
-                $option['readonly'] = true;
-            }
-            Dropdown::show(
-                Employer::getType(),
-                $option,
+            $decoded          = json_decode($this->fields['secondary_services'] ?? '', true);
+            $secondary_values = is_array($decoded) ? $decoded : [];
+        }
+
+        // Shared by the whole department/service/role chain: the AJAX handlers target
+        // "dropdown_<name><rand>", so the PHP dropdowns and the template must agree on it.
+        $rand = mt_rand();
+
+        $rank                = new Rank();
+        $can_view_rank       = $rank->canView();
+        $situation_dropdown  = '';
+        $contractnature_html = '';
+        $rank_dropdown       = '';
+        $speciality_html     = '';
+        if ($can_view_rank) {
+            $situation = self::buildChainedDropdownPair(
+                ResourceSituation::class,
+                'plugin_resources_resourcesituations_id',
+                $this->fields['plugin_resources_resourcesituations_id'],
+                $this->fields["entities_id"],
+                'dropdownContractnature.php',
+                'span_contractnature',
+                'glpi_plugin_resources_contractnatures',
+                $this->fields["plugin_resources_contractnatures_id"],
             );
-            echo "</td>";
-        } else {
-            echo "<td colspan='2'></td>";
+            $situation_dropdown  = $situation['dropdown'];
+            $contractnature_html = $situation['span'];
+
+            $rank_pair = self::buildChainedDropdownPair(
+                Rank::class,
+                'plugin_resources_ranks_id',
+                $this->fields['plugin_resources_ranks_id'],
+                $this->fields["entities_id"],
+                'dropdownSpeciality.php',
+                'span_speciality',
+                'glpi_plugin_resources_resourcespecialities',
+                $this->fields["plugin_resources_resourcespecialities_id"],
+            );
+            $rank_dropdown   = $rank_pair['dropdown'];
+            $speciality_html = $rank_pair['span'];
         }
 
-        echo "<td colspan='2'></td>";
+        $organisation = $this->buildOrganisationFields($readonly, $rand, (bool) $config->useServiceDepartmentAD());
 
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td " . $tohide['users_id'] . " ";
-
-        if (in_array("users_id", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Resource manager', 'resources') . "</td>";
-        echo "<td " . $tohide['users_id'] . ">";
-        $config = new Config();
+        $resource_managers = null;
         if ($config->getField('resource_manager') != "") {
-
-            $tableProfileUser = Profile_User::getTable();
-            $profile_User = new Profile_User();
-            $prof = [];
-            $decoded_managers = json_decode($config->getField('resource_manager'), true);
-            foreach (is_array($decoded_managers) ? $decoded_managers : [] as $profs) {
-                $prof[$profs] = $profs;
-            }
-            $ids = join("','", $prof);
-            $restrict = getEntitiesRestrictCriteria(
-                $tableProfileUser,
-                'entities_id',
+            $resource_managers = self::getManagerDropdownValues(
+                $config->getField('resource_manager'),
                 $this->fields["entities_id"],
-                true,
             );
-            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
-            $profiles_User = $profile_User->find($restrict);
-            $used = [];
-            foreach ($profiles_User as $profileUser) {
-                $user = new \User();
-                if ($user->getFromDB($profileUser["users_id"])) {
-                    $used[$profileUser["users_id"]] = $user->getFriendlyName();
-                }
-            }
-
-            $option = ['value' => $this->fields["users_id"], 'display_emptychoice' => true];
-            /*if (in_array("users_id", $readonly)){
-                $option['readonly'] = true;
-            }*/
-            Dropdown::showFromArray("users_id", $used, $option);
-        } else {
-            $option = ['value'       => $this->fields["users_id"],
-                'name'        => "users_id",
-                'entity'      => $this->fields["entities_id"],
-                'entity_sons' => true,
-                'right'       => 'all'];
-            if (in_array("users_id", $readonly)) {
-                $option['readonly'] = true;
-                echo \User::dropdown($option);
-            } else {
-                \User::dropdown($option);
-            }
         }
-
-        echo "</td>";
-        if ($tohide['users_id'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        echo "<td " . $tohide['date_begin'] . " ";
-        if (in_array("date_begin", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Arrival date', 'resources') . "</td>";
-        echo "<td " . $tohide['date_begin'] . " >";
-        $option = ['value' => $this->fields["date_begin"]];
-        if (in_array("date_begin", $readonly)) {
-            $option['canedit'] = true;
-        }
-        Html::showDateField("date_begin", $option);
-        echo "</td>";
-        if ($tohide['date_begin'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        echo "</tr>";
-
-        echo "<tr " . $tohide['users_id_sales'] . " class='tab_bg_1'>";
-        echo "<td";
-        if (in_array("users_id_sales", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Sales manager', 'resources') . "</td>";
-        echo "<td>";
-        $config = new Config();
-        if (($config->getField('sales_manager') != "")) {
-            echo "<div class='col-md-3 mb-2'>";
-            $tableProfileUser = Profile_User::getTable();
-
-            $profile_User = new Profile_User();
-            $prof = [];
-            foreach (json_decode($config->getField('sales_manager')) as $profs) {
-                $prof[$profs] = $profs;
-            }
-
-            $ids = join("','", $prof);
-            $restrict = getEntitiesRestrictCriteria(
-                $tableProfileUser,
-                'entities_id',
+        $sales_managers = null;
+        if ($config->getField('sales_manager') != "") {
+            $sales_managers = self::getManagerDropdownValues(
+                $config->getField('sales_manager'),
                 $this->fields["entities_id"],
-                true,
             );
-            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
-            $profiles_User = $profile_User->find($restrict);
-            $used = [];
-            foreach ($profiles_User as $profileUser) {
-                $user = new \User();
-                if ($user->getFromDB($profileUser["users_id"])) {
-                    $used[$profileUser["users_id"]] = $user->getFriendlyName();
-                }
-            }
-
-            $option = ['value' => $this->fields["users_id_sales"], 'display_emptychoice' => true];
-            if (in_array("users_id_sales", $readonly)) {
-                $option['readonly'] = true;
-            }
-            Dropdown::showFromArray("users_id_sales", $used, $option);
-        } else {
-            $option = ['value'       => $this->fields["users_id_sales"],
-                'name'        => "users_id_sales",
-                'entity'      => $this->fields["entities_id"],
-                'entity_sons' => true,
-                'right'       => 'all'];
-            if (in_array("users_id_sales", $readonly)) {
-                $option['readonly'] = true;
-                echo \User::dropdown($option);
-            } else {
-                \User::dropdown($option);
-            }
         }
 
-        echo "</td>";
-        if ($tohide['users_id_sales'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        echo "<td colspan='2'>";
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr " . $tohide['comment'] . " class='tab_bg_1'><td colspan='4'>" . __('Description') . "</td></tr>";
-
-        echo "<tr " . $tohide['comment'] . " class='tab_bg_1'><td colspan='4'>";
-        echo Html::textarea([
-            'name' => 'comment',
-            'value' => $this->fields["comment"],
-            'cols' => '130',
-            'rows' => '4',
-            'display' => false,
-        ]);
-        echo Html::hidden('withtemplate', ['value' => $options['withtemplate']]);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'>";
-        if ($ID && $options['withtemplate'] < 2) {
-            echo __('Request date') . " : ";
-            echo Html::convDate($this->fields["date_declaration"]);
-            echo "&nbsp;" . __('By') . "&nbsp;";
-            $users_id_recipient = new \User();
-            $users_id_recipient->getFromDB($this->fields["users_id_recipient"]);
-            if ($this->canCreate() && Session::getCurrentInterface() == 'central') {
-                $option = ['value'       => $this->fields["users_id_recipient"],
-                    'name'        => "users_id_recipient",
-                    'entity'      => $this->fields["entities_id"],
-                    'entity_sons' => true,
-                    'right'       => 'all'];
-                if (in_array('users_id_recipient', $readonly)) {
-                    $option['readonly'] = true;
-                    echo \User::dropdown($option);
-                } else {
-                    \User::dropdown($option);
-                }
-            } else {
-                echo getUserName($this->fields["users_id_recipient"]);
-            }
-        } else {
-            echo Html::hidden('users_id_recipient', ['value' => Session::getLoginUserID()]);
-            echo Html::hidden('date_declaration', ['value' => date('Y-m-d')]);
-        }
-        echo "</td>";
-
-        echo "<td>" . __('Associable to a ticket') . "</td><td>";
-
-        if (Session::getCurrentInterface() == 'central') {
-            if (in_array('is_helpdesk_visible', $readonly)) {
-                Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible'], -1, ['readonly' => true]);
-            } else {
-                Dropdown::showYesNo('is_helpdesk_visible', $this->fields['is_helpdesk_visible']);
-            }
-        } else {
-            echo Dropdown::getDropdownName($this->getTable(), $this->fields["is_helpdesk_visible"]);
-        }
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td></td><td></td><td>" . __('Send a notification') . "</td><td>";
-        echo "<input type='checkbox' name='send_notification' checked = true";
-        if (Session::getCurrentInterface() != 'central'
-            || (isset($options['withtemplate']) && $options['withtemplate'])
+        $picture_url = '';
+        if (!empty($this->fields["picture"])
+            && file_exists(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $this->fields["picture"])
         ) {
-            echo " disabled='true' ";
-        }
-        echo " value='1'>";
-        if (Session::getCurrentInterface() != 'central') {
-            echo Html::hidden('send_notification', ['value' => 1]);
-        }
-        echo "</td>";
-        echo "</tr>";
-
-        echo "</table><table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td>" . __('Declared as leaving', 'resources') . "</td><td>";
-
-        if (Session::getCurrentInterface() != 'central') {
-            // Helpdesk: read-only display + link to the dedicated departure wizard
-            echo Dropdown::getYesNo($this->fields["is_leaving"]);
-            echo Html::hidden('is_leaving', ['value' => $this->fields["is_leaving"]]);
-            if (!$this->fields["is_leaving"] && $ID > 0 && (!isset($options['withtemplate']) || !$options['withtemplate'])) {
-                $remove_url = PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php?resource_id=" . (int) $ID;
-                echo "&nbsp;&nbsp;<a href='" . htmlspecialchars($remove_url) . "' class='btn btn-sm btn-warning'>"
-                    . __('Declare a departure', 'resources')
-                    . "</a>";
-            }
-        } else {
-            if (in_array('is_leaving', $readonly)) {
-                Dropdown::showYesNo('is_leaving', $this->fields['is_leaving'], -1, ['readonly' => true]);
-            } else {
-                Dropdown::showYesNo("is_leaving", $this->fields["is_leaving"]);
-            }
+            $picture_url = PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $this->fields["picture"];
         }
 
-        if ($ID != -1 && $options['withtemplate'] != 1 && $this->fields["is_leaving"] == 1
+        // "By <user> - <date>", appended to the "Declared as leaving" field
+        $leaving_by = '';
+        if ($ID != -1 && $withtemplate != 1 && $this->fields["is_leaving"] == 1
             && isset($this->fields["users_id_recipient_leaving"])
         ) {
-            echo "&nbsp;" . __('By') . "&nbsp;";
-            echo getUserName($this->fields["users_id_recipient_leaving"]);
-
-            if (isset($this->fields["date_declaration_leaving"])
-                && $this->fields["date_declaration_leaving"] != null
-            ) {
-                echo "&nbsp;-&nbsp;";
-                echo Html::convDateTime($this->fields["date_declaration_leaving"]);
+            $leaving_by = htmlescape(
+                __('By') . " " . getUserName($this->fields["users_id_recipient_leaving"]),
+            );
+            if (!empty($this->fields["date_declaration_leaving"])) {
+                $leaving_by .= " - " . htmlescape(Html::convDateTime($this->fields["date_declaration_leaving"]));
             }
         }
 
-        echo "</td>";
-        if (countDistinctElementsInTable(LeavingReason::getTable(), 'id')) {
-            echo "<td";
-            if (in_array("plugin_resources_leavingreasons_id", $required)) {
-                echo $alert;
-            }
-            echo ">";
-            echo LeavingReason::getTypeName(1) . "</td>";
-            echo "<td>";
-            if (Session::getCurrentInterface() != 'central') {
-                echo Dropdown::getDropdownName(LeavingReason::getTable(), $this->fields["plugin_resources_leavingreasons_id"]);
-                echo Html::hidden('plugin_resources_leavingreasons_id', ['value' => $this->fields["plugin_resources_leavingreasons_id"]]);
-            } else {
-                Dropdown::show(
-                    LeavingReason::class,
-                    [
-                        'value' => $this->fields["plugin_resources_leavingreasons_id"],
-                        'entity' => $this->fields["entities_id"],
-                    ],
-                );
-            }
-            echo "</td>";
+        $params = $options;
+        if (!$is_central) {
+            $params['candel'] = false;
         }
+        $params['hidden_fields']    = $hidden;
+        $params['readonly_fields']  = $readonly;
+        $params['mandatory_fields'] = $mandatory;
 
-        echo "<td " . $tohide['date_end'] . " ";
-        if (in_array("date_end", $required)) {
-            echo $alert;
-        }
-        echo ">";
-        echo __('Departure date', 'resources') . "&nbsp;";
-        if (!in_array("date_end", $required)) {
-            Html::showToolTip(nl2br(__('Empty for non defined', 'resources')));
-        }
-        echo "</td>";
-        echo "<td " . $tohide['date_end'] . ">";
-        if (Session::getCurrentInterface() != 'central') {
-            echo Html::convDate($this->fields["date_end"]);
-            echo Html::hidden('date_end', ['value' => $this->fields["date_end"]]);
-        } else {
-            $option = ['value' => $this->fields["date_end"]];
-            if (in_array('date_end', $readonly)) {
-                $option['canedit'] = false;
-            }
-            Html::showDateField("date_end", $option);
-        }
-        echo "</td>";
-        if ($tohide['date_end'] == "hidden") {
-            echo "<td colspan='2'></td>";
-        }
-        if (!countDistinctElementsInTable(LeavingReason::getTable(), 'id')) {
-            echo "<td colspan='2'></td>";
-        }
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='6'>";
-        if (isset($options['withtemplate']) && $options['withtemplate']) {
-            //TRANS: %s is the datetime of insertion
-            printf(__('Created on %s'), Html::convDateTime($_SESSION["glpi_currenttime"]));
-        }
-        echo "</td></tr>\n";
-
-        $config = new Config();
-        if ($config->useSecurity()) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td " . $tohide['security'] . ">" . __('Sensitized to security', 'resources') . "</td>";
-            echo "<td " . $tohide['security'] . ">";
-            $checked = '';
-            if ($this->fields['sensitize_security']) {
-                $checked = "checked = true";
-            }
-            echo "<input type='checkbox' name='sensitize_security' $checked value='1'>";
-            echo "</td>";
-            if ($tohide['security'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "<td " . $tohide['charter'] . ">" . __(
-                'Reading the security charter',
-                'resources',
-            ) . "</td><td " . $tohide['charter'] . ">";
-            $checked = '';
-            if ($this->fields['read_chart']) {
-                $checked = "checked = true";
-            }
-            echo "<input type='checkbox' name='read_chart' $checked value='1'>";
-            $name = 'is_checked' . $ID;
-            echo Html::hidden($name, ['value' => (($this->fields['read_chart'] > 0) ? 0 : 1)]);
-
-            echo "</td>";
-            if ($tohide['charter'] == "hidden") {
-                echo "<td colspan='2'></td>";
-            }
-            echo "<td colspan='2'></td>";
-            echo "</tr>";
-        }
-
-        echo "</table><table class='tab_cadre_fixe'>";
-
-        if (Session::getCurrentInterface() != 'central') {
-            $options['candel'] = false;
-        }
-        $options['colspan'] = 6;
-        $this->showFormButtons($options);
+        TemplateRenderer::getInstance()->display('@resources/resource_form.html.twig', [
+            'item'                       => $this,
+            'params'                     => $params,
+            'is_central'                 => $is_central,
+            'plugin_rand'                => $rand,
+            'root_resources'             => PLUGIN_RESOURCES_WEBDIR,
+            'user_class'                 => \User::class,
+            'location_class'             => Location::class,
+            'resourcestate_class'        => ResourceState::class,
+            'contracttype_class'         => ContractType::class,
+            'resourcefunction_class'     => ResourceFunction::class,
+            'team_class'                 => Team::class,
+            'employer_class'             => Employer::class,
+            'leavingreason_class'        => LeavingReason::class,
+            'genders'                    => self::getGenders(),
+            'quota_value'                => Html::formatNumber($this->fields["quota"], true, 4),
+            'can_view_rank'              => $can_view_rank,
+            'can_read_employee'          => $can_read_employee,
+            'can_set_recipient'          => $this->canCreate() && $is_central,
+            'second_matricule'           => $second_matricule,
+            'use_security'               => (bool) $config->useSecurity(),
+            'use_services_deparments_ad' => (bool) $config->useServiceDepartmentAD(),
+            'use_secondary_services'     => $use_secondary_services,
+            'secondary_services'         => $secondary_services,
+            'secondary_values'           => $secondary_values,
+            'condition_emp'              => $condition_emp,
+            'employers_id'               => $employers_id,
+            'resource_managers'          => $resource_managers,
+            'sales_managers'             => $sales_managers,
+            'has_leavingreasons'         => countDistinctElementsInTable(LeavingReason::getTable(), 'id') > 0,
+            'picture_url'                => $picture_url,
+            'empty_picture'              => PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png",
+            'max_upload_size'            => Document::getMaxUploadSize(),
+            'situation_dropdown'         => $situation_dropdown,
+            'contractnature_html'        => $contractnature_html,
+            'rank_dropdown'              => $rank_dropdown,
+            'speciality_html'            => $speciality_html,
+            'department_dropdown'        => $organisation['department'],
+            'service_dropdown'           => $organisation['service'],
+            'role_dropdown'              => $organisation['role'],
+            'organisation_script'        => $organisation['script'],
+            'declaration_date'           => Html::convDate($this->fields["date_declaration"]),
+            'recipient_name'             => getUserName($this->fields["users_id_recipient"]),
+            'date_end_display'           => Html::convDate($this->fields["date_end"]),
+            'leaving_by'                 => $leaving_by,
+            'remove_url'                 => PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php?resource_id=" . (int) $ID,
+            'created_on'                 => sprintf(__('Created on %s'), Html::convDateTime($_SESSION["glpi_currenttime"])),
+        ]);
 
         return true;
+    }
+
+    /**
+     * Build the users list of a "manager" dropdown, restricted to the profiles selected in the
+     * plugin configuration and to the entities the given entity gives access to.
+     *
+     * @param string $profiles_json Raw configuration value, a JSON encoded list of profile IDs
+     * @param int    $entities_id   Entity the resource belongs to
+     *
+     * @return array<int, string> Users indexed by their ID
+     */
+    public static function getManagerDropdownValues($profiles_json, $entities_id): array
+    {
+        $table    = Profile_User::getTable();
+        $decoded  = json_decode($profiles_json, true);
+        $profiles = [];
+        foreach (is_array($decoded) ? $decoded : [] as $profile) {
+            $profiles[$profile] = $profile;
+        }
+
+        $restrict = getEntitiesRestrictCriteria($table, 'entities_id', $entities_id, true);
+        $restrict = array_merge([$table . ".profiles_id" => [join("','", $profiles)]], $restrict);
+
+        $profile_user = new Profile_User();
+        $managers     = [];
+        foreach ($profile_user->find($restrict) as $line) {
+            $user = new \User();
+            if ($user->getFromDB($line["users_id"])) {
+                $managers[$line["users_id"]] = $user->getFriendlyName();
+            }
+        }
+
+        return $managers;
+    }
+
+    /**
+     * Build a "chained dropdown + target span" pair, as used by the situation/contract nature and
+     * the rank/speciality couples. showGenericDropdown() echoes both the dropdown and its wiring
+     * script, so its output has to be captured to be handed over to fields.htmlField().
+     *
+     * @param string $itemtype   Dropdown itemtype
+     * @param string $name       Input name of the dropdown
+     * @param int    $value      Current dropdown value
+     * @param int    $entity     Entity restriction
+     * @param string $ajax_file  File name, inside the plugin ajax/ directory, feeding the span
+     * @param string $span_id    DOM id of the span refreshed on change
+     * @param string $span_table Table the span label is read from
+     * @param int    $span_value Current value of the field displayed in the span
+     *
+     * @return array{dropdown: string, span: string}
+     */
+    private static function buildChainedDropdownPair(
+        $itemtype,
+        $name,
+        $value,
+        $entity,
+        $ajax_file,
+        $span_id,
+        $span_table,
+        $span_value,
+    ): array {
+        ob_start();
+        self::showGenericDropdown($itemtype, [
+            'name'   => $name,
+            'value'  => $value,
+            'entity' => $entity,
+            'action' => PLUGIN_RESOURCES_WEBDIR . "/ajax/" . $ajax_file,
+            'span'   => $span_id,
+        ]);
+        $dropdown = (string) ob_get_clean();
+
+        $label = htmlescape($span_value > 0
+            ? Dropdown::getDropdownName($span_table, $span_value)
+            : __('None'));
+
+        return [
+            'dropdown' => $dropdown,
+            'span'     => "<span id='" . $span_id . "' name='" . $span_id . "'>" . $label . "</span>",
+        ];
+    }
+
+    /**
+     * Build the department / service / role dropdowns and the scripts chaining them.
+     *
+     * When the departments and services are read from the directory, they are plain UserTitle and
+     * UserCategory dropdowns and only the department drives a refresh; otherwise the plugin
+     * dropdowns are used and the service drives the role list as well.
+     *
+     * @param array $readonly Readonly fields, as a map of field names
+     * @param int   $rand     Random suffix shared by the whole chain
+     * @param bool  $from_ad  Whether departments and services come from the directory
+     *
+     * @return array{department: string, service: string, role: string, script: string}
+     */
+    private function buildOrganisationFields(array $readonly, $rand, bool $from_ad): array
+    {
+        $department_options = [
+            'name'    => "plugin_resources_departments_id",
+            'value'   => $this->fields["plugin_resources_departments_id"],
+            'rand'    => $rand,
+            'display' => false,
+        ];
+        $service_options = [
+            'name'    => "plugin_resources_services_id",
+            'value'   => $this->fields["plugin_resources_services_id"],
+            'rand'    => $rand,
+            'display' => false,
+        ];
+        if (isset($readonly['plugin_resources_departments_id'])) {
+            $department_options['readonly'] = true;
+        }
+        if (isset($readonly['plugin_resources_services_id'])) {
+            $service_options['readonly'] = true;
+        }
+
+        $script = '';
+        if ($from_ad) {
+            $department = (string) UserTitle::dropdown($department_options);
+            $service    = (string) UserCategory::dropdown($service_options);
+        } else {
+            $department_options['entity'] = $this->fields["entities_id"];
+            $department                   = (string) Dropdown::show(Department::class, $department_options);
+
+            $service_options['entity'] = $_SESSION['glpiactiveentities'];
+            $service                   = (string) Service::dropdownFromDepart(
+                $this->fields["plugin_resources_departments_id"],
+                $service_options,
+            );
+
+            ob_start();
+            Ajax::updateItemOnSelectEvent(
+                "dropdown_plugin_resources_services_id" . $rand,
+                "show_roles",
+                PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownRole.php",
+                ['plugin_resources_services_id' => '__VALUE__', 'rand' => $rand],
+            );
+            $script .= (string) ob_get_clean();
+        }
+
+        $role_options = [
+            'name'    => "plugin_resources_roles_id",
+            'value'   => $this->fields["plugin_resources_roles_id"],
+            'entity'  => $_SESSION['glpiactiveentities'],
+            'rand'    => $rand,
+            'display' => false,
+        ];
+        if (isset($readonly['plugin_resources_roles_id'])) {
+            $role_options['readonly'] = true;
+        }
+        $role = (string) Role::dropdownFromService(
+            $this->fields['plugin_resources_services_id'],
+            $role_options,
+        );
+
+        ob_start();
+        Ajax::updateItemOnSelectEvent(
+            "dropdown_plugin_resources_departments_id" . $rand,
+            "show_services",
+            PLUGIN_RESOURCES_WEBDIR . "/ajax/dropdownService.php",
+            ['plugin_resources_departments_id' => '__VALUE__', 'rand' => $rand],
+        );
+        $script .= (string) ob_get_clean();
+
+        return [
+            'department' => $department,
+            'service'    => $service,
+            'role'       => $role,
+            'script'     => $script,
+        ];
     }
 
     /**
@@ -3162,50 +2605,42 @@ class Resource extends CommonDBTM
         return $output;
     }
 
+    /**
+     * Massive action sub form of "Generate resources": collects the few fields
+     * fastResourceAdd() needs to build a resource out of each selected user.
+     *
+     * @return void
+     */
     public static function fastResourceAddForm()
     {
-        echo "<table class='tab_cadre'>";
-        // ContractType
-        echo "<tr>";
-        echo "<td>" . __("Contract type") . "</td>";
-        echo "<td>";
-
-        Department::getTypeName(1) . "</td><td>";
-        Dropdown::show(
-            ContractType::class,
-            ['name' => "plugin_resources_contracttypes_id"],
-        );
-
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr>";
-
-        // Recipient
-        echo "<td>";
-        echo __('Resource manager', 'resources') . "</td>";
-        echo "<td width='70%'>";
-        \User::dropdown([
-            'name' => "users_id_recipient",
-            'entity' => $_SESSION['glpiactive_entity'],
-            'entity_sons' => true,
-            'right' => 'all',
+        // The dropdowns echo their markup and return their rand by default: ask for the
+        // string instead, so the template stays in charge of the layout.
+        $contracttype_dropdown = (string) Dropdown::show(ContractType::class, [
+            'name'    => 'plugin_resources_contracttypes_id',
+            'display' => false,
         ]);
-        echo "<td>";
-        echo "</tr>";
 
-        // Department
-        echo "<tr>";
-        echo "<td>";
-        echo Department::getTypeName(1) . "</td><td>";
-        Dropdown::show(
-            Department::class,
-            ['name' => "plugin_resources_departments_id"],
-        );
+        $recipient_dropdown = (string) \User::dropdown([
+            'name'        => 'users_id_recipient',
+            'entity'      => $_SESSION['glpiactive_entity'],
+            'entity_sons' => true,
+            'right'       => 'all',
+            'display'     => false,
+        ]);
 
-        echo '<input type="hidden" name="itemtype" value="User">';
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
+        $department_dropdown = (string) Dropdown::show(Department::class, [
+            'name'    => 'plugin_resources_departments_id',
+            'display' => false,
+        ]);
+
+        TemplateRenderer::getInstance()->display('@resources/resource_fast_add_form.html.twig', [
+            'contracttype_label'    => __('Contract type'),
+            'contracttype_dropdown' => $contracttype_dropdown,
+            'recipient_label'       => __('Resource manager', 'resources'),
+            'recipient_dropdown'    => $recipient_dropdown,
+            'department_label'      => Department::getTypeName(1),
+            'department_dropdown'   => $department_dropdown,
+        ]);
     }
 
     /**
@@ -3507,8 +2942,14 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * @param     $target
-     * @param int $add
+     * List the resource templates.
+     *
+     * Rendering is delegated to the core template list view, which already brings the
+     * multi entity column, the purge button and its CSRF token. Template names are
+     * escaped here: they are free text and used to be echoed raw inside the link.
+     *
+     * @param string $target
+     * @param int    $add
      */
     public function listOfTemplates($target, $add = 0)
     {
@@ -3520,391 +2961,262 @@ class Resource extends CommonDBTM
 
         $templates = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 
-        if (Session::isMultiEntitiesMode()) {
-            $colsup = 1;
-        } else {
-            $colsup = 0;
+        $can_purge = self::canPurge();
+        $entries   = [];
+
+        if ($add) {
+            $entries[] = [
+                'name' => '<a href="' . htmlescape($target . '?id=-1&withtemplate=2') . '">'
+                    . __s('Blank Template') . '</a>',
+            ];
         }
 
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        if ($add) {
-            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __(
-                'Choose a template',
-                'resources',
-            ) . " - " . self::getTypeName(2) . "</th>";
-        } else {
-            echo "<tr><th colspan='" . (2 + $colsup) . "'>" . __('Templates') . " - " . self::getTypeName(2) . "</th>";
-        }
-
-        echo "</tr>";
-        if ($add) {
-            echo "<tr>";
-            echo "<td colspan='" . (2 + $colsup) . "' class='center tab_bg_1'>";
-            echo "<a href=\"$target?id=-1&amp;withtemplate=2\">&nbsp;&nbsp;&nbsp;" . __(
-                'Blank Template',
-            ) . "&nbsp;&nbsp;&nbsp;</a></td>";
-            echo "</tr>";
-        }
+        // Picking a template creates a resource out of it (withtemplate=2), while the
+        // management screen edits the template itself (withtemplate=1).
+        $withtemplate = $add ? 2 : 1;
 
         foreach ($templates as $template) {
             $templname = $template["template_name"];
             if ($_SESSION["glpiis_ids_visible"] || empty($template["template_name"])) {
-                $templname .= "(" . $template["id"] . ")";
+                $templname = sprintf(__('%1$s (%2$s)'), $templname, $template["id"]);
             }
 
-            echo "<tr>";
-            echo "<td class='center tab_bg_1'>";
-            if (!$add) {
-                echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=1\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
+            $url = $target . '?id=' . $template["id"] . '&withtemplate=' . $withtemplate;
 
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center tab_bg_2'>";
-                    echo Dropdown::getDropdownName("glpi_entities", $template['entities_id']);
-                    echo "</td>";
-                }
-                echo "<td class='center tab_bg_2'>";
-                Html::showSimpleForm(
-                    $target,
-                    'purge',
-                    _x('button', 'Delete permanently'),
-                    ['id' => $template["id"], 'withtemplate' => 1],
-                );
-                echo "</td>";
-            } else {
-                echo "<a href=\"$target?id=" . $template["id"] . "&amp;withtemplate=2\">&nbsp;&nbsp;&nbsp;$templname&nbsp;&nbsp;&nbsp;</a></td>";
-
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center tab_bg_2'>";
-                    echo Dropdown::getDropdownName("glpi_entities", $template['entities_id']);
-                    echo "</td>";
-                }
-            }
-            echo "</tr>";
-        }
-        if (!$add) {
-            echo "<tr>";
-            echo "<td colspan='" . (2 + $colsup) . "' class='tab_bg_2 center'>";
-            echo "<b><a href=\"$target?withtemplate=1\">" . __('Add a template') . "</a></b>";
-            echo "</td>";
-            echo "</tr>";
-        }
-        echo "</table></div>";
-    }
-
-    //Show form from heelpdesk to remove a resource
-    public function showResourcesToRemove()
-    {
-
-        $dbu = new DbUtils();
-        $preselected_id = isset($_GET['resource_id']) ? (int) $_GET['resource_id'] : 0;
-
-        if ($dbu->countElementsInTable($this->getTable()) > 0) {
-
-            echo "<div class='card container' style='min-width: 80%;'>";
-
-            $title = __('Declare a departure', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png";
-            Wizard::WizardHeader($title, $img);
-
-            echo "<div class='card-body'>";
-
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php\">";
-
-            echo "<div class='row'>";
-            echo "<div class='col-md-4 mb-2'>";
-            echo self::getTypeName(1);
-            echo "</div>";
-            echo "<div class='col-md-4 mb-2'>";
-            $available_contracttype = false;
-            $contracttypeprofile = new Contracttypeprofile();
-            if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
-                $available_contracttype = json_decode(
-                    $contracttypeprofile->fields['plugin_resources_contracttypes_id'],
-                );
-            }
-
-            $cond = ['is_not_leaving_only' => 'is_not_leaving_only'];
-
-            if ($available_contracttype !== false && is_array($available_contracttype)) {
-                $available_contracttype[] = 0;
-                $cond['plugin_resources_contracttypes_id']  = $available_contracttype;
-            }
-            $rand = mt_rand();
-            self::dropdown([
-                'name' => 'plugin_resources_resources_id',
-                'display' => true,
-                'entity' => $_SESSION['glpiactiveentities'],
-                'condition' => $cond,
-                'rand' => $rand,
-                'value' => $preselected_id,
-                'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
-            ]);
-
-            $params = [
-                'plugin_resources_resources_id' => '__VALUE__',
-                'rand' => $rand,
+            $entry = [
+                'id'   => $template["id"],
+                'name' => '<a href="' . htmlescape($url) . '">' . htmlescape($templname) . '</a>',
             ];
-            Ajax::updateItemOnSelectEvent(
-                "dropdown_plugin_resources_resources_id$rand",
-                "leaving_input",
-                "../ajax/leavingform.php",
-                $params,
-            );
 
-            // If a resource is pre-selected, trigger the ajax call immediately to populate leaving_input
-            if ($preselected_id > 0) {
-                Ajax::updateItem(
-                    "leaving_input",
-                    "../ajax/leavingform.php",
-                    [
-                        'plugin_resources_resources_id' => $preselected_id,
-                        'rand' => $rand,
-                    ],
-                );
+            if (!$add) {
+                if (Session::isMultiEntitiesMode()) {
+                    $entry['entity'] = Dropdown::getDropdownName("glpi_entities", $template['entities_id']);
+                }
+                $entry['can_delete'] = $can_purge && $this->can($template["id"], PURGE);
             }
 
-            echo "</div>";
-            echo "</div>";
-            echo "<div id='leaving_input'>";
-
-            echo "<div class='row'>";
-
-            echo "<div class='col-md-4 mb-2'>";
-            echo __('Departure date', 'resources');
-            echo "</div>";
-            echo "<div class='col-md-4 mb-2'>";
-            Html::showDateField("date_end", ['value' => $_POST["date_end"]]);
-            echo "</div>";
-            echo "</div>";
-
-            echo "<div class='row'>";
-
-            echo "<div class='col-md-4 mb-2'>";
-            echo __('Resource manager', 'resources');
-            echo "</div>";
-            echo "<div class='col-md-4 mb-2'>";
-            User::dropdown(['name' => 'remove_manager', 'right' => 'all']);
-            echo "</div>";
-            echo "</div>";
-
-            echo "</div>";
-
-            //            $leavinginformation = new LeavingInformation();
-            //
-            //            TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
-            //                'item'   => $leavinginformation,
-            //                'params' => [
-            //                    'plugin_resources_resources_id' => 10,
-            //                    'default_button'       => true,
-            //                ],
-            //            ]);
-
-            //            if (countDistinctElementsInTable(LeavingReason::getTable(), 'id')) {
-            //                echo "<div class='row'>";
-            //                echo "<div class='col-md-4 mb-2'>";
-            //                echo LeavingReason::getTypeName(1);
-            //                echo "</div>";
-            //                echo "<div class='col-md-4 mb-2'>";
-            //                Dropdown::show(LeavingReason::class,
-            //                               ['entity' => $_SESSION['glpiactiveentities']]);
-            //                echo "</div>";
-            //                echo "</div>";
-            //            }
-
-            echo "<div class='center' id='resource_pdf' colspan='2'></div>";
-
-            echo "<div class='row'>";
-            echo "<div class='col-md-12 mb-2'>";
-            echo "<div class='next'>";
-            echo Html::submit(
-                __s('Declare a departure', 'resources'),
-                ['name' => 'removeresources', 'class' => 'btn btn-success'],
-            );
-            echo "</div>";
-            echo "</div></div>";
-
-            Html::closeForm();
-            echo "</div>";
-            echo "</div>";
-        } else {
-            echo "<div class='center'>" . __('No results found') . "</div>";
+            $entries[] = $entry;
         }
+
+        TemplateRenderer::getInstance()->display('pages/assets/template_list.html.twig', [
+            'add_mode'      => (bool) $add,
+            'templates'     => $entries,
+            'target'        => $target,
+            'can_delete'    => $can_purge,
+            'add_template'  => !$add && self::canCreate(),
+            'target_create' => $target . '?id=-1&withtemplate=1',
+        ]);
     }
 
     /**
-     * Show form from helpdesk to change a resource
+     * Show the helpdesk form used to declare the departure of a resource.
      *
-     * @param array $options
+     * @return void
+     */
+    public function showResourcesToRemove()
+    {
+        $dbu = new DbUtils();
+
+        if ($dbu->countElementsInTable($this->getTable()) == 0) {
+            TemplateRenderer::getInstance()->display('@resources/resource_remove_form.html.twig', [
+                'has_resources' => false,
+            ]);
+            return;
+        }
+
+        $preselected_id = isset($_GET['resource_id']) ? (int) $_GET['resource_id'] : 0;
+
+        // Only the contract types granted to the current profile can be declared as leaving.
+        // Resources with no contract type at all (0) stay reachable.
+        $available_contracttype = false;
+        $contracttypeprofile    = new Contracttypeprofile();
+        if ($contracttypeprofile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+            $available_contracttype = json_decode(
+                $contracttypeprofile->fields['plugin_resources_contracttypes_id'],
+            );
+        }
+
+        $cond = ['is_not_leaving_only' => 'is_not_leaving_only'];
+        if (is_array($available_contracttype)) {
+            $available_contracttype[] = 0;
+            $cond['plugin_resources_contracttypes_id'] = $available_contracttype;
+        }
+
+        // The dropdowns echo their markup and return their rand by default: ask for the
+        // string instead, so the template stays in charge of the layout.
+        $rand = mt_rand();
+        $resource_dropdown = (string) self::dropdown([
+            'name'      => 'plugin_resources_resources_id',
+            'display'   => false,
+            'entity'    => $_SESSION['glpiactiveentities'],
+            'condition' => $cond,
+            'rand'      => $rand,
+            'value'     => $preselected_id,
+            'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
+        ]);
+
+        $leaving_url = "../ajax/leavingform.php";
+        $scripts     = (string) Ajax::updateItemOnSelectEvent(
+            "dropdown_plugin_resources_resources_id$rand",
+            "leaving_input",
+            $leaving_url,
+            [
+                'plugin_resources_resources_id' => '__VALUE__',
+                'rand' => $rand,
+            ],
+            false,
+        );
+
+        // A pre-selected resource never fires a change event: fill the block right away.
+        if ($preselected_id > 0) {
+            $scripts .= (string) Ajax::updateItem(
+                "leaving_input",
+                $leaving_url,
+                [
+                    'plugin_resources_resources_id' => $preselected_id,
+                    'rand' => $rand,
+                ],
+                "",
+                false,
+            );
+        }
+
+        $manager_dropdown = (string) User::dropdown([
+            'name'    => 'remove_manager',
+            'right'   => 'all',
+            'display' => false,
+        ]);
+
+        TemplateRenderer::getInstance()->display('@resources/resource_remove_form.html.twig', [
+            'has_resources'     => true,
+            'header_title'      => __('Declare a departure', 'resources'),
+            'header_img'        => PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png",
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php",
+            'resource_label'    => self::getTypeName(1),
+            'resource_dropdown' => $resource_dropdown,
+            'date_end'          => $_POST["date_end"] ?? '',
+            'manager_dropdown'  => $manager_dropdown,
+            'scripts'           => $scripts,
+        ]);
+    }
+
+    /**
+     * Show the helpdesk form used to declare a change on a resource.
+     *
+     * @param array $options previously posted values, used to report the empty ones
+     *
+     * @return void
      */
     public function showResourcesToChange($options = [])
     {
-        global $CFG_GLPI;
-
         $dbu = new DbUtils();
 
-        if ($dbu->countElementsInTable($this->getTable()) > 0) {
-
-            echo "<div class='card container' style='min-width: 80%;'>";
-
-            $title = __('Declare a change', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png";
-            Wizard::WizardHeader($title, $img);
-
-            echo "<div class='card-body'>";
-
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php\">";
-
-            echo "<div class='row'>";
-            echo "<div class='col-md-4 mb-2'>";
-            echo self::getTypeName(1);
-            echo "</div>";
-            echo "<div class='col-md-4 mb-2'>";
-            self::dropdown([
-                'name' => 'plugin_resources_resources_id',
-                'display' => true,
-                'entity' => $_SESSION['glpiactiveentities'],
-                'on_change' => "plugin_resources_change_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
+        if ($dbu->countElementsInTable($this->getTable()) == 0) {
+            TemplateRenderer::getInstance()->display('@resources/resource_change_form.html.twig', [
+                'has_resources' => false,
             ]);
+            return;
+        }
 
-            echo "</div>";
-            echo "</div>";
+        // The dropdowns echo their markup and return their rand by default: ask for the
+        // string instead, so the template stays in charge of the layout.
+        $resource_dropdown = (string) self::dropdown([
+            'name'      => 'plugin_resources_resources_id',
+            'display'   => false,
+            'entity'    => $_SESSION['glpiactiveentities'],
+            'on_change' => "plugin_resources_change_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
+        ]);
 
-            //choose actions
-            echo "<div class='row'>";
-            echo "<div class='col-md-4 mb-2'>";
-            echo __('Actions to be taken', 'resources');
-            echo "</div>";
-            echo "<div class='col-md-4 mb-2'>";
-            $actions = Resource_Change::getAllActions();
-            $actionProfile = new Actionprofile();
-            if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
-                $available_action = json_decode($actionProfile->fields['actions_id']);
-            }
-            if (isset($available_action) && !empty($available_action)) {
+        // Only offer the actions granted to the current profile.
+        $actions       = Resource_Change::getAllActions();
+        $actionProfile = new Actionprofile();
+        if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+            $available_action = json_decode($actionProfile->fields['actions_id']);
+            if (!empty($available_action)) {
                 foreach ($actions as $id => $action) {
                     if (!in_array($id, $available_action)) {
                         unset($actions[$id]);
                     }
                 }
             }
-            Dropdown::showFromArray(
-                'change_action',
-                $actions,
-                ['on_change' => "plugin_resources_change_action(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);"],
-            );
-            echo "</div>";
-            echo "</div>";
-
-            echo "<div id='plugin_resources_actions'>";
-            $msg = [];
-            if (isset($options['plugin_resources_resources_id']) && $options['plugin_resources_resources_id'] == 0) {
-                $msg[] = self::getTypeName(1);
-            }
-            if (isset($options['change_action']) && $options['change_action'] == 0) {
-                $msg[] = __('Actions to taken');
-            }
-
-            if (count($msg) > 0) {
-                echo "<span class='red'>" . sprintf(
-                    __("Please correct: %s", 'resources'),
-                    implode(', ', $msg),
-                ) . "</span>";
-            }
-            echo "</div>";
-
-            echo "<div colspan='2' id='plugin_resources_buttonchangeresources'></div>";
-
-            Html::closeForm();
-            echo "</div>";
-            echo "</div>";
-        } else {
-            echo "<div class='center'>" . __('No results found') . "</div>";
         }
+
+        $action_dropdown = (string) Dropdown::showFromArray('change_action', $actions, [
+            'display'   => false,
+            'on_change' => "plugin_resources_change_action(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
+        ]);
+
+        // Fields the previous submit left empty, reported back above the action block.
+        $msg = [];
+        if (isset($options['plugin_resources_resources_id']) && $options['plugin_resources_resources_id'] == 0) {
+            $msg[] = self::getTypeName(1);
+        }
+        if (isset($options['change_action']) && $options['change_action'] == 0) {
+            $msg[] = __('Actions to taken');
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/resource_change_form.html.twig', [
+            'has_resources'     => true,
+            'header_title'      => __('Declare a change', 'resources'),
+            'header_img'        => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
+            'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php",
+            'resource_label'    => self::getTypeName(1),
+            'resource_dropdown' => $resource_dropdown,
+            'action_label'      => __('Actions to be taken', 'resources'),
+            'action_dropdown'   => $action_dropdown,
+            'error_message'     => count($msg) > 0
+                ? sprintf(__("Please correct: %s", 'resources'), implode(', ', $msg))
+                : '',
+        ]);
     }
 
     /**
-     * Show form from heelpdesk to transfer a resource
+     * Show the helpdesk form used to declare the transfer of a resource to another entity.
      *
-     * @param $plugin_resources_resources_id
+     * @param int $plugin_resources_resources_id
+     *
+     * @return void
      */
     public function showResourcesToTransfer($plugin_resources_resources_id)
     {
-        global $CFG_GLPI;
+        $resource = new self();
 
-        $dbu = new DbUtils();
-
-        if ($dbu->countElementsInTable($this->getTable()) > 0) {
-            echo "<div class='center'>";
-
-            echo "<div class='card container' style='min-width: 80%;'>";
-
-            $title = __('Declare a transfer', 'resources');
-            $img = PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png";
-            Wizard::WizardHeader($title, $img);
-
-            echo "<div class='card-body'>";
-
-            echo "<form method='post' action=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php\">";
-
-            if (isset($plugin_resources_resources_id)) {
-                $resource = new Resource();
-                if ($resource->getFromDB($plugin_resources_resources_id)) {
-
-                    echo "<div class='row'>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    echo self::getTypeName(1);
-                    echo "</div>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    echo self::getResourceName($plugin_resources_resources_id);
-                    echo "</div>";
-                    echo "</div>";
-
-                    echo "<div class='row'>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    echo __('Current entity', 'resources');
-                    echo "</div>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    echo Dropdown::getDropdownName('glpi_entities', $resource->fields['entities_id']);
-                    echo "</div>";
-                    echo "</div>";
-
-                    echo "<div class='row'>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    echo __('Target entity', 'resources') . " <span class='red'>*</span>";
-                    echo "</div>";
-                    echo "<div class='col-md-4 mb-2'>";
-                    $transferentity = new TransferEntity();
-                    $data = $transferentity->find();
-                    $elements = [Dropdown::EMPTY_VALUE];
-                    foreach ($data as $val) {
-                        $elements[$val['entities_id']] = Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $val['entities_id'],
-                        );
-                    }
-                    Dropdown::showFromArray("entities_id", $elements);
-                    echo "</div>";
-                    echo "</div>";
-
-                    echo "<div class='row'>";
-                    echo "<div class='col-md-12 mb-2'>";
-                    echo "<div class='next'>";
-                    echo Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                    echo Html::submit(
-                        __s('Declare a transfer', 'resources'),
-                        ['name' => 'transferresources', 'class' => 'btn btn-success'],
-                    );
-                    echo "</div>";
-                    echo "</div></div>";
-
-                    Html::closeForm();
-                    echo "</div>";
-                    echo "</div>";
-                }
-            }
-        } else {
-            echo "<div class='center'>" . __('No results found') . "</div>";
+        // can() loads the row and enforces both the read right and the entity boundary,
+        // which the bare getFromDB() it replaces did not: the name and the current entity
+        // of any resource were readable from the id alone.
+        if (!$resource->can((int) $plugin_resources_resources_id, READ)) {
+            TemplateRenderer::getInstance()->display('@resources/resource_transfer_form.html.twig', [
+                'has_resource' => false,
+            ]);
+            return;
         }
+
+        // Only the entities opened to transfers, and only those the current user may reach:
+        // front/resource.transfer.php checks the posted one again anyway.
+        $elements = [Dropdown::EMPTY_VALUE];
+        foreach ((new TransferEntity())->find() as $val) {
+            if (!Session::haveAccessToEntity($val['entities_id'])) {
+                continue;
+            }
+            $elements[$val['entities_id']] = Dropdown::getDropdownName('glpi_entities', $val['entities_id']);
+        }
+
+        TemplateRenderer::getInstance()->display('@resources/resource_transfer_form.html.twig', [
+            'has_resource'                  => true,
+            'header_title'                  => __('Declare a transfer', 'resources'),
+            'header_img'                    => PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png",
+            'form_action'                   => PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php",
+            'resource_label'                => self::getTypeName(1),
+            'resource_name'                 => self::getResourceName($resource->getID()),
+            'current_entity'                => Dropdown::getDropdownName(
+                'glpi_entities',
+                $resource->fields['entities_id'],
+            ),
+            'entity_dropdown'               => (string) Dropdown::showFromArray('entities_id', $elements, [
+                'display' => false,
+            ]),
+            'plugin_resources_resources_id' => $resource->getID(),
+        ]);
     }
 
     /**
@@ -4119,7 +3431,10 @@ class Resource extends CommonDBTM
 
             case "plugin_resources_generate_resources":
                 $messages = [];
-                if (sizeof($input['itemtype']) > 0) {
+                // The sub form posts itemtype as a scalar ("User"): sizeof() on a string is a
+                // TypeError since PHP 8.0, so this guard used to abort the whole action. Only
+                // check that the hidden field made it through.
+                if (!empty($input['itemtype'])) {
                     foreach ($ids as $key => $val) {
                         [$id, $error, $message] = self::fastResourceAdd($key, $input);
                         if ($error['right']) {
@@ -4809,71 +4124,32 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * Display entities of the loaded profile
+     * Show the contract type tree used to filter the resource list.
      *
-     * @param $myname select name
-     * @param $target target for entity change action
+     * Rendered inside an iframe modal, in a page that goes through none of the usual
+     * header: the stylesheets and the scripts it needs are pulled here.
+     *
+     * @param string $target front page the "Show all" link points back to
+     *
+     * @return void
      */
     public static function showSelector($target)
     {
-        global $CFG_GLPI;
-
-        $rand = mt_rand();
         Plugin::loadLang('resources');
-        echo Html::css("lib/base.css");
-        echo Html::script("lib/base.js");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/themes/default/style.min.css");
-        echo Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/jstree-glpi.css");
-        echo "<div class='alert alert-important alert-info d-flex'>" . __(
-            'Select the contract type',
-            'resources',
-        ) . "</div><br>";
-        // $target is reflected into this href attribute; escape it to prevent a
-        // reflected XSS via an attribute breakout (the caller also whitelists it to
-        // an internal same-origin path, this is defense in depth at the sink).
-        echo "<a href='" . htmlescape($target) . "?reset=reset' target='_blank' title=\""
-            . __s('Show all') . "\">" . str_replace(" ", "&nbsp;", __('Show all')) . "</a>";
 
-        echo "<div class='left' style='width:100%'>";
-        $root_doc = PLUGIN_RESOURCES_WEBDIR;
-        $js = "   $(function() {
-                  $.getScript('$root_doc/lib/jstree/jstree.js', function(data, textStatus, jqxhr) {
-                     $('#tree_resourcetypes$rand').jstree({
-                        // the `plugins` array allows you to configure the active plugins on this instance
-                        'plugins' : ['search', 'qload'],
-                        'search': {
-                           'case_insensitive': true,
-                           'show_only_matches': true,
-                           'ajax': {
-                              'type': 'POST',
-                              'url': '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php'
-                           }
-                        },
-                        'qload': {
-                           'prevLimit': 50,
-                           'nextLimit': 30,
-                           'moreText': '" . __s('Load more...') . "'
-                        },
-                        'core': {
-//                           'themes': {
-//                              'name': 'glpi'
-//                           },
-                           'animation': 0,
-                           'data': {
-                              'url': function(node) {
-                                 return node.id === '#' ?
-                                    '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php?node=-1' :
-                                    '" . PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetreetypes.php?node='+node.id;
-                              }
-                           }
-                        }
-                     });
-                  });
-               });";
-        echo Html::scriptBlock($js);
-        echo "<div class='left' style='width:100%'>";
-        echo "<div id='tree_resourcetypes$rand'></div>";
-        echo "</div>";
+        $assets = Html::css("lib/base.css")
+            . Html::script("lib/base.js")
+            . Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/themes/default/style.min.css")
+            . Html::css(PLUGIN_RESOURCES_WEBDIR . "/lib/jstree/jstree-glpi.css")
+            . Html::script(PLUGIN_RESOURCES_WEBDIR . "/scripts/resourcetree.js", [], false);
+
+        TemplateRenderer::getInstance()->display('@resources/resource_tree.html.twig', [
+            'assets'    => $assets,
+            'rand'      => mt_rand(),
+            'target'    => $target,
+            'root_doc'  => PLUGIN_RESOURCES_WEBDIR,
+            'more_text' => __('Load more...'),
+        ]);
     }
 
     /**
@@ -5137,77 +4413,75 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * List of resources for a client
+     * List, in the client tab, the resources whose employee record points at that client.
      *
-     * @param $client_id
+     * @param int $client_id
+     *
+     * @return void
      */
     public function showListResourcesForClient($client_id)
     {
         global $DB;
 
-        //Retrieving resource ids for this client
-        $criteria = [
-            'SELECT' => [
-                '*',
-            ],
-            'FROM' => 'glpi_plugin_resources_resources',
-            'LEFT JOIN' => [
-                'glpi_plugin_resources_employees' => [
+        $dbu = new DbUtils();
+
+        // The join is what filters on the client, so it must be an inner one. The entity
+        // restriction is ours to add: the client tab does not scope the linked resources.
+        $iterator = $DB->request([
+            'SELECT'     => [self::getTable() . '.*'],
+            'FROM'       => self::getTable(),
+            'INNER JOIN' => [
+                Employee::getTable() => [
                     'ON' => [
-                        'glpi_plugin_resources_employees' => 'plugin_resources_resources_id',
-                        'glpi_plugin_resources_resources' => 'id',
+                        Employee::getTable() => 'plugin_resources_resources_id',
+                        self::getTable()     => 'id',
                     ],
                 ],
             ],
-            'WHERE' => [
-                'glpi_plugin_resources_resources.is_deleted' => 0,
-                'glpi_plugin_resources_employees.plugin_resources_clients_id' => $client_id,
-            ],
-        ];
+            'WHERE'      => [
+                self::getTable() . '.is_deleted'                      => 0,
+                Employee::getTable() . '.plugin_resources_clients_id' => (int) $client_id,
+            ] + $dbu->getEntitiesRestrictCriteria(self::getTable(), '', '', $this->maybeRecursive()),
+            'ORDER'      => self::getTable() . '.name',
+        ]);
 
-        echo "<div class='center'>";
-
-        $iterator = $DB->request($criteria);
-
-        if (count($iterator) > 0) {
-            echo __('No results found');
-        } else {
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='5'>" . __('Resources list', 'resources') . "</th></tr>";
-            echo "<tr><th>" . __('Surname') . "</th>";
-            echo "<th>" . __('First name') . "</th>";
-            echo "<th>" . ResourceState::getTypeName(1) . "</th>";
-            echo "<th>" . __('Location') . "</th>";
-            echo "<th>" . Department::getTypeName(1) . "</th>";
-            echo "</tr>";
-
-            $resource = new Resource();
-            $dbu = new DbUtils();
-            foreach ($iterator as $employee) {
-                if ($resource->getFromDB($employee['plugin_resources_resources_id'])) {
-                    if (!$resource->fields['is_deleted']) {
-                        echo "<tr class='tab_bg_1'>";
-                        echo "<td>" . $resource->getLink() . "</td>";
-                        echo "<td>" . htmlescape((string) $resource->fields['firstname']) . "</td>";
-                        echo "<td>" . Dropdown::getDropdownName(
-                            $dbu->getTableForItemType(ResourceState::class),
-                            $resource->fields['plugin_resources_resourcestates_id'],
-                        ) . "</td>";
-                        echo "<td>" . Dropdown::getDropdownName(
-                            $dbu->getTableForItemType('Location'),
-                            $resource->fields['locations_id'],
-                        ) . "</td>";
-                        echo "<td>" . Dropdown::getDropdownName(
-                            $dbu->getTableForItemType(Department::class),
-                            $resource->fields['plugin_resources_departments_id'],
-                        ) . "</td>";
-                        echo "</tr>";
-                    }
-                }
-            }
-            echo "</table>";
+        $resource = new self();
+        $entries  = [];
+        foreach ($iterator as $data) {
+            $resource->getFromResultSet($data);
+            $entries[] = [
+                'name'       => $resource->getLink(),
+                'firstname'  => $data['firstname'],
+                'state'      => Dropdown::getDropdownName(
+                    ResourceState::getTable(),
+                    $data['plugin_resources_resourcestates_id'],
+                ),
+                'location'   => Dropdown::getDropdownName('glpi_locations', $data['locations_id']),
+                'department' => Dropdown::getDropdownName(
+                    Department::getTable(),
+                    $data['plugin_resources_departments_id'],
+                ),
+            ];
         }
-        echo "</div>";
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'is_tab'          => true,
+            'nofilter'        => true,
+            'nosort'          => true,
+            'super_header'    => __('Resources list', 'resources'),
+            'columns'         => [
+                'name'       => __('Surname'),
+                'firstname'  => __('First name'),
+                'state'      => ResourceState::getTypeName(1),
+                'location'   => __('Location'),
+                'department' => Department::getTypeName(1),
+            ],
+            // getLink() returns an anchor, everything else is plain text Twig escapes.
+            'formatters'      => ['name' => 'raw_html'],
+            'entries'         => $entries,
+            'total_number'    => count($entries),
+            'filtered_number' => count($entries),
+        ]);
     }
 
     /**

@@ -107,13 +107,12 @@
                             });
                         }
                     </script>
-                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2" style='color: green;'
-                         id='security_compliance'>
+                    <div class="form-field row align-items-center col-12 col-sm-12 mb-2"
+                         id="security_compliance">
+                        {# Only the compliant state is rendered on load: the client dropdown starts
+                         # empty, and flagging an empty selection as non compliant would mislead. #}
                         {% if params["compliant"] is defined and params["compliant"] == true %}
-                            <label class="col-form-label col-xxl-5 text-xxl-end ">
-                                {{ __('Security compliance', 'resources') }} &nbsp;
-                                <i style='color:green' class='ti ti-circle-check'></i>
-                            </label>
+                            {% include '@resources/employee_security_compliance.html.twig' with {'compliant': true} only %}
                         {% endif %}
                     </div>
                     {% if params["default_button"] is defined and params["default_button"] ==1 %}

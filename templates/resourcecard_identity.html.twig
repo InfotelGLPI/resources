@@ -1,0 +1,75 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div id="plugin_resources_about" class="plugin_resources_content plugin_resources_clearfix">
+    {% if not identity.has_user %}
+        <p><span class="b red">{{ __('Information, this resource is not linked to a user', 'resources') }}</span></p>
+    {% endif %}
+
+    <div id="plugin_resources_about-image">
+        <img src="{{ identity.picture_url }}" alt="" />
+    </div>
+
+    <div id="plugin_resources_about-content" class="text-start">
+        <h1>{{ identity.title }}</h1>
+        {% if identity.subtitle is not empty %}
+            <h2>{{ identity.subtitle }}</h2>
+        {% endif %}
+
+        <div style="height:10px;"></div>
+
+        <div class="scrollable" style="padding-right: 8px;height:420px;">
+            <p>
+                {% for info in identity.infos %}
+                    <span class="b">{{ __('%1$s: %2$s')|format(info.label, '') }}</span>{{ info.value }}<br />
+                {% endfor %}
+
+                {% if identity.emails is not empty %}
+                    <span class="b">{{ _n('Email', 'Emails', identity.emails|length) }}</span>&nbsp;:&nbsp;{{ identity.emails|join(', ') }}
+                {% endif %}
+            </p>
+
+            <p>
+                <span class="b">{{ __('%1$s: %2$s')|format(__('Arrival date', 'resources'), '') }}</span>{{ identity.arrival_date }}
+            </p>
+
+            {% if identity.habilitations is not empty %}
+                <h3>{{ identity.habilitations_title }}</h3>
+                <table class="tab_cadre_fixe">
+                    <tr>
+                        <th class="text-center">{{ __('Name') }}</th>
+                    </tr>
+                    {% for habilitation in identity.habilitations %}
+                        <tr class="tab_bg_1">
+                            <td class="center">{{ habilitation }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</div>

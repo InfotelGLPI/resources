@@ -1,0 +1,81 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
+
+{# Helpdesk form used to declare the departure of a resource. It owns its <form>,
+ # so it carries the CSRF token itself. #}
+{% if not has_resources %}
+    <div class="alert alert-info">{{ __('No results found') }}</div>
+{% else %}
+    <div class="card container" style="min-width: 80%;">
+        <h3 class="alert alert-secondary" role="alert" style="margin-top: 10px;">
+            <span class="resources_wizard_resp_img">
+                <img src="{{ header_img }}">&nbsp;{{ header_title }}
+            </span>
+        </h3>
+        <div class="card-body">
+            <form method="post" action="{{ form_action }}">
+                <div class="row">
+                    {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, {
+                        'wrapper_class': '',
+                    }) }}
+                </div>
+
+                {# Refreshed by ajax/leavingform.php every time another resource is picked. #}
+                <div id="leaving_input">
+                    <div class="row">
+                        {{ fields.dateField('date_end', date_end, __('Departure date', 'resources')) }}
+                    </div>
+                    <div class="row">
+                        {{ fields.htmlField('remove_manager', manager_dropdown, __('Resource manager', 'resources'), {
+                            'wrapper_class': '',
+                        }) }}
+                    </div>
+                </div>
+
+                {# Filled by plugin_resources_pdf_resource(), bound on the dropdown above. #}
+                <div class="center" id="resource_pdf"></div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="next">
+                            {{ inputs.submit('removeresources', __('Declare a departure', 'resources'), 1, {
+                                'class': 'btn btn-success',
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                {# Emitted last: the scripts target #leaving_input, which must already exist. #}
+                {{ scripts|raw }}
+            </form>
+        </div>
+    </div>
+{% endif %}

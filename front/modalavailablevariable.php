@@ -27,31 +27,13 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Config;
 
 // This endpoint exposes the full notification variable catalog; gate it behind the
 // plugin read right like every other resources endpoint (was reachable unauthenticated).
 Session::checkRight('plugin_resources', READ);
 
-echo '<div>
-
-<table>
-  <thead>
-    <tr>
-      <th>' . __('Variable', 'resources') . '</th>
-      <th>' . __('Description', 'resources') . '</th>
-    </tr>
-  </thead>
-
-  <tbody>';
-
-foreach (Config::getAvailablevariable() as $item => $description) {
-    echo '<tr>';
-    echo '<td>' . $item . '</td>';
-    echo '<td>' . $description . '</td>';
-    echo '</tr>';
-}
-echo '
-  </tbody>
-</table>
-</div>';
+TemplateRenderer::getInstance()->display('@resources/modal_available_variable.html.twig', [
+    'variables' => Config::getAvailablevariable(),
+]);

@@ -847,12 +847,6 @@ parameters:
 			path: src/CheckSchema.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/CheckSchema.php
-
-		-
 			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
 			identifier: method.notFound
 			count: 1

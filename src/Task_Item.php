@@ -288,10 +288,11 @@ class Task_Item extends CommonDBTM
 
         $items_dropdown = '';
         if ($canedit) {
-            // dropdownItems() echoes directly, so capture it for the template.
-            ob_start();
-            (new Resource_Item())->dropdownItems($plugin_resources_resources_id, $used);
-            $items_dropdown = (string) ob_get_clean();
+            $items_dropdown = (string) (new Resource_Item())->dropdownItems(
+                $plugin_resources_resources_id,
+                $used,
+                false,
+            );
         }
 
         TemplateRenderer::getInstance()->display('@resources/task_item_form.html.twig', [

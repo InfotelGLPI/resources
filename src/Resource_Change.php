@@ -63,7 +63,7 @@ class Resource_Change extends CommonDBTM
 
     //List of possible actions
     public const CHANGE_RESOURCEMANAGER = 1;
-    public const CHANGE_ACCESSPROFIL = 2;
+    public const CHANGE_ACCESSPROFILE = 2;
     public const CHANGE_CONTRACTTYPE = 3;
     public const CHANGE_AGENCY = 4;
     public const CHANGE_TRANSFER = 5;
@@ -126,7 +126,7 @@ class Resource_Change extends CommonDBTM
         $actions[0] = self::getNameActions(0);
         $actions[self::CHANGE_RESOURCEMANAGER] = self::getNameActions(self::CHANGE_RESOURCEMANAGER);
         $actions[self::CHANGE_RESOURCESALE] = self::getNameActions(self::CHANGE_RESOURCESALE);
-        $actions[self::CHANGE_ACCESSPROFIL] = self::getNameActions(self::CHANGE_ACCESSPROFIL);
+        $actions[self::CHANGE_ACCESSPROFILE] = self::getNameActions(self::CHANGE_ACCESSPROFILE);
         $actions[self::CHANGE_CONTRACTTYPE] = self::getNameActions(self::CHANGE_CONTRACTTYPE);
         $actions[self::CHANGE_AGENCY] = self::getNameActions(self::CHANGE_AGENCY);
         $actions[self::CHANGE_RESOURCEINFORMATIONS] = self::getNameActions(self::CHANGE_RESOURCEINFORMATIONS);
@@ -175,8 +175,8 @@ class Resource_Change extends CommonDBTM
                 return __("Change manager", 'resources');
             case self::CHANGE_RESOURCESALE:
                 return __("Change the sales manager", 'resources');
-            case self::CHANGE_ACCESSPROFIL:
-                return __("Change the access profil", 'resources');
+            case self::CHANGE_ACCESSPROFILE:
+                return __("Change the access profile", 'resources');
             case self::CHANGE_CONTRACTTYPE:
                 return __("Change contract type", 'resources');
             case self::CHANGE_AGENCY:
@@ -298,7 +298,7 @@ class Resource_Change extends CommonDBTM
                 );
                 break;
 
-            case self::CHANGE_ACCESSPROFIL:
+            case self::CHANGE_ACCESSPROFILE:
                 $criteria = [
                     'SELECT' => [
                         'glpi_plugin_resources_habilitations.id',
@@ -360,7 +360,7 @@ class Resource_Change extends CommonDBTM
                 $js .= self::loadButtonJs(
                     'plugin_resources_load_button_changeresources_profil',
                     [
-                        'action' => self::CHANGE_ACCESSPROFIL,
+                        'action' => self::CHANGE_ACCESSPROFILE,
                         'plugin_resources_habilitations_id' => '__VALUE__',
                     ],
                     'dropdown_plugin_resources_habilitations_id' . $rand,
@@ -706,17 +706,26 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_RESOURCEMATERIAL:
-                $material = $capture(fn() => Html::textarea(['name' => "content"]));
-                $material .= Ajax::updateItemOnInputTextEvent(
+                $rows[] = [
+                    'label'  => __("Change material", "resources"),
+                    // Html::textarea() names the tag after 'editor_id', not after 'name':
+                    // pin it, the script below observes that id.
+                    'widget' => $capture(fn() => Html::textarea([
+                        'name'      => "content",
+                        'editor_id' => "content",
+                    ])),
+                ];
+                // Ajax::updateItemOnInputTextEvent() was removed in GLPI 11. It only wrapped
+                // updateItemOnEvent() with the typing events, so bind them here instead: the
+                // action button area stays empty until something is typed.
+                $js .= Ajax::updateItemOnEventJsCode(
                     'content',
                     'plugin_resources_buttonchangeresources',
                     PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
                     ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL],
+                    ['keyup', 'change'],
+                    display: false,
                 );
-                $rows[] = [
-                    'label'  => __("Change material", "resources"),
-                    'widget' => $material,
-                ];
                 break;
 
             case self::CHANGE_RESOURCEITEMAPPLICATION:
@@ -811,7 +820,7 @@ class Resource_Change extends CommonDBTM
                 }
                 break;
 
-            case self::CHANGE_ACCESSPROFIL:
+            case self::CHANGE_ACCESSPROFILE:
                 if (isset($options['plugin_resources_habilitations_id'])
                     && !empty($options['plugin_resources_habilitations_id'])
                     && $options['plugin_resources_habilitations_id'] != 0) {
@@ -971,7 +980,7 @@ class Resource_Change extends CommonDBTM
 
                 $input['users_id_sales'] = $options['users_id_sales'];
                 break;
-            case self::CHANGE_ACCESSPROFIL:
+            case self::CHANGE_ACCESSPROFILE:
                 $data['name'] = __("Change the access profile for", 'resources') . " " .
                     Resource::getResourceName($plugin_resources_resources_id);
                 $data['content'] = __("Change the access profile for", 'resources') . " " .
@@ -1343,51 +1352,37 @@ class Resource_Change extends CommonDBTM
         // Entity already added for this action
         $datas = $this->find([], "actions_id");
 
-        $rand = mt_rand();
-
-        if (count($datas) > 0) {
-            echo "<div class='left'>";
-            if ($canedit) {
-                Html::openMassiveActionsForm('massResource_Change' . $rand);
-                $massiveactionparams = ['item' => __CLASS__, 'container' => 'massResource_Change' . $rand];
-                Html::showMassiveActions($massiveactionparams);
-            }
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr>";
-            echo "<th colspan='4'>" . __('List') . "</th>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<th width='10'>";
-            if ($canedit) {
-                echo Html::getCheckAllAsCheckbox('massResource_Change' . $rand);
-            }
-            echo "</th>";
-            echo "<th>" . __('Action') . "</th>";
-            echo "<th>" . __('Entity') . "</th>";
-            echo "<th>" . __('Category') . "</th>";
-            echo "</tr>";
-            foreach ($datas as $action) {
-                echo "<tr class='tab_bg_1'>";
-                echo "<td width='10'>";
-                if ($canedit) {
-                    Html::showMassiveActionCheckBox(__CLASS__, $action['id']);
-                }
-                echo "</td>";
-                //DATA LINE
-                echo "<td>" . self::getNameActions($action['actions_id']) . "</td>";
-                echo "<td>" . Dropdown::getDropdownName('glpi_entities', $action['entities_id']) . "</td>";
-                echo "<td>" . Dropdown::getDropdownName('glpi_itilcategories', $action['itilcategories_id']) . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-            if ($canedit) {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-                Html::closeForm();
-            }
-            echo "</div>";
+        if (count($datas) === 0) {
+            return;
         }
 
+        $entries = [];
+        foreach ($datas as $action) {
+            $entries[] = [
+                'itemtype' => self::class,
+                'id'       => $action['id'],
+                'action'   => self::getNameActions($action['actions_id']),
+                'entity'   => Dropdown::getDropdownName('glpi_entities', $action['entities_id']),
+                'category' => Dropdown::getDropdownName('glpi_itilcategories', $action['itilcategories_id']),
+            ];
+        }
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => __('List'),
+            'columns'             => [
+                'action'   => __('Action'),
+                'entity'   => __('Entity'),
+                'category' => __('Category'),
+            ],
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => 'massResource_Change' . mt_rand(),
+            ],
+        ]);
     }
 
     /**
@@ -1439,27 +1434,34 @@ class Resource_Change extends CommonDBTM
      */
     public static function displayCategory($entities_id)
     {
-        global $CFG_GLPI;
+        // The reload script has to target the dropdown by id, so fix the rand instead of
+        // reading it back from Dropdown::show(), which returns the markup when display is off.
+        $rand = mt_rand();
 
-        echo __('Category') . "&nbsp;";
-        $rand = Dropdown::show('ITILCategory', [
+        $dropdown = (string) Dropdown::show('ITILCategory', [
             'name' => 'itilcategories_id',
             'entity' => $entities_id,
             'condition' => ['is_request' => 1],
             'on_change' => 'plugin_resources_load_buttonadd();',
+            'rand' => $rand,
+            'display' => false,
         ]);
 
-        echo "<script type='text/javascript'>";
-        echo "function plugin_resources_load_buttonadd(){";
-        $params = ['action' => 'loadButtonAdd', 'itilcategories_id' => '__VALUE__'];
-        Ajax::updateItemJsCode(
-            'plugin_resources_button_add',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-            $params,
-            'dropdown_itilcategories_id' . $rand,
+        $script = Html::scriptBlock(
+            'function plugin_resources_load_buttonadd(){' . Ajax::updateItemJsCode(
+                'plugin_resources_button_add',
+                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                ['action' => 'loadButtonAdd', 'itilcategories_id' => '__VALUE__'],
+                'dropdown_itilcategories_id' . $rand,
+                false,
+            ) . '}',
         );
-        echo "};";
-        echo "</script>";
+
+        TemplateRenderer::getInstance()->display('@resources/resource_change_category.html.twig', [
+            'label'    => __('Category'),
+            'dropdown' => $dropdown,
+            'script'   => $script,
+        ]);
     }
 
     /**

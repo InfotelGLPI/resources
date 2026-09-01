@@ -34,6 +34,7 @@ use DBConnection;
 use Dropdown;
 use Migration;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -102,45 +103,40 @@ class Role extends CommonDropdown
 
 
     /**
-     * Display a rank's list depending on profession
+     * Display the roles available for a service.
+     *
+     * Roles carry no profession of their own: they are linked to services through
+     * Role_Service, so the listing is delegated to dropdownFromService().
      *
      * @static
      *
      * @param $options
      */
-    public static function showRank($options)
+    public static function showRole($options)
     {
-        global $DB;
+        $servicesId = (int) ($options['plugin_resources_services_id'] ?? 0);
+        $entity     = $options['entity'] ?? 0;
 
-        $professionId = $options['plugin_resources_professions_id'];
-        $entity = $options['entity'];
-        $rand = $options['rand'];
-        $sort = $options['sort'];
+        // The rand only builds an element id and comes straight from the request: keep it
+        // numeric so it can never break out of the id attribute.
+        $rand = (int) ($options['rand'] ?? 0);
 
-        if ($professionId > 0) {
-            if ($sort) {
-                $values[0] = Dropdown::EMPTY_VALUE;
-                $iterator = $DB->request([
-                    'FROM'  => 'glpi_plugin_resources_ranks',
-                    'WHERE' => ['plugin_resources_professions_id' => (int) $professionId],
-                ]);
-                foreach ($iterator as $data) {
-                    $values[$data['id']] = $data['name'];
-                }
-                Dropdown::showFromArray('plugin_resources_ranks_id', $values);
-            } else {
-                $condition = ['plugin_resources_professions_id' => $professionId];
-
-                Dropdown::show(Role::class, [
-                    'entity' => $entity,
-                    'condition' => $condition,
-                ]);
-            }
-        } else {
-            echo "<select class='form-select' name='plugin_resources_ranks_id'
-                        id='dropdown_plugin_resources_ranks_id$rand'>";
-            echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
+        $dropdown = '';
+        if ($servicesId > 0) {
+            $dropdown = (string) self::dropdownFromService($servicesId, [
+                'name'    => 'plugin_resources_roles_id',
+                'entity'  => $entity,
+                'rand'    => $rand,
+                'display' => false,
+            ]);
         }
+
+        TemplateRenderer::getInstance()->display('@resources/dependent_dropdown.html.twig', [
+            'dropdown'    => $dropdown,
+            'field_name'  => 'plugin_resources_roles_id',
+            'rand'        => $rand,
+            'empty_value' => Dropdown::EMPTY_VALUE,
+        ]);
     }
 
 

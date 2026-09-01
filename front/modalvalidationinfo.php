@@ -27,24 +27,10 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 // Static validation prompt, also shown in the simplified (helpdesk) interface:
 // require authentication for consistency without gating behind the plugin right.
+Session::checkLoginUser();
 
-echo '<div >' . __('Do you verify all the information listed on this resource?', 'resources') . '</div><br><br>';
-echo Html::submit(
-    __('Validate', 'resources'),
-    [
-        'id' => 'btnAddAnswer',
-        'onclick' => "validinformation()",
-        'data-bs-dismiss' => 'modal',
-        'class' => 'btn btn-primary',
-    ],
-);
-echo Html::submit(
-    __('Close', 'resources'),
-    [
-        'id' => 'btnClose',
-        'class' => 'btn btn-secondary',
-        'data-bs-dismiss' => 'modal',
-    ],
-);
+TemplateRenderer::getInstance()->display('@resources/modal_validation_info.html.twig');

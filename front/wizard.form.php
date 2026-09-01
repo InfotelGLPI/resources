@@ -355,36 +355,16 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // replace an arbitrary resource's picture. check() halts (AccessDenied) on failure.
     $resource->check($resources_id, UPDATE);
 
-    if (isset($_FILES) && isset($_FILES['_uploader_picture']['tmp_name'][0])) {
-
-        $tmp_name = $_FILES['_uploader_picture']['tmp_name'][0];
-
-        // The client Content-Type is spoofable: mirror prepareInputForUpdate() and require
-        // a genuine uploaded file that is really a JPEG (is_uploaded_file + exif_imagetype).
-        if (is_uploaded_file($tmp_name)
-            && exif_imagetype($tmp_name) === IMAGETYPE_JPEG) {
-
-            $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
-            if ($_FILES['_uploader_picture']['size'][0] <= $max_size) {
-                $resource->getFromDB($resources_id);
-                $input['picture'] = $resource->addPhoto($resource);
-                $input["id"] = $resources_id;
-                $resource->update($input);
-
-            } else {
-                Session::addMessageAfterRedirect(
-                    __('Failed to send the file (probably too large)', 'resources'),
-                    false,
-                    ERROR,
-                );
-            }
-        } else {
-            Session::addMessageAfterRedirect(
-                __('Invalid filename'),
-                false,
-                ERROR,
-            );
-        }
+    // Html::file() uploads asynchronously and replaces the file input, so $_FILES is empty
+    // here: the picture already sits in GLPI_TMP_DIR and only its name reaches _picture[0].
+    // Hand the raw _picture over to update(): prepareInputForUpdate() resolves it, checks the
+    // JPEG signature and the size, then stores the resized photo. Doing it here as well would
+    // process the same temporary file twice.
+    if (Resource::getUploadedPicturePath($_POST) !== '') {
+        $resource->update([
+            'id'       => $resources_id,
+            '_picture' => $_POST['_picture'],
+        ]);
     } else {
         Session::addMessageAfterRedirect(
             __('Failed to send the file', 'resources'),

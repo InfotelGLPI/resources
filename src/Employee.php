@@ -286,14 +286,6 @@ class Employee extends CommonDBTM
             ],
         ));
 
-        if (Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"])) {
-            $img   = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
-            $color = "color: green;";
-        } else {
-            $img   = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
-            $color = "color: red;";
-        }
-
         // Action buttons cell (mix of returned Html::* helpers and the echoing template dropdown).
         $buttons_cell = '';
         if ($withtemplate < 2) {
@@ -355,9 +347,7 @@ class Employee extends CommonDBTM
             'address_html'        => $address_html,
             'label_client'        => Client::getTypeName(1),
             'client_dropdown'     => $client_dropdown,
-            'compliance_color'    => $color,
-            'compliance_label'    => __('Security compliance', 'resources'),
-            'compliance_img'      => $img,
+            'compliant'           => Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"]),
             'buttons_cell'        => $buttons_cell,
         ]);
 

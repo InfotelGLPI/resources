@@ -34,6 +34,7 @@ use DBConnection;
 use Dropdown;
 use Migration;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -111,29 +112,31 @@ class ContractNature extends CommonDropdown
      */
     public static function showContractnature($options)
     {
-        $resourceSituationId = $options['plugin_resources_resourcesituations_id'];
+        $resourceSituationId = (int) ($options['plugin_resources_resourcesituations_id'] ?? 0);
+        $entity              = $options['entity'] ?? 0;
 
-        $entity = $options['entity'];
-        $rand = $options['rand'];
+        // The rand only builds an element id and comes straight from the request: keep it
+        // numeric so it can never break out of the id attribute.
+        $rand = (int) ($options['rand'] ?? 0);
 
-        if ($resourceSituationId > 0) {
-            $resourceSituation = new ResourceSituation();
-            $resourceSituation->getFromDB($resourceSituationId);
+        $resourceSituation = new ResourceSituation();
 
-            if ($isContractLinked = $resourceSituation->fields["is_contract_linked"]) {
-                if ($isContractLinked == 1) {
-                    Dropdown::show(Contractnature::class, ['entity' => $entity]);
-                }
-            } else {
-                echo "<select class='form-select' name='plugin_resources_contractnatures_id'
-                        id='dropdown_plugin_resources_contractnatures_id$rand'>";
-                echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
-            }
-        } else {
-            echo "<select class='form-select' name='plugin_resources_contractnatures_id'
-                        id='dropdown_plugin_resources_contractnatures_id$rand'>";
-            echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
+        $dropdown = '';
+        if ($resourceSituationId > 0
+            && $resourceSituation->getFromDB($resourceSituationId)
+            && (int) ($resourceSituation->fields['is_contract_linked'] ?? 0) === 1) {
+            $dropdown = (string) Dropdown::show(self::class, [
+                'entity'  => $entity,
+                'display' => false,
+            ]);
         }
+
+        TemplateRenderer::getInstance()->display('@resources/dependent_dropdown.html.twig', [
+            'dropdown'    => $dropdown,
+            'field_name'  => 'plugin_resources_contractnatures_id',
+            'rand'        => $rand,
+            'empty_value' => Dropdown::EMPTY_VALUE,
+        ]);
     }
 
     /**

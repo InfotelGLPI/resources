@@ -34,6 +34,7 @@ use DBConnection;
 use Dropdown;
 use Migration;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -116,22 +117,28 @@ class ResourceSpeciality extends CommonDropdown
      */
     public static function showSpeciality($options)
     {
-        $rankId = $options['plugin_resources_ranks_id'];
-        $entity = $options['entity'];
-        $rand = $options['rand'];
+        $rankId = (int) ($options['plugin_resources_ranks_id'] ?? 0);
+        $entity = $options['entity'] ?? 0;
 
+        // The rand only builds an element id and comes straight from the request: keep it
+        // numeric so it can never break out of the id attribute.
+        $rand = (int) ($options['rand'] ?? 0);
+
+        $dropdown = '';
         if ($rankId > 0) {
-            $condition = ['plugin_resources_ranks_id' => $rankId];
-
-            Dropdown::show(ResourceSpeciality::class, [
+            $dropdown = (string) Dropdown::show(ResourceSpeciality::class, [
                 'entity' => $entity,
-                'condition' => $condition,
+                'condition' => ['plugin_resources_ranks_id' => $rankId],
+                'display' => false,
             ]);
-        } else {
-            echo "<select class='form-select' name='plugin_resources_resourcespecialities_id'
-                        id='dropdown_plugin_resources_resourcespecialities_id$rand'>";
-            echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
         }
+
+        TemplateRenderer::getInstance()->display('@resources/dependent_dropdown.html.twig', [
+            'dropdown' => $dropdown,
+            'field_name' => 'plugin_resources_resourcespecialities_id',
+            'rand' => $rand,
+            'empty_value' => Dropdown::EMPTY_VALUE,
+        ]);
     }
 
     /**

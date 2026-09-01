@@ -34,33 +34,39 @@ use DbUtils;
 use Document_Item;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
-use Html;
-use Profile_User;
 use Session;
 use Toolbox;
 use UserCategory;
 
 class Wizard extends CommonDBTM
 {
-    public static function WizardHeader($title = "", $img = "", $icon = "")
+    /**
+     * Card header of the wizard steps and of the helpdesk screens of the plugin.
+     *
+     * The template is also included directly by the step templates, so both paths render
+     * the very same markup.
+     *
+     * @param string $title   Defaults to the plugin name
+     * @param string $img     Picture, takes precedence over the icon
+     * @param string $icon    Icon class, defaults to the resource one
+     * @param bool   $display Echo the header, or return it as a string
+     *
+     * @return string|void
+     */
+    public static function WizardHeader($title = "", $img = "", $icon = "", $display = true)
     {
-        if (empty($title)) {
-            $title = __('Resources management', 'resources');
+        $render = TemplateRenderer::getInstance()->render('@resources/wizard_header.html.twig', [
+            'title'        => $title,
+            'img'          => $img,
+            'icon'         => $icon,
+            'default_icon' => Resource::getIcon(),
+        ]);
+
+        if (!$display) {
+            return $render;
         }
-        echo "<h3 class='alert alert-secondary' role='alert' style='margin-top: 10px;'>";
-        echo "<span class='resources_wizard_resp_img'>";
-        if (empty($img)) {
-            if (empty($icon)) {
-                echo "<i class='" . Resource::getIcon() . "'></i>&nbsp;";
-            } else {
-                echo "<i class='" . $icon . "'></i>&nbsp;";
-            }
-        } else {
-            echo "<img src='" . $img . "'/>&nbsp;";
-        }
-        echo $title;
-        echo "</span>";
-        echo "</h3>";
+
+        echo $render;
     }
 
     /**
@@ -254,58 +260,18 @@ class Wizard extends CommonDBTM
 
         $resource_managers = [];
         if ($config->getField('resource_manager') != "") {
-            $tableProfileUser = Profile_User::getTable();
-
-            $profile_User = new Profile_User();
-            $prof = [];
-            $decoded_managers = json_decode($config->getField('resource_manager'), true);
-            foreach (is_array($decoded_managers) ? $decoded_managers : [] as $profs) {
-                $prof[$profs] = $profs;
-            }
-            $ids = join("','", $prof);
-            $restrict = getEntitiesRestrictCriteria(
-                $tableProfileUser,
-                'entities_id',
+            $resource_managers = [0 => Dropdown::EMPTY_VALUE] + Resource::getManagerDropdownValues(
+                $config->getField('resource_manager'),
                 $_SESSION['glpiactive_entity'],
-                true,
             );
-            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
-            $profiles_User = $profile_User->find($restrict);
-
-            $resource_managers[0] = Dropdown::EMPTY_VALUE;
-            foreach ($profiles_User as $profileUser) {
-                $user = new \User();
-                $user->getFromDB($profileUser["users_id"]);
-                $resource_managers[$profileUser["users_id"]] = $user->getFriendlyName();
-            }
         }
 
         $sales_managers = [];
         if (($config->getField('sales_manager') != "")) {
-            $tableProfileUser = Profile_User::getTable();
-
-            $profile_User = new Profile_User();
-            $prof = [];
-            foreach (json_decode($config->getField('sales_manager')) as $profs) {
-                $prof[$profs] = $profs;
-            }
-
-            $ids = join("','", $prof);
-            $restrict = getEntitiesRestrictCriteria(
-                $tableProfileUser,
-                'entities_id',
+            $sales_managers = [0 => Dropdown::EMPTY_VALUE] + Resource::getManagerDropdownValues(
+                $config->getField('sales_manager'),
                 $_SESSION['glpiactive_entity'],
-                true,
             );
-            $restrict = array_merge([$tableProfileUser . ".profiles_id" => [$ids]], $restrict);
-            $profiles_User = $profile_User->find($restrict);
-
-            $sales_managers[0] = Dropdown::EMPTY_VALUE;
-            foreach ($profiles_User as $profileUser) {
-                $user = new \User();
-                $user->getFromDB($profileUser["users_id"]);
-                $sales_managers[$profileUser["users_id"]] = $user->getFriendlyName();
-            }
         }
 
         $rank = new Rank();
@@ -714,60 +680,29 @@ class Wizard extends CommonDBTM
 
         $resource->getFromDB($plugin_resources_resources_id);
 
-        echo "<div class='card container' style='min-width: 80%;'>";
-
-        $title = __('Add documents to the resource', 'resources');
-        $img = PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png";
-        self::WizardHeader($title, $img);
-
-        echo "<div class='card-body'>";
-
-        $target = Toolbox::getItemTypeFormURL(Wizard::class);
-        echo "<form action='$target' enctype='multipart/form-data' method='post'>";
-
-        echo "<div class='row'>";
+        // Both helpers echo their own markup: capture them so the template stays in charge
+        // of the layout. Neither of them opens a form of its own.
+        ob_start();
         Resource::showAddFormForItem($resource);
-        echo "</div>";
+        $add_document_form = (string) ob_get_clean();
 
-        echo "<div class='row'>";
+        ob_start();
         Document_Item::showListForItem($resource, 99); // With template 99 to disable massive action
-        echo "</div>";
+        $documents_list = (string) ob_get_clean();
 
-        echo Html::hidden('plugin_resources_resources_id', ['value' => $resource->fields["id"]]);
-
-        if ($resource->canCreate() && (!empty($plugin_resources_resources_id))) {
-            echo "<br><div class='hr mt-3 mb-3'></div><div class='row'>";
-            echo "<div class='hstack gap-1'>";
-            echo "<div class='pe-5 ms-auto'>";
-            if ($resource->canPurge()) {
-                echo Html::submit(
-                    _sx('button', 'Cancel the request', 'resources'),
-                    [
-                        'name' => 'cancel_request',
-                        'class' => 'btn btn-danger ms-1',
-                        'icon' => 'ti ti-x',
-                    ],
-                );
-            }
-            echo "&nbsp;";
-            echo Html::submit(
-                "< " . _sx('button', 'Previous', 'resources'),
-                ['name' => 'undo_seven_step', 'class' => 'btn btn-primary'],
-            );
-            echo "&nbsp;";
-            echo Html::submit(
-                _sx('button', 'Next', 'resources') . " >",
-                ['name' => 'eight_step', 'class' => 'btn btn-success'],
-            );
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-        }
-
-        Html::closeForm();
-
-        echo "</div>";
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@resources/wizard_sevenstep_document.html.twig', [
+            'can_edit'          => $resource->canCreate() && !empty($plugin_resources_resources_id),
+            'can_purge'         => $resource->canPurge(),
+            'add_document_form' => $add_document_form,
+            'documents_list'    => $documents_list,
+            'params'            => [
+                'title'                         => __('Add documents to the resource', 'resources'),
+                'target'                        => Toolbox::getItemTypeFormURL(Wizard::class),
+                'icon'                          => '',
+                'img'                           => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'plugin_resources_resources_id' => $resource->fields["id"] ?? 0,
+            ],
+        ]);
 
         return true;
     }

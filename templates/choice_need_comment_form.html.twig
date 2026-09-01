@@ -1,0 +1,45 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Add comment form of a checklist choice, AJAX loaded into #addneedcomment{id}{rand} by
+ # Choice::showAddCommentForm(). The submit button belongs to the form of the surrounding
+ # list, and hideAddForm{id}() hides the two blocks below, so their ids must stay in sync
+ # with the ones it targets. #}
+<div id="addcommentneed{{ items_id }}{{ rand }}" class="center">
+    <textarea class="form-control" name="commentneed{{ items_id }}" rows="3" cols="30"></textarea>
+    <input type="hidden" name="id" value="{{ items_id }}">
+</div>
+
+<div id="viewaccept{{ items_id }}" class="center">
+    <p>
+        <input type="submit" name="updateneedcomment[{{ items_id }}]"
+               value="{{ _x('button', 'Add') }}" class="submit btn btn-primary">
+        &nbsp;
+        <input type="button" onclick="hideAddForm{{ items_id }}();"
+               value="{{ _x('button', 'Cancel') }}" class="submit btn btn-primary">
+    </p>
+</div>

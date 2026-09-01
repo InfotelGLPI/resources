@@ -35,7 +35,7 @@ $resource = new Resource();
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
     Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 
-    $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php", $_GET["add"]);
+    $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php", (int) ($_GET["add"] ?? 0));
 
     Html::footer();
 }

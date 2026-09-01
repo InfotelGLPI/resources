@@ -34,6 +34,7 @@ use DBConnection;
 use Dropdown;
 use Migration;
 use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -199,35 +200,43 @@ class Rank extends CommonDropdown
     {
         global $DB;
 
-        $professionId = $options['plugin_resources_professions_id'];
-        $entity = $options['entity'];
-        $rand = $options['rand'];
-        $sort = $options['sort'];
+        $professionId = (int) ($options['plugin_resources_professions_id'] ?? 0);
+        $entity       = $options['entity'] ?? 0;
+        $sort         = $options['sort'] ?? false;
 
+        // The rand only builds an element id and comes straight from the request: keep it
+        // numeric so it can never break out of the id attribute.
+        $rand = (int) ($options['rand'] ?? 0);
+
+        $dropdown = '';
         if ($professionId > 0) {
             if ($sort) {
-                $values[0] = Dropdown::EMPTY_VALUE;
+                $values   = [0 => Dropdown::EMPTY_VALUE];
                 $iterator = $DB->request([
-                    'FROM'  => 'glpi_plugin_resources_ranks',
-                    'WHERE' => ['plugin_resources_professions_id' => (int) $professionId],
+                    'FROM'  => self::getTable(),
+                    'WHERE' => ['plugin_resources_professions_id' => $professionId],
                 ]);
                 foreach ($iterator as $data) {
                     $values[$data['id']] = $data['name'];
                 }
-                Dropdown::showFromArray('plugin_resources_ranks_id', $values);
+                $dropdown = (string) Dropdown::showFromArray('plugin_resources_ranks_id', $values, [
+                    'display' => false,
+                ]);
             } else {
-                $condition = ['plugin_resources_professions_id' => $professionId];
-
-                Dropdown::show(Rank::class, [
-                    'entity' => $entity,
-                    'condition' => $condition,
+                $dropdown = (string) Dropdown::show(Rank::class, [
+                    'entity'    => $entity,
+                    'condition' => ['plugin_resources_professions_id' => $professionId],
+                    'display'   => false,
                 ]);
             }
-        } else {
-            echo "<select class='form-select' name='plugin_resources_ranks_id'
-                        id='dropdown_plugin_resources_ranks_id$rand'>";
-            echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option></select>";
         }
+
+        TemplateRenderer::getInstance()->display('@resources/dependent_dropdown.html.twig', [
+            'dropdown'    => $dropdown,
+            'field_name'  => 'plugin_resources_ranks_id',
+            'rand'        => $rand,
+            'empty_value' => Dropdown::EMPTY_VALUE,
+        ]);
     }
 
     /**

@@ -111,7 +111,7 @@ class ImportColumn extends CommonDBChild
      * NB : Only called for existing object
      *      Must check right on what will be displayed + template
      *
-     * @param ommonGLPI $item CommonDBTM object for which the tab need to be displayed
+     * @param CommonGLPI $item CommonDBTM object for which the tab need to be displayed
      * @param bool|int $withtemplate boolean  is a template object ? (default 0)
      *
      * @return string tab name

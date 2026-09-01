@@ -60,7 +60,7 @@ if (isset($_POST["transferresources"])) {
 } else {
     if ($resource->canView() || Session::haveRight("config", UPDATE)) {
         //show remove resource form
-        $resource->showResourcesToTransfer($_GET['plugin_resources_resources_id']);
+        $resource->showResourcesToTransfer((int) ($_GET["plugin_resources_resources_id"] ?? 0));
     }
 }
 

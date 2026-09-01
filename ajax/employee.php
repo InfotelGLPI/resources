@@ -27,28 +27,16 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Client;
-use GlpiPlugin\Resources\Resource_Change;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-$resource_change = new Resource_Change();
-
 if (isset($_POST['plugin_resources_clients_id'])) {
-    if (Client::isSecurityCompliance($_POST['plugin_resources_clients_id'])) {
-        $img = "<i style='color:green' class='ti ti-circle-check' alt=\"" . __('OK') . "\"></i>";
-        $color = "color: green;";
-    } else {
-        $img = "<i style='color:red' class='ti ti-circle-x' alt=\"" . __('KO') . "\"></i>";
-        $color = "color: red;";
-    }
-    echo "<label class='col-form-label col-xxl-5 text-xxl-end'>";
-    echo "<span style='$color'>";
-    echo __('Security compliance', 'resources') . "&nbsp;";
-    echo $img;
-    echo "</span>";
-    echo "</label>";
+    TemplateRenderer::getInstance()->display('@resources/employee_security_compliance.html.twig', [
+        'compliant' => Client::isSecurityCompliance((int) $_POST['plugin_resources_clients_id']),
+    ]);
 }

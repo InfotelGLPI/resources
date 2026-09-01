@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
@@ -48,20 +49,9 @@ $resource = new Resource();
 if ($resource->canView() || Session::haveRight("config", UPDATE)) {
     if (Session::haveRight("plugin_resources_all", READ)
     && Session::getCurrentInterface() == 'central') {
-        global $CFG_GLPI;
-
-        //Have right to see all resources
-        //Have not right to see all resources
-        echo "<div class='center'>";
-
-        echo "<a href='#' data-bs-toggle='modal' data-bs-target='#seetypemodal' class='submit btn btn-primary' title='" . __(
-            'View by contract type',
-            'resources',
-        ) . "' >";
-        echo __('View by contract type', 'resources');
-        echo "</a>";
-        echo "</div><br>";
-        echo Ajax::createIframeModalWindow(
+        // The modal markup and the script that opens it come from the core helper: ask for
+        // the string, so the template stays in charge of the layout.
+        $modal = (string) Ajax::createIframeModalWindow(
             'seetypemodal',
             PLUGIN_RESOURCES_WEBDIR . "/ajax/resourcetree.php",
             [
@@ -71,6 +61,11 @@ if ($resource->canView() || Session::haveRight("config", UPDATE)) {
                 'height' => 500,
             ],
         );
+
+        TemplateRenderer::getInstance()->display('@resources/resource_tree_button.html.twig', [
+            'label' => __('View by contract type', 'resources'),
+            'modal' => $modal,
+        ]);
     }
 
     Search::show(Resource::class);

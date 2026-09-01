@@ -36,6 +36,7 @@ use GlpiPlugin\Badges\Badge;
 use Html;
 use Session;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -70,256 +71,120 @@ class ResourceCard extends CommonDBTM
 
         $users_id = $data['items_id'] ?? 0;
 
-        $user = new \User();
-        if ($users_id > 0 && $user->getFromDB($users_id)) {
-            echo "<div id='plugin_resources_container'>";
+        $user     = new \User();
+        $has_user = $users_id > 0 && $user->getFromDB($users_id);
 
-            echo "<div id='plugin_resources_card'>";
-            echo "<div id='plugin_resources_card-header'>";
-            echo "<div id='plugin_resources_card-header-button' data-download='" . $CFG_GLPI["root_doc"] .
-                "/front/user.form.php?getvcard=1&amp;id=" . $user->getID() . "'
-                           class='download mouse-events'></div>";
-            echo "</div>"; //end plugin_resources_card-header
-
-            echo "<div id='plugin_resources_card-content'>";
-            echo "<div id='plugin_resources_card-content-frame'>";
-
-            echo "<div id='plugin_resources_card-content-wrap'>";
-            self::showIdentity($resource, $user);
-            echo "</div>"; //end plugin_resources_card-content-wrap
-
-            self::showItems($user);
-
-            echo "</div>"; //end plugin_resources_card-content-frame
-            echo "</div>"; //end plugin_resources_card-content
-            echo "</div>"; //end plugin_resources_card
-
-            echo "<div id='plugin_resources_card-footer'></div>";
-
-            echo "</div>"; //end plugin_resources_container
-
-            ///navigation
-            echo "<nav>";
-            echo "<ul class='plugin_resources_clearfix'>";
-            echo "<li class='active'><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#about'>" . __(
-                'About',
-                'resources',
-            ) . "</a></li>";
-            echo "<li><a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php#inventory'>" . __(
-                'Inventory',
-                'resources',
-            ) . "</a></li>";
-            echo "</ul>";
-            echo "</nav>";
-        } else {
-            echo "<div id='plugin_resources_container'>";
-
-            echo "<div id='plugin_resources_card'>";
-            echo "<div id='plugin_resources_card-header'>";
-            echo "</div>"; //end plugin_resources_card-header
-
-            echo "<div id='plugin_resources_card-content'>";
-            echo "<div id='plugin_resources_card-content-frame'>";
-
-            echo "<div id='plugin_resources_card-content-wrap'>";
-            self::showIdentity($resource);
-            echo "</div>"; //end plugin_resources_card-content-wrap
-
-            echo "</div>"; //end plugin_resources_card-content-frame
-            echo "</div>"; //end plugin_resources_card-content
-            echo "</div>"; //end plugin_resources_card
-
-            echo "<div id='plugin_resources_card-footer'></div>";
-
-            echo "</div>"; //end plugin_resources_container
-        }
+        TemplateRenderer::getInstance()->display('@resources/resourcecard.html.twig', [
+            'has_user'  => $has_user,
+            'vcard_url' => $has_user
+                ? $CFG_GLPI["root_doc"] . "/front/user.form.php?getvcard=1&id=" . $user->getID()
+                : '',
+            'card_url'  => PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php",
+            'identity'  => self::getIdentityData($resource, $has_user ? $user : false),
+            'items'     => $has_user ? self::getItemsData($user) : [],
+        ]);
     }
 
     /**
-     * @param $user
-     * @param $resource
+     * Build the "about" pane of the card.
+     *
+     * Values are returned raw: the template escapes them, so nothing must be pre-encoded here.
+     *
+     * @param Resource    $resource
+     * @param \User|false $user     Linked user, false when the resource has none
+     *
+     * @return array
      */
-    public static function showIdentity($resource, $user = false)
+    private static function getIdentityData(Resource $resource, $user = false): array
     {
-        echo "<div id='plugin_resources_about' class='plugin_resources_content plugin_resources_clearfix'>";
-
         $dbu = new DbUtils();
 
+        $identity = [
+            'has_user'            => $user !== false,
+            'emails'              => [],
+            'arrival_date'        => Html::convDate($resource->fields["date_begin"]),
+            'habilitations'       => [],
+            'habilitations_title' => '',
+        ];
+
         if ($user === false) {
-            echo "<p>";
-            echo "<span class='b red'>" . __(
-                'Information, this resource is not linked to a user',
-                'resources',
-            ) . "</br>";
-            echo "</p>";
-
-            echo "<div id='plugin_resources_about-image'>";
-            echo "<img src='" . User::getThumbnailURLForPicture('') . "' alt='' />";
-            echo "</div>"; //end plugin_resources_about-image
-
-            echo "<div id='plugin_resources_about-content' align='left'>";
-
-            echo "<h1>" . sprintf(__('%1$s %2$s'), htmlescape((string) $resource->fields['firstname']), htmlescape((string) $resource->fields['name'])) . "</h1>";
-            echo "<div style='height:10px;'></div>";
-            echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
-            echo "<p>";
-            echo sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Location'),
-                "</span>" .
-                    Dropdown::getDropdownName(
+            $identity['picture_url'] = User::getThumbnailURLForPicture('');
+            $identity['title']       = sprintf(
+                __('%1$s %2$s'),
+                (string) $resource->fields['firstname'],
+                (string) $resource->fields['name'],
+            );
+            $identity['subtitle'] = '';
+            $identity['infos']    = [
+                [
+                    'label' => __('Location'),
+                    'value' => Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
                         $resource->fields['locations_id'],
                     ),
-            ) . "</br>";
-
-            echo "<p>" . sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Arrival date', 'resources'),
-                "</span>" . Html::convDate($resource->fields["date_begin"]),
-            ) . "</br>";
-            echo "</p>";
-
-            if (ResourceHabilitation::canView()) {
-                if ($count = ResourceHabilitation::countForResource($resource)) {
-                    echo "<h3>" . ResourceHabilitation::getTypeName($count) . "</h3>";
-
-                    $resourcehabilitation = new ResourceHabilitation();
-                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
-
-                    echo "<table class='tab_cadre_fixe'>";
-                    echo "<tr>";
-                    echo "<th style='text-align: center;'>" . __('Name') . "</th>";
-                    echo "</tr>";
-                    foreach ($datas as $data) {
-                        echo "<tr class='tab_bg_1'>";
-                        echo "<td class='center'>" . Dropdown::getDropdownName(
-                            'glpi_plugin_resources_habilitations',
-                            $data['plugin_resources_habilitations_id'],
-                        ) . "</td>";
-                        echo "</tr>";
-                    }
-                    echo "</table>";
-                }
-            }
-
-            echo "</div>"; //end plugin_resources_scrollable
-            echo "</div>"; //end plugin_resources_about-content
+                ],
+            ];
         } else {
-            echo "<div id='plugin_resources_about-image'>";
-            echo "<img src='" . Resource::getThumbnailURLForPicture($resource->fields['picture']) . "' alt='' />";
-            echo "</div>"; //end plugin_resources_about-image
-
-            echo "<div id='plugin_resources_about-content' align='left'>";
-
-            echo "<h1>" . $dbu->getUsername($user->getID()) . "</h1>";
-            echo "<h2>" . Dropdown::getDropdownName('glpi_usertitles', $user->getField('usertitles_id')) . "</h2>";
-            echo "<div style='height:10px;'></div>";
-            echo "<div class='scrollable' style='padding-right: 8px;height:420px;'>";
-            echo "<p>" . sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Phone'),
-                "</span>" . $user->fields['phone'],
-            ) . "</br>";
-            echo sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Phone 2'),
-                "</span>" . $user->fields['phone2'],
-            ) . "</br>";
-            echo sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Mobile phone'),
-                "</span>" . $user->fields['mobile'],
-            ) . "</br>";
-            echo sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Location'),
-                "</span>" .
-                    Dropdown::getDropdownName(
+            $identity['picture_url'] = Resource::getThumbnailURLForPicture($resource->fields['picture']);
+            $identity['title']       = $dbu->getUsername($user->getID());
+            $identity['subtitle']    = Dropdown::getDropdownName('glpi_usertitles', $user->getField('usertitles_id'));
+            $identity['infos']       = [
+                ['label' => __('Phone'), 'value' => $user->fields['phone']],
+                ['label' => __('Phone 2'), 'value' => $user->fields['phone2']],
+                ['label' => __('Mobile phone'), 'value' => $user->fields['mobile']],
+                [
+                    'label' => __('Location'),
+                    'value' => Dropdown::getDropdownName(
                         $dbu->getTableForItemType('Location'),
                         $user->fields['locations_id'],
                     ),
-            ) . "</br>";
-
-            $emails = $user->getAllEmails($user->getID());
-
-            if (!empty($emails)) {
-                $count = count($emails);
-                echo "<span class='b'>" . _n('Email', 'Emails', $count) . "</span>&nbsp;:&nbsp;";
-                $n = 1;
-                foreach ($emails as $id => $email) {
-                    echo $email;
-                    if ($n < $count) {
-                        $n++;
-                        echo ", ";
-                    }
-                }
-            }
-            echo "</p>";
-
-            echo "<p>" . sprintf(
-                __('%1$s: %2$s'),
-                "<span class='b'>" . __('Arrival date', 'resources'),
-                "</span>" . Html::convDate($resource->fields["date_begin"]),
-            ) . "</br>";
-            echo "</p>";
-
-            if (ResourceHabilitation::canView()) {
-                if ($count = ResourceHabilitation::countForResource($resource)) {
-                    echo "<h3>" . ResourceHabilitation::getTypeName($count) . "</h3>";
-
-                    $resourcehabilitation = new ResourceHabilitation();
-                    $datas = $resourcehabilitation->find(['plugin_resources_resources_id' => $resource->getField('id')]);
-
-                    echo "<table class='tab_cadre_fixe'>";
-                    echo "<tr>";
-                    echo "<th style='text-align: center;'>" . __('Name') . "</th>";
-                    echo "</tr>";
-                    foreach ($datas as $data) {
-                        echo "<tr class='tab_bg_1'>";
-                        echo "<td class='center'>" . Dropdown::getDropdownName(
-                            'glpi_plugin_resources_habilitations',
-                            $data['plugin_resources_habilitations_id'],
-                        ) . "</td>";
-                        echo "</tr>";
-                    }
-                    echo "</table>";
-                }
-            }
-
-            echo "</div>"; //end plugin_resources_scrollable
-            echo "</div>"; //end plugin_resources_about-content
+                ],
+            ];
+            // getAllEmails() reads $this->fields['id']: the legacy argument was silently dropped.
+            $identity['emails'] = array_values($user->getAllEmails());
         }
-        echo "</div>"; //end plugin_resources_about
+
+        if (ResourceHabilitation::canView() && ($count = ResourceHabilitation::countForResource($resource))) {
+            $resourcehabilitation = new ResourceHabilitation();
+            $habilitations = $resourcehabilitation->find([
+                'plugin_resources_resources_id' => $resource->getField('id'),
+            ]);
+
+            $identity['habilitations_title'] = ResourceHabilitation::getTypeName($count);
+            foreach ($habilitations as $habilitation) {
+                $identity['habilitations'][] = Dropdown::getDropdownName(
+                    'glpi_plugin_resources_habilitations',
+                    $habilitation['plugin_resources_habilitations_id'],
+                );
+            }
+        }
+
+        return $identity;
     }
 
     /**
-     * @param $user
+     * Build the "inventory" pane of the card: the assignable items of the linked user,
+     * grouped by itemtype.
+     *
+     * @param \User $user
+     *
+     * @return array
      */
-    public static function showItems($user)
+    private static function getItemsData($user): array
     {
         global $CFG_GLPI, $DB;
 
-        echo "<div id='plugin_resources_inventory' class='plugin_resources_content' align='left'>";
-        echo "<h1>" . __('Inventory', 'resources') . "</h1>";
+        $dbu   = new DbUtils();
+        $ID    = $user->getID();
+        $items = [];
 
-        echo "<div class='scrollable'  style='padding-right: 8px;height:420px;'>";
-
-        $type_user = $CFG_GLPI['assignable_types'];
-        $field_user = 'users_id';
-
-        $ID = $user->getID();
-
-        $inv = false;
-        $datas = [];
-        $dbu = new DbUtils();
-        foreach ($type_user as $itemtype) {
+        foreach ($CFG_GLPI['assignable_types'] as $itemtype) {
             if (!($item = $dbu->getItemForItemtype($itemtype)) || !in_array($itemtype, self::$types)) {
                 continue;
             }
-            $i = 0;
+
             $itemtable = $dbu->getTableForItemType($itemtype);
-            $where = [$field_user => (int) $ID];
+            $where     = ['users_id' => (int) $ID];
 
             if ($item->maybeTemplate()) {
                 $where['is_template'] = 0;
@@ -331,81 +196,80 @@ class ResourceCard extends CommonDBTM
             if (count($entities_crit)) {
                 $where[] = $entities_crit;
             }
+
             $iterator = $DB->request([
                 'FROM'  => $itemtable,
                 'WHERE' => $where,
             ]);
 
-            if (count($iterator) > 0) {
-                $inv = true;
-                foreach ($iterator as $data) {
-                    $datas[$itemtype][$i] = $data;
-                    $i++;
-                }
-            }
-        }
-        foreach ($datas as $type => $table) {
-            echo "<table class='tab_cadre_fixe'>";
-
-            $obj = new $type();
-            $count = count($table);
-            $type_name = $obj->getTypeName($count);
-            echo "<tr><td colspan='3' class='center b'>$type_name</td></tr>";
-
-            foreach ($table as $k => $values) {
-                $cansee = $obj->can($values["id"], READ);
-                $link = $values["name"];
-                if ($cansee && Session::getCurrentInterface() == 'central') {
-                    $link_item = Toolbox::getItemTypeFormURL($type);
-                    if ($_SESSION["glpiis_ids_visible"] || empty($link)) {
-                        $link = sprintf(__('%1$s (%2$s)'), $link, $values["id"]);
-                    }
-                    $link = "<a href='" . $link_item . "?id=" . $values["id"] . "'>" . $link . "</a>";
-                }
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td class='center'  width='100'>";
-                $url = PLUGIN_RESOURCES_DIR . "/pics/gallery/" . $type . ".jpg";
-                if (file_exists($url)) {
-                    echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/gallery/" . $type . ".jpg' width = '50%' alt='' />";
-                } else {
-                    echo "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/gallery/nothing.png' width = '50%' alt='' />";
-                }
-                echo "</td>";
-
-                echo "<td class='left'>$link</br>";
-                if (Session::isMultiEntitiesMode()) {
-                    echo Dropdown::getDropdownName("glpi_entities", $values["entities_id"]) . "</br>";
-                }
-                if (isset($values["locations_id"]) && !empty($values["locations_id"])) {
-                    echo Dropdown::getDropdownName("glpi_locations", $values["locations_id"]) . "</br>";
-                }
-                if (isset($values["groups_id"]) && !empty($values["groups_id"])) {
-                    echo Dropdown::getDropdownName("glpi_groups", $values["groups_id"]) . "</br>";
-                }
-                if (isset($values["serial"]) && !empty($values["serial"])) {
-                    echo $values["serial"];
-                    echo "</br>";
-                }
-                if (isset($values["otherserial"]) && !empty($values["otherserial"])) {
-                    echo $values["otherserial"];
-                    echo "</br>";
-                }
-                //            if (isset($values["states_id"])) {
-                //               echo Dropdown::getDropdownName("glpi_states", $values['states_id']);
-                //            }
-                echo "</td></tr>";
+            if (count($iterator) === 0) {
+                continue;
             }
 
-            echo "</table>";
+            $rows = [];
+            foreach ($iterator as $values) {
+                $rows[] = self::getItemRowData($item, $itemtype, $values);
+            }
+
+            $items[] = [
+                'type_name' => $item->getTypeName(count($rows)),
+                'rows'      => $rows,
+            ];
         }
 
-        if ($inv == false) {
-            echo "<div class='alert alert-important alert-warning d-flex'>";
-            echo "<b>" . __('No results found') . "</b></div>";
+        return $items;
+    }
+
+    /**
+     * Build one inventory row: thumbnail, link and secondary information.
+     *
+     * @param CommonDBTM $item     Instance used to check the read right on the row
+     * @param string     $itemtype
+     * @param array      $values   Raw database row
+     *
+     * @return array
+     */
+    private static function getItemRowData(CommonDBTM $item, string $itemtype, array $values): array
+    {
+        $label = (string) $values["name"];
+        $url   = '';
+
+        if ($item->can($values["id"], READ) && Session::getCurrentInterface() == 'central') {
+            if ($_SESSION["glpiis_ids_visible"] || $label === '') {
+                $label = sprintf(__('%1$s (%2$s)'), $label, $values["id"]);
+            }
+            $url = Toolbox::getItemTypeFormURL($itemtype) . "?id=" . $values["id"];
         }
 
-        echo "</div>";
-        echo "</div>";
+        // The gallery pictures are shipped under public/, which is the web root of the plugin:
+        // the filesystem test must walk through it, only the URL may skip it.
+        $picture = PLUGIN_RESOURCES_DIR . "/public/pics/gallery/" . $itemtype . ".jpg";
+        $picture = file_exists($picture)
+            ? PLUGIN_RESOURCES_WEBDIR . "/pics/gallery/" . $itemtype . ".jpg"
+            : PLUGIN_RESOURCES_WEBDIR . "/pics/gallery/nothing.png";
+
+        $details = [];
+        if (Session::isMultiEntitiesMode()) {
+            $details[] = Dropdown::getDropdownName("glpi_entities", $values["entities_id"]);
+        }
+        if (!empty($values["locations_id"])) {
+            $details[] = Dropdown::getDropdownName("glpi_locations", $values["locations_id"]);
+        }
+        if (!empty($values["groups_id"])) {
+            $details[] = Dropdown::getDropdownName("glpi_groups", $values["groups_id"]);
+        }
+        if (!empty($values["serial"])) {
+            $details[] = $values["serial"];
+        }
+        if (!empty($values["otherserial"])) {
+            $details[] = $values["otherserial"];
+        }
+
+        return [
+            'picture' => $picture,
+            'url'     => $url,
+            'label'   => $label,
+            'details' => $details,
+        ];
     }
 }

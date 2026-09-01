@@ -52,7 +52,7 @@
             <td>{{ client_dropdown|raw }}</td>
             <td>
                 <div id="security_compliance">
-                    <span style="{{ compliance_color }}">{{ compliance_label }}&nbsp;{{ compliance_img|raw }}</span>
+                    {% include '@resources/employee_security_compliance.html.twig' with {'compliant': compliant} only %}
                 </div>
             </td>
         </tr>

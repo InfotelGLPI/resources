@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -34,28 +35,11 @@ Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-if (isset($_POST["id"])) {
-    $items_id = (int) $_POST["id"];
-    $rand = (int) ($_POST["rand"] ?? 0);
-    echo "<div id='addcommentneed$items_id$rand'class='center'>";
-    echo Html::textarea([
-        'name' => 'commentneed' . $items_id,
-        'cols' => '30',
-        'rows' => '3',
-        'display' => false,
-    ]);
-    echo Html::hidden('id', ['value' => $items_id]);
-    echo "</div>";
-    echo "<div id='viewaccept$items_id'class='center'>";
-    echo "<p>";
-    $name = "updateneedcomment[" . $items_id . "]";
-    echo Html::submit(_sx('button', 'Add'), ['name' => $name, 'class' => 'btn btn-primary']);
-    echo "&nbsp;";
-    echo Html::submit(
-        _sx('button', 'Cancel'),
-        ['name' => 'cancel', 'class' => 'btn btn-primary', 'onclick' => "hideAddForm$items_id();"],
-    );
-    echo "</div>";
-} else {
+if (!isset($_POST["id"])) {
     throw new AccessDeniedHttpException();
 }
+
+TemplateRenderer::getInstance()->display('@resources/choice_need_comment_form.html.twig', [
+    'items_id' => (int) $_POST["id"],
+    'rand'     => (int) ($_POST["rand"] ?? 0),
+]);

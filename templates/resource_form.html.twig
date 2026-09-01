@@ -1,0 +1,386 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% block form_fields %}
+    {% set hidden    = params['hidden_fields']    ?? [] %}
+    {% set readonly  = params['readonly_fields']  ?? [] %}
+    {% set mandatory = params['mandatory_fields'] ?? [] %}
+    {% set tpl       = params['withtemplate'] ?? 0 %}
+
+    {# Fields keep the core two column grid, the picture is kept apart on the right #}
+    <div class="col-12 col-xxl-9">
+        <div class="row flex-row">
+            {% if hidden.gender is not defined %}
+                {{ fields.dropdownArrayField('gender', item.fields['gender'] ?? 0, genders, __('Gender', 'resources'), {
+                    'required': mandatory.gender is defined,
+                    'readonly': readonly.gender is defined,
+                }) }}
+            {% endif %}
+
+            {% if hidden.name is not defined %}
+                {{ fields.textField('name', item.fields['name'], __('Surname'), {
+                    'required': mandatory.name is defined,
+                    'readonly': readonly.name is defined,
+                    'additional_attributes': {'onchange': 'this.value = this.value.toUpperCase();'},
+                }) }}
+            {% endif %}
+
+            {% if hidden.firstname is not defined %}
+                {{ fields.textField('firstname', item.fields['firstname'], __('First name'), {
+                    'required': mandatory.firstname is defined,
+                    'readonly': readonly.firstname is defined,
+                    'input_addclass': 'text-capitalize',
+                }) }}
+            {% endif %}
+
+            {% if hidden.matricule is not defined %}
+                {{ fields.textField('matricule', item.fields['matricule'], __('Matricule', 'resources'), {
+                    'required': mandatory.matricule is defined,
+                    'readonly': readonly.matricule is defined,
+                }) }}
+            {% endif %}
+
+            {% if second_matricule and hidden.matricule_second is not defined %}
+                {{ fields.textField('matricule_second', item.fields['matricule_second'], __('Second matricule', 'resources'), {
+                    'required': mandatory.matricule_second is defined,
+                    'readonly': readonly.matricule_second is defined,
+                }) }}
+            {% endif %}
+
+            {% if hidden.phone is not defined %}
+                {{ fields.textField('phone', item.fields['phone'], __('Phone'), {
+                    'required': mandatory.phone is defined,
+                    'readonly': readonly.phone is defined,
+                }) }}
+            {% endif %}
+
+            {% if hidden.cellphone is not defined %}
+                {{ fields.textField('cellphone', item.fields['cellphone'], __('Mobile phone'), {
+                    'required': mandatory.cellphone is defined,
+                    'readonly': readonly.cellphone is defined,
+                }) }}
+            {% endif %}
+
+            {# Read-only outside the central interface: the value is kept through the hidden input
+             # rendered by the dropdown itself #}
+            {{ fields.dropdownField(resourcestate_class, 'plugin_resources_resourcestates_id',
+                item.fields['plugin_resources_resourcestates_id'],
+                _n('Resource state', 'Resource states', 1, 'resources'), {
+                    'entity': item.fields['entities_id'],
+                    'readonly': not is_central or readonly.plugin_resources_resourcestates_id is defined,
+                }) }}
+
+            {% if hidden.plugin_resources_contracttypes_id is not defined %}
+                {{ fields.dropdownField(contracttype_class, 'plugin_resources_contracttypes_id',
+                    item.fields['plugin_resources_contracttypes_id'],
+                    _n('Type of contract', 'Types of contract', 1, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'readonly': readonly.plugin_resources_contracttypes_id is defined,
+                    }) }}
+            {% endif %}
+
+            {% if hidden.quota is not defined %}
+                {{ fields.textField('quota', quota_value, __('Quota', 'resources'), {
+                    'required': mandatory.quota is defined,
+                    'readonly': readonly.quota is defined,
+                }) }}
+            {% endif %}
+
+            {% if can_view_rank %}
+                {# Situation drives an AJAX refresh of the contract nature span, and rank the speciality one #}
+                {% if hidden.plugin_resources_resourcesituations_id is not defined %}
+                    {{ fields.htmlField('plugin_resources_resourcesituations_id', situation_dropdown,
+                        _n('Public status', 'Public statuses', 1, 'resources'), {
+                            'required': mandatory.plugin_resources_resourcesituations_id is defined,
+                            'wrapper_class': '',
+                        }) }}
+                {% endif %}
+
+                {% if hidden.plugin_resources_contractnatures_id is not defined %}
+                    {{ fields.htmlField('plugin_resources_contractnatures_id', contractnature_html,
+                        _n('Contract nature', 'Contract natures', 1, 'resources'), {
+                            'required': mandatory.plugin_resources_contractnatures_id is defined,
+                        }) }}
+                {% endif %}
+
+                {% if hidden.plugin_resources_ranks_id is not defined %}
+                    {{ fields.htmlField('plugin_resources_ranks_id', rank_dropdown,
+                        _n('Rank', 'Ranks', 1, 'resources'), {
+                            'required': mandatory.plugin_resources_ranks_id is defined,
+                            'wrapper_class': '',
+                        }) }}
+                {% endif %}
+
+                {% if hidden.plugin_resources_resourcespecialities_id is not defined %}
+                    {{ fields.htmlField('plugin_resources_resourcespecialities_id', speciality_html,
+                        _n('Speciality', 'Specialities', 1, 'resources'), {
+                            'required': mandatory.plugin_resources_resourcespecialities_id is defined,
+                        }) }}
+                {% endif %}
+            {% endif %}
+
+            {% if hidden.locations_id is not defined %}
+                {{ fields.dropdownField(location_class, 'locations_id', item.fields['locations_id'], __('Location'), {
+                    'entity': item.fields['entities_id'],
+                    'required': mandatory.locations_id is defined,
+                    'readonly': readonly.locations_id is defined,
+                }) }}
+            {% endif %}
+
+            {# Department, service and role are chained through AJAX: the containers below are the
+             # targets of the scripts emitted at the end of this block #}
+            {% if hidden.plugin_resources_departments_id is not defined %}
+                {{ fields.htmlField('plugin_resources_departments_id', department_dropdown,
+                    _n('Department', 'Departments', 1, 'resources'), {
+                        'required': mandatory.plugin_resources_departments_id is defined,
+                        'wrapper_class': '',
+                    }) }}
+            {% endif %}
+
+            {% if hidden.plugin_resources_services_id is not defined %}
+                {% set service_field %}
+                    <div id="show_services">{{ service_dropdown|raw }}</div>
+                {% endset %}
+                {{ fields.htmlField('plugin_resources_services_id', service_field,
+                    _n('Service', 'Services', 2, 'resources'), {
+                        'required': mandatory.plugin_resources_services_id is defined,
+                        'wrapper_class': '',
+                    }) }}
+            {% endif %}
+
+            {% if hidden.plugin_resources_roles_id is not defined %}
+                {% set role_field %}
+                    <div id="show_roles">{{ role_dropdown|raw }}</div>
+                {% endset %}
+                {{ fields.htmlField('plugin_resources_roles_id', role_field,
+                    _n('Role', 'Roles', 2, 'resources'), {
+                        'required': mandatory.plugin_resources_roles_id is defined,
+                        'wrapper_class': '',
+                    }) }}
+            {% endif %}
+
+            {% if use_secondary_services %}
+                {{ fields.dropdownArrayField('secondary_services', null, secondary_services, __('Secondaries services', 'resources'), {
+                    'values': secondary_values,
+                    'multiple': true,
+                }) }}
+            {% endif %}
+
+            {% if hidden.plugin_resources_functions_id is not defined %}
+                {{ fields.dropdownField(resourcefunction_class, 'plugin_resources_functions_id',
+                    item.fields['plugin_resources_functions_id'],
+                    _n('Function', 'Functions', 2, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'required': mandatory.plugin_resources_functions_id is defined,
+                        'readonly': readonly.plugin_resources_functions_id is defined,
+                    }) }}
+            {% endif %}
+
+            {% if hidden.plugin_resources_teams_id is not defined %}
+                {{ fields.dropdownField(team_class, 'plugin_resources_teams_id',
+                    item.fields['plugin_resources_teams_id'],
+                    _n('Team', 'Teams', 2, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'required': mandatory.plugin_resources_teams_id is defined,
+                        'readonly': readonly.plugin_resources_teams_id is defined,
+                    }) }}
+            {% endif %}
+
+            {% if can_read_employee and hidden.plugin_resources_employers_id is not defined %}
+                {{ fields.dropdownField(employer_class, 'plugin_resources_employers_id', employers_id,
+                    _n('Employer', 'Employers', 1, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'condition': condition_emp,
+                        'required': mandatory.plugin_resources_employers_id is defined,
+                        'readonly': readonly.plugin_resources_employers_id is defined,
+                    }) }}
+            {% endif %}
+
+            {% if hidden.users_id is not defined %}
+                {% if resource_managers is not null %}
+                    {{ fields.dropdownArrayField('users_id', item.fields['users_id'], resource_managers, __('Resource manager', 'resources'), {
+                        'display_emptychoice': true,
+                        'required': mandatory.users_id is defined,
+                    }) }}
+                {% else %}
+                    {{ fields.dropdownField(user_class, 'users_id', item.fields['users_id'], __('Resource manager', 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'entity_sons': true,
+                        'right': 'all',
+                        'required': mandatory.users_id is defined,
+                        'readonly': readonly.users_id is defined,
+                    }) }}
+                {% endif %}
+            {% endif %}
+
+            {% if hidden.users_id_sales is not defined %}
+                {% if sales_managers is not null %}
+                    {{ fields.dropdownArrayField('users_id_sales', item.fields['users_id_sales'], sales_managers, __('Sales manager', 'resources'), {
+                        'display_emptychoice': true,
+                        'required': mandatory.users_id_sales is defined,
+                        'readonly': readonly.users_id_sales is defined,
+                    }) }}
+                {% else %}
+                    {{ fields.dropdownField(user_class, 'users_id_sales', item.fields['users_id_sales'], __('Sales manager', 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'entity_sons': true,
+                        'right': 'all',
+                        'required': mandatory.users_id_sales is defined,
+                        'readonly': readonly.users_id_sales is defined,
+                    }) }}
+                {% endif %}
+            {% endif %}
+
+            {% if hidden.date_begin is not defined %}
+                {{ fields.dateField('date_begin', item.fields['date_begin'], __('Arrival date', 'resources'), {
+                    'required': mandatory.date_begin is defined,
+                }) }}
+            {% endif %}
+
+            {% if item.fields['id'] > 0 and tpl < 2 %}
+                {{ fields.readOnlyField('date_declaration', declaration_date, __('Request date')) }}
+                {% if can_set_recipient %}
+                    {{ fields.dropdownField(user_class, 'users_id_recipient', item.fields['users_id_recipient'], __('Writer'), {
+                        'entity': item.fields['entities_id'],
+                        'entity_sons': true,
+                        'right': 'all',
+                        'readonly': readonly.users_id_recipient is defined,
+                    }) }}
+                {% else %}
+                    {{ fields.readOnlyField('users_id_recipient', recipient_name, __('Writer')) }}
+                {% endif %}
+            {% else %}
+                {{ fields.hiddenField('users_id_recipient', session('glpiID')) }}
+                {{ fields.hiddenField('date_declaration', 'now'|date('Y-m-d')) }}
+            {% endif %}
+
+            {{ fields.dropdownYesNo('is_helpdesk_visible', item.fields['is_helpdesk_visible'], __('Associable to a ticket'), {
+                'readonly': not is_central or readonly.is_helpdesk_visible is defined,
+            }) }}
+
+            {# Always on, and only the central interface may turn it off. The hidden input added
+             # below keeps posting 1 when the checkbox itself is disabled #}
+            {{ fields.checkboxField('send_notification', 1, __('Send a notification'), {
+                'disabled': not is_central or tpl,
+            }) }}
+            {% if not is_central %}
+                {{ fields.hiddenField('send_notification', 1) }}
+            {% endif %}
+
+            {% set leaving_options = {'readonly': not is_central or readonly.is_leaving is defined} %}
+            {% if leaving_by is not empty %}
+                {% set leaving_options = leaving_options|merge({'add_field_html': leaving_by}) %}
+            {% endif %}
+            {{ fields.dropdownYesNo('is_leaving', item.fields['is_leaving'], __('Declared as leaving', 'resources'), leaving_options) }}
+
+            {% if not is_central and not item.fields['is_leaving'] and item.fields['id'] > 0 and not tpl %}
+                {% set departure_link %}
+                    <a href="{{ remove_url }}" class="btn btn-sm btn-warning">{{ __('Declare a departure', 'resources') }}</a>
+                {% endset %}
+                {{ fields.htmlField('_departure', departure_link, '', {'no_label': true, 'wrapper_class': ''}) }}
+            {% endif %}
+
+            {% if has_leavingreasons %}
+                {{ fields.dropdownField(leavingreason_class, 'plugin_resources_leavingreasons_id',
+                    item.fields['plugin_resources_leavingreasons_id'],
+                    _n('Leaving reason', 'Leaving reasons', 1, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'required': mandatory.plugin_resources_leavingreasons_id is defined,
+                        'readonly': not is_central,
+                    }) }}
+            {% endif %}
+
+            {% if hidden.date_end is not defined %}
+                {% if is_central %}
+                    {{ fields.dateField('date_end', item.fields['date_end'], __('Departure date', 'resources'), {
+                        'required': mandatory.date_end is defined,
+                        'helper': mandatory.date_end is defined ? false : __('Empty for non defined', 'resources'),
+                    }) }}
+                {% else %}
+                    {{ fields.readOnlyField('date_end', date_end_display, __('Departure date', 'resources')) }}
+                    {{ fields.hiddenField('date_end', item.fields['date_end']) }}
+                {% endif %}
+            {% endif %}
+
+            {% if use_security %}
+                {% if hidden.security is not defined %}
+                    {{ fields.checkboxField('sensitize_security', item.fields['sensitize_security'], __('Sensitized to security', 'resources'), {
+                        'readonly': readonly.security is defined,
+                    }) }}
+                {% endif %}
+                {% if hidden.charter is not defined %}
+                    {{ fields.checkboxField('read_chart', item.fields['read_chart'], __('Reading the security charter', 'resources'), {
+                        'readonly': readonly.charter is defined,
+                    }) }}
+                {% endif %}
+            {% endif %}
+
+            {% if hidden.comment is not defined %}
+                {{ fields.textareaField('comment', item.fields['comment'], __('Description'), {
+                    'full_width': true,
+                    'rows': 4,
+                    'readonly': readonly.comment is defined,
+                }) }}
+            {% endif %}
+
+            {% if tpl %}
+                {{ fields.htmlField('_created_on', created_on, '', {'full_width': true, 'no_label': true}) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-12 col-xxl-3">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if picture_url %}
+                    <object data="{{ picture_url }}" class="img-fluid mb-2"></object>
+                    {{ fields.hiddenField('picture', item.fields['picture']) }}
+                {% else %}
+                    <img src="{{ empty_picture }}" class="img-fluid mb-2" alt="{{ __('Photo', 'resources') }}">
+                {% endif %}
+
+                {{ fields.fileField('picture', null, __('Photo format : JPG', 'resources'), {
+                    'onlyimages': true,
+                    'full_width': true,
+                    'helper': max_upload_size,
+                }) }}
+
+                {% if picture_url %}
+                    <button type="submit" name="delete_picture" value="1" class="btn btn-sm btn-outline-danger mt-2">
+                        <i class="ti ti-circle-x me-1"></i>{{ _x('button', 'Delete permanently') }}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {{ fields.hiddenField('withtemplate', tpl) }}
+    {{ organisation_script|raw }}
+{% endblock %}

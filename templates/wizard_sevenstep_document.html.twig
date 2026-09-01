@@ -26,54 +26,57 @@
  #}
 
 {% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
-{% import 'components/form/fields_macros.html.twig' as fields %}
 
-{% set rand = random() %}
-{% set field_options = {
-    'field_class': 'col-4',
-} %}
-{% if can_edit %}
-    <form method="post" action="{{ params["target"] }}" {{ formoptions ?? '' }} enctype="multipart/form-data"
-          data-submit-once>
-        <div class="card">
-{#            <h3 class="card-title alert alert-secondary" style="margin-top: 10px;">#}
-{#                    <span class="resources_wizard_resp_img">#}
-{#                        <i class=" {{ params["icon"] }} "></i>&nbsp;#}
-{#                        <img src=" {{ params["img"] }} ">&nbsp;#}
-{#                        {{ params["title"] }}#}
-{#                    </span>#}
-{#            </h3>#}
+{# Seventh wizard step: attach documents to the resource being created. The two blocks
+ # below are rendered by Resource::showAddFormForItem() and Document_Item::showListForItem(),
+ # captured as strings; neither opens a form, so this one stays the only one. #}
+<div class="card container" style="min-width: 80%;">
+    {% include '@resources/wizard_header.html.twig' with {
+        'title': params['title'],
+        'img': params['img'],
+        'icon': params['icon'],
+    } only %}
 
-            <div class="card-body">
+    <div class="card-body">
+        <form method="post" action="{{ params['target'] }}" enctype="multipart/form-data">
+            <div class="row">
+                {{ add_document_form|raw }}
+            </div>
+            <div class="row">
+                {{ documents_list|raw }}
+            </div>
+
+            {{ inputs.hidden('plugin_resources_resources_id', params['plugin_resources_resources_id']) }}
+            {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+
+            {% if can_edit %}
                 <div class="hr mt-3 mb-3"></div>
-                <div class="hstack gap-1">
-                    <div class="pe-5 ms-auto">
-                        {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
-                        {{ inputs.hidden('id', params["id"]) }}
-                        {{ inputs.hidden('withtemplate', 0) }}
-                        {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
+                <div class="row">
+                    <div class="hstack gap-1">
+                        <div class="pe-5 ms-auto">
+                            {% if can_purge %}
+                                {{ inputs.submit('cancel_request',
+                                    _x('button', 'Cancel the request', 'resources'),
+                                    1,
+                                    {class: 'btn btn-danger ms-1',
+                                        icon: 'ti ti-x'}) }}
+                            {% endif %}
 
-                        {% if can_purge %}
-                            {{ inputs.submit('cancel_request',
-                                _x('button', 'Cancel the request', 'resources'),
+                            {{ inputs.submit('undo_seven_step',
+                                _x('button', 'Previous', 'resources'),
                                 1,
-                                {class: 'btn btn-danger ms-1',
-                                    icon: 'ti ti-x'}) }}
-                        {% endif %}
-                        {{ inputs.submit('undo_seven_step',
-                            _x('button', 'Previous', 'resources'),
-                            1,
-                            {class: 'btn btn-primary ms-1',
-                                icon: 'ti ti-chevron-left'}) }}
+                                {class: 'btn btn-primary ms-1',
+                                    icon: 'ti ti-chevron-left'}) }}
 
-                        {{ inputs.submit('eight_step',
-                            _x('button', 'Next', 'resources'),
-                            1,
-                            {class: 'btn btn-success ms-1',
-                                icon: 'ti ti-chevron-right'}) }}
+                            {{ inputs.submit('eight_step',
+                                _x('button', 'Next', 'resources'),
+                                1,
+                                {class: 'btn btn-success ms-1',
+                                    icon: 'ti ti-chevron-right'}) }}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </form>
-{% endif %}
+            {% endif %}
+        </form>
+    </div>
+</div>

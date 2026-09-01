@@ -1,0 +1,62 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div id="plugin_resources_inventory" class="plugin_resources_content text-start">
+    <h1>{{ __('Inventory', 'resources') }}</h1>
+
+    <div class="scrollable" style="padding-right: 8px;height:420px;">
+        {% for group in items %}
+            <table class="tab_cadre_fixe">
+                <tr>
+                    <td colspan="3" class="center b">{{ group.type_name }}</td>
+                </tr>
+                {% for row in group.rows %}
+                    <tr class="tab_bg_1">
+                        <td class="center" width="100">
+                            <img src="{{ row.picture }}" width="50%" alt="" />
+                        </td>
+                        <td class="left">
+                            {% if row.url %}
+                                <a href="{{ row.url }}">{{ row.label }}</a>
+                            {% else %}
+                                {{ row.label }}
+                            {% endif %}
+                            <br />
+                            {% for detail in row.details %}
+                                {{ detail }}<br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="alert alert-important alert-warning d-flex">
+                <b>{{ __('No results found') }}</b>
+            </div>
+        {% endfor %}
+    </div>
+</div>

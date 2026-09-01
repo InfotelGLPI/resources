@@ -1,0 +1,39 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+
+{# AJAX fragment shared by the endpoints that refresh a dropdown depending on a parent one
+ # (ajax/dropdownRank.php, ajax/dropdownSpeciality.php). When the parent has no value there
+ # is nothing to list: render an empty placeholder so the field keeps being posted and keeps
+ # the id the caller's script targets. `rand` is imposed by that caller. #}
+{% if dropdown is not empty %}
+    {{ dropdown|raw }}
+{% else %}
+    <select class="form-select" name="{{ field_name }}" id="dropdown_{{ field_name }}{{ rand }}">
+        <option value="0">{{ empty_value }}</option>
+    </select>
+{% endif %}
