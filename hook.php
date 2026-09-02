@@ -1363,7 +1363,7 @@ function plugin_resources_getDropdown()
         return [
             ContractType::class => ContractType::getTypeName(2),
             TaskType::class => TaskType::getTypeName(2),
-            ResourceState::class => Resource::getTypeName(2),
+            ResourceState::class => ResourceState::getTypeName(2),
             Department::class => Department::getTypeName(2),
             Employer::class => Employer::getTypeName(2),
             Client::class => Client::getTypeName(2),
