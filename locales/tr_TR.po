@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-02 07:38+0000\n"
+"POT-Creation-Date: 2026-09-02 13:57+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/Resource_Change.php:189
@@ -52,8 +53,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:292
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
 
 #: src/Adconfig.php:328
@@ -88,8 +88,7 @@ msgstr "Sözleşmesiz dönem güncellendi"
 msgid "A resource has been added by"
 msgstr "Şu kişi tarafından bir kaynak eklendi"
 
-#: src/NotificationTargetResource.php:86
-#: src/NotificationTargetResource.php:676
+#: src/NotificationTargetResource.php:86 src/NotificationTargetResource.php:676
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
@@ -141,13 +140,11 @@ msgstr "İşlem yetkilendirmesi"
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:85
-#: src/NotificationTargetResource.php:572
+#: src/NotificationTargetResource.php:85 src/NotificationTargetResource.php:572
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:84
-#: src/NotificationTargetResource.php:565
+#: src/NotificationTargetResource.php:84 src/NotificationTargetResource.php:565
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
@@ -463,8 +460,7 @@ msgid "Be careful, new resources will be created in the entity"
 msgstr "Dikkatli olun, birim içinde yeni kaynaklar oluşturulacak"
 
 #: templates/employment_form.html.twig:71 templates/budget_form.html.twig:66
-#: templates/resourceholiday_form.html.twig:47
-#: templates/cost_form.html.twig:56
+#: templates/resourceholiday_form.html.twig:47 templates/cost_form.html.twig:56
 #: templates/resourceresting_form.html.twig:47
 msgid "Begin date"
 msgstr "Başlangıç tarihi"
@@ -678,9 +674,8 @@ msgstr "Kapat"
 #: src/BudgetVolume.php:93 src/BudgetVolume.php:145 src/Rank.php:104
 #: src/Rank.php:152 src/ProfessionLine.php:100 src/ProfessionLine.php:152
 #: src/BudgetType.php:93 src/BudgetType.php:145 src/ProfessionCategory.php:102
-#: src/ProfessionCategory.php:154 src/Profession.php:101
-#: src/Profession.php:220 src/ContractNature.php:100
-#: src/ContractNature.php:187
+#: src/ProfessionCategory.php:154 src/Profession.php:101 src/Profession.php:220
+#: src/ContractNature.php:100 src/ContractNature.php:187
 #: report/professionwithoutvolume/professionwithoutvolume.php:313
 #: report/professionwithoutvolume/professionwithoutvolume.php:318
 #: report/professionwithoutcost/professionwithoutcost.php:307
@@ -1138,8 +1133,7 @@ msgstr[1] "Çalışanlar"
 #: hook.php:1458 src/Employer.php:57 src/Employment.php:230
 #: src/Department.php:84 src/Department.php:117
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
-#: templates/employment_form.html.twig:38
-#: templates/resource_form.html.twig:218
+#: templates/employment_form.html.twig:38 templates/resource_form.html.twig:218
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşveren"
@@ -1189,8 +1183,7 @@ msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
 
 #: templates/employment_form.html.twig:73 templates/budget_form.html.twig:68
-#: templates/resourceholiday_form.html.twig:49
-#: templates/cost_form.html.twig:58
+#: templates/resourceholiday_form.html.twig:49 templates/cost_form.html.twig:58
 #: templates/resourceresting_form.html.twig:49
 #: templates/resourceresting_end_date.html.twig:33
 msgid "End date"
@@ -1426,8 +1419,7 @@ msgstr "başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
 
 #: src/Metademand.php:150
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
@@ -1442,8 +1434,7 @@ msgstr ""
 
 #: src/Metademand.php:183
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
@@ -1666,8 +1657,7 @@ msgstr "Zorunlu tatil günleri"
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:404
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:404
 #: src/NotificationTargetResource.php:1665
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
@@ -2054,8 +2044,7 @@ msgstr "Lütfen düzeltin: %s"
 #: templates/resource_restitution_pdf.html.twig:33
 msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
-"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin "
-"olun"
+"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin olun"
 
 #: src/Resource_Change.php:226
 msgid "Please select a resource"
@@ -2737,8 +2726,8 @@ msgstr "Doğrulama sonrası kaynak oluşturma destek kaydındaki yazı"
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken "
 "aralarına tire \"-\" koyun."
@@ -2815,8 +2804,8 @@ msgid ""
 "run by the plugin."
 msgstr ""
 "Aşağıdaki sorgular yalnızca bulunan farklılıklardan oluşturulmuş "
-"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el"
-" ile yürütün. Asla eklenti tarafından yürütülmezler."
+"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el "
+"ile yürütün. Asla eklenti tarafından yürütülmezler."
 
 #: src/Employee.php:343
 msgid "The resource is also created if not existent"
@@ -2853,8 +2842,7 @@ msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
 #: src/Employment.php:502
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr "Bu kaynaklar kurumdan ayrıldığından, geçerli işleri güncellendi"
 
 #: src/Resource.php:3418 src/Resource.php:3446
