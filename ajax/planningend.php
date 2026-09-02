@@ -27,8 +27,6 @@
  * --------------------------------------------------------------------------
  */
 
-$AJAX_INCLUDE = 1;
-
 // Send UTF8 Headers
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
