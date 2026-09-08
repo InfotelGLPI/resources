@@ -1115,8 +1115,19 @@ class Task extends CommonDBTM
         switch ($ma->getAction()) {
             case "Transfert":
                 if ($itemtype == Task::class) {
+                    // The destination entity travels in the massive action form: refuse
+                    // one the session has no access to before moving any task into it.
+                    if (!Session::haveAccessToEntity((int) ($input['entities_id'] ?? -1))) {
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                        return;
+                    }
                     foreach ($ids as $key => $val) {
-                        $item->getFromDB($key);
+                        // MassiveAction passes the posted ids through untouched: this
+                        // handler is the only gate on the rows themselves.
+                        if (!$item->can($key, UPDATE)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
                         $tasktype = TaskType::transfer(
                             $item->fields["plugin_resources_tasktypes_id"],
                             $input['entities_id'],
@@ -1142,8 +1153,23 @@ class Task extends CommonDBTM
 
             case "Duplicate":
                 if ($itemtype == Task::class) {
+                    // The destination entity travels in the massive action form: require
+                    // access to it and the right to create a task there, once, before the
+                    // loop -- can(-1, CREATE) would otherwise reset the loaded record.
+                    $create_input = ['entities_id' => (int) ($input['entities_id'] ?? -1)];
+                    $target = new Task();
+                    if (!Session::haveAccessToEntity($create_input['entities_id'])
+                        || !$target->can(-1, CREATE, $create_input)) {
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                        return;
+                    }
                     foreach ($ids as $key => $val) {
-                        $item->getFromDB($key);
+                        // MassiveAction passes the posted ids through untouched: the source
+                        // row has to be readable before it is copied anywhere.
+                        if (!$item->can($key, READ)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
                         unset($item->fields["id"]);
                         $item->fields["entities_id"] = $input['entities_id'];
                         if ($item->add($item->fields)) {
@@ -1157,6 +1183,12 @@ class Task extends CommonDBTM
 
             case "Install":
                 foreach ($ids as $key => $val) {
+                    // Task_Item carries no entity of its own: authorise the owning task,
+                    // whose id comes straight from the posted massive action.
+                    if (!$item->can($key, UPDATE)) {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        continue;
+                    }
                     $values = [
                         'plugin_resources_tasks_id' => $key,
                         'items_id' => $input["item_item"],
@@ -1172,6 +1204,12 @@ class Task extends CommonDBTM
 
             case "Desinstall":
                 foreach ($ids as $key => $val) {
+                    // Task_Item carries no entity of its own: authorise the owning task,
+                    // whose id comes straight from the posted massive action.
+                    if (!$item->can($key, UPDATE)) {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        continue;
+                    }
                     if ($task_item->deleteItemByTaskAndItem($key, $input['item_item'], $input['itemtype'])) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                     } else {

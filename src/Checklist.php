@@ -286,10 +286,21 @@ class Checklist extends CommonDBTM
         $result = false;
         $tt = new TicketTemplate();
 
+        // Every value below travels in the posted checklist form. The entity in particular
+        // decides which template, which predefined fields and which actors apply, so read
+        // it back from the resource the checklist belongs to instead of trusting the form.
+        $source = new Resource();
+        if (!$source->getFromDB((int) ($data['plugin_resources_resources_id'] ?? 0))) {
+            return false;
+        }
+        $entities_id = (int) $source->fields['entities_id'];
+
         // Create ticket based on ticket template and entity informations of ticketrecurrent
-        if ($tt->getFromDB($data['tickettemplates_id'])) {
+        // The template id is client-supplied too: only accept one that entity may use.
+        if ($tt->getFromDB($data['tickettemplates_id'])
+            && Session::haveAccessToEntity($tt->fields['entities_id'], $tt->fields['is_recursive'])) {
             // Get default values for ticket
-            $input = Ticket::getDefaultValues($data['entities_id']);
+            $input = Ticket::getDefaultValues($entities_id);
             // Apply tickettemplates predefined values
             $ttp = new TicketTemplatePredefinedField();
             $predefined = $ttp->getPredefinedFields($data['tickettemplates_id'], true);
@@ -311,13 +322,13 @@ class Checklist extends CommonDBTM
                 );
             }
             // Set entity
-            $input['entities_id'] = $data['entities_id'];
-            $input['actiontime'] = $data['actiontime'];
-            $res = new Resource();
+            $input['entities_id'] = $entities_id;
+            $input['actiontime'] = (int) ($data['actiontime'] ?? 0);
+            $res = $source;
 
             $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $input['entities_id'], '', 1);
 
-            if ($res->getFromDB($data['plugin_resources_resources_id'])) {
+            if (!$res->isNewItem()) {
                 $input['users_id_recipient'] = $res->fields['users_id_recipient'];
                 $input['_users_id_requester'] = [$res->fields['users_id_recipient']];
                 $input['_users_id_requester_notif']['use_notification'] = [$default_use_notif];
@@ -332,8 +343,20 @@ class Checklist extends CommonDBTM
                     $input['_users_id_observer_notif'] = [];
                 }
 
-                if (isset($data['users_id'])) {
-                    $input['_users_id_assign'] = $data['users_id'];
+                // The assignee travels in the form: keep it only when that user really
+                // holds a profile in the entity the ticket is created in, otherwise fall
+                // back to the current session.
+                $assign = (int) ($data['users_id'] ?? 0);
+                if ($assign > 0) {
+                    $dbu = new DbUtils();
+                    $has_profile = $dbu->getAllDataFromTable(
+                        'glpi_profiles_users',
+                        ['users_id' => $assign]
+                        + $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', $entities_id, true),
+                    );
+                    $input['_users_id_assign'] = count($has_profile) > 0
+                        ? $assign
+                        : Session::getLoginUserID();
                 } else {
                     $input['_users_id_assign'] = Session::getLoginUserID();
                 }
@@ -728,8 +751,11 @@ class Checklist extends CommonDBTM
                 . "&checklist_type=" . $checklist_type,
             ) . '">' . htmlescape($checklist["name"]) . '</a>&nbsp;';
             if (!empty($checklist["address"])) {
+                // The content parameter is a raw HTML sink: the core inserts it without any
+                // filtering. Escape it the way "comment" is escaped a few lines below. "link"
+                // needs no treatment, the core escapes it itself.
                 $name .= '&nbsp;' . $capture(static fn() => Html::showToolTip(
-                    $checklist["address"],
+                    htmlescape($checklist["address"]),
                     ['link' => $checklist["address"], 'linktarget' => '_blank'],
                 ));
             }
@@ -953,7 +979,13 @@ class Checklist extends CommonDBTM
                         $rules = new RuleTicketCollection();
                         $ticket = new Ticket();
                         foreach ($ids as $key => $val) {
-                            $item->getFromDB($key);
+                            // MassiveAction hands the posted ids over untouched, so this
+                            // handler is the only gate on the rows themselves: check each
+                            // one the way the do_checklist branch above does.
+                            if (!$item->can($key, UPDATE, $input)) {
+                                $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                                continue;
+                            }
 
                             $input2["content"] = $item->fields["comment"];
                             $input2["name"] = $item->fields["name"];
@@ -995,7 +1027,13 @@ class Checklist extends CommonDBTM
                     if ($task->canCreate()) {
                         $tasks_id = [];
                         foreach ($ids as $key => $val) {
-                            $item->getFromDB($key);
+                            // MassiveAction hands the posted ids over untouched, so this
+                            // handler is the only gate on the rows themselves: check each
+                            // one the way the do_checklist branch above does.
+                            if (!$item->can($key, UPDATE, $input)) {
+                                $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                                continue;
+                            }
                             if (empty($item->fields["plugin_resources_tasks_id"])) {
                                 $input2 = $input;
                                 $input2["name"] = $item->fields["name"];

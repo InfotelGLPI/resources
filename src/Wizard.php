@@ -332,6 +332,11 @@ class Wizard extends CommonDBTM
         $employee_spotted = false;
 
         $resource = new Resource();
+        // The id travels in the wizard form: authorise the record, not only the global
+        // right the canView() above answers for. Mirrors wizardSevenStep().
+        if ($plugin_resources_resources_id > 0) {
+            $resource->check($plugin_resources_resources_id, READ);
+        }
         $resource->getFromDB($plugin_resources_resources_id);
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
@@ -401,6 +406,11 @@ class Wizard extends CommonDBTM
         $spotted = false;
 
         $resource = new Resource();
+        // The id travels in the wizard form: authorise the record, not only the global
+        // right the canView() above answers for. Mirrors wizardSevenStep().
+        if ($plugin_resources_resources_id > 0) {
+            $resource->check($plugin_resources_resources_id, READ);
+        }
         $resource->getFromDB($plugin_resources_resources_id);
 
         $newrestrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
@@ -536,6 +546,11 @@ class Wizard extends CommonDBTM
     public function wizardFiveStep($plugin_resources_resources_id)
     {
         $resource = new Resource();
+        // The id travels in the wizard form: authorise the record. This step exposes the
+        // picture attached to it, so it must not be reachable by id alone.
+        if ($plugin_resources_resources_id > 0) {
+            $resource->check($plugin_resources_resources_id, READ);
+        }
         $resource->getFromDB($plugin_resources_resources_id);
         $path = "";
         $path_send = "";
@@ -581,6 +596,11 @@ class Wizard extends CommonDBTM
         }
 
         $resource = new Resource();
+        // The id travels in the wizard form: authorise the record, not only the global
+        // right the canView() above answers for. Mirrors wizardSevenStep().
+        if ($plugin_resources_resources_id > 0) {
+            $resource->check($plugin_resources_resources_id, READ);
+        }
         $resource->getFromDB($plugin_resources_resources_id);
 
         $existing_habilitations = [];
@@ -718,6 +738,11 @@ class Wizard extends CommonDBTM
     public function wizardEightStep($ID, $options = [])
     {
         $resource = new Resource();
+        // The id travels in the wizard form: authorise the record before rendering the
+        // entrance information of that resource. Mirrors wizardSevenStep().
+        if ($ID > 0) {
+            $resource->check($ID, READ);
+        }
         $resource->initForm($ID, $options);
         $resource->getFromDB($ID);
 

@@ -300,6 +300,9 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["addcomment"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
+    // canCreate() answers for the global right bit only: the resource id is posted, so
+    // authorise the record itself before writing anything under it.
+    $resource->check((int) $resources_id, UPDATE);
     if ($resource->canCreate()) {
         $choice->addComment($_POST);
     }
@@ -307,6 +310,9 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     $wizard->wizardFourStep($resources_id);
 } elseif (isset($_POST["addchoice"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
+    // canCreate() answers for the global right bit only: the resource id is posted, so
+    // authorise the record itself before writing anything under it.
+    $resource->check((int) $resources_id, UPDATE);
     if ($resource->canCreate(
     ) && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
         $choice->addHelpdeskItem($_POST);
@@ -314,8 +320,12 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     $wizard->wizardFourStep($resources_id);
 } elseif (isset($_POST["deletechoice"])) {
     $resources_id = $_POST["plugin_resources_resources_id"];
-    if ($resource->canCreate()) {
-        $choice->delete(['id' => $_POST["id"]]);
+    // Choice carries no entity of its own and the row id is posted alongside an unrelated
+    // resource id. Resolve the owning resource from the row about to be deleted -- never
+    // from the id posted next to it -- and require UPDATE there.
+    if ($choice->getFromDB((int) ($_POST["id"] ?? 0))) {
+        $resource->check((int) $choice->fields['plugin_resources_resources_id'], UPDATE);
+        $choice->delete(['id' => $choice->getID()]);
     }
 
     $wizard->wizardFourStep($resources_id);
@@ -323,6 +333,8 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 } elseif (isset($_POST["five_step"])) {
 
     $resources_id = $_POST["plugin_resources_resources_id"];
+    // Every step reached from here renders the resource: authorise the posted record.
+    $resource->check((int) $resources_id, READ);
 
     $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
     $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
@@ -437,7 +449,12 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["upload_seven_step"])) {
 
-    $resources_id = $_POST["items_id"];
+    // The target resource is posted by the client and the entry guard of this file is only a
+    // global checkGlobal(READ), which says nothing about this particular record. Authorize it
+    // before anything is attached to it: check() covers both the right and the entity scope.
+    $resources_id = (int) $_POST["items_id"];
+    $resource = new Resource();
+    $resource->check($resources_id, UPDATE);
 
     $doc = new Document();
     $doc->check(-1, CREATE, $_POST);
@@ -454,9 +471,14 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     }
     if (isset($newID) && $newID > 0) {
         $document_item = new Document_Item();
-        $input['items_id'] = $resources_id;
-        $input['itemtype'] = Resource::getType();
-        $input['documents_id'] = $newID;
+        $input = [
+            'items_id' => $resources_id,
+            'itemtype' => Resource::getType(),
+            'documents_id' => $newID,
+        ];
+        // check() rather than a bare add(), the way the add_doc_seven_step branch above does:
+        // Document_Item::canCreateItem() validates both ends of the relation, which add() skips.
+        $document_item->check(-1, CREATE, $input);
         $document_item->add($input);
     }
 

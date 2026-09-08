@@ -27,12 +27,13 @@
  * --------------------------------------------------------------------------
  */
 
-//Options for GLPI 0.71 and newer : need slave db to access the report
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Resources\Employment;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\Resource;
 
+//Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 global $HEADER_LOADED, $DB;
@@ -91,99 +92,151 @@ $dbu = new DbUtils();
 
 //to verify if resources exist
 // SQL statement
-$condition = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
 $date = date("Y-m-d");
 $dataAll = [];
 
+// Both queries share the same "out of the rank validity range" test. The two first branches
+// compare a column to a column: no criteria form expresses that, so they stay QueryExpression
+// built from quoted identifiers.
+$lapseOnRank = static fn(string $begin, string $end): array => [
+    'OR' => [
+        new QueryExpression(
+            $DB->quoteName($begin)
+            . ' > ' . $DB->quoteName('glpi_plugin_resources_ranks.end_date'),
+        ),
+        new QueryExpression(
+            $DB->quoteName($end)
+            . ' < ' . $DB->quoteName('glpi_plugin_resources_ranks.begin_date'),
+        ),
+        ['glpi_plugin_resources_ranks.end_date' => ['<', $date]],
+        ['glpi_plugin_resources_ranks.begin_date' => ['>', $date]],
+    ],
+];
+
 //case resource
-$query = "SELECT `glpi_plugin_resources_resources`.`entities_id` AS entity,
-                  'Resource' AS typeName,
-                    `glpi_plugin_resources_resources`.`name` AS name,
-                    `glpi_plugin_resources_resources`.`id` AS ID,
-                    `glpi_plugin_resources_resources`.`firstname` AS firstname,
-                    `glpi_users`.`registration_number` AS registration_number,
-                    `glpi_plugin_resources_ranks`.`id` AS rankID,
-                    `glpi_plugin_resources_ranks`.`name` AS rankName,
-                    `glpi_plugin_resources_resources`.`date_begin`,
-                    `glpi_plugin_resources_resources`.`date_end`,
-                    `glpi_plugin_resources_ranks`.`begin_date`,
-                    `glpi_plugin_resources_ranks`.`end_date`
-             FROM `glpi_users`
-             LEFT JOIN `glpi_plugin_resources_resources_items`
-                  ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                     AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
-             LEFT JOIN `glpi_plugin_resources_resources`
-                  ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
-             LEFT JOIN `glpi_plugin_resources_ranks`
-                  ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`)
-             WHERE ((`glpi_plugin_resources_resources`.`date_begin` < '" . $date . "'
-                     AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
-                           OR `glpi_plugin_resources_resources`.`date_end` > '" . $date . "'))
-                     AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL
-                     AND `glpi_plugin_resources_resources`.`is_leaving` = 0
-                     AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-                     AND `glpi_plugin_resources_resources`.`is_template` = 0)
-                     AND ((`glpi_plugin_resources_resources`.`date_begin` > `glpi_plugin_resources_ranks`.`end_date`
-                          OR `glpi_plugin_resources_resources`.`date_end` < `glpi_plugin_resources_ranks`.`begin_date`)
-                        OR (`glpi_plugin_resources_ranks`.`end_date` < '" . $date . "'
-                            OR `glpi_plugin_resources_ranks`.`begin_date` > '" . $date . "'))";
-//             WHERE ((`glpi_plugin_resources_resources`.`date_begin` > `glpi_plugin_resources_ranks`.`end_date`
-//                    OR `glpi_plugin_resources_resources`.`date_end` < `glpi_plugin_resources_ranks`.`begin_date`
-//                    OR `glpi_plugin_resources_resources`.`date_begin` < '".$date."'
-//                       AND `glpi_plugin_resources_resources`.`date_end` IS NULL
-//                       AND (`glpi_plugin_resources_ranks`.`end_date` < '".$date."'
-//                            OR `glpi_plugin_resources_ranks`.`begin_date` > '".$date."'))
-//                  AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL
-//                  AND `glpi_plugin_resources_resources`.`is_leaving` = '0'
-//                  AND `glpi_plugin_resources_resources`.`is_deleted` = '0'
-//                  AND `glpi_plugin_resources_resources`.`is_template` = '0')";
+$criteria = [
+    'SELECT'    => [
+        'glpi_plugin_resources_resources.entities_id AS entity',
+        new QueryExpression($DB->quoteValue('Resource') . ' AS ' . $DB->quoteName('typeName')),
+        'glpi_plugin_resources_resources.name AS name',
+        'glpi_plugin_resources_resources.id AS ID',
+        'glpi_plugin_resources_resources.firstname AS firstname',
+        'glpi_users.registration_number AS registration_number',
+        'glpi_plugin_resources_ranks.id AS rankID',
+        'glpi_plugin_resources_ranks.name AS rankName',
+        'glpi_plugin_resources_resources.date_begin',
+        'glpi_plugin_resources_resources.date_end',
+        'glpi_plugin_resources_ranks.begin_date',
+        'glpi_plugin_resources_ranks.end_date',
+    ],
+    'FROM'      => 'glpi_users',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_resources_items' => [
+            'ON' => [
+                'glpi_users'                            => 'id',
+                'glpi_plugin_resources_resources_items' => 'items_id',
+                [
+                    'AND' => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+                ],
+            ],
+        ],
+        'glpi_plugin_resources_resources'       => [
+            'ON' => [
+                'glpi_plugin_resources_resources'       => 'id',
+                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+            ],
+        ],
+        'glpi_plugin_resources_ranks'           => [
+            'ON' => [
+                'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                'glpi_plugin_resources_ranks'     => 'id',
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        [
+            'glpi_plugin_resources_resources.date_begin'  => ['<', $date],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_resources.date_end' => null],
+                    ['glpi_plugin_resources_resources.date_end' => ['>', $date]],
+                ],
+            ],
+            'NOT'                                         => [
+                'glpi_plugin_resources_ranks.id' => null,
+            ],
+            'glpi_plugin_resources_resources.is_leaving'  => 0,
+            'glpi_plugin_resources_resources.is_deleted'  => 0,
+            'glpi_plugin_resources_resources.is_template' => 0,
+        ],
+        $lapseOnRank(
+            'glpi_plugin_resources_resources.date_begin',
+            'glpi_plugin_resources_resources.date_end',
+        ),
+        // Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an "OR"
+        // key (recursive entities) or a bare QueryExpression under key 0, which a union would
+        // drop.
+        $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources', '', '', true),
+    ],
+];
 
-$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
+$criteria = $criteria + getNewOrderBy('entity', $columns);
 
-$query .= $conditionAll . " " . getOrderBy('entity', $columns);
-
-$result = $DB->doQuery($query);
-for ($row_num = 0; $data = $DB->fetchAssoc($result); $row_num++) {
+$row_num = 0;
+foreach ($DB->request($criteria) as $data) {
     $dataAll[$row_num] = $data;
+    $row_num++;
 }
 
 //case employment
-$queryEmploy = "SELECT `glpi_plugin_resources_employments`.`entities_id` AS entity,
-                        'Employment' AS typeName,
-                       `glpi_plugin_resources_employments`.`name` AS name,
-                       `glpi_plugin_resources_employments`.`id` AS ID,
-                       NULL AS firstname,
-                       NULL AS registration_number,
-                        `glpi_plugin_resources_ranks`.`id` AS rankID,
-                        `glpi_plugin_resources_ranks`.`name` AS rankName,
-                    `glpi_plugin_resources_employments`.`begin_date` AS date_begin,
-                    `glpi_plugin_resources_employments`.`end_date` AS date_end,
-                    `glpi_plugin_resources_ranks`.`begin_date`,
-                    `glpi_plugin_resources_ranks`.`end_date`
-             FROM `glpi_plugin_resources_employments`
-             LEFT JOIN `glpi_plugin_resources_ranks`
-                  ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`)
-             WHERE ((`glpi_plugin_resources_employments`.`begin_date` < '" . $date . "'
-                     AND (`glpi_plugin_resources_employments`.`end_date` IS NULL
-                           OR `glpi_plugin_resources_employments`.`end_date` > '" . $date . "'))
-                     AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL)
-                     AND ((`glpi_plugin_resources_employments`.`begin_date` > `glpi_plugin_resources_ranks`.`end_date`
-                           OR `glpi_plugin_resources_employments`.`end_date` < `glpi_plugin_resources_ranks`.`begin_date`)
-                        OR (`glpi_plugin_resources_ranks`.`end_date` < '" . $date . "'
-                           OR `glpi_plugin_resources_ranks`.`begin_date` > '" . $date . "'))";
-//             WHERE (((`glpi_plugin_resources_employments`.`begin_date` > `glpi_plugin_resources_ranks`.`end_date`
-//                    OR `glpi_plugin_resources_employments`.`end_date` < `glpi_plugin_resources_ranks`.`begin_date`
-//                    OR `glpi_plugin_resources_employments`.`begin_date` < '".$date."')
-//                       AND `glpi_plugin_resources_employments`.`end_date` IS NULL
-//                       AND (`glpi_plugin_resources_ranks`.`end_date` < '".$date."'
-//                            OR `glpi_plugin_resources_ranks`.`begin_date` > '".$date."'))
-//                  AND `glpi_plugin_resources_ranks`.`id` IS NOT NULL)";
+$criteriaEmploy = [
+    'SELECT'    => [
+        'glpi_plugin_resources_employments.entities_id AS entity',
+        new QueryExpression($DB->quoteValue('Employment') . ' AS ' . $DB->quoteName('typeName')),
+        'glpi_plugin_resources_employments.name AS name',
+        'glpi_plugin_resources_employments.id AS ID',
+        new QueryExpression('NULL AS ' . $DB->quoteName('firstname')),
+        new QueryExpression('NULL AS ' . $DB->quoteName('registration_number')),
+        'glpi_plugin_resources_ranks.id AS rankID',
+        'glpi_plugin_resources_ranks.name AS rankName',
+        'glpi_plugin_resources_employments.begin_date AS date_begin',
+        'glpi_plugin_resources_employments.end_date AS date_end',
+        'glpi_plugin_resources_ranks.begin_date',
+        'glpi_plugin_resources_ranks.end_date',
+    ],
+    'FROM'      => 'glpi_plugin_resources_employments',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_ranks' => [
+            'ON' => [
+                'glpi_plugin_resources_employments' => 'plugin_resources_ranks_id',
+                'glpi_plugin_resources_ranks'       => 'id',
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        [
+            'glpi_plugin_resources_employments.begin_date' => ['<', $date],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_employments.end_date' => null],
+                    ['glpi_plugin_resources_employments.end_date' => ['>', $date]],
+                ],
+            ],
+            'NOT'                                          => [
+                'glpi_plugin_resources_ranks.id' => null,
+            ],
+        ],
+        $lapseOnRank(
+            'glpi_plugin_resources_employments.begin_date',
+            'glpi_plugin_resources_employments.end_date',
+        ),
+        $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_employments', '', '', true),
+    ],
+];
 
-$conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_employments', '', '', true);
+$criteriaEmploy = $criteriaEmploy + getNewOrderBy('entity', $columns);
 
-$queryEmploy .= $conditionAll . " " . getOrderBy('entity', $columns);
-
-foreach ($DB->request($queryEmploy) as $dataEmploy) {
+foreach ($DB->request($criteriaEmploy) as $dataEmploy) {
     $dataAll[$row_num] = $dataEmploy;
     $row_num++;
 }
@@ -246,8 +299,11 @@ if ($nbtot == 0) {
 }
 
 if ($nbtot > 0) {
-    $nbcols = $DB->num_fields($result);
-    $nbrows = $DB->numrows($result);
+    // The report merges two queries into $dataAll, so neither of them describes the table
+    // printed below: the sizes come from the columns actually rendered and from the merged
+    // row set.
+    $nbcols = 10;
+    $nbrows = $nbtot;
     $num = 1;
     $link = $_SERVER['PHP_SELF'];
     $order = 'ASC';
@@ -375,25 +431,24 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
 }
 
 /**
- * Build the ORDER BY clause
+ * Build the "ORDER BY" criteria
  *
  * @param $default string, name of the column used by default
- * @return string
+ * @param $columns array, the sortable columns of the report
+ * @return array
  */
-function getOrderBy($default, $columns)
+function getNewOrderBy($default, $columns)
 {
     if (!isset($_REQUEST['order']) || $_REQUEST['order'] != 'DESC') {
         $_REQUEST['order'] = 'ASC';
     }
     $order = $_REQUEST['order'];
 
-    $tabs[] = getOrderByFields($default, $columns);
-    if (count($tabs) > 0) {
-        foreach ($tabs as $tab) {
-            return " ORDER BY " . $tab . " " . $order;
-        }
+    $field = getOrderByFields($default, $columns);
+    if (is_string($field) && $field !== '') {
+        return ['ORDERBY' => $field . ' ' . $order];
     }
-    return '';
+    return [];
 }
 
 /**

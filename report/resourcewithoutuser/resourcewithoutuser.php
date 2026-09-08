@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-//Options for GLPI 0.71 and newer : need slave db to access the report
+use Glpi\DBAL\QuerySubQuery;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Reports\Column;
 use GlpiPlugin\Reports\ColumnDate;
@@ -37,6 +37,7 @@ use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceSituation;
 use GlpiPlugin\Resources\ResourceState;
 
+//Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
 
@@ -93,39 +94,76 @@ $report->setColumns([
 
 // SQL statement
 $dbu = new DbUtils();
-$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_resources", '', '', false);
 $date = date("Y-m-d");
 
 //display only resource without user linked
-$query = "SELECT `glpi_plugin_resources_resources`.`id` as resource_id,
-                 `glpi_plugin_resources_resources`.`name` as resource_name,
-                 `glpi_plugin_resources_resources`.`firstname`,
-                 `glpi_plugin_resources_ranks`.`name` as `rank`,
-                 `glpi_plugin_resources_resourcesituations`.`name` as situation,
-                 `glpi_plugin_resources_resourcestates`.`name` as state,
-                 `glpi_plugin_resources_resources`.`date_begin`,
-                 `glpi_plugin_resources_resources`.`date_end`
-          FROM `glpi_plugin_resources_resources`
-          LEFT JOIN `glpi_plugin_resources_ranks`
-               ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`)
-          LEFT JOIN `glpi_plugin_resources_resourcesituations`
-               ON (`glpi_plugin_resources_resources`.`plugin_resources_resourcesituations_id` = `glpi_plugin_resources_resourcesituations`.`id`)
-          LEFT JOIN `glpi_plugin_resources_resourcestates`
-               ON (`glpi_plugin_resources_resources`.`plugin_resources_resourcestates_id` = `glpi_plugin_resources_resourcestates`.`id`)
-          WHERE (`glpi_plugin_resources_resources`.`is_leaving` = 0
-             AND `glpi_plugin_resources_resources`.`id` NOT IN (SELECT `plugin_resources_resources_id`
-               FROM `glpi_plugin_resources_resources_items`
-               WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
-             AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-             AND `glpi_plugin_resources_resources`.`is_template` = 0
-             " . $condition . ")
-             AND ((`glpi_plugin_resources_resources`.`date_end` IS NULL )
-                  OR (`glpi_plugin_resources_resources`.`date_end` > '" . $date . "' ))
-             AND ((`glpi_plugin_resources_resources`.`date_begin` IS NULL)
-                  OR ( `glpi_plugin_resources_resources`.`date_begin` < '" . $date . "'))" .
-    $report->getOrderBy('resource_id');
+$criteria = [
+    'SELECT'    => [
+        'glpi_plugin_resources_resources.id AS resource_id',
+        'glpi_plugin_resources_resources.name AS resource_name',
+        'glpi_plugin_resources_resources.firstname',
+        'glpi_plugin_resources_ranks.name AS rank',
+        'glpi_plugin_resources_resourcesituations.name AS situation',
+        'glpi_plugin_resources_resourcestates.name AS state',
+        'glpi_plugin_resources_resources.date_begin',
+        'glpi_plugin_resources_resources.date_end',
+    ],
+    'FROM'      => 'glpi_plugin_resources_resources',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_ranks'              => [
+            'ON' => [
+                'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                'glpi_plugin_resources_ranks'     => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_resourcesituations' => [
+            'ON' => [
+                'glpi_plugin_resources_resources'          => 'plugin_resources_resourcesituations_id',
+                'glpi_plugin_resources_resourcesituations' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_resourcestates'     => [
+            'ON' => [
+                'glpi_plugin_resources_resources'      => 'plugin_resources_resourcestates_id',
+                'glpi_plugin_resources_resourcestates' => 'id',
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        'glpi_plugin_resources_resources.is_leaving'  => 0,
+        'glpi_plugin_resources_resources.is_deleted'  => 0,
+        'glpi_plugin_resources_resources.is_template' => 0,
+        'NOT'                                         => [
+            'glpi_plugin_resources_resources.id' => new QuerySubQuery([
+                'SELECT' => 'plugin_resources_resources_id',
+                'FROM'   => 'glpi_plugin_resources_resources_items',
+                'WHERE'  => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+            ]),
+        ],
+        [
+            'OR' => [
+                ['glpi_plugin_resources_resources.date_end' => null],
+                ['glpi_plugin_resources_resources.date_end' => ['>', $date]],
+            ],
+        ],
+        [
+            'OR' => [
+                ['glpi_plugin_resources_resources.date_begin' => null],
+                ['glpi_plugin_resources_resources.date_begin' => ['<', $date]],
+            ],
+        ],
+    ],
+];
+// Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an "OR" key
+// (recursive entities) or a bare QueryExpression under key 0, which a union would drop.
+$criteria['WHERE'] = [
+    $criteria['WHERE'],
+    $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources'),
+];
 
-$report->setSqlRequest($query);
+$criteria = $criteria + $report->getNewOrderBy('resource_id');
+
+$report->setSqlRequest($criteria);
 
 $report->execute();
 

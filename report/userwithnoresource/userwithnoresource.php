@@ -45,6 +45,8 @@ global $HEADER_LOADED, $DB;
 // resources endpoint — before running any query or emitting output.
 Session::checkRight('plugin_resources', READ);
 
+$dbu = new DbUtils();
+
 $report = new AutoReport(__("User without resource", "resources"));
 
 // Columns title (optional)
@@ -95,6 +97,15 @@ $criteria = [
         'glpi_users.is_deleted' => 0,
         'glpi_users.authtype' => Auth::LDAP,
         'glpi_users.is_active' => 1,
+        // glpi_users carries no entity of its own: a user belongs to an entity through its
+        // profiles, which is how the core scopes its own user lists. Without this the
+        // report listed every LDAP user of the instance whatever the active entity, while
+        // every other report of the plugin restricts its own result set.
+        'glpi_users.id' => new QuerySubQuery([
+            'SELECT' => 'users_id',
+            'FROM'   => 'glpi_profiles_users',
+            'WHERE'  => $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', '', true),
+        ]),
         'AND' => [
             [
                 'NOT' => [

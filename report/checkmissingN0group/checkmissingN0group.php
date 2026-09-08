@@ -88,43 +88,75 @@ if (isset($_POST["display_type"])) {
 $title = $report->getFullTitle();
 $dbu = new DbUtils();
 
-$query_resource_user = "SELECT glpi_plugin_resources_resources.*, glpi_users.id as glpi_users_id
-                        FROM `glpi_plugin_resources_resources`
-                        LEFT JOIN glpi_plugin_resources_resources_items ON glpi_plugin_resources_resources_items.plugin_resources_resources_id = glpi_plugin_resources_resources.id
-                        AND glpi_plugin_resources_resources_items.itemtype = 'User'
-                        LEFT JOIN glpi_users ON glpi_plugin_resources_resources_items.items_id = glpi_users.id
-                        AND glpi_plugin_resources_resources_items.itemtype = 'User'
-                        WHERE `glpi_plugin_resources_resources`.`is_deleted` = 0
-                        AND `glpi_plugin_resources_resources`.`is_template` = 0
-                        AND `glpi_plugin_resources_resources`.`is_leaving` = 0 ";
-
-$query_resource_user .= $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources', '', '', true);
-$query_resource_user .= " ORDER BY glpi_plugin_resources_resources.id ASC";
-
-$result_resource_user = $DB->doQuery($query_resource_user);
+$criteriaResourceUser = [
+    'SELECT'    => [
+        'glpi_plugin_resources_resources.*',
+        'glpi_users.id AS glpi_users_id',
+    ],
+    'FROM'      => 'glpi_plugin_resources_resources',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_resources_items' => [
+            'ON' => [
+                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+                'glpi_plugin_resources_resources'       => 'id',
+                [
+                    'AND' => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+                ],
+            ],
+        ],
+        'glpi_users'                            => [
+            'ON' => [
+                'glpi_plugin_resources_resources_items' => 'items_id',
+                'glpi_users'                            => 'id',
+                [
+                    'AND' => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+                ],
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        'glpi_plugin_resources_resources.is_deleted'  => 0,
+        'glpi_plugin_resources_resources.is_template' => 0,
+        'glpi_plugin_resources_resources.is_leaving'  => 0,
+        // Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an "OR"
+        // key (recursive entities) or a bare QueryExpression under key 0, which a union would
+        // drop.
+        $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources', '', '', true),
+    ],
+    'ORDERBY'   => 'glpi_plugin_resources_resources.id ASC',
+];
 
 $dataAll = [];
-while ($data = $DB->fetchAssoc($result_resource_user)) {
+foreach ($DB->request($criteriaResourceUser) as $data) {
     $habilitations = [];
     $groups = [];
     if (!empty($data['glpi_users_id'])) {
         $users_id = $data['glpi_users_id'];
         $resources_id = $data['id'];
 
-        $query_resources = "SELECT `glpi_plugin_resources_resources`.`date_end`
-                              FROM `glpi_plugin_resources_resources`
-                              WHERE `id` = $resources_id";
-        $result_resources = $DB->doQuery($query_resources);
-        $date_end = $DB->result($result_resources, 0, 'date_end');
+        $resourceIterator = $DB->request([
+            'SELECT' => 'date_end',
+            'FROM'   => 'glpi_plugin_resources_resources',
+            'WHERE'  => ['id' => $resources_id],
+        ]);
+        $date_end = $resourceIterator->current()['date_end'] ?? null;
 
-        $query_habilitations = "SELECT `glpi_plugin_resources_habilitations` .*
-                              FROM `glpi_plugin_resources_resourcehabilitations`
-                              LEFT JOIN `glpi_plugin_resources_habilitations`
-                              ON `glpi_plugin_resources_habilitations`.id = `glpi_plugin_resources_resourcehabilitations`.`plugin_resources_habilitations_id`
-                              WHERE `plugin_resources_resources_id` = $resources_id";
-        $result_habilitations = $DB->doQuery($query_habilitations);
-
-        while ($data_habilitation = $DB->fetchAssoc($result_habilitations)) {
+        $habilitationIterator = $DB->request([
+            'SELECT'    => 'glpi_plugin_resources_habilitations.*',
+            'FROM'      => 'glpi_plugin_resources_resourcehabilitations',
+            'LEFT JOIN' => [
+                'glpi_plugin_resources_habilitations' => [
+                    'ON' => [
+                        'glpi_plugin_resources_habilitations'         => 'id',
+                        'glpi_plugin_resources_resourcehabilitations' => 'plugin_resources_habilitations_id',
+                    ],
+                ],
+            ],
+            'WHERE'     => [
+                'glpi_plugin_resources_resourcehabilitations.plugin_resources_resources_id' => $resources_id,
+            ],
+        ]);
+        foreach ($habilitationIterator as $data_habilitation) {
             $habilitations[$data_habilitation['id']] = $data_habilitation['name'];
         }
 

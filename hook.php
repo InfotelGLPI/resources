@@ -2623,6 +2623,13 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
         $output_type = $_GET['display_type'];
     }
 
+    // Whatever this hook returns is injected verbatim into the search output: the core
+    // escapes the values it produces itself (SQLProvider::giveItem) but hands a plugin
+    // string straight through, so every dynamic value below has to be escaped here.
+    // Escaping is unconditional, exports included: DataExport::normalizeValueForTextExport()
+    // parses the markup back to text, so no entity ever leaks into a CSV or a PDF.
+    $esc = static fn($value): string => htmlescape((string) $value);
+
     switch ($type) {
         case Resource::class:
             switch ($table . '.' . $field) {
@@ -2631,25 +2638,34 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
                         $link = Toolbox::getItemTypeFormURL(Resource::class);
                         if ($output_type == Search::HTML_OUTPUT) {
-                            $out = "<a href=\"" . $link . "?id=" . $data['raw']["ITEM_" . $num . "_2"] . "\">";
+                            $out = "<a href=\"" . $link . "?id=" . (int) $data['raw']["ITEM_" . $num . "_2"] . "\">";
                         }
-                        $out .= $data['raw']["META_$num"];
+                        $out .= $esc($data['raw']["META_$num"]);
                         if ($output_type == Search::HTML_OUTPUT) {
                             if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["META_$num"])) {
-                                $out .= " (" . $data['raw']["ITEM_" . $num . "_2"] . ")";
+                                $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
                             }
                             $out .= "</a>";
                         }
 
                         if (Session::haveRight("plugin_resources_task", READ) && $output_type == Search::HTML_OUTPUT) {
-                            $query_tasks = "SELECT COUNT(`id`) AS nb_tasks,SUM(`is_finished`) AS is_finished
-                                 FROM `glpi_plugin_resources_tasks`
-                                 WHERE `plugin_resources_resources_id` = " . $data['id'] . "
-                                 AND `is_deleted` = 0";
-                            $result_tasks = $DB->doQuery($query_tasks);
-                            $nb_tasks = $DB->result($result_tasks, 0, "nb_tasks");
-                            $is_finished = $DB->result($result_tasks, 0, "is_finished");
-                            $out .= "&nbsp;(<a href=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?plugin_resources_resources_id=" . $data["id"] . "\">";
+                            // Built through the query builder: the row id reaches this
+                            // function straight from the search result set, and the raw
+                            // string it used to be concatenated into quoted nothing.
+                            $tasks_row = $DB->request([
+                                'SELECT' => [
+                                    new QueryExpression('COUNT(' . $DB->quoteName('id') . ') AS ' . $DB->quoteName('nb_tasks')),
+                                    new QueryExpression('SUM(' . $DB->quoteName('is_finished') . ') AS ' . $DB->quoteName('is_finished')),
+                                ],
+                                'FROM'   => 'glpi_plugin_resources_tasks',
+                                'WHERE'  => [
+                                    'plugin_resources_resources_id' => (int) $data['id'],
+                                    'is_deleted'                    => 0,
+                                ],
+                            ])->current();
+                            $nb_tasks = (int) ($tasks_row['nb_tasks'] ?? 0);
+                            $is_finished = (int) ($tasks_row['is_finished'] ?? 0);
+                            $out .= "&nbsp;(<a href=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?plugin_resources_resources_id=" . (int) $data["id"] . "\">";
                             if (($nb_tasks - $is_finished) > 0) {
                                 $out .= "<span class='plugin_resources_date_over_color'>";
                                 $out .= $nb_tasks - $is_finished . "</span></a>)";
@@ -2683,13 +2699,15 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                             }
                             $item = new $device["itemtype"]();
                             $item->getFromDB($device["items_id"]);
-                            $out .= $item->getTypeName() . " - ";
+                            $out .= $esc($item->getTypeName()) . " - ";
                             if ($device["itemtype"] == 'User') {
                                 if ($output_type == Search::HTML_OUTPUT) {
                                     $link = Toolbox::getItemTypeFormURL(User::class);
-                                    $out .= "<a href=\"" . $link . "?id=" . $device["items_id"] . "\">";
+                                    $out .= "<a href=\"" . $link . "?id=" . (int) $device["items_id"] . "\">";
                                 }
-                                $out .= $dbu->getUserName($device["items_id"]);
+                                // getUserName() without the link flag returns the raw
+                                // database name, which the user form lets anyone set.
+                                $out .= $esc($dbu->getUserName($device["items_id"]));
                                 if ($output_type == Search::HTML_OUTPUT) {
                                     $out .= "</a>";
                                 }
@@ -2715,10 +2733,11 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
                         $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
-                        $out = "<a href='" . $user['link'] . "'>";
-                        $out .= $user["name"];
+                        // getResourceName() formats the name straight from the database.
+                        $out = "<a href='" . $esc($user['link']) . "'>";
+                        $out .= $esc($user["name"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
-                            $out .= " (" . $data['raw']["ITEM_" . $num . "_2"] . ")";
+                            $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2732,9 +2751,16 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     $out = '';
                     if (!empty($items)) {
                         foreach ($items as $device) {
+                            // The itemtype comes from the database and is instantiated
+                            // right here: an unknown class would be a fatal error, so skip
+                            // it the way the resources_items branch above does.
+                            if (!class_exists($device["itemtype"])) {
+                                continue;
+                            }
                             $item = new $device["itemtype"]();
                             $item->getFromDB($device["items_id"]);
-                            $out .= $item->getTypeName() . " - " . $item->getLink() . "<br>";
+                            // getLink() is markup on purpose; the type name is not.
+                            $out .= $esc($item->getTypeName()) . " - " . $item->getLink() . "<br>";
                         }
                     }
                     return $out;
@@ -2756,7 +2782,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_managers.name":
                 case "glpi_plugin_resources_salemanagers.name":
                 case "glpi_plugin_resources_recipients.name":
-                    $out = getUserName($data['raw']["ITEM_" . $num . "_2"]);
+                    $out = $esc(getUserName($data['raw']["ITEM_" . $num . "_2"]));
                     return $out;
             }
             return "";
@@ -2765,10 +2791,10 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_resources.name":
                     if (!empty($data["id"])) {
                         $link = Toolbox::getItemTypeFormURL(ResourceResting::class);
-                        $out = "<a href=\"" . $link . "?id=" . $data["id"] . "\">";
-                        $out .= $data['raw']["ITEM_$num"];
+                        $out = "<a href=\"" . $link . "?id=" . (int) $data["id"] . "\">";
+                        $out .= $esc($data['raw']["ITEM_$num"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["ITEM_$num"])) {
-                            $out .= " (" . $data["id"] . ")";
+                            $out .= " (" . (int) $data["id"] . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2780,10 +2806,10 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_resources.name":
                     if (!empty($data["id"])) {
                         $link = Toolbox::getItemTypeFormURL(ResourceHoliday::class);
-                        $out = "<a href=\"" . $link . "?id=" . $data["id"] . "\">";
-                        $out .= $data['raw']["ITEM_$num"];
+                        $out = "<a href=\"" . $link . "?id=" . (int) $data["id"] . "\">";
+                        $out .= $esc($data['raw']["ITEM_$num"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["ITEM_$num"])) {
-                            $out .= " (" . $data["id"] . ")";
+                            $out .= " (" . (int) $data["id"] . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2795,7 +2821,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_managers.name":
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $out = getUserName($data['raw']["ITEM_" . $num . "_2"]);
+                        $out = $esc(getUserName($data['raw']["ITEM_" . $num . "_2"]));
                     } else {
                         $out = "";
                     }
@@ -2808,10 +2834,11 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     $out = "";
                     if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
                         $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
-                        $out = "<a href='" . $user['link'] . "'>";
-                        $out .= $user["name"];
+                        // getResourceName() formats the name straight from the database.
+                        $out = "<a href='" . $esc($user['link']) . "'>";
+                        $out .= $esc($user["name"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
-                            $out .= " (" . $data['raw']["ITEM_" . $num . "_2"] . ")";
+                            $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2830,7 +2857,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                                 if ($i != 0) {
                                     $result .= "\n";
                                 }
-                                $result .= Resource::getResourceName($data["Computer_4331"][$i]["id"]);
+                                $result .= $esc(Resource::getResourceName($data["Computer_4331"][$i]["id"]));
                             }
                         }
                     }

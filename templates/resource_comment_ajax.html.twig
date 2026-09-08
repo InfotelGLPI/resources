@@ -32,7 +32,9 @@
  # file that could carry the per-request element id and href. It is built in PHP with
  # json_encode(JSON_HEX_TAG | JSON_HEX_AMP), so it cannot break out of the block. #}
 
-{{ comment }}
+{# `comment` is a fragment built by Resource::getResourceName(), which escapes every database
+ # value it concatenates; only the surrounding markup (picture, <br>) is server side. #}
+{{ comment|raw }}
 
 {% if link_script %}
     <script type="text/javascript">{{ link_script|raw }}</script>

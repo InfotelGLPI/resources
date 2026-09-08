@@ -138,17 +138,17 @@ function plugin_init_resources()
         ]);
 
         if (Session::haveRight("plugin_servicecatalog", READ)
-            || Session::haveright("plugin_servicecatalog_setup", UPDATE)) {
+            || Session::haveRight("plugin_servicecatalog_setup", UPDATE)) {
             $PLUGIN_HOOKS['servicecatalog']['resources'] = [Servicecatalog::class];
         }
 
         if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveright("plugin_resources_employee", UPDATE))) {
+            || Session::haveRight("plugin_resources_employee", UPDATE))) {
             $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['resources'] = PLUGIN_RESOURCES_WEBDIR . '/front/menu.php';
             $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['resources'] = Resource::getIcon();
         }
 
-        if (Session::haveright("plugin_resources_checklist", READ)
+        if (Session::haveRight("plugin_resources_checklist", READ)
             && class_exists(DashboardMenu::class)
         ) {
             $PLUGIN_HOOKS['mydashboard']['resources'] = [Dashboard::class];
@@ -172,7 +172,7 @@ function plugin_init_resources()
         }
 
         if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveright("plugin_resources_employee", UPDATE))) {
+            || Session::haveRight("plugin_resources_employee", UPDATE))) {
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['resources'] = ['admin' => Menu::class];
         }
         Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
@@ -201,7 +201,7 @@ function plugin_init_resources()
 
         // Resource menu
         if (Session::haveRight("plugin_resources", READ)
-            || Session::haveright("plugin_resources_employee", UPDATE)) {
+            || Session::haveRight("plugin_resources_employee", UPDATE)) {
             $PLUGIN_HOOKS['redirect_page']['resources'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php";
         }
 
@@ -220,11 +220,13 @@ function plugin_init_resources()
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
                 "scripts/resources.js",
                 "scripts/import.js",
-                "lib/plugins/jquery.address.js",
-                "lib/plugins/jquery.mousewheel.js",
-                "lib/plugins/jquery.scroll.js",
             ];
 
+            // The resource card is not wired to anything: ResourceCard::resourceCard() has no
+            // caller and front/resource.card.form.php has no body. Its script lib/resources_card.js
+            // also relies on jquery.address and jScrollPane, which were removed because no live
+            // code used them. Reviving the card means bringing those two back, or porting the
+            // script off jQuery.
             //            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
             //                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
             //                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";

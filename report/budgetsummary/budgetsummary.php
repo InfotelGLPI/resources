@@ -29,6 +29,7 @@
 
 global $HEADER_LOADED;
 
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Reports\DropdownCriteria;
 use GlpiPlugin\Resources\Budget;
@@ -111,53 +112,81 @@ if ($report->criteriasValidated()) {
 
     //to verify if budget exist
     // SQL statement
-    $condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_resources_budgets", '', '', false);
     $date = $datecrit->getDate();
-    // Defense-in-depth: this criterion value is concatenated into the SQL below. Keep only a
-    // well-formed date and bind it via quoteValue() rather than trusting the reports plugin.
+    // Defense-in-depth: keep only a well-formed date rather than trusting the reports plugin
+    // with the value used all over the queries below.
     if (!preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', (string) $date)) {
         $date = date('Y-m-d');
     }
-    $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
-    $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
+    $sqlprofessioncategory = $professioncategory->getNewSqlCriteriasRestriction();
+    $sqlprofessionline = $professionline->getNewSqlCriteriasRestriction();
 
     //recover all budgets
-    $query = "SELECT `glpi_plugin_resources_professions`.`plugin_resources_professioncategories_id` AS professioncategory,
-                    `glpi_plugin_resources_professions`.`plugin_resources_professionlines_id` AS professionline,
-                    `glpi_plugin_resources_budgets`.`plugin_resources_professions_id` AS profession,
-                    `glpi_plugin_resources_budgets`.`plugin_resources_ranks_id` AS rank,
-                    `glpi_plugin_resources_budgets`.`begin_date` AS begin_date,
-                    `glpi_plugin_resources_budgets`.`end_date` AS end_date,
-                    `glpi_plugin_resources_budgets`.`plugin_resources_budgettypes_id` AS budget_type,
-                    `glpi_plugin_resources_budgets`.`volume` AS qt_vol_budg_vot
-             FROM `glpi_plugin_resources_budgets`
-                  LEFT JOIN `glpi_plugin_resources_professions`
-                     ON (`glpi_plugin_resources_budgets`.`plugin_resources_professions_id`
-                           = `glpi_plugin_resources_professions`.`id`)
-             WHERE " . $condition . "
-                  AND (`glpi_plugin_resources_budgets`.`begin_date` <= " . $DB->quoteValue($date) . "
-                     AND (`glpi_plugin_resources_budgets`.`end_date` IS NULL
-                        OR `glpi_plugin_resources_budgets`.`end_date` >= " . $DB->quoteValue($date) . "))
-                  AND `glpi_plugin_resources_professions`.`is_active` = 1
-                  AND ((`glpi_plugin_resources_professions`.`begin_date` <= " . $DB->quoteValue($date) . ")
-                     AND (`glpi_plugin_resources_professions`.`end_date` IS NULL
-                        OR `glpi_plugin_resources_professions`.`end_date` >= " . $DB->quoteValue($date) . ")) " .
-        $sqlprofessioncategory . $sqlprofessionline . "
-             GROUP BY profession,
-                      rank,
-                      budget_type " . getOrderBy('profession', $columns);
+    $criteria = [
+        'SELECT'    => [
+            'glpi_plugin_resources_professions.plugin_resources_professioncategories_id AS professioncategory',
+            'glpi_plugin_resources_professions.plugin_resources_professionlines_id AS professionline',
+            'glpi_plugin_resources_budgets.plugin_resources_professions_id AS profession',
+            'glpi_plugin_resources_budgets.plugin_resources_ranks_id AS rank',
+            'glpi_plugin_resources_budgets.begin_date AS begin_date',
+            'glpi_plugin_resources_budgets.end_date AS end_date',
+            'glpi_plugin_resources_budgets.plugin_resources_budgettypes_id AS budget_type',
+            'glpi_plugin_resources_budgets.volume AS qt_vol_budg_vot',
+        ],
+        'FROM'      => 'glpi_plugin_resources_budgets',
+        'LEFT JOIN' => [
+            'glpi_plugin_resources_professions' => [
+                'ON' => [
+                    'glpi_plugin_resources_budgets'     => 'plugin_resources_professions_id',
+                    'glpi_plugin_resources_professions' => 'id',
+                ],
+            ],
+        ],
+        'WHERE'     => [
+            // Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an
+            // "OR" key (recursive entities) or a bare QueryExpression under key 0, which a
+            // union would drop.
+            $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_budgets', '', '', false),
+            ['glpi_plugin_resources_budgets.begin_date' => ['<=', $date]],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_budgets.end_date' => null],
+                    ['glpi_plugin_resources_budgets.end_date' => ['>=', $date]],
+                ],
+            ],
+            'glpi_plugin_resources_professions.is_active' => 1,
+            ['glpi_plugin_resources_professions.begin_date' => ['<=', $date]],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_professions.end_date' => null],
+                    ['glpi_plugin_resources_professions.end_date' => ['>=', $date]],
+                ],
+            ],
+        ],
+        'GROUPBY'   => ['profession', 'rank', 'budget_type'],
+    ];
 
-    $res = $DB->doQuery($query);
-    $nbtot = ($res ? $DB->numrows($res) : 0);
+    // The criteria form filters are optional: an unset dropdown returns an empty array, which
+    // would be rendered as an empty "()" group.
+    foreach ([$sqlprofessioncategory, $sqlprofessionline] as $criteriasRestriction) {
+        if (!empty($criteriasRestriction)) {
+            $criteria['WHERE'][] = $criteriasRestriction;
+        }
+    }
+
+    $criteria = $criteria + getNewOrderBy('profession', $columns);
+
+    $iterator = $DB->request($criteria);
+    $nbtot = count($iterator);
     if ($limit) {
-        // Cast to int: $start is concatenated raw into the LIMIT clause below (SQL injection).
+        // Cast to int: $start comes from the query string and is used as a SQL OFFSET.
         // $limit is cast at its assignment above, for the same reason.
         $start = (int) ($_GET["start"] ?? 0);
         if ($start >= $nbtot) {
             $start = 0;
         }
         if ($start > 0 || $start + $limit < $nbtot) {
-            $res = $DB->doQuery($query . " LIMIT $start,$limit");
+            $iterator = $DB->request($criteria + ['START' => $start, 'LIMIT' => $limit]);
         }
     } else {
         $start = 0;
@@ -211,9 +240,9 @@ if ($report->criteriasValidated()) {
         Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
     }
 
-    if ($res && $nbtot > 0) {
-        $nbcols = $DB->num_fields($res);
-        $nbrows = $DB->numrows($res);
+    if ($nbtot > 0) {
+        $nbcols = count($criteria['SELECT']);
+        $nbrows = count($iterator);
         $num = 1;
         $link = $_SERVER['PHP_SELF'];
         $order = 'ASC';
@@ -250,7 +279,8 @@ if ($report->criteriasValidated()) {
         $totalbudgetemployment = 0;
 
         //For each budget
-        for ($row_num = 2; $data = $DB->fetchAssoc($res); $row_num++) {
+        $row_num = 2;
+        foreach ($iterator as $data) {
             $num = 1;
             echo Search::showNewLine($output_type);
             echo Search::showItem(
@@ -290,35 +320,63 @@ if ($report->criteriasValidated()) {
             $totalvolbudget = $totalvolbudget + $data['qt_vol_budg_vot'];
 
             //recover ratio employment sum for each budget depending on rank, profession and year
-            $calqtvolbudguse = "SELECT SUM(`glpi_plugin_resources_employments`.`ratio_employment_budget`) AS sum
-                          FROM `glpi_plugin_resources_employments`
-                              LEFT JOIN `glpi_plugin_resources_employmentstates`
-                                 ON (`glpi_plugin_resources_employments`.`plugin_resources_employmentstates_id`
-                                       = `glpi_plugin_resources_employmentstates`.`id`
-                                       AND `glpi_plugin_resources_employmentstates`.`is_leaving_state` = 0) ";
+            $criteriaEmploymentVolume = [
+                'SELECT'    => [
+                    new QueryExpression(
+                        'SUM(' . $DB->quoteName(
+                            'glpi_plugin_resources_employments.ratio_employment_budget',
+                        ) . ') AS ' . $DB->quoteName('sum'),
+                    ),
+                ],
+                'FROM'      => 'glpi_plugin_resources_employments',
+                'LEFT JOIN' => [
+                    'glpi_plugin_resources_employmentstates' => [
+                        'ON' => [
+                            'glpi_plugin_resources_employments'      => 'plugin_resources_employmentstates_id',
+                            'glpi_plugin_resources_employmentstates' => 'id',
+                            [
+                                'AND' => [
+                                    'glpi_plugin_resources_employmentstates.is_leaving_state' => 0,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'WHERE'     => [
+                    // Each date bound sits in its own group: the same column is compared twice,
+                    // which a flat associative array could not express.
+                    ['glpi_plugin_resources_employments.begin_date' => ['>=', $data['begin_date']]],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_employments.end_date' => ['<=', $data['end_date']]],
+                            ['glpi_plugin_resources_employments.end_date' => null],
+                        ],
+                    ],
+                    ['glpi_plugin_resources_employments.begin_date' => ['<=', $data['end_date']]],
+                    'glpi_plugin_resources_employments.plugin_resources_professions_id' => $data['profession'],
+                ],
+            ];
             if ($data['rank'] != 0) {
-                $calqtvolbudguse .= " LEFT JOIN `glpi_plugin_resources_ranks`
-                                 ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id`
-                        = `glpi_plugin_resources_ranks`.`id`)";
-            }
-            $calqtvolbudguse .= " WHERE (`glpi_plugin_resources_employments`.`begin_date`
-                                  >= '" . $data['begin_date'] . "')
-                            AND (`glpi_plugin_resources_employments`.`end_date`
-                                  <= '" . $data['end_date'] . "'
-                                  OR `glpi_plugin_resources_employments`.`end_date` IS NULL)
-                            AND `glpi_plugin_resources_employments`.`begin_date`
-                                  <= '" . $data['end_date'] . "'
-                            AND `glpi_plugin_resources_employments`.`plugin_resources_professions_id` = '" . $data['profession'] . "' ";
-            if ($data['rank'] != 0) {
-                $calqtvolbudguse .= " AND `glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
-                                 AND `glpi_plugin_resources_ranks`.`is_active` = 1
-                                 AND ((`glpi_plugin_resources_ranks`.`begin_date` <= " . $DB->quoteValue($date) . ")
-                                    AND (`glpi_plugin_resources_ranks`.`end_date` IS NULL
-                                       OR `glpi_plugin_resources_ranks`.`end_date` >= " . $DB->quoteValue($date) . "))";
+                $criteriaEmploymentVolume['LEFT JOIN']['glpi_plugin_resources_ranks'] = [
+                    'ON' => [
+                        'glpi_plugin_resources_employments' => 'plugin_resources_ranks_id',
+                        'glpi_plugin_resources_ranks'       => 'id',
+                    ],
+                ];
+                $criteriaEmploymentVolume['WHERE'][] = [
+                    'glpi_plugin_resources_employments.plugin_resources_ranks_id' => $data['rank'],
+                    'glpi_plugin_resources_ranks.is_active'                       => 1,
+                    'glpi_plugin_resources_ranks.begin_date'                      => ['<=', $date],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_ranks.end_date' => null],
+                            ['glpi_plugin_resources_ranks.end_date' => ['>=', $date]],
+                        ],
+                    ],
+                ];
             }
 
-            $result1 = $DB->doQuery($calqtvolbudguse);
-            $data1 = $DB->fetchArray($result1);
+            $data1 = $DB->request($criteriaEmploymentVolume)->current() ?? ['sum' => null];
 
             //link to recap.php displaying only employments with same rank and profession
             $ratio = "";
@@ -338,38 +396,71 @@ if ($report->criteriasValidated()) {
 
             echo Search::showItem($output_type, $ratio, $num, $row_num);
             $totalvolemployment = $totalvolemployment + $data1['sum'];
-
             //recover quota sum of resource for each budget depending on rank, profession and year
-            $calqtvolreal = "SELECT SUM(`glpi_plugin_resources_resources`.`quota`) AS sum
-                           FROM `glpi_plugin_resources_resources`
-                           LEFT JOIN `glpi_plugin_resources_ranks`
-                              ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id`
-                                    = `glpi_plugin_resources_ranks`.`id`
-                                    AND `glpi_plugin_resources_resources`.`is_leaving` = 0)
-                           LEFT JOIN `glpi_plugin_resources_employments`
-                              ON (`glpi_plugin_resources_employments`.`plugin_resources_resources_id` = `glpi_plugin_resources_resources`.`id`)
-                          LEFT JOIN `glpi_plugin_resources_employmentstates`
-                              ON (`glpi_plugin_resources_employments`.`plugin_resources_employmentstates_id`
-                                  = `glpi_plugin_resources_employmentstates`.`id` AND
-                                  `glpi_plugin_resources_employmentstates`.`is_active` = 1)
-                        WHERE (`glpi_plugin_resources_employments`.`begin_date`
-                                  >= '" . $data['begin_date'] . "')
-                            AND (`glpi_plugin_resources_employments`.`end_date`
-                                  <= '" . $data['end_date'] . "'
-                                  OR `glpi_plugin_resources_employments`.`end_date` IS NULL)
-                            AND `glpi_plugin_resources_employments`.`begin_date`
-                                  <= '" . $data['end_date'] . "'
-                       AND `glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = '" . $data['profession'] . "'";
+            $criteriaResourceVolume = [
+                'SELECT'    => [
+                    new QueryExpression(
+                        'SUM(' . $DB->quoteName(
+                            'glpi_plugin_resources_resources.quota',
+                        ) . ') AS ' . $DB->quoteName('sum'),
+                    ),
+                ],
+                'FROM'      => 'glpi_plugin_resources_resources',
+                'LEFT JOIN' => [
+                    'glpi_plugin_resources_ranks'            => [
+                        'ON' => [
+                            'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                            'glpi_plugin_resources_ranks'     => 'id',
+                            [
+                                'AND' => ['glpi_plugin_resources_resources.is_leaving' => 0],
+                            ],
+                        ],
+                    ],
+                    'glpi_plugin_resources_employments'      => [
+                        'ON' => [
+                            'glpi_plugin_resources_employments' => 'plugin_resources_resources_id',
+                            'glpi_plugin_resources_resources'   => 'id',
+                        ],
+                    ],
+                    'glpi_plugin_resources_employmentstates' => [
+                        'ON' => [
+                            'glpi_plugin_resources_employments'      => 'plugin_resources_employmentstates_id',
+                            'glpi_plugin_resources_employmentstates' => 'id',
+                            [
+                                'AND' => [
+                                    'glpi_plugin_resources_employmentstates.is_active' => 1,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'WHERE'     => [
+                    ['glpi_plugin_resources_employments.begin_date' => ['>=', $data['begin_date']]],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_employments.end_date' => ['<=', $data['end_date']]],
+                            ['glpi_plugin_resources_employments.end_date' => null],
+                        ],
+                    ],
+                    ['glpi_plugin_resources_employments.begin_date' => ['<=', $data['end_date']]],
+                    'glpi_plugin_resources_ranks.plugin_resources_professions_id' => $data['profession'],
+                ],
+            ];
             if ($data['rank'] != 0) {
-                $calqtvolreal .= " AND `glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
-                             AND `glpi_plugin_resources_ranks`.`is_active` = 1
-                             AND ((`glpi_plugin_resources_ranks`.`begin_date` <= " . $DB->quoteValue($date) . ")
-                                AND (`glpi_plugin_resources_ranks`.`end_date` IS NULL
-                                    OR `glpi_plugin_resources_ranks`.`end_date` >= " . $DB->quoteValue($date) . "))";
+                $criteriaResourceVolume['WHERE'][] = [
+                    'glpi_plugin_resources_resources.plugin_resources_ranks_id' => $data['rank'],
+                    'glpi_plugin_resources_ranks.is_active'                     => 1,
+                    'glpi_plugin_resources_ranks.begin_date'                    => ['<=', $date],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_ranks.end_date' => null],
+                            ['glpi_plugin_resources_ranks.end_date' => ['>=', $date]],
+                        ],
+                    ],
+                ];
             }
 
-            $result2 = $DB->doQuery($calqtvolreal);
-            $data2 = $DB->fetchArray($result2);
+            $data2 = $DB->request($criteriaResourceVolume)->current() ?? ['sum' => null];
 
             //link to recap.php displaying only resource with same rank and profession
             $quota = "";
@@ -395,16 +486,22 @@ if ($report->criteriasValidated()) {
             echo Search::showItem($output_type, $solde, $num, $row_num);
 
             //recover cost allocated for each couple rank/profession/year
-            $query3 = "SELECT `glpi_plugin_resources_costs`.`cost` AS cost
-                 FROM `glpi_plugin_resources_costs`
-                 WHERE `glpi_plugin_resources_costs`.`plugin_resources_ranks_id` = '" . $data['rank'] . "'
-                 AND `glpi_plugin_resources_costs`.`plugin_resources_professions_id` = '" . $data['profession'] . "'
-                 AND (`begin_date` <= " . $DB->quoteValue($date) . "
-                 AND (`end_date` IS NULL
-                        OR `end_date` >= " . $DB->quoteValue($date) . "))";
-
-            $result3 = $DB->doQuery($query3);
-            $data3 = $DB->fetchArray($result3);
+            $costIterator = $DB->request([
+                'SELECT' => 'glpi_plugin_resources_costs.cost AS cost',
+                'FROM'   => 'glpi_plugin_resources_costs',
+                'WHERE'  => [
+                    'glpi_plugin_resources_costs.plugin_resources_ranks_id'       => $data['rank'],
+                    'glpi_plugin_resources_costs.plugin_resources_professions_id' => $data['profession'],
+                    'begin_date'                                                  => ['<=', $date],
+                    [
+                        'OR' => [
+                            ['end_date' => null],
+                            ['end_date' => ['>=', $date]],
+                        ],
+                    ],
+                ],
+            ]);
+            $data3 = $costIterator->current() ?? ['cost' => 0];
 
             //ammount of budget voting
             $calvolbudgvot = $data3['cost'] * $data['qt_vol_budg_vot'];
@@ -432,6 +529,8 @@ if ($report->criteriasValidated()) {
             echo Search::showItem($output_type, Html::formatNumber($soldeamount, '', 2), $num, $row_num);
 
             echo Search::showEndLine($output_type);
+
+            $row_num++;
         }
 
         $num = 1;
@@ -562,27 +661,25 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
 }
 
 /**
- * Build the ORDER BY clause
+ * Build the "ORDER BY" criteria
  *
  * @param $default string, name of the column used by default
- * @param $columns
+ * @param $columns array, the sortable columns of the report
  *
- * @return string
+ * @return array
  */
-function getOrderBy($default, $columns)
+function getNewOrderBy($default, $columns)
 {
     if (!isset($_REQUEST['order']) || $_REQUEST['order'] != 'DESC') {
         $_REQUEST['order'] = 'ASC';
     }
     $order = $_REQUEST['order'];
 
-    $tabs[] = getOrderByFields($default, $columns);
-    if (count($tabs) > 0) {
-        foreach ($tabs as $tab) {
-            return " ORDER BY " . $tab . " " . $order;
-        }
+    $field = getOrderByFields($default, $columns);
+    if (is_string($field) && $field !== '') {
+        return ['ORDERBY' => $field . ' ' . $order];
     }
-    return '';
+    return [];
 }
 
 /**

@@ -27,9 +27,11 @@
  * --------------------------------------------------------------------------
  */
 
-//Options for GLPI 0.71 and newer : need slave db to access the report
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Reports\ColumnLink;
+
+//Options for GLPI 0.71 and newer : need slave db to access the report
 
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 0;
@@ -56,20 +58,48 @@ $report->setColumns([
     ),
 ]);
 
-//display only resource without user linked
-$query = "SELECT `glpi_plugin_resources_resources_items`.`items_id` as items_id
-          FROM `glpi_plugin_resources_resources_items`
-           LEFT JOIN `glpi_plugin_resources_resources`
-               ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
-          LEFT JOIN `glpi_users`
-               ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`)
-          WHERE `glpi_plugin_resources_resources_items`.`itemtype`= 'User'
-            AND `glpi_users`.`is_active` = 1
-            AND `glpi_users`.`is_deleted` = 0
-          AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-          GROUP BY items_id HAVING COUNT(items_id) > 1 ";
+$dbu = new DbUtils();
 
-$report->setSqlRequest($query);
+// SQL statement
+// Only the users linked to more than one resource.
+$criteria = [
+    'SELECT'    => ['glpi_plugin_resources_resources_items.items_id AS items_id'],
+    'FROM'      => 'glpi_plugin_resources_resources_items',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_resources' => [
+            'ON' => [
+                'glpi_plugin_resources_resources'       => 'id',
+                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+            ],
+        ],
+        'glpi_users'                      => [
+            'ON' => [
+                'glpi_users'                            => 'id',
+                'glpi_plugin_resources_resources_items' => 'items_id',
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        'glpi_plugin_resources_resources_items.itemtype' => 'User',
+        'glpi_users.is_active'                           => 1,
+        'glpi_users.is_deleted'                          => 0,
+        'glpi_plugin_resources_resources.is_deleted'     => 0,
+    ],
+    'GROUPBY'   => 'items_id',
+    'HAVING'    => [new QueryExpression('COUNT(' . $DB->quoteName('items_id') . ') > 1')],
+];
+
+// The result set is scoped to the entities of the session, the way every other report of
+// the plugin does it: without this clause the report listed the users of the whole
+// instance, whatever the active entity.
+// Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an "OR" key
+// (recursive entities) or a bare QueryExpression under key 0, which a union would drop.
+$criteria['WHERE'] = [
+    $criteria['WHERE'],
+    $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources', '', '', true),
+];
+
+$report->setSqlRequest($criteria);
 $report->execute();
 
 $report->footer();

@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-//Options for GLPI 0.71 and newer : need slave db to access the report
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Reports\Column;
 use GlpiPlugin\Reports\ColumnDate;
@@ -43,6 +43,7 @@ use GlpiPlugin\Resources\ProfessionLine;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\Resource;
 
+//Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
 
@@ -153,71 +154,151 @@ $report->setColumns([
 ]);
 
 $dbu = new DbUtils();
+
 // SQL statement
-$condition = $dbu->getEntitiesRestrictRequest(' AND ', "glpi_plugin_resources_employments", '', '', false);
-
 //display only resource which have rank and profession not equal to employment rank or profession
-$query = "SELECT `glpi_users`.`registration_number`,
-                          `glpi_users`.`id` as user_id,
-                          `glpi_plugin_resources_resources`.`id` as resource_id,
-                          `glpi_plugin_resources_resources`.`name` as resource_name,
-                          `glpi_plugin_resources_resources`.`firstname`,
-                          `glpi_plugin_resources_resources`.`quota`,
-                          `glpi_plugin_resources_ranks`.`name` AS resource_rank,
-                          `glpi_plugin_resources_professions`.`name` AS resource_profession,
-                          `glpi_plugin_resources_professionlines`.`name` AS resource_professionline,
-                          `glpi_plugin_resources_professioncategories`.`name` AS resource_professioncategory,
-                          `glpi_plugin_resources_employments`.`name` AS employment_name,
-                          `glpi_plugin_resources_employments`.`id` AS employment_id,
-                          `glpi_plugin_resources_employments`.`ratio_employment_budget`,
-                          `glpi_plugin_resources_employmentranks`.`name` AS employment_rank,
-                          `glpi_plugin_resources_employmentprofessions`.`name` AS employment_profession,
-                          `glpi_plugin_resources_employmentprofessionlines`.`name` AS employment_professionline,
-                          `glpi_plugin_resources_employmentprofessioncategories`.`name` AS employment_professioncategory,
-                          `glpi_plugin_resources_employments`.`begin_date`,
-                          `glpi_plugin_resources_employments`.`end_date`,
-                          `glpi_plugin_resources_employmentstates`.`name` AS employment_state,
-                          `glpi_plugin_resources_employers`.`name` AS employer_name
-                   FROM `glpi_users`
-                      LEFT JOIN `glpi_plugin_resources_resources_items`
-                        ON (`glpi_users`.`id` = `glpi_plugin_resources_resources_items`.`items_id`
-                                AND `glpi_plugin_resources_resources_items`.`itemtype`= 'User')
-                      LEFT JOIN `glpi_plugin_resources_resources`
-                        ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_resources_items`.`plugin_resources_resources_id`)
-                      LEFT JOIN `glpi_plugin_resources_employments`
-                        ON (`glpi_plugin_resources_resources`.`id` = `glpi_plugin_resources_employments`.`plugin_resources_resources_id` )
-                      LEFT JOIN `glpi_plugin_resources_ranks`
-                        ON (`glpi_plugin_resources_resources`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professions`
-                        ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professions` AS `glpi_plugin_resources_employmentprofessions`
-                        ON (`glpi_plugin_resources_employments`.`plugin_resources_professions_id` = `glpi_plugin_resources_employmentprofessions`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_employers`
-                        ON (`glpi_plugin_resources_employments`.`plugin_resources_employers_id` = `glpi_plugin_resources_employers`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professionlines`
-                        ON (`glpi_plugin_resources_professions`.`plugin_resources_professionlines_id` = `glpi_plugin_resources_professionlines`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professioncategories`
-                        ON (`glpi_plugin_resources_professions`.`plugin_resources_professioncategories_id` = `glpi_plugin_resources_professioncategories`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_ranks` AS `glpi_plugin_resources_employmentranks`
-                        ON (`glpi_plugin_resources_employments`.`plugin_resources_ranks_id` = `glpi_plugin_resources_employmentranks`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professionlines` AS `glpi_plugin_resources_employmentprofessionlines`
-                        ON (`glpi_plugin_resources_employmentprofessions`.`plugin_resources_professionlines_id` = `glpi_plugin_resources_employmentprofessionlines`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_professioncategories` AS `glpi_plugin_resources_employmentprofessioncategories`
-                        ON (`glpi_plugin_resources_employmentprofessions`.`plugin_resources_professioncategories_id` = `glpi_plugin_resources_employmentprofessioncategories`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_employmentstates`
-                        ON (`glpi_plugin_resources_employments`.`plugin_resources_employmentstates_id` = `glpi_plugin_resources_employmentstates`.`id`)
-                   WHERE (`glpi_plugin_resources_resources`.`is_leaving` = 0
-                          AND `glpi_users`.`is_active` = 1
-                          AND `glpi_plugin_resources_employments`.`plugin_resources_resources_id` <> 0
-                          AND `glpi_plugin_resources_resources`.`is_deleted` = 0
-                          AND `glpi_plugin_resources_resources`.`is_template` = 0
-                          " . $condition . " )
-                   GROUP BY `glpi_plugin_resources_employments`.`id`, `glpi_users`.`id`
-                   HAVING (resource_profession <> employment_profession
-                                 OR resource_rank <> employment_rank)" .
-    $report->getOrderBy('registration_number');
+$criteria = [
+    'SELECT'    => [
+        'glpi_users.registration_number',
+        'glpi_users.id AS user_id',
+        'glpi_plugin_resources_resources.id AS resource_id',
+        'glpi_plugin_resources_resources.name AS resource_name',
+        'glpi_plugin_resources_resources.firstname',
+        'glpi_plugin_resources_resources.quota',
+        'glpi_plugin_resources_ranks.name AS resource_rank',
+        'glpi_plugin_resources_professions.name AS resource_profession',
+        'glpi_plugin_resources_professionlines.name AS resource_professionline',
+        'glpi_plugin_resources_professioncategories.name AS resource_professioncategory',
+        'glpi_plugin_resources_employments.name AS employment_name',
+        'glpi_plugin_resources_employments.id AS employment_id',
+        'glpi_plugin_resources_employments.ratio_employment_budget',
+        'glpi_plugin_resources_employmentranks.name AS employment_rank',
+        'glpi_plugin_resources_employmentprofessions.name AS employment_profession',
+        'glpi_plugin_resources_employmentprofessionlines.name AS employment_professionline',
+        'glpi_plugin_resources_employmentprofessioncategories.name AS employment_professioncategory',
+        'glpi_plugin_resources_employments.begin_date',
+        'glpi_plugin_resources_employments.end_date',
+        'glpi_plugin_resources_employmentstates.name AS employment_state',
+        'glpi_plugin_resources_employers.name AS employer_name',
+    ],
+    'FROM'      => 'glpi_users',
+    'LEFT JOIN' => [
+        'glpi_plugin_resources_resources_items'                                                          => [
+            'ON' => [
+                'glpi_users'                            => 'id',
+                'glpi_plugin_resources_resources_items' => 'items_id',
+                [
+                    'AND' => ['glpi_plugin_resources_resources_items.itemtype' => 'User'],
+                ],
+            ],
+        ],
+        'glpi_plugin_resources_resources'                                                                => [
+            'ON' => [
+                'glpi_plugin_resources_resources'       => 'id',
+                'glpi_plugin_resources_resources_items' => 'plugin_resources_resources_id',
+            ],
+        ],
+        'glpi_plugin_resources_employments'                                                              => [
+            'ON' => [
+                'glpi_plugin_resources_resources'   => 'id',
+                'glpi_plugin_resources_employments' => 'plugin_resources_resources_id',
+            ],
+        ],
+        'glpi_plugin_resources_ranks'                                                                    => [
+            'ON' => [
+                'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                'glpi_plugin_resources_ranks'     => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professions'                                                              => [
+            'ON' => [
+                'glpi_plugin_resources_ranks'       => 'plugin_resources_professions_id',
+                'glpi_plugin_resources_professions' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professions AS glpi_plugin_resources_employmentprofessions'               => [
+            'ON' => [
+                'glpi_plugin_resources_employments'           => 'plugin_resources_professions_id',
+                'glpi_plugin_resources_employmentprofessions' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_employers'                                                                => [
+            'ON' => [
+                'glpi_plugin_resources_employments' => 'plugin_resources_employers_id',
+                'glpi_plugin_resources_employers'   => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professionlines'                                                          => [
+            'ON' => [
+                'glpi_plugin_resources_professions'     => 'plugin_resources_professionlines_id',
+                'glpi_plugin_resources_professionlines' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professioncategories'                                                     => [
+            'ON' => [
+                'glpi_plugin_resources_professions'          => 'plugin_resources_professioncategories_id',
+                'glpi_plugin_resources_professioncategories' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_ranks AS glpi_plugin_resources_employmentranks'                           => [
+            'ON' => [
+                'glpi_plugin_resources_employments'     => 'plugin_resources_ranks_id',
+                'glpi_plugin_resources_employmentranks' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professionlines AS glpi_plugin_resources_employmentprofessionlines'       => [
+            'ON' => [
+                'glpi_plugin_resources_employmentprofessions'     => 'plugin_resources_professionlines_id',
+                'glpi_plugin_resources_employmentprofessionlines' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_professioncategories AS glpi_plugin_resources_employmentprofessioncategories' => [
+            'ON' => [
+                'glpi_plugin_resources_employmentprofessions'          => 'plugin_resources_professioncategories_id',
+                'glpi_plugin_resources_employmentprofessioncategories' => 'id',
+            ],
+        ],
+        'glpi_plugin_resources_employmentstates'                                                         => [
+            'ON' => [
+                'glpi_plugin_resources_employments'      => 'plugin_resources_employmentstates_id',
+                'glpi_plugin_resources_employmentstates' => 'id',
+            ],
+        ],
+    ],
+    'WHERE'     => [
+        'glpi_plugin_resources_resources.is_leaving'                      => 0,
+        'glpi_users.is_active'                                            => 1,
+        'glpi_plugin_resources_employments.plugin_resources_resources_id' => ['<>', 0],
+        'glpi_plugin_resources_resources.is_deleted'                      => 0,
+        'glpi_plugin_resources_resources.is_template'                     => 0,
+    ],
+    'GROUPBY'   => [
+        'glpi_plugin_resources_employments.id',
+        'glpi_users.id',
+    ],
+    // Column to column comparison on the SELECT aliases: no criteria form expresses that,
+    // so it stays a QueryExpression built from quoted identifiers.
+    'HAVING'    => [
+        'OR' => [
+            new QueryExpression(
+                $DB->quoteName('resource_profession') . ' <> ' . $DB->quoteName('employment_profession'),
+            ),
+            new QueryExpression(
+                $DB->quoteName('resource_rank') . ' <> ' . $DB->quoteName('employment_rank'),
+            ),
+        ],
+    ],
+];
+// Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an "OR" key
+// (recursive entities) or a bare QueryExpression under key 0, which a union would drop.
+$criteria['WHERE'] = [
+    $criteria['WHERE'],
+    $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_employments'),
+];
 
-$report->setSqlRequest($query);
+$criteria = $criteria + $report->getNewOrderBy('registration_number');
+
+$report->setSqlRequest($criteria);
 
 $report->execute();
 

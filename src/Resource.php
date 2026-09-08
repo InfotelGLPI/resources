@@ -2453,41 +2453,53 @@ class Resource extends CommonDBTM
                         $user["link"] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $ID;
                         $user["comment"] = "";
 
+                        // "comment" is an HTML fragment consumed by Html::showToolTip(), which
+                        // inserts it verbatim. Since GLPI 10 values are stored raw in database,
+                        // so every one of them is escaped here, at the point of concatenation:
+                        // formatUserName(), the dropdown labels and registration_number all
+                        // return unfiltered text. The picture file name additionally goes
+                        // through urlencode() because it is a query string parameter.
                         if (isset($data["picture"]) && !empty($data["picture"])) {
                             $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
                             if (file_exists($path)) {
-                                $user["comment"] .= "<object data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $data["picture"] . "'>
-                      <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR
-                                    . "/front/picture.send.php?file=" . $data["picture"] . "'>
-                     </object><br> ";
+                                $picture_url = htmlescape(
+                                    PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file="
+                                    . urlencode($data["picture"]),
+                                );
+                                $user["comment"] .= '<object data="' . $picture_url . '">
+                      <param name="src" value="' . $picture_url . '">
+                     </object><br> ';
                             } else {
-                                $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
+                                $user["comment"] .= '<img src="'
+                                    . htmlescape(PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png") . '"><br>';
                             }
                         } else {
-                            $user["comment"] .= "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png'><br>";
+                            $user["comment"] .= '<img src="'
+                                . htmlescape(PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png") . '"><br>';
                         }
 
-                        $user["comment"] .= __('Name') . "&nbsp;: " . $username . "<br>";
+                        $user["comment"] .= htmlescape(__('Name')) . "&nbsp;: "
+                            . htmlescape($username) . "<br>";
 
                         if ($data["plugin_resources_ranks_id"] > 0) {
-                            $user["comment"] .= Rank::getTypeName(1) . "&nbsp;: "
-                                . Dropdown::getDropdownName(
+                            $user["comment"] .= htmlescape(Rank::getTypeName(1)) . "&nbsp;: "
+                                . htmlescape(Dropdown::getDropdownName(
                                     "glpi_plugin_resources_ranks",
                                     $data["plugin_resources_ranks_id"],
-                                ) . "<br>";
+                                )) . "<br>";
                         }
 
                         if ($data["locations_id"] > 0) {
-                            $user["comment"] .= __('Location') . "&nbsp;: "
-                                . Dropdown::getDropdownName(
+                            $user["comment"] .= htmlescape(__('Location')) . "&nbsp;: "
+                                . htmlescape(Dropdown::getDropdownName(
                                     "glpi_locations",
                                     $data["locations_id"],
-                                ) . "<br>";
+                                )) . "<br>";
                         }
 
                         if ($data["registration_number"] > 0) {
-                            $user["comment"] .= _x('user', 'Administrative number') . "&nbsp;: "
-                                . $data["registration_number"] . "<br>";
+                            $user["comment"] .= htmlescape(_x('user', 'Administrative number')) . "&nbsp;: "
+                                . htmlescape($data["registration_number"]) . "<br>";
                         }
                     } else {
                         $user = $username;
@@ -3431,6 +3443,16 @@ class Resource extends CommonDBTM
                 break;
 
             case "plugin_resources_add_item":
+                // Both ends of the relation must be authorized: the loop below checks the
+                // source item, but the destination resource comes straight from the sub form.
+                // can() covers the right bit and the entity boundary in one call.
+                $target_resources_id = (int) ($input['plugin_resources_resources_id'] ?? 0);
+                if ($target_resources_id <= 0 || !$resource->can($target_resources_id, UPDATE)) {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                    $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                    break;
+                }
+
                 $messages = [];
                 foreach ($ids as $key => $val) {
                     if ($item->can($key, UPDATE)) {
@@ -3438,7 +3460,7 @@ class Resource extends CommonDBTM
                         // iteration, so shadowing it made the branch depend on its own
                         // output.
                         $values = [
-                            'plugin_resources_resources_id' => $input['plugin_resources_resources_id'],
+                            'plugin_resources_resources_id' => $target_resources_id,
                             'items_id' => $key,
                             'itemtype' => $link_itemtype,
                         ];

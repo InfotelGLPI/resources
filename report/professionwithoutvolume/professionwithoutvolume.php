@@ -30,6 +30,7 @@
 //Options for GLPI 0.71 and newer : need slave db to access the report
 global $HEADER_LOADED, $DB;
 
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Reports\AutoReport;
 use GlpiPlugin\Reports\DropdownCriteria;
 use GlpiPlugin\Resources\Profession;
@@ -110,123 +111,255 @@ if ($report->criteriasValidated()) {
 
     //to verify if professions exist
     // SQL statement
-    $condition = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_resources');
     $date = date("Y-m-d");
-    $sqlprofessioncategory = $professioncategory->getSqlCriteriasRestriction('AND');
-    $sqlprofessionline = $professionline->getSqlCriteriasRestriction('AND');
+    $sqlprofessioncategory = $professioncategory->getNewSqlCriteriasRestriction();
+    $sqlprofessionline = $professionline->getNewSqlCriteriasRestriction();
     $dataAll = [];
 
     //recover all professions_id present in resources
-    $requestResource = "SELECT DISTINCT(`glpi_plugin_resources_ranks`.`plugin_resources_professions_id`)
-               FROM `glpi_plugin_resources_resources`
-               LEFT JOIN `glpi_plugin_resources_ranks`
-                     ON (`glpi_plugin_resources_ranks`.`id` = `glpi_plugin_resources_resources`.`plugin_resources_ranks_id`)
-               WHERE `glpi_plugin_resources_resources`.`date_begin` <= '" . $date . "'
-                  AND (`glpi_plugin_resources_resources`.`date_end` IS NULL
-                        OR `glpi_plugin_resources_resources`.`date_end` >= '" . $date . "')" .
-        $condition .
-        "ORDER BY `plugin_resources_professions_id`";
-
-    $professionsResourceList = '0';
-    foreach ($DB->request($requestResource) as $data) {
+    $professionsResourceList = [0];
+    $resourceIterator = $DB->request([
+        'SELECT'    => 'glpi_plugin_resources_ranks.plugin_resources_professions_id',
+        'DISTINCT'  => true,
+        'FROM'      => 'glpi_plugin_resources_resources',
+        'LEFT JOIN' => [
+            'glpi_plugin_resources_ranks' => [
+                'ON' => [
+                    'glpi_plugin_resources_ranks'     => 'id',
+                    'glpi_plugin_resources_resources' => 'plugin_resources_ranks_id',
+                ],
+            ],
+        ],
+        'WHERE'     => [
+            'glpi_plugin_resources_resources.date_begin' => ['<=', $date],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_resources.date_end' => null],
+                    ['glpi_plugin_resources_resources.date_end' => ['>=', $date]],
+                ],
+            ],
+            // Nested rather than merged with "+": getEntitiesRestrictCriteria() can return an
+            // "OR" key (recursive entities) or a bare QueryExpression under key 0, which a
+            // union would drop.
+            $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources'),
+        ],
+        'ORDERBY'   => 'plugin_resources_professions_id',
+    ]);
+    foreach ($resourceIterator as $data) {
         if ($data['plugin_resources_professions_id'] != null) {
-            $professionsResourceList .= ',';
-            $professionsResourceList .= $data['plugin_resources_professions_id'];
+            $professionsResourceList[] = $data['plugin_resources_professions_id'];
         }
     }
 
+    $conditionAll = $dbu->getEntitiesRestrictCriteria(
+        'glpi_plugin_resources_professions',
+        '',
+        '',
+        true,
+    );
+
     //case global management
-    $query = "SELECT `glpi_plugin_resources_professions`.`plugin_resources_professionlines_id` AS professionline,
-                    `glpi_plugin_resources_professions`.`plugin_resources_professioncategories_id` AS professioncategory,
-                    `glpi_plugin_resources_professions`.`name` AS profession,
-                    `glpi_plugin_resources_professions`.`id` AS profession_id,
-                    `glpi_plugin_resources_professions`.`code` AS profession_code,
-                    0 AS rank_name, 0 AS rank_code,
-                    `glpi_plugin_resources_professions`.`begin_date`,
-                    `glpi_plugin_resources_professions`.`end_date`
-             FROM `glpi_plugin_resources_professions`
-             LEFT JOIN `glpi_plugin_resources_budgets`
-                  ON (`glpi_plugin_resources_budgets`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`
-                  AND ((`glpi_plugin_resources_budgets`.`begin_date` IS NULL)
-                        OR (`glpi_plugin_resources_budgets`.`begin_date` < '" . $date . "')
-                       AND (`glpi_plugin_resources_budgets`.`end_date` IS NULL)
-                        OR (`glpi_plugin_resources_budgets`.`end_date` > '" . $date . "')))
-             WHERE (`glpi_plugin_resources_professions`.`id` IN (" . $professionsResourceList . ")
-                  AND `glpi_plugin_resources_professions`.`is_active` = 1
-                  AND ((`glpi_plugin_resources_professions`.`end_date` IS NULL )
-                        OR (`glpi_plugin_resources_professions`.`end_date` > '" . $date . "' ))
-                     AND ((`glpi_plugin_resources_professions`.`begin_date` IS NULL)
-                        OR ( `glpi_plugin_resources_professions`.`begin_date` < '" . $date . "')))
-                  AND ((`glpi_plugin_resources_budgets`.`id` IS NULL)
-                  OR (`glpi_plugin_resources_budgets`.`begin_date` IS NOT NULL
-                     AND `glpi_plugin_resources_budgets`.`begin_date` > '" . $date . "')
-                  OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
-                        AND `glpi_plugin_resources_budgets`.`end_date` < '" . $date . "')) " .
-        $sqlprofessioncategory . $sqlprofessionline;
+    $criteria = [
+        'SELECT'    => [
+            'glpi_plugin_resources_professions.plugin_resources_professionlines_id AS professionline',
+            'glpi_plugin_resources_professions.plugin_resources_professioncategories_id AS professioncategory',
+            'glpi_plugin_resources_professions.name AS profession',
+            'glpi_plugin_resources_professions.id AS profession_id',
+            'glpi_plugin_resources_professions.code AS profession_code',
+            new QueryExpression('0 AS ' . $DB->quoteName('rank_name')),
+            new QueryExpression('0 AS ' . $DB->quoteName('rank_code')),
+            'glpi_plugin_resources_professions.begin_date',
+            'glpi_plugin_resources_professions.end_date',
+        ],
+        'FROM'      => 'glpi_plugin_resources_professions',
+        'LEFT JOIN' => [
+            'glpi_plugin_resources_budgets' => [
+                'ON' => [
+                    'glpi_plugin_resources_budgets'     => 'plugin_resources_professions_id',
+                    'glpi_plugin_resources_professions' => 'id',
+                    [
+                        // Kept exactly as the original SQL grouped it: AND binds tighter than
+                        // OR, so the middle branch is "begin_date < date AND end_date IS NULL".
+                        'AND' => [
+                            [
+                                'OR' => [
+                                    ['glpi_plugin_resources_budgets.begin_date' => null],
+                                    [
+                                        'AND' => [
+                                            ['glpi_plugin_resources_budgets.begin_date' => ['<', $date]],
+                                            ['glpi_plugin_resources_budgets.end_date' => null],
+                                        ],
+                                    ],
+                                    ['glpi_plugin_resources_budgets.end_date' => ['>', $date]],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'WHERE'     => [
+            'glpi_plugin_resources_professions.id'        => $professionsResourceList,
+            'glpi_plugin_resources_professions.is_active' => 1,
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_professions.end_date' => null],
+                    ['glpi_plugin_resources_professions.end_date' => ['>', $date]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_professions.begin_date' => null],
+                    ['glpi_plugin_resources_professions.begin_date' => ['<', $date]],
+                ],
+            ],
+            [
+                'OR' => [
+                    ['glpi_plugin_resources_budgets.id' => null],
+                    [
+                        'NOT'                                      => ['glpi_plugin_resources_budgets.begin_date' => null],
+                        'glpi_plugin_resources_budgets.begin_date' => ['>', $date],
+                    ],
+                    [
+                        'NOT'                                    => ['glpi_plugin_resources_budgets.end_date' => null],
+                        'glpi_plugin_resources_budgets.end_date' => ['<', $date],
+                    ],
+                ],
+            ],
+            $conditionAll,
+        ],
+    ];
 
-    $conditionAll = $dbu->getEntitiesRestrictRequest('AND', 'glpi_plugin_resources_professions', '', '', true);
+    // The criteria form filters are optional: an unset dropdown returns an empty array, which
+    // would be rendered as an empty "()" group.
+    foreach ([$sqlprofessioncategory, $sqlprofessionline] as $criteriasRestriction) {
+        if (!empty($criteriasRestriction)) {
+            $criteria['WHERE'][] = $criteriasRestriction;
+        }
+    }
 
-    $query .= $conditionAll . " " . getOrderBy('profession', $columns);
+    $criteria = $criteria + getNewOrderBy('profession', $columns);
 
-    $result = $DB->doQuery($query);
-    for ($row_num = 0; $data = $DB->fetchAssoc($result); $row_num++) {
+    $row_num = 0;
+    foreach ($DB->request($criteria) as $data) {
         if ($row_num == 0) {
             $dataAll[$row_num]['professionline'] = Profession::getTypeName(1);
             $row_num++;
         }
         $dataAll[$row_num] = $data;
+        $row_num++;
     }
 
     //Case of specific management for each grade of a profession
-    $rankList = "SELECT DISTINCT(`glpi_plugin_resources_budgets`.`plugin_resources_ranks_id`)
-               FROM `glpi_plugin_resources_budgets`
-               WHERE ((`glpi_plugin_resources_budgets`.`begin_date` < '" . $date . "')
-                  AND (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
-                  OR `glpi_plugin_resources_budgets`.`end_date` > '" . $date . "'))
-               ORDER BY `glpi_plugin_resources_budgets`.`plugin_resources_ranks_id`";
+    $rankIterator = $DB->request([
+        'SELECT'   => 'glpi_plugin_resources_budgets.plugin_resources_ranks_id',
+        'DISTINCT' => true,
+        'FROM'     => 'glpi_plugin_resources_budgets',
+        'WHERE'    => [
+            'glpi_plugin_resources_budgets.begin_date' => ['<', $date],
+            [
+                'OR' => [
+                    ['NOT' => ['glpi_plugin_resources_budgets.end_date' => null]],
+                    ['glpi_plugin_resources_budgets.end_date' => ['>', $date]],
+                ],
+            ],
+        ],
+        'ORDERBY'  => 'glpi_plugin_resources_budgets.plugin_resources_ranks_id',
+    ]);
 
-    foreach ($DB->request($rankList) as $d) {
+    foreach ($rankIterator as $d) {
         if ($d['plugin_resources_ranks_id'] != 0) {
             $rank = new Rank();
             $rank->getFromDB($d['plugin_resources_ranks_id']);
 
-            $qRank = "SELECT  `glpi_plugin_resources_ranks`.`name` AS rank_name,
-                              `glpi_plugin_resources_ranks`.`code` AS rank_code,
-                              `glpi_plugin_resources_professions`.`plugin_resources_professionlines_id` AS professionline,
-                              `glpi_plugin_resources_professions`.`plugin_resources_professioncategories_id` AS professioncategory,
-                              `glpi_plugin_resources_professions`.`name` AS profession,
-                              `glpi_plugin_resources_professions`.`id` AS profession_id,
-                              `glpi_plugin_resources_professions`.`code` AS profession_code,
-                              `glpi_plugin_resources_professions`.`begin_date`,
-                              `glpi_plugin_resources_professions`.`end_date`
-                      FROM `glpi_plugin_resources_ranks`
-                      LEFT JOIN `glpi_plugin_resources_professions`
-                           ON (`glpi_plugin_resources_ranks`.`plugin_resources_professions_id` = `glpi_plugin_resources_professions`.`id`)
-                      LEFT JOIN `glpi_plugin_resources_budgets`
-                           ON (`glpi_plugin_resources_budgets`.`plugin_resources_ranks_id` = `glpi_plugin_resources_ranks`.`id`
-                                 AND ((`glpi_plugin_resources_budgets`.`begin_date` IS NULL)
-                                    OR (`glpi_plugin_resources_budgets`.`begin_date` < '" . $date . "')
-                                 AND (`glpi_plugin_resources_budgets`.`end_date` IS NULL)
-                                    OR (`glpi_plugin_resources_budgets`.`end_date` > '" . $date . "')))
-                      WHERE `glpi_plugin_resources_ranks`.`plugin_resources_professions_id`='" . $rank->getField(
-                'plugin_resources_professions_id',
-            ) . "'
-                           AND `glpi_plugin_resources_ranks`.`is_active` = 1
-                           AND ((`glpi_plugin_resources_ranks`.`end_date` IS NULL )
-                                 OR (`glpi_plugin_resources_ranks`.`end_date` > '" . $date . "' ))
-                           AND ((`glpi_plugin_resources_ranks`.`begin_date` IS NULL)
-                                 OR ( `glpi_plugin_resources_ranks`.`begin_date` < '" . $date . "'))
-                           AND ((`glpi_plugin_resources_budgets`.`id` IS NULL)
-                              OR (`glpi_plugin_resources_budgets`.`begin_date` IS NOT NULL
-                                 AND `glpi_plugin_resources_budgets`.`begin_date` > '" . $date . "')
-                              OR (`glpi_plugin_resources_budgets`.`end_date` IS NOT NULL
-                                 AND `glpi_plugin_resources_budgets`.`end_date` < '" . $date . "')) " .
-                $sqlprofessioncategory . $sqlprofessionline;
+            $criteriaRank = [
+                'SELECT'    => [
+                    'glpi_plugin_resources_ranks.name AS rank_name',
+                    'glpi_plugin_resources_ranks.code AS rank_code',
+                    'glpi_plugin_resources_professions.plugin_resources_professionlines_id AS professionline',
+                    'glpi_plugin_resources_professions.plugin_resources_professioncategories_id AS professioncategory',
+                    'glpi_plugin_resources_professions.name AS profession',
+                    'glpi_plugin_resources_professions.id AS profession_id',
+                    'glpi_plugin_resources_professions.code AS profession_code',
+                    'glpi_plugin_resources_professions.begin_date',
+                    'glpi_plugin_resources_professions.end_date',
+                ],
+                'FROM'      => 'glpi_plugin_resources_ranks',
+                'LEFT JOIN' => [
+                    'glpi_plugin_resources_professions' => [
+                        'ON' => [
+                            'glpi_plugin_resources_ranks'       => 'plugin_resources_professions_id',
+                            'glpi_plugin_resources_professions' => 'id',
+                        ],
+                    ],
+                    'glpi_plugin_resources_budgets'     => [
+                        'ON' => [
+                            'glpi_plugin_resources_budgets' => 'plugin_resources_ranks_id',
+                            'glpi_plugin_resources_ranks'   => 'id',
+                            [
+                                // Same grouping as the original SQL: see the comment above.
+                                'AND' => [
+                                    [
+                                        'OR' => [
+                                            ['glpi_plugin_resources_budgets.begin_date' => null],
+                                            [
+                                                'AND' => [
+                                                    ['glpi_plugin_resources_budgets.begin_date' => ['<', $date]],
+                                                    ['glpi_plugin_resources_budgets.end_date' => null],
+                                                ],
+                                            ],
+                                            ['glpi_plugin_resources_budgets.end_date' => ['>', $date]],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'WHERE'     => [
+                    'glpi_plugin_resources_ranks.plugin_resources_professions_id' => $rank->getField(
+                        'plugin_resources_professions_id',
+                    ),
+                    'glpi_plugin_resources_ranks.is_active'                       => 1,
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_ranks.end_date' => null],
+                            ['glpi_plugin_resources_ranks.end_date' => ['>', $date]],
+                        ],
+                    ],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_ranks.begin_date' => null],
+                            ['glpi_plugin_resources_ranks.begin_date' => ['<', $date]],
+                        ],
+                    ],
+                    [
+                        'OR' => [
+                            ['glpi_plugin_resources_budgets.id' => null],
+                            [
+                                'NOT'                                      => ['glpi_plugin_resources_budgets.begin_date' => null],
+                                'glpi_plugin_resources_budgets.begin_date' => ['>', $date],
+                            ],
+                            [
+                                'NOT'                                    => ['glpi_plugin_resources_budgets.end_date' => null],
+                                'glpi_plugin_resources_budgets.end_date' => ['<', $date],
+                            ],
+                        ],
+                    ],
+                    $conditionAll,
+                ],
+            ];
 
-            $qRank .= $conditionAll . " " . getOrderBy('profession', $columns);
+            foreach ([$sqlprofessioncategory, $sqlprofessionline] as $criteriasRestriction) {
+                if (!empty($criteriasRestriction)) {
+                    $criteriaRank['WHERE'][] = $criteriasRestriction;
+                }
+            }
+
+            $criteriaRank = $criteriaRank + getNewOrderBy('profession', $columns);
 
             $first = 0;
-            foreach ($DB->request($qRank) as $dataRank) {
+            foreach ($DB->request($criteriaRank) as $dataRank) {
                 if ($first == 0) {
                     $dataAll[$row_num]['professionline'] = Rank::getTypeName(1);
                     $first++;
@@ -295,8 +428,11 @@ if ($report->criteriasValidated()) {
     }
 
     if ($nbtot > 0) {
-        $nbcols = $DB->num_fields($result);
-        $nbrows = $DB->numrows($result);
+        // The report merges two queries into $dataAll, so neither of them describes the table
+        // printed below: take the sizes from the columns actually rendered and from the merged
+        // row set.
+        $nbcols = count($columns);
+        $nbrows = $nbtot;
         $num = 1;
         $link = $_SERVER['PHP_SELF'];
         $order = 'ASC';
@@ -440,25 +576,24 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
 }
 
 /**
- * Build the ORDER BY clause
+ * Build the "ORDER BY" criteria
  *
  * @param $default string, name of the column used by default
- * @return string
+ * @param $columns array, the sortable columns of the report
+ * @return array
  */
-function getOrderBy($default, $columns)
+function getNewOrderBy($default, $columns)
 {
     if (!isset($_REQUEST['order']) || $_REQUEST['order'] != 'DESC') {
         $_REQUEST['order'] = 'ASC';
     }
     $order = $_REQUEST['order'];
 
-    $tabs[] = getOrderByFields($default, $columns);
-    if (count($tabs) > 0) {
-        foreach ($tabs as $tab) {
-            return " ORDER BY " . $tab . " " . $order;
-        }
+    $field = getOrderByFields($default, $columns);
+    if (is_string($field) && $field !== '') {
+        return ['ORDERBY' => $field . ' ' . $order];
     }
-    return '';
+    return [];
 }
 
 /**

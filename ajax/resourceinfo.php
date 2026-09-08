@@ -27,16 +27,27 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\BadRequestHttpException;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-switch ($_POST['action']) {
+switch ($_POST['action'] ?? '') {
     case 'groupEntity':
-        if (isset($_POST["entities_id"])) {
-            echo __('Group') . "&nbsp;";
-            Dropdown::show('Group', ['entity' => $_POST["entities_id"], 'entity_sons' => true]);
+        // The entity is posted by the client and "entity_sons" widens the lookup to the whole
+        // sub tree, so an unchecked value would list the groups of an entity the user has no
+        // access to. The global plugin right says nothing about the entity perimeter.
+        $entities_id = (int) ($_POST["entities_id"] ?? -1);
+        if (!Session::haveAccessToEntity($entities_id)) {
+            throw new AccessDeniedHttpException();
         }
+        echo htmlescape(__('Group')) . "&nbsp;";
+        Dropdown::show('Group', ['entity' => $entities_id, 'entity_sons' => true]);
         break;
+
+    default:
+        throw new BadRequestHttpException();
 }

@@ -103,13 +103,17 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     //from central
     // add employee and resource if adding employee informations from user details form
 } elseif (isset($_POST["addressourceandemployee"])) {
+    // This branch creates a Resource first and an Employee under it afterwards, so the
+    // Employee right alone never authorised it. Fix the entity, then require CREATE on
+    // Resource there before anything is written.
+    $_POST["entities_id"] = $_SESSION["glpiactive_entity"];
+    $resource->check(-1, CREATE, $_POST);
     if ($employee->canCreate()) {
         $User = new user();
         $User->getFromDB($_POST["users_id"]);
         //Check unicity by criteria control
         $_POST["name"] = $User->fields["realname"];
         $_POST["firstname"] = $User->fields["firstname"];
-        $_POST["entities_id"] = $_SESSION["glpiactive_entity"];
         $_POST["plugin_resources_contracttypes_id"] = 0;
         $_POST["users_id"] = 0;
         $_POST["users_id_sales"] = 0;
@@ -125,18 +129,34 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
         $_POST["withtemplate"] = 0;
 
         if ($_POST["templates_id"] > 0) {
-            $resource->getFromDB($_POST["templates_id"]);
-            unset($resource->fields["is_template"]);
-            unset($resource->fields["date_mod"]);
+            // The template id is client-supplied and its whole record is merged into the
+            // new resource below: accept a row only when it really is a template and the
+            // session may read it, otherwise any resource of the instance was clonable.
+            $template = new Resource();
+            if ($template->getFromDB((int) $_POST["templates_id"])
+                && $template->fields["is_template"]
+                && $template->can($template->getID(), READ)) {
+                // The merge below copies every column of the template, entities_id and the
+                // row identity included, which is how the entity fixed above could be
+                // overwritten by the one the template belongs to. Drop them first.
+                unset(
+                    $template->fields["id"],
+                    $template->fields["is_template"],
+                    $template->fields["date_mod"],
+                    $template->fields["date_creation"],
+                    $template->fields["entities_id"],
+                    $template->fields["is_recursive"],
+                );
 
-            $fields = [];
-            foreach ($resource->fields as $key => $value) {
-                if ($value != '' && (!isset($fields[$key]) || $fields[$key] == '' || $fields[$key] == 0)) {
-                    $_POST[$key] = $value;
+                $fields = [];
+                foreach ($template->fields as $key => $value) {
+                    if ($value != '' && (!isset($fields[$key]) || $fields[$key] == '' || $fields[$key] == 0)) {
+                        $_POST[$key] = $value;
+                    }
                 }
-            }
 
-            $_POST["withtemplate"] = 1;
+                $_POST["withtemplate"] = 1;
+            }
         }
         //for not create employee informations with template
         $_POST["add_from_helpdesk"] = 1;
@@ -380,9 +400,10 @@ elseif (isset($_POST["deleteresources"])) {
 } //from central
 //add checklist from resource form
 elseif (isset($_POST["add_checklist_resources"])) {
+    // canCreate() only answers for the global right bit. The resource id is client-supplied
+    // and the checklists are seeded under it, so authorise the record itself.
+    $resource->check((int) ($_POST["id"] ?? 0), UPDATE);
     if ($checklist->canCreate()) {
-        $resource->getFromDB($_POST["id"]);
-
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_IN);
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_OUT);
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_TRANSFER);
@@ -392,7 +413,11 @@ elseif (isset($_POST["add_checklist_resources"])) {
 //from central
 //add checklist
 elseif (isset($_POST["add_checklist"])) {
+    // The whole $_POST is written as-is, so the parent resource has to be authorised
+    // before anything is created under it, and it also fixes the entity of the new row.
+    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
     if ($checklist->canCreate()) {
+        $_POST['entities_id'] = $resource->fields['entities_id'];
         $newID = $checklist->add($_POST);
     }
     Html::back();
@@ -400,6 +425,10 @@ elseif (isset($_POST["add_checklist"])) {
     //from central
     //close checklist
 } elseif (isset($_POST["close_checklist"])) {
+    // This branch had no guard at all: both the checklist lookup and the ticket creation
+    // below are keyed on the posted plugin_resources_resources_id, so authorising that
+    // resource (right bit and entity) is what gates the whole path.
+    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
     $isfinished = Checklist::checkifChecklistFinished($_POST);
 
     if ($isfinished) {
@@ -412,6 +441,10 @@ elseif (isset($_POST["add_checklist"])) {
     //from central
     //open checklist
 } elseif (isset($_POST["open_checklist"])) {
+    // openFinishedChecklist() is keyed on the posted plugin_resources_resources_id and
+    // reopens every checklist row of that resource: authorise the resource, not just the
+    // global right bit canCreate() answers for.
+    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
     if ($checklist->canCreate()) {
         $checklist->openFinishedChecklist($_POST);
     }

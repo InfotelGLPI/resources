@@ -393,9 +393,24 @@ class Checklistconfig extends CommonDBTM
         switch ($ma->getAction()) {
             case "Transfert":
                 if ($itemtype == Employment::class) {
+                    // The destination entity comes from the sub form and the core copies the
+                    // checked ids verbatim for plugin specific actions, so this handler is the
+                    // only barrier: without these two tests the action moved records into any
+                    // entity of the instance. Mirrors Resource::processMassiveActionsForOneItemtype().
+                    $entities_id = (int) ($input['entities_id'] ?? -1);
+                    if (!Session::haveAccessToEntity($entities_id)) {
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                        break;
+                    }
                     foreach ($ids as $key => $val) {
+                        if (!$item->can($key, UPDATE)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                            continue;
+                        }
                         $values["id"] = $key;
-                        $values["entities_id"] = $input['entities_id'];
+                        $values["entities_id"] = $entities_id;
 
                         if ($item->update($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
