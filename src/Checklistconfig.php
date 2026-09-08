@@ -267,52 +267,76 @@ class Checklistconfig extends CommonDBTM
      * @param  $data
      * @param  $ma
      * @param  $item
+     * @param  array $ids ids handed over by the core, already restricted to this itemtype
      */
-    public function addRulesFromChecklists($data, $ma, $item)
+    public function addRulesFromChecklists($data, $ma, $item, array $ids)
     {
         $rulecollection = new RuleChecklistCollection();
         $rulecollection->checkGlobal(UPDATE);
 
-        foreach ($ma->items[Checklistconfig::class] as $key => $val) {
-            $this->getFromDB($key);
-            $rule = new RuleChecklist();
-            $values["name"] = $this->fields["name"];
-            $values["match"] = "AND";
-            $values["is_active"] = 1;
-            $values["is_recursive"] = 1;
-            $values["entities_id"] = $this->fields["entities_id"];
-            $values["sub_type"] = RuleChecklist::class;
-            $newID = $rule->add($values);
+        // Iterate over the ids the core handed over rather than over $ma->items, which is the
+        // posted list, copied verbatim by MassiveAction for plugin specific actions. Nothing
+        // else authorizes them: checkGlobal(UPDATE) above only asks for the right to write
+        // rules, it says nothing about this record. can(UPDATE) covers both the right bit and
+        // the entity boundary, canUpdateItem() calling checkEntity(), and it guarantees the
+        // record was loaded, so a non existent id can no longer produce a rule built from the
+        // fields left over by the previous iteration.
+        foreach ($ids as $key => $val) {
+            if (!$item->can($key, UPDATE)) {
+                $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                continue;
+            }
 
+            $rule = new RuleChecklist();
+            $newID = $rule->add([
+                'name'         => $item->fields["name"],
+                'match'        => "AND",
+                'is_active'    => 1,
+                'is_recursive' => 1,
+                'entities_id'  => $item->fields["entities_id"],
+                'sub_type'     => RuleChecklist::class,
+            ]);
+
+            if (!$newID) {
+                $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                continue;
+            }
+
+            // One input per child: the single $values array that used to be reused here
+            // carried the rule fields over into the criteria, then the criteria fields over
+            // into the action.
             if (isset($data["checklist_type"]) && $data["checklist_type"] > 0) {
                 $criteria = new RuleCriteria();
-                $values["rules_id"] = $newID;
-                $values["criteria"] = "checklist_type";
-                $values["condition"] = 0;
-                $values["pattern"] = $data["checklist_type"];
-                $criteria->add($values);
+                $criteria->add([
+                    'rules_id'  => $newID,
+                    'criteria'  => "checklist_type",
+                    'condition' => 0,
+                    'pattern'   => $data["checklist_type"],
+                ]);
             }
 
             if (isset($data["plugin_resources_contracttypes_id"])) {
                 $criteria = new RuleCriteria();
-                $values["rules_id"] = $newID;
-                $values["criteria"] = "plugin_resources_contracttypes_id";
-                $values["condition"] = $data["condition"];
-                $values["pattern"] = $data["plugin_resources_contracttypes_id"];
-                $criteria->add($values);
+                $criteria->add([
+                    'rules_id'  => $newID,
+                    'criteria'  => "plugin_resources_contracttypes_id",
+                    'condition' => $data["condition"] ?? 0,
+                    'pattern'   => $data["plugin_resources_contracttypes_id"],
+                ]);
             }
 
             $action = new RuleAction();
-            $values["rules_id"] = $newID;
-            $values["action_type"] = "assign";
-            $values["field"] = "checklists_id";
-            $values["value"] = $key;
-            $action->add($values);
-            if ($newID) {
-                $ma->itemDone($item->getType(), $newID, MassiveAction::ACTION_OK);
-            } else {
-                $ma->itemDone($item->getType(), $newID, MassiveAction::ACTION_KO);
-            }
+            $action->add([
+                'rules_id'    => $newID,
+                'action_type' => "assign",
+                'field'       => "checklists_id",
+                'value'       => $key,
+            ]);
+
+            // itemDone() expects the id of the processed item, not the id of the rule that was
+            // just created: the progress report used to point at rows of another table.
+            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
         }
     }
 
@@ -422,7 +446,7 @@ class Checklistconfig extends CommonDBTM
                 break;
             case "Generate_Rule":
                 if ($itemtype == Checklistconfig::class) {
-                    $item->addRulesFromChecklists($input, $ma, $item);
+                    $item->addRulesFromChecklists($input, $ma, $item, $ids);
                 }
                 break;
         }

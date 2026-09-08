@@ -28,6 +28,7 @@
  */
 
 // Direct access to file
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Resources\Resource;
 
 global $DB;
@@ -126,32 +127,67 @@ if (count($result)) {
 }
 
 // Add unlinked users
-if ($_GET['addUnlinkedUsers']) {
-    //   ksort($logins);
-    $query = "SELECT `glpi_users`.*
-             FROM `glpi_users`
-             WHERE `glpi_users`.`id` NOT IN (" . implode(",", array_map('intval', $linkedUsers)) . ")
-             AND `glpi_users`.`entities_id` IN (" . implode(",", array_map('intval', $_GET["entity"])) . ")
-             AND `is_deleted` = 0
-             AND (`glpi_users`.`name` " . Search::makeTextSearch($_GET['searchText']) . "
-                  OR `glpi_users`.`firstname` " . Search::makeTextSearch($_GET['searchText']) . "
-                  OR `glpi_users`.`realname` " . Search::makeTextSearch($_GET['searchText']) . "
-                  OR `glpi_users`.`registration_number` " . Search::makeTextSearch($_GET['searchText']) . "
-                  OR `glpi_users`.`name` " . Search::makeTextSearch($_GET['searchText']) . "
-                  OR CONCAT(`glpi_users`.`name`,' ',`glpi_users`.`firstname`,' ',`glpi_users`.`registration_number`,' ',`glpi_users`.`name`) " .
-        Search::makeTextSearch($_GET['searchText']) . ");";
-    $result = $DB->doQuery($query);
-    while ($data = $DB->fetchArray($result)) {
-        array_push($users, [
-            'id' => 'users-' . $data["id"],
-            'text' => $dbu->formatUserName(
-                $data["id"],
-                $data["name"],
-                $data["realname"],
-                $data["firstname"],
-            ),
-        ]);
-        //      $logins['users-'.$data["id"]] = $data["name"];
+if ($_GET['addUnlinkedUsers'] ?? false) {
+    // The entity list has been confined to the session scope above. An empty list therefore
+    // means the session sees no entity at all and no user can match, which is also why the
+    // query is skipped instead of being run: the builder rejects an empty IN(), and the string
+    // concatenation it replaces used to emit "IN ()", a syntax error.
+    if (!empty($_GET["entity"])) {
+        // makeTextSearchValue() returns the LIKE pattern. The loose comparison below mirrors
+        // makeTextSearch(), which also falls back to IS NULL on an empty pattern, so the
+        // "NULL" keyword and an empty search string keep behaving as they did. A null
+        // criterion is turned into IS NULL by the builder. Only the concatenation still needs
+        // the raw fragment, see below.
+        $search_value = Search::makeTextSearchValue($_GET['searchText']);
+        $search_crit  = $search_value == null ? null : ['LIKE', $search_value];
+
+        $criteria = [
+            'FROM'  => 'glpi_users',
+            'WHERE' => [
+                'glpi_users.entities_id' => $_GET["entity"],
+                'glpi_users.is_deleted'  => 0,
+                [
+                    'OR' => [
+                        'glpi_users.name'                => $search_crit,
+                        'glpi_users.firstname'           => $search_crit,
+                        'glpi_users.realname'            => $search_crit,
+                        'glpi_users.registration_number' => $search_crit,
+                        // A function call cannot be a criteria key, so this last comparison
+                        // stays an expression, built the way Resource::getSqlSearchResult()
+                        // builds its own.
+                        new QueryExpression(
+                            'CONCAT(' . $DB->quoteName('glpi_users.name') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_users.firstname') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_users.registration_number') . ', '
+                            . $DB->quoteValue(' ') . ', '
+                            . $DB->quoteName('glpi_users.name') . ') '
+                            . Search::makeTextSearch($_GET['searchText']),
+                        ),
+                    ],
+                ],
+            ],
+        ];
+
+        // Same reasoning for the exclusion list: no linked user means there is nothing to
+        // exclude, not an empty NOT IN().
+        $linked_users = array_values(array_unique(array_filter(array_map('intval', $linkedUsers))));
+        if (!empty($linked_users)) {
+            $criteria['WHERE']['glpi_users.id'] = ['NOT IN', $linked_users];
+        }
+
+        foreach ($DB->request($criteria) as $data) {
+            $users[] = [
+                'id' => 'users-' . $data["id"],
+                'text' => $dbu->formatUserName(
+                    $data["id"],
+                    $data["name"],
+                    $data["realname"],
+                    $data["firstname"],
+                ),
+            ];
+        }
     }
 }
 

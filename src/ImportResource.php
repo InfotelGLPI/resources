@@ -511,8 +511,15 @@ class ImportResource extends CommonDBTM
     public function importFileToVerify($params = [])
     {
         // The uploaded filename is client-supplied: strip any directory component so a
-        // crafted "../" value cannot escape the temporary upload directory.
+        // crafted "../" value cannot escape the temporary upload directory. basename() maps
+        // a few inputs to a name that is not a file, hence the second test.
+        if (!isset($params['_filename'][0]) || !is_string($params['_filename'][0])) {
+            throw new BadRequestHttpException();
+        }
         $safe_filename = basename($params['_filename'][0]);
+        if ($safe_filename === '' || $safe_filename === '.' || $safe_filename === '..') {
+            throw new BadRequestHttpException();
+        }
         $filePath = GLPI_DOC_DIR . '/_tmp/' . $safe_filename;
 
         $temp = $this->readCSVLines($filePath, 0, 1);
@@ -527,7 +534,23 @@ class ImportResource extends CommonDBTM
         }
 
         $fullpath = GLPI_TMP_DIR . "/" . $safe_filename;
-        $filename = str_replace($params['_prefix_filename'], '', $safe_filename);
+
+        // The caller controls the uploaded name and the prefix alike, and str_replace() drops
+        // every occurrence wherever it appears: a crafted pair reduced the destination to "",
+        // "." or "..", which slipped through the anti collision loop below and made
+        // renameForce() write outside the verify directory. Strip the prefix only where a
+        // prefix actually is, the way Document::moveUploadedDocument() takes it, then check
+        // what is left is still a file name.
+        $prefixes = (array) ($params['_prefix_filename'] ?? []);
+        $prefix   = (string) (array_shift($prefixes) ?? '');
+        $filename = $prefix !== '' && str_starts_with($safe_filename, $prefix)
+            ? substr($safe_filename, strlen($prefix))
+            : $safe_filename;
+        $filename = basename($filename);
+        if ($filename === '' || $filename === '.' || $filename === '..') {
+            throw new BadRequestHttpException();
+        }
+
         $origin_filename = $filename;
         $exist = false;
         $i = 1;
