@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 11:58+0000\n"
+"POT-Creation-Date: 2026-09-08 14:31+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/infotelGLPI/"
@@ -133,7 +133,7 @@ msgstr "Acces la aplicaţie"
 msgid "Action authorization"
 msgstr ""
 
-#: src/Resource.php:3165
+#: src/Resource.php:3177
 msgid "Actions to be taken"
 msgstr ""
 
@@ -203,19 +203,19 @@ msgstr ""
 msgid "Add a picture"
 msgstr "Adaugă o imagine"
 
-#: src/Checklist.php:610
+#: src/Checklist.php:633
 msgid "Add a task at the arriving checklist"
 msgstr "Adaugă un task la lista de verificare la sosire"
 
-#: src/Checklist.php:615
+#: src/Checklist.php:638
 msgid "Add a task at the leaving checklist"
 msgstr "Adaugă un task la lista de verificare la sosire"
 
-#: src/Checklist.php:620
+#: src/Checklist.php:643
 msgid "Add a task at the transfer checklist"
 msgstr ""
 
-#: src/Resource.php:3276 templates/resourcehabilitation_add_form.html.twig:34
+#: src/Resource.php:3288 templates/resourcehabilitation_add_form.html.twig:34
 msgid "Add additional habilitation"
 msgstr ""
 
@@ -227,23 +227,23 @@ msgstr ""
 msgid "Add application"
 msgstr ""
 
-#: src/Wizard.php:700
+#: src/Wizard.php:720
 msgid "Add documents to the resource"
 msgstr ""
 
-#: src/Resource.php:3239
+#: src/Resource.php:3251
 msgid "Add habiliation"
 msgstr ""
 
-#: src/Wizard.php:747
+#: src/Wizard.php:772
 msgid "Add recruiting informations to the resource"
 msgstr ""
 
-#: src/Wizard.php:554
+#: src/Wizard.php:569
 msgid "Add the photo of the resource"
 msgstr "Adaugă foto al resursei"
 
-#: src/Checklist.php:861
+#: src/Checklist.php:887
 msgid "Add ticket"
 msgstr "Adaugă tichet"
 
@@ -310,12 +310,12 @@ msgid "Arrival / Departure workflow"
 msgstr ""
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:91
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:268
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:266
-#: report/resourcewithoutuser/resourcewithoutuser.php:84
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:90
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:328
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:322
+#: report/resourcewithoutuser/resourcewithoutuser.php:85
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:91
 #: src/RuleContracttypeReadonly.php:327 src/Resource.php:181
-#: src/Resource.php:499 src/Checklist.php:1110 src/ResourcePDF.php:106
+#: src/Resource.php:499 src/Checklist.php:1148 src/ResourcePDF.php:106
 #: src/Config.php:140 src/Config.php:519 src/RuleContracttypeHidden.php:286
 #: src/Recap.php:225 src/NotificationTargetResource.php:473
 #: src/NotificationTargetResource.php:588
@@ -368,12 +368,12 @@ msgstr "Reguli de atribuire al listelor de verificare la un tip de contract"
 msgid "Associable to a ticket"
 msgstr ""
 
-#: src/Resource.php:3261 templates/document_item.html.twig:87
+#: src/Resource.php:3273 templates/document_item.html.twig:87
 msgctxt "button"
 msgid "Associate"
 msgstr ""
 
-#: src/Resource.php:3234
+#: src/Resource.php:3246
 msgid "Associate a resource"
 msgstr "Asociază o resursă"
 
@@ -413,15 +413,15 @@ msgstr "La crearea, modificarea, ştergerea unui task"
 msgid "At home"
 msgstr "Acasă"
 
-#: src/Checklist.php:384 src/Checklist.php:405
+#: src/Checklist.php:407 src/Checklist.php:428
 msgid "At the arriving of a resource"
 msgstr "La sosirea resursei"
 
-#: src/Checklist.php:385 src/Checklist.php:407
+#: src/Checklist.php:408 src/Checklist.php:430
 msgid "At the leaving of a resource"
 msgstr "La plecarea resursei"
 
-#: src/Checklist.php:386 src/Checklist.php:409
+#: src/Checklist.php:409 src/Checklist.php:432
 msgid "At the transfer of a resource"
 msgstr ""
 
@@ -484,13 +484,13 @@ msgstr[2] "Tipuri buget"
 msgid "Budget volume"
 msgstr "Volum bugetar"
 
-#: report/budgetsummary/budgetsummary.php:237
-#: report/budgetsummary/budgetsummary.php:468
+#: report/budgetsummary/budgetsummary.php:266
+#: report/budgetsummary/budgetsummary.php:567
 msgid "Budget volume (€)"
 msgstr "Volum bugetar (€)"
 
-#: report/budgetsummary/budgetsummary.php:233
-#: report/budgetsummary/budgetsummary.php:449
+#: report/budgetsummary/budgetsummary.php:262
+#: report/budgetsummary/budgetsummary.php:548
 msgid "Budget volume(qty)"
 msgstr "Volum bugetar (cant)"
 
@@ -617,11 +617,11 @@ msgstr ""
 msgid "Check all"
 msgstr ""
 
-#: src/Checklist.php:638
+#: src/Checklist.php:661
 msgid "Check list done"
 msgstr ""
 
-#: src/Checklist.php:1398
+#: src/Checklist.php:1436
 msgid "Checked"
 msgstr "Bifat"
 
@@ -636,7 +636,7 @@ msgstr[2] "Liste de control"
 msgid "Checklist action"
 msgstr "Acţiune listă verificare"
 
-#: src/Checklist.php:1116 src/NotificationTargetResource.php:578
+#: src/Checklist.php:1154 src/NotificationTargetResource.php:578
 msgid "Checklist needs to verificated"
 msgstr "Lista de verificare trebuie verificată"
 
@@ -651,7 +651,7 @@ msgstr[2] "Setări Liste de verificare"
 msgid "Checklist type"
 msgstr "Tip listă de verificare"
 
-#: src/Checklist.php:1148 src/Checklist.php:1291
+#: src/Checklist.php:1186 src/Checklist.php:1329
 msgid "Checklists Verification"
 msgstr "Verificare Lista de verificare"
 
@@ -659,7 +659,7 @@ msgstr "Verificare Lista de verificare"
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Resource.php:4444 src/Directory.php:1226
+#: src/Resource.php:4466 src/Directory.php:1226
 msgid "Click here to send your email"
 msgstr "Clic aici pentru a trimite emailul dvs."
 
@@ -671,12 +671,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: report/professionwithoutvolume/professionwithoutvolume.php:315
-#: report/professionwithoutvolume/professionwithoutvolume.php:320
-#: report/lapserankprofession/lapserankprofession.php:61
-#: report/lapserankprofession/lapserankprofession.php:82
-#: report/professionwithoutcost/professionwithoutcost.php:309
-#: report/professionwithoutcost/professionwithoutcost.php:314
+#: report/professionwithoutvolume/professionwithoutvolume.php:451
+#: report/professionwithoutvolume/professionwithoutvolume.php:456
+#: report/lapserankprofession/lapserankprofession.php:62
+#: report/lapserankprofession/lapserankprofession.php:83
+#: report/professionwithoutcost/professionwithoutcost.php:435
+#: report/professionwithoutcost/professionwithoutcost.php:440
 #: src/ProfessionCategory.php:102 src/ProfessionCategory.php:154
 #: src/ProfessionLine.php:100 src/ProfessionLine.php:152 src/Profession.php:101
 #: src/Profession.php:220 src/BudgetVolume.php:93 src/BudgetVolume.php:145
@@ -765,7 +765,7 @@ msgstr ""
 msgid "ContractType"
 msgstr ""
 
-#: src/ResourceBadge.php:480 src/Checklist.php:352
+#: src/ResourceBadge.php:480 src/Checklist.php:375
 #: templates/checklist_from_resources.html.twig:66
 msgid "Create a end treatment ticket"
 msgstr "Crearea unui tichet de sfărşit de tratament"
@@ -778,7 +778,7 @@ msgstr ""
 msgid "Create a ticket with departure and instructions"
 msgstr ""
 
-#: src/Checklist.php:450
+#: src/Checklist.php:473
 msgid "Create checklists"
 msgstr "Crează liste de verificare"
 
@@ -867,15 +867,15 @@ msgstr ""
 msgid "Declaration of resource leaving OK"
 msgstr "Declararea plecării resursei OK"
 
-#: src/Resource.php:3851
+#: src/Resource.php:3873
 msgid "Declaration of resource transfer OK"
 msgstr ""
 
-#: src/Menu.php:176 src/Resource.php:3160
+#: src/Menu.php:176 src/Resource.php:3172
 msgid "Declare a change"
 msgstr ""
 
-#: src/Menu.php:181 src/Resource.php:3092
+#: src/Menu.php:181 src/Resource.php:3104
 #: templates/resource_remove_form.html.twig:68
 #: templates/resource_form.html.twig:305
 msgid "Declare a departure"
@@ -899,7 +899,7 @@ msgstr "Declară o perioadă intercontracte"
 msgid "Declare a super habilitation"
 msgstr ""
 
-#: src/Resource.php:3206 templates/resource_transfer_form.html.twig:62
+#: src/Resource.php:3218 templates/resource_transfer_form.html.twig:62
 msgid "Declare a transfer"
 msgstr ""
 
@@ -972,18 +972,18 @@ msgstr[0] "Departament"
 msgstr[1] "Departamente"
 msgstr[2] "Departamente"
 
-#: report/checkmissingN1group/checkmissingN1group.php:221
+#: report/checkmissingN1group/checkmissingN1group.php:253
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:96
-#: report/checkmissingN0group/checkmissingN0group.php:221
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:269
-#: report/checkgroup/checkgroup.php:282
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:267
-#: report/checkhabilitation/checkhabilitation.php:224
-#: report/resourcewithoutuser/resourcewithoutuser.php:89
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:95
+#: report/checkmissingN0group/checkmissingN0group.php:253
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:329
+#: report/checkgroup/checkgroup.php:327
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:323
+#: report/checkhabilitation/checkhabilitation.php:264
+#: report/resourcewithoutuser/resourcewithoutuser.php:90
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:96
 #: src/RuleContracttypeReadonly.php:331 src/Resource.php:182
 #: src/Resource.php:506 src/LinkAd.php:552 src/Adconfig.php:309
-#: src/Checklist.php:1109 src/Resource_Change.php:474 src/ResourcePDF.php:107
+#: src/Checklist.php:1147 src/Resource_Change.php:474 src/ResourcePDF.php:107
 #: src/Config.php:141 src/RuleContracttypeHidden.php:290 src/Recap.php:233
 #: src/NotificationTargetResource.php:474
 #: src/NotificationTargetResource.php:589
@@ -1002,8 +1002,8 @@ msgstr[2] "Departamente"
 msgid "Departure date"
 msgstr "Data plecare"
 
-#: front/resource.remove.php:159 front/resource.form.php:282
-#: front/resource.form.php:595
+#: front/resource.remove.php:159 front/resource.form.php:302
+#: front/resource.form.php:628
 msgid "Departure of"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgstr ""
 msgid "Dissociate"
 msgstr ""
 
-#: src/Resource.php:3265
+#: src/Resource.php:3277
 msgctxt "button"
 msgid "Dissociate"
 msgstr ""
@@ -1181,13 +1181,13 @@ msgstr[2] "Statute angajări"
 msgid "Employment state at leaving's resource"
 msgstr "Statut angajare la plecarea resursei"
 
-#: report/budgetsummary/budgetsummary.php:234
-#: report/budgetsummary/budgetsummary.php:455
+#: report/budgetsummary/budgetsummary.php:263
+#: report/budgetsummary/budgetsummary.php:554
 msgid "Employment volume (qty)"
 msgstr "Volum angajări (cant)"
 
-#: report/budgetsummary/budgetsummary.php:238
-#: report/budgetsummary/budgetsummary.php:474
+#: report/budgetsummary/budgetsummary.php:267
+#: report/budgetsummary/budgetsummary.php:573
 msgid "Employment volume (€)"
 msgstr "Volum Angajari (€)"
 
@@ -1212,7 +1212,7 @@ msgstr ""
 msgid "End date was not completed. Please try again."
 msgstr "Data de sfârşit nu a fost completată. Încearcă din nou."
 
-#: src/Wizard.php:372 src/ContractType.php:85 src/ContractType.php:160
+#: src/Wizard.php:377 src/ContractType.php:85 src/ContractType.php:160
 msgid "Enter employer information about the resource"
 msgstr "Introduceţi informaţii angajator despre resursă"
 
@@ -1228,11 +1228,11 @@ msgstr ""
 msgid "Enter habilitation information "
 msgstr ""
 
-#: src/Wizard.php:655
+#: src/Wizard.php:675
 msgid "Enter habilitations about the resource"
 msgstr ""
 
-#: src/Wizard.php:499 src/ContractType.php:91 src/ContractType.php:167
+#: src/Wizard.php:509 src/ContractType.php:91 src/ContractType.php:167
 msgid "Enter the computing needs of the resource"
 msgstr "Introduceţi necesarele informatice ale resursei"
 
@@ -1252,7 +1252,7 @@ msgstr ""
 msgid "FIFOUR - Supplier's sheet"
 msgstr ""
 
-#: src/Resource.php:4082 src/Resource.php:4087
+#: src/Resource.php:4104 src/Resource.php:4109
 msgid "Failed to Send alert to the commercial manager"
 msgstr ""
 
@@ -1260,11 +1260,11 @@ msgstr ""
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: front/wizard.form.php:388
+#: front/wizard.form.php:400
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:4988 src/Resource.php:5000
+#: src/Resource.php:5010 src/Resource.php:5022
 msgid "Female"
 msgstr ""
 
@@ -1358,7 +1358,7 @@ msgstr ""
 msgid "Generate a rule"
 msgstr "Generează o regulă"
 
-#: src/Resource.php:3238
+#: src/Resource.php:3250
 msgid "Generate resources"
 msgstr "Generează resursă"
 
@@ -1409,7 +1409,7 @@ msgstr[0] "Concediu"
 msgstr[1] "Concedii"
 msgstr[2] "Concedii"
 
-#: setup.php:272 src/Metademand.php:79
+#: setup.php:274 src/Metademand.php:79
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Resursă Umană"
@@ -1594,7 +1594,7 @@ msgstr[2] "Motive părăsire"
 msgid "Leaving resource"
 msgstr ""
 
-#: src/Checklist.php:1120 src/NotificationTargetResource.php:574
+#: src/Checklist.php:1158 src/NotificationTargetResource.php:574
 #: src/Dashboard.php:75 src/Dashboard.php:189
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Părăsire resursă - lista de verificare trebuie verificată"
@@ -1638,7 +1638,7 @@ msgstr ""
 msgid "Link a checklist out"
 msgstr ""
 
-#: src/Checklist.php:854
+#: src/Checklist.php:880
 msgid "Link a task"
 msgstr "Linl către un task"
 
@@ -1650,7 +1650,7 @@ msgstr ""
 msgid "Link with metademand"
 msgstr ""
 
-#: src/Checklist.php:1397 templates/checklist_from_resources.html.twig:124
+#: src/Checklist.php:1435 templates/checklist_from_resources.html.twig:124
 msgid "Linked task"
 msgstr "Task legat"
 
@@ -1717,7 +1717,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:4987 src/Resource.php:4997
+#: src/Resource.php:5009 src/Resource.php:5019
 msgid "Male"
 msgstr ""
 
@@ -1741,11 +1741,11 @@ msgstr ""
 msgid "Mandatory when creating the resource"
 msgstr ""
 
-#: src/Checklist.php:840
+#: src/Checklist.php:866
 msgid "Mark as finished"
 msgstr ""
 
-#: src/Checklist.php:847
+#: src/Checklist.php:873
 msgid "Mark as unfinished"
 msgstr ""
 
@@ -1760,11 +1760,11 @@ msgstr ""
 msgid "Meta-demands linked"
 msgstr ""
 
-#: report/checkhabilitation/checkhabilitation.php:228
+#: report/checkhabilitation/checkhabilitation.php:268
 msgid "Missing group"
 msgstr ""
 
-#: report/checkgroup/checkgroup.php:286
+#: report/checkgroup/checkgroup.php:331
 msgid "Missing habilitation"
 msgstr ""
 
@@ -1787,7 +1787,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:2910
+#: hook.php:2937
 msgid "Modification of the associated resource's location"
 msgstr "Modificare a locaţiei resursei asociate"
 
@@ -1829,7 +1829,7 @@ msgstr[2] "Necesare"
 msgid "New access profile of the resource"
 msgstr ""
 
-#: src/Checklist.php:1121 src/NotificationTargetResource.php:567
+#: src/Checklist.php:1159 src/NotificationTargetResource.php:567
 #: src/Dashboard.php:70 src/Dashboard.php:141
 msgid "New resource - checklist needs to verificated"
 msgstr "Resursă nouă - lista de verificare trebuie verificată"
@@ -1884,7 +1884,7 @@ msgstr ""
 msgid "No advanced request found"
 msgstr ""
 
-#: src/Checklist.php:1414
+#: src/Checklist.php:1452
 msgid "No checklist found"
 msgstr "Nici o listăde verificare gasită"
 
@@ -1900,8 +1900,8 @@ msgstr ""
 msgid "No query could be suggested for this difference."
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:172
-#: report/checkgroup/checkgroup.php:226 templates/datatable.html.twig:64
+#: report/budgetsummary/budgetsummary.php:201
+#: report/checkgroup/checkgroup.php:271 templates/datatable.html.twig:64
 #: templates/datatable.html.twig:361
 #: templates/resource_remove_form.html.twig:34
 #: templates/resource_change_form.html.twig:33
@@ -1934,7 +1934,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: hook.php:2669
+#: hook.php:2685
 msgid "Not defined"
 msgstr "Nedefinit"
 
@@ -1958,7 +1958,7 @@ msgstr "Configurare Notificări"
 msgid "Notification history"
 msgstr "Istoric notificări"
 
-#: front/resource.form.php:441
+#: front/resource.form.php:474
 msgid "Notification sent"
 msgstr "Notificare trimisă"
 
@@ -1976,11 +1976,11 @@ msgstr ""
 msgid "On needs tab, view parts"
 msgstr ""
 
-#: front/resource.form.php:243
+#: front/resource.form.php:263
 msgid "One or more mandatory fields are empty."
 msgstr ""
 
-#: front/resource.form.php:608 templates/resource_leaving_form.html.twig:42
+#: front/resource.form.php:641 templates/resource_leaving_form.html.twig:42
 msgid "Order"
 msgstr ""
 
@@ -1988,7 +1988,7 @@ msgstr ""
 msgid "Order resources by"
 msgstr ""
 
-#: src/Resource.php:184 src/Resource.php:4989 src/Resource.php:5003
+#: src/Resource.php:184 src/Resource.php:5011 src/Resource.php:5025
 #: src/Notification.php:213 src/Config.php:115 src/Config.php:597
 msgid "Other"
 msgstr "Altele"
@@ -2065,7 +2065,7 @@ msgstr ""
 msgid "Please check the leaving checklist of the resource"
 msgstr "Verificaţi lista de verificare la plecare a resursei"
 
-#: src/Resource.php:3168
+#: src/Resource.php:3180
 #, php-format
 msgid "Please correct: %s"
 msgstr ""
@@ -2139,7 +2139,7 @@ msgstr ""
 msgid "Queries to run"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:79
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:80
 #: src/RuleContracttypeReadonly.php:335 src/Resource.php:623 src/Config.php:143
 #: src/Config.php:171 src/RuleContracttypeHidden.php:294 src/Recap.php:153
 #: src/NotificationTargetResource.php:709
@@ -2167,7 +2167,7 @@ msgstr[0] "Grad"
 msgstr[1] "Grade"
 msgstr[2] "Grade"
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:110
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:111
 #: src/Employment.php:237 src/Recap.php:249
 #: templates/employment_form.html.twig:68
 msgid "Ratio Employment / Budget"
@@ -2202,12 +2202,12 @@ msgstr[2] ""
 msgid "Recruiting information"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:236
+#: report/budgetsummary/budgetsummary.php:265
 msgid "Remaining budget - employment (qty)"
 msgstr "Buget rămas- angajări (cant)"
 
-#: report/budgetsummary/budgetsummary.php:240
-#: report/budgetsummary/budgetsummary.php:486
+#: report/budgetsummary/budgetsummary.php:269
+#: report/budgetsummary/budgetsummary.php:585
 msgid "Remaining budget - employment (€)"
 msgstr "Buget rămas- angajări (€)"
 
@@ -2245,29 +2245,29 @@ msgstr ""
 msgid "Report listing human resources without group N1"
 msgstr ""
 
-#: report/lapserankprofession/lapserankprofession.php:49 setup.php:187
+#: report/lapserankprofession/lapserankprofession.php:50 setup.php:187
 msgid "Report listing obsolete corps and ranks"
 msgstr ""
 
-#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:47
+#: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:48
 #: setup.php:191
 msgid "Report listing resources or jobs with an expired corp"
 msgstr ""
 
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:46
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:47
 #: setup.php:192
 msgid "Report listing resources or jobs with an obsolete grade"
 msgstr ""
 
-#: report/resourcewithoutuser/resourcewithoutuser.php:52 setup.php:195
+#: report/resourcewithoutuser/resourcewithoutuser.php:53 setup.php:195
 msgid "Report listing resources without users"
 msgstr ""
 
-#: report/professionwithoutvolume/professionwithoutvolume.php:50 setup.php:189
+#: report/professionwithoutvolume/professionwithoutvolume.php:51 setup.php:189
 msgid "Report listing the corps and grades without budget allocation"
 msgstr ""
 
-#: report/professionwithoutcost/professionwithoutcost.php:50 setup.php:188
+#: report/professionwithoutcost/professionwithoutcost.php:51 setup.php:188
 msgid "Report listing the corps and grades without budgetary valuation"
 msgstr ""
 
@@ -2279,17 +2279,17 @@ msgstr ""
 msgid "Report listing the permissions not present in the user's groups"
 msgstr ""
 
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:53
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:54
 #: setup.php:194
 msgid "Report listing unemployed resources"
 msgstr ""
 
-#: report/userwithmorethanoneresource/userwithmorethanoneresource.php:47
+#: report/userwithmorethanoneresource/userwithmorethanoneresource.php:49
 #: setup.php:196
 msgid "Report listing users linked to more than one resource"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:57 setup.php:190
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:58 setup.php:190
 msgid "Report of pledges"
 msgstr ""
 
@@ -2318,7 +2318,7 @@ msgstr ""
 msgid "Required Fields"
 msgstr "Câmpuri cerute"
 
-#: front/wizard.form.php:127 front/wizard.form.php:423 src/Resource.php:1235
+#: front/wizard.form.php:127 front/wizard.form.php:435 src/Resource.php:1235
 msgid "Required fields are not filled. Please try again."
 msgstr "Câmpurile cerute nu sunt completate. Încercaţi din nou."
 
@@ -2343,10 +2343,10 @@ msgstr[2] ""
 msgid "Resignation date"
 msgstr ""
 
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:84
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:89
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:94
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:99
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:85
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:90
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:95
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:100
 msgid "Resource"
 msgstr "Resursă"
 
@@ -2369,7 +2369,7 @@ msgstr ""
 #: hook.php:1474 src/RuleContracttypeReadonly.php:193
 #: src/RuleContracttypeReadonly.php:234 src/RuleContracttypeReadonly.php:264
 #: src/RuleContracttypeReadonly.php:315 src/Resource.php:179
-#: src/Resource.php:486 src/Resource.php:2639 src/ResourcePDF.php:98
+#: src/Resource.php:486 src/Resource.php:2651 src/ResourcePDF.php:98
 #: src/Config.php:134 src/Config.php:506 src/RuleContracttypeHidden.php:274
 #: src/NotificationTargetResource.php:111
 #: src/NotificationTargetResource.php:469
@@ -2378,7 +2378,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:848
 #: src/NotificationTargetResource.php:1013
 #: src/NotificationTargetResource.php:1659
-#: src/NotificationTargetResource.php:1690 src/Task.php:834 src/Task.php:1247
+#: src/NotificationTargetResource.php:1690 src/Task.php:834 src/Task.php:1285
 #: src/Directory.php:215 src/RuleContracttype.php:271
 #: templates/resource_remove_form.html.twig:56
 #: templates/resource_form.html.twig:228 templates/resource_form.html.twig:233
@@ -2412,13 +2412,13 @@ msgstr ""
 msgid "Resource user"
 msgstr "Resurse utilizator"
 
-#: report/budgetsummary/budgetsummary.php:235
-#: report/budgetsummary/budgetsummary.php:461
+#: report/budgetsummary/budgetsummary.php:264
+#: report/budgetsummary/budgetsummary.php:560
 msgid "Resource volume (qty)"
 msgstr "Volum resursă (cant)"
 
-#: report/budgetsummary/budgetsummary.php:239
-#: report/budgetsummary/budgetsummary.php:480
+#: report/budgetsummary/budgetsummary.php:268
+#: report/budgetsummary/budgetsummary.php:579
 msgid "Resource volume (€)"
 msgstr "Volum resurse (€)"
 
@@ -2430,11 +2430,11 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:4684
+#: src/Resource.php:4706
 msgid "Resources list"
 msgstr ""
 
-#: src/Resource.php:3876 src/NotificationTargetResource.php:96
+#: src/Resource.php:3898 src/NotificationTargetResource.php:96
 #: src/NotificationTargetResource.php:1760
 msgid "Resources list of commercial manager"
 msgstr ""
@@ -2443,7 +2443,7 @@ msgstr ""
 msgid "Resources management"
 msgstr "Managementul resurselor"
 
-#: src/Resource.php:3871
+#: src/Resource.php:3893
 msgid "Resources not declaring leaving"
 msgstr "Resurse nedeclarate plecarea"
 
@@ -2547,7 +2547,7 @@ msgstr ""
 msgid "Select the contract type"
 msgstr "Selectează tipul contractului"
 
-#: src/Resource.php:3280 src/Directory.php:1147
+#: src/Resource.php:3292 src/Directory.php:1147
 #: templates/resource_form.html.twig:290
 #: templates/wizard_secondstep_resource.html.twig:754
 msgid "Send a notification"
@@ -2561,7 +2561,7 @@ msgstr ""
 msgid "Send a second ticket for a departure after instruction"
 msgstr ""
 
-#: src/Resource.php:4069 src/Resource.php:4075
+#: src/Resource.php:4091 src/Resource.php:4097
 msgid "Send alert to the commercial manager"
 msgstr ""
 
@@ -2682,7 +2682,7 @@ msgstr ""
 msgid "Suggested queries"
 msgstr ""
 
-#: report/budgetsummary/budgetsummary.php:51 setup.php:182
+#: report/budgetsummary/budgetsummary.php:52 setup.php:182
 msgid "Summary by budget with total amount and quantity"
 msgstr ""
 
@@ -2787,12 +2787,12 @@ msgstr "Data de început a perioadei concediului angajator trebuie completată"
 msgid "The begin date of the non contract period must be filled"
 msgstr "Data de început a perioadei intrecontracte trebuie completată"
 
-#: src/Checklist.php:924 src/Checklist.php:945 src/Checklist.php:987
-#: src/Checklist.php:1028
+#: src/Checklist.php:950 src/Checklist.php:971 src/Checklist.php:1019
+#: src/Checklist.php:1066
 msgid "The checklist is finished"
 msgstr ""
 
-#: front/resource.form.php:408
+#: front/resource.form.php:437
 msgid "The checklist is not finished"
 msgstr "Lista de control nu este terminată"
 
@@ -2821,7 +2821,7 @@ msgid ""
 "plugin or by a custom development before running them."
 msgstr ""
 
-#: front/resource.form.php:444 src/Resource.php:3845
+#: front/resource.form.php:477 src/Resource.php:3867
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
@@ -2868,7 +2868,7 @@ msgstr ""
 msgid "There is a right problem"
 msgstr ""
 
-#: src/Resource.php:3946 src/NotificationTargetResource.php:83
+#: src/Resource.php:3968 src/NotificationTargetResource.php:83
 #: src/NotificationTargetResource.php:463
 msgid "These resources have normally left the company"
 msgstr "Aceste resurse au părăsit normal compania"
@@ -2886,7 +2886,7 @@ msgid ""
 "prefer the random format."
 msgstr ""
 
-#: src/Resource.php:3457 src/Resource.php:3485
+#: src/Resource.php:3479 src/Resource.php:3507
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Acestă resursă deja există"
@@ -2897,7 +2897,7 @@ msgstr[2] "Aceste resurse deja există"
 msgid "This resource already exists"
 msgstr ""
 
-#: src/Resource.php:3449 src/Resource.php:3493
+#: src/Resource.php:3471 src/Resource.php:3515
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Acestă resursă a fost adăugată"
@@ -2920,13 +2920,13 @@ msgstr "De afectat o angajare"
 msgid "To begin, select type of contract"
 msgstr "Pentru a începe, selectaţi tipul de contract"
 
-#: report/budgetsummary/budgetsummary.php:449
-#: report/budgetsummary/budgetsummary.php:455
-#: report/budgetsummary/budgetsummary.php:461
-#: report/budgetsummary/budgetsummary.php:468
-#: report/budgetsummary/budgetsummary.php:474
-#: report/budgetsummary/budgetsummary.php:480
-#: report/budgetsummary/budgetsummary.php:486 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:548
+#: report/budgetsummary/budgetsummary.php:554
+#: report/budgetsummary/budgetsummary.php:560
+#: report/budgetsummary/budgetsummary.php:567
+#: report/budgetsummary/budgetsummary.php:573
+#: report/budgetsummary/budgetsummary.php:579
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
 msgid "Total"
 msgstr "Total"
 
@@ -2942,7 +2942,7 @@ msgstr ""
 msgid "Trainee"
 msgstr "Stagiar"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3272 src/Task.php:1063
+#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr ""
 
@@ -3004,7 +3004,7 @@ msgstr ""
 msgid "Unlimited number of selectable habilitations "
 msgstr ""
 
-#: src/Resource.php:3355
+#: src/Resource.php:3367
 msgid "Unsupported item type"
 msgstr ""
 
@@ -3025,7 +3025,7 @@ msgstr ""
 msgid "Update LDAP directory"
 msgstr ""
 
-#: src/Resource.php:3881
+#: src/Resource.php:3903
 msgid "Update Resources state"
 msgstr ""
 
@@ -3092,7 +3092,7 @@ msgstr ""
 msgid "Used for planning"
 msgstr "Utilizat la planificare"
 
-#: report/userwithnoresource/userwithnoresource.php:48 setup.php:197
+#: report/userwithnoresource/userwithnoresource.php:50 setup.php:197
 msgid "User without resource"
 msgstr ""
 
@@ -3144,8 +3144,8 @@ msgstr "Va fi adăugat la zona de comentariu a resursei"
 msgid "Wished leaving date"
 msgstr ""
 
-#: front/resource.remove.php:181 front/resource.form.php:291
-#: front/resource.form.php:606 src/Resource.php:1807
+#: front/resource.remove.php:181 front/resource.form.php:311
+#: front/resource.form.php:639 src/Resource.php:1807
 #: src/Contracttypeprofile.php:76 src/ContractType.php:270
 #: src/ContractType.php:290
 msgid "Without contract"
@@ -3178,15 +3178,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:2968 src/LinkAd.php:687
+#: hook.php:2995 src/LinkAd.php:687
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:3016
+#: hook.php:3043
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: hook.php:2950 hook.php:2998 src/LinkAd.php:685
+#: hook.php:2977 hook.php:3025 src/LinkAd.php:685
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
@@ -3216,12 +3216,12 @@ msgstr ""
 msgid "given name.name"
 msgstr ""
 
-#: front/resource.remove.php:165 front/resource.form.php:284
-#: front/resource.form.php:599
+#: front/resource.remove.php:165 front/resource.form.php:304
+#: front/resource.form.php:632
 msgid "leave on"
 msgstr ""
 
-#: front/linkad.form.php:92 front/resource.form.php:542
+#: front/linkad.form.php:92 front/resource.form.php:575
 msgid "the user has been added to the LDAP directory"
 msgstr ""
 
@@ -3230,11 +3230,11 @@ msgid "the user has been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:152 front/resource.remove.php:292
-#: front/resource.form.php:560
+#: front/resource.form.php:593
 msgid "the user has been updated to the LDAP directory"
 msgstr ""
 
-#: front/linkad.form.php:95 front/resource.form.php:545
+#: front/linkad.form.php:95 front/resource.form.php:578
 msgid "the user has not been added to the LDAP directory"
 msgstr ""
 
@@ -3243,7 +3243,7 @@ msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr ""
 
 #: front/linkad.form.php:155 front/resource.remove.php:243
-#: front/resource.remove.php:295 front/resource.form.php:563
+#: front/resource.remove.php:295 front/resource.form.php:596
 msgid "the user has not been updated to the LDAP directory"
 msgstr ""
 
