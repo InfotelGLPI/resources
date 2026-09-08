@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:31+0000\n"
+"POT-Creation-Date: 2026-09-08 15:21+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/infotelGLPI/"
@@ -447,7 +447,7 @@ msgstr[1] "Gestión de insignias"
 msgid "Badge restitution"
 msgstr "Restitución de la insignia"
 
-#: src/ImportResource.php:687
+#: src/ImportResource.php:710
 msgid "Be careful, new resources will be created in the entity"
 msgstr ""
 
@@ -709,11 +709,11 @@ msgstr ""
 msgid "Company name"
 msgstr ""
 
-#: src/ImportResource.php:692
+#: src/ImportResource.php:715
 msgid "Compare File with GLPI Resources"
 msgstr ""
 
-#: src/ImportResource.php:695
+#: src/ImportResource.php:718
 msgid "Compare GLPI Resources with File"
 msgstr ""
 
@@ -1035,7 +1035,7 @@ msgstr "Detalle de períodos sin contrato"
 msgid "Detail of the forced holiday"
 msgstr "Detalle de días no laborables"
 
-#: src/ImportResource.php:719
+#: src/ImportResource.php:742
 msgid "Different to GLPI"
 msgstr ""
 
@@ -1299,11 +1299,11 @@ msgstr "Administración de días no laborables"
 msgid "Format password"
 msgstr ""
 
-#: src/ImportResource.php:726
+#: src/ImportResource.php:749
 msgid "Found in file with second level id"
 msgstr ""
 
-#: src/ImportResource.php:725
+#: src/ImportResource.php:748
 msgid "Found in the file with a top level id"
 msgstr ""
 
@@ -1334,7 +1334,7 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: src/Checklistconfig.php:334
+#: src/Checklistconfig.php:358
 msgid "Generate a rule"
 msgstr "Generar regla"
 
@@ -1404,7 +1404,7 @@ msgstr[1] "Recursos Humanos"
 msgid "IT needs identified"
 msgstr "Necesita identificación TIC"
 
-#: src/ImportResource.php:717
+#: src/ImportResource.php:740
 msgid "Identical to GLPI"
 msgstr ""
 
@@ -1906,11 +1906,11 @@ msgstr "No definido"
 msgid "Not finished tasks"
 msgstr "Tareas no finalizadas"
 
-#: src/ImportResource.php:718
+#: src/ImportResource.php:741
 msgid "Not in GLPI"
 msgstr ""
 
-#: src/ImportResource.php:727
+#: src/ImportResource.php:750
 msgid "Not in the file"
 msgstr ""
 
@@ -2761,7 +2761,7 @@ msgid "The end date of the forced holiday period must be filled"
 msgstr ""
 "Se debe llenar la fecha de finalización del período de días no laborables"
 
-#: src/ImportResource.php:525
+#: src/ImportResource.php:532
 msgid "The file does not match any template"
 msgstr ""
 
@@ -2876,7 +2876,7 @@ msgstr "Para comenzar, selecciona el tipo de contrato"
 #: report/budgetsummary/budgetsummary.php:567
 #: report/budgetsummary/budgetsummary.php:573
 #: report/budgetsummary/budgetsummary.php:579
-#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:743
 msgid "Total"
 msgstr "Total"
 
@@ -2884,7 +2884,7 @@ msgstr "Total"
 msgid "Total duration"
 msgstr ""
 
-#: src/ImportResource.php:728
+#: src/ImportResource.php:751
 msgid "Total lines in the file"
 msgstr ""
 
@@ -2892,7 +2892,7 @@ msgstr ""
 msgid "Trainee"
 msgstr "Pasante"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
+#: src/Checklistconfig.php:365 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr ""
 
@@ -2962,7 +2962,7 @@ msgctxt "button"
 msgid "Update"
 msgstr ""
 
-#: src/Menu.php:320 src/ImportResource.php:684
+#: src/Menu.php:320 src/ImportResource.php:707
 msgid "Update GLPI Resources"
 msgstr ""
 
@@ -3046,7 +3046,7 @@ msgstr ""
 msgid "Validate"
 msgstr ""
 
-#: src/ImportResource.php:744
+#: src/ImportResource.php:767
 msgid "Validate and pre-import file"
 msgstr ""
 
