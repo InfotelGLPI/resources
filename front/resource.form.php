@@ -365,6 +365,23 @@ elseif (isset($_POST["additem"])) {
         // like the neighbouring addhelpdeskitem branch — otherwise any authenticated
         // user could attach an arbitrary object to a resource of another entity.
         $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
+
+        // The pair below is stored as posted, then reused to instantiate a class and to
+        // build SQL identifiers downstream: pin the itemtype to the list the plugin
+        // exposes, the way ajax/linkItems.php pins the one it hands to ::dropdown().
+        if (!in_array($_POST['itemtype'], Resource::getTypes(true), true)) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+
+        // Authorizing the resource says nothing about the object being attached to it,
+        // and that object's name, serial and inventory number are displayed back on the
+        // resource afterwards. can(READ) covers the right bit and the entity boundary
+        // alike, which getTypeItems() does not.
+        $linked_item = getItemForItemtype($_POST['itemtype']);
+        if (!$linked_item || !$linked_item->can((int) $_POST['items_id'], READ)) {
+            throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+        }
+
         $resource_item->addItem($_POST);
     }
     Html::back();

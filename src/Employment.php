@@ -423,20 +423,20 @@ class Employment extends CommonDBTM
     }
 
     /**
-     * @return string
+     * @return array criteria for DBmysql::request()
      */
     public function queryLeavingResources()
     {
-        $date = date("Y-m-d H:i:s");
-        $query = "SELECT *
-            FROM `glpi_plugin_resources_resources`
-            WHERE `date_end` IS NOT NULL
-            AND `date_end` < '" . $date . "'
-            AND `is_leaving` = 0
-            AND `is_template` = 0
-            AND `is_deleted` = 0";
-
-        return $query;
+        return [
+            'FROM'  => 'glpi_plugin_resources_resources',
+            'WHERE' => [
+                ['NOT' => ['date_end' => null]],
+                ['date_end' => ['<', date("Y-m-d H:i:s")]],
+                'is_leaving'  => 0,
+                'is_template' => 0,
+                'is_deleted'  => 0,
+            ],
+        ];
     }
 
     /**
@@ -453,7 +453,9 @@ class Employment extends CommonDBTM
         $message = [];
 
         $REmployment = new Employment();
-        $query_expired = $REmployment->doQueryLeavingResources();
+        // The method is named queryLeavingResources(): the call below named one that does not
+        // exist, so the task died on a fatal error at its first useful statement.
+        $query_expired = $REmployment->queryLeavingResources();
 
         $querys = [Alert::END => $query_expired];
 
@@ -466,12 +468,20 @@ class Employment extends CommonDBTM
                 //when a resource is leaving, current employment get default state
                 $default = EmploymentState::getDefault();
                 // only current employment
-                $restrict = "`plugin_resources_resources_id` = '" . $data["id"] . "'
-                     AND ((`begin_date` < '" . $data['date_end'] . "'
-                           OR `begin_date` IS NULL)
-                           AND (`end_date` > '" . $data['date_end'] . "'
-                                 OR `end_date` IS NULL)) ";
-                $iterator = $DB->request("glpi_plugin_resources_employments", $restrict);
+                $iterator = $DB->request([
+                    'FROM'  => 'glpi_plugin_resources_employments',
+                    'WHERE' => [
+                        'plugin_resources_resources_id' => (int) $data["id"],
+                        ['OR' => [
+                            ['begin_date' => ['<', $data['date_end']]],
+                            ['begin_date' => null],
+                        ]],
+                        ['OR' => [
+                            ['end_date' => ['>', $data['date_end']]],
+                            ['end_date' => null],
+                        ]],
+                    ],
+                ]);
                 foreach ($iterator as $employment) {
                     $values = [
                         'plugin_resources_employmentstates_id' => $default,

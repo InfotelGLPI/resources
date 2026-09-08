@@ -2950,9 +2950,19 @@ function plugin_pre_item_update_resources($item)
  */
 function plugin_pre_item_add_solutions($item)
 {
-    if (isset($item->fields["itemtype"])) {
-        $ticket = new $item->fields["itemtype"]();
-        if ($ticket->getFromDB($item->fields["items_id"])) {
+    // PRE_ITEM_ADD is raised by CommonDBTM::add() right after $this->input is set and before
+    // anything reaches $this->fields: on the fresh ITILSolution this hook is registered for,
+    // $item->fields is still empty, so reading it here silently disabled both
+    // mandatory_adcreation and mandatory_checklist while the configuration screen kept
+    // announcing them.
+    $solution_itemtype = (string) ($item->input["itemtype"] ?? '');
+    $solution_items_id = (int) ($item->input["items_id"] ?? 0);
+
+    // The itemtype comes from the submitted form and is instantiated right below: keep it to
+    // the ITIL objects a solution can belong to.
+    if (in_array($solution_itemtype, [Ticket::class, Change::class, Problem::class], true)) {
+        $ticket = new $solution_itemtype();
+        if ($ticket->getFromDB($solution_items_id)) {
             $adconfig = new Adconfig();
             $adconfig->getFromDB(1);
             $adconfig->fields = $adconfig->prepareFields($adconfig->fields);

@@ -1786,12 +1786,6 @@ parameters:
 			path: src/Employment.php
 
 		-
-			message: '#^Call to an undefined method GlpiPlugin\\Resources\\Employment\:\:doQueryLeavingResources\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Employment.php
-
-		-
 			message: '#^Default value of the parameter \#2 \$options \(array\<int, string\>\) of method GlpiPlugin\\Resources\\Employment\:\:showForm\(\) is incompatible with type array\<string, mixed\>\.$#'
 			identifier: parameter.defaultValue
 			count: 1

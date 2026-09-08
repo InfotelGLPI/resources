@@ -3246,7 +3246,10 @@ class Resource extends CommonDBTM
             $action[$prefix . "plugin_resources_add_item"] = __('Associate a resource', 'resources');
         }
 
-        if ($type == "User") {
+        // Both entries write plugin records from a list the plugin does not own (a Resource
+        // for the first, a ResourceHabilitation for the second), so the right they need is the
+        // plugin's, not the one that opened the User list. Same test as above.
+        if ($type == "User" && Session::haveRightsOr('plugin_resources', [CREATE, UPDATE])) {
             $action[$prefix . "plugin_resources_generate_resources"] = __('Generate resources', 'resources');
             $action[$prefix . "plugin_resources_add_habilitation"] = __('Add habiliation', 'resources');
         }
@@ -3368,6 +3371,40 @@ class Resource extends CommonDBTM
             return;
         }
 
+        // The object being linked or unlinked is posted too, and the per-item can() below
+        // answers for the resource, never for it. Its name, serial and inventory number are
+        // displayed back on the resource afterwards, so require read access on it, which
+        // covers the right bit and the entity boundary alike — the same guard the additem
+        // branch of front/resource.form.php poses.
+        $link_items_id = (int) ($input['item_item'] ?? 0);
+        if (in_array($ma->getAction(), ['Install', 'Desinstall'], true)) {
+            $linked_item = getItemForItemtype($link_itemtype);
+            if (!$linked_item || !$linked_item->can($link_items_id, READ)) {
+                $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                return;
+            }
+        }
+
+        // Same reasoning for the habilitation the two AddHabilitation branches attach: it is a
+        // CommonTreeDropdown value carrying its own entity, and the per-item can() answers for
+        // the resource row, never for the value posted next to it. is_recursive is part of the
+        // test, otherwise an inherited habilitation would be rejected.
+        $habilitations_id = (int) ($input['plugin_resources_habilitations_id'] ?? 0);
+        if (in_array($ma->getAction(), ['AddHabilitation', 'plugin_resources_add_habilitation'], true)) {
+            $habilitation_value = new Habilitation();
+            if ($habilitations_id <= 0
+                || !$habilitation_value->getFromDB($habilitations_id)
+                || !Session::haveAccessToEntity(
+                    $habilitation_value->fields['entities_id'],
+                    $habilitation_value->fields['is_recursive'],
+                )) {
+                $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                return;
+            }
+        }
+
         switch ($ma->getAction()) {
             case "Transfert":
                 if ($itemtype == Resource::class) {
@@ -3401,7 +3438,7 @@ class Resource extends CommonDBTM
                     if ($item->can($key, UPDATE)) {
                         $values = [
                             'plugin_resources_resources_id' => $key,
-                            'items_id' => $input["item_item"],
+                            'items_id' => $link_items_id,
                             'itemtype' => $link_itemtype,
                         ];
                         if ($resource_item->add($values)) {
@@ -3426,7 +3463,7 @@ class Resource extends CommonDBTM
                         $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
                         continue;
                     }
-                    if ($resource_item->deleteItemByResourcesAndItem($key, $input['item_item'], $link_itemtype)) {
+                    if ($resource_item->deleteItemByResourcesAndItem($key, $link_items_id, $link_itemtype)) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                     } else {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3526,17 +3563,19 @@ class Resource extends CommonDBTM
             case "AddHabilitation":
                 $habilitation = new ResourceHabilitation();
                 foreach ($ids as $key => $val) {
+                    // $item is the Resource here, so can(UPDATE) already covers the plugin
+                    // right and the entity of the row. The posted habilitation was validated
+                    // before the switch.
                     if ($item->can($key, UPDATE)) {
                         //check if habilitation already added
                         if (!$habilitation->getFromDBByCrit([
                             'plugin_resources_resources_id' => $key,
-                            'plugin_resources_habilitations_id' => $input['plugin_resources_habilitations_id'],
+                            'plugin_resources_habilitations_id' => $habilitations_id,
                         ])) {
                             if ($resource->getFromDB($key)) {
-                                //TODO add verification entities
                                 $values = [
                                     'plugin_resources_resources_id' => $key,
-                                    'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"],
+                                    'plugin_resources_habilitations_id' => $habilitations_id,
                                 ];
                                 if ($habilitation->add($values)) {
                                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
@@ -3561,17 +3600,24 @@ class Resource extends CommonDBTM
                     if ($item->can($key, UPDATE)) {
                         $resource_item = new Resource_Item();
                         if ($resource_item->getFromDBByCrit(['items_id' => $key, 'itemtype' => User::getType()])) {
-                            $resource_id = $resource_item->getField('plugin_resources_resources_id');
+                            $resource_id = (int) $resource_item->getField('plugin_resources_resources_id');
                             //check if habilitation already added
                             if (!$habilitation->getFromDBByCrit([
                                 'plugin_resources_resources_id' => $resource_id,
-                                'plugin_resources_habilitations_id' => $input['plugin_resources_habilitations_id'],
+                                'plugin_resources_habilitations_id' => $habilitations_id,
                             ])) {
-                                if ($resource->getFromDB($resource_id)) {
-                                    //TODO add verification entities
+                                // $item is a User on this branch, so the can(UPDATE) above is
+                                // the User write right and nothing more: it says nothing about
+                                // the plugin right, and nothing about the entity of the
+                                // resource the habilitation lands on. ResourceHabilitation is
+                                // owned by plugin_resources and add() checks no right of its
+                                // own, so this call was the only remaining gate. can(UPDATE)
+                                // on the resource covers both, and loads it, which is all
+                                // getFromDB() did here.
+                                if ($resource->can($resource_id, UPDATE)) {
                                     $values = [
                                         'plugin_resources_resources_id' => $resource_id,
-                                        'plugin_resources_habilitations_id' => $input["plugin_resources_habilitations_id"],
+                                        'plugin_resources_habilitations_id' => $habilitations_id,
                                     ];
                                     if ($habilitation->add($values)) {
                                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);

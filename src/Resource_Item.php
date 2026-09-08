@@ -611,7 +611,9 @@ class Resource_Item extends CommonDBRelation
             'can_edit' => $canedit && $withtemplate != 2,
             'withtemplate' => $withtemplate,
             'used' => $used,
-            'types' => Resource::getTypes(true),
+            // Filtered list: an itemtype the session cannot view is refused by the additem
+            // branch of front/resource.form.php, so do not offer it here.
+            'types' => Resource::getTypes(),
             'datatable_params' => [
                 'is_tab' => true,
                 'nofilter' => true,

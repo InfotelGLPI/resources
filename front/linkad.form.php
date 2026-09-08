@@ -47,13 +47,22 @@ if (isset($_POST["add"])) {
     $linkad->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
+    // checkChildOwnership() below only asks for the plugin_resources right on the owning
+    // Resource, and LinkAd has a right of its own that every other mutating branch of this
+    // file requires: ask for it here too.
+    Session::checkRight(LinkAd::$rightname, UPDATE);
     // LinkAd carries no entities_id of its own, so check($id, UPDATE) alone cannot scope
     // this to the caller's entity: resolve the owning Resource via
     // plugin_resources_resources_id and check the right on that instance instead.
     Resource::checkChildOwnership($linkad, $_POST["id"]);
     $linkad->update($_POST);
-    $ldap = new LDAP();
-    $ldap->getUserInformation($_POST["auth_id"]);
+    // auth_id names the directory the server binds to, with its stored rootdn password:
+    // take it as an id, and do not bind at all when the form named none.
+    $auth_id = (int) ($_POST["auth_id"] ?? 0);
+    if ($auth_id > 0) {
+        $ldap = new LDAP();
+        $ldap->getUserInformation($auth_id);
+    }
     Html::back();
 } elseif (isset($_POST["createAD"])) {
     // Drives Active Directory account creation from arbitrary POST identity fields:

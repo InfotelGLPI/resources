@@ -974,10 +974,15 @@ class Checklist extends CommonDBTM
             case "add_ticket":
                 if (!$isfinished) {
                     unset($input["id"]);
-                    if (Session::haveRight("ticket", Ticket::READALL)) {
+                    $ticket = new Ticket();
+                    // CommonDBTM::add() checks no right of its own, so this branch is the only
+                    // gate on the creation below. The READALL bit that used to stand here is a
+                    // read bit, and the per row can(UPDATE) inside the loop authorizes the
+                    // checklist rows, not the ticket: ask for the create right, the way the
+                    // add_task branch below does.
+                    if ($ticket->canCreate()) {
                         $cat = new TicketCategory();
                         $rules = new RuleTicketCollection();
-                        $ticket = new Ticket();
                         foreach ($ids as $key => $val) {
                             // MassiveAction hands the posted ids over untouched, so this
                             // handler is the only gate on the rows themselves: check each
