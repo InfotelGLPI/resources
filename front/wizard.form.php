@@ -56,7 +56,19 @@ if (Session::getCurrentInterface() == 'central') {
     }
 }
 if (empty($_POST)) {
-    $_POST = $_GET;
+    // CheckCsrfListener deliberately skips GET, so copying $_GET wholesale into $_POST
+    // turned every branch below into a forgeable link -- cancel_request included, whose
+    // delete(..., 1) is a permanent purge. Only the keys the wizard is actually entered
+    // with survive the fallback, which keeps the GET entry point working while leaving
+    // every branch that writes reachable by POST only. This is an allow-list on purpose:
+    // a step added later stays out of reach over GET until it is listed here.
+    $get_navigation_keys = [
+        'second_step',
+        'template',
+        'withtemplate',
+        'plugin_resources_resources_id',
+    ];
+    $_POST = array_intersect_key($_GET, array_flip($get_navigation_keys));
 }
 
 //if (isset($_POST["secondary_services"])) {
@@ -100,8 +112,6 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             $values[$key] = $val;
         }
 
-        // Clean text fields
-        $values['name'] = stripslashes($values['name']);
         $values['withtemplate'] = $_POST["withtemplate"];
         $values['template'] = $_POST["template"];
         $values["requiredfields"] = 1;
@@ -132,8 +142,6 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             $values[$key] = $val;
         }
 
-        // Clean text fields
-        $values['name'] = stripslashes($values['name']);
         $values['withtemplate'] = $_POST["withtemplate"];
         $values["requiredfields"] = 1;
 
@@ -159,7 +167,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 $resource->update($_POST);
                 $newresource = $_POST['plugin_resources_resources_id'];
             } else {
+                // canCreate() only answers for the global right: check(-1, CREATE, $_POST)
+                // additionally confines the posted entities_id to the session scope, which
+                // add() never does on its own.
                 unset($_POST['id']);
+                $resource->check(-1, CREATE, $_POST);
                 $newresource = $resource->add($_POST);
             }
 
@@ -177,8 +189,6 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
             foreach ($_POST as $key => $val) {
                 $values[$key] = $val;
             }
-            // Clean text fields
-            $values['name'] = stripslashes($values['name']);
             $values['withtemplate'] = $_POST["withtemplate"];
             $values["requiredfields"] = 1;
 
@@ -235,11 +245,19 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // resource (the entity owner). Under the sole checkGlobal(READ) entry guard, this
     // branch would otherwise let a read-only user create/update Employee records on
     // resources of any entity.
-    $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
+    $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+    $resource->check($resources_id, UPDATE);
 
     if (isset($_POST['id']) && $_POST['id'] > 0) {
+        // The guard above answers for the resource, the write answers for another id: without
+        // correlating the two, a valid resource of the caller let them update the Employee row
+        // of any other resource. Resolve the owner from the row itself.
+        Resource::checkChildOwnership($employee, (int) $_POST['id'], UPDATE);
+        $_POST['plugin_resources_resources_id'] = $employee->fields['plugin_resources_resources_id'];
         $employee->update($_POST);
     } else {
+        // Pin the parent to the validated resource so the new row cannot be attached elsewhere.
+        $_POST['plugin_resources_resources_id'] = $resources_id;
         $newid = $employee->add($_POST);
     }
 
@@ -596,8 +614,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $resourcestemplate = new Resource();
         $resourcestemplatedata = $resourcestemplate->find(['is_template' => 1]);
         if (count($resourcestemplatedata) == 1) {
-            // Clean text fields
-            $values['name']    = stripslashes('');
+            $values['name'] = '';
             $values['withtemplate'] = 2;
             $values['new']          = 1;
             $values["requiredfields"] = 1;

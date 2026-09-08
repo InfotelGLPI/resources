@@ -37,7 +37,7 @@ use Session;
  */
 class RuleChecklistCollection extends RuleCollection
 {
-    public static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources_rule';
 
     // From RuleCollection
     //public $use_output_rule_process_as_next_input=true;

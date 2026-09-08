@@ -38,10 +38,15 @@ if (!defined('GLPI_ROOT')) {
     die("Can not acces directly to this file");
 }
 
-$name = $_POST['name'];
-$firstname = $_POST['firstname'];
+$name = $_POST['name'] ?? '';
+$firstname = $_POST['firstname'] ?? '';
 
 $resource = new Resource();
-$resources = $resource->find(['name' => $name, 'firstname' => $firstname]);
+// find() applies no entity restriction of its own: without this the probe answered on the
+// whole instance and turned into an oracle over the personnel of every entity.
+$resources = $resource->find(
+    ['name' => $name, 'firstname' => $firstname]
+    + getEntitiesRestrictCriteria($resource->getTable(), '', '', true),
+);
 
 echo json_encode(count($resources));

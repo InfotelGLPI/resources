@@ -393,8 +393,8 @@ class ImportResource extends CommonDBTM
                 // Create new Import resource data
                 foreach ($datas as $item) {
                     $importResourceDataInput = $importResourceData->prepareInput(
-                        addslashes($item['name']),
-                        addslashes($item['value']),
+                        $item['name'],
+                        $item['value'],
                         $newImportId,
                         $item['plugin_resources_importcolumns_id'],
                     );
@@ -496,7 +496,7 @@ class ImportResource extends CommonDBTM
 
                 $input = [
                     ImportResourceData::getIndexName() => $importResourceData['id'],
-                    'value' => addslashes($data['value']),
+                    'value' => $data['value'],
                 ];
 
                 $ImportResourceData->update($input);
@@ -1675,8 +1675,9 @@ class ImportResource extends CommonDBTM
 
         $headerIndex = 0;
         foreach ($header as $columnName) {
-            $utf8ColumnName = addslashes($columnName);
-            $utf8ColumnName = $this->encodeUtf8($utf8ColumnName);
+            // getFromDBByCrit() below quotes the criteria itself: escaping here made the
+            // lookup miss every column name containing a quote or a backslash.
+            $utf8ColumnName = $this->encodeUtf8($columnName);
 
             $crit = [
                 'name' => $utf8ColumnName,

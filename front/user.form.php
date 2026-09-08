@@ -44,6 +44,13 @@ if (empty($_GET["name"])) {
 
 if (isset($_POST["update"])) {
     $user->check($_POST['id'], UPDATE);
+    // idResource is a second identifier, uncorrelated with the user authorised above.
+    // It drives the enumeration of the linked tickets and the ITILSolution::add() below,
+    // and nothing downstream re-checks it: ITILSolution::prepareInputForAdd() only
+    // validates that the parent exists and enforces no right on the ticket, so this
+    // controller is the only gate on that path. Authorise it before anything is written.
+    $resource = new Resource();
+    $resource->check((int) ($_POST['idResource'] ?? 0), UPDATE);
     $user->update($_POST);
     Event::log(
         $_POST['id'],
@@ -53,8 +60,6 @@ if (isset($_POST["update"])) {
         //TRANS: %s is the user login
         sprintf(__('%s updates an item'), $_SESSION["glpiname"]),
     );
-    $resource = new Resource();
-    $resource->getFromDB($_POST['idResource']);
     $ticket = new Ticket();
     $itemTicket = new Item_Ticket();
     $content = "";

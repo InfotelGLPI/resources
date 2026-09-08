@@ -53,6 +53,14 @@ class Adconfig extends CommonDBTM
 {
     public static $rightname = 'plugin_resources';
 
+    // Initial password of the accounts created in the directory.
+    /** Initials of the holder, optionally their arrival date, plus a shared suffix. */
+    public const PASSWORD_FORMAT_DYNAMIC = 1;
+    /** A single secret shared by every account created by the plugin. */
+    public const PASSWORD_FORMAT_STATIC = 2;
+    /** Drawn at random for each account; nothing to store, nothing to guess. */
+    public const PASSWORD_FORMAT_RANDOM = 3;
+
     // Bind and default-account secrets are stored encrypted (GLPIKey); keep them out of
     // API/exports and out of the update history so the (encrypted) value is not disclosed.
     public static $undisclosedFields = [
@@ -251,13 +259,23 @@ class Adconfig extends CommonDBTM
                 'format_default_account_password',
                 [
                     0 => Dropdown::EMPTY_VALUE,
-                    1 => 'prefixe dynamique et suffixe statique',
-                    2 => __('Static default password ', 'resources'),
+                    self::PASSWORD_FORMAT_DYNAMIC => __('Dynamic prefix and static suffix', 'resources'),
+                    self::PASSWORD_FORMAT_STATIC => __('Static default password ', 'resources'),
+                    self::PASSWORD_FORMAT_RANDOM => __('Random password (recommended)', 'resources'),
                 ],
                 ['value' => $format],
             ));
-            $data['show_password_detail'] = ($format != 0);
-            $data['is_prefix_format']     = ($format == 1);
+            // The random format stores no secret; the two others are only worth the value
+            // entered below, so say so instead of presenting the three as equivalent.
+            $stored_formats = [self::PASSWORD_FORMAT_DYNAMIC, self::PASSWORD_FORMAT_STATIC];
+            $data['show_password_detail'] = in_array($format, $stored_formats, true);
+            $data['is_prefix_format']     = ($format === self::PASSWORD_FORMAT_DYNAMIC);
+            $data['password_warning']     = $data['show_password_detail']
+                ? __(
+                    'This password is derived from the identity of the account holder, or shared by every account created by the plugin. It is expired on first logon, but prefer the random format.',
+                    'resources',
+                )
+                : '';
             $data['prefix_dropdown'] = $capture(fn() => Dropdown::showFromArray(
                 'prefix_default_account_password',
                 [

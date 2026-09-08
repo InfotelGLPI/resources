@@ -86,15 +86,22 @@ elseif (isset($_POST["purge"])) {
 } //from central
 //add item to task
 elseif (isset($_POST["addtaskitem"])) {
-    if ($task->canCreate()) {
-        $task_item->addTaskItem($_POST);
-    }
+    // canCreate() only answers for the global right bit: it looks at neither the record
+    // nor its entity. The task id is client-supplied and Task carries entities_id, so
+    // check the targeted task the way every other branch of this controller does.
+    $task->check((int) ($_POST["plugin_resources_tasks_id"] ?? 0), UPDATE);
+    $task_item->addTaskItem($_POST);
     Html::back();
 } //from central
 //delete item to task
 elseif (isset($_POST["deletetaskitem"])) {
-    if ($task->canCreate()) {
-        $task_item->delete(['id' => $_POST["id"]]);
+    // Task_Item holds no entity of its own and the row id is client-supplied, while
+    // CommonDBTM::delete() checks nothing by itself. Resolve the owning task from the
+    // row that is about to be deleted -- never from an id posted alongside it -- and
+    // require UPDATE there.
+    if ($task_item->getFromDB((int) ($_POST["id"] ?? 0))) {
+        $task->check((int) $task_item->fields['plugin_resources_tasks_id'], UPDATE);
+        $task_item->delete(['id' => $task_item->getID()]);
     }
     Html::back();
 } else {

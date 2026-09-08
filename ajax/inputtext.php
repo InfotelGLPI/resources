@@ -35,7 +35,7 @@ Session::checkRight('plugin_resources', READ);
 if (isset($_POST['name'])) {
     echo Html::textarea([
         'name' => $_POST['name'],
-        'value' => htmlescape(rawurldecode(stripslashes($_POST["data"]))),
+        'value' => htmlescape(rawurldecode($_POST["data"])),
         'cols' => '30',
         'rows' => '3',
         'display' => false,

@@ -503,8 +503,8 @@ class Task extends CommonDBTM
                 $taskid = $values["id"];
                 unset($values["id"]);
                 $values["plugin_resources_resources_id"] = $newid;
-                $values["name"] = addslashes($ptask["name"]);
-                $values["comment"] = addslashes($ptask["comment"]);
+                $values["name"] = $ptask["name"];
+                $values["comment"] = $ptask["comment"];
 
                 $newtid = $item->add($values);
 
@@ -1145,8 +1145,6 @@ class Task extends CommonDBTM
                     foreach ($ids as $key => $val) {
                         $item->getFromDB($key);
                         unset($item->fields["id"]);
-                        $item->fields["name"] = addslashes($item->fields["name"]);
-                        $item->fields["comment"] = addslashes($item->fields["comment"]);
                         $item->fields["entities_id"] = $input['entities_id'];
                         if ($item->add($item->fields)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);

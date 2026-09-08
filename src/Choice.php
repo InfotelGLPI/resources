@@ -191,7 +191,7 @@ class Choice extends CommonDBTM
 
         $resource->update([
             'id' => $values['plugin_resources_resources_id'],
-            'comment' => addslashes($comment),
+            'comment' => $comment,
         ]);
 
     }

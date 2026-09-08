@@ -65,7 +65,9 @@ $columns = [
 $output_type = Search::HTML_OUTPUT;
 
 if (isset($_POST['list_limit'])) {
-    $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+    // Cast: this key is shared with the core, and the budget summary report reads it
+    // back straight into a SQL LIMIT clause.
+    $_SESSION['glpilist_limit'] = (int) $_POST['list_limit'];
     unset($_POST['list_limit']);
 }
 if (!isset($_REQUEST['sort'])) {
@@ -73,7 +75,7 @@ if (!isset($_REQUEST['sort'])) {
     $_REQUEST['order'] = "ASC";
 }
 
-$limit = $_SESSION['glpilist_limit'];
+$limit = (int) $_SESSION['glpilist_limit'];
 
 if (isset($_POST["display_type"])) {
     $output_type = $_POST["display_type"];
@@ -274,11 +276,21 @@ if ($nbtot > 0) {
         $dataAll = array_slice($dataAll, $start, $limit);
     }
 
+    // Escape raw DB values (resource identity, rank/profession labels) before output:
+    // Search::showItem() concatenates its value straight into the <td>, and GLPI 10+
+    // stores these fields unencoded, so a crafted value would otherwise run as HTML.
+    $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+
     foreach ($dataAll as $key => $data) {
         $num = 1;
 
         echo Search::showNewLine($output_type);
-        echo Search::showItem($output_type, Dropdown::getDropdownName('glpi_entities', $data['entity']), $num, $key);
+        echo Search::showItem(
+            $output_type,
+            $escape(Dropdown::getDropdownName('glpi_entities', $data['entity'])),
+            $num,
+            $key,
+        );
         if ($data['typeName'] == 'Resource') {
             $type = Resource::getTypeName(0);
             $link = Toolbox::getItemTypeFormURL(Resource::class);
@@ -288,20 +300,21 @@ if ($nbtot > 0) {
         }
         echo Search::showItem($output_type, $type, $num, $key);
 
-        $name = "<a href='" . $link . "?id=" . $data["ID"] . "' target='_blank'>";
+        $name = "<a href='" . $link . "?id=" . (int) $data["ID"] . "' target='_blank'>";
         if ($data["name"] == null) {
-            $name .= "(" . $data["ID"] . ")";
+            $name .= "(" . (int) $data["ID"] . ")";
         } else {
-            $name .= $data["name"];
+            $name .= $escape($data["name"]);
         }
         $name .= "</a>";
         echo Search::showItem($output_type, $name, $num, $key);
 
-        echo Search::showItem($output_type, $data['firstname'], $num, $key);
-        echo Search::showItem($output_type, $data['registration_number'], $num, $key);
+        echo Search::showItem($output_type, $escape($data['firstname']), $num, $key);
+        echo Search::showItem($output_type, $escape($data['registration_number']), $num, $key);
 
         $link1 = Toolbox::getItemTypeFormURL(Profession::class);
-        $profName = "<a href='" . $link1 . "?id=" . $data["profID"] . "' target='_blank'>" . $data["profession"] . "</a>";
+        $profName = "<a href='" . $link1 . "?id=" . (int) $data["profID"] . "' target='_blank'>"
+            . $escape($data["profession"]) . "</a>";
         echo Search::showItem($output_type, $profName, $num, $key);
 
         echo Search::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);

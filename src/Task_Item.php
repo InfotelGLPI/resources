@@ -155,6 +155,24 @@ class Task_Item extends CommonDBTM
     }
 
     /**
+     * @param array $input
+     *
+     * @return array|false
+     */
+    public function prepareInputForAdd($input)
+    {
+        // The itemtype travels in the posted form (front/task.form.php) and in the
+        // massive action input (Task::processMassiveActionsForOneItemtype), and every
+        // reader of this table instantiates it. Validate the value here, at the sink,
+        // the way ajax/linkItems.php does, so no writer can bypass the allow-list.
+        if (!in_array($input['itemtype'] ?? '', Resource::getTypes(true), true)) {
+            return false;
+        }
+
+        return $input;
+    }
+
+    /**
      * @param $values
      */
     public function addTaskItem($values)

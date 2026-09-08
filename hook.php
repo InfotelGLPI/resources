@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
 use Glpi\Search\Provider\SQLProvider;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Resources\Actionprofile;
@@ -474,9 +475,9 @@ function plugin_resources_install()
             $Checklistconfig = new Checklistconfig();
             if (!empty($checklists)) {
                 foreach ($checklists as $checklist) {
-                    $values["name"] = addslashes($checklist["name"]);
-                    $values["address"] = addslashes($checklist["address"]);
-                    $values["comment"] = addslashes($checklist["comment"]);
+                    $values["name"] = $checklist["name"];
+                    $values["address"] = $checklist["address"];
+                    $values["comment"] = $checklist["comment"];
                     $values["tag"] = $checklist["tag"];
                     $values["entities_id"] = $checklist["entities_id"];
                     $Checklistconfig->add($values);
@@ -560,7 +561,7 @@ function plugin_resources_install()
                 while ($data = $DB->fetchAssoc($result)) {
                     $restrictaffected = [
                         "itemtype" => $data['raw']["ITEMtype"],
-                        "comment" => addslashes($data["comment"]),
+                        "comment" => $data["comment"],
                     ];
                     $affected = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
 
@@ -614,20 +615,25 @@ function plugin_resources_install()
                         if (!empty($choice->fields["comment"])) {
                             $comment = $choice->fields["comment"];
                         }
-                        $valueschild["name"] = addslashes(Html::resume_text($comment, 50));
-                        $valueschild["comment"] = addslashes($comment);
+                        // add() goes through the query builder, which quotes values itself:
+                        // addslashes() here stored the backslashes verbatim.
+                        $valueschild["name"] = Html::resume_text($comment, 50);
+                        $valueschild["comment"] = $comment;
                         $valueschild["entities_id"] = 0;
                         $valueschild["is_recursive"] = 1;
                         $valueschild["plugin_resources_choiceitems_id"] = $newidparent;
                         $newidchild = $choice_item->add($valueschild);
 
                         foreach ($ressources as $id => $val) {
-                            $query = "UPDATE `glpi_plugin_resources_choices`
-                           SET `plugin_resources_choiceitems_id` = '" . $newidchild . "'
-                          WHERE `plugin_resources_resources_id` = '" . $val . "'
-                          AND `itemtype` = '" . $choice->fields["itemtype"] . "'
-                           AND `comment` = '" . addslashes($choice->fields["comment"]) . "';";
-                            $result = $DB->doQuery($query);
+                            $DB->update(
+                                'glpi_plugin_resources_choices',
+                                ['plugin_resources_choiceitems_id' => $newidchild],
+                                [
+                                    'plugin_resources_resources_id' => $val,
+                                    'itemtype' => $choice->fields["itemtype"],
+                                    'comment' => $choice->fields["comment"],
+                                ],
+                            );
                         }
                     }
                 }
@@ -649,12 +655,10 @@ function plugin_resources_install()
             "glpi_plugin_resources_employees",
             "matricule",
         )) {
-            $query = "SELECT * FROM `glpi_users`";
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
+            $users_iterator = $DB->request(['FROM' => 'glpi_users']);
 
-            if (!empty($number)) {
-                while ($data = $DB->fetchAssoc($result)) {
+            if (count($users_iterator) > 0) {
+                foreach ($users_iterator as $data) {
                     $restrict = [
                         "items_id" => $data["id"],
                         "itemtype" => 'User',
@@ -670,10 +674,11 @@ function plugin_resources_install()
                                 $matricule = $employee->fields["matricule"];
 
                                 if (isset($matricule) && !empty($matricule)) {
-                                    $query = "UPDATE `glpi_users`
-                           SET `registration_number` = '" . $matricule . "'
-                           WHERE `id` ='" . $link["items_id"] . "'";
-                                    $DB->doQuery($query);
+                                    $DB->update(
+                                        'glpi_users',
+                                        ['registration_number' => $matricule],
+                                        ['id' => $link["items_id"]],
+                                    );
                                 }
                             }
                         }
@@ -705,11 +710,13 @@ function plugin_resources_install()
                     ]);
                     if (count($iterator) > 0) {
                         foreach ($iterator as $data) {
-                            $iq = "INSERT INTO `glpi_notepads`
-                             (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
-                      VALUES ('" . $dbu->getItemTypeForTable($t) . "', '" . $data['id'] . "',
-                              '" . addslashes($data['notepad']) . "', NOW(), NOW())";
-                            $DB->doQuery($iq, "0.85 migrate notepad data");
+                            $DB->insert('glpi_notepads', [
+                                'itemtype' => $dbu->getItemTypeForTable($t),
+                                'items_id' => $data['id'],
+                                'content' => $data['notepad'],
+                                'date' => new QueryExpression('NOW()'),
+                                'date_mod' => new QueryExpression('NOW()'),
+                            ]);
                         }
                     }
                     $query = "ALTER TABLE `glpi_plugin_resources_resources` DROP COLUMN `notepad`;";
@@ -1683,11 +1690,23 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
         case "glpi_plugin_resources_recipients_leaving.name":
         case "glpi_plugin_resources_recipients.name":
         case "glpi_plugin_resources_salemanagers.name":
-            $ADD = " OR `" . $table . "`.`firstname` LIKE '%" . $val . "%' OR `" . $table . "`.`realname` LIKE '%" . $val . "%' ";
+            // $SEARCH is escaped by makeTextSearch(); $val is not. The core reinjects
+            // whatever this hook returns verbatim through new QueryExpression($out)
+            // (SQLProvider::getAddWhereHook()), so concatenating the raw search value here
+            // was a plain SQL injection. Reuse the escaped comparison on every column.
             if ($nott && $val != "NULL") {
-                $ADD = " OR `$table`.`$field` IS NULL";
+                // Negative search: a row matches only when NONE of the three columns
+                // matches, so they are combined with AND. Keeping the OR of the positive
+                // branch would make the condition true on nearly every row, which is why
+                // the two extra columns used to be dropped here altogether.
+                return $link . " ((`$table`.`$field` $SEARCH"
+                    . " AND `$table`.`firstname` $SEARCH"
+                    . " AND `$table`.`realname` $SEARCH)"
+                    . " OR `$table`.`$field` IS NULL) ";
             }
-            return $link . " (`$table`.`$field` $SEARCH " . $ADD . " ) ";
+            return $link . " (`$table`.`$field` $SEARCH"
+                . " OR `$table`.`firstname` $SEARCH"
+                . " OR `$table`.`realname` $SEARCH) ";
     }
     return "";
 }

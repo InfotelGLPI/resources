@@ -88,7 +88,9 @@ $output_type = Search::HTML_OUTPUT;
 // Form validate
 if ($report->criteriasValidated()) {
     if (isset($_POST['list_limit'])) {
-        $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+        // Cast: this key is shared with the core, and the budget summary report reads it
+        // back straight into a SQL LIMIT clause.
+        $_SESSION['glpilist_limit'] = (int) $_POST['list_limit'];
         unset($_POST['list_limit']);
     }
     if (!isset($_REQUEST['sort'])) {
@@ -96,7 +98,7 @@ if ($report->criteriasValidated()) {
         $_REQUEST['order'] = "ASC";
     }
 
-    $limit = $_SESSION['glpilist_limit'];
+    $limit = (int) $_SESSION['glpilist_limit'];
 
     if (isset($_POST["display_type"])) {
         $output_type = $_POST["display_type"];

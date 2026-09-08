@@ -238,8 +238,8 @@ class ReportConfig extends CommonDBTM
             $report = new self();
             $report->add([
                 'plugin_resources_resources_id' => $newid,
-                'information' => addslashes($data["information"]),
-                'comment' => addslashes($data["comment"]),
+                'information' => $data["information"],
+                'comment' => $data["comment"],
                 'send_transfer_notif' => $data["send_transfer_notif"],
                 'send_report_notif' => $data["send_report_notif"],
                 'send_other_notif' => $data["send_other_notif"],

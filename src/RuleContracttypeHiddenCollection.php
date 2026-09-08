@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
  */
 class RuleContracttypeHiddenCollection extends RuleCollection
 {
-    public static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources_rule';
 
     // From RuleCollection
     public $stop_on_first_match = true;

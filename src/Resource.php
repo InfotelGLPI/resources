@@ -3343,11 +3343,39 @@ class Resource extends CommonDBTM
         $resource = new Resource();
         $itemtype = $ma->getItemtype(false);
 
+        // Every branch below that links or unlinks an item reads the itemtype from the
+        // posted form and hands it to Resource_Item. Validate the value against the types
+        // the plugin actually exposes, the way ajax/linkItems.php does: the per-item can()
+        // answers for the resource, never for the class named alongside it.
+        $link_itemtype = (string) ($input['itemtype'] ?? '');
+        $link_actions = ['Install', 'Desinstall', 'plugin_resources_add_item', 'plugin_resources_generate_resources'];
+        if (in_array($ma->getAction(), $link_actions, true)
+            && !in_array($link_itemtype, self::getTypes(true), true)) {
+            $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
+            $ma->addMessage(__('Unsupported item type', 'resources'));
+            return;
+        }
+
         switch ($ma->getAction()) {
             case "Transfert":
                 if ($itemtype == Resource::class) {
+                    // The destination entity is posted with the form and nothing below validates
+                    // it: without this test the action moved resources into any entity of the
+                    // instance. The per-item check that follows scopes the source side, which
+                    // update() never does on its own.
+                    $entities_id = (int) ($input['entities_id'] ?? -1);
+                    if (!Session::haveAccessToEntity($entities_id)) {
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                        break;
+                    }
                     foreach ($ids as $key => $val) {
-                        if ($item->transferResource($key, $input['entities_id'])) {
+                        if (!$item->can($key, UPDATE)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                            continue;
+                        }
+                        if ($item->transferResource($key, $entities_id)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3362,7 +3390,7 @@ class Resource extends CommonDBTM
                         $values = [
                             'plugin_resources_resources_id' => $key,
                             'items_id' => $input["item_item"],
-                            'itemtype' => $input['itemtype'],
+                            'itemtype' => $link_itemtype,
                         ];
                         if ($resource_item->add($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
@@ -3378,7 +3406,15 @@ class Resource extends CommonDBTM
 
             case "Desinstall":
                 foreach ($ids as $key => $val) {
-                    if ($resource_item->deleteItemByResourcesAndItem($key, $input['item_item'], $input['itemtype'])) {
+                    // Same contract as the "Install" branch above: the posted ids are not
+                    // filtered by the massive action engine, so each one has to answer for
+                    // itself before a link is removed.
+                    if (!$item->can($key, UPDATE)) {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                        continue;
+                    }
+                    if ($resource_item->deleteItemByResourcesAndItem($key, $input['item_item'], $link_itemtype)) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                     } else {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3398,13 +3434,16 @@ class Resource extends CommonDBTM
                 $messages = [];
                 foreach ($ids as $key => $val) {
                     if ($item->can($key, UPDATE)) {
-                        $input = [
+                        // Do not reassign $input here: the loop reads it again on the next
+                        // iteration, so shadowing it made the branch depend on its own
+                        // output.
+                        $values = [
                             'plugin_resources_resources_id' => $input['plugin_resources_resources_id'],
                             'items_id' => $key,
-                            'itemtype' => $input['itemtype'],
+                            'itemtype' => $link_itemtype,
                         ];
 
-                        if ($resource_item->add($input)) {
+                        if ($resource_item->add($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                             $messages[] = _n(
                                 "This resource has been added",
@@ -4362,6 +4401,11 @@ class Resource extends CommonDBTM
     {
         $users = [];
         foreach ($items as $key => $val) {
+            // The ids come straight from the massive-action form: a resource the session
+            // cannot read must not disclose the mail addresses of the users behind it.
+            if (!$this->can($key, READ)) {
+                continue;
+            }
             $restrict = [
                 "itemtype" => 'User',
                 "plugin_resources_resources_id" => $key,
@@ -4393,7 +4437,11 @@ class Resource extends CommonDBTM
             }
         }
 
-        $send = "<a href='mailto:$mail'>" . __('Click here to send your email', 'resources') . "</a>";
+        // addMessageAfterRedirect() is rendered with |raw by the core toast template, and
+        // the address list is built from user-editable fields: escape it here, and quote the
+        // attribute so a stray apostrophe cannot break out of it either.
+        $send = '<a href="mailto:' . htmlspecialchars($mail, ENT_QUOTES, 'UTF-8') . '">'
+            . __('Click here to send your email', 'resources') . '</a>';
         Session::addMessageAfterRedirect($send);
 
         return true;
@@ -4410,48 +4458,11 @@ class Resource extends CommonDBTM
      **/
     public static function sendFile($file, $filename)
     {
-        // Test securite : document in DOC_DIR
-        $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/", "", $file);
-
-        if (strstr($tmpfile, "../") || strstr($tmpfile, "..\\")) {
-            Event::log(
-                $file,
-                "sendFile",
-                1,
-                "security",
-                $_SESSION["glpiname"] . " try to get a non standard file.",
-            );
-            die("Security attack !!!");
-        }
-
-        if (!file_exists($file)) {
-            die("Error file $file does not exist");
-        }
-
-        $splitter = explode("/", $file);
-        $mime = "application/octet-stream";
-
-        if (preg_match('/\.(....?)$/', $file, $regs)) {
-            switch ($regs[1]) {
-                case "jpeg":
-                    $mime = "image/jpeg";
-                    break;
-
-                case "jpg":
-                    $mime = "image/jpeg";
-                    break;
-            }
-        }
-        //print_r($file);
-
-        // Now send the file with header() magic
-        header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
-        header('Pragma: private'); /// IE BUG + SSL
-        header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
-        header("Content-disposition: filename=\"$filename\"");
-        header("Content-type: " . $mime);
-
-        readfile($file) or die("Error opening file $file");
+        // $filename comes from a file name built out of the employee identity, so it is
+        // not a safe literal: it used to be interpolated into a hand-written
+        // Content-disposition header. The core helper does the DOC_DIR check, the
+        // encoding of the file name and the inline/attachment decision on the MIME type.
+        Toolbox::getFileAsResponse($file, $filename)->send();
     }
 
     /**

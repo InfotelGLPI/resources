@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(RuleContracttypeReadonlyCollection::$rightname, READ);
 
 $rulecollection = new RuleContracttypeReadonlyCollection($_SESSION['glpiactive_entity']);
 

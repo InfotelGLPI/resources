@@ -472,7 +472,7 @@ class ResourceBadge extends CommonDBTM
             'glpi_plugin_badges_badges',
             $options['badges_id'],
         );
-        $input["content"] .= addslashes("\n\n");
+        $input["content"] .= "\n\n";
         $input['id'] = 0;
         $ticket = new Ticket();
 
@@ -495,7 +495,7 @@ class ResourceBadge extends CommonDBTM
             }
             $changes[0] = 0;
             $changes[1] = '';
-            $changes[2] = addslashes($msg);
+            $changes[2] = $msg;
             Log::history(
                 $input['plugin_resources_resources_id'],
                 Resource::class,

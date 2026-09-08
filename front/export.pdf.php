@@ -83,17 +83,17 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
                 if (!empty($doc->fields['filepath'])) {
                     $file = GLPI_DOC_DIR . "/" . $doc->fields['filepath'];
 
-                    if (!file_exists($file)) {
-                        die("Error file " . $file . " does not exist");
-                    }
-                    // Now send the file with header() magic
-                    header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
-                    header('Pragma: private'); /// IE BUG + SSL
-                    header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
-                    header("Content-disposition: filename=\"" . $doc->fields['filename'] . "\"");
-                    header("Content-type: " . $doc->fields['mime']);
-
-                    readfile($file) or die("Error opening file $file");
+                    // File name and MIME type are raw database values that used to be
+                    // interpolated into hand-written headers: a quote in the name broke out
+                    // of the Content-disposition filename, and an attacker-chosen MIME type
+                    // got the file rendered inline instead of downloaded. The core helper
+                    // re-checks the path against GLPI_DOC_DIR, encodes the file name and
+                    // only inlines images and PDF documents.
+                    Toolbox::getFileAsResponse(
+                        $file,
+                        $doc->fields['filename'],
+                        $doc->fields['mime'],
+                    )->send();
                 }
             }
         }

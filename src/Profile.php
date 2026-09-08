@@ -116,6 +116,7 @@ class Profile extends \Profile
             'plugin_resources_checklist' => ALLSTANDARDRIGHT,
             'plugin_resources_employee' => ALLSTANDARDRIGHT,
             'plugin_resources_role' => ALLSTANDARDRIGHT,
+            'plugin_resources_rule' => ALLSTANDARDRIGHT,
             'plugin_resources_resting' => ALLSTANDARDRIGHT,
             'plugin_resources_holiday' => ALLSTANDARDRIGHT,
             'plugin_resources_habilitation' => ALLSTANDARDRIGHT,
@@ -206,6 +207,15 @@ class Profile extends \Profile
                 'itemtype' => Role::class,
                 'label' => _n('Role', 'Roles', 1, 'resources'),
                 'field' => 'plugin_resources_role',
+                'type' => 'general',
+            ],
+            [
+                // Rules drive automatic assignments: they are configuration, not data, so
+                // they answer to their own right instead of the generic plugin_resources
+                // one that every reader of the directory has to be granted.
+                'itemtype' => RuleChecklist::class,
+                'label' => _n('Rule', 'Rules', Session::getPluralNumber()),
+                'field' => 'plugin_resources_rule',
                 'type' => 'general',
             ],
 
@@ -391,6 +401,13 @@ class Profile extends \Profile
         global $DB;
         $profile = new self();
         $dbu = new DbUtils();
+        // The rules used to be governed by the generic plugin_resources right. Remember
+        // whether plugin_resources_rule is being created right now, so the former value
+        // can be carried over below instead of revoking access on upgrade.
+        $is_new_rule_right = $dbu->countElementsInTable(
+            'glpi_profilerights',
+            ['name' => 'plugin_resources_rule'],
+        ) == 0;
         //Add new rights in glpi_profilerights table
         foreach ($profile->getAllRights(true) as $data) {
             if ($dbu->countElementsInTable(
@@ -398,6 +415,26 @@ class Profile extends \Profile
                 ["name" => $data['field']],
             ) == 0) {
                 ProfileRight::addProfileRights([$data['field']]);
+            }
+        }
+
+        if ($is_new_rule_right) {
+            // Seed the new right from the one that used to gate the rules, so an upgrade
+            // never takes away an access the administrator had deliberately granted.
+            $it = $DB->request([
+                'SELECT' => ['profiles_id', 'rights'],
+                'FROM' => 'glpi_profilerights',
+                'WHERE' => ['name' => 'plugin_resources'],
+            ]);
+            foreach ($it as $data) {
+                $DB->update(
+                    'glpi_profilerights',
+                    ['rights' => $data['rights']],
+                    [
+                        'profiles_id' => $data['profiles_id'],
+                        'name' => 'plugin_resources_rule',
+                    ],
+                );
             }
         }
 

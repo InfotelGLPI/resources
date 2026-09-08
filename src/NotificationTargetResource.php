@@ -444,7 +444,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##task.planned##'] = '';
                 $tmp['##task.finished##'] = Dropdown::getYesNo($task['is_finished']);
                 $tmp['##task.realtime##'] = Ticket::getActionTime($task["actiontime"]);
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']);
                 $tmp['##task.comment##'] = RichText::getTextFromHtml($comment);
                 $tmp['##task.resource##'] = Dropdown::getDropdownName(
                     'glpi_plugin_resources_resources',
@@ -536,7 +536,7 @@ class NotificationTargetResource extends NotificationTarget
                     'glpi_locations',
                     $resource['locations_id'],
                 );
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource['comment']));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $resource['comment']);
                 $tmp['##resource.comment##'] = RichText::getTextFromHtml($comment);
                 $tmp['##resource.usersleaving##'] = getUserName($resource['users_id_recipient_leaving']);
                 $tmp['##resource.leaving##'] = Dropdown::getYesNo($resource['is_leaving']);
@@ -638,7 +638,7 @@ class NotificationTargetResource extends NotificationTarget
                     'glpi_locations',
                     $checklist['locations_id'],
                 );
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $checklist['comment']));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $checklist['comment']);
                 $tmp['##checklist.comment##'] = RichText::getTextFromHtml($comment);
                 $tmp['##checklist.usersleaving##'] = getUserName($checklist['users_id_recipient_leaving']);
                 $tmp['##checklist.datedeclarationleaving##'] = Html::convDateTime(
@@ -809,7 +809,7 @@ class NotificationTargetResource extends NotificationTarget
 
             $this->data['##lang.resource.comment##'] = __('Description');
             if ($this->obj->getField("comment")) {
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment")));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment"));
                 $this->data['##resource.comment##'] = RichText::getTextFromHtml($comment);
             }
 
@@ -960,7 +960,7 @@ class NotificationTargetResource extends NotificationTarget
 
                 $tmp['##resource.datedeclarationleaving##'] = Html::convDateTime($resource['date_declaration_leaving']);
 
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $resource["comment"]));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $resource["comment"]);
                 $tmp['##resource.comment##'] = RichText::getTextFromHtml($comment);
 
                 $tmp['##resource.url##'] = urldecode(
@@ -1178,15 +1178,11 @@ class NotificationTargetResource extends NotificationTarget
                 $ReportConfig->getFromDB($options['reports_id']);
 
                 $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
-                $information = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']),
-                );
+                $information = str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']);
                 $this->data['##resource.informations##'] = RichText::getTextFromHtml($information);
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']),
-                );
+                $commentaire = str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']);
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
             }
 
@@ -1227,15 +1223,11 @@ class NotificationTargetResource extends NotificationTarget
                 $ReportConfig->getFromDB($options['reports_id']);
 
                 $this->data['##lang.resource.informations##'] = _n('Information', 'Informations', 2);
-                $information = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']),
-                );
+                $information = str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['information']);
                 $this->data['##resource.informations##'] = RichText::getTextFromHtml($information);
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']),
-                );
+                $commentaire = str_replace(['\r\n', '\n', '\r'], "<br>", $ReportConfig->fields['comment']);
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
                 $this->data['##lang.resource.targetentity##'] = __('Target entity', 'resources');
@@ -1286,9 +1278,7 @@ class NotificationTargetResource extends NotificationTarget
                 $this->data['##lang.resource.informationtitle##'] = __('Additional informations', 'resources');
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceResting->fields['comment']),
-                );
+                $commentaire = str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceResting->fields['comment']);
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
                 $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
@@ -1321,9 +1311,7 @@ class NotificationTargetResource extends NotificationTarget
                 $this->data['##lang.resource.informationtitle##'] = __('Additional informations', 'resources');
 
                 $this->data['##lang.resource.commentaires##'] = __('Comments');
-                $commentaire = stripslashes(
-                    str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceHoliday->fields['comment']),
-                );
+                $commentaire = str_replace(['\r\n', '\n', '\r'], "<br>", $ResourceHoliday->fields['comment']);
                 $this->data['##resource.commentaires##'] = RichText::getTextFromHtml($commentaire);
 
                 $this->data['##lang.resource.openby##'] = __('Reported by', 'resources');
@@ -1512,9 +1500,7 @@ class NotificationTargetResource extends NotificationTarget
                     if (empty($this->target_object->oldvalues['comment'])) {
                         $tmp['##update.comment##'] = "---";
                     } else {
-                        $comment = stripslashes(
-                            str_replace(['\r\n', '\n', '\r'], "<br/>", $this->target_object->oldvalues['comment']),
-                        );
+                        $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $this->target_object->oldvalues['comment']);
                         $tmp['##update.comment##'] = RichText::getTextFromHtml($comment);
                     }
                 }
@@ -1645,7 +1631,7 @@ class NotificationTargetResource extends NotificationTarget
                 $tmp['##task.planned##'] = '';
                 $tmp['##task.finished##'] = Dropdown::getYesNo($task['is_finished']);
                 $tmp['##task.realtime##'] = Ticket::getActionTime($task["actiontime"]);
-                $comment = stripslashes(str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']));
+                $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $task['comment']);
                 $tmp['##task.comment##'] = RichText::getTextFromHtml($comment);
 
                 $this->data['tasks'][] = $tmp;

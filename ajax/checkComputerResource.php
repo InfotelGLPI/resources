@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Item;
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -40,9 +41,32 @@ if (!defined('GLPI_ROOT')) {
 
 
 if (isset($_POST["computer_id"])) {
-    $resource_item = new Resource_Item();
-    $resources = $resource_item->find(['itemtype' => Computer::getType(), 'items_id' => $_POST["computer_id"]]);
-    if (count($resources) > 0) {
+    /** @var \DBmysql $DB */
+    global $DB;
+
+    // The link table carries no entity of its own: the boundary lives on the owning
+    // resource, so the probe has to join it instead of answering on the raw link rows.
+    $link_table     = Resource_Item::getTable();
+    $resource_table = Resource::getTable();
+    $iterator       = $DB->request([
+        'COUNT'      => 'cpt',
+        'FROM'       => $link_table,
+        'INNER JOIN' => [
+            $resource_table => [
+                'ON' => [
+                    $link_table     => 'plugin_resources_resources_id',
+                    $resource_table => 'id',
+                ],
+            ],
+        ],
+        'WHERE'      => [
+            $link_table . '.itemtype' => Computer::class,
+            $link_table . '.items_id' => (int) $_POST["computer_id"],
+        ] + getEntitiesRestrictCriteria($resource_table, '', '', true),
+    ]);
+
+    $row = $iterator->current();
+    if ((int) ($row['cpt'] ?? 0) > 0) {
         echo true;
     }
 }

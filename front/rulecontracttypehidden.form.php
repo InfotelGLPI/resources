@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\RuleContracttypeHiddenCollection;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(RuleContracttypeHiddenCollection::$rightname, READ);
 
 $rulecollection = new RuleContracttypeHiddenCollection($_SESSION['glpiactive_entity']);
 

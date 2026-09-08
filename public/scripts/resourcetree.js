@@ -117,6 +117,13 @@ const initTree = (container) => {
         extensions: ['filter', 'glyph'],
         autoScroll: true,
 
+        // Node titles are plain database values (contract type and resource names).
+        // Fancytree defaults escapeTitles to false -- it assigns node.title through
+        // innerHTML so callers can append markup, which the core relies on in
+        // Glpi\Features\TreeBrowse -- so a stored payload would render as markup here.
+        // Neither title carries markup on purpose: icons come from the separate key.
+        escapeTitles: true,
+
         // Contract types carry no URL: a click on one unfolds it instead of leaving the tree.
         clickFolderMode: 3,
 

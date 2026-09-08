@@ -256,6 +256,44 @@ class LDAP extends CommonDBTM
         }
     }
 
+    /**
+     * Build an initial Active Directory password no one can derive from the identity of the
+     * account holder. One character is drawn from each class first so the result satisfies the
+     * default AD complexity policy, then the whole string is shuffled with random_int().
+     *
+     * @param int $length total length of the generated password
+     *
+     * @return string
+     */
+    public static function generateRandomPassword(int $length = 20): string
+    {
+        // Ambiguous glyphs (0/O, 1/l/I) are left out: the password is read out loud or typed
+        // from a printout before its first use.
+        $alphabets = [
+            'ABCDEFGHJKLMNPQRSTUVWXYZ',
+            'abcdefghijkmnpqrstuvwxyz',
+            '23456789',
+            '!@#$%*-_=+?',
+        ];
+
+        $chars = [];
+        foreach ($alphabets as $alphabet) {
+            $chars[] = $alphabet[random_int(0, strlen($alphabet) - 1)];
+        }
+        $all = implode('', $alphabets);
+        while (count($chars) < max($length, count($alphabets))) {
+            $chars[] = $all[random_int(0, strlen($all) - 1)];
+        }
+
+        // str_shuffle() draws from a non-cryptographic generator: shuffle by hand.
+        for ($i = count($chars) - 1; $i > 0; $i--) {
+            $j = random_int(0, $i);
+            [$chars[$i], $chars[$j]] = [$chars[$j], $chars[$i]];
+        }
+
+        return implode('', $chars);
+    }
+
     public function existingUser($login)
     {
         $find = false;
@@ -293,10 +331,23 @@ class LDAP extends CommonDBTM
 
             // Create the users distinguished name.
             // We're adding an OU onto the users base DN to have it be saved in the specified OU.
-            $dn = "CN=" . $data["name"] . " " . $data["firstname"] . "," . $adConfig->getField("ouUser");
+            // The identity comes from the resource form: the RFC 4514 special characters
+            // (, + " \\ < > ; =) would otherwise close the CN component and let the caller pick
+            // the OU the account is created in. Escape the value, and assert the result still
+            // sits under the configured OU.
+            $cn = trim($data["name"] . " " . $data["firstname"]);
+            $ou = (string) $adConfig->getField("ouUser");
+            if ($cn === '' || $ou === '') {
+                return false;
+            }
+            $dn = "CN=" . ldap_escape($cn, '', LDAP_ESCAPE_DN) . "," . $ou;
+            if (!str_ends_with($dn, ',' . $ou)) {
+                return false;
+            }
             $user->setDn($dn);
             $user->setFirstAttribute('samaccountname', $data['login']);
-            $user->setFirstAttribute('cn', $data["name"] . " " . $data["firstname"]);
+            // Attribute values are not DN components: the unescaped name belongs here.
+            $user->setFirstAttribute('cn', $cn);
 
 
             $attributes = [];
@@ -329,7 +380,8 @@ class LDAP extends CommonDBTM
             if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
                 try {
                     $newPassword = '';
-                    if ($adConfig->fields['format_default_account_password'] == 1) {
+                    $format      = (int) $adConfig->fields['format_default_account_password'];
+                    if ($format === Adconfig::PASSWORD_FORMAT_DYNAMIC) {
                         $newPassword = strtoupper(substr($data["firstname"], 0, 1))
                             . strtolower(substr($data["name"], 0, 1));
                         if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
@@ -339,12 +391,18 @@ class LDAP extends CommonDBTM
                         }
                         $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
 
-                    } elseif ($adConfig->fields['format_default_account_password'] == 2) {
+                    } elseif ($format === Adconfig::PASSWORD_FORMAT_STATIC) {
                         $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
+                    } elseif ($format === Adconfig::PASSWORD_FORMAT_RANDOM) {
+                        $newPassword = self::generateRandomPassword();
                     }
                     if ($newPassword != '') {
                         // Reset the password. The 'unicodepwd' mutator auto-encodes it (UTF-16LE, quoted).
                         $user->setAttribute('unicodepwd', $newPassword);
+                        // The first two formats derive the initial password from public identity
+                        // data or share a single secret across every account: expiring it right
+                        // away keeps the window in which it can be guessed to the first logon.
+                        $user->setAttribute('pwdlastset', 0);
                         $user->save();
                     }
                     return true;
@@ -412,8 +470,12 @@ class LDAP extends CommonDBTM
             // save() and rename() return void and throw LdapRecordException on failure.
             $user->save();
             if ($rename) {
-                $ncn = "cn=" . $data["name"] . " " . $data["firstname"];
-                $user->rename($ncn);
+                // rename() takes the new RDN verbatim: escape the identity so it cannot append
+                // components of its own and move the account out of its OU.
+                $ncn = trim($data["name"] . " " . $data["firstname"]);
+                if ($ncn !== '') {
+                    $user->rename("cn=" . ldap_escape($ncn, '', LDAP_ESCAPE_DN));
+                }
             }
 
             return [true, $new_value];

@@ -720,15 +720,12 @@ class Resource_Item extends CommonDBRelation
                 "date_begin" => __('Arrival date', 'resources'),
                 "date_end" => __('Departure date', 'resources'),
             ],
+            // raw_html turns Twig escaping off (templates/components/datatable.html.twig).
+            // Only 'name' carries deliberate markup (getLink()); every other column is a
+            // plain database value — firstname is user input and the dropdown labels are
+            // stored verbatim — so they go through the default escaping formatter.
             'formatters' => [
                 'name' => 'raw_html',
-                'firstname' => 'raw_html',
-                'entities_id' => 'raw_html',
-                'locations_id' => 'raw_html',
-                'plugin_resources_contracttypes_id' => 'raw_html',
-                'plugin_resources_departments_id' => 'raw_html',
-                "date_begin" => 'raw_html',
-                "date_end" => 'raw_html',
             ],
         ];
 

@@ -474,9 +474,10 @@ class Wizard extends CommonDBTM
             'comment' => __('Comment'),
             "delete_choice" => __('Action'),
         ];
+        // getDropdownName()/getDropdownComments() return the stored label verbatim, not
+        // markup: raw_html rendered a stored payload as HTML, and this view is exposed in
+        // the simplified interface. Let Twig escape both.
         $formatters = [
-            'name' => 'raw_html',
-            'comment' => 'raw_html',
             'delete_choice' => 'button',
         ];
         $footers = [];

@@ -46,7 +46,7 @@ if (!defined('GLPI_ROOT')) {
  **/
 class RuleChecklist extends Rule
 {
-    public static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources_rule';
 
     // From Rule
     public $can_sort = true;

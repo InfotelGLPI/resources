@@ -35,6 +35,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Html;
 use Item_Ticket;
 use Location;
@@ -58,6 +59,32 @@ class LinkAd extends CommonDBTM
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;
     public const RESOURCES_CHECKLIST_TRANSFER = 3;
+
+    /**
+     * Validate the ticket a directory operation reports itself into.
+     *
+     * The AD forms carry the ticket as a hidden field and ITILFollowup::add() enforces no
+     * right of its own: a forged ticket_id would write a private follow-up on any ticket of
+     * the instance. Require read access on the posted ticket, the way the timeline does.
+     *
+     * @param mixed $tickets_id posted ticket id
+     *
+     * @return int the validated ticket id, 0 when none was posted
+     */
+    public static function checkTicketAccess($tickets_id): int
+    {
+        $tickets_id = (int) $tickets_id;
+        if ($tickets_id <= 0) {
+            return 0;
+        }
+
+        $ticket = new Ticket();
+        if (!$ticket->can($tickets_id, READ)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        return $tickets_id;
+    }
 
     /**
      * Return the localized name of the current Type
@@ -237,7 +264,12 @@ class LinkAd extends CommonDBTM
         if ($ID > 0) {
             $this->check($ID, READ);
         } else {
-            // Create item
+            // Create item: $input was never defined here, so check() resolved the entity of
+            // an empty array. State the parent the form is opened for instead.
+            $input = [
+                'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                'entities_id' => $options['entities_id'] ?? $_SESSION['glpiactive_entity'],
+            ];
             $this->check(-1, UPDATE, $input);
         }
 

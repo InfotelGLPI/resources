@@ -62,6 +62,9 @@ if (isset($_POST["add"])) {
     // check() on it can enforce the entity boundary — see the "update" branch below).
     Session::checkRight(LinkAd::$rightname, CREATE);
     Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
+    // The follow-up below reports the operation into the ticket named by the form: validate
+    // it before the directory is touched, not after.
+    $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $ldap = new LDAP();
     $res = $ldap->createUserAD($_POST);
     if ($res) {
@@ -71,8 +74,8 @@ if (isset($_POST["add"])) {
 
         $toadd = [
             'type' => "new",
-            'items_id' => $_POST["ticket_id"],
-            'itemtype' => 'Ticket',
+            'items_id' => $tickets_id,
+            'itemtype' => Ticket::class,
             'is_private' => 1,
         ];
 
@@ -83,7 +86,9 @@ if (isset($_POST["add"])) {
         );
         $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
-        $fup->add($toadd);
+        if ($tickets_id > 0) {
+            $fup->add($toadd);
+        }
         $message = __('the user has been added to the LDAP directory', 'resources');
         Session::addMessageAfterRedirect($message, false, INFO);
     } else {
@@ -98,6 +103,9 @@ if (isset($_POST["add"])) {
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     Resource::checkChildOwnership($linkad, $_POST['id']);
+    // The follow-up below reports the operation into the ticket named by the form: validate
+    // it before the directory is touched, not after.
+    $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->updateUserAD($_POST);
     if ($res[0]) {
@@ -107,8 +115,8 @@ if (isset($_POST["add"])) {
 
         $toadd = [
             'type' => "new",
-            'items_id' => $_POST["ticket_id"],
-            'itemtype' => 'Ticket',
+            'items_id' => $tickets_id,
+            'itemtype' => Ticket::class,
             'is_private' => 1,
         ];
 
@@ -138,7 +146,9 @@ if (isset($_POST["add"])) {
         }
         $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
-        $fup->add($toadd);
+        if ($tickets_id > 0) {
+            $fup->add($toadd);
+        }
         $message = __('the user has been updated to the LDAP directory', 'resources');
         Session::addMessageAfterRedirect($message, false, INFO);
     } else {
@@ -153,6 +163,9 @@ if (isset($_POST["add"])) {
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
     Resource::checkChildOwnership($linkad, $_POST['id']);
+    // The follow-up below reports the operation into the ticket named by the form: validate
+    // it before the directory is touched, not after.
+    $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->disableUserAD($_POST);
     if ($res) {
@@ -162,8 +175,8 @@ if (isset($_POST["add"])) {
 
         $toadd = [
             'type' => "new",
-            'items_id' => $_POST["ticket_id"],
-            'itemtype' => 'Ticket',
+            'items_id' => $tickets_id,
+            'itemtype' => Ticket::class,
             'is_private' => 1,
         ];
 
@@ -174,7 +187,9 @@ if (isset($_POST["add"])) {
         );
         $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
-        $fup->add($toadd);
+        if ($tickets_id > 0) {
+            $fup->add($toadd);
+        }
         $message = __('the user has been disabled and moved to the LDAP directory', 'resources');
         Session::addMessageAfterRedirect($message, false, INFO);
     } else {

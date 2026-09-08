@@ -369,8 +369,13 @@ class Employee extends CommonDBTM
 
         $employee_spotted = false;
 
+        // canView() above only answers for the global right, and getFromDB() applies no
+        // entity restriction. Carry the per-object guard on the method itself so every
+        // entry point (tab, export, another front) gets the boundary replayed too.
         $resource = new Resource();
-        $resource->getFromDB($plugin_resources_resources_id);
+        if (!$resource->can((int) $plugin_resources_resources_id, READ)) {
+            return false;
+        }
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
         $dbu = new DbUtils();

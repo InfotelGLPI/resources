@@ -52,7 +52,12 @@ if (isset($_POST["add_helpdesk_employee"])) {
     Html::redirect("./resource_item.list.php?id=" . $_POST["plugin_resources_resources_id"] . "&exist=0");
 } else {
     //show form employee informations from helpdesk
-    $employee->showFormHelpdesk($_GET["id"], 0);
+    // The write branch above is guarded by checkOwnership(); this one was not, and the
+    // canView() inside showFormHelpdesk() is a global right test that never looks at the
+    // entity of the requested row. The parameter is a Resource id, so guard it as one.
+    $resources_id = (int) ($_GET["id"] ?? 0);
+    Resource::checkOwnership($resources_id, READ);
+    $employee->showFormHelpdesk($resources_id, 0);
 }
 
 if (Session::getCurrentInterface() != 'central'

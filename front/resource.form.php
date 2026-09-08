@@ -140,7 +140,6 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
         }
         //for not create employee informations with template
         $_POST["add_from_helpdesk"] = 1;
-        $_POST["comment"] = addslashes($_POST["comment"]);
         $_POST["locations_id"] = $User->fields["locations_id"];
         $_POST["date_begin"] = date('Y-m-d');
         $_POST["users_id_recipient"] = Session::getLoginUserID();
@@ -235,9 +234,6 @@ elseif (isset($_POST["update"])) {
         foreach ($_POST as $key => $val) {
             $values[$key] = $val;
         }
-
-        // Clean text fields
-        $values['name']    = stripslashes($values['name']);
 
         $values['target']       = Toolbox::getItemTypeFormURL('PluginResourcesWizard');
         $values['withtemplate'] = $_POST["withtemplate"];
@@ -591,11 +587,12 @@ elseif (isset($_POST["add_checklist"])) {
         if (isset($tt->predefined) && count($tt->predefined)) {
             foreach ($tt->predefined as $predeffield => $predefvalue) {
                 // Load template data
-                $ticket->fields[$predeffield] = $DB->escape($predefvalue);
+                // add() goes through the query builder, which quotes values itself.
+                $ticket->fields[$predeffield] = $predefvalue;
             }
         }
         $resource->getFromDB($_POST["id"]);
-        $ticket->fields["name"] = $DB->escape(__("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname']);
+        $ticket->fields["name"] = __("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
         $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
 
         $dateend = new DateTime($resource->fields['date_end']);

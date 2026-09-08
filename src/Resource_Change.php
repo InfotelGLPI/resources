@@ -1556,7 +1556,7 @@ class Resource_Change extends CommonDBTM
         }
         $input["name"] = $data['name'];
         $input["content"] = $data['content'];
-        $input["content"] .= addslashes("\n\n");
+        $input["content"] .= "\n\n";
         $input['id'] = 0;
         $ticket = new Ticket();
 
@@ -1579,7 +1579,7 @@ class Resource_Change extends CommonDBTM
             }
             $changes[0] = 0;
             $changes[1] = '';
-            $changes[2] = addslashes($msg);
+            $changes[2] = $msg;
             Log::history(
                 $data['plugin_resources_resources_id'],
                 Resource::class,

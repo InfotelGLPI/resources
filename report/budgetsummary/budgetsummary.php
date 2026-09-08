@@ -85,14 +85,16 @@ $output_type = Search::HTML_OUTPUT;
 //If criterias have been validated
 if ($report->criteriasValidated()) {
     if (isset($_POST['list_limit'])) {
-        $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+        // Cast: this key is shared with the core, and the budget summary report reads it
+        // back straight into a SQL LIMIT clause.
+        $_SESSION['glpilist_limit'] = (int) $_POST['list_limit'];
         unset($_POST['list_limit']);
     }
     if (!isset($_REQUEST['sort'])) {
         $_REQUEST['sort'] = "profession";
         $_REQUEST['order'] = "ASC";
     }
-    $limit = $_SESSION['glpilist_limit'];
+    $limit = (int) $_SESSION['glpilist_limit'];
 
     if (isset($_POST["display_type"])) {
         $output_type = $_POST["display_type"];
@@ -149,6 +151,7 @@ if ($report->criteriasValidated()) {
     $nbtot = ($res ? $DB->numrows($res) : 0);
     if ($limit) {
         // Cast to int: $start is concatenated raw into the LIMIT clause below (SQL injection).
+        // $limit is cast at its assignment above, for the same reason.
         $start = (int) ($_GET["start"] ?? 0);
         if ($start >= $nbtot) {
             $start = 0;

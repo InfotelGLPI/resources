@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-global $CFG_GLPI, $DB;
+global $CFG_GLPI;
 
 use GlpiPlugin\Resources\Adconfig;
 use GlpiPlugin\Resources\Checklist;
@@ -260,7 +260,11 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
                         'itemtype' => 'Ticket',
                         'is_private' => 1];
 
-                    $content = $DB->escape(sprintf(__('%1$s %2$s have been updated in the LDAP directory', 'resources'), $value["firstname"], $value["name"]));
+                    $content = sprintf(
+                        __('%1$s %2$s have been updated in the LDAP directory', 'resources'),
+                        $value["firstname"],
+                        $value["name"],
+                    );
                     $content .= __("Data changed", 'resources') . " <br />";
                     foreach ($res[1] as $key => $oldData) {
                         $i = 1;

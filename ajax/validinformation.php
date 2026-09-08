@@ -27,8 +27,6 @@
  * --------------------------------------------------------------------------
  */
 
-global $DB;
-
 use GlpiPlugin\Resources\Adconfig;
 use GlpiPlugin\Resources\ContractNature;
 use GlpiPlugin\Resources\Department;
@@ -69,11 +67,12 @@ $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["cat
 if (isset($tt->predefined) && count($tt->predefined)) {
     foreach ($tt->predefined as $predeffield => $predefvalue) {
         // Load template data
-        $ticket->fields[$predeffield] = $DB->escape($predefvalue);
+        // add() goes through the query builder, which quotes values itself.
+        $ticket->fields[$predeffield] = $predefvalue;
     }
 }
 
-$ticket->fields["name"] = $DB->escape(__("Arrival of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname']);
+$ticket->fields["name"] = __("Arrival of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
 $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
 
 $content = str_replace(PHP_EOL, '<br>', $config->fields['text_ticket_validation']);
@@ -136,7 +135,7 @@ foreach (Config::getAvailablevariable() as $key => $value) {
 if (substr_count($content, 'r<br>') > 1) {
     $content = str_replace('r<br>', '<br>', $content);
 }
-$ticket->fields["content"] = addslashes($content);
+$ticket->fields["content"] = $content;
 
 $ticket->fields['users_id_recipient']  = Session::getLoginUserID();
 $ticket->fields['_users_id_requester'] = Session::getLoginUserID();

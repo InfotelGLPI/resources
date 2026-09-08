@@ -47,7 +47,7 @@ if (!defined('GLPI_ROOT')) {
  **/
 class RuleContracttypeHidden extends Rule
 {
-    public static $rightname = 'plugin_resources';
+    public static $rightname = 'plugin_resources_rule';
 
     public $can_sort = true;
 

@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\RuleChecklistCollection;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(RuleChecklistCollection::$rightname, READ);
 
 $rulecollection = new RuleChecklistCollection($_SESSION['glpiactive_entity']);
 

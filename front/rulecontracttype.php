@@ -29,7 +29,7 @@
 
 use GlpiPlugin\Resources\RuleContracttypeCollection;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(RuleContracttypeCollection::$rightname, READ);
 
 $rulecollection = new RuleContracttypeCollection($_SESSION['glpiactive_entity']);
 

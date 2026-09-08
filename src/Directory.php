@@ -1180,11 +1180,33 @@ class Directory extends CommonDBTM
      */
     public function sendEmail($items)
     {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        // The ids come straight from the massive-action form. The directory list itself is
+        // scoped through glpi_profiles_users, so replay that scope here: without it a forged
+        // id list disclosed the mail address of any user of the instance.
+        $allowed   = [];
+        $requested = array_map('intval', array_keys($items));
+        if (!empty($requested)) {
+            $dbu      = new DbUtils();
+            $iterator = $DB->request([
+                'SELECT'   => 'users_id',
+                'DISTINCT' => true,
+                'FROM'     => 'glpi_profiles_users',
+                'WHERE'    => ['users_id' => $requested]
+                    + $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', '', true),
+            ]);
+            foreach ($iterator as $row) {
+                $allowed[(int) $row['users_id']] = true;
+            }
+        }
+
         $User = new User();
         $mail = "";
         $first = true;
         foreach ($items as $key => $val) {
-            if ($User->getFromDB($key)) {
+            if (isset($allowed[(int) $key]) && $User->getFromDB($key)) {
                 $email = $User->getDefaultEmail();
                 if (!empty($email)) {
                     if (!$first) {
@@ -1197,7 +1219,11 @@ class Directory extends CommonDBTM
             }
         }
 
-        $send = "<a href='mailto:$mail'>" . __('Click here to send your email', 'resources') . "</a>";
+        // addMessageAfterRedirect() is rendered with |raw by the core toast template, and
+        // the address list is built from user-editable fields: escape it here, and quote the
+        // attribute so a stray apostrophe cannot break out of it either.
+        $send = '<a href="mailto:' . htmlspecialchars($mail, ENT_QUOTES, 'UTF-8') . '">'
+            . __('Click here to send your email', 'resources') . '</a>';
         Session::addMessageAfterRedirect($send);
 
         return true;

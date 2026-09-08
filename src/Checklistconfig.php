@@ -213,9 +213,6 @@ class Checklistconfig extends CommonDBTM
                     $checklist["plugin_resources_resources_id"] = $resource->fields["id"];
                     $checklist["plugin_resources_contracttypes_id"] = $resource->fields["plugin_resources_contracttypes_id"];
                     $checklist["checklist_type"] = $checklist_type;
-                    $checklist["name"] = addslashes($checklist["name"]);
-                    $checklist["address"] = addslashes($checklist["address"]);
-                    $checklist["comment"] = addslashes($checklist["comment"]);
                     $checklist["entities_id"] = $resource->fields["entities_id"];
                     $resource_checklist = new Checklist();
                     $resource_checklist->add($checklist);
@@ -279,7 +276,7 @@ class Checklistconfig extends CommonDBTM
         foreach ($ma->items[Checklistconfig::class] as $key => $val) {
             $this->getFromDB($key);
             $rule = new RuleChecklist();
-            $values["name"] = addslashes($this->fields["name"]);
+            $values["name"] = $this->fields["name"];
             $values["match"] = "AND";
             $values["is_active"] = 1;
             $values["is_recursive"] = 1;

@@ -339,11 +339,11 @@ class Checklist extends CommonDBTM
                 }
 
                 $input["items_id"] = [Resource::class => [$data['plugin_resources_resources_id']]];
-                $input["name"] .= addslashes(" " . Resource::getResourceName($data['plugin_resources_resources_id']));
+                $input["name"] .= " " . Resource::getResourceName($data['plugin_resources_resources_id']);
             }
 
             //TODO : ADD checklist lists or add config into plugin ?
-            $input["content"] .= addslashes("\n\n");
+            $input["content"] .= "\n\n";
             $input['status'] = Ticket::CLOSED;
             $input['id'] = 0;
             $ticket = new Ticket();
@@ -360,7 +360,7 @@ class Checklist extends CommonDBTM
         if ($tid) {
             $changes[0] = 0;
             $changes[1] = '';
-            $changes[2] = addslashes($msg);
+            $changes[2] = $msg;
             Log::history(
                 $data['plugin_resources_resources_id'],
                 Resource::class,
@@ -551,7 +551,12 @@ class Checklist extends CommonDBTM
         if ($ID > 0) {
             $this->check($ID, READ);
         } else {
-            // Create item
+            // Create item: $input was never defined here, so check() resolved the entity of
+            // an empty array. State the parent the form is opened for instead.
+            $input = [
+                'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                'entities_id' => $options['entities_id'] ?? $_SESSION['glpiactive_entity'],
+            ];
             $this->check(-1, UPDATE, $input);
         }
 
@@ -993,8 +998,8 @@ class Checklist extends CommonDBTM
                             $item->getFromDB($key);
                             if (empty($item->fields["plugin_resources_tasks_id"])) {
                                 $input2 = $input;
-                                $input2["name"] = addslashes($item->fields["name"]);
-                                $input2["comment"] = addslashes($item->fields["comment"]);
+                                $input2["name"] = $item->fields["name"];
+                                $input2["comment"] = $item->fields["comment"];
                                 $input2["entities_id"] = $item->fields["entities_id"];
                                 $newID = $task->add($input2);
                                 $tasks_id[$newID] = $newID;

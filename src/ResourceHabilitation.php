@@ -274,13 +274,11 @@ class ResourceHabilitation extends CommonDBTM
     {
         $changes[0] = 0;
         $changes[1] = '';
-        $changes[2] = addslashes(
-            sprintf(
-                __('Adding the habilitation: %s', 'resources'),
-                Dropdown::getDropdownName(
-                    'glpi_plugin_resources_habilitations',
-                    $this->input['plugin_resources_habilitations_id'],
-                ),
+        $changes[2] = sprintf(
+            __('Adding the habilitation: %s', 'resources'),
+            Dropdown::getDropdownName(
+                'glpi_plugin_resources_habilitations',
+                $this->input['plugin_resources_habilitations_id'],
             ),
         );
         Log::history(
@@ -299,13 +297,11 @@ class ResourceHabilitation extends CommonDBTM
     {
         $changes[0] = 0;
         $changes[1] = '';
-        $changes[2] = addslashes(
-            sprintf(
-                __('Suppression of the habilitation: %s', 'resources'),
-                Dropdown::getDropdownName(
-                    'glpi_plugin_resources_habilitations',
-                    $this->fields['plugin_resources_habilitations_id'],
-                ),
+        $changes[2] = sprintf(
+            __('Suppression of the habilitation: %s', 'resources'),
+            Dropdown::getDropdownName(
+                'glpi_plugin_resources_habilitations',
+                $this->fields['plugin_resources_habilitations_id'],
             ),
         );
         Log::history(

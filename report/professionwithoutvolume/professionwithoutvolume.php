@@ -84,7 +84,9 @@ $dbu = new DbUtils();
 // Form validate
 if ($report->criteriasValidated()) {
     if (isset($_POST['list_limit'])) {
-        $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+        // Cast: this key is shared with the core, and the budget summary report reads it
+        // back straight into a SQL LIMIT clause.
+        $_SESSION['glpilist_limit'] = (int) $_POST['list_limit'];
         unset($_POST['list_limit']);
     }
     if (!isset($_REQUEST['sort'])) {
@@ -92,7 +94,7 @@ if ($report->criteriasValidated()) {
         $_REQUEST['order'] = "ASC";
     }
 
-    $limit = $_SESSION['glpilist_limit'];
+    $limit = (int) $_SESSION['glpilist_limit'];
 
     if (isset($_POST["display_type"])) {
         $output_type = $_POST["display_type"];
@@ -325,11 +327,16 @@ if ($report->criteriasValidated()) {
             $dataAll = array_slice($dataAll, $start, $limit);
         }
 
+        // Escape raw DB values (resource identity, rank/profession labels) before output:
+        // Search::showItem() concatenates its value straight into the <td>, and GLPI 10+
+        // stores these fields unencoded, so a crafted value would otherwise run as HTML.
+        $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+
         foreach ($dataAll as $key => $data) {
             $num = 1;
             if (!is_numeric($data['professionline'])) {
                 echo Search::showNewLine($output_type);
-                echo Search::showItem($output_type, $data['professionline'], $num, $key);
+                echo Search::showItem($output_type, $escape($data['professionline']), $num, $key);
                 echo Search::showItem($output_type, '', $num, $key);
                 echo Search::showItem($output_type, '', $num, $key);
                 echo Search::showItem($output_type, '', $num, $key);
@@ -343,29 +350,36 @@ if ($report->criteriasValidated()) {
                 echo Search::showNewLine($output_type);
                 echo Search::showItem(
                     $output_type,
-                    Dropdown::getDropdownName('glpi_plugin_resources_professionlines', $data['professionline']),
+                    $escape(
+                        Dropdown::getDropdownName(
+                            'glpi_plugin_resources_professionlines',
+                            $data['professionline'],
+                        ),
+                    ),
                     $num,
                     $key,
                 );
                 echo Search::showItem(
                     $output_type,
-                    Dropdown::getDropdownName(
-                        'glpi_plugin_resources_professioncategories',
-                        $data['professioncategory'],
+                    $escape(
+                        Dropdown::getDropdownName(
+                            'glpi_plugin_resources_professioncategories',
+                            $data['professioncategory'],
+                        ),
                     ),
                     $num,
                     $key,
                 );
-                echo Search::showItem($output_type, $data['profession'], $num, $key);
-                echo Search::showItem($output_type, $data['profession_code'], $num, $key);
+                echo Search::showItem($output_type, $escape($data['profession']), $num, $key);
+                echo Search::showItem($output_type, $escape($data['profession_code']), $num, $key);
                 if ($data['rank_name'] == '0') {
                     $data['rank_name'] = '';
                 }
-                echo Search::showItem($output_type, $data['rank_name'], $num, $key);
+                echo Search::showItem($output_type, $escape($data['rank_name']), $num, $key);
                 if ($data['rank_code'] == '0') {
                     $data['rank_code'] = '';
                 }
-                echo Search::showItem($output_type, $data['rank_code'], $num, $key);
+                echo Search::showItem($output_type, $escape($data['rank_code']), $num, $key);
                 echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
                 echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
                 echo Search::showEndLine($output_type);
