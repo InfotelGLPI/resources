@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:31+0000\n"
+"POT-Creation-Date: 2026-09-08 15:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -454,7 +454,7 @@ msgstr[1] "Yaka kartları yönetimi"
 msgid "Badge restitution"
 msgstr "Yaka kartı iadesi"
 
-#: src/ImportResource.php:687
+#: src/ImportResource.php:710
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Dikkatli olun, birim içinde yeni kaynaklar oluşturulacak"
 
@@ -716,11 +716,11 @@ msgstr "Kuruluş"
 msgid "Company name"
 msgstr "Kuruluş adı"
 
-#: src/ImportResource.php:692
+#: src/ImportResource.php:715
 msgid "Compare File with GLPI Resources"
 msgstr "Dosyayı GLPI kaynakları ile karşılaştır"
 
-#: src/ImportResource.php:695
+#: src/ImportResource.php:718
 msgid "Compare GLPI Resources with File"
 msgstr "GLPI kaynaklarını dosya ile karşılaştır"
 
@@ -1044,7 +1044,7 @@ msgstr "Sözleşmesiz dönem ayrıntıları"
 msgid "Detail of the forced holiday"
 msgstr "Zorunlu tatil ayrıntıları"
 
-#: src/ImportResource.php:719
+#: src/ImportResource.php:742
 msgid "Different to GLPI"
 msgstr "GLPI ile aynı değil"
 
@@ -1307,11 +1307,11 @@ msgstr "Zorunlu tatil yönetimi"
 msgid "Format password"
 msgstr "Parola biçimi"
 
-#: src/ImportResource.php:726
+#: src/ImportResource.php:749
 msgid "Found in file with second level id"
 msgstr "Dosyada ikinci düzey bir kimlik ile bulundu"
 
-#: src/ImportResource.php:725
+#: src/ImportResource.php:748
 msgid "Found in the file with a top level id"
 msgstr "Dosyada birinci düzey bir kimlik ile bulundu"
 
@@ -1342,7 +1342,7 @@ msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 msgid "Gender"
 msgstr "Cinsiyet"
 
-#: src/Checklistconfig.php:334
+#: src/Checklistconfig.php:358
 msgid "Generate a rule"
 msgstr "Bir kural oluştur"
 
@@ -1412,7 +1412,7 @@ msgstr[1] "İnsan kaynakları"
 msgid "IT needs identified"
 msgstr "Belirlenen bilişim gereksinimleri"
 
-#: src/ImportResource.php:717
+#: src/ImportResource.php:740
 msgid "Identical to GLPI"
 msgstr "GLPI ile aynı"
 
@@ -1921,11 +1921,11 @@ msgstr "Belirtilmemiş"
 msgid "Not finished tasks"
 msgstr "Bitmemiş görevler"
 
-#: src/ImportResource.php:718
+#: src/ImportResource.php:741
 msgid "Not in GLPI"
 msgstr "GLPI üzerinde yok"
 
-#: src/ImportResource.php:727
+#: src/ImportResource.php:750
 msgid "Not in the file"
 msgstr "Dosyada yok"
 
@@ -2777,7 +2777,7 @@ msgstr ""
 msgid "The end date of the forced holiday period must be filled"
 msgstr "Zorunlu tatil döneminin bitiş tarihi yazılmalıdır"
 
-#: src/ImportResource.php:525
+#: src/ImportResource.php:532
 msgid "The file does not match any template"
 msgstr "Dosya herhangi bir kalıp ile eşleşmiyor"
 
@@ -2899,7 +2899,7 @@ msgstr "Sözleşme türünü seçerek başlayın"
 #: report/budgetsummary/budgetsummary.php:567
 #: report/budgetsummary/budgetsummary.php:573
 #: report/budgetsummary/budgetsummary.php:579
-#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:743
 msgid "Total"
 msgstr "Toplam"
 
@@ -2907,7 +2907,7 @@ msgstr "Toplam"
 msgid "Total duration"
 msgstr "Toplam süre"
 
-#: src/ImportResource.php:728
+#: src/ImportResource.php:751
 msgid "Total lines in the file"
 msgstr "Dosyadaki satır sayısı"
 
@@ -2915,7 +2915,7 @@ msgstr "Dosyadaki satır sayısı"
 msgid "Trainee"
 msgstr "Stajer"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
+#: src/Checklistconfig.php:365 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr "Aktar"
 
@@ -2985,7 +2985,7 @@ msgctxt "button"
 msgid "Update"
 msgstr "Güncelle"
 
-#: src/Menu.php:320 src/ImportResource.php:684
+#: src/Menu.php:320 src/ImportResource.php:707
 msgid "Update GLPI Resources"
 msgstr "GLPI kaynaklarını güncelle"
 
@@ -3068,7 +3068,7 @@ msgstr "Kaynağı olmayan kullanıcı"
 msgid "Validate"
 msgstr "Doğrula"
 
-#: src/ImportResource.php:744
+#: src/ImportResource.php:767
 msgid "Validate and pre-import file"
 msgstr "Dosyayı doğrula ve içe aktarmaya hazırlan"
 

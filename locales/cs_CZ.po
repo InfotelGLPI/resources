@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:31+0000\n"
+"POT-Creation-Date: 2026-09-08 15:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2025\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -461,7 +461,7 @@ msgstr[3] "Správa jmenovek"
 msgid "Badge restitution"
 msgstr "Vrácení jmenovky"
 
-#: src/ImportResource.php:687
+#: src/ImportResource.php:710
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Buďte opatrní, v entitě se vytvoří nové zdroje"
 
@@ -737,11 +737,11 @@ msgstr "Firma"
 msgid "Company name"
 msgstr "Název firmy"
 
-#: src/ImportResource.php:692
+#: src/ImportResource.php:715
 msgid "Compare File with GLPI Resources"
 msgstr "Porovnat soubor se zdroji GLPI"
 
-#: src/ImportResource.php:695
+#: src/ImportResource.php:718
 msgid "Compare GLPI Resources with File"
 msgstr "Porovnat zdroje GLPI se souborem"
 
@@ -1074,7 +1074,7 @@ msgstr "Podrobnosti o období bez smlouvy"
 msgid "Detail of the forced holiday"
 msgstr "Podrobnosti nařízené dovolené"
 
-#: src/ImportResource.php:719
+#: src/ImportResource.php:742
 msgid "Different to GLPI"
 msgstr "Různé od GLPI"
 
@@ -1346,11 +1346,11 @@ msgstr "Správa nařízených dovolených"
 msgid "Format password"
 msgstr ""
 
-#: src/ImportResource.php:726
+#: src/ImportResource.php:749
 msgid "Found in file with second level id"
 msgstr "Nalezeno v souboru s id druhé úrovně "
 
-#: src/ImportResource.php:725
+#: src/ImportResource.php:748
 msgid "Found in the file with a top level id"
 msgstr "Nalezeno v souboru s ID nejvyšší úrovně "
 
@@ -1383,7 +1383,7 @@ msgstr "GISF – správa bezpečnostních incidentů dodavatele"
 msgid "Gender"
 msgstr "Pohlaví"
 
-#: src/Checklistconfig.php:334
+#: src/Checklistconfig.php:358
 msgid "Generate a rule"
 msgstr "Vytvořit pravidlo"
 
@@ -1463,7 +1463,7 @@ msgstr[3] "Pracovníci"
 msgid "IT needs identified"
 msgstr "Zjištěné IT potřeby"
 
-#: src/ImportResource.php:717
+#: src/ImportResource.php:740
 msgid "Identical to GLPI"
 msgstr "Stejně do GLPI"
 
@@ -1993,11 +1993,11 @@ msgstr "Neurčen"
 msgid "Not finished tasks"
 msgstr "Nedokončené úkoly"
 
-#: src/ImportResource.php:718
+#: src/ImportResource.php:741
 msgid "Not in GLPI"
 msgstr "Není v GLPI"
 
-#: src/ImportResource.php:727
+#: src/ImportResource.php:750
 msgid "Not in the file"
 msgstr "Není v souboru "
 
@@ -2875,7 +2875,7 @@ msgstr ""
 msgid "The end date of the forced holiday period must be filled"
 msgstr "Je třeba vyplnit datum skončení nařízené dovolené"
 
-#: src/ImportResource.php:525
+#: src/ImportResource.php:532
 msgid "The file does not match any template"
 msgstr "Soubor neodpovídá žádné šabloně "
 
@@ -2995,7 +2995,7 @@ msgstr "Začněte výběrem typu smlouvy"
 #: report/budgetsummary/budgetsummary.php:567
 #: report/budgetsummary/budgetsummary.php:573
 #: report/budgetsummary/budgetsummary.php:579
-#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:743
 msgid "Total"
 msgstr "Celkem"
 
@@ -3003,7 +3003,7 @@ msgstr "Celkem"
 msgid "Total duration"
 msgstr ""
 
-#: src/ImportResource.php:728
+#: src/ImportResource.php:751
 msgid "Total lines in the file"
 msgstr "Celkový počet řádků v souboru "
 
@@ -3011,7 +3011,7 @@ msgstr "Celkový počet řádků v souboru "
 msgid "Trainee"
 msgstr "Praktikant"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
+#: src/Checklistconfig.php:365 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr ""
 
@@ -3091,7 +3091,7 @@ msgctxt "button"
 msgid "Update"
 msgstr ""
 
-#: src/Menu.php:320 src/ImportResource.php:684
+#: src/Menu.php:320 src/ImportResource.php:707
 msgid "Update GLPI Resources"
 msgstr "Aktualizovat zdroje GLPI"
 
@@ -3176,7 +3176,7 @@ msgstr "Uživatel bez zdroje"
 msgid "Validate"
 msgstr ""
 
-#: src/ImportResource.php:744
+#: src/ImportResource.php:767
 msgid "Validate and pre-import file"
 msgstr "Ověřit a předimport souboru "
 

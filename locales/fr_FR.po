@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:31+0000\n"
+"POT-Creation-Date: 2026-09-08 15:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -457,7 +457,7 @@ msgstr[2] "Gestion des badges"
 msgid "Badge restitution"
 msgstr "Restitution de badge"
 
-#: src/ImportResource.php:687
+#: src/ImportResource.php:710
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Attention, les ressources seront créées dans l'entité"
 
@@ -727,11 +727,11 @@ msgstr "Société"
 msgid "Company name"
 msgstr "Nom de l'entreprise"
 
-#: src/ImportResource.php:692
+#: src/ImportResource.php:715
 msgid "Compare File with GLPI Resources"
 msgstr "Comparer un fichier avec les ressources de GLPI"
 
-#: src/ImportResource.php:695
+#: src/ImportResource.php:718
 msgid "Compare GLPI Resources with File"
 msgstr "Comparer les ressources de GLPI avec un fichier"
 
@@ -1061,7 +1061,7 @@ msgstr "Détail de l'intercontrat"
 msgid "Detail of the forced holiday"
 msgstr "Détail du congé employeur"
 
-#: src/ImportResource.php:719
+#: src/ImportResource.php:742
 msgid "Different to GLPI"
 msgstr "Différent de GLPI"
 
@@ -1334,11 +1334,11 @@ msgstr "Gestion congés employeur"
 msgid "Format password"
 msgstr "Format du mot de passe"
 
-#: src/ImportResource.php:726
+#: src/ImportResource.php:749
 msgid "Found in file with second level id"
 msgstr "Trouver dans le fichier avec l'id de second niveau"
 
-#: src/ImportResource.php:725
+#: src/ImportResource.php:748
 msgid "Found in the file with a top level id"
 msgstr "Trouver dans le fichier avec l'id de haut niveau"
 
@@ -1370,7 +1370,7 @@ msgstr "GISF - Gestion incident sécurité par le fournisseur"
 msgid "Gender"
 msgstr "Genre"
 
-#: src/Checklistconfig.php:334
+#: src/Checklistconfig.php:358
 msgid "Generate a rule"
 msgstr "Générer une règle"
 
@@ -1446,7 +1446,7 @@ msgstr[2] "Ressources humaines"
 msgid "IT needs identified"
 msgstr "Besoins informatiques recensés"
 
-#: src/ImportResource.php:717
+#: src/ImportResource.php:740
 msgid "Identical to GLPI"
 msgstr "Identique à GLPI"
 
@@ -1967,11 +1967,11 @@ msgstr "Non défini"
 msgid "Not finished tasks"
 msgstr "Tâches non terminées"
 
-#: src/ImportResource.php:718
+#: src/ImportResource.php:741
 msgid "Not in GLPI"
 msgstr "Pas trouvé dans GLPI"
 
-#: src/ImportResource.php:727
+#: src/ImportResource.php:750
 msgid "Not in the file"
 msgstr "Pas dans le fichier"
 
@@ -2856,7 +2856,7 @@ msgstr ""
 msgid "The end date of the forced holiday period must be filled"
 msgstr "La date de fin du congé employeur est requise"
 
-#: src/ImportResource.php:525
+#: src/ImportResource.php:532
 msgid "The file does not match any template"
 msgstr "Le fichier ne correspond à aucun gabarit"
 
@@ -2984,7 +2984,7 @@ msgstr "Pour commencer, sélectionnez le type de contrat"
 #: report/budgetsummary/budgetsummary.php:567
 #: report/budgetsummary/budgetsummary.php:573
 #: report/budgetsummary/budgetsummary.php:579
-#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:743
 msgid "Total"
 msgstr "Total"
 
@@ -2992,7 +2992,7 @@ msgstr "Total"
 msgid "Total duration"
 msgstr "Durée totale"
 
-#: src/ImportResource.php:728
+#: src/ImportResource.php:751
 msgid "Total lines in the file"
 msgstr "Total de lignes dans le fichier"
 
@@ -3000,7 +3000,7 @@ msgstr "Total de lignes dans le fichier"
 msgid "Trainee"
 msgstr "Stagiaire"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
+#: src/Checklistconfig.php:365 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr "Transférer"
 
@@ -3075,7 +3075,7 @@ msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: src/Menu.php:320 src/ImportResource.php:684
+#: src/Menu.php:320 src/ImportResource.php:707
 msgid "Update GLPI Resources"
 msgstr "Mise à jour des ressources de GLPI"
 
@@ -3159,7 +3159,7 @@ msgstr "Utilisateur sans ressource"
 msgid "Validate"
 msgstr "Valider"
 
-#: src/ImportResource.php:744
+#: src/ImportResource.php:767
 msgid "Validate and pre-import file"
 msgstr "Valider et pré-importer le fichier"
 

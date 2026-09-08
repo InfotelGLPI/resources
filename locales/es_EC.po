@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 14:31+0000\n"
+"POT-Creation-Date: 2026-09-08 15:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -457,7 +457,7 @@ msgstr[2] "Gestión de insignias"
 msgid "Badge restitution"
 msgstr "Restitución de insignias"
 
-#: src/ImportResource.php:687
+#: src/ImportResource.php:710
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Cuidado, se crearán nuevos recursos en la entidad"
 
@@ -726,11 +726,11 @@ msgstr "Empresa"
 msgid "Company name"
 msgstr ""
 
-#: src/ImportResource.php:692
+#: src/ImportResource.php:715
 msgid "Compare File with GLPI Resources"
 msgstr "Comparar archivo con recursos GLPI"
 
-#: src/ImportResource.php:695
+#: src/ImportResource.php:718
 msgid "Compare GLPI Resources with File"
 msgstr "Comparar recursos GLPI con archivo"
 
@@ -1057,7 +1057,7 @@ msgstr "Detalle del periodo sin contrato"
 msgid "Detail of the forced holiday"
 msgstr "Detalle de las vacaciones forzadas"
 
-#: src/ImportResource.php:719
+#: src/ImportResource.php:742
 msgid "Different to GLPI"
 msgstr "Diferente a GLPI"
 
@@ -1327,11 +1327,11 @@ msgstr "Gestión de vacaciones forzadas"
 msgid "Format password"
 msgstr ""
 
-#: src/ImportResource.php:726
+#: src/ImportResource.php:749
 msgid "Found in file with second level id"
 msgstr "Encontrado en archivo con id de segundo nivel"
 
-#: src/ImportResource.php:725
+#: src/ImportResource.php:748
 msgid "Found in the file with a top level id"
 msgstr "Encontrado en el archivo con un id de nivel superior"
 
@@ -1363,7 +1363,7 @@ msgstr "GISF - Gestión de incidentes de seguridad de proveedores"
 msgid "Gender"
 msgstr "Género"
 
-#: src/Checklistconfig.php:334
+#: src/Checklistconfig.php:358
 msgid "Generate a rule"
 msgstr "Generar una regla"
 
@@ -1438,7 +1438,7 @@ msgstr[2] "Recursos humanos"
 msgid "IT needs identified"
 msgstr "Necesidades informáticas identificadas"
 
-#: src/ImportResource.php:717
+#: src/ImportResource.php:740
 msgid "Identical to GLPI"
 msgstr "Idéntico a GLPI"
 
@@ -1958,11 +1958,11 @@ msgstr "No definido"
 msgid "Not finished tasks"
 msgstr "Tareas no finalizadas"
 
-#: src/ImportResource.php:718
+#: src/ImportResource.php:741
 msgid "Not in GLPI"
 msgstr "No está en GLPI"
 
-#: src/ImportResource.php:727
+#: src/ImportResource.php:750
 msgid "Not in the file"
 msgstr "No está en el archivo"
 
@@ -2832,7 +2832,7 @@ msgid "The end date of the forced holiday period must be filled"
 msgstr ""
 "Debe rellenarse la fecha de finalización del periodo de vacaciones forzosas"
 
-#: src/ImportResource.php:525
+#: src/ImportResource.php:532
 msgid "The file does not match any template"
 msgstr "El archivo no coincide con ninguna plantilla"
 
@@ -2952,7 +2952,7 @@ msgstr "Para empezar, seleccione el tipo de contrato"
 #: report/budgetsummary/budgetsummary.php:567
 #: report/budgetsummary/budgetsummary.php:573
 #: report/budgetsummary/budgetsummary.php:579
-#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:720
+#: report/budgetsummary/budgetsummary.php:585 src/ImportResource.php:743
 msgid "Total"
 msgstr "Total"
 
@@ -2960,7 +2960,7 @@ msgstr "Total"
 msgid "Total duration"
 msgstr ""
 
-#: src/ImportResource.php:728
+#: src/ImportResource.php:751
 msgid "Total lines in the file"
 msgstr "Total de líneas en el archivo"
 
@@ -2968,7 +2968,7 @@ msgstr "Total de líneas en el archivo"
 msgid "Trainee"
 msgstr "Aprendiz"
 
-#: src/Checklistconfig.php:341 src/Resource.php:3284 src/Task.php:1063
+#: src/Checklistconfig.php:365 src/Resource.php:3284 src/Task.php:1063
 msgid "Transfer"
 msgstr ""
 
@@ -3043,7 +3043,7 @@ msgctxt "button"
 msgid "Update"
 msgstr ""
 
-#: src/Menu.php:320 src/ImportResource.php:684
+#: src/Menu.php:320 src/ImportResource.php:707
 msgid "Update GLPI Resources"
 msgstr "Actualizar los recursos GLPI"
 
@@ -3128,7 +3128,7 @@ msgstr "Usuario sin recurso"
 msgid "Validate"
 msgstr ""
 
-#: src/ImportResource.php:744
+#: src/ImportResource.php:767
 msgid "Validate and pre-import file"
 msgstr "Validar y preimportar el archivo"
 
