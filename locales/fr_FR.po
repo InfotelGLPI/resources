@@ -2,27 +2,29 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2022
 # Alban Lesellier <alban.lesellier@infotel.com>, 2023
 # EVRARD, 2026
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:00+0000\n"
+"POT-Creation-Date: 2026-09-09 12:15+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: src/Resource_Change.php:185
 msgid " Change information"
@@ -54,8 +56,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:288
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr ""
 "(Si les quatre champs sont activés, le client est conforme à la sécurité) "
 
@@ -91,8 +92,7 @@ msgstr "Modification d'un intercontrat"
 msgid "A resource has been added by"
 msgstr "Ajout d'une ressource"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:672
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:672
 msgid "A resource has been declared leaving"
 msgstr "Une ressource a été déclarée partante"
 
@@ -148,13 +148,11 @@ msgstr "Autorisation sur les actions"
 msgid "Actions to be taken"
 msgstr "Action à réaliser"
 
-#: src/NotificationTargetResource.php:81
-#: src/NotificationTargetResource.php:568
+#: src/NotificationTargetResource.php:81 src/NotificationTargetResource.php:568
 msgid "Actions to do on these leaving resources"
 msgstr "Des actions sont à effectuer sur ces ressources partantes"
 
-#: src/NotificationTargetResource.php:80
-#: src/NotificationTargetResource.php:561
+#: src/NotificationTargetResource.php:80 src/NotificationTargetResource.php:561
 msgid "Actions to do on these new resources"
 msgstr "Des actions sont à effectuer sur ces nouvelles ressources"
 
@@ -1093,8 +1091,7 @@ msgstr ""
 
 #: src/Config.php:280
 msgid "Display of two additional security fields on a resource"
-msgstr ""
-"Affichage de deux champs de sécurité supplémentaires sur une ressource"
+msgstr "Affichage de deux champs de sécurité supplémentaires sur une ressource"
 
 #: src/Config.php:278
 msgid "Displaying the security block on the resource"
@@ -1169,8 +1166,7 @@ msgstr[2] "Employés"
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
 #: hook.php:1485 src/Employment.php:226 src/Employer.php:53
 #: src/Department.php:80 src/Department.php:113
-#: templates/resource_form.html.twig:218
-#: templates/employment_form.html.twig:38
+#: templates/resource_form.html.twig:218 templates/employment_form.html.twig:38
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "Employeur"
@@ -1223,8 +1219,7 @@ msgid "Empty for non defined"
 msgstr "Vide si non défini"
 
 #: templates/planning_item.html.twig:14 templates/budget_form.html.twig:73
-#: templates/cost_form.html.twig:62
-#: templates/resourceholiday_form.html.twig:49
+#: templates/cost_form.html.twig:62 templates/resourceholiday_form.html.twig:49
 #: templates/resourceresting_end_date.html.twig:33
 #: templates/employment_form.html.twig:77
 #: templates/resourceresting_form.html.twig:49
@@ -1371,8 +1366,8 @@ msgstr "Besoins en fournitures"
 msgid "GISF - Supplier security incident management"
 msgstr "GISF - Gestion incident sécurité par le fournisseur"
 
-#: src/RuleContracttypeReadonly.php:274 src/Resource.php:948
-#: src/Config.php:124 src/Config.php:159 src/RuleContracttypeHidden.php:252
+#: src/RuleContracttypeReadonly.php:274 src/Resource.php:948 src/Config.php:124
+#: src/Config.php:159 src/RuleContracttypeHidden.php:252
 #: templates/resource_form.html.twig:41
 #: templates/wizard_secondstep_resource.html.twig:83
 #: templates/wizard_secondstep_resource.html.twig:94
@@ -1421,7 +1416,8 @@ msgstr "Masquer le premier formulaire lorsque vous n'avez qu'un seul gabarit"
 
 #: src/Config.php:448
 msgid "Hide the following fields in the \"Report an Arrival\" form"
-msgstr "Masquer ces champs uniquement dans le formulaire \"Déclarer une arrivée\""
+msgstr ""
+"Masquer ces champs uniquement dans le formulaire \"Déclarer une arrivée\""
 
 #: src/Config.php:492
 msgid "Hide/Show elements"
@@ -1468,8 +1464,7 @@ msgstr "Si un autre contrat est disponible ne pas afficher le \"Sans contrat\""
 
 #: src/Metademand.php:146
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
@@ -1484,8 +1479,7 @@ msgstr ""
 
 #: src/Metademand.php:179
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, l'habilitation "
 "va être ajoutée"
@@ -1717,8 +1711,7 @@ msgstr "Liste des congés employeurs"
 msgid "List of non contract periods"
 msgstr "Liste des intercontrats"
 
-#: src/NotificationTargetResource.php:78
-#: src/NotificationTargetResource.php:400
+#: src/NotificationTargetResource.php:78 src/NotificationTargetResource.php:400
 #: src/NotificationTargetResource.php:1647
 msgid "List of not finished tasks"
 msgstr "Tâches révolues"
@@ -1783,8 +1776,8 @@ msgstr "Marquer comme fait"
 msgid "Mark as unfinished"
 msgstr "Marquer comme non fait"
 
-#: src/RuleContracttypeReadonly.php:338 src/Resource.php:802
-#: src/Config.php:147 src/Config.php:162 src/RuleContracttypeHidden.php:297
+#: src/RuleContracttypeReadonly.php:338 src/Resource.php:802 src/Config.php:147
+#: src/Config.php:162 src/RuleContracttypeHidden.php:297
 #: src/RuleContracttype.php:290 templates/resource_form.html.twig:64
 #: templates/wizard_secondstep_resource.html.twig:185
 msgid "Matricule"
@@ -1929,8 +1922,8 @@ msgstr "Pas de colonne pour cet import"
 #: templates/wizard_sixstep_habilitation.html.twig:77
 msgid "No habilitation level, you cannot add habilitation for this resource."
 msgstr ""
-"Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour"
-" cette ressource."
+"Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour "
+"cette ressource."
 
 #: templates/checkschema_result.html.twig:90
 msgid "No query could be suggested for this difference."
@@ -2099,8 +2092,7 @@ msgstr "Merci d'activer le plugin métademandes"
 
 #: src/NotificationTargetResource.php:675
 msgid "Please check the leaving checklist of the resource"
-msgstr ""
-"Merci de vérifier la checklist de départ de la ressource si nécessaire"
+msgstr "Merci de vérifier la checklist de départ de la ressource si nécessaire"
 
 #: src/Resource.php:3184
 #, php-format
@@ -2178,9 +2170,9 @@ msgid "Queries to run"
 msgstr "Requêtes à exécuter"
 
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:80
-#: src/RuleContracttypeReadonly.php:330 src/Resource.php:619
-#: src/Config.php:139 src/Config.php:167 src/RuleContracttypeHidden.php:289
-#: src/Recap.php:148 src/NotificationTargetResource.php:705
+#: src/RuleContracttypeReadonly.php:330 src/Resource.php:619 src/Config.php:139
+#: src/Config.php:167 src/RuleContracttypeHidden.php:289 src/Recap.php:148
+#: src/NotificationTargetResource.php:705
 #: src/NotificationTargetResource.php:835
 #: src/NotificationTargetResource.php:1006
 #: src/NotificationTargetResource.php:1650
@@ -2215,9 +2207,8 @@ msgstr "Ratio Emploi / Budget"
 msgid "Read only Fields"
 msgstr "Champs en lecture seule"
 
-#: src/RuleContracttypeReadonly.php:389 src/Resource.php:694
-#: src/Config.php:145 src/RuleContracttypeHidden.php:347
-#: src/NotificationTargetResource.php:1125
+#: src/RuleContracttypeReadonly.php:389 src/Resource.php:694 src/Config.php:145
+#: src/RuleContracttypeHidden.php:347 src/NotificationTargetResource.php:1125
 #: src/NotificationTargetResource.php:1673
 #: templates/resource_form.html.twig:339
 #: templates/wizard_secondstep_resource.html.twig:715
@@ -2495,10 +2486,9 @@ msgstr "Gestion des ressources"
 msgid "Resources not declaring leaving"
 msgstr "Ressources non déclarées partantes"
 
-#: src/RuleContracttypeReadonly.php:354 src/LinkAd.php:542
-#: src/Adconfig.php:320 src/Profile.php:204 src/RuleContracttypeHidden.php:313
-#: src/Role.php:53 src/RuleContracttype.php:306
-#: templates/resource_form.html.twig:183
+#: src/RuleContracttypeReadonly.php:354 src/LinkAd.php:542 src/Adconfig.php:320
+#: src/Profile.php:204 src/RuleContracttypeHidden.php:313 src/Role.php:53
+#: src/RuleContracttype.php:306 templates/resource_form.html.twig:183
 #: templates/linkad_resource_form.html.twig:93
 msgid "Role"
 msgid_plural "Roles"
@@ -2561,8 +2551,8 @@ msgstr "Chercher une ressource"
 msgid "Second Form"
 msgstr "Seconde forme"
 
-#: src/RuleContracttypeReadonly.php:350 src/Resource.php:847
-#: src/Config.php:148 src/Config.php:164 src/RuleContracttypeHidden.php:309
+#: src/RuleContracttypeReadonly.php:350 src/Resource.php:847 src/Config.php:148
+#: src/Config.php:164 src/RuleContracttypeHidden.php:309
 #: src/RuleContracttype.php:302 templates/resource_form.html.twig:71
 #: templates/wizard_secondstep_resource.html.twig:228
 msgid "Second matricule"
@@ -2658,9 +2648,9 @@ msgid "Setup LDAP directory"
 msgstr "Configuration de l'annuaire LDAP"
 
 #: src/Profession.php:103 src/Profession.php:222 src/ResourceSituation.php:104
-#: src/ResourceSituation.php:168 src/ResourceSituation.php:174
-#: src/Rank.php:107 src/Rank.php:155 src/EmploymentState.php:89
-#: src/EmploymentState.php:151 src/Employer.php:95 src/Employer.php:134
+#: src/ResourceSituation.php:168 src/ResourceSituation.php:174 src/Rank.php:107
+#: src/Rank.php:155 src/EmploymentState.php:89 src/EmploymentState.php:151
+#: src/Employer.php:95 src/Employer.php:134
 msgid "Short name"
 msgstr "Nom - court"
 
@@ -2826,12 +2816,12 @@ msgstr ""
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Merci de faire attention a l'orthographe du nom et du prénom de la "
-"ressource. Pour les prénoms composés, veuillez les séparer par un tiret "
-"\"-\"."
+"ressource. Pour les prénoms composés, veuillez les séparer par un tiret \"-"
+"\"."
 
 #: src/NotificationTargetResource.php:821
 msgid "Thanks to recover his badges"
@@ -2890,10 +2880,10 @@ msgid ""
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
-"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas"
-" partie du schéma attendu : des données seront perdues. Avant de les "
-"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par"
-" un développement personnalisé."
+"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas "
+"partie du schéma attendu : des données seront perdues. Avant de les "
+"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par "
+"un développement personnalisé."
 
 #: front/resource.form.php:504 src/Resource.php:3917
 msgid ""
@@ -2918,8 +2908,8 @@ msgid ""
 msgstr ""
 "Les requêtes ci-dessous ne sont que des suggestions basées sur les "
 "différences constatées. Veuillez les examiner, sauvegarder votre base de "
-"données, puis les exécuter manuellement : elles ne sont jamais exécutées par"
-" l’extension."
+"données, puis les exécuter manuellement : elles ne sont jamais exécutées par "
+"l’extension."
 
 #: src/Employee.php:339
 msgid "The resource is also created if not existent"
@@ -2957,8 +2947,7 @@ msgstr "Ces ressources ont normalement quitté l'entreprise"
 
 #: src/Employment.php:511
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr ""
 "Ces ressources ont quitté l'entreprise, les emplois liés sont mis à jour"
 
