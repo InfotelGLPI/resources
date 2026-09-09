@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:17+0000\n"
+"POT-Creation-Date: 2026-09-09 12:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -1029,7 +1029,7 @@ msgstr "Descendant"
 #: src/Config.php:138 templates/checklist_form.html.twig:42
 #: templates/linkad_form.html.twig:42
 #: templates/checklistconfig_form.html.twig:45
-#: templates/planning_item.html.twig:20 templates/resource_form.html.twig:346
+#: templates/planning_item.html.twig:47 templates/resource_form.html.twig:346
 #: templates/wizard_secondstep_resource.html.twig:736
 #: templates/choice_helpdesk_needs.html.twig:36
 #: templates/modal_available_variable.html.twig:35
@@ -1218,7 +1218,7 @@ msgstr "Gestion des emplois / budgets"
 msgid "Empty for non defined"
 msgstr "Vide si non défini"
 
-#: templates/planning_item.html.twig:14 templates/budget_form.html.twig:73
+#: templates/planning_item.html.twig:41 templates/budget_form.html.twig:73
 #: templates/cost_form.html.twig:62 templates/resourceholiday_form.html.twig:49
 #: templates/resourceresting_end_date.html.twig:33
 #: templates/employment_form.html.twig:77
@@ -3167,7 +3167,7 @@ msgstr "Utiliser le module de validation"
 msgid "Used for planning"
 msgstr "Inclure dans le planning"
 
-#: templates/planning_item.html.twig:11
+#: templates/planning_item.html.twig:38
 msgid "User"
 msgstr "Utilisateur"
 
