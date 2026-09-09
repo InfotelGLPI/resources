@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 15:49+0000\n"
+"POT-Creation-Date: 2026-09-09 07:52+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/Resource_Change.php:189
@@ -52,8 +53,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:292
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
 
 #: src/Adconfig.php:346
@@ -88,8 +88,7 @@ msgstr "Sözleşmesiz dönem güncellendi"
 msgid "A resource has been added by"
 msgstr "Şu kişi tarafından bir kaynak eklendi"
 
-#: src/NotificationTargetResource.php:86
-#: src/NotificationTargetResource.php:676
+#: src/NotificationTargetResource.php:86 src/NotificationTargetResource.php:676
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
@@ -141,13 +140,11 @@ msgstr "İşlem yetkilendirmesi"
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:85
-#: src/NotificationTargetResource.php:572
+#: src/NotificationTargetResource.php:85 src/NotificationTargetResource.php:572
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:84
-#: src/NotificationTargetResource.php:565
+#: src/NotificationTargetResource.php:84 src/NotificationTargetResource.php:565
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
@@ -537,7 +534,7 @@ msgctxt "button"
 msgid "Cancel the request"
 msgstr "İsteği iptal et"
 
-#: src/Choice.php:224
+#: src/Choice.php:225
 msgid "Cannot add a choice that contains children"
 msgstr "Alt ögeleri olan bir seçenek eklenemez"
 
@@ -680,13 +677,12 @@ msgstr "Kapat"
 #: report/professionwithoutcost/professionwithoutcost.php:435
 #: report/professionwithoutcost/professionwithoutcost.php:440
 #: src/ProfessionCategory.php:102 src/ProfessionCategory.php:154
-#: src/ProfessionLine.php:100 src/ProfessionLine.php:152
-#: src/Profession.php:101 src/Profession.php:220 src/BudgetVolume.php:93
-#: src/BudgetVolume.php:145 src/ResourceSituation.php:102
-#: src/ResourceSituation.php:166 src/ContractNature.php:100
-#: src/ContractNature.php:187 src/Rank.php:104 src/Rank.php:152
-#: src/BudgetType.php:93 src/BudgetType.php:145 src/ContractType.php:73
-#: src/ContractType.php:153
+#: src/ProfessionLine.php:100 src/ProfessionLine.php:152 src/Profession.php:101
+#: src/Profession.php:220 src/BudgetVolume.php:93 src/BudgetVolume.php:145
+#: src/ResourceSituation.php:102 src/ResourceSituation.php:166
+#: src/ContractNature.php:100 src/ContractNature.php:187 src/Rank.php:105
+#: src/Rank.php:153 src/BudgetType.php:93 src/BudgetType.php:145
+#: src/ContractType.php:73 src/ContractType.php:153
 msgid "Code"
 msgstr "Kod"
 
@@ -728,7 +724,7 @@ msgstr "Dosyayı GLPI kaynakları ile karşılaştır"
 msgid "Compare GLPI Resources with File"
 msgstr "GLPI kaynaklarını dosya ile karşılaştır"
 
-#: src/Choice.php:468
+#: src/Choice.php:481
 msgid "Computer and phone equipment needs"
 msgstr "Bilgisayar ve telefon aygıtı gereksinimleri"
 
@@ -1143,8 +1139,7 @@ msgstr[1] "Çalışanlar"
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
 #: hook.php:1465 src/Employment.php:230 src/Employer.php:57
 #: src/Department.php:84 src/Department.php:117
-#: templates/resource_form.html.twig:218
-#: templates/employment_form.html.twig:38
+#: templates/resource_form.html.twig:218 templates/employment_form.html.twig:38
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşveren"
@@ -1331,7 +1326,7 @@ msgid_plural "Functions"
 msgstr[0] "İşlev"
 msgstr[1] "İşlevler"
 
-#: src/Choice.php:470 src/Config.php:155
+#: src/Choice.php:483 src/Config.php:155
 msgid "Furnitures needs"
 msgstr "Mobilya gereksinimleri"
 
@@ -1339,8 +1334,8 @@ msgstr "Mobilya gereksinimleri"
 msgid "GISF - Supplier security incident management"
 msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 
-#: src/RuleContracttypeReadonly.php:279 src/Resource.php:952
-#: src/Config.php:128 src/Config.php:163 src/RuleContracttypeHidden.php:257
+#: src/RuleContracttypeReadonly.php:279 src/Resource.php:952 src/Config.php:128
+#: src/Config.php:163 src/RuleContracttypeHidden.php:257
 #: templates/resource_form.html.twig:41
 #: templates/wizard_secondstep_resource.html.twig:83
 #: templates/wizard_secondstep_resource.html.twig:94
@@ -1431,8 +1426,7 @@ msgstr "başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
 
 #: src/Metademand.php:150
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
@@ -1447,8 +1441,7 @@ msgstr ""
 
 #: src/Metademand.php:183
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
@@ -1671,8 +1664,7 @@ msgstr "Zorunlu tatil günleri"
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:404
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:404
 #: src/NotificationTargetResource.php:1651
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
@@ -1737,8 +1729,8 @@ msgstr "Tamamlanmış olarak işaretle"
 msgid "Mark as unfinished"
 msgstr "Tamamlanmamış olarak işaretle"
 
-#: src/RuleContracttypeReadonly.php:343 src/Resource.php:806
-#: src/Config.php:151 src/Config.php:166 src/RuleContracttypeHidden.php:302
+#: src/RuleContracttypeReadonly.php:343 src/Resource.php:806 src/Config.php:151
+#: src/Config.php:166 src/RuleContracttypeHidden.php:302
 #: src/RuleContracttype.php:295 templates/resource_form.html.twig:64
 #: templates/wizard_secondstep_resource.html.twig:187
 msgid "Matricule"
@@ -1806,7 +1798,7 @@ msgstr "Aktif dizin kullanıcısını düzenle"
 msgid "Name"
 msgstr "Ad"
 
-#: src/Choice.php:65
+#: src/Choice.php:66
 msgid "Need"
 msgid_plural "Needs"
 msgstr[0] "Gereksinim"
@@ -1980,7 +1972,7 @@ msgstr "Kaynak sıralaması"
 msgid "Other"
 msgstr "Diğer"
 
-#: src/Choice.php:471
+#: src/Choice.php:484
 msgid "Other needs"
 msgstr "Diğer gereksinimler"
 
@@ -1996,7 +1988,7 @@ msgstr "Diğer işlemler"
 msgid "Others declarations"
 msgstr "Diğer bildirimler"
 
-#: hook.php:598 src/Choice.php:189 src/Config.php:156
+#: hook.php:598 src/Choice.php:190 src/Config.php:156
 #: templates/wizard_fourstep_choice.html.twig:92
 msgid "Others needs"
 msgstr "Diğer gereksinimler"
@@ -2060,8 +2052,7 @@ msgstr "Lütfen düzeltin: %s"
 #: templates/resource_restitution_pdf.html.twig:33
 msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
-"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin "
-"olun"
+"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin olun"
 
 #: src/Resource_Change.php:226
 msgid "Please select a resource"
@@ -2090,7 +2081,7 @@ msgstr "Önceki"
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:107
 #: src/Employment.php:201 src/Budget.php:178 src/Cost.php:146 src/Cost.php:188
-#: src/Profession.php:55 src/Rank.php:116 src/Rank.php:164
+#: src/Profession.php:55 src/Rank.php:117 src/Rank.php:165
 #: templates/budget_form.html.twig:46 templates/cost_form.html.twig:46
 #: templates/employment_form.html.twig:47
 msgid "Profession"
@@ -2125,9 +2116,9 @@ msgid "Queries to run"
 msgstr "Yürütülecek sorgular"
 
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:80
-#: src/RuleContracttypeReadonly.php:335 src/Resource.php:623
-#: src/Config.php:143 src/Config.php:171 src/RuleContracttypeHidden.php:294
-#: src/Recap.php:153 src/NotificationTargetResource.php:709
+#: src/RuleContracttypeReadonly.php:335 src/Resource.php:623 src/Config.php:143
+#: src/Config.php:171 src/RuleContracttypeHidden.php:294 src/Recap.php:153
+#: src/NotificationTargetResource.php:709
 #: src/NotificationTargetResource.php:839
 #: src/NotificationTargetResource.php:1010
 #: src/NotificationTargetResource.php:1654
@@ -2142,7 +2133,7 @@ msgid "Random password (recommended)"
 msgstr "Rastgele parola (önerilir)"
 
 #: src/Employment.php:193 src/Budget.php:169 src/Cost.php:152 src/Cost.php:196
-#: src/Rank.php:57 src/ResourceSpeciality.php:105
+#: src/Rank.php:58 src/ResourceSpeciality.php:105
 #: src/ResourceSpeciality.php:189 templates/resource_form.html.twig:135
 #: templates/budget_form.html.twig:53 templates/cost_form.html.twig:53
 #: templates/employment_form.html.twig:54
@@ -2161,9 +2152,8 @@ msgstr "İş / bütçe oranı"
 msgid "Read only Fields"
 msgstr "Salt okunur alanlar"
 
-#: src/RuleContracttypeReadonly.php:394 src/Resource.php:698
-#: src/Config.php:149 src/RuleContracttypeHidden.php:352
-#: src/NotificationTargetResource.php:1129
+#: src/RuleContracttypeReadonly.php:394 src/Resource.php:698 src/Config.php:149
+#: src/RuleContracttypeHidden.php:352 src/NotificationTargetResource.php:1129
 #: src/NotificationTargetResource.php:1677
 #: templates/resource_form.html.twig:339
 #: templates/wizard_secondstep_resource.html.twig:717
@@ -2306,7 +2296,7 @@ msgstr "Zorunlu alanlar"
 msgid "Required fields are not filled. Please try again."
 msgstr "Zorunlu alanlar doldurulmamış. Lütfen yeniden deneyin."
 
-#: src/Choice.php:447
+#: src/Choice.php:460
 msgid "Resend the declaration"
 msgstr "Duyuruyu yeniden gönder"
 
@@ -2429,10 +2419,9 @@ msgstr "Kaynak yönetimi"
 msgid "Resources not declaring leaving"
 msgstr "Ayrılmayacağı söylenen kaynaklar"
 
-#: src/RuleContracttypeReadonly.php:359 src/LinkAd.php:546
-#: src/Adconfig.php:311 src/Profile.php:208 src/RuleContracttypeHidden.php:318
-#: src/Role.php:57 src/RuleContracttype.php:311
-#: templates/resource_form.html.twig:183
+#: src/RuleContracttypeReadonly.php:359 src/LinkAd.php:546 src/Adconfig.php:311
+#: src/Profile.php:208 src/RuleContracttypeHidden.php:318 src/Role.php:57
+#: src/RuleContracttype.php:311 templates/resource_form.html.twig:183
 #: templates/linkad_resource_form.html.twig:93
 msgid "Role"
 msgid_plural "Roles"
@@ -2492,8 +2481,8 @@ msgstr "Kaynak arayın"
 msgid "Second Form"
 msgstr "İkinci form"
 
-#: src/RuleContracttypeReadonly.php:355 src/Resource.php:851
-#: src/Config.php:152 src/Config.php:168 src/RuleContracttypeHidden.php:314
+#: src/RuleContracttypeReadonly.php:355 src/Resource.php:851 src/Config.php:152
+#: src/Config.php:168 src/RuleContracttypeHidden.php:314
 #: src/RuleContracttype.php:307 templates/resource_form.html.twig:71
 #: templates/wizard_secondstep_resource.html.twig:230
 msgid "Second matricule"
@@ -2583,9 +2572,9 @@ msgid "Setup LDAP directory"
 msgstr "LDAP dizinini kur"
 
 #: src/Profession.php:107 src/Profession.php:226 src/ResourceSituation.php:108
-#: src/ResourceSituation.php:172 src/ResourceSituation.php:178
-#: src/Rank.php:110 src/Rank.php:158 src/EmploymentState.php:93
-#: src/EmploymentState.php:155 src/Employer.php:99 src/Employer.php:138
+#: src/ResourceSituation.php:172 src/ResourceSituation.php:178 src/Rank.php:111
+#: src/Rank.php:159 src/EmploymentState.php:93 src/EmploymentState.php:155
+#: src/Employer.php:99 src/Employer.php:138
 msgid "Short name"
 msgstr "Kısa ad"
 
@@ -2593,7 +2582,7 @@ msgstr "Kısa ad"
 msgid "Show all"
 msgstr "Tümünü görüntüle"
 
-#: src/Choice.php:469 src/Config.php:154
+#: src/Choice.php:482 src/Config.php:154
 msgid "Softwares requirements"
 msgstr "Yazılım gereksinimleri"
 
@@ -2736,7 +2725,7 @@ msgstr "Teknisyen"
 msgid "Templates"
 msgstr "Kalıplar"
 
-#: src/Choice.php:446
+#: src/Choice.php:459
 msgid "Terminate the declaration"
 msgstr "Duyuruyu kaldır"
 
@@ -2746,8 +2735,8 @@ msgstr "Doğrulama sonrası kaynak oluşturma destek kaydındaki yazı"
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken "
 "aralarına tire \"-\" koyun."
@@ -2824,8 +2813,8 @@ msgid ""
 "run by the plugin."
 msgstr ""
 "Aşağıdaki sorgular yalnızca bulunan farklılıklardan oluşturulmuş "
-"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el"
-" ile yürütün. Asla eklenti tarafından yürütülmezler."
+"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el "
+"ile yürütün. Asla eklenti tarafından yürütülmezler."
 
 #: src/Employee.php:343
 msgid "The resource is also created if not existent"
@@ -2862,8 +2851,7 @@ msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
 #: src/Employment.php:512
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr "Bu kaynaklar kurumdan ayrıldığından, geçerli işleri güncellendi"
 
 #: src/Adconfig.php:275
@@ -2873,8 +2861,8 @@ msgid ""
 "prefer the random format."
 msgstr ""
 "Bu parola, hesap sahibinin kimliğinden türetilir veya eklenti tarafından "
-"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz"
-" oldu. Ancak rastgele biçimi yeğleyin."
+"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz "
+"oldu. Ancak rastgele biçimi yeğleyin."
 
 #: src/Resource.php:3516 src/Resource.php:3544
 msgid "This resource aldready exists"
