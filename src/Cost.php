@@ -243,7 +243,7 @@ class Cost extends CommonDropdown
             'item'                => $this,
             'params'              => $params,
             'profession_dropdown' => $profession_rank['profession_dropdown'],
-            'rank_html'           => $profession_rank['rank_html'],
+            'rank_label'          => $profession_rank['rank_label'],
             'cost_value'          => Html::formatNumber($this->fields["cost"], true),
         ]);
 

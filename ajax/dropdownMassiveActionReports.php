@@ -32,7 +32,7 @@ Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-if (isset($_POST["action"]) || isset($_POST["id"])) {
+if (isset($_POST["action"]) && isset($_POST["id"])) {
     echo Html::hidden('action', ['value' => $_POST["action"]]);
     echo Html::hidden('id', ['value' => $_POST["id"]]);
     switch ($_POST["action"]) {

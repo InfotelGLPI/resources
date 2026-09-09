@@ -47,6 +47,11 @@
         {'wrapper_class': ''}
     ) }}
 
+    {# The span is the target the profession dropdown replaces over AJAX, so it keeps its id.
+     # Built here rather than in PHP so the rank label goes through the Twig escaper: the capture
+     # below is already marked safe, only what it interpolates is escaped. #}
+    {% set rank_html %}<span id="span_rank" name="span_rank">{{ rank_label }}</span>{% endset %}
+
     {{ fields.htmlField(
         'plugin_resources_ranks_id',
         rank_html,

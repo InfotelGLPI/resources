@@ -183,6 +183,7 @@ class Adconfig extends CommonDBTM
             'label_password'              => __('Password'),
             'label_clear'                 => __('Clear'),
             'label_server'                => __('Server'),
+            'label_allow_invalid_cert'    => __('Accept a directory certificate that cannot be validated', 'resources'),
             'label_creation_category'     => __('Creation category', 'resources'),
             'label_modification_category' => __('Modification category', 'resources'),
             'label_deletion_category'     => __('Deletion category', 'resources'),
@@ -242,8 +243,20 @@ class Adconfig extends CommonDBTM
             'mail_suffix_field' => Html::input('mail_suffix', ['value' => $this->fields['mail_suffix']]),
         ];
 
-        // Optional password-creation block (only offered for an SSL/TLS-secured AD).
-        $data['ssl_tls'] = (new LDAP())->isSSLorTLSAD();
+        // Certificate validation of the provisioning connection. Offered here rather than left to
+        // the ldap.conf of the host, because that connection carries the initial password of the
+        // accounts the plugin creates.
+        $allow_invalid_cert = self::allowsInvalidCertificate();
+        $data['allow_invalid_cert_dropdown'] = $capture(
+            fn() => Dropdown::showYesNo('tls_allow_invalid_cert', $allow_invalid_cert ? 1 : 0),
+        );
+        $data['allow_invalid_cert_warning'] = $allow_invalid_cert
+            ? __('The certificate of the directory is not checked, so the far end of the encrypted connection cannot be authenticated: the password creation module below is disabled.', 'resources')
+            : '';
+
+        // Optional password-creation block: only offered when the connection to the directory is
+        // both encrypted and certificate-validated, since the module writes a secret to it.
+        $data['ssl_tls'] = LDAP::isTrustedADChannel();
         if ($data['ssl_tls']) {
             $data['use_password_module_dropdown'] = $capture(
                 fn() => Dropdown::showYesNo('use_password_module', $this->fields['use_password_module']),
@@ -420,6 +433,26 @@ class Adconfig extends CommonDBTM
     }
 
     /**
+     * Whether the administrator stored the decision to accept a directory certificate GLPI
+     * cannot validate.
+     *
+     * Off by default, on upgrade as well: the certificate of the domain controller is checked
+     * unless someone says otherwise here. Saying otherwise also closes the password creation
+     * module, since its whole point is to write a secret to that directory.
+     *
+     * @return bool
+     */
+    public static function allowsInvalidCertificate(): bool
+    {
+        $config = new self();
+        if (!$config->getFromDB(1)) {
+            return false;
+        }
+
+        return !empty($config->fields['tls_allow_invalid_cert']);
+    }
+
+    /**
      * @return mixed
      */
     public function useSecurity()
@@ -505,6 +538,11 @@ class Adconfig extends CommonDBTM
                         `mail_prefix`                int {$default_key_sign} NOT NULL                   DEFAULT '0',
                         `mail_suffix`                varchar(255) NOT NULL                   DEFAULT '',
                         `fonctionAD`                 varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `use_password_module`        tinyint      NOT NULL                   DEFAULT '0',
+                        `default_account_password`   varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+                        `format_default_account_password` int {$default_key_sign} NOT NULL  DEFAULT '0',
+                        `prefix_default_account_password` int {$default_key_sign} NOT NULL  DEFAULT '0',
+                        `tls_allow_invalid_cert`     tinyint      NOT NULL                   DEFAULT '0',
                         PRIMARY KEY (`id`)
                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
@@ -538,7 +576,13 @@ class Adconfig extends CommonDBTM
                     'second_form' => 0,
                     'mail_prefix' => 0,
                     'mail_suffix' => '',
-                    'fonctionAD' => ''],
+                    'fonctionAD' => '',
+                    'use_password_module' => 0,
+                    'default_account_password' => '',
+                    'format_default_account_password' => 0,
+                    'prefix_default_account_password' => 0,
+                    // Validate the certificate of the domain controller unless told otherwise.
+                    'tls_allow_invalid_cert' => 0],
             );
         }
     }

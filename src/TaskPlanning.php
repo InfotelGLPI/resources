@@ -440,70 +440,90 @@ class TaskPlanning extends CommonDBTM
     /**
      * Display a Planning Item
      *
-     * @param $parm Array of the item to display
+     * @param array $val      the item to display
+     * @param int   $who      user the planning is displayed for, 0 for everyone
+     * @param string $type    which bound of the slot is being displayed
+     * @param int   $complete unused, kept for the signature the core calls
      *
-     * @return  (display function)
+     * @return string
      * */
     public static function displayPlanningItem(array $val, $who, $type = "", $complete = 0)
     {
-        global $CFG_GLPI;
+        $dbu = new DbUtils();
 
-        $html = "";
-
-        $rand = mt_rand();
-        $html .= "<a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $val["id"] . "'";
-
-        $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
-               onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
-        $html .= ">";
+        $time_label = '';
+        // Left empty when the caller asks for a bound this method does not know: sprintf() then
+        // drops both placeholders, which is what the switch used to do by falling through.
+        $heading_format = '';
 
         switch ($type) {
             case "in":
                 //TRANS: %1$s is the start time of a planned item, %2$s is the end
-                $beginend = sprintf(
+                $time_label = sprintf(
                     __('From %1$s to %2$s'),
                     date("H:i", strtotime($val["begin"])),
                     date("H:i", strtotime($val["end"])),
                 );
-                $html .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
-
+                $heading_format = __('%1$s %2$s');
                 break;
             case "begin":
-                $start = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
-                $html .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
+                $time_label = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
+                $heading_format = __('%1$s: %2$s');
                 break;
-
             case "end":
-                $end = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
-                $html .= sprintf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
+                $time_label = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
+                $heading_format = __('%1$s: %2$s');
                 break;
         }
 
-        if ($val["users_id"] && $who == 0) {
-            $dbu = new DbUtils();
-            $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id"]);
-        }
-        $html .= "</a><br>";
+        // The markup used to be assembled here by concatenation. The resource name, the task type
+        // and the user name are free text read back from the database, and none of them was
+        // escaped: the core copies this return value verbatim into the planning and into the
+        // tooltip, so any of the three carried a stored XSS to every user displaying the planning.
+        // A template escapes them by construction instead of relying on a call being remembered.
+        return TemplateRenderer::getInstance()->render('@resources/planning_item.html.twig', [
+            'id'                 => (int) $val["id"],
+            'rand'               => mt_rand(),
+            'task_url'           => PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id="
+                . (int) $val["id"],
+            'resource_url'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id="
+                . (int) ($val["plugin_resources_resources_id"] ?? 0),
+            'heading_format'     => $heading_format,
+            'time_label'         => $time_label,
+            // Truncated but not escaped, because the template escapes on output. Html::resume_text()
+            // does both at once, which would print the entities instead of the characters.
+            'task_name'          => self::resumeRawText((string) ($val["name"] ?? ''), 80),
+            'user_name'          => (!empty($val["users_id"]) && $who == 0)
+                ? $dbu->getUserName($val["users_id"])
+                : '',
+            'resource'           => (string) ($val["resource"] ?? ''),
+            'resource_type_name' => Resource::getTypeName(1),
+            'task_type_name'     => TaskType::getTypeName(1),
+            'type'               => (string) ($val["type"] ?? ''),
+            'end_date'           => !empty($val["end"]) ? Html::convdatetime($val["end"]) : '',
+            'content'            => (string) ($val["content"] ?? ''),
+        ]);
+    }
 
-        $html .= Resource::getTypeName(1) .
-            " : <a href='" . PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" .
-            $val["plugin_resources_resources_id"] . "'";
-        $html .= ">" . $val["resource"] . "</a>";
+    /**
+     * Truncate a label the way Html::resume_text() does, but without escaping it.
+     *
+     * The result is handed to a Twig template, which escapes it on output: escaping it here as
+     * well would show the entities to the user. The non breaking space of the ellipsis is written
+     * as the character itself rather than as &nbsp; for the same reason.
+     *
+     * @param string $string
+     * @param int    $length
+     *
+     * @return string
+     */
+    private static function resumeRawText(string $string, int $length): string
+    {
+        if (mb_strlen($string, 'UTF-8') <= $length) {
+            return $string;
+        }
 
-        $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
-        if ($val["end"]) {
-            $html .= "<strong>" . __('End date') . "</strong> : " . Html::convdatetime($val["end"]) . "<br>";
-        }
-        if ($val["type"]) {
-            $html .= "<strong>" . TaskType::getTypeName(1) . "</strong> : " .
-                $val["type"] . "<br>";
-        }
-        if ($val["content"]) {
-            $html .= "<strong>" . __('Description') . "</strong> : " . $val["content"];
-        }
-        $html .= "</div>";
-
-        return $html;
+        return mb_substr($string, 0, $length, 'UTF-8') . "\u{00A0}(...)";
     }
 
     public static function install(Migration $migration)

@@ -32,6 +32,7 @@ namespace GlpiPlugin\Resources;
 use AuthLDAP;
 use CommonDBTM;
 use Exception;
+use Glpi\Toolbox\Filesystem;
 use GLPIKey;
 use LdapRecord\Auth\BindException;
 use LdapRecord\Connection;
@@ -153,41 +154,120 @@ class LDAP extends CommonDBTM
         return $ldap_connection;
     }
 
+    /**
+     * Split the host field of a directory into the host list LdapRecord expects.
+     *
+     * The scheme used to be looked for with strpos() anywhere in the value and stripped with
+     * str_replace(), which mangles a field naming several servers and mistakes a host whose name
+     * merely contains "ldaps://" for a secure one. Each entry is parsed on its own, with the same
+     * idiom as AuthLDAP::buildUri().
+     *
+     * @param string $raw_host the host field of the AuthLDAP record
+     *
+     * @return array{0: string[], 1: bool} the bare host names, and whether they are all LDAPS
+     */
+    private static function parseHosts(string $raw_host): array
+    {
+        $entries = preg_split('/[\s,]+/', trim($raw_host), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        $hosts  = [];
+        $secure = [];
+        foreach ($entries as $entry) {
+            $hosts[]  = (string) preg_replace('@^ldaps?://@i', '', $entry);
+            $secure[] = stripos($entry, 'ldaps://') === 0;
+        }
+
+        if ($hosts === []) {
+            // No directory configured yet: keep the shape of the return value so callers do not
+            // have to special case it.
+            return [[''], false];
+        }
+
+        // One connection cannot be LDAPS for the first host and plain for the next: only call the
+        // list secure when every entry says so.
+        return [$hosts, !in_array(false, $secure, true)];
+    }
+
+    /**
+     * Transport options pinned on the connections built below.
+     *
+     * LdapRecord applies these through ldap_set_option() from Connection::configure(), which runs
+     * before ldap_connect(): they therefore land on the global handle, which is where libldap
+     * reads LDAP_OPT_X_TLS_REQUIRE_CERT from when it negotiates the handshake.
+     *
+     * @param AuthLDAP $config_ldap the directory GLPI is configured with
+     *
+     * @return array<int, mixed>
+     */
+    private static function getTransportOptions(AuthLDAP $config_ldap): array
+    {
+        // Whether the server certificate is checked at all used to be decided by the ldap.conf of
+        // the host, outside GLPI. This connection writes the initial password of the accounts it
+        // creates (see createUserAD()), so a TLS_REQCERT never left there was enough for anyone on
+        // the path to present their own certificate and read both the bind credentials and those
+        // passwords. Validation is the default now, and switching it off is an explicit stored
+        // decision that also closes the password write.
+        $options = [
+            LDAP_OPT_X_TLS_REQUIRE_CERT => Adconfig::allowsInvalidCertificate()
+                ? LDAP_OPT_X_TLS_NEVER
+                : LDAP_OPT_X_TLS_HARD,
+        ];
+
+        // Client certificate and TLS version: same fields and same safety checks as
+        // AuthLDAP::connectToServer(), so both connections to the same directory behave alike.
+        $certfile = (string) ($config_ldap->fields['tls_certfile'] ?? '');
+        if ($certfile !== '' && Filesystem::isFilepathSafe($certfile) && file_exists($certfile)) {
+            $options[LDAP_OPT_X_TLS_CERTFILE] = $certfile;
+        }
+
+        $keyfile = (string) ($config_ldap->fields['tls_keyfile'] ?? '');
+        if ($keyfile !== '' && Filesystem::isFilepathSafe($keyfile) && file_exists($keyfile)) {
+            $options[LDAP_OPT_X_TLS_KEYFILE] = $keyfile;
+        }
+
+        $tls_version = (string) ($config_ldap->fields['tls_version'] ?? '');
+        if ($tls_version !== '') {
+            $cipher_suite = 'NORMAL';
+            foreach (AuthLDAP::TLS_VERSIONS as $version) {
+                $cipher_suite .= ($version === $tls_version ? ':+' : ':!') . 'VERS-TLS' . $version;
+            }
+            $options[LDAP_OPT_X_TLS_CIPHER_SUITE] = $cipher_suite;
+        }
+
+        return $options;
+    }
+
+    /**
+     * Build the LdapRecord configuration of the account provisioning connection.
+     *
+     * @return array<string, mixed>
+     */
     private static function getConfig()
     {
         $config_ldap = new AuthLDAP();
         $configAD = new Adconfig();
         $configAD->getFromDB(1);
         $authID = $configAD->fields["auth_id"] ?? 0;
-        $res = $config_ldap->getFromDB($authID);
+        $config_ldap->getFromDB($authID);
 
         // The AuthLDAP record may not be loaded yet (no auth_id configured,
         // or the referenced directory was deleted): fall back to empty values
         // instead of dereferencing undefined field keys.
-        $raw_host = $config_ldap->fields['host'] ?? '';
+        [$hosts, $ssl] = self::parseHosts((string) ($config_ldap->fields['host'] ?? ''));
 
         // Create a configuration array.
-        if (strpos($raw_host, 'ldaps://') !== false) {
-            $host = str_replace('ldaps://', '', $raw_host);
-            $ssl = true;
-        } elseif (strpos($raw_host, 'ldap://') !== false) {
-            $host = str_replace('ldap://', '', $raw_host);
-            $ssl = false;
-        } else {
-            $host = $raw_host;
-            $ssl = false;
-        }
-        $deref = !empty($config_ldap->fields['deref_option']);
-        $tls   = !empty($config_ldap->fields['use_tls']);
-
-        $config = [
+        return [
             // An array of your LDAP hosts. You can use either
             // the host name or the IP address of your host.
-            'hosts' => [$host],
+            'hosts' => $hosts,
             'port' => $config_ldap->fields['port'] ?? 389,
-            'use_tls' => $tls,
+            'use_tls' => !empty($config_ldap->fields['use_tls']),
             'use_ssl' => $ssl,
-            'follow_referrals' => $deref,
+            'follow_referrals' => !empty($config_ldap->fields['deref_option']),
+            // getUserInformation() pinned the protocol version and this one did not, which left
+            // the connection that writes to the directory on whatever the library defaults to.
+            'version' => 3,
+            'timeout' => (int) ($config_ldap->fields['timeout'] ?? 10),
 
             // The base distinguished name of your domain to perform searches upon.
             'base_dn' => $config_ldap->fields['basedn'] ?? '',
@@ -197,40 +277,36 @@ class LDAP extends CommonDBTM
             // be a full distinguished name of the user account.
             'username' => $configAD->fields['login'] ?? '',
             'password' => (new GLPIKey())->decrypt($configAD->fields['password'] ?? ''),
+            'options' => self::getTransportOptions($config_ldap),
         ];
-        //      Toolbox::logWarning($config);
-        return $config;
     }
 
+    /**
+     * Bind to a directory to validate the credentials stored on its AuthLDAP record.
+     *
+     * @param int|string $authID
+     *
+     * @return bool whether the bind succeeded
+     */
     public function getUserInformation($authID)
     {
         $config_ldap = new AuthLDAP();
-        $res = $config_ldap->getFromDB($authID);
+        $config_ldap->getFromDB($authID);
 
         // Guard against a missing/unloaded directory record.
-        $raw_host = $config_ldap->fields['host'] ?? '';
+        [$hosts, $ssl] = self::parseHosts((string) ($config_ldap->fields['host'] ?? ''));
 
         // Create a configuration array.
-        if (strpos($raw_host, 'ldaps://') !== false) {
-            $host = str_replace('ldaps://', '', $raw_host);
-            $ssl = true;
-        } elseif (strpos($raw_host, 'ldap://') !== false) {
-            $host = str_replace('ldap://', '', $raw_host);
-            $ssl = false;
-        } else {
-            $host = $raw_host;
-            $ssl = false;
-        }
-
         $config = [
             // An array of your LDAP hosts. You can use either
             // the host name or the IP address of your host.
-            'hosts' => [$host],
+            'hosts' => $hosts,
             'port' => $config_ldap->fields['port'] ?? 389,
             'use_tls' => !empty($config_ldap->fields['use_tls']),
             'use_ssl' => $ssl,
             'follow_referrals' => !empty($config_ldap->fields['deref_option']),
             'version' => 3,
+            'timeout' => (int) ($config_ldap->fields['timeout'] ?? 10),
 
             // The base distinguished name of your domain to perform searches upon.
             'base_dn' => $config_ldap->fields['basedn'] ?? '',
@@ -240,6 +316,7 @@ class LDAP extends CommonDBTM
             // be a full distinguished name of the user account.
             'username' => $config_ldap->fields['rootdn'] ?? '',
             'password' => (new GLPIKey())->decrypt($config_ldap->fields['rootdn_passwd'] ?? ''),
+            'options' => self::getTransportOptions($config_ldap),
         ];
 
         $connection = new Connection($config);
@@ -247,8 +324,15 @@ class LDAP extends CommonDBTM
         try {
             // Bind to the server to validate the connection settings.
             $connection->connect();
+            return true;
         } catch (BindException $e) {
-            // There was an issue binding / connecting to the server.
+            // The exception used to be dropped here, which made an unreachable server or an
+            // expired service account indistinguishable from a directory that simply answered.
+            Toolbox::logInFile(
+                'LDAPERROR',
+                sprintf('Bind to directory %d failed: %s', (int) $authID, $e->getMessage()),
+            );
+            return false;
         }
     }
 
@@ -309,11 +393,20 @@ class LDAP extends CommonDBTM
         return $find;
     }
 
-    public function isSSLorTLSAD()
+    /**
+     * Whether the directory connection can be trusted with a secret.
+     *
+     * Encryption alone is not enough for the password write this gates: without certificate
+     * validation the far end of the channel is not authenticated, so it may well be someone on
+     * the path rather than the domain controller.
+     *
+     * @return bool
+     */
+    public static function isTrustedADChannel(): bool
     {
-        $adConfig = new Adconfig();
         $config = self::getConfig();
-        return $config['use_tls'] || $config['use_ssl'];
+
+        return ($config['use_tls'] || $config['use_ssl']) && !Adconfig::allowsInvalidCertificate();
     }
 
     public function createUserAD($data)
@@ -373,7 +466,19 @@ class LDAP extends CommonDBTM
 
             // save() returns void and throws LdapRecordException on failure.
             $user->save();
-            if (($config['use_tls'] || $config['use_ssl']) && $adConfig->fields['use_password_module']) {
+            if (!empty($adConfig->fields['use_password_module'])) {
+                if (!self::isTrustedADChannel()) {
+                    // Fail closed: the account is created, but its initial password is not sent
+                    // down a channel whose far end has not been authenticated. The gate used to
+                    // ask for encryption only, and did so without saying anything when it
+                    // declined.
+                    Toolbox::logInFile(
+                        'LDAPERROR',
+                        'Initial password not written: the directory connection is not encrypted, '
+                        . 'or its certificate is not validated.',
+                    );
+                    return true;
+                }
                 try {
                     $newPassword = '';
                     $format      = (int) $adConfig->fields['format_default_account_password'];

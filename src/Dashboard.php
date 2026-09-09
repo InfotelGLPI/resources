@@ -113,12 +113,20 @@ class Dashboard extends CommonGLPI
                             $data["date"] .= "</div>";
                         }
 
-                        $data["entity"] = Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']);
-                        $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
-                        $data["contracttypes"] = Dropdown::getDropdownName(
+                        // Datatable serialises these cells and mydashboard renders them as HTML
+                        // without escaping anything, which is why the name above already goes
+                        // through htmlescape(). These three labels are free text too, entered by
+                        // whoever manages the dropdowns.
+                        $data["entity"] = htmlescape(
+                            Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']),
+                        );
+                        $data["location"] = htmlescape(
+                            Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']),
+                        );
+                        $data["contracttypes"] = htmlescape(Dropdown::getDropdownName(
                             "glpi_plugin_resources_contracttypes",
                             $checklist['plugin_resources_contracttypes_id'],
-                        );
+                        ));
 
                         $datas[] = $data;
                     }
@@ -162,12 +170,17 @@ class Dashboard extends CommonGLPI
                             $data["date"] .= "</div>";
                         }
 
-                        $data["entity"] = Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']);
-                        $data["location"] = Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']);
-                        $data["contracttypes"] = Dropdown::getDropdownName(
+                        // Same unescaped Datatable sink as the arrival widget above.
+                        $data["entity"] = htmlescape(
+                            Dropdown::getDropdownName("glpi_entities", $checklist['entities_id']),
+                        );
+                        $data["location"] = htmlescape(
+                            Dropdown::getDropdownName("glpi_locations", $checklist['locations_id']),
+                        );
+                        $data["contracttypes"] = htmlescape(Dropdown::getDropdownName(
                             "glpi_plugin_resources_contracttypes",
                             $checklist['plugin_resources_contracttypes_id'],
-                        );
+                        ));
 
                         $datas[] = $data;
                     }

@@ -48,6 +48,10 @@
         {'wrapper_class': ''}
     ) }}
 
+    {# Same as budget_form.html.twig: the span keeps the id the AJAX dropdown targets, and the
+     # label is interpolated so Twig escapes it. #}
+    {% set rank_html %}<span id="span_rank" name="span_rank">{{ rank_label }}</span>{% endset %}
+
     {{ fields.htmlField(
         'plugin_resources_ranks_id',
         rank_html,

@@ -310,7 +310,7 @@ class Employment extends CommonDBTM
             'resource_class'        => Resource::class,
             'resource_value'        => $resource,
             'profession_dropdown'   => $profession_rank['profession_dropdown'],
-            'rank_html'             => $profession_rank['rank_html'],
+            'rank_label'            => $profession_rank['rank_label'],
             'ratio_value'           => Html::formatNumber($this->fields["ratio_employment_budget"], true),
         ]);
 
@@ -499,7 +499,10 @@ class Employment extends CommonDBTM
                 if (!isset($message[$entity])) {
                     $message = [$entity => ''];
                 }
-                $message[$entity] .= $data["name"] . " " . $data["firstname"] . " : " .
+                // Accumulated into the message handed to addMessageAfterRedirect() below, which
+                // the core documents as an unescaped HTML sink. Escaped leaf by leaf so the <br>
+                // separator stays markup.
+                $message[$entity] .= htmlescape($data["name"]) . " " . htmlescape($data["firstname"]) . " : " .
                     Html::convDate($data["date_end"]) . "<br>\n";
                 $task_infos[$type][$entity][] = $data;
 
@@ -517,23 +520,17 @@ class Employment extends CommonDBTM
             foreach ($task_infos[$type] as $entity => $resources) {
                 Plugin::loadLang('resources');
 
+                // The entity name is free text and the message it prefixes is HTML: escaped once
+                // here, for the cron log and for the session message alike.
+                $entity_label = htmlescape(Dropdown::getDropdownName("glpi_entities", $entity));
+
                 $message = $task_messages[$type][$entity];
                 $cron_status = 1;
                 if ($task) {
-                    $task->log(
-                        Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $entity,
-                        ) . ":  $message\n",
-                    );
+                    $task->log($entity_label . ":  $message\n");
                     $task->addVolume(count($resources));
                 } else {
-                    Session::addMessageAfterRedirect(
-                        Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $entity,
-                        ) . ":  $message",
-                    );
+                    Session::addMessageAfterRedirect($entity_label . ":  $message");
                 }
             }
         }

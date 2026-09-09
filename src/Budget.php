@@ -262,7 +262,7 @@ class Budget extends CommonDBTM
             'budgettype_class'    => BudgetType::class,
             'budgetvolume_class'  => BudgetVolume::class,
             'profession_dropdown' => $profession_rank['profession_dropdown'],
-            'rank_html'           => $profession_rank['rank_html'],
+            'rank_label'          => $profession_rank['rank_label'],
         ]);
 
         return true;

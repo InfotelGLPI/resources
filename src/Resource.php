@@ -2678,6 +2678,14 @@ class Resource extends CommonDBTM
 
         $user = new \User();
         if ($user->getFromDB($userId)) {
+            // This message reaches Session::addMessageAfterRedirect() through
+            // MassiveAction::addMessage(), a sink the core documents as unescaped HTML
+            // (@psalm-taint-sink html $msg, src/Session.php). The user name is free text, so each
+            // part is escaped on its own: escaping the assembled string would print the <br/>
+            // separator as literal text.
+            $user_label = htmlescape($user->fields['realname'] ?? '')
+                . " " . htmlescape($user->fields['firstname'] ?? '') . "<br/>";
+
             $resource = new Resource();
             $resource->getFromDBByCrit([
                 'name' => $user->fields['realname'],
@@ -2747,11 +2755,11 @@ class Resource extends CommonDBTM
                                 ['is_checked' => 1],
                                 ['plugin_resources_resources_id' => (int) $idResource],
                             )) {
-                                $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
+                                $message = $user_label;
                             }
                         } else {
                             $error['error'] = 1;
-                            $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
+                            $message = $user_label;
                             $resource->delete($resource->fields, 1);
                         }
                     } else {
@@ -2762,7 +2770,7 @@ class Resource extends CommonDBTM
                 }
             } else {
                 $error['error'] = 1;
-                $message = $user->fields['realname'] . " " . $user->fields['firstname'] . "<br/>";
+                $message = $user_label;
             }
         } else {
             $error['error'] = 1;
@@ -4001,7 +4009,10 @@ class Resource extends CommonDBTM
             $task_infos[$type] = [];
             foreach ($DB->request($query) as $data) {
                 $entity = $data['entities_id'];
-                $message = $data["name"] . " " . $data["firstname"] . " : "
+                // Same sink as fastResourceAdd(): this line is accumulated into the message the
+                // loop below hands to addMessageAfterRedirect(). Escaped leaf by leaf so the <br>
+                // that separates the entries stays markup.
+                $message = htmlescape($data["name"]) . " " . htmlescape($data["firstname"]) . " : "
                     . Html::convDate($data["date_end"]) . "<br>\n";
                 $task_infos[$type][$entity][] = $data;
 
@@ -4019,6 +4030,10 @@ class Resource extends CommonDBTM
             foreach ($task_infos[$type] as $entity => $resources) {
                 Plugin::loadLang('resources');
 
+                // The entity name is free text and the message it prefixes is HTML: escaped once
+                // here, for the cron log and for the session message alike.
+                $entity_label = htmlescape(Dropdown::getDropdownName("glpi_entities", $entity));
+
                 if (NotificationEvent::raiseEvent(
                     "AlertLeavingResources",
                     new Resource(),
@@ -4031,31 +4046,17 @@ class Resource extends CommonDBTM
                     $message = $task_messages[$type][$entity];
                     $cron_status = 1;
                     if ($task) {
-                        $task->log(
-                            Dropdown::getDropdownName(
-                                "glpi_entities",
-                                $entity,
-                            ) . ":  $message\n",
-                        );
+                        $task->log($entity_label . ":  $message\n");
                         $task->addVolume(1);
                     } else {
-                        Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName(
-                                "glpi_entities",
-                                $entity,
-                            ) . ":  $message",
-                        );
+                        Session::addMessageAfterRedirect($entity_label . ":  $message");
                     }
                 } else {
                     if ($task) {
-                        $task->log(
-                            Dropdown::getDropdownName("glpi_entities", $entity)
-                            . ":  Send leaving resources alert failed\n",
-                        );
+                        $task->log($entity_label . ":  Send leaving resources alert failed\n");
                     } else {
                         Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName("glpi_entities", $entity)
-                            . ":  Send leaving resources alert failed",
+                            $entity_label . ":  Send leaving resources alert failed",
                             false,
                             ERROR,
                         );
@@ -4116,6 +4117,10 @@ class Resource extends CommonDBTM
             $resource->fields['id'] = $resources[0]['id'] ?? 0;
 
             $dbu = new DbUtils();
+            // Same sink again, and the same reason to escape once: the name is free text. The
+            // method also mixed the global getUserName() with the DbUtils one, which returned the
+            // very same unescaped value; the object is used on every branch now.
+            $sales_label = htmlescape($dbu->getUserName($commercial['users_id_sales']));
 
             if (count($resources) > 0 && NotificationEvent::raiseEvent(
                 "AlertCommercialManager",
@@ -4129,25 +4134,25 @@ class Resource extends CommonDBTM
                 $cron_status = 1;
                 if ($task) {
                     $task->log(
-                        $dbu->getUserName($commercial['users_id_sales']) . ": "
+                        $sales_label . ": "
                         . __('Send alert to the commercial manager', 'resources') . "\n",
                     );
                     $task->addVolume(1);
                 } else {
                     Session::addMessageAfterRedirect(
-                        getUserName($commercial['users_id_sales']) . ": "
+                        $sales_label . ": "
                         . __('Send alert to the commercial manager', 'resources') . "\n",
                     );
                 }
             } else {
                 if ($task) {
                     $task->log(
-                        $dbu->getUserName($commercial['users_id_sales']) . ": "
+                        $sales_label . ": "
                         . __('Failed to Send alert to the commercial manager', 'resources') . "\n",
                     );
                 } else {
                     Session::addMessageAfterRedirect(
-                        getUserName($commercial['users_id_sales']) . ": "
+                        $sales_label . ": "
                         . __('Failed to Send alert to the commercial manager', 'resources') . "\n",
                     );
                 }
@@ -4578,7 +4583,7 @@ class Resource extends CommonDBTM
      *                       plugin_resources_ranks_id and entities_id
      * @param bool  $sort    Whether the profession dropdown is sorted
      *
-     * @return array{profession_dropdown: string, rank_html: string}
+     * @return array{profession_dropdown: string, rank_label: string}
      */
     public static function getProfessionRankFields(array $fields, bool $sort = true): array
     {
@@ -4604,7 +4609,11 @@ class Resource extends CommonDBTM
 
         return [
             'profession_dropdown' => $profession_dropdown,
-            'rank_html'           => "<span id='span_rank' name='span_rank'>" . $rank_label . "</span>",
+            // The label alone, never markup. Returned as a fragment it reached
+            // fields.htmlField(), whose macro renders with |raw, so a rank named with a tag
+            // executed in the browser of anyone opening a budget, a cost or an employment. The
+            // three templates now build the span themselves, where Twig escapes on output.
+            'rank_label'          => $rank_label,
         ];
     }
 

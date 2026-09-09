@@ -1129,6 +1129,7 @@ CREATE TABLE `glpi_plugin_resources_adconfigs`
     `default_account_password` varchar(255) COLLATE utf8mb4_unicode_ci default '',
     `format_default_account_password` int unsigned NOT NULL default '0',
     `prefix_default_account_password` int unsigned NOT NULL default '0',
+    `tls_allow_invalid_cert` tinyint NOT NULL default '0',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
