@@ -102,7 +102,7 @@ class TransferEntity extends CommonDBTM
     {
         if ($item->getType() == Config::class) {
             $self = new self();
-            $self->showConfigForm($_SERVER['PHP_SELF']);
+            $self->showConfigForm();
         }
         return true;
     }

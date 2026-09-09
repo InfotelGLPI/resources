@@ -36,6 +36,7 @@ use GlpiPlugin\Metademands\Config as MetaConfig;
 use GlpiPlugin\Metademands\Field;
 use GlpiPlugin\Metademands\FieldParameter;
 use Plugin;
+use Session;
 
 /**
  * Class Metademand
@@ -246,7 +247,7 @@ class Metademand extends CommonGLPI
     }
 
     /**
-     * @return string
+     * @return void
      */
     public static function afterCreateTicket($p)
     {
@@ -262,7 +263,41 @@ class Metademand extends CommonGLPI
                 $habilitationConfig = new ResourceHabilitation();
                 $habilitationResource = new Habilitation();
                 $resource = new Resource();
-                $resource->getFromDB($options["resources_id"]);
+
+                // The identifier reaches this hook from the metademands wizard, where it travels
+                // in a hidden field and is copied from $_POST/$_GET into the session without ever
+                // being checked. This method is the sink: it adds and removes habilitations, then
+                // flips the resource to "leaving" and overwrites its end date. Unguarded, a
+                // requester could aim those writes at any resource of the database, in any
+                // entity, simply by editing the posted value.
+                //
+                // The bar replayed here is the one of the legitimate entry point,
+                // ajax/showHabilitations.php, which already requires can($id, READ) before
+                // seeding the wizard: every path that works today has passed it. Demanding UPDATE
+                // instead would deny the workflow to the very users it was built for, and the
+                // hook would then return silently on a ticket that has already been created.
+                //
+                // can() rather than check(): the ticket exists by the time this runs, so throwing
+                // an access exception would abort a creation that was legitimate on its own.
+                $resources_id = (int) ($options["resources_id"] ?? 0);
+                if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                    trigger_error(
+                        sprintf(
+                            'Metademands hook: resource %d is out of reach for user %s, skipped.',
+                            $resources_id,
+                            (string) Session::getLoginUserID(),
+                        ),
+                        E_USER_WARNING,
+                    );
+
+                    return;
+                }
+
+                // All three sinks below work on the validated identifier. It used to be read back
+                // from the object inside the loops, which left it undefined when no habilitation
+                // branch was taken and turned the two deletes into a criterion on resource 0.
+                $idResource = $resources_id;
+
                 if (count($line["form"])) {
                     $habilitationToDelKeep = [];
                     $habilitationToDel = [];
