@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\ResourceHoliday;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
@@ -71,12 +72,15 @@ if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_i
     Resource::checkChildOwnership($holiday, $_POST['id']);
     $holiday->delete($_POST, 1);
     $holiday->redirectToList();
-} elseif (isset($_GET['menu'])) {
-    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
-        $holiday->showMenu();
-    }
 } else {
-    if ($holiday->canView() || Session::haveRight("config", UPDATE)) {
+    // Both remaining branches only display, and both used to answer with an empty page when the
+    // right was missing: pose the read guard once and refuse.
+    if (!$holiday->canView() && !Session::haveRight("config", UPDATE)) {
+        throw new AccessDeniedHttpException();
+    }
+    if (isset($_GET['menu'])) {
+        $holiday->showMenu();
+    } else {
         $holiday->display($_GET);
     }
 }

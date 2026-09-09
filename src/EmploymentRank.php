@@ -31,10 +31,6 @@ namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class EmploymentRank
  */

@@ -28,9 +28,11 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Resources\Resource_Validation;
 
-// Static validation prompt, also shown in the simplified (helpdesk) interface:
-// require authentication for consistency without gating behind the plugin right.
-Session::checkRight('plugin_resources_validation', READ);
+// Static validation prompt shown by Resource_Validation::showValidationForm(): gate it on the
+// same right that screen asks for, so the modal and the endpoint it posts to
+// (ajax/validinformation.php) stay consistent.
+Session::checkRight(Resource_Validation::$rightname, READ);
 
 TemplateRenderer::getInstance()->display('@resources/modal_validation_info.html.twig');

@@ -223,14 +223,11 @@ function plugin_init_resources()
             ];
 
             // The resource card is not wired to anything: ResourceCard::resourceCard() has no
-            // caller and front/resource.card.form.php has no body. Its script lib/resources_card.js
-            // also relies on jquery.address and jScrollPane, which were removed because no live
-            // code used them. Reviving the card means bringing those two back, or porting the
-            // script off jQuery.
-            //            if (strpos($_SERVER['REQUEST_URI'], "resource.card.form.php") !== false) {
-            //                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'][] = "lib/resources_card.js";
-            //                $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'][] = "css/resourcecard.css";
-            //            }
+            // caller, and the empty front/resource.card.form.php it used to point at has been
+            // removed rather than left reachable. Its script lib/resources_card.js also relies
+            // on jquery.address and jScrollPane, which were removed because no live code used
+            // them. Reviving the card means adding a controller back and either restoring those
+            // two libraries or porting the script off jQuery.
         }
 
         //TODO : Check

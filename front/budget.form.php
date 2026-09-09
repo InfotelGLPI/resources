@@ -38,7 +38,12 @@ if (!isset($_GET["id"])) {
 $budget = new Budget();
 
 if (isset($_POST["add"])) {
-    $budget->check(-1, UPDATE);
+    // The posted values have to reach the guard. CommonDBTM::can() only copies them into the
+    // object under "if (is_array($input))"; without them the object stays the one getEmpty()
+    // built, whose entities_id is the active entity of the session, and canCreateItem() then
+    // validates that entity instead of the submitted one. add() does not reimpose it either,
+    // so a row could be created in an entity the user has no access to.
+    $budget->check(-1, CREATE, $_POST);
     $newID = $budget->add($_POST);
 
     Html::back();

@@ -228,7 +228,11 @@ elseif (isset($_POST["deleteemployee"])) {
     /////////////////////////////////resource from central///////////////////////////////
     //add resource
 } elseif (isset($_POST["add"])) {
-    $resource->check(-1, UPDATE, $_POST);
+    // CREATE, not UPDATE: the bits of plugin_resources are independently grantable (the
+    // standard matrix is shown, Profile::getAllRights() declaring no explicit 'rights' key),
+    // so a profile deliberately given update only was creating resources through this branch.
+    // The branch at line 110 of this same file already takes it that way.
+    $resource->check(-1, CREATE, $_POST);
     $newID = $resource->add($_POST);
     if (isset($_POST['plugin_resources_employers_id'])) {
         $employee = new Employee();
@@ -329,7 +333,9 @@ elseif (isset($_POST["update"])) {
 } //from central
 //delete resource
 elseif (isset($_POST["delete"])) {
-    $resource->check($_POST['id'], UPDATE);
+    // The template variant below is a forced delete, that is a definitive purge: ask for the
+    // bit the branch actually spends rather than the UPDATE it used to settle for.
+    $resource->check((int) $_POST['id'], !empty($_POST["withtemplate"]) ? PURGE : DELETE);
     if (!empty($_POST["withtemplate"])) {
         $resource->delete($_POST, 1);
     } else {
@@ -344,13 +350,17 @@ elseif (isset($_POST["delete"])) {
 } //from central
 //restore resource
 elseif (isset($_POST["restore"])) {
-    $resource->check($_POST['id'], UPDATE);
+    // Restoring is the counterpart of deleting and carries the same bit in the core.
+    $resource->check((int) $_POST['id'], DELETE);
     $resource->restore($_POST);
     $resource->redirectToList();
 } //from central
 //purge resource template
 elseif (isset($_POST["purge"])) {
-    $resource->check($_POST['id'], UPDATE);
+    // delete($_POST, 1) erases the record and its related data for good, with no trash bin to
+    // restore it from: PURGE is the bit for that, the way front/wizard.form.php:83 asks for it
+    // on this very itemtype.
+    $resource->check((int) $_POST['id'], PURGE);
     $resource->delete($_POST, 1);
     if (!empty($_POST["withtemplate"])) {
         Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/setup.templates.php?add=0");

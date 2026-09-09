@@ -54,10 +54,6 @@ use TicketTemplatePredefinedField;
 use Toolbox;
 use User;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Checklist
  */
@@ -669,7 +665,6 @@ class Checklist extends CommonDBTM
                 PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php",
                 [
                     'type' => self::class,
-                    'target' => $targetchecklist,
                     'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
                     'checklist_type' => $checklist_type,

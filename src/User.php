@@ -42,11 +42,6 @@ use PluginPdfSimplePDF;
 use Session;
 use UserEmail;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
-
 class User extends \User
 {
     public static function getTable($classname = null)

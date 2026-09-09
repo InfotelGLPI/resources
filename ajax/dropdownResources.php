@@ -38,10 +38,6 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownResources.php")) {
     Html::header_nocache();
 }
 
-if (!defined('GLPI_ROOT')) {
-    die("Can not acces directly to this file");
-}
-
 if (empty($_GET)) {
     $_GET = $_POST;
 }

@@ -27,15 +27,20 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 
 $resource = new Resource();
 
-if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
-
-    $resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php", (int) ($_GET["add"] ?? 0));
-
-    Html::footer();
+// A guard clause rather than a wrapping if: without the right this used to answer 200 with an
+// empty body, which reads as "nothing to show here" instead of "you may not look".
+if (!$resource->canView() && !Session::haveRight("config", UPDATE)) {
+    throw new AccessDeniedHttpException();
 }
+
+Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+
+$resource->listOfTemplates(PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php", (int) ($_GET["add"] ?? 0));
+
+Html::footer();

@@ -35,11 +35,6 @@ Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-if (!defined('GLPI_ROOT')) {
-    die("Can not acces directly to this file");
-}
-
-
 if (isset($_POST["computer_id"])) {
     /** @var \DBmysql $DB */
     global $DB;

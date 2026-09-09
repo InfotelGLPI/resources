@@ -38,10 +38,6 @@ use Session;
 use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class ResourceCard
  */
@@ -79,7 +75,6 @@ class ResourceCard extends CommonDBTM
             'vcard_url' => $has_user
                 ? $CFG_GLPI["root_doc"] . "/front/user.form.php?getvcard=1&id=" . $user->getID()
                 : '',
-            'card_url'  => PLUGIN_RESOURCES_WEBDIR . "/front/resource.card.form.php",
             'identity'  => self::getIdentityData($resource, $has_user ? $user : false),
             'items'     => $has_user ? self::getItemsData($user) : [],
         ]);

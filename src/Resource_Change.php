@@ -50,10 +50,6 @@ use Ticket;
 use TicketTemplate;
 use TicketTemplatePredefinedField;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Resource_Change
  */

@@ -41,7 +41,20 @@ if (!isset($_GET["plugin_resources_resources_id"])) {
 $employment = new Employment();
 
 if (isset($_POST["add"])) {
-    $employment->check(-1, UPDATE);
+    // Same as budget.form.php: without the posted values, can() validates the entity of the
+    // session rather than the submitted entities_id.
+    $employment->check(-1, CREATE, $_POST);
+
+    // The employment carries the resource it belongs to. That resource is a separate record
+    // with its own entity, which the guard above says nothing about: the update branch below
+    // already re-checked it, this one did not, so an employment could be attached to the file
+    // of a resource outside the perimeter of its author. An employment may legitimately be
+    // created with no resource, hence the test rather than a check on id 0.
+    $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+    if ($resources_id > 0) {
+        Resource::checkOwnership($resources_id);
+    }
+
     $newID = $employment->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
@@ -69,8 +82,9 @@ if (isset($_POST["add"])) {
         $input['plugin_resources_resources_id'] = $_POST['items_id'];
 
         $employment->check($input["id"], UPDATE);
-        // Employment has no entities_id of its own, so the check() above cannot enforce
-        // any entity boundary on the target: re-check it on the owning Resource.
+        // The check() above covers the employment row, which does carry an entities_id. It
+        // says nothing about the resource being linked here: that is another record, with an
+        // entity of its own, so the boundary has to be checked on it too.
         Resource::checkOwnership($input['plugin_resources_resources_id']);
         $employment->update($input);
     }

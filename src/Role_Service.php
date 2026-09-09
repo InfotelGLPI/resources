@@ -33,10 +33,6 @@ use CommonDBRelation;
 use DBConnection;
 use Migration;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Role_Service Class
  **/

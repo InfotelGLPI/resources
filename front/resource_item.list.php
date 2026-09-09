@@ -89,12 +89,10 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     Html::back();
 } else {
     //show form items needs from helpdesk
-    // The global test below says nothing about the id, which comes straight from $_GET: the
-    // per record guard (right bit and entity boundary alike) is posed at the sink, in
-    // Choice::showItemHelpdesk(), so every call path goes through it.
-    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-        $choice->showItemHelpdesk((int) ($_GET["id"] ?? 0), $_GET["exist"] ?? 0);
-    }
+    // No test here: the per record guard (right bit, config bypass and entity boundary alike)
+    // is posed at the sink, in Choice::showItemHelpdesk(), so every call path goes through it
+    // and a refusal comes back as a refusal rather than as an empty page.
+    $choice->showItemHelpdesk((int) ($_GET["id"] ?? 0), $_GET["exist"] ?? 0);
 }
 
 if (Session::getCurrentInterface() != 'central'

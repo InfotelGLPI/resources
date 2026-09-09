@@ -39,10 +39,6 @@ use Migration;
 use Session;
 use Glpi\Application\View\TemplateRenderer;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class ReportConfig
  */

@@ -43,10 +43,6 @@ use Session;
 use Ticket;
 use UserEmail;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class NotificationTargetResource
  */

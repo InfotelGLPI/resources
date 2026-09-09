@@ -98,6 +98,7 @@ use GlpiPlugin\Resources\Role_Service;
 use GlpiPlugin\Resources\RuleChecklist;
 use GlpiPlugin\Resources\RuleContracttype;
 use GlpiPlugin\Resources\RuleContracttypeHidden;
+use GlpiPlugin\Resources\RuleContracttypeReadonly;
 use GlpiPlugin\Resources\Service;
 use GlpiPlugin\Resources\Task;
 use GlpiPlugin\Resources\Task_Item;
@@ -276,10 +277,11 @@ function plugin_resources_install()
 
             if (!empty($profiles)) {
                 foreach ($profiles as $profile) {
-                    $query = "UPDATE `glpi_plugin_resources_profiles`
-                  SET `profiles_id` = '" . $profile["id"] . "'
-                  WHERE `id` = '" . $profile["id"] . "';";
-                    $DB->doQuery($query);
+                    $DB->update(
+                        'glpi_plugin_resources_profiles',
+                        ['profiles_id' => $profile["id"]],
+                        ['id' => $profile["id"]],
+                    );
                 }
             }
 
@@ -352,15 +354,15 @@ function plugin_resources_install()
         if (!$DB->tableExists("glpi_plugin_resources_employments")) {
             $DB->runFile(PLUGIN_RESOURCES_DIR . "/install/sql/update-1.9.0.sql");
 
-            $query = "SELECT * FROM `glpi_plugin_resources_employers`";
-            $result = $DB->doQuery($query);
-            if ($DB->numrows($result) > 0) {
-                while ($data = $DB->fetchArray($result)) {
-                    $queryUpdate = "UPDATE `glpi_plugin_resources_employers`
-                            SET `completename`= '" . $data["name"] . "'
-                            WHERE `id`= '" . $data["id"] . "'";
-                    $DB->doQuery($queryUpdate);
-                }
+            // The employer name is free text. Read back from the database and concatenated into
+            // the UPDATE, it was a second order SQL injection, and a plain apostrophe was enough
+            // to break the migration and leave completename empty.
+            foreach ($DB->request(['FROM' => 'glpi_plugin_resources_employers']) as $data) {
+                $DB->update(
+                    'glpi_plugin_resources_employers',
+                    ['completename' => $data["name"]],
+                    ['id' => $data["id"]],
+                );
             }
         }
 
@@ -509,10 +511,11 @@ function plugin_resources_install()
             $tasks = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks");
             if (!empty($tasks)) {
                 foreach ($tasks as $task) {
-                    $query = "INSERT INTO `glpi_plugin_resources_taskplannings`
-               ( `id` , `plugin_resources_tasks_id` , `begin` , `end` )
-               VALUES (NULL , '" . $task["id"] . "', '" . $task["date_begin"] . "', '" . $task["date_end"] . "') ;";
-                    $DB->doQuery($query);
+                    $DB->insert('glpi_plugin_resources_taskplannings', [
+                        'plugin_resources_tasks_id' => $task["id"],
+                        'begin' => $task["date_begin"],
+                        'end' => $task["date_end"],
+                    ]);
                 }
             }
 
@@ -530,9 +533,11 @@ function plugin_resources_install()
                 foreach ($taches as $tache) {
                     $Resource->getFromDB($tache["plugin_resources_resources_id"]);
                     $input["entities_id"] = $Resource->fields["entities_id"];
-                    $query = "UPDATE `glpi_plugin_resources_tasks`
-               SET `entities_id` =  '" . $Resource->fields["entities_id"] . "' WHERE `id` = '" . $tache["id"] . "' ;";
-                    $DB->doQuery($query);
+                    $DB->update(
+                        'glpi_plugin_resources_tasks',
+                        ['entities_id' => $Resource->fields["entities_id"]],
+                        ['id' => $tache["id"]],
+                    );
                 }
             }
         }
@@ -541,11 +546,21 @@ function plugin_resources_install()
             $restrict = ["itemtype" => Resource::class];
             $unicities = $dbu->getAllDataFromTable("glpi_fieldunicities", $restrict);
             if (empty($unicities)) {
-                $query = "INSERT INTO `glpi_fieldunicities`"
-                    . "VALUES (NULL, 'Resources creation', 1, '" . Resource::class . "', '0',
-                                             'name,firstname','1',
-                                             '1', '1', '',NOW(),NOW());";
-                $DB->doQuery($query, " 0.80 Create fieldunicities check");
+                // The positional VALUES are spelled out with the column names they relied on:
+                // any change in the core table used to shift every value by one column.
+                $DB->insert('glpi_fieldunicities', [
+                    'name' => 'Resources creation',
+                    'is_recursive' => 1,
+                    'itemtype' => Resource::class,
+                    'entities_id' => 0,
+                    'fields' => 'name,firstname',
+                    'is_active' => 1,
+                    'action_refuse' => 1,
+                    'action_notify' => 1,
+                    'comment' => '',
+                    'date_mod' => new QueryExpression('NOW()'),
+                    'date_creation' => new QueryExpression('NOW()'),
+                ]);
             }
         }
 
@@ -1127,21 +1142,22 @@ function plugin_resources_uninstall()
     }
 
     //drop rules
+    // The four rule classes registered in setup.php, listed once so a new one cannot be added
+    // without showing up here. RuleContracttypeReadonly used to be missing: its rows survived
+    // the uninstall with a sub_type the core can no longer load, breaking the rule engine and
+    // silently coming back with a stale configuration on a later reinstall.
     $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => RuleChecklist::class]);
-    foreach ($a_rules as $data) {
-        $Rule->delete($data);
-    }
-
-    $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => RuleContracttype::class]);
-    foreach ($a_rules as $data) {
-        $Rule->delete($data);
-    }
-    $Rule = new Rule();
-    $a_rules = $Rule->find(['sub_type' => RuleContracttypeHidden::class]);
-    foreach ($a_rules as $data) {
-        $Rule->delete($data);
+    foreach (
+        [
+            RuleChecklist::class,
+            RuleContracttype::class,
+            RuleContracttypeHidden::class,
+            RuleContracttypeReadonly::class,
+        ] as $sub_type
+    ) {
+        foreach ($Rule->find(['sub_type' => $sub_type]) as $data) {
+            $Rule->delete($data);
+        }
     }
 
     $notif = new \Notification();
@@ -1634,7 +1650,7 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
 /**
  * @param $type
  *
- * @return int[]
+ * @return array<int|string, mixed> criteria consumed as is by SQLProvider
  */
 function plugin_resources_addDefaultWhere($type)
 {
@@ -1643,13 +1659,46 @@ function plugin_resources_addDefaultWhere($type)
     switch ($type) {
         case Directory::class:
         case Recap::class:
-        case User::class:
+            // Neither side was restricting the entity here. This hook returned no entity
+            // criteria, and the core skipped its own restriction as well: both classes alias
+            // glpi_users through getTable() but declare $notable = true, which makes
+            // CommonDBTM::isField('entities_id') return false whatever the aliased table
+            // actually holds, so the $entity_restrict flag of SQLProvider stayed false and the
+            // getEntitiesRestrictRequest() block was never reached. The whole directory was
+            // therefore readable across every entity of the instance.
+            // Pose the boundary on the resource, the only record joined here that carries
+            // entities_id and is_recursive: glpi_users.entities_id is a mere preference, as the
+            // core itself states in User::isEntityAssign().
             $criteria = [
                 'glpi_plugin_resources_resources.is_leaving' => 0,
                 'glpi_users.is_active' => 1,
             ];
 
+            $dbu = new DbUtils();
+            $entity_criteria = $dbu->getEntitiesRestrictCriteria(
+                'glpi_plugin_resources_resources',
+                '',
+                '',
+                true,
+            );
+            if ($entity_criteria !== []) {
+                // Nested rather than merged with "+": getEntitiesRestrictCriteria() can return
+                // an "OR" key (recursive entities) or a bare QueryExpression under key 0, which
+                // a union would drop. Appended only when it holds something, so a session that
+                // sees every entity does not end up with an "AND (true)" in the query.
+                $criteria[] = $entity_criteria;
+            }
+
             return $criteria;
+
+        case User::class:
+            // Left as it was: the core already restricts this itemtype on glpi_profiles_users,
+            // which is the authoritative entity link of a user, so repeating the resource
+            // criteria here would only hide users legitimately visible in the current entity.
+            return [
+                'glpi_plugin_resources_resources.is_leaving' => 0,
+                'glpi_users.is_active' => 1,
+            ];
 
         case Resource::class:
             $who = Session::getLoginUserID();
@@ -1861,8 +1910,14 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                     $out['LEFT JOIN'] = $left;
                 }
             } else {
+                // No alias here. The $AS above exists for the Resource searches, which carry a
+                // second option on this table (54, linkfield last_contract_type) and need the
+                // two joins told apart. Recap has a single option on it (4355) with the natural
+                // foreign key, so SQLProvider::addSelect() appends no suffix and selects
+                // glpi_plugin_resources_contracttypes.name: aliasing the join left that column
+                // unreachable and the whole Recap list died with a 1054.
                 $out['LEFT JOIN'] = [
-                    'glpi_plugin_resources_contracttypes' . $AS => [
+                    'glpi_plugin_resources_contracttypes' => [
                         'ON' => [
                             'glpi_plugin_resources_resources' => 'plugin_resources_contracttypes_id',
                             'glpi_plugin_resources_contracttypes' => 'id',

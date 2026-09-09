@@ -76,10 +76,6 @@ use Toolbox;
 use UserCategory;
 use UserTitle;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Resource
  */

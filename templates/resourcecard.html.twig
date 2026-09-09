@@ -54,8 +54,11 @@
 {% if has_user %}
     <nav>
         <ul class="plugin_resources_clearfix">
-            <li class="active"><a href="{{ card_url }}#about">{{ __('About', 'resources') }}</a></li>
-            <li><a href="{{ card_url }}#inventory">{{ __('Inventory', 'resources') }}</a></li>
+            {# Fragment only: the click handler of resources_card.js cancels the navigation and
+               just feeds the href to $.address, so pointing these at a front controller only
+               ever offered a link to a blank page. #}
+            <li class="active"><a href="#about">{{ __('About', 'resources') }}</a></li>
+            <li><a href="#inventory">{{ __('Inventory', 'resources') }}</a></li>
         </ul>
     </nav>
 {% endif %}

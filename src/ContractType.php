@@ -35,10 +35,6 @@ use DbUtils;
 use Dropdown;
 use Migration;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 // Class for a Dropdown
 
 /**

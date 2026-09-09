@@ -88,12 +88,15 @@ if (isset($_POST["add"])) {
             'is_private' => 1,
         ];
 
-        $content = sprintf(
-            __('%1$s %2$s have been added in the LDAP directory', 'resources'),
-            $_POST["firstname"],
-            $_POST["name"],
+        // The follow-up content is HTML: escape the untrusted values as they go in, instead of
+        // running htmlentities() over the assembled string. The blanket call turned the <br />
+        // separators of the update branch into literal text, and ENT_NOQUOTES left quotes
+        // unescaped anyway.
+        $toadd["content"] = sprintf(
+            htmlescape(__('%1$s %2$s have been added in the LDAP directory', 'resources')),
+            htmlescape($_POST["firstname"]),
+            htmlescape($_POST["name"]),
         );
-        $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
         if ($tickets_id > 0) {
             $fup->add($toadd);
@@ -129,23 +132,25 @@ if (isset($_POST["add"])) {
             'is_private' => 1,
         ];
 
+        // Escaping happens leaf by leaf: the attribute names and the values come from the
+        // directory, the <br /> separators are ours and have to survive as markup.
         $content = sprintf(
-            __('%1$s %2$s have been updated in the LDAP directory', 'resources'),
-            $_POST["firstname"],
-            $_POST["name"],
+            htmlescape(__('%1$s %2$s have been updated in the LDAP directory', 'resources')),
+            htmlescape($_POST["firstname"]),
+            htmlescape($_POST["name"]),
         );
-        $content .= __("Data changed", 'resources') . " <br />";
+        $content .= htmlescape(__("Data changed", 'resources')) . " <br />";
         foreach ($res[1] as $key => $oldData) {
             $i = 1;
             $nb = count($oldData);
-            $content .= $key . " : ";
+            $content .= htmlescape($key) . " : ";
             foreach ($oldData as $data) {
                 if ($key == "accountexpires") {
                     $time = $ldap->ldapTimeToUnixTime($data);
                     $data = date('Y-m-d', $time);
                     $data = Html::convDate($data);
                 }
-                $content .= $data;
+                $content .= htmlescape($data);
                 if ($i < $nb) {
                     $content .= ", ";
                 }
@@ -153,7 +158,7 @@ if (isset($_POST["add"])) {
             }
             $content .= "<br />";
         }
-        $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
+        $toadd["content"] = $content;
 
         if ($tickets_id > 0) {
             $fup->add($toadd);
@@ -189,12 +194,11 @@ if (isset($_POST["add"])) {
             'is_private' => 1,
         ];
 
-        $content = sprintf(
-            __('%1$s %2$s have been disabled and moved in the LDAP directory', 'resources'),
-            $_POST["firstname"],
-            $_POST["name"],
+        $toadd["content"] = sprintf(
+            htmlescape(__('%1$s %2$s have been disabled and moved in the LDAP directory', 'resources')),
+            htmlescape($_POST["firstname"]),
+            htmlescape($_POST["name"]),
         );
-        $toadd["content"] = htmlentities($content, ENT_NOQUOTES);
 
         if ($tickets_id > 0) {
             $fup->add($toadd);

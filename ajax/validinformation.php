@@ -41,8 +41,20 @@ use GlpiPlugin\Resources\Role;
 use GlpiPlugin\Resources\Service;
 use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\Config;
+use GlpiPlugin\Resources\Resource_Validation;
 
 Session::checkRight('plugin_resources', READ);
+
+// This endpoint is the sink of Resource_Validation::showValidationForm(), and a display gate
+// is never transitive: the URL is plainly readable in the script block that method emits
+// (src/Resource_Validation.php:176-191), so every condition that screen imposes has to be
+// posed again here. The first one is the dedicated right: plugin_resources is not
+// plugin_resources_validation, and the whole feature hangs off the latter
+// (src/Resource_Validation.php:48). READ is the bit the screen asks for, canView() being what
+// gates both getTabNameForItem() and showValidationForm(); the validate button itself is not
+// gated on canCreate(), so demanding UPDATE here would lock out the very managers the feature
+// is written for.
+Session::checkRight(Resource_Validation::$rightname, READ);
 
 // This endpoint mutates a resource and creates tickets. GLPI's CheckCsrfListener only
 // validates the CSRF token on non-GET requests, so a state-changing action reachable
@@ -55,6 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $resource_id = (int) ($_POST["plugin_resources_resources_id"] ?? 0);
 $resource = new Resource();
 $resource->check($resource_id, UPDATE);
+
+// The two remaining conditions of showValidationForm(): the screen only offers the validate
+// button to the direct manager of the resource, and only while the information has not been
+// validated yet. Neither was replayed here, so any holder of the right could validate someone
+// else's resource, and replaying the call on an already validated one created the arrival
+// tickets over and over.
+if (empty($resource->fields['users_id'])
+    || $_SESSION['glpiID'] != $resource->fields['users_id']
+    || $resource->fields['valid_resource_information']) {
+    throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+}
+
 $resource->update(['id' => $resource_id, 'valid_resource_information' => 1]);
 $resource->getFromDB($resource_id);
 

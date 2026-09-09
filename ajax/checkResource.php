@@ -34,10 +34,6 @@ Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-if (!defined('GLPI_ROOT')) {
-    die("Can not acces directly to this file");
-}
-
 $name = $_POST['name'] ?? '';
 $firstname = $_POST['firstname'] ?? '';
 

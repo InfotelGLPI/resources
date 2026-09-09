@@ -46,6 +46,12 @@ global $HEADER_LOADED, $DB;
 // resources endpoint — before running any query or emitting output.
 Session::checkRight('plugin_resources', READ);
 
+// GLPI 11 routes every request through the Symfony front controller, so $_SERVER['PHP_SELF']
+// resolves to the router entry point instead of this script: the filter form and the pagination
+// links used to send the user back to the GLPI root, losing the criteria. Build the target from
+// the plugin web path, which is a server side value and reflects nothing from the request.
+$report_target = PLUGIN_RESOURCES_WEBDIR . '/report/checkgroup/checkgroup.php';
+
 $report = new AutoReport(__("Report listing the groups not included in the resource's permissions", "resources"));
 
 //Report's search criterias
@@ -264,7 +270,7 @@ if ($report->criteriasValidated()) {
 
     if ($nbtot == 0) {
         if (!$HEADER_LOADED) {
-            Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+            Html::header($title, $report_target, "utils", "report");
             Report::title();
         }
         echo "<div class='alert alert-danger center'><span style='color : red;font-weight:bold;'>" . __(
@@ -275,13 +281,13 @@ if ($report->criteriasValidated()) {
         include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
     } elseif ($output_type == Search::HTML_OUTPUT) {
         if (!$HEADER_LOADED) {
-            Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
+            Html::header($title, $report_target, "utils", "report");
             Report::title();
         }
         echo "<div class='center'><table class='tab_cadre_fixe'>";
         echo "<tr><th>$title</th></tr>\n";
         echo "<tr class='tab_bg_2 center'><td class='center'>";
-        echo "<form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES, 'UTF-8') . "?start=$start'>\n";
+        echo "<form method='POST' action='" . htmlescape($report_target) . "?start=$start'>\n";
 
         $param = "";
         foreach ($_POST as $key => $val) {
@@ -307,14 +313,14 @@ if ($report->criteriasValidated()) {
         echo "</td></tr>";
         echo "</table></div>";
 
-        Html::printPager($start, $nbtot, $_SERVER['PHP_SELF'], $param);
+        Html::printPager($start, $nbtot, $report_target, $param);
     }
 
     if ($nbtot > 0) {
         $nbcols = 4;
         $nbrows = count($dataAll);
         $num = 1;
-        $link = $_SERVER['PHP_SELF'];
+        $link = $report_target;
         $order = 'ASC';
         $issort = false;
 
