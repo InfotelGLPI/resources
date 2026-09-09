@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 09:49+0000\n"
+"POT-Creation-Date: 2026-09-09 10:16+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -1386,7 +1386,7 @@ msgstr "Donner des instructions de départ"
 msgid "Group"
 msgstr "Groupe"
 
-#: src/Metademand.php:176 src/ResourceHabilitation.php:62
+#: src/Metademand.php:177 src/ResourceHabilitation.php:62
 #: src/Habilitation.php:54
 msgid "Habilitation"
 msgid_plural "Habilitations"
@@ -1426,7 +1426,7 @@ msgstr[0] "Congé"
 msgstr[1] "Congés"
 msgstr[2] "Congés"
 
-#: setup.php:271 src/Metademand.php:74
+#: setup.php:271 src/Metademand.php:75
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Ressource humaine"
@@ -1458,14 +1458,14 @@ msgstr "Identifiants"
 msgid "If other contract are available don't display without contract"
 msgstr "Si un autre contrat est disponible ne pas afficher le \"Sans contrat\""
 
-#: src/Metademand.php:145
+#: src/Metademand.php:146
 msgid ""
 "If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: src/Metademand.php:161
+#: src/Metademand.php:162
 msgid ""
 "If the value selected equals the value to check, the checklist out will be "
 "add"
@@ -1473,14 +1473,14 @@ msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
 
-#: src/Metademand.php:178
+#: src/Metademand.php:179
 msgid ""
 "If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, l'habilitation "
 "va être ajoutée"
 
-#: src/Metademand.php:196
+#: src/Metademand.php:197
 msgid "If yes, the resource will be declared as leaving"
 msgstr "Si oui, la ressource sera déclarée partante"
 
@@ -1613,7 +1613,7 @@ msgstr[0] "Raison du départ"
 msgstr[1] "Raisons du départ"
 msgstr[2] "Raisons du départ"
 
-#: src/Metademand.php:194
+#: src/Metademand.php:195
 msgid "Leaving resource"
 msgstr "Ressource partante"
 
@@ -1653,11 +1653,11 @@ msgstr[0] "Lien Rôle/Service"
 msgstr[1] "Liens Rôle/Service"
 msgstr[2] "Liens Rôle/Service"
 
-#: src/Metademand.php:143
+#: src/Metademand.php:144
 msgid "Link a checklist in"
 msgstr "Lier à un checklist entrante"
 
-#: src/Metademand.php:159
+#: src/Metademand.php:160
 msgid "Link a checklist out"
 msgstr "Lier à une checklist sortante"
 
