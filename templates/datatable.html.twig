@@ -277,7 +277,7 @@
                                         {% elseif formatter == 'integer' %}
                                             {{ entry[colkey]|formatted_integer }}
                                         {% elseif formatter == "raw_html" %}
-                                            {# raw_html: l'appelant garantit que cette valeur ne contient pas de données utilisateur non échappées #}
+                                            {# raw_html: The caller guarantees that this value does not contain unescaped user data #}
                                             {{ entry[colkey]|raw }}
                                         {% elseif formatter == 'avatar' %}
                                             {#  Note: Does not support anonymization currently #}

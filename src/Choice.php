@@ -36,6 +36,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Html;
 use MassiveAction;
 use Migration;
@@ -348,6 +349,24 @@ class Choice extends CommonDBTM
      */
     public function showItemHelpdesk($plugin_resources_resources_id, $exist, $withtemplate = '')
     {
+        $plugin_resources_resources_id = (int) $plugin_resources_resources_id;
+
+        $resource = new Resource();
+        // Both callers only test the global right, and canView() loads no record and never
+        // calls checkEntity(): on the controller path the id comes straight from $_GET, so the
+        // needs of any resource of any entity were readable from that id alone. Authorize the
+        // record here, at the sink, so the tab path (self::displayTabContentForItem()) is
+        // covered by the same guard, the way Resource::showResourcesToTransfer() does it. The
+        // config bypass is the one every controller of the plugin grants to a super
+        // administrator holding no plugin right.
+        if (!$resource->getFromDB($plugin_resources_resources_id)
+            || !Session::haveAccessToEntity(
+                $resource->fields['entities_id'],
+                $resource->fields['is_recursive'],
+            )
+            || !($resource->canView() || Session::haveRight('config', UPDATE))) {
+            throw new AccessDeniedHttpException();
+        }
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
         $dbu = new DbUtils();
@@ -356,14 +375,8 @@ class Choice extends CommonDBTM
         $configchoice = json_decode($config->fields['view_needs_parts']);
         $configchoice = is_array($configchoice) ? $configchoice : [];
 
-        $resource = new Resource();
-        $resource->getFromDB($plugin_resources_resources_id);
-
-        if (isset($resource->fields["entities_id"])) {
-            $input['entities_id'] = $resource->fields["entities_id"];
-        } else {
-            $input['entities_id'] = $_SESSION['glpiactive_entity'];
-        }
+        // The guard above loaded the record, so the entity is always the resource's own.
+        $input['entities_id'] = $resource->fields["entities_id"];
         $input['plugin_resources_contracttypes_id'] = $resource->fields["plugin_resources_contracttypes_id"];
         $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];

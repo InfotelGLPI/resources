@@ -28,13 +28,25 @@
  */
 
 use Glpi\Event;
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
+
+// Every branch of this controller reads or writes a core user, and the tab it backs is gated
+// on \User::canView() (src/User.php:102): pose the same right here. Without it the login
+// resolution below was reachable by any authenticated session, including a self service one.
+Session::checkRight(User::$rightname, READ);
 
 $user = new User();
 $groupuser = new Group_User();
 
 if (empty($_GET["id"]) && isset($_GET["name"])) {
-    $user->getFromDBbyName($_GET["name"]);
+    // getFromDBbyName() leaves $this->fields empty when no such login exists, so
+    // $user->fields['id'] used to read an undefined key and redirect without an id: the shape
+    // of the answer told the caller whether the login it guessed exists, and gave away its
+    // internal id when it does.
+    if (!$user->getFromDBbyName($_GET["name"])) {
+        throw new NotFoundHttpException();
+    }
     Html::redirect($user->getFormURLWithID($user->fields['id']));
 }
 

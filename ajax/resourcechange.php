@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Change;
@@ -38,15 +39,31 @@ $resource_change = new Resource_Change();
 if (isset($_POST['load_button_changeresources'])) {
     $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
 } elseif (isset($_POST['action'])) {
+    // The three fragments below belong to the "Managing change actions" setup screen, which
+    // Resource_Change::showFormActions() gates on canView() && canCreate(): the READ right
+    // posed at the top of this file is not enough for them. The test stands before the switch
+    // so no branch is left uncovered.
+    if (in_array($_POST['action'], ['loadEntity', 'loadCategory', 'loadButtonAdd'], true)
+        && !(Resource_Change::canView() && Resource_Change::canCreate())) {
+        throw new AccessDeniedHttpException();
+    }
+
     switch ($_POST['action']) {
         case "loadEntity":
-            $resource_change->loadEntity($_POST['actions_id']);
+            $resource_change->loadEntity((int) ($_POST['actions_id'] ?? 0));
             break;
         case "loadCategory":
-            $resource_change->displayCategory($_POST['entities_id']);
+            // The entity is posted by the client and is the only scope of the ITIL category
+            // dropdown built from it: without this test the category list of any entity of the
+            // instance was readable from this endpoint alone.
+            $entities_id = (int) ($_POST['entities_id'] ?? 0);
+            if (!Session::haveAccessToEntity($entities_id)) {
+                throw new AccessDeniedHttpException();
+            }
+            $resource_change->displayCategory($entities_id);
             break;
         case "loadButtonAdd":
-            $resource_change->displayButtonAdd($_POST['itilcategories_id']);
+            $resource_change->displayButtonAdd((int) ($_POST['itilcategories_id'] ?? 0));
             break;
         case "clean":
             echo "";

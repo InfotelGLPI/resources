@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDropdown;
 use DBConnection;
+use DbUtils;
 use Dropdown;
 use Migration;
 use Session;
@@ -212,9 +213,15 @@ class Rank extends CommonDropdown
         if ($professionId > 0) {
             if ($sort) {
                 $values   = [0 => Dropdown::EMPTY_VALUE];
+                // This branch used to list every rank of the profession whatever its entity,
+                // while the branch below hands $entity over to Dropdown::show(). sort is
+                // posted by the client, so setting it was enough to read the ranks of entities
+                // the session cannot reach: apply the same restriction here.
                 $iterator = $DB->request([
                     'FROM'  => self::getTable(),
-                    'WHERE' => ['plugin_resources_professions_id' => $professionId],
+                    'WHERE' => [
+                        'plugin_resources_professions_id' => $professionId,
+                    ] + (new DbUtils())->getEntitiesRestrictCriteria(self::getTable(), '', $entity, true),
                 ]);
                 foreach ($iterator as $data) {
                     $values[$data['id']] = $data['name'];

@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceResting;
@@ -34,7 +35,14 @@ use GlpiPlugin\Resources\ResourceResting;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+// Every fragment below belongs to the non contract period wizard, which
+// front/resourceresting.form.php gates on ResourceResting::canView(), that is on
+// plugin_resources_resting: the plugin_resources right this file used to ask for is a
+// different bit of a different profile right, and a session holding it alone had no business
+// here. The config bypass is the one that controller grants alongside canView().
+if (!ResourceResting::canView() && !Session::haveRight('config', UPDATE)) {
+    throw new AccessDeniedHttpException();
+}
 
 if (isset($_POST['action'])) {
     $resting = new ResourceResting();
@@ -51,13 +59,23 @@ if (isset($_POST['action'])) {
             $resting->loadResting($resources_id);
             break;
 
-
         case "loadEndDateResting":
-            $resting->loadEndDateResting($_POST['plugin_resources_resting_id']);
-            break;
-
         case "loadButtonResting":
-            $resting->loadButtonResting($_POST['plugin_resources_resting_id']);
+            // The id is echoed back into the hidden field that front/resourceresting.form.php
+            // reads on addenddaterestingresources, and the global READ right posed above says
+            // nothing about which period may be named here. ResourceResting carries no
+            // entities_id of its own, so the owning Resource is what defines the boundary. A
+            // zero id is the empty value of the dropdown and is left alone: the write branch
+            // refuses it anyway.
+            $resting_id = (int) ($_POST['plugin_resources_resting_id'] ?? 0);
+            if ($resting_id > 0) {
+                Resource::checkChildOwnership($resting, $resting_id, READ);
+            }
+            if ($_POST['action'] === 'loadEndDateResting') {
+                $resting->loadEndDateResting($resting_id);
+            } else {
+                $resting->loadButtonResting($resting_id);
+            }
             break;
     }
 }

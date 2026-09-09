@@ -31,6 +31,6 @@ use Glpi\Application\View\TemplateRenderer;
 
 // Static validation prompt, also shown in the simplified (helpdesk) interface:
 // require authentication for consistency without gating behind the plugin right.
-Session::checkLoginUser();
+Session::checkRight('plugin_resources_validation', READ);
 
 TemplateRenderer::getInstance()->display('@resources/modal_validation_info.html.twig');

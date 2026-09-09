@@ -89,8 +89,11 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     Html::back();
 } else {
     //show form items needs from helpdesk
+    // The global test below says nothing about the id, which comes straight from $_GET: the
+    // per record guard (right bit and entity boundary alike) is posed at the sink, in
+    // Choice::showItemHelpdesk(), so every call path goes through it.
     if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-        $choice->showItemHelpdesk($_GET["id"], $_GET["exist"]);
+        $choice->showItemHelpdesk((int) ($_GET["id"] ?? 0), $_GET["exist"] ?? 0);
     }
 }
 

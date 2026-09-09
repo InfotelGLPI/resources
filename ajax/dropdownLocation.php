@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Employer;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownLocation.php")) {
@@ -35,13 +36,29 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownLocation.php")) {
 }
 Session::checkRight('plugin_resources', READ);
 
-if ($_POST['plugin_resources_employers_id'] > 0) {
+$employers_id = (int) ($_POST['plugin_resources_employers_id'] ?? 0);
+if ($employers_id > 0) {
     $employer = new Employer();
-    $employer->getFromDB($_POST['plugin_resources_employers_id']);
-    $locationId = $employer->fields["locations_id"];
+    // Employer is entity assigned and the id is posted: resolve the record and confine it to
+    // the session scope, instead of reading fields off an object getFromDB() may have left
+    // empty.
+    if (!$employer->getFromDB($employers_id)
+        || !Session::haveAccessToEntity(
+            $employer->fields['entities_id'],
+            $employer->fields['is_recursive'],
+        )) {
+        throw new AccessDeniedHttpException();
+    }
+
+    $locationId = (int) $employer->fields["locations_id"];
     if ($locationId > 0) {
-        echo Dropdown::getDropdownName('glpi_locations', $locationId);
+        // GLPI 11 stores dropdown names raw, and getDropdownName() delegates to
+        // getTreeValueCompleteName(), which concatenates completename, alias and code without
+        // escaping anything. This response is served as text/html and injected into the
+        // resource form as is, so whatever a location name carries would run in the session
+        // that opens that form: escape at the sink.
+        echo htmlescape(Dropdown::getDropdownName('glpi_locations', $locationId));
     } else {
-        echo _x('periodicity', 'None');
+        echo htmlescape(_x('periodicity', 'None'));
     }
 }

@@ -36,10 +36,22 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownRank.php")) {
 
 Session::checkRight('plugin_resources', READ);
 
+// entity_restrict is client supplied and is the only entity scope of the dropdown query
+// below: intersect it with the session scope, the way ajax/dropdownRole.php ignores the posted
+// value altogether. An empty intersection means the caller asked for entities it cannot reach,
+// so fall back to its own scope rather than to no restriction at all.
+$entity_restrict = array_values(array_intersect(
+    array_map('intval', (array) ($_POST['entity_restrict'] ?? [])),
+    $_SESSION['glpiactiveentities'],
+));
+if ($entity_restrict === []) {
+    $entity_restrict = $_SESSION['glpiactiveentities'];
+}
+
 //allow rank's diplay depending on profession
 $options = [
     'plugin_resources_professions_id' => $_POST['plugin_resources_professions_id'],
-    'entity' => $_POST['entity_restrict'],
+    'entity' => $entity_restrict,
     'rand' => $_POST['rand'],
     'sort' => $_POST['sort'],
 ];
