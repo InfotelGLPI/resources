@@ -1091,6 +1091,9 @@ function plugin_resources_uninstall()
         $item->deleteByCriteria(['itemtype' => Checklistconfig::class]);
 
         $item = new $itemtype();
+        $item->deleteByCriteria(['itemtype' => Checklist::class]);
+
+        $item = new $itemtype();
         $item->deleteByCriteria(['itemtype' => Directory::class]);
 
         $item = new $itemtype();
