@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:00+0000\n"
+"POT-Creation-Date: 2026-09-09 12:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2025\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -273,7 +273,7 @@ msgstr "Další informace"
 msgid "Address"
 msgstr ""
 
-#: hook.php:1489 src/Client.php:49
+#: hook.php:1492 src/Client.php:49
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Klient kterého se týká"
@@ -936,7 +936,7 @@ msgstr "Zadat nástup"
 msgid "Declare an employment"
 msgstr "Deklarovat zaměstnání"
 
-#: hook.php:1478 src/RuleContracttypeReadonly.php:294 src/Resource.php:558
+#: hook.php:1481 src/RuleContracttypeReadonly.php:294 src/Resource.php:558
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:592
 #: src/NotificationTargetResource.php:789
@@ -1175,7 +1175,7 @@ msgstr[2] "Zaměstnanců"
 msgstr[3] "Zaměstnanci"
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
-#: hook.php:1485 src/Employment.php:226 src/Employer.php:53
+#: hook.php:1488 src/Employment.php:226 src/Employer.php:53
 #: src/Department.php:80 src/Department.php:113
 #: templates/resource_form.html.twig:218 templates/employment_form.html.twig:38
 msgid "Employer"
@@ -1539,7 +1539,7 @@ msgstr "Importované hodnoty"
 msgid "In element"
 msgstr ""
 
-#: hook.php:1507 src/Resource.php:566 src/NotificationTargetResource.php:110
+#: hook.php:1510 src/Resource.php:566 src/NotificationTargetResource.php:110
 #: src/NotificationTargetResource.php:479
 #: src/NotificationTargetResource.php:591
 #: src/NotificationTargetResource.php:798
@@ -1838,7 +1838,7 @@ msgstr ""
 msgid "Modification category"
 msgstr "Změna kategorie"
 
-#: hook.php:2996
+#: hook.php:2999
 msgid "Modification of the associated resource's location"
 msgstr "Změna souvisejícího umístění pracovníka"
 
@@ -1989,7 +1989,7 @@ msgstr[1] "Správa období bez smlouvy"
 msgstr[2] "Správa období bez smlouvy"
 msgstr[3] "Správa období bez smlouvy"
 
-#: hook.php:2744
+#: hook.php:2747
 msgid "Not defined"
 msgstr "Neurčen"
 
@@ -2428,7 +2428,7 @@ msgstr "Vytvoření pracovního poměru"
 msgid "Resource files imports"
 msgstr "Importy souborů s pracovníky"
 
-#: hook.php:1494 src/RuleContracttypeReadonly.php:188
+#: hook.php:1497 src/RuleContracttypeReadonly.php:188
 #: src/RuleContracttypeReadonly.php:229 src/RuleContracttypeReadonly.php:259
 #: src/RuleContracttypeReadonly.php:310 src/Resource.php:175
 #: src/Resource.php:482 src/Resource.php:2647 src/ResourcePDF.php:98
@@ -2521,7 +2521,7 @@ msgstr[1] "Rolí"
 msgstr[2] "Rolí"
 msgstr[3] "Role"
 
-#: hook.php:1515 src/RuleContracttypeReadonly.php:314 src/Resource.php:179
+#: hook.php:1518 src/RuleContracttypeReadonly.php:314 src/Resource.php:179
 #: src/Resource.php:671 src/LeavingInformation.php:341
 #: src/LeavingInformation.php:488 src/Config.php:131 src/Config.php:501
 #: src/RuleContracttypeHidden.php:273 src/NotificationTargetResource.php:108
@@ -3269,15 +3269,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:3064 src/LinkAd.php:683
+#: hook.php:3067 src/LinkAd.php:683
 msgid "You have to do all checklist in action before"
 msgstr "Předtím musíte provést všechny kontrolní seznamy v akci "
 
-#: hook.php:3112
+#: hook.php:3115
 msgid "You have to do all checklist out action before"
 msgstr "Předtím musíte provést všechny kroky kontrolního seznamu"
 
-#: hook.php:3046 hook.php:3094 src/LinkAd.php:681
+#: hook.php:3049 hook.php:3097 src/LinkAd.php:681
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "Nejprve musíte provést akci v adresáři LDAP"
 

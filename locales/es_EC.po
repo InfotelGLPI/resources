@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:00+0000\n"
+"POT-Creation-Date: 2026-09-09 12:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -271,7 +271,7 @@ msgstr "Información adicional"
 msgid "Address"
 msgstr ""
 
-#: hook.php:1489 src/Client.php:49
+#: hook.php:1492 src/Client.php:49
 msgid "Affected client"
 msgid_plural "Affected clients"
 msgstr[0] "Clientes afectados"
@@ -922,7 +922,7 @@ msgstr "Declarar una llegada"
 msgid "Declare an employment"
 msgstr "Declarar un empleo"
 
-#: hook.php:1478 src/RuleContracttypeReadonly.php:294 src/Resource.php:558
+#: hook.php:1481 src/RuleContracttypeReadonly.php:294 src/Resource.php:558
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:592
 #: src/NotificationTargetResource.php:789
@@ -1158,7 +1158,7 @@ msgstr[1] "Empleados"
 msgstr[2] "Empleados"
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
-#: hook.php:1485 src/Employment.php:226 src/Employer.php:53
+#: hook.php:1488 src/Employment.php:226 src/Employer.php:53
 #: src/Department.php:80 src/Department.php:113
 #: templates/resource_form.html.twig:218 templates/employment_form.html.twig:38
 msgid "Employer"
@@ -1514,7 +1514,7 @@ msgstr "Valores importados"
 msgid "In element"
 msgstr ""
 
-#: hook.php:1507 src/Resource.php:566 src/NotificationTargetResource.php:110
+#: hook.php:1510 src/Resource.php:566 src/NotificationTargetResource.php:110
 #: src/NotificationTargetResource.php:479
 #: src/NotificationTargetResource.php:591
 #: src/NotificationTargetResource.php:798
@@ -1806,7 +1806,7 @@ msgstr ""
 msgid "Modification category"
 msgstr "Categoría de modificación"
 
-#: hook.php:2996
+#: hook.php:2999
 msgid "Modification of the associated resource's location"
 msgstr "Modificación de la ubicación del recurso asociado"
 
@@ -1954,7 +1954,7 @@ msgstr[0] "Gestión de los periodos no contractuales"
 msgstr[1] "Gestión de los periodos no contractuales"
 msgstr[2] "Gestión de los periodos no contractuales"
 
-#: hook.php:2744
+#: hook.php:2747
 msgid "Not defined"
 msgstr "No definido"
 
@@ -2388,7 +2388,7 @@ msgstr "Creación de recursos"
 msgid "Resource files imports"
 msgstr "Importación de archivos de recursos"
 
-#: hook.php:1494 src/RuleContracttypeReadonly.php:188
+#: hook.php:1497 src/RuleContracttypeReadonly.php:188
 #: src/RuleContracttypeReadonly.php:229 src/RuleContracttypeReadonly.php:259
 #: src/RuleContracttypeReadonly.php:310 src/Resource.php:175
 #: src/Resource.php:482 src/Resource.php:2647 src/ResourcePDF.php:98
@@ -2480,7 +2480,7 @@ msgstr[0] "Funciones"
 msgstr[1] "Funciones"
 msgstr[2] "Funciones"
 
-#: hook.php:1515 src/RuleContracttypeReadonly.php:314 src/Resource.php:179
+#: hook.php:1518 src/RuleContracttypeReadonly.php:314 src/Resource.php:179
 #: src/Resource.php:671 src/LeavingInformation.php:341
 #: src/LeavingInformation.php:488 src/Config.php:131 src/Config.php:501
 #: src/RuleContracttypeHidden.php:273 src/NotificationTargetResource.php:108
@@ -3220,16 +3220,16 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: hook.php:3064 src/LinkAd.php:683
+#: hook.php:3067 src/LinkAd.php:683
 msgid "You have to do all checklist in action before"
 msgstr "Tienes que hacer toda la lista de comprobación en acción antes de"
 
-#: hook.php:3112
+#: hook.php:3115
 msgid "You have to do all checklist out action before"
 msgstr ""
 "Usted tiene que hacer toda la lista de verificación a cabo la acción antes de"
 
-#: hook.php:3046 hook.php:3094 src/LinkAd.php:681
+#: hook.php:3049 hook.php:3097 src/LinkAd.php:681
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "Tiene que realizar la acción en el directorio LDAP antes de"
 
