@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 15:49+0000\n"
+"POT-Creation-Date: 2026-09-09 07:52+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/infotelGLPI/"
@@ -541,7 +541,7 @@ msgctxt "button"
 msgid "Cancel the request"
 msgstr ""
 
-#: src/Choice.php:224
+#: src/Choice.php:225
 msgid "Cannot add a choice that contains children"
 msgstr ""
 
@@ -691,8 +691,8 @@ msgstr ""
 #: src/ProfessionLine.php:100 src/ProfessionLine.php:152 src/Profession.php:101
 #: src/Profession.php:220 src/BudgetVolume.php:93 src/BudgetVolume.php:145
 #: src/ResourceSituation.php:102 src/ResourceSituation.php:166
-#: src/ContractNature.php:100 src/ContractNature.php:187 src/Rank.php:104
-#: src/Rank.php:152 src/BudgetType.php:93 src/BudgetType.php:145
+#: src/ContractNature.php:100 src/ContractNature.php:187 src/Rank.php:105
+#: src/Rank.php:153 src/BudgetType.php:93 src/BudgetType.php:145
 #: src/ContractType.php:73 src/ContractType.php:153
 msgid "Code"
 msgstr "Код"
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Compare GLPI Resources with File"
 msgstr ""
 
-#: src/Choice.php:468
+#: src/Choice.php:481
 msgid "Computer and phone equipment needs"
 msgstr ""
 
@@ -1361,7 +1361,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Choice.php:470 src/Config.php:155
+#: src/Choice.php:483 src/Config.php:155
 msgid "Furnitures needs"
 msgstr ""
 
@@ -1854,7 +1854,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src/Choice.php:65
+#: src/Choice.php:66
 msgid "Need"
 msgid_plural "Needs"
 msgstr[0] ""
@@ -2032,7 +2032,7 @@ msgstr ""
 msgid "Other"
 msgstr "Прочее"
 
-#: src/Choice.php:471
+#: src/Choice.php:484
 msgid "Other needs"
 msgstr ""
 
@@ -2048,7 +2048,7 @@ msgstr ""
 msgid "Others declarations"
 msgstr ""
 
-#: hook.php:598 src/Choice.php:189 src/Config.php:156
+#: hook.php:598 src/Choice.php:190 src/Config.php:156
 #: templates/wizard_fourstep_choice.html.twig:92
 msgid "Others needs"
 msgstr "Другие нужды"
@@ -2140,7 +2140,7 @@ msgstr ""
 
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:107
 #: src/Employment.php:201 src/Budget.php:178 src/Cost.php:146 src/Cost.php:188
-#: src/Profession.php:55 src/Rank.php:116 src/Rank.php:164
+#: src/Profession.php:55 src/Rank.php:117 src/Rank.php:165
 #: templates/budget_form.html.twig:46 templates/cost_form.html.twig:46
 #: templates/employment_form.html.twig:47
 msgid "Profession"
@@ -2200,7 +2200,7 @@ msgid "Random password (recommended)"
 msgstr ""
 
 #: src/Employment.php:193 src/Budget.php:169 src/Cost.php:152 src/Cost.php:196
-#: src/Rank.php:57 src/ResourceSpeciality.php:105
+#: src/Rank.php:58 src/ResourceSpeciality.php:105
 #: src/ResourceSpeciality.php:189 templates/resource_form.html.twig:135
 #: templates/budget_form.html.twig:53 templates/cost_form.html.twig:53
 #: templates/employment_form.html.twig:54
@@ -2367,7 +2367,7 @@ msgstr ""
 msgid "Required fields are not filled. Please try again."
 msgstr "Поле обязательное для заполнения пустое. Пожалуйста попробуйте еще раз"
 
-#: src/Choice.php:447
+#: src/Choice.php:460
 msgid "Resend the declaration"
 msgstr ""
 
@@ -2651,8 +2651,8 @@ msgid "Setup LDAP directory"
 msgstr ""
 
 #: src/Profession.php:107 src/Profession.php:226 src/ResourceSituation.php:108
-#: src/ResourceSituation.php:172 src/ResourceSituation.php:178 src/Rank.php:110
-#: src/Rank.php:158 src/EmploymentState.php:93 src/EmploymentState.php:155
+#: src/ResourceSituation.php:172 src/ResourceSituation.php:178 src/Rank.php:111
+#: src/Rank.php:159 src/EmploymentState.php:93 src/EmploymentState.php:155
 #: src/Employer.php:99 src/Employer.php:138
 msgid "Short name"
 msgstr "Короткое имя"
@@ -2661,7 +2661,7 @@ msgstr "Короткое имя"
 msgid "Show all"
 msgstr ""
 
-#: src/Choice.php:469 src/Config.php:154
+#: src/Choice.php:482 src/Config.php:154
 msgid "Softwares requirements"
 msgstr ""
 
@@ -2812,7 +2812,7 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
-#: src/Choice.php:446
+#: src/Choice.php:459
 msgid "Terminate the declaration"
 msgstr ""
 
