@@ -54,7 +54,9 @@ if (Plugin::isPluginActive("badges")) {
     $badge = new ResourceBadge();
     $pluginbadge = new Badge();
     if (isset($_POST['add_metademand'])) {
-        $badge->check(-1, UPDATE, $_POST);
+        // CREATE, not UPDATE: canCreate() is widened here to
+        // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+        $badge->check(-1, CREATE, $_POST);
         $badge->add($_POST);
 
         Html::back();

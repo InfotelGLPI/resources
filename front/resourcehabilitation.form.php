@@ -54,7 +54,9 @@ if (isset($_POST['add'])) {
     if (isset($_POST['plugin_resources_habilitations_id']) &&
         !empty($_POST['plugin_resources_habilitations_id']) &&
         $_POST['plugin_resources_habilitations_id']) {
-        $habilitation->check(-1, UPDATE, $_POST);
+        // CREATE, not UPDATE: canCreate() is widened here to
+        // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+        $habilitation->check(-1, CREATE, $_POST);
         // ResourceHabilitation has no entities_id of its own, so the check() above cannot
         // enforce any entity boundary: re-check it on the owning Resource.
         Resource::checkOwnership($_POST['plugin_resources_resources_id'] ?? 0);
@@ -62,7 +64,9 @@ if (isset($_POST['add'])) {
     }
     Html::back();
 } elseif (isset($_POST["delete"])) {
-    $habilitation->check($_POST["id"], UPDATE);
+    // glpi_plugin_resources_resourcehabilitations has no is_deleted column, so delete()
+    // destroys the row for good: require PURGE rather than the edit bit.
+    $habilitation->check($_POST["id"], PURGE);
     Resource::checkChildOwnership($habilitation, $_POST["id"]);
     $habilitation->delete($_POST);
     Html::back();

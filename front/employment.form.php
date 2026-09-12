@@ -62,11 +62,13 @@ if (isset($_POST["add"])) {
     $employment->update($_POST);
     Html::back();
 } elseif (isset($_POST["delete"])) {
-    $employment->check($_POST["id"], UPDATE);
+    // Same as budget.form.php: glpi_plugin_resources_employments has no is_deleted column,
+    // so delete() destroys the row for good and PURGE is the matching bit.
+    $employment->check($_POST["id"], PURGE);
     $employment->delete($_POST);
     $employment->redirectToList();
 } elseif (isset($_POST["purge"])) {
-    $employment->check($_POST['id'], UPDATE);
+    $employment->check($_POST['id'], PURGE);
     $employment->delete($_POST, 1);
     $employment->redirectToList();
 } elseif (isset($_POST["restore"])) {

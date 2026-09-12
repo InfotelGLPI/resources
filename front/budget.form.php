@@ -53,12 +53,17 @@ if (isset($_POST["add"])) {
 
     Html::back();
 } elseif (isset($_POST["delete"])) {
-    $budget->check($_POST["id"], UPDATE);
+    // glpi_plugin_resources_budgets carries no is_deleted column, so maybeDeleted() is
+    // false: CommonDBTM::getRights() never publishes a DELETE bit for this itemtype and
+    // delete() is a hard delete. PURGE is the bit that matches what happens here, and it
+    // is the one the profile form actually offers; UPDATE let anyone who could merely
+    // edit a budget destroy it.
+    $budget->check($_POST["id"], PURGE);
     $budget->delete($_POST);
 
     $budget->redirectToList();
 } elseif (isset($_POST["purge"])) {
-    $budget->check($_POST['id'], UPDATE);
+    $budget->check($_POST['id'], PURGE);
     $budget->delete($_POST, 1);
 
     $budget->redirectToList();

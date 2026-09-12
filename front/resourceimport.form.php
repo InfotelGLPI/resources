@@ -40,34 +40,57 @@ $import = new Import();
 $pluginResourcesResourceImport = new ResourceImport();
 
 if (isset($_POST['save'])) {
+    if (!is_array($_POST['select'] ?? null)) {
+        throw new BadRequestHttpException();
+    }
+    // Whatever the branch taken below, every processed row ends up removed from the
+    // staging queue: that is a destructive operation driven by ids that come straight
+    // from the client. ImportResource declares a rightname of its own that
+    // Profile::getAllRights() never publishes, so ImportResource::check() can never be
+    // satisfied by any profile; gate the purge on plugin_resources_import instead, the
+    // right that is actually provisioned and that already guards this screen.
+    Session::checkRight(ResourceImport::$rightname, PURGE);
+
     foreach ($_POST['select'] as $key => $selected) {
         if ($selected) {
+            // Resolve the staged row before doing anything with the posted id: a key that
+            // matches no row must reach neither add()/update() nor delete().
+            $pluginResourcesImportResource = new ImportResource();
+            if (!$pluginResourcesImportResource->getFromDB((int) $key)) {
+                continue;
+            }
+
+            // add()/update() iterate over this, so refuse a scalar here instead of
+            // letting foreach() fail deeper down.
+            $datas = $_POST['import'][$key] ?? [];
+            if (!is_array($datas)) {
+                throw new BadRequestHttpException();
+            }
+
             // Update
-            if ($_POST['resource'][$key]) {
+            if (!empty($_POST['resource'][$key])) {
                 // Authorize the Resource actually overwritten (global right + entity),
                 // otherwise a POST could rewrite any resource of any entity by id.
                 $resource = new Resource();
                 $resource->check((int) $_POST['resource'][$key], UPDATE);
 
                 $input = [
-                    'resourceID' => $_POST['resource'][$key],
-                    'datas' => $_POST['import'][$key],
+                    'resourceID' => (int) $_POST['resource'][$key],
+                    'datas' => $datas,
                 ];
 
                 $pluginResourcesResourceImport->update($input);
-                $pluginResourcesImportResource = new ImportResource();
-                $pluginResourcesImportResource->delete(['id' => $key]);
+                $pluginResourcesImportResource->delete(['id' => (int) $key]);
             } //New
             else {
                 $import->check(-1, CREATE, $_POST);
                 $input = [
-                    'importID' => $key,
-                    'datas' => $_POST['import'][$key],
+                    'importID' => (int) $key,
+                    'datas' => $datas,
                 ];
 
                 $pluginResourcesResourceImport->add($input);
-                $pluginResourcesImportResource = new ImportResource();
-                $pluginResourcesImportResource->delete(['id' => $key]);
+                $pluginResourcesImportResource->delete(['id' => (int) $key]);
             }
         }
     }
@@ -77,15 +100,22 @@ if (isset($_POST['save'])) {
     $pluginResourcesResourceImport->delete($_POST);
     redirectWithParameters(ImportResource::getIndexUrl(), $_GET);
 } elseif (isset($_POST["delete"])) {
+    if (!is_array($_POST['select'] ?? null)) {
+        throw new BadRequestHttpException();
+    }
+    // Same rightname caveat as the save branch: ImportResource::$rightname is granted to
+    // nobody, so the purge is gated on plugin_resources_import.
+    Session::checkRight(ResourceImport::$rightname, PURGE);
+
     foreach ($_POST['select'] as $key => $selected) {
         if ($selected) {
             $pluginResourcesImportResource = new ImportResource();
-            // Authorize the deletion of each staged import row (global right + entity)
-            // instead of purging arbitrary ids straight from $_POST.
-            $pluginResourcesImportResource->check((int) $key, PURGE);
+            if (!$pluginResourcesImportResource->getFromDB((int) $key)) {
+                continue;
+            }
 
             $input = [
-                ImportResource::getIndexName() => $key,
+                ImportResource::getIndexName() => (int) $key,
             ];
 
             $pluginResourcesImportResource->delete($input);

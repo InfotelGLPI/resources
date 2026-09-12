@@ -39,11 +39,15 @@ if (!isset($_GET["id"])) {
 $checklistconfig = new Checklistconfig();
 
 if (isset($_POST["add"])) {
-    $checklistconfig->check(-1, UPDATE, $_POST);
+    // CREATE, not UPDATE: canCreate() is widened here to
+    // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+    $checklistconfig->check(-1, CREATE, $_POST);
     $newID = $checklistconfig->add($_POST);
     Html::back();
 } elseif (isset($_POST["purge"])) {
-    $checklistconfig->check($_POST['id'], UPDATE);
+    // glpi_plugin_resources_checklistconfigs has no is_deleted column: this really is a
+    // purge, and PURGE is the bit the profile form offers for it.
+    $checklistconfig->check($_POST['id'], PURGE);
     $checklistconfig->delete($_POST, 1);
     $checklistconfig->redirectToList();
 } elseif (isset($_POST["update"])) {

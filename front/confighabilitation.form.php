@@ -52,7 +52,9 @@ if (!isset($_GET["id"])) {
 $habilitation = new ConfigHabilitation();
 
 if (isset($_POST['add_metademand'])) {
-    $habilitation->check(-1, UPDATE, $_POST);
+    // CREATE, not UPDATE: canCreate() is widened here to
+    // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+    $habilitation->check(-1, CREATE, $_POST);
     if ($_POST['plugin_metademands_metademands_id']
         && isset($_POST['action'])
         && $_POST['action']) {

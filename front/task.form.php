@@ -47,7 +47,10 @@ $task_item = new Task_Item();
 
 //add tasks
 if (isset($_POST['add'])) {
-    $task->check(-1, UPDATE, $_POST);
+    // CREATE, not UPDATE: canCreate() is widened here to
+    // haveRightsOr([CREATE, UPDATE, DELETE]), so the guard keeps accepting exactly the
+    // same profiles as before while naming the operation it actually authorizes.
+    $task->check(-1, CREATE, $_POST);
     $newID = $task->add($_POST);
     Html::back();
 } //update task
@@ -59,7 +62,11 @@ elseif (isset($_POST["update"])) {
 } //from central
 //delete task
 elseif (isset($_POST["delete"])) {
-    $task->check($_POST['id'], UPDATE);
+    // Tasks are soft-deleted (the table carries is_deleted), so the destructive branches
+    // ask for the bit that matches the operation instead of UPDATE: DELETE for the soft
+    // delete and its restore, PURGE for the definitive one. Anyone allowed to edit a task
+    // used to be allowed to destroy it.
+    $task->check($_POST['id'], DELETE);
     $task->delete($_POST);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
@@ -68,7 +75,7 @@ elseif (isset($_POST["delete"])) {
 } //from central
 //restore task
 elseif (isset($_POST["restore"])) {
-    $task->check($_POST['id'], UPDATE);
+    $task->check($_POST['id'], DELETE);
     $task->restore($_POST);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
@@ -77,7 +84,7 @@ elseif (isset($_POST["restore"])) {
 } //from central
 //purge task
 elseif (isset($_POST["purge"])) {
-    $task->check($_POST['id'], UPDATE);
+    $task->check($_POST['id'], PURGE);
     $task->delete($_POST, 1);
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) . "?id=" .
