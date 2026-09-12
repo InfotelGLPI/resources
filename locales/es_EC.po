@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:21+0000\n"
+"POT-Creation-Date: 2026-09-12 09:13+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -1898,8 +1898,8 @@ msgstr ""
 msgid "No Identifier"
 msgstr "Sin identificador"
 
-#: front/confighabilitation.form.php:91 front/confighabilitation.form.php:115
-#: front/resourcebadge.form.php:91
+#: front/confighabilitation.form.php:93 front/confighabilitation.form.php:117
+#: front/resourcebadge.form.php:93
 msgid "No advanced request found"
 msgstr "No se ha encontrado ninguna solicitud avanzada"
 
@@ -2071,13 +2071,13 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr "Por favor, active el plugin"
 
-#: front/resourcebadge.form.php:135
+#: front/resourcebadge.form.php:137
 msgid "Please activate the plugin badge"
 msgstr "Por favor, active la insignia plugin"
 
-#: front/confighabilitation.form.php:75 front/confighabilitation.form.php:98
-#: front/confighabilitation.form.php:122 front/resourcebadge.form.php:77
-#: front/resourcebadge.form.php:98
+#: front/confighabilitation.form.php:77 front/confighabilitation.form.php:100
+#: front/confighabilitation.form.php:124 front/resourcebadge.form.php:79
+#: front/resourcebadge.form.php:100
 msgid "Please activate the plugin metademand"
 msgstr "Por favor, active el plugin metademand"
 
@@ -3241,7 +3241,7 @@ msgstr ""
 "Tienes que realizar la acción en el directorio LDAP antes y tienes que hacer "
 "toda la lista de comprobación en acción antes"
 
-#: front/resourcebadge.form.php:66
+#: front/resourcebadge.form.php:68
 msgid "You need rights into badges plugin"
 msgstr "Necesitas derechos en el plugin de insignias"
 

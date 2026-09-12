@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:21+0000\n"
+"POT-Creation-Date: 2026-09-12 09:13+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2025\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -1931,8 +1931,8 @@ msgstr ""
 msgid "No Identifier"
 msgstr "Bez identifikátoru"
 
-#: front/confighabilitation.form.php:91 front/confighabilitation.form.php:115
-#: front/resourcebadge.form.php:91
+#: front/confighabilitation.form.php:93 front/confighabilitation.form.php:117
+#: front/resourcebadge.form.php:93
 msgid "No advanced request found"
 msgstr "Nenalezeny žádné nadstandardní požadavky"
 
@@ -2106,13 +2106,13 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr "Zapněte zásuvný modul"
 
-#: front/resourcebadge.form.php:135
+#: front/resourcebadge.form.php:137
 msgid "Please activate the plugin badge"
 msgstr "Zapněte zásuvný modul Jmenovky"
 
-#: front/confighabilitation.form.php:75 front/confighabilitation.form.php:98
-#: front/confighabilitation.form.php:122 front/resourcebadge.form.php:77
-#: front/resourcebadge.form.php:98
+#: front/confighabilitation.form.php:77 front/confighabilitation.form.php:100
+#: front/confighabilitation.form.php:124 front/resourcebadge.form.php:79
+#: front/resourcebadge.form.php:100
 msgid "Please activate the plugin metademand"
 msgstr "Zapněte zásuvný modul metademand"
 
@@ -3289,7 +3289,7 @@ msgstr ""
 "Předtím musíte provést akci na adresáři LDAP a předtím musíte provést "
 "všechny kontrolní seznamy v akci "
 
-#: front/resourcebadge.form.php:66
+#: front/resourcebadge.form.php:68
 msgid "You need rights into badges plugin"
 msgstr "Musíte mít práva k zásuvnému modulu Jmenovky"
 

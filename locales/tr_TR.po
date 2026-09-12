@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 12:32+0000\n"
+"POT-Creation-Date: 2026-09-12 09:13+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/Resource_Change.php:185
@@ -52,8 +53,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:288
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
 
 #: src/Adconfig.php:355
@@ -88,8 +88,7 @@ msgstr "Sözleşmesiz dönem güncellendi"
 msgid "A resource has been added by"
 msgstr "Şu kişi tarafından bir kaynak eklendi"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:672
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:672
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
@@ -145,13 +144,11 @@ msgstr "İşlem yetkilendirmesi"
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:81
-#: src/NotificationTargetResource.php:568
+#: src/NotificationTargetResource.php:81 src/NotificationTargetResource.php:568
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:80
-#: src/NotificationTargetResource.php:561
+#: src/NotificationTargetResource.php:80 src/NotificationTargetResource.php:561
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
@@ -1146,8 +1143,7 @@ msgstr[1] "Çalışanlar"
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
 #: hook.php:1488 src/Employment.php:226 src/Employer.php:53
 #: src/Department.php:80 src/Department.php:113
-#: templates/resource_form.html.twig:218
-#: templates/employment_form.html.twig:38
+#: templates/resource_form.html.twig:218 templates/employment_form.html.twig:38
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşveren"
@@ -1197,8 +1193,7 @@ msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
 
 #: templates/planning_item.html.twig:41 templates/budget_form.html.twig:73
-#: templates/cost_form.html.twig:62
-#: templates/resourceholiday_form.html.twig:49
+#: templates/cost_form.html.twig:62 templates/resourceholiday_form.html.twig:49
 #: templates/resourceresting_end_date.html.twig:33
 #: templates/employment_form.html.twig:77
 #: templates/resourceresting_form.html.twig:49
@@ -1343,8 +1338,8 @@ msgstr "Mobilya gereksinimleri"
 msgid "GISF - Supplier security incident management"
 msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 
-#: src/RuleContracttypeReadonly.php:274 src/Resource.php:948
-#: src/Config.php:124 src/Config.php:159 src/RuleContracttypeHidden.php:252
+#: src/RuleContracttypeReadonly.php:274 src/Resource.php:948 src/Config.php:124
+#: src/Config.php:159 src/RuleContracttypeHidden.php:252
 #: templates/resource_form.html.twig:41
 #: templates/wizard_secondstep_resource.html.twig:83
 #: templates/wizard_secondstep_resource.html.twig:94
@@ -1435,8 +1430,7 @@ msgstr "başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
 
 #: src/Metademand.php:146
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
@@ -1451,8 +1445,7 @@ msgstr ""
 
 #: src/Metademand.php:179
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
@@ -1675,8 +1668,7 @@ msgstr "Zorunlu tatil günleri"
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: src/NotificationTargetResource.php:78
-#: src/NotificationTargetResource.php:400
+#: src/NotificationTargetResource.php:78 src/NotificationTargetResource.php:400
 #: src/NotificationTargetResource.php:1647
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
@@ -1741,8 +1733,8 @@ msgstr "Tamamlanmış olarak işaretle"
 msgid "Mark as unfinished"
 msgstr "Tamamlanmamış olarak işaretle"
 
-#: src/RuleContracttypeReadonly.php:338 src/Resource.php:802
-#: src/Config.php:147 src/Config.php:162 src/RuleContracttypeHidden.php:297
+#: src/RuleContracttypeReadonly.php:338 src/Resource.php:802 src/Config.php:147
+#: src/Config.php:162 src/RuleContracttypeHidden.php:297
 #: src/RuleContracttype.php:290 templates/resource_form.html.twig:64
 #: templates/wizard_secondstep_resource.html.twig:185
 msgid "Matricule"
@@ -1870,8 +1862,8 @@ msgstr "Hayır"
 msgid "No Identifier"
 msgstr "Belirteç yok"
 
-#: front/confighabilitation.form.php:91 front/confighabilitation.form.php:115
-#: front/resourcebadge.form.php:91
+#: front/confighabilitation.form.php:93 front/confighabilitation.form.php:117
+#: front/resourcebadge.form.php:93
 msgid "No advanced request found"
 msgstr "Henüz gelişmiş bir istek yok"
 
@@ -2042,13 +2034,13 @@ msgstr "Planlama"
 msgid "Please activate the plugin"
 msgstr "Lütfen eklentiyi etkinleştirin"
 
-#: front/resourcebadge.form.php:135
+#: front/resourcebadge.form.php:137
 msgid "Please activate the plugin badge"
 msgstr "Lütfen yaka kartı eklentisini etkinleştirin"
 
-#: front/confighabilitation.form.php:75 front/confighabilitation.form.php:98
-#: front/confighabilitation.form.php:122 front/resourcebadge.form.php:77
-#: front/resourcebadge.form.php:98
+#: front/confighabilitation.form.php:77 front/confighabilitation.form.php:100
+#: front/confighabilitation.form.php:124 front/resourcebadge.form.php:79
+#: front/resourcebadge.form.php:100
 msgid "Please activate the plugin metademand"
 msgstr "Lütfen metademand eklentisini etkinleştirin"
 
@@ -2064,8 +2056,7 @@ msgstr "Lütfen düzeltin: %s"
 #: templates/resource_restitution_pdf.html.twig:33
 msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
-"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin "
-"olun"
+"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin olun"
 
 #: src/Resource_Change.php:222
 msgid "Please select a resource"
@@ -2129,9 +2120,9 @@ msgid "Queries to run"
 msgstr "Yürütülecek sorgular"
 
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:80
-#: src/RuleContracttypeReadonly.php:330 src/Resource.php:619
-#: src/Config.php:139 src/Config.php:167 src/RuleContracttypeHidden.php:289
-#: src/Recap.php:148 src/NotificationTargetResource.php:705
+#: src/RuleContracttypeReadonly.php:330 src/Resource.php:619 src/Config.php:139
+#: src/Config.php:167 src/RuleContracttypeHidden.php:289 src/Recap.php:148
+#: src/NotificationTargetResource.php:705
 #: src/NotificationTargetResource.php:835
 #: src/NotificationTargetResource.php:1006
 #: src/NotificationTargetResource.php:1650
@@ -2165,9 +2156,8 @@ msgstr "İş / bütçe oranı"
 msgid "Read only Fields"
 msgstr "Salt okunur alanlar"
 
-#: src/RuleContracttypeReadonly.php:389 src/Resource.php:694
-#: src/Config.php:145 src/RuleContracttypeHidden.php:347
-#: src/NotificationTargetResource.php:1125
+#: src/RuleContracttypeReadonly.php:389 src/Resource.php:694 src/Config.php:145
+#: src/RuleContracttypeHidden.php:347 src/NotificationTargetResource.php:1125
 #: src/NotificationTargetResource.php:1673
 #: templates/resource_form.html.twig:339
 #: templates/wizard_secondstep_resource.html.twig:715
@@ -2433,10 +2423,9 @@ msgstr "Kaynak yönetimi"
 msgid "Resources not declaring leaving"
 msgstr "Ayrılmayacağı söylenen kaynaklar"
 
-#: src/RuleContracttypeReadonly.php:354 src/LinkAd.php:542
-#: src/Adconfig.php:320 src/Profile.php:204 src/RuleContracttypeHidden.php:313
-#: src/Role.php:53 src/RuleContracttype.php:306
-#: templates/resource_form.html.twig:183
+#: src/RuleContracttypeReadonly.php:354 src/LinkAd.php:542 src/Adconfig.php:320
+#: src/Profile.php:204 src/RuleContracttypeHidden.php:313 src/Role.php:53
+#: src/RuleContracttype.php:306 templates/resource_form.html.twig:183
 #: templates/linkad_resource_form.html.twig:93
 msgid "Role"
 msgid_plural "Roles"
@@ -2496,8 +2485,8 @@ msgstr "Kaynak arayın"
 msgid "Second Form"
 msgstr "İkinci form"
 
-#: src/RuleContracttypeReadonly.php:350 src/Resource.php:847
-#: src/Config.php:148 src/Config.php:164 src/RuleContracttypeHidden.php:309
+#: src/RuleContracttypeReadonly.php:350 src/Resource.php:847 src/Config.php:148
+#: src/Config.php:164 src/RuleContracttypeHidden.php:309
 #: src/RuleContracttype.php:302 templates/resource_form.html.twig:71
 #: templates/wizard_secondstep_resource.html.twig:228
 msgid "Second matricule"
@@ -2587,9 +2576,9 @@ msgid "Setup LDAP directory"
 msgstr "LDAP dizinini kur"
 
 #: src/Profession.php:103 src/Profession.php:222 src/ResourceSituation.php:104
-#: src/ResourceSituation.php:168 src/ResourceSituation.php:174
-#: src/Rank.php:107 src/Rank.php:155 src/EmploymentState.php:89
-#: src/EmploymentState.php:151 src/Employer.php:95 src/Employer.php:134
+#: src/ResourceSituation.php:168 src/ResourceSituation.php:174 src/Rank.php:107
+#: src/Rank.php:155 src/EmploymentState.php:89 src/EmploymentState.php:151
+#: src/Employer.php:95 src/Employer.php:134
 msgid "Short name"
 msgstr "Kısa ad"
 
@@ -2750,8 +2739,8 @@ msgstr "Doğrulama sonrası kaynak oluşturma destek kaydındaki yazı"
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken "
 "aralarına tire \"-\" koyun."
@@ -2837,8 +2826,8 @@ msgid ""
 "run by the plugin."
 msgstr ""
 "Aşağıdaki sorgular yalnızca bulunan farklılıklardan oluşturulmuş "
-"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el"
-" ile yürütün. Asla eklenti tarafından yürütülmezler."
+"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el "
+"ile yürütün. Asla eklenti tarafından yürütülmezler."
 
 #: src/Employee.php:339
 msgid "The resource is also created if not existent"
@@ -2875,8 +2864,7 @@ msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
 #: src/Employment.php:511
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr "Bu kaynaklar kurumdan ayrıldığından, geçerli işleri güncellendi"
 
 #: src/Adconfig.php:284
@@ -2886,8 +2874,8 @@ msgid ""
 "prefer the random format."
 msgstr ""
 "Bu parola, hesap sahibinin kimliğinden türetilir veya eklenti tarafından "
-"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz"
-" oldu. Ancak rastgele biçimi yeğleyin."
+"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz "
+"oldu. Ancak rastgele biçimi yeğleyin."
 
 #: src/Resource.php:3520 src/Resource.php:3548
 msgid "This resource aldready exists"
@@ -3196,7 +3184,7 @@ msgstr ""
 "İşlemi önce LDAP dizini üzerinde yapmalı ve önce işlemin tüm kontrol "
 "listesini tamamlamalısınız"
 
-#: front/resourcebadge.form.php:66
+#: front/resourcebadge.form.php:68
 msgid "You need rights into badges plugin"
 msgstr "Yaka kartları eklentisini kullanma izniniz olmalıdır"
 
