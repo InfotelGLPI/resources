@@ -1987,6 +1987,9 @@ class Resource extends CommonDBTM
         if (!$is_central) {
             $params['candel'] = false;
         }
+        $can_save = (!$config->fields['use_module_validation']
+            || !$config->fields['freeze_form_after_validation']
+            || !$this->fields['valid_resource_information']);
         $params['hidden_fields']    = $hidden;
         $params['readonly_fields']  = $readonly;
         $params['mandatory_fields'] = $mandatory;
@@ -1994,6 +1997,7 @@ class Resource extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/resource_form.html.twig', [
             'item'                       => $this,
             'params'                     => $params,
+            'no_form_buttons'            => !$can_save,
             'is_central'                 => $is_central,
             'plugin_rand'                => $rand,
             'root_resources'             => PLUGIN_RESOURCES_WEBDIR,

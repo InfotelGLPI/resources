@@ -302,7 +302,7 @@ class Wizard extends CommonDBTM
                 'use_services_deparments_ad' => $config->useServiceDepartmentAD(),
                 'use_secondary_services' => $config->useSecondaryService() && $config->useServiceDepartmentAD(),
                 'use_security' => $config->useSecurity(),
-                'use_notification' => (($config->fields['automatic_notification_declare_arrival_form'] ?? 0) == 0) ? 1 : 0,
+                'use_notification' => $config->fields['automatic_notification_declare_arrival_form'] ?? 0,
                 'display_employee' => $display_employee,
                 'condition_emp' => $condition_emp,
                 'date_declaration' => date('Y-m-d'),

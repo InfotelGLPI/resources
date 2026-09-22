@@ -45,6 +45,7 @@ use GlpiPlugin\Resources\Task;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Validation;
 use GlpiPlugin\Resources\Config;
 
 if (!isset($_GET["id"])) {
@@ -529,7 +530,9 @@ elseif (isset($_POST["add_checklist"])) {
     // effect. resource.form.php has no global guard and the $canedit computed below was
     // never enforced, leaving this branch reachable by any authenticated user. Gate on
     // UPDATE right + entity access of the target resource before touching the directory.
-    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+    if (!Session::haveRight(Resource_Validation::$rightname, UPDATE)) {
+        Html::displayRightError();
+    }
     $resource->getFromDB($_POST["plugin_resources_resources_id"]);
 
     $config          = new Config();
@@ -537,7 +540,7 @@ elseif (isset($_POST["add_checklist"])) {
     $config->getFromDB(1);
     $configAD->getFromDB(1);
     $configAD->fields = $configAD->prepareFields($configAD->fields);
-    $canedit                           = $resource->can($resource->fields['id'], UPDATE);
+    $canedit                           = Session::haveRight(Resource_Validation::$rightname, UPDATE);
     $entities_id                       = $resource->fields["entities_id"];
     $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
     $rand                              = mt_rand();
