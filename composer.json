@@ -20,6 +20,17 @@
         "php": ">=8.2",
         "directorytree/ldaprecord": "^3.0"
     },
+    "replace": {
+        "psr/clock": "*",
+        "psr/container": "*",
+        "psr/log": "*",
+        "psr/simple-cache": "*",
+        "symfony/deprecation-contracts": "*",
+        "symfony/polyfill-mbstring": "*",
+        "symfony/polyfill-php83": "*",
+        "symfony/polyfill-php84": "*",
+        "symfony/translation-contracts": "*"
+    },
     "scripts": {
         "lint": "parallel-lint --exclude vendor --exclude node_modules .",
         "cs": "php-cs-fixer fix --dry-run --diff --ansi",

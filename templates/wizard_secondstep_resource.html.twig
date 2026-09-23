@@ -745,6 +745,8 @@
 
 
                             {% if params['use_notification'] is defined and params['use_notification'] == 1 %}
+                                {{ inputs.hidden('send_notification', 1) }}
+                            {% else %}
                                 {% if get_current_interface() == 'central' %}
                                     {{ fields.checkboxField(
                                         'send_notification',
@@ -755,8 +757,6 @@
                                             'readonly': readonly.send_notification is defined,
                                         }
                                     ) }}
-                                {% else %}
-                                    {{ inputs.hidden('send_notification', 1) }}
                                 {% endif %}
                             {% endif %}
                         </div>
