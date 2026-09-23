@@ -185,7 +185,10 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
         $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
         $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
         $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-        $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+        // The leaving ticket carries the identity fields of $resource and is linked to it, so
+        // it belongs to the entity of the resource. The active entity of the session can be a
+        // parent one, which would expose those fields to technicians outside the perimeter.
+        $ticket->fields["entities_id"] = $resource->fields['entities_id'];
         $ticket->fields['items_id'] = [Resource::class => [$input['id']]];
         unset($ticket->fields["id"]);
         $ticket->add($ticket->fields);

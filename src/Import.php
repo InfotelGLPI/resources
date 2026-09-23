@@ -114,7 +114,7 @@ class Import extends CommonDBTM
             'links'      => $links,
             'index_url'  => self::getIndexUrl(),
             'form_url'   => self::getFormUrl(),
-            'can_create' => Session::haveright(self::$rightname, CREATE),
+            'can_create' => Session::haveRight(self::$rightname, CREATE),
         ]);
 
         if ($display) {

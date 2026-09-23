@@ -72,7 +72,9 @@ if (isset($_POST["add"])) {
     $employment->delete($_POST, 1);
     $employment->redirectToList();
 } elseif (isset($_POST["restore"])) {
-    $employment->check($_POST["id"], UPDATE);
+    // Same as budget.form.php: unreachable without an is_deleted column, but kept
+    // aligned with the sibling delete/purge branches rather than left on UPDATE.
+    $employment->check($_POST["id"], PURGE);
     $employment->restore($_POST);
     $employment->redirectToList();
 } elseif (isset($_POST["add_item"])) {

@@ -32,5 +32,5 @@ Html::header_nocache();
 Session::checkRight('plugin_resources', READ);
 
 if (isset($_POST["type"])) {
-    echo htmlspecialchars($_POST['type'], ENT_QUOTES, 'UTF-8');
+    echo htmlescape($_POST['type']);
 }

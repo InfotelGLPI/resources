@@ -35,7 +35,9 @@ Session::checkRight('plugin_resources', READ);
 if (isset($_POST['name'])) {
     echo Html::textarea([
         'name' => $_POST['name'],
-        'value' => htmlescape(rawurldecode($_POST["data"])),
+        // No htmlescape() here: Html::textarea() already escapes 'value', and escaping
+        // twice renders the entities themselves (&amp;lt; instead of <).
+        'value' => rawurldecode($_POST["data"]),
         'cols' => '30',
         'rows' => '3',
         'display' => false,

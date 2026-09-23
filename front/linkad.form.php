@@ -55,6 +55,14 @@ if (isset($_POST["add"])) {
     // this to the caller's entity: resolve the owning Resource via
     // plugin_resources_resources_id and check the right on that instance instead.
     Resource::checkChildOwnership($linkad, $_POST["id"]);
+    // The guard above validates the Resource currently STORED in the row. The form posts
+    // plugin_resources_resources_id as a hidden field (linkad_form.html.twig,
+    // linkad_resource_form.html.twig) and update() writes it back, so the posted value has
+    // to be authorized at the sink as well: otherwise the row can be reparented onto a
+    // Resource of another entity, whose form would then display the AD account it carries.
+    if (isset($_POST["plugin_resources_resources_id"])) {
+        Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
+    }
     $linkad->update($_POST);
     // auth_id names the directory the server binds to, with its stored rootdn password:
     // take it as an id, and do not bind at all when the form named none.

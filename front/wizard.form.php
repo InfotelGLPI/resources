@@ -441,7 +441,15 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["add_doc_seven_step"])) {
 
-    $resources_id = $_POST["items_id"];
+    // Document_Item does not override $checkItem_1_Rights/$checkItem_2_Rights, so
+    // CommonDBRelation::canRelationItem() runs with $OneWriteIsEnough: a write right on the
+    // Document alone satisfies check(-1, CREATE) and the Resource is only checked for READ.
+    // Require the write right on the Resource explicitly, exactly as the upload_seven_step
+    // branch below already does.
+    $resources_id = (int) $_POST["items_id"];
+    $resource = new Resource();
+    $resource->check($resources_id, UPDATE);
+
     $document_item = new Document_Item();
     $document_item->check(-1, CREATE, $_POST);
     $document_item->add($_POST);

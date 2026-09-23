@@ -164,7 +164,11 @@ $ticket->fields["content"] = $content;
 $ticket->fields['users_id_recipient']  = Session::getLoginUserID();
 $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
 $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-$ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+// The content of this ticket is built entirely from the fields of $resource and the ticket is
+// linked to it, so it belongs to the entity of the resource. Taking the active entity of the
+// session instead would publish the resource data to an entity the resource is not in: the
+// caller may legitimately hold the resource in scope from a parent entity.
+$ticket->fields["entities_id"] = $resource->fields['entities_id'];
 $ticket->fields['items_id'] = [Resource::class => [$resource->fields['id']]];
 unset($ticket->fields["id"]);
 $ticket_id = $ticket->add($ticket->fields);
@@ -173,7 +177,8 @@ if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_modul
     $ticket->fields['users_id_recipient']  = Session::getLoginUserID();
     $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
     $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-    $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
+    // Same as the arrival ticket above: entity of the resource, not of the session.
+    $ticket->fields["entities_id"] = $resource->fields['entities_id'];
     $ticket->fields['items_id'] = [Resource::class => [$resource->fields['id']]];
     unset($ticket->fields["id"]);
     $ticket_id = $ticket->add($ticket->fields);

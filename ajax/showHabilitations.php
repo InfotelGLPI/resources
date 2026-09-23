@@ -52,8 +52,6 @@ if ($resources_id <= 0 || $metademands_id <= 0 || !$resource->can($resources_id,
     throw new AccessDeniedHttpException();
 }
 
-$KO = false;
-
 $metademands = new Metademand();
 $wizard = new Wizard();
 $form = new Form();
@@ -89,9 +87,4 @@ if (count($resForm)) {
     Html::redirect(
         PLUGIN_METADEMANDS_WEBDIR . "/front/wizard.form.php?see_form=1&resources_id=" . $resources_id . "&metademands_id=" . $metademands_id . "&step=2",
     );
-}
-if ($KO === false) {
-    echo 0;
-} else {
-    echo $KO;
 }

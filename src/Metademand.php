@@ -280,18 +280,18 @@ class Metademand extends CommonGLPI
                 // can() rather than check(): the ticket exists by the time this runs, so throwing
                 // an access exception would abort a creation that was legitimate on its own.
                 $resources_id = (int) ($options["resources_id"] ?? 0);
-//                if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
-//                    trigger_error(
-//                        sprintf(
-//                            'Metademands hook: resource %d is out of reach for user %s, skipped.',
-//                            $resources_id,
-//                            (string) Session::getLoginUserID(),
-//                        ),
-//                        E_USER_WARNING,
-//                    );
-//
-//                    return;
-//                }
+                //                if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                //                    trigger_error(
+                //                        sprintf(
+                //                            'Metademands hook: resource %d is out of reach for user %s, skipped.',
+                //                            $resources_id,
+                //                            (string) Session::getLoginUserID(),
+                //                        ),
+                //                        E_USER_WARNING,
+                //                    );
+                //
+                //                    return;
+                //                }
 
                 // All three sinks below work on the validated identifier. It used to be read back
                 // from the object inside the loops, which left it undefined when no habilitation

@@ -68,7 +68,11 @@ if (isset($_POST["add"])) {
 
     $budget->redirectToList();
 } elseif (isset($_POST["restore"])) {
-    $budget->check($_POST["id"], UPDATE);
+    // Unreachable in practice for the same reason as above: with no is_deleted column
+    // the form never renders a restore button. The bit is aligned with its two sibling
+    // branches anyway, so the branch cannot become an UPDATE-gated write if the column
+    // is ever added.
+    $budget->check($_POST["id"], PURGE);
     $budget->restore($_POST);
 
     $budget->redirectToList();
