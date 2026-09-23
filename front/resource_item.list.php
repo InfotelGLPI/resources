@@ -75,6 +75,10 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     Html::back();
 } elseif (isset($_POST['updateSpecialRequirement'])) {
     $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    // The frozen form only hides its save button: refuse the same POST server-side.
+    if ($resource->isFrozenAfterValidation()) {
+        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+    }
     // Whitelist to the fields actually exposed by this form (see the "Specials
     // requirements" section of Choice::showItemHelpdesk()) to avoid mass-assigning
     // unrelated Resource fields (entities_id, is_leaving, ...) via a crafted POST.

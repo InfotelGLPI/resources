@@ -492,9 +492,7 @@ class Choice extends CommonDBTM
             }
 
             $can_save = !in_array("special_need", $readonly)
-                && (!$config->fields['use_module_validation']
-                    || !$config->fields['freeze_form_after_validation']
-                    || !$resource->fields['valid_resource_information']);
+                && !$resource->isFrozenAfterValidation();
 
             TemplateRenderer::getInstance()->display('@resources/choice_helpdesk_requirements.html.twig', [
                 'form_action'  => PLUGIN_RESOURCES_WEBDIR . "/front/resource_item.list.php",

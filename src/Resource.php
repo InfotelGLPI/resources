@@ -1523,6 +1523,12 @@ class Resource extends CommonDBTM
      **/
     public function prepareInputForUpdate($input)
     {
+        // The validation flag belongs to the validation workflow (ajax/validinformation.php,
+        // manager only, once only): an ordinary update must not set or reset it.
+        if (empty($input['_from_validation_workflow'])) {
+            unset($input['valid_resource_information']);
+        }
+
         if (isset($input['date_begin'])
             && empty($input['date_begin'])
         ) {
@@ -1893,6 +1899,21 @@ class Resource extends CommonDBTM
      *
      * @return bool
      */
+    /**
+     * Whether the resource forms are locked because the information has been validated
+     * (validation module on and "freeze form after validation" enabled).
+     *
+     * @return bool
+     */
+    public function isFrozenAfterValidation(): bool
+    {
+        $config = new Config();
+
+        return $config->fields['use_module_validation']
+            && $config->fields['freeze_form_after_validation']
+            && !empty($this->fields['valid_resource_information']);
+    }
+
     public function showForm($ID, $options = [])
     {
         $this->initForm($ID, $options);
@@ -2030,9 +2051,7 @@ class Resource extends CommonDBTM
         if (!$is_central) {
             $params['candel'] = false;
         }
-        $can_save = (!$config->fields['use_module_validation']
-            || !$config->fields['freeze_form_after_validation']
-            || !$this->fields['valid_resource_information']);
+        $can_save = !$this->isFrozenAfterValidation();
         $params['hidden_fields']    = $hidden;
         $params['readonly_fields']  = $readonly;
         $params['mandatory_fields'] = $mandatory;

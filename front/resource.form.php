@@ -248,6 +248,10 @@ elseif (isset($_POST["deleteemployee"])) {
 //update resource
 elseif (isset($_POST["update"])) {
     $resource->check($_POST['id'], UPDATE);
+    // The frozen form only hides its buttons: refuse the same POST server-side.
+    if ($resource->isFrozenAfterValidation()) {
+        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+    }
     $_POST['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
     $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 

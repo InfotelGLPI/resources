@@ -365,9 +365,9 @@ class ImportResource extends CommonDBTM
 
             $status = null;
 
-            $resourceID = $this->findResource($firstLevelIdentifiers);
-            if (is_null($resourceID) && count($secondLevelIdentifiers) > 0) {
-                $resourceID = $this->findResource($secondLevelIdentifiers);
+            $resourceID = $this->findResource($firstLevelIdentifiers, false);
+            if (!$resourceID && count($secondLevelIdentifiers) > 0) {
+                $resourceID = $this->findResource($secondLevelIdentifiers, false);
             }
 
             $Resource = new Resource();
@@ -1476,7 +1476,7 @@ class ImportResource extends CommonDBTM
             }
 
             $resourceID = $this->findResource($firstLevelIdentifiers);
-            if (is_null($resourceID) && count($secondLevelIdentifiers) > 0) {
+            if (!$resourceID && count($secondLevelIdentifiers) > 0) {
                 $resourceID = $this->findResource($secondLevelIdentifiers);
             }
 
@@ -1949,9 +1949,11 @@ class ImportResource extends CommonDBTM
      * BE CAREFULL IDENTIFIERS VALUE CANNOT BE EMPTY
      *
      * @param $identifiers
-     * @return |null
+     * @param bool $restrict_to_active_entities only match a resource of the active entities;
+     *                                          false for the instance-wide staging queue (cron)
+     * @return int|false
      */
-    public function findResource($identifiers)
+    public function findResource($identifiers, bool $restrict_to_active_entities = true)
     {
         global $DB;
         $where    = [];
@@ -1973,6 +1975,12 @@ class ImportResource extends CommonDBTM
             'FROM'   => Resource::getTable() . ' AS r',
             'WHERE'  => $where,
         ];
+
+        // Screens that render the matched resource must not reach beyond the importer's
+        // entities: an out-of-scope match is treated as not found.
+        if ($restrict_to_active_entities) {
+            $criteria['WHERE'][] = getEntitiesRestrictCriteria('r', '', '', true);
+        }
 
         if ($needLink) {
             $criteria['INNER JOIN'] = [

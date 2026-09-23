@@ -79,7 +79,11 @@ if (empty($resource->fields['users_id'])
     throw new \Glpi\Exception\Http\AccessDeniedHttpException();
 }
 
-$resource->update(['id' => $resource_id, 'valid_resource_information' => 1]);
+$resource->update([
+    'id'                         => $resource_id,
+    'valid_resource_information' => 1,
+    '_from_validation_workflow'  => true,
+]);
 $resource->getFromDB($resource_id);
 
 $config = new Config();
