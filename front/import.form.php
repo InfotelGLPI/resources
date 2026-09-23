@@ -40,9 +40,21 @@ if (isset($_POST["add"])) {
     $import->check(-1, CREATE, $_POST);
     $import->add($_POST);
     Html::back();
+} elseif (isset($_POST["delete"])) {
+    // glpi_plugin_resources_imports carries an is_deleted column, so maybeDeleted() is true and
+    // the form renders the trash/restore/purge triplet. Each branch has to exist, or a row sent
+    // to the trash becomes unreachable: there was no delete and no restore branch at all, while
+    // "purge" called delete() without the force flag and therefore only trashed the row.
+    $import->check($_POST['id'], DELETE);
+    $import->delete($_POST);
+    $import->redirectToList();
+} elseif (isset($_POST["restore"])) {
+    $import->check($_POST['id'], DELETE);
+    $import->restore($_POST);
+    $import->redirectToList();
 } elseif (isset($_POST["purge"])) {
     $import->check($_POST['id'], PURGE);
-    $import->delete($_POST);
+    $import->delete($_POST, true);
     $import->redirectToList();
 } elseif (isset($_POST["update"])) {
     $import->check($_POST['id'], UPDATE);

@@ -486,7 +486,13 @@ class Checklist extends CommonDBTM
         $iterator = $DB->request([
             'SELECT' => 'rank',
             'FROM'   => $this->getTable(),
-            'WHERE'  => ['id' => (int) $input['id']],
+            // Bind the posted id to the resource and type the caller was authorized on,
+            // so it cannot designate a checklist row of another resource.
+            'WHERE'  => [
+                'id'                            => (int) $input['id'],
+                'checklist_type'                => (int) $input['checklist_type'],
+                'plugin_resources_resources_id' => (int) $input['plugin_resources_resources_id'],
+            ],
         ]);
 
         if (count($iterator) == 1) {

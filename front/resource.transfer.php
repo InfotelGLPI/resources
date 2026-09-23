@@ -31,6 +31,7 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\TransferEntity;
 
 if (Session::getCurrentInterface() == 'central') {
     Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
@@ -49,6 +50,11 @@ if (isset($_POST["transferresources"])) {
     // to update the source resource and must have access to the target entity.
     $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
     if (!Session::haveAccessToEntity((int) $_POST['entities_id'])) {
+        throw new AccessDeniedHttpException();
+    }
+    // The form only offers the entities opened to transfers by the administrator
+    // (TransferEntity): enforce that list on the posted value too.
+    if (!(new TransferEntity())->getFromDBByCrit(['entities_id' => (int) $_POST['entities_id']])) {
         throw new AccessDeniedHttpException();
     }
     if ($resource->checkTransferMandatoryFields($_POST)) {

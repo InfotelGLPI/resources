@@ -28,7 +28,7 @@
 {# Restitution block injected into #resource_pdf by ajax/pdfresource.php when the
  # outgoing resource's linked user still holds equipment. It is rendered *inside* the
  # departure form of resource_remove_form.html.twig, so it must not open a form of its
- # own: the download link targets a separate page in a new tab. #}
+ # own: resources.js posts a detached form (new tab) carrying the token below. #}
 
 <p>{{ __('Please ensure that the return form is signed by the employee', 'resources') }}</p>
 
@@ -36,6 +36,11 @@
     {{ __("The sales manager is responsible for the complete return of the company's equipment held by the outgoing employee (badge, PC, smartphone, etc.)", 'resources') }}
 </div>
 
-<a class="btn btn-warning" href="{{ pdf_url }}" target="_blank" rel="noopener">
+<button type="button" class="btn btn-warning plugin-resources-pdf-download"
+        data-url="{{ pdf_url }}"
+        data-users-id="{{ users_id }}"
+        data-resources-id="{{ resources_id }}"
+        data-root="{{ root_doc }}"
+        data-csrf="{{ csrf_token() }}">
     {{ __('Download the restitution form', 'resources') }}
-</a>
+</button>

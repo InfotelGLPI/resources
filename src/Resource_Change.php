@@ -49,6 +49,10 @@ use Session;
 use Ticket;
 use TicketTemplate;
 use TicketTemplatePredefinedField;
+use Profile_User;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use User;
 
 /**
  * Class Resource_Change
@@ -908,6 +912,73 @@ class Resource_Change extends CommonDBTM
     }
 
     /**
+     * Revalidate the target values posted for a change action
+     *
+     * Each foreign key must point to an existing object within the user's entity scope;
+     * users must additionally be attached to the resource's entity.
+     *
+     * @param int   $action_id
+     * @param array $options
+     * @param int   $entities_id entity of the changed resource
+     *
+     * @return array $options with the checked keys cast to int
+     */
+    private static function checkChangeTargets(int $action_id, array $options, int $entities_id): array
+    {
+        $targets = [
+            self::CHANGE_RESOURCEMANAGER         => ['users_id' => User::class],
+            self::CHANGE_RESOURCESALE            => ['users_id_sales' => User::class],
+            self::CHANGE_ACCESSPROFILE           => ['plugin_resources_habilitations_id' => Habilitation::class],
+            self::CHANGE_CONTRACTTYPE            => ['plugin_resources_contracttypes_id' => ContractType::class],
+            self::CHANGE_AGENCY                  => [
+                'locations_id'              => Location::class,
+                'plugin_resources_teams_id' => Team::class,
+            ],
+            self::CHANGE_RESOURCECOMPANY         => ['employer_id' => Employer::class],
+            self::CHANGE_RESOURCEDEPARTMENT      => ['department_id' => Department::class],
+            self::CHANGE_RESOURCESERVICE         => ['service_id' => Service::class],
+            self::CHANGE_RESOURCEROLE            => ['role_id' => Role::class],
+            self::CHANGE_RESOURCEFUNCTION        => ['function_id' => ResourceFunction::class],
+            self::CHANGE_RESOURCETEAM            => ['team_id' => Team::class],
+            self::CHANGE_RESOURCEITEMAPPLICATION => ['appliances_id' => Appliance::class],
+        ];
+
+        foreach ($targets[$action_id] ?? [] as $key => $itemtype) {
+            if (!isset($options[$key])) {
+                continue;
+            }
+            $id = (int) $options[$key];
+            $options[$key] = $id;
+            if ($id <= 0) {
+                continue;
+            }
+
+            if ($itemtype === User::class) {
+                if (
+                    !(new User())->getFromDB($id)
+                    || !in_array($entities_id, Profile_User::getUserEntities($id, true))
+                ) {
+                    throw new AccessDeniedHttpException();
+                }
+                continue;
+            }
+
+            $item = getItemForItemtype($itemtype);
+            if (!$item || !$item->getFromDB($id)) {
+                throw new BadRequestHttpException();
+            }
+            if (
+                $item->isEntityAssign()
+                && !Session::haveAccessToEntity($item->getEntityID(), $item->isRecursive())
+            ) {
+                throw new AccessDeniedHttpException();
+            }
+        }
+
+        return $options;
+    }
+
+    /**
      * Launch of change for ticket creation
      *
      * @param       $plugin_resources_resources_id
@@ -922,6 +993,10 @@ class Resource_Change extends CommonDBTM
         $resource->getFromDB($plugin_resources_resources_id);
 
         $dbu = new DbUtils();
+
+        // The caller only checked UPDATE on the resource row: the posted target values
+        // are revalidated here before being written or resolved into the ticket content.
+        $options = self::checkChangeTargets((int) $action_id, $options, (int) $resource->fields['entities_id']);
 
         //Preparation of ticket data
         $data = [];
@@ -1117,7 +1192,12 @@ class Resource_Change extends CommonDBTM
                 $data['content'] = __("Change of company for", 'resources') . " " .
                     Resource::getResourceName($plugin_resources_resources_id) . "\n";
                 $employee = new Employee();
-                $employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id]);
+                if (
+                    !$employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id])
+                    || !$employee->can($employee->getID(), UPDATE)
+                ) {
+                    throw new AccessDeniedHttpException();
+                }
                 $data['content'] .= __("Current company of the resource", 'resources') . "&nbsp;:&nbsp;" .
                     Dropdown::getDropdownName(
                         'glpi_plugin_resources_employers',
@@ -1216,7 +1296,7 @@ class Resource_Change extends CommonDBTM
                         $resource->getField('plugin_resources_teams_id'),
                     ) . "\n";
                 $data['content'] .= __("New resource team", 'resources') . "&nbsp;:&nbsp;" .
-                    Dropdown::getDropdownName('glpi_plugin_resources_teams', $options['role_id']) . "\n";
+                    Dropdown::getDropdownName('glpi_plugin_resources_teams', $options['team_id']) . "\n";
 
                 $input['plugin_resources_teams_id'] = $options['team_id'];
 

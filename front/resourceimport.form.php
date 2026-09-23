@@ -96,7 +96,9 @@ if (isset($_POST['save'])) {
     }
     redirectWithParameters(ImportResource::getIndexUrl(), $_GET);
 } elseif (isset($_POST["purge"])) {
-    $import->check($_POST['id'], PURGE);
+    // Check the row actually purged: an Import (model) id says nothing about the
+    // ResourceImport row sharing the same id nor about its parent resource's entity.
+    $pluginResourcesResourceImport->check((int) $_POST['id'], PURGE);
     $pluginResourcesResourceImport->delete($_POST);
     redirectWithParameters(ImportResource::getIndexUrl(), $_GET);
 } elseif (isset($_POST["delete"])) {

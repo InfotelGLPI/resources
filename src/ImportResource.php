@@ -2028,9 +2028,13 @@ class ImportResource extends CommonDBTM
 
         // Get resources
 
+        // Same entity restriction as getResources() below: the statistics branch reads the very
+        // same resources and must not be the wider of the two.
+        $entity_restrict = getEntitiesRestrictCriteria(Resource::getTable(), '', '', true);
+
         if ($display === self::DISPLAY_STATISTICS) {
             $Resource = new Resource();
-            $resources = $Resource->find();
+            $resources = $Resource->find($entity_restrict);
         } else {
             $resources = self::getResources($start, $limit);
         }
@@ -2043,7 +2047,9 @@ class ImportResource extends CommonDBTM
         ];
         $entries = [];
 
-        $nbOfResources = (new DBUtils())->countElementsInTable(Resource::getTable());
+        // Restricted too, otherwise the pagination counter promises pages the list can no
+        // longer fill.
+        $nbOfResources = (new DBUtils())->countElementsInTable(Resource::getTable(), $entity_restrict);
 
         $temp = $this->readCSVLines($absoluteFilePath, 0, 1);
         $header = array_shift($temp);
@@ -2301,8 +2307,15 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
 
+        // The only guard between ajax/verifyCSVStatistics.php and this query is the global
+        // plugin_resources_import READ right, which says nothing about entities. Without the
+        // restriction below the verification screen enumerated the name and firstname of every
+        // resource of the instance, across all entities. The table carries is_recursive, so the
+        // recursive form is the right one: children of the active entity stay visible, exactly
+        // as on the other screens of the plugin.
         $iterator = $DB->request([
             'FROM'  => Resource::getTable(),
+            'WHERE' => getEntitiesRestrictCriteria(Resource::getTable(), '', '', true),
             'START' => (int) $start,
             'LIMIT' => (int) $limit,
         ]);

@@ -85,7 +85,10 @@ if (Plugin::isPluginActive("useditemsexport")) {
 
             if ($total_numrows > 0) {
                 TemplateRenderer::getInstance()->display('@resources/resource_restitution_pdf.html.twig', [
-                    'pdf_url' => PLUGIN_RESOURCES_WEBDIR . '/front/export.pdf.php?generate_pdf&users_id=' . $users_id,
+                    'pdf_url'      => PLUGIN_RESOURCES_WEBDIR . '/front/export.pdf.php',
+                    'users_id'     => $users_id,
+                    'resources_id' => $resources_id,
+                    'root_doc'     => PLUGIN_RESOURCES_WEBDIR,
                 ]);
             }
         }

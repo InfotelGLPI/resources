@@ -120,6 +120,17 @@ class LinkAd extends CommonDBTM
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
     }
 
+    public function prepareInputForUpdate($input)
+    {
+        // A directory link belongs to the resource it was created for. Callers only check
+        // the resource currently stored in the row, while several forms post the whole
+        // request (with plugin_resources_resources_id as a hidden field) to update(): never
+        // let an update reparent the link onto another resource, possibly in another entity.
+        unset($input['plugin_resources_resources_id']);
+
+        return $input;
+    }
+
 
     /**
      * Get Tab Name used for itemtype

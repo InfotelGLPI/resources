@@ -1374,6 +1374,47 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Delete the picture file stored for this resource.
+     *
+     * The file name is always taken from the stored fields, never from the request, so a
+     * caller can only remove the picture of the resource it has been authorized on. The file
+     * is kept when another resource still references it (pictures created before names were
+     * made unique are shared by homonyms).
+     *
+     * @return bool True when the resource no longer has a picture file to reference
+     */
+    public function deletePictureFile(): bool
+    {
+        $picture = (string) ($this->fields['picture'] ?? '');
+        if ($picture === '' || strtoupper($picture) === 'NULL') {
+            return true;
+        }
+
+        $picture_dir = realpath(GLPI_PLUGIN_DOC_DIR . "/resources/pictures");
+        if ($picture_dir === false) {
+            return false;
+        }
+        $real = realpath($picture_dir . DIRECTORY_SEPARATOR . basename($picture));
+        if ($real === false) {
+            // Already gone: nothing left to delete.
+            return true;
+        }
+        if (!str_starts_with($real, $picture_dir . DIRECTORY_SEPARATOR)) {
+            return false;
+        }
+
+        $shared = countElementsInTable(self::getTable(), [
+            'picture' => $picture,
+            'NOT'     => ['id' => (int) $this->fields['id']],
+        ]);
+        if ($shared > 0) {
+            return true;
+        }
+
+        return unlink($real);
+    }
+
+    /**
      * Resolve the picture sent by the asynchronous uploader of Html::file().
      *
      * jQuery File Upload replaces the file input as soon as it is filled, so $_FILES is
@@ -1453,7 +1494,9 @@ class Resource extends CommonDBTM
         $resources_name = preg_replace('/[^a-z0-9_-]/', '', $this->replace_accents($resources_name));
         $resources_firstname = preg_replace('/[^a-z0-9_-]/', '', $this->replace_accents($resources_firstname));
 
-        $name = $resources_name . "_" . $resources_firstname . "." . $ext;
+        // Random suffix: homonyms (possibly in different entities) must not overwrite each
+        // other's picture, and the name must not be guessable from the identity alone.
+        $name = $resources_name . "_" . $resources_firstname . "_" . bin2hex(random_bytes(8)) . "." . $ext;
 
         $tmpfile = GLPI_DOC_DIR . "/_uploads/" . $name;
         $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $name;
@@ -1498,6 +1541,8 @@ class Resource extends CommonDBTM
             if (exif_imagetype($uploadedfile) === IMAGETYPE_JPEG) {
                 $max_size = Toolbox::return_bytes_from_ini_vars(ini_get("upload_max_filesize"));
                 if (filesize($uploadedfile) <= $max_size) {
+                    // Picture names are unique, so the replaced file would otherwise be orphaned.
+                    $this->deletePictureFile();
                     $input['picture'] = $this->addPhoto($this, $uploadedfile);
                 } else {
                     Session::addMessageAfterRedirect(__('Failed to send the file (probably too large)'), false, ERROR);
@@ -1759,12 +1804,10 @@ class Resource extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        if (isset($this->input['picture']) && $this->input['picture'] != "" && $this->input['picture'] != "null" && $this->input['picture'] != "NULL") {
-            // 'picture' is a flat filename (name_firstname.jpg); apply basename() so a crafted
-            // input (e.g. picture=../../config/glpicrypt.key posted on delete) cannot make
-            // unlink() remove an arbitrary file outside the pictures directory.
-            $filename = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . basename((string) $this->input['picture']);
-            unlink($filename);
+        if (!empty($this->input['_purge'])) {
+            // Use the stored file name only: a posted 'picture' value is not bound to the
+            // resource being purged and would let the caller remove another one's picture.
+            $this->deletePictureFile();
         }
         if ($CFG_GLPI["notifications_mailing"]
             && $this->fields["is_template"] != 1

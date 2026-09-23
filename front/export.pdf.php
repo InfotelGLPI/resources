@@ -39,8 +39,10 @@ if (Session::getCurrentInterface()
 
 global $DB;
 
-if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
-    // $_GET['users_id'] is attacker-controlled and was streamed back as a document
+// Generating the PDF writes a Document and an export row: POST only, so that the
+// request goes through the CSRF check (GET is never validated).
+if (isset($_POST['generate_pdf']) && isset($_POST['users_id'])) {
+    // $_POST['users_id'] is attacker-controlled and was streamed back as a document
     // without any ownership/right check (IDOR). Authorize it:
     //  - simplified (helpdesk) interface: a user may only export their OWN equipment;
     //  - central interface: exporting an arbitrary user's data requires the resources
@@ -48,7 +50,7 @@ if (isset($_GET['generate_pdf']) && isset($_GET['users_id'])) {
     if (Session::getCurrentInterface() === 'helpdesk') {
         $users_id = (int) Session::getLoginUserID();
     } else {
-        $users_id = (int) $_GET['users_id'];
+        $users_id = (int) $_POST['users_id'];
         // The global plugin_resources READ right does not enforce entity scope, so
         // resolve the resource linked to the target user and require ->can($id, READ)
         // (right + checkEntity) before exporting — mirroring the guard used by

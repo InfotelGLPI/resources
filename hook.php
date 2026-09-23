@@ -1136,16 +1136,22 @@ function plugin_resources_uninstall()
         $item->deleteByCriteria(['itemtype' => Task::class]);
     }
 
-    $tables = [
-        "glpi_fieldunicities",
-    ];
-
-    foreach ($tables as $table) {
-        $DB->doQuery(
-            "DELETE
-                  FROM `$table`
-                  WHERE `name` LIKE 'GlpiPlugin\\Resources%'",
-        );
+    // Field unicity rules are keyed by itemtype (not by their free-text name): purge those
+    // targeting any plugin class, legacy PluginResources* names included. Filtering in PHP
+    // avoids LIKE, where the namespace backslash is an escape character.
+    $fieldunicity = new \FieldUnicity();
+    foreach (
+        $DB->request([
+            'SELECT' => ['id', 'itemtype'],
+            'FROM'   => \FieldUnicity::getTable(),
+        ]) as $row
+    ) {
+        if (
+            str_starts_with($row['itemtype'], 'GlpiPlugin\\Resources\\')
+            || str_starts_with($row['itemtype'], 'PluginResources')
+        ) {
+            $fieldunicity->delete(['id' => $row['id']], true);
+        }
     }
 
     //drop rules
@@ -1709,6 +1715,11 @@ function plugin_resources_addDefaultWhere($type)
 
         case Resource::class:
             $who = Session::getLoginUserID();
+            // Intentional display filter, not an authorization boundary: without
+            // plugin_resources_all, lists only show the resources the user requested or is
+            // in charge of. Access by id (form, AJAX, check()/can()) stays governed by the
+            // plugin_resources right and the entity scope, so that validators, technicians
+            // and checklist actors can still act on resources they are not in charge of.
             if (!Session::haveRight("plugin_resources_all", READ)) {
                 $criteria = [
                     'OR' => [
@@ -2756,11 +2767,13 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     $out = '';
                     if (!empty($items)) {
                         foreach ($items as $device) {
-                            if (!class_exists($device["itemtype"])) {
+                            $item = getItemForItemtype($device["itemtype"]);
+                            // Resources are recursive, so a linked item may belong to an
+                            // entity the viewer cannot access: only list the items the viewer
+                            // is allowed to see (right on the itemtype + entity scope).
+                            if (!$item || !$item->can((int) $device["items_id"], READ)) {
                                 continue;
                             }
-                            $item = new $device["itemtype"]();
-                            $item->getFromDB($device["items_id"]);
                             $out .= $esc($item->getTypeName()) . " - ";
                             if ($device["itemtype"] == 'User') {
                                 if ($output_type == Search::HTML_OUTPUT) {
@@ -2813,14 +2826,13 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     $out = '';
                     if (!empty($items)) {
                         foreach ($items as $device) {
-                            // The itemtype comes from the database and is instantiated
-                            // right here: an unknown class would be a fatal error, so skip
-                            // it the way the resources_items branch above does.
-                            if (!class_exists($device["itemtype"])) {
+                            // The itemtype comes from the database: skip unknown classes, and
+                            // the items the viewer cannot see, the way the resources_items
+                            // branch above does.
+                            $item = getItemForItemtype($device["itemtype"]);
+                            if (!$item || !$item->can((int) $device["items_id"], READ)) {
                                 continue;
                             }
-                            $item = new $device["itemtype"]();
-                            $item->getFromDB($device["items_id"]);
                             // getLink() is markup on purpose; the type name is not.
                             $out .= $esc($item->getTypeName()) . " - " . $item->getLink() . "<br>";
                         }

@@ -511,18 +511,13 @@ elseif (isset($_POST["add_checklist"])) {
 } elseif (isset($_POST["delete_picture"])) {
     // Enforce the right BEFORE any filesystem mutation (check() dies on failure).
     $resource->check($_POST['id'], UPDATE);
-    if (isset($_POST['picture'])) {
-        // basename() strips any path component and realpath() containment prevents traversal
-        // (e.g. "../../config/glpi.conf"): only files inside the pictures directory can be deleted.
-        $picture_dir = realpath(GLPI_PLUGIN_DOC_DIR . "/resources/pictures");
-        $filename    = $picture_dir . "/" . basename((string) $_POST['picture']);
-        $real        = realpath($filename);
-        if ($picture_dir !== false && $real !== false && str_starts_with($real, $picture_dir . "/")) {
-            if (unlink($real)) {
-                $_POST['picture'] = 'NULL';
-                $resource->update($_POST);
-            }
-        }
+    // The file to delete is the one stored on the authorized resource, never the posted
+    // 'picture' value, which is not bound to it and could target another resource's picture.
+    if ($resource->deletePictureFile()) {
+        $resource->update([
+            'id'      => $resource->getID(),
+            'picture' => 'NULL',
+        ]);
     }
     Html::back();
 } elseif (isset($_POST["synchActiveDirectory"])) {
@@ -530,10 +525,8 @@ elseif (isset($_POST["add_checklist"])) {
     // effect. resource.form.php has no global guard and the $canedit computed below was
     // never enforced, leaving this branch reachable by any authenticated user. Gate on
     // UPDATE right + entity access of the target resource before touching the directory.
-    if (!Session::haveRight(Resource_Validation::$rightname, UPDATE)) {
-        Html::displayRightError();
-    }
-    $resource->getFromDB($_POST["plugin_resources_resources_id"]);
+    Session::checkRight(Resource_Validation::$rightname, UPDATE);
+    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
 
     $config          = new Config();
     $configAD        = new Adconfig();
