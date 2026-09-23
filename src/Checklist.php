@@ -1336,6 +1336,10 @@ class Checklist extends CommonDBTM
             foreach ($checklist_infos[$type] as $entity => $checklists) {
                 Plugin::loadLang('resources');
 
+                // The entity completename is free text and the message it prefixes is HTML:
+                // escaped once here, for the cron log and for the session message alike.
+                $entity_label = htmlescape(Dropdown::getDropdownName("glpi_entities", $entity));
+
                 if (NotificationEvent::raiseEvent(
                     ($type == Alert::NOTICE ? "AlertArrivalChecklists" : "AlertLeavingChecklists"),
                     new Resource(),
@@ -1348,23 +1352,19 @@ class Checklist extends CommonDBTM
                     $message = $checklist_messages[$type][$entity];
                     $cron_status = 1;
                     if ($task) {
-                        $task->log(Dropdown::getDropdownName("glpi_entities", $entity) . ":  $message\n");
+                        $task->log($entity_label . ":  $message\n");
                         $task->addVolume(1);
                     } else {
-                        Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName("glpi_entities", $entity) . ":  $message",
-                        );
+                        Session::addMessageAfterRedirect($entity_label . ":  $message");
                     }
                 } else {
                     if ($task) {
                         $task->log(
-                            Dropdown::getDropdownName("glpi_entities", $entity) .
-                            ":  Send checklists resources alert failed\n",
+                            $entity_label . ":  Send checklists resources alert failed\n",
                         );
                     } else {
                         Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName("glpi_entities", $entity) .
-                            ":  Send checklists resources alert failed",
+                            $entity_label . ":  Send checklists resources alert failed",
                             false,
                             ERROR,
                         );

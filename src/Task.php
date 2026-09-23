@@ -924,7 +924,10 @@ class Task extends CommonDBTM
             $task_infos[$type] = [];
             foreach ($DB->request($query) as $data) {
                 $entity = $data['entities_id'];
-                $message = $data["name"] . ": "
+                // Accumulated into the message handed to addMessageAfterRedirect() below, which
+                // the core documents as an unescaped HTML sink. Escaped leaf by leaf so the <br>
+                // separator stays markup (same pattern as Employment::cronResourcesEmployment()).
+                $message = htmlescape($data["name"]) . ": "
                     . Html::convDate($data["date_end"]) . "<br>\n";
                 $task_infos[$type][$entity][] = $data;
 
@@ -939,6 +942,10 @@ class Task extends CommonDBTM
             foreach ($task_infos[$type] as $entity => $tasks) {
                 Plugin::loadLang('resources');
 
+                // The entity completename is free text and the message it prefixes is HTML:
+                // escaped once here, for the cron log and for the session message alike.
+                $entity_label = htmlescape(Dropdown::getDropdownName("glpi_entities", $entity));
+
                 if (NotificationEvent::raiseEvent(
                     "AlertExpiredTasks",
                     new Resource(),
@@ -951,31 +958,17 @@ class Task extends CommonDBTM
                     $message = $task_messages[$type][$entity];
                     $cron_status = 1;
                     if ($task) {
-                        $task->log(
-                            Dropdown::getDropdownName(
-                                "glpi_entities",
-                                $entity,
-                            ) . ":  $message\n",
-                        );
+                        $task->log($entity_label . ":  $message\n");
                         $task->addVolume(1);
                     } else {
-                        Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName(
-                                "glpi_entities",
-                                $entity,
-                            ) . ":  $message",
-                        );
+                        Session::addMessageAfterRedirect($entity_label . ":  $message");
                     }
                 } else {
                     if ($task) {
-                        $task->log(
-                            Dropdown::getDropdownName("glpi_entities", $entity)
-                            . ":  Send tasks alert failed\n",
-                        );
+                        $task->log($entity_label . ":  Send tasks alert failed\n");
                     } else {
                         Session::addMessageAfterRedirect(
-                            Dropdown::getDropdownName("glpi_entities", $entity)
-                            . ":  Send tasks alert failed",
+                            $entity_label . ":  Send tasks alert failed",
                             false,
                             ERROR,
                         );
