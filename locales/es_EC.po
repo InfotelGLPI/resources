@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 07:31+0000\n"
+"POT-Creation-Date: 2026-09-23 08:27+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -31,17 +31,17 @@ msgstr " Cambiar información"
 msgid " Change name"
 msgstr ""
 
-#: front/linkad.form.php:96
+#: front/linkad.form.php:104
 #, php-format
 msgid "%1$s %2$s have been added in the LDAP directory"
 msgstr "%1$s  %2$s se han añadido en el directorio LDAP"
 
-#: front/linkad.form.php:198
+#: front/linkad.form.php:206
 #, php-format
 msgid "%1$s %2$s have been disabled and moved in the LDAP directory"
 msgstr "%1$s %2$s se han desactivado y movido en el directorio LDAP"
 
-#: front/linkad.form.php:138 front/resource.remove.php:264
+#: front/linkad.form.php:146 front/resource.remove.php:267
 #, php-format
 msgid "%1$s %2$s have been updated in the LDAP directory"
 msgstr "%1$s %2$s se han actualizado en el directorio LDAP"
@@ -834,7 +834,7 @@ msgstr "Equipo actual del recurso"
 msgid "Data Type not found"
 msgstr "Tipo de datos no encontrado"
 
-#: front/linkad.form.php:142 front/resource.remove.php:268
+#: front/linkad.form.php:150 front/resource.remove.php:271
 msgid "Data changed"
 msgstr "Datos modificados"
 
@@ -3268,29 +3268,29 @@ msgstr "nombre dado.nombre"
 msgid "leave on"
 msgstr "Dejar encendido"
 
-#: front/linkad.form.php:104 front/resource.form.php:605
+#: front/linkad.form.php:112 front/resource.form.php:605
 msgid "the user has been added to the LDAP directory"
 msgstr "el usuario ha sido añadido al directorio LDAP"
 
-#: front/linkad.form.php:206
+#: front/linkad.form.php:214
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr "el usuario ha sido desactivado y trasladado al directorio LDAP"
 
-#: front/linkad.form.php:166 front/resource.form.php:623
-#: front/resource.remove.php:292
+#: front/linkad.form.php:174 front/resource.form.php:623
+#: front/resource.remove.php:295
 msgid "the user has been updated to the LDAP directory"
 msgstr "el usuario se ha actualizado en el directorio LDAP"
 
-#: front/linkad.form.php:107 front/resource.form.php:608
+#: front/linkad.form.php:115 front/resource.form.php:608
 msgid "the user has not been added to the LDAP directory"
 msgstr "el usuario no ha sido añadido al directorio LDAP"
 
-#: front/linkad.form.php:209
+#: front/linkad.form.php:217
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr "el usuario no ha sido desactivado y trasladado al directorio LDAP"
 
-#: front/linkad.form.php:169 front/resource.form.php:626
-#: front/resource.remove.php:243 front/resource.remove.php:295
+#: front/linkad.form.php:177 front/resource.form.php:626
+#: front/resource.remove.php:246 front/resource.remove.php:298
 msgid "the user has not been updated to the LDAP directory"
 msgstr "el usuario no ha sido actualizado en el directorio LDAP"
 
