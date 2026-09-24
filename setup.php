@@ -70,9 +70,6 @@ function plugin_init_resources()
 {
     global $PLUGIN_HOOKS;
 
-    // add autoload for vendor
-    include_once(PLUGIN_RESOURCES_DIR . "/vendor/autoload.php");
-
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['resources'] = [Profile::class, 'initProfile'];
     $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET]['resources'] = true;
 

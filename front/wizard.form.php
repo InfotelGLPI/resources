@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Choice;
 use GlpiPlugin\Resources\ContractType;
 use GlpiPlugin\Resources\Employee;
@@ -163,6 +164,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
                 // Updating an existing resource: canCreate() only checks the global
                 // right, so enforce entity access on the targeted record (anti-IDOR).
                 $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+                // Same freeze as the update branch of front/resource.form.php: once the
+                // information is validated, the wizard must not rewrite it either.
+                if ($resource->isFrozenAfterValidation()) {
+                    throw new AccessDeniedHttpException();
+                }
                 $_POST['id'] = $_POST["plugin_resources_resources_id"];
                 $resource->update($_POST);
                 $newresource = $_POST['plugin_resources_resources_id'];
@@ -512,6 +518,10 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // Entry guard is only checkGlobal(READ): enforce UPDATE right + entity access on the
     // target resource before writing its fields (READ->write escalation + cross-entity IDOR).
     $resource->check((int) $resources_id, UPDATE);
+    // Recruitment fields are part of the frozen form as well.
+    if ($resource->isFrozenAfterValidation()) {
+        throw new AccessDeniedHttpException();
+    }
 
     $data = [];
     $data['id'] = $_POST['plugin_resources_resources_id'];

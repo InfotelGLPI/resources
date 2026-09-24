@@ -71,6 +71,7 @@ use Profile_User;
 use Search;
 use Session;
 use Software;
+use Symfony\Component\HttpFoundation\Response;
 use Ticket;
 use Toolbox;
 use UserCategory;
@@ -82,6 +83,12 @@ use UserTitle;
 class Resource extends CommonDBTM
 {
     public static $rightname = 'plugin_resources';
+
+    /**
+     * Set server-side by the validation workflow (ajax/validinformation.php) only.
+     * It replaces an input key, which any update($_POST) caller could forge.
+     */
+    public bool $allow_validation_flag = false;
 
     public static $types = [
         Computer::class,
@@ -1524,10 +1531,13 @@ class Resource extends CommonDBTM
     public function prepareInputForUpdate($input)
     {
         // The validation flag belongs to the validation workflow (ajax/validinformation.php,
-        // manager only, once only): an ordinary update must not set or reset it.
-        if (empty($input['_from_validation_workflow'])) {
+        // manager only, once only): an ordinary update must not set or reset it. The workflow
+        // is recognized through a server-side property, never through the input, which comes
+        // straight from $_POST in the resource and wizard forms.
+        if (!$this->allow_validation_flag) {
             unset($input['valid_resource_information']);
         }
+        unset($input['_from_validation_workflow']);
 
         if (isset($input['date_begin'])
             && empty($input['date_begin'])
@@ -4589,15 +4599,18 @@ class Resource extends CommonDBTM
      * @param $file string: storage filename
      * @param $filename string: file title
      *
-     * @return nothing
+     * @return Response
      **/
-    public static function sendFile($file, $filename)
+    public static function sendFile($file, $filename): Response
     {
         // $filename comes from a file name built out of the employee identity, so it is
         // not a safe literal: it used to be interpolated into a hand-written
         // Content-disposition header. The core helper does the DOC_DIR check, the
         // encoding of the file name and the inline/attachment decision on the MIME type.
-        Toolbox::getFileAsResponse($file, $filename)->send();
+        // The response is returned, not sent: Response::send() closes the output buffer
+        // opened by LegacyFileLoadController, which logs "output buffer has been
+        // unexpectedly closed" and "Unexpected output detected" on every picture.
+        return Toolbox::getFileAsResponse($file, $filename);
     }
 
     /**

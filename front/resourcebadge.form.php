@@ -108,10 +108,17 @@ if (Plugin::isPluginActive("badges")) {
         // in another entity.
         $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
         $resource     = new Resource();
+        // createTicket() is a write: a read right on badges alone must not open tickets, so
+        // the ticket creation right is required too. The entity test honours is_recursive,
+        // Resource being a recursive item.
         if (($pluginbadge->canView() || Session::haveRight("config", UPDATE))
+            && Ticket::canCreate()
             && $resources_id > 0
             && $resource->getFromDB($resources_id)
-            && Session::haveAccessToEntity($resource->fields['entities_id'])) {
+            && Session::haveAccessToEntity(
+                $resource->fields['entities_id'],
+                (bool) $resource->fields['is_recursive'],
+            )) {
             $badge->createTicket($resources_id, $_POST);
         }
         Html::back();

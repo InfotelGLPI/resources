@@ -91,11 +91,13 @@ if (isset($_POST['generate_pdf']) && isset($_POST['users_id'])) {
                     // got the file rendered inline instead of downloaded. The core helper
                     // re-checks the path against GLPI_DOC_DIR, encodes the file name and
                     // only inlines images and PDF documents.
-                    Toolbox::getFileAsResponse(
+                    // Returned to LegacyFileLoadController rather than ->send(), which
+                    // closes its output buffer and logs an "unexpected output" warning.
+                    return Toolbox::getFileAsResponse(
                         $file,
                         $doc->fields['filename'],
                         $doc->fields['mime'],
-                    )->send();
+                    );
                 }
             }
         }

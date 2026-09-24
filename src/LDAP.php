@@ -141,10 +141,26 @@ class LDAP extends CommonDBTM
     //      return $input;
     //   }
 
+
+    public function __construct()
+    {
+        self::loadVendorAutoloader();
+    }
+
     /**
-     * PluginInsightvmInsightvm constructor.
+     * Register the Composer autoloader of the plugin dependencies (LdapRecord and its tree).
+     *
+     * Deliberately kept out of plugin_init_resources(): that tree ships symfony/translation,
+     * which GLPI core does not. Making it autoloadable on every request lets the core container
+     * be compiled with a translator service whose class is then missing in requests where the
+     * plugin is not loaded (ClassNotFoundError from LocaleAwareListener).
+     *
+     * @return void
      */
-    public function __construct() {}
+    private static function loadVendorAutoloader(): void
+    {
+        require_once PLUGIN_RESOURCES_DIR . '/vendor/autoload.php';
+    }
 
     public function connect($authsId)
     {

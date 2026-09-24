@@ -632,10 +632,14 @@ elseif (isset($_POST["add_checklist"])) {
     // enforces neither right nor entity. Gate on UPDATE of the target resource, like the
     // sibling write branches, before mutating it and generating a departure ticket.
     $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
-    $_POST["id"]       = $_POST["plugin_resources_resources_id"];
-    unset($_POST["plugin_resources_resources_id"]);
-    unset($_POST["date_end"]);
-    $resource->update($_POST);
+    // The leaving form only owns the order text. Never hand the raw body to update(): any
+    // other resource column posted alongside it was written as is, bypassing the frozen form
+    // check of the update branch above.
+    $_POST["id"] = (int) $_POST["plugin_resources_resources_id"];
+    $resource->update([
+        'id'           => $_POST["id"],
+        'remove_order' => $_POST['remove_order'] ?? '',
+    ]);
 
     $config = new Config();
     $config->getFromDB(1);

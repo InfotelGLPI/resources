@@ -79,11 +79,13 @@ if (empty($resource->fields['users_id'])
     throw new \Glpi\Exception\Http\AccessDeniedHttpException();
 }
 
+// Server-side flag: the only path allowed to set valid_resource_information.
+$resource->allow_validation_flag = true;
 $resource->update([
     'id'                         => $resource_id,
     'valid_resource_information' => 1,
-    '_from_validation_workflow'  => true,
 ]);
+$resource->allow_validation_flag = false;
 $resource->getFromDB($resource_id);
 
 $config = new Config();

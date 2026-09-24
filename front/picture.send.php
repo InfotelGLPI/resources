@@ -56,7 +56,7 @@ if (isset($_GET["file"])) {
         throw new AccessDeniedHttpException();
     }
 
-    Resource::sendFile($file, basename($file));
+    return Resource::sendFile($file, basename($file));
 } else {
     throw new AccessDeniedHttpException();
 }
