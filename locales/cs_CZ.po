@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 16:16+0000\n"
+"POT-Creation-Date: 2026-09-24 12:15+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2025\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -143,7 +143,7 @@ msgstr "Přístup k aplikacím"
 msgid "Action authorization"
 msgstr "Oprávnění k akci"
 
-#: src/Resource.php:3247
+#: src/Resource.php:3257
 msgid "Actions to be taken"
 msgstr "Co udělat"
 
@@ -224,7 +224,7 @@ msgstr "Přidat úkol do kontrolního seznamu pro výstup"
 msgid "Add a task at the transfer checklist"
 msgstr "Přidat úkol do kontrolního seznamu pro přechod"
 
-#: src/Resource.php:3361 templates/resourcehabilitation_add_form.html.twig:34
+#: src/Resource.php:3371 templates/resourcehabilitation_add_form.html.twig:34
 msgid "Add additional habilitation"
 msgstr "Přidat další oprávnění"
 
@@ -240,7 +240,7 @@ msgstr "Přidat aplikaci"
 msgid "Add documents to the resource"
 msgstr "Přidat dokument ke zdroji"
 
-#: src/Resource.php:3324
+#: src/Resource.php:3334
 msgid "Add habiliation"
 msgstr "Přidat habilitaci"
 
@@ -321,7 +321,7 @@ msgstr ""
 msgid "Arrival / Departure workflow"
 msgstr ""
 
-#: src/RuleContracttype.php:278 src/Resource.php:177 src/Resource.php:495
+#: src/RuleContracttype.php:278 src/Resource.php:184 src/Resource.php:502
 #: src/Checklist.php:1154 src/Recap.php:220 src/Resource_Item.php:718
 #: src/Resource_Item.php:989 src/Resource_Item.php:999
 #: src/RuleContracttypeReadonly.php:322 src/RuleContracttypeHidden.php:281
@@ -344,7 +344,7 @@ msgstr ""
 msgid "Arrival date"
 msgstr "Datum nástupu"
 
-#: ajax/validinformation.php:103
+#: ajax/validinformation.php:105
 msgid "Arrival of"
 msgstr ""
 
@@ -380,12 +380,12 @@ msgstr "Pravidla přiřazení kontrolního seznamu k typu smlouvy"
 msgid "Associable to a ticket"
 msgstr ""
 
-#: src/Resource.php:3346 templates/document_item.html.twig:87
+#: src/Resource.php:3356 templates/document_item.html.twig:87
 msgctxt "button"
 msgid "Associate"
 msgstr "Přidružit"
 
-#: src/Resource.php:3316
+#: src/Resource.php:3326
 msgid "Associate a resource"
 msgstr "Přiřadit pracovníka"
 
@@ -409,7 +409,7 @@ msgstr[3] ""
 msgid "Associated tasks"
 msgstr "Související úkoly"
 
-#: src/Resource.php:173
+#: src/Resource.php:180
 msgid "Associed User"
 msgstr "Přiřazený uživatel"
 
@@ -677,11 +677,11 @@ msgstr "Prověřování kontrolních seznamů"
 msgid "Choosing the intercontrat"
 msgstr "Volba dotazování"
 
-#: src/Resource.php:4579 src/Directory.php:374
+#: src/Resource.php:4589 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "Kliknutím sem odešlete e-mail"
 
-#: src/Resource.php:761
+#: src/Resource.php:768
 msgid "Client Sensitized to security"
 msgstr "Klient si je vědom zabezpečení"
 
@@ -784,7 +784,7 @@ msgstr[3] ""
 msgid "Contract type authorization"
 msgstr "Autorizace typu smlouvy "
 
-#: src/Resource.php:172
+#: src/Resource.php:179
 msgid "ContractType"
 msgstr "Typ smlouvy"
 
@@ -844,7 +844,7 @@ msgstr "Stávající entita"
 msgid "Current team of the resource"
 msgstr "Aktuální tým zdroje"
 
-#: src/Resource.php:243
+#: src/Resource.php:250
 msgid "Data Type not found"
 msgstr "Typ dat nenalezen"
 
@@ -856,7 +856,7 @@ msgstr "Data byla změněna"
 msgid "Date"
 msgstr "Datum"
 
-#: src/RuleContracttype.php:325 src/Resource.php:853
+#: src/RuleContracttype.php:325 src/Resource.php:860
 #: src/RuleContracttypeReadonly.php:405 src/RuleContracttypeHidden.php:363
 #: templates/wizard_eightstep_recruitinginformation.html.twig:58
 msgid "Date agreement candidate"
@@ -866,11 +866,11 @@ msgstr "Datum dohody kandidáta"
 msgid "Date of contract type change"
 msgstr "Datum změny typu smlouvy"
 
-#: src/Resource.php:895
+#: src/Resource.php:902
 msgid "Date of last contract type"
 msgstr "Datum posledního typu smlouvy"
 
-#: src/Resource.php:912
+#: src/Resource.php:919
 msgid "Date of last location"
 msgstr "Datum posledního umístění"
 
@@ -882,7 +882,7 @@ msgstr "Datum změny umístění"
 msgid "Decimal"
 msgstr "Desetinné číslo"
 
-#: src/Resource.php:683 src/NotificationTargetResource.php:801
+#: src/Resource.php:690 src/NotificationTargetResource.php:801
 #: src/NotificationTargetResource.php:1088
 msgid "Declaration of departure date"
 msgstr "Deklarace datumu příchodu"
@@ -891,15 +891,15 @@ msgstr "Deklarace datumu příchodu"
 msgid "Declaration of resource leaving OK"
 msgstr "Deklarace odchodu zaměstnance v pořádku"
 
-#: src/Resource.php:3989
+#: src/Resource.php:3999
 msgid "Declaration of resource transfer OK"
 msgstr "Deklarace přechodu pracovníka je v pořádku"
 
-#: src/Resource.php:3242 src/Menu.php:176
+#: src/Resource.php:3252 src/Menu.php:176
 msgid "Declare a change"
 msgstr "Zadat změnu"
 
-#: src/Resource.php:3174 src/Menu.php:181
+#: src/Resource.php:3184 src/Menu.php:181
 #: templates/resource_remove_form.html.twig:68
 #: templates/resource_form.html.twig:305
 msgid "Declare a departure"
@@ -923,7 +923,7 @@ msgstr "Deklarovat období bez smlouvy"
 msgid "Declare a super habilitation"
 msgstr "Zadat super oprávnění"
 
-#: src/Resource.php:3288 templates/resource_transfer_form.html.twig:62
+#: src/Resource.php:3298 templates/resource_transfer_form.html.twig:62
 msgid "Declare a transfer"
 msgstr "Deklarovat přechod"
 
@@ -935,7 +935,7 @@ msgstr "Zadat nástup"
 msgid "Declare an employment"
 msgstr "Deklarovat zaměstnání"
 
-#: src/Resource.php:558 src/RuleContracttypeReadonly.php:294
+#: src/Resource.php:565 src/RuleContracttypeReadonly.php:294
 #: src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:592
 #: src/NotificationTargetResource.php:789
@@ -988,7 +988,7 @@ msgstr ""
 msgid "Deletion category"
 msgstr "Smazání kategorie"
 
-#: src/Department.php:52 src/Resource.php:176 src/LinkAd.php:557
+#: src/Department.php:52 src/Resource.php:183 src/LinkAd.php:557
 #: src/Adconfig.php:312 templates/linkad_resource_form.html.twig:49
 #: templates/resource_form.html.twig:161
 msgid "Department"
@@ -998,7 +998,7 @@ msgstr[1] "Oddělení"
 msgstr[2] "Oddělení"
 msgstr[3] "Oddělení"
 
-#: src/RuleContracttype.php:282 src/Resource.php:178 src/Resource.php:502
+#: src/RuleContracttype.php:282 src/Resource.php:185 src/Resource.php:509
 #: src/Checklist.php:1153 src/Recap.php:228 src/Resource_Item.php:719
 #: src/Resource_Item.php:990 src/Resource_Item.php:1000
 #: src/RuleContracttypeReadonly.php:326 src/RuleContracttypeHidden.php:285
@@ -1028,7 +1028,7 @@ msgstr[3] "Oddělení"
 msgid "Departure date"
 msgstr "Datum odchodu"
 
-#: front/resource.form.php:311 front/resource.form.php:655
+#: front/resource.form.php:311 front/resource.form.php:659
 #: front/resource.remove.php:159
 msgid "Departure of"
 msgstr "Odchod z"
@@ -1110,7 +1110,7 @@ msgstr "Zobrazuje se blok zabezpečení pracovníka"
 msgid "Dissociate"
 msgstr ""
 
-#: src/Resource.php:3350
+#: src/Resource.php:3360
 msgctxt "button"
 msgid "Dissociate"
 msgstr ""
@@ -1239,7 +1239,7 @@ msgstr "Pro neurčené nevyplňujte"
 msgid "End date"
 msgstr ""
 
-#: src/Resource.php:1613
+#: src/Resource.php:1623
 msgid "End date was not completed. Please try again."
 msgstr "Datum ukončení není vyplněno. Zkuste to znovu."
 
@@ -1283,7 +1283,7 @@ msgstr ""
 msgid "FIFOUR - Supplier's sheet"
 msgstr "FIFOUR – list dodavatele"
 
-#: src/Resource.php:4217 src/Resource.php:4222
+#: src/Resource.php:4227 src/Resource.php:4232
 msgid "Failed to Send alert to the commercial manager"
 msgstr "Nepodařilo se poslat upozornění obchodnímu řediteli"
 
@@ -1291,11 +1291,11 @@ msgstr "Nepodařilo se poslat upozornění obchodnímu řediteli"
 msgid "Failed to check the sanity of the tables!"
 msgstr ""
 
-#: front/wizard.form.php:400
+#: front/wizard.form.php:406
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:5127 src/Resource.php:5139
+#: src/Resource.php:5140 src/Resource.php:5152
 msgid "Female"
 msgstr "Žena"
 
@@ -1326,7 +1326,7 @@ msgid ""
 "date (DDMMYYYY)"
 msgstr ""
 
-#: src/Resource.php:170 src/LinkAd.php:546 src/Resource_Change.php:466
+#: src/Resource.php:177 src/LinkAd.php:546 src/Resource_Change.php:466
 #: templates/linkad_resource_form.html.twig:62
 msgid "Firstname"
 msgstr "Jméno"
@@ -1378,7 +1378,7 @@ msgstr ""
 msgid "GISF - Supplier security incident management"
 msgstr "GISF – správa bezpečnostních incidentů dodavatele"
 
-#: src/Resource.php:948 src/RuleContracttypeReadonly.php:274
+#: src/Resource.php:955 src/RuleContracttypeReadonly.php:274
 #: src/RuleContracttypeHidden.php:252 src/Config.php:124 src/Config.php:159
 #: templates/wizard_secondstep_resource.html.twig:83
 #: templates/wizard_secondstep_resource.html.twig:94
@@ -1390,7 +1390,7 @@ msgstr "Pohlaví"
 msgid "Generate a rule"
 msgstr "Vytvořit pravidlo"
 
-#: src/Resource.php:3323
+#: src/Resource.php:3333
 msgid "Generate resources"
 msgstr "Vytvořit pracovníky"
 
@@ -1444,7 +1444,7 @@ msgstr[1] "Dovolené"
 msgstr[2] "Dovolených"
 msgstr[3] "Dovolené"
 
-#: setup.php:271 src/Metademand.php:74
+#: setup.php:268 src/Metademand.php:74
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "Pracovník"
@@ -1452,7 +1452,7 @@ msgstr[1] "Pracovníci"
 msgstr[2] "Pracovníků"
 msgstr[3] "Lidské zdroje"
 
-#: src/Resource.php:115 src/Profile.php:174 src/Employment.php:181
+#: src/Resource.php:122 src/Profile.php:174 src/Employment.php:181
 #: src/Employment.php:240 src/Menu.php:361 src/TaskPlanning.php:67
 #: templates/employment_form.html.twig:84
 msgid "Human resource"
@@ -1538,7 +1538,7 @@ msgstr "Importované hodnoty"
 msgid "In element"
 msgstr ""
 
-#: src/Resource.php:566 src/NotificationTargetResource.php:110
+#: src/Resource.php:573 src/NotificationTargetResource.php:110
 #: src/NotificationTargetResource.php:479
 #: src/NotificationTargetResource.php:591
 #: src/NotificationTargetResource.php:798
@@ -1605,15 +1605,15 @@ msgstr ""
 msgid "LDAP"
 msgstr "LDAP"
 
-#: src/Resource.php:904
+#: src/Resource.php:911
 msgid "Last contract type"
 msgstr "Poslední typ smlouvy"
 
-#: src/Resource.php:921
+#: src/Resource.php:928
 msgid "Last location"
 msgstr "Poslední umístění"
 
-#: src/Resource.php:171
+#: src/Resource.php:178
 msgid "Lastname"
 msgstr "Příjmení"
 
@@ -1744,7 +1744,7 @@ msgstr "Seznam nedokončených úkolů"
 msgid "List of your associated resources"
 msgstr "Seznam souvisejících prostředků"
 
-#: src/Resource.php:174 templates/resource_form.html.twig:150
+#: src/Resource.php:181 templates/resource_form.html.twig:150
 msgid "Location"
 msgstr "Umístění"
 
@@ -1768,7 +1768,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr "Vytvoření emailu"
 
-#: src/Resource.php:5126 src/Resource.php:5136
+#: src/Resource.php:5139 src/Resource.php:5149
 msgid "Male"
 msgstr "Muž"
 
@@ -1800,7 +1800,7 @@ msgstr "Označit za dokončené"
 msgid "Mark as unfinished"
 msgstr "Označit za nedokončené"
 
-#: src/RuleContracttype.php:290 src/Resource.php:802
+#: src/RuleContracttype.php:290 src/Resource.php:809
 #: src/RuleContracttypeReadonly.php:338 src/RuleContracttypeHidden.php:297
 #: src/Config.php:147 src/Config.php:162
 #: templates/wizard_secondstep_resource.html.twig:185
@@ -2017,7 +2017,7 @@ msgstr "Historie oznámení"
 msgid "Notification sent"
 msgstr "Oznámení odesláno"
 
-#: src/RuleContracttype.php:337 src/Resource.php:878
+#: src/RuleContracttype.php:337 src/Resource.php:885
 #: src/RuleContracttypeReadonly.php:417 src/RuleContracttypeHidden.php:375
 #: templates/wizard_eightstep_recruitinginformation.html.twig:99
 msgid "Number of years experience"
@@ -2035,7 +2035,7 @@ msgstr ""
 msgid "One or more mandatory fields are empty."
 msgstr ""
 
-#: front/resource.form.php:668 templates/resource_leaving_form.html.twig:42
+#: front/resource.form.php:672 templates/resource_leaving_form.html.twig:42
 msgid "Order"
 msgstr ""
 
@@ -2043,7 +2043,7 @@ msgstr ""
 msgid "Order resources by"
 msgstr ""
 
-#: src/Resource.php:180 src/Resource.php:5128 src/Resource.php:5142
+#: src/Resource.php:187 src/Resource.php:5141 src/Resource.php:5155
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:593
 msgid "Other"
 msgstr "Ostatní"
@@ -2089,7 +2089,7 @@ msgstr ""
 msgid "Phone"
 msgstr "Telefon"
 
-#: src/Resource.php:603 templates/resource_form.html.twig:366
+#: src/Resource.php:610 templates/resource_form.html.twig:366
 msgid "Photo"
 msgstr "Fotografie"
 
@@ -2106,7 +2106,7 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr "Zapněte zásuvný modul"
 
-#: front/resourcebadge.form.php:137
+#: front/resourcebadge.form.php:144
 msgid "Please activate the plugin badge"
 msgstr "Zapněte zásuvný modul Jmenovky"
 
@@ -2120,7 +2120,7 @@ msgstr "Zapněte zásuvný modul metademand"
 msgid "Please check the leaving checklist of the resource"
 msgstr "Prověřte kontrolní seznam odcházejícího pracovníka"
 
-#: src/Resource.php:3250
+#: src/Resource.php:3260
 #, php-format
 msgid "Please correct: %s"
 msgstr "Opravte: %s"
@@ -2198,7 +2198,7 @@ msgstr "Vyčistit importované zdroje "
 msgid "Queries to run"
 msgstr ""
 
-#: src/RuleContracttype.php:286 src/Resource.php:619 src/Recap.php:148
+#: src/RuleContracttype.php:286 src/Resource.php:626 src/Recap.php:148
 #: src/RuleContracttypeReadonly.php:330 src/RuleContracttypeHidden.php:289
 #: src/NotificationTargetResource.php:705
 #: src/NotificationTargetResource.php:835
@@ -2238,7 +2238,7 @@ msgstr "Poměr úvazek/rozpočet"
 msgid "Read only Fields"
 msgstr ""
 
-#: src/Resource.php:694 src/RuleContracttypeReadonly.php:389
+#: src/Resource.php:701 src/RuleContracttypeReadonly.php:389
 #: src/RuleContracttypeHidden.php:347 src/NotificationTargetResource.php:1125
 #: src/NotificationTargetResource.php:1673 src/Config.php:145
 #: templates/wizard_secondstep_resource.html.twig:715
@@ -2246,7 +2246,7 @@ msgstr ""
 msgid "Reading the security charter"
 msgstr "Čtení charty zabezpečení"
 
-#: src/RuleContracttype.php:341 src/Resource.php:886
+#: src/RuleContracttype.php:341 src/Resource.php:893
 #: src/RuleContracttypeReadonly.php:421 src/RuleContracttypeHidden.php:379
 #: templates/wizard_eightstep_recruitinginformation.html.twig:111
 msgid "Reconversion"
@@ -2260,7 +2260,7 @@ msgstr[1] "Zdroje pro nábor"
 msgstr[2] "Zdrojů pro nábor"
 msgstr[3] "Zdroje pro nábor"
 
-#: src/Resource.php:399
+#: src/Resource.php:406
 msgid "Recruiting information"
 msgstr "Informace o náboru"
 
@@ -2294,64 +2294,64 @@ msgstr ""
 msgid "Replace default form for departure"
 msgstr ""
 
-#: setup.php:193
+#: setup.php:190
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:54
 msgid "Report listing departing resources with active employment"
 msgstr ""
 
-#: setup.php:185 report/checkmissingN0group/checkmissingN0group.php:54
+#: setup.php:182 report/checkmissingN0group/checkmissingN0group.php:54
 msgid "Report listing human resources without group N0"
 msgstr ""
 
-#: setup.php:186 report/checkmissingN1group/checkmissingN1group.php:54
+#: setup.php:183 report/checkmissingN1group/checkmissingN1group.php:54
 msgid "Report listing human resources without group N1"
 msgstr ""
 
-#: setup.php:187 report/lapserankprofession/lapserankprofession.php:50
+#: setup.php:184 report/lapserankprofession/lapserankprofession.php:50
 msgid "Report listing obsolete corps and ranks"
 msgstr ""
 
-#: setup.php:191
+#: setup.php:188
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:54
 msgid "Report listing resources or jobs with an expired corp"
 msgstr ""
 
-#: setup.php:192
+#: setup.php:189
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:53
 msgid "Report listing resources or jobs with an obsolete grade"
 msgstr ""
 
-#: setup.php:195 report/resourcewithoutuser/resourcewithoutuser.php:53
+#: setup.php:192 report/resourcewithoutuser/resourcewithoutuser.php:53
 msgid "Report listing resources without users"
 msgstr ""
 
-#: setup.php:189 report/professionwithoutvolume/professionwithoutvolume.php:57
+#: setup.php:186 report/professionwithoutvolume/professionwithoutvolume.php:57
 msgid "Report listing the corps and grades without budget allocation"
 msgstr ""
 
-#: setup.php:188 report/professionwithoutcost/professionwithoutcost.php:57
+#: setup.php:185 report/professionwithoutcost/professionwithoutcost.php:57
 msgid "Report listing the corps and grades without budgetary valuation"
 msgstr ""
 
-#: setup.php:183 report/checkgroup/checkgroup.php:55
+#: setup.php:180 report/checkgroup/checkgroup.php:55
 msgid "Report listing the groups not included in the resource's permissions"
 msgstr ""
 
-#: setup.php:184 report/checkhabilitation/checkhabilitation.php:54
+#: setup.php:181 report/checkhabilitation/checkhabilitation.php:54
 msgid "Report listing the permissions not present in the user's groups"
 msgstr ""
 
-#: setup.php:194
+#: setup.php:191
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:54
 msgid "Report listing unemployed resources"
 msgstr ""
 
-#: setup.php:196
+#: setup.php:193
 #: report/userwithmorethanoneresource/userwithmorethanoneresource.php:49
 msgid "Report listing users linked to more than one resource"
 msgstr ""
 
-#: setup.php:190 report/resourceemploymentdiff/resourceemploymentdiff.php:58
+#: setup.php:187 report/resourceemploymentdiff/resourceemploymentdiff.php:58
 msgid "Report of pledges"
 msgstr ""
 
@@ -2380,7 +2380,7 @@ msgstr ""
 msgid "Required Fields"
 msgstr "Povinné kolonky"
 
-#: front/wizard.form.php:127 front/wizard.form.php:435 src/Resource.php:1231
+#: front/wizard.form.php:128 front/wizard.form.php:441 src/Resource.php:1238
 msgid "Required fields are not filled. Please try again."
 msgstr "Povinné kolonky nejsou vyplněné. Zkuste to znovu."
 
@@ -2417,7 +2417,7 @@ msgstr "Pracovník"
 msgid "Resource Attribute"
 msgstr "Atribut pracovníka"
 
-#: src/Resource.php:267
+#: src/Resource.php:274
 msgid "Resource column name not found"
 msgstr "Sloupec jména zdroje nenalezen"
 
@@ -2430,7 +2430,7 @@ msgid "Resource files imports"
 msgstr "Importy souborů s pracovníky"
 
 #: src/Task.php:830 src/Task.php:1274 src/RuleContracttype.php:266
-#: src/Resource.php:175 src/Resource.php:482 src/Resource.php:2713
+#: src/Resource.php:182 src/Resource.php:489 src/Resource.php:2723
 #: src/RuleContracttypeReadonly.php:188 src/RuleContracttypeReadonly.php:229
 #: src/RuleContracttypeReadonly.php:259 src/RuleContracttypeReadonly.php:310
 #: src/RuleContracttypeHidden.php:269 src/Directory.php:211
@@ -2494,11 +2494,11 @@ msgstr "Data zdrojů"
 msgid "Resources directory"
 msgstr "Adresář zdrojů"
 
-#: src/Resource.php:4823
+#: src/Resource.php:4836
 msgid "Resources list"
 msgstr "Seznam pracovníků"
 
-#: src/Resource.php:4014 src/NotificationTargetResource.php:92
+#: src/Resource.php:4024 src/NotificationTargetResource.php:92
 #: src/NotificationTargetResource.php:1756
 msgid "Resources list of commercial manager"
 msgstr "Seznam podřízených obchodního ředitele"
@@ -2507,7 +2507,7 @@ msgstr "Seznam podřízených obchodního ředitele"
 msgid "Resources management"
 msgstr "Správa pracovníků"
 
-#: src/Resource.php:4009
+#: src/Resource.php:4019
 msgid "Resources not declaring leaving"
 msgstr "Pracovníci nedeklarující odchod"
 
@@ -2523,7 +2523,7 @@ msgstr[1] "Rolí"
 msgstr[2] "Rolí"
 msgstr[3] "Role"
 
-#: src/RuleContracttype.php:270 src/Resource.php:179 src/Resource.php:671
+#: src/RuleContracttype.php:270 src/Resource.php:186 src/Resource.php:678
 #: src/RuleContracttypeReadonly.php:314 src/RuleContracttypeHidden.php:273
 #: src/NotificationTargetResource.php:108
 #: src/NotificationTargetResource.php:138
@@ -2576,7 +2576,7 @@ msgstr "Vyhledání pracovníků"
 msgid "Second Form"
 msgstr "Druhý formulář"
 
-#: src/RuleContracttype.php:302 src/Resource.php:847
+#: src/RuleContracttype.php:302 src/Resource.php:854
 #: src/RuleContracttypeReadonly.php:350 src/RuleContracttypeHidden.php:309
 #: src/Config.php:148 src/Config.php:164
 #: templates/wizard_secondstep_resource.html.twig:228
@@ -2614,7 +2614,7 @@ msgstr ""
 msgid "Select the contract type"
 msgstr "Vyberte typ smlouvy"
 
-#: src/Resource.php:3365 src/Directory.php:295
+#: src/Resource.php:3375 src/Directory.php:295
 #: templates/wizard_secondstep_resource.html.twig:754
 #: templates/resource_form.html.twig:290
 msgid "Send a notification"
@@ -2628,7 +2628,7 @@ msgstr ""
 msgid "Send a second ticket for a departure after instruction"
 msgstr ""
 
-#: src/Resource.php:4204 src/Resource.php:4210
+#: src/Resource.php:4214 src/Resource.php:4220
 msgid "Send alert to the commercial manager"
 msgstr "Poslat upozornění obchodnímu řediteli"
 
@@ -2648,7 +2648,7 @@ msgstr "Poslat oznámení o vytvoření výkazu o pracovnících"
 msgid "Send resource transfer notification"
 msgstr "Poslat oznámení o přechodu pracovníka"
 
-#: src/Resource.php:702 src/Resource.php:794
+#: src/Resource.php:709 src/Resource.php:801
 #: src/RuleContracttypeReadonly.php:385 src/RuleContracttypeHidden.php:343
 #: src/NotificationTargetResource.php:1120
 #: src/NotificationTargetResource.php:1672 src/Config.php:144
@@ -2751,7 +2751,7 @@ msgstr "Suffix"
 msgid "Suggested queries"
 msgstr ""
 
-#: setup.php:182 report/budgetsummary/budgetsummary.php:58
+#: setup.php:179 report/budgetsummary/budgetsummary.php:58
 msgid "Summary by budget with total amount and quantity"
 msgstr ""
 
@@ -2900,7 +2900,7 @@ msgid ""
 "plugin or by a custom development before running them."
 msgstr ""
 
-#: front/resource.form.php:509 src/Resource.php:3983
+#: front/resource.form.php:509 src/Resource.php:3993
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr "Oznámení nebylo odesláno, protože pracovník není propojen s uživatelem"
@@ -2936,19 +2936,19 @@ msgstr ""
 "Obchodní ředitel je odpovědný za úplné vrácení vybavení společnosti držené "
 "odchozím zaměstnancem (jmenovka, počítač, telefon, atd.)"
 
-#: front/wizard.form.php:149
+#: front/wizard.form.php:150
 msgid "The start date must be greater than the end date"
 msgstr "Datum zahájení musí být vyšší než datum ukončení"
 
-#: front/wizard.form.php:235
+#: front/wizard.form.php:241
 msgid "There is a problem with resource creation"
 msgstr ""
 
-#: front/wizard.form.php:196
+#: front/wizard.form.php:202
 msgid "There is a right problem"
 msgstr "Je tu problém s oprávněním"
 
-#: src/Resource.php:4087 src/NotificationTargetResource.php:79
+#: src/Resource.php:4097 src/NotificationTargetResource.php:79
 #: src/NotificationTargetResource.php:459
 msgid "These resources have normally left the company"
 msgstr "Tito pracovníci v pořádku opustili společnost"
@@ -2967,7 +2967,7 @@ msgid ""
 "prefer the random format."
 msgstr ""
 
-#: src/Resource.php:3586 src/Resource.php:3614
+#: src/Resource.php:3596 src/Resource.php:3624
 msgid "This resource aldready exists"
 msgid_plural "These resources aldready exist"
 msgstr[0] "Tento pracovník už existuje"
@@ -2979,7 +2979,7 @@ msgstr[3] "Tito pracovníci už existují"
 msgid "This resource already exists"
 msgstr ""
 
-#: src/Resource.php:3578 src/Resource.php:3622
+#: src/Resource.php:3588 src/Resource.php:3632
 msgid "This resource has been added"
 msgid_plural "These resources have been added"
 msgstr[0] "Tento pracovník byl přidán"
@@ -3025,7 +3025,7 @@ msgstr "Celkový počet řádků v souboru "
 msgid "Trainee"
 msgstr "Praktikant"
 
-#: src/Task.php:1052 src/Resource.php:3357 src/Checklistconfig.php:361
+#: src/Task.php:1052 src/Resource.php:3367 src/Checklistconfig.php:361
 msgid "Transfer"
 msgstr ""
 
@@ -3092,7 +3092,7 @@ msgstr ""
 msgid "Unlimited number of selectable habilitations "
 msgstr "Neomezené množství oprávnění, ze kterých lze vybrat"
 
-#: src/Resource.php:3440
+#: src/Resource.php:3450
 msgid "Unsupported item type"
 msgstr ""
 
@@ -3113,7 +3113,7 @@ msgstr "Aktualizovat zdroje GLPI"
 msgid "Update LDAP directory"
 msgstr "Aktualizovat LDAP adresář"
 
-#: src/Resource.php:4019
+#: src/Resource.php:4029
 msgid "Update Resources state"
 msgstr "Aktualizovat stav zdroje"
 
@@ -3185,7 +3185,7 @@ msgstr "Použit pro plánování"
 msgid "User"
 msgstr ""
 
-#: setup.php:197 report/userwithnoresource/userwithnoresource.php:50
+#: setup.php:194 report/userwithnoresource/userwithnoresource.php:50
 msgid "User without resource"
 msgstr "Uživatel bez zdroje"
 
@@ -3237,8 +3237,8 @@ msgstr "Bude přidáno do komentáře k zaměstnanci"
 msgid "Wished leaving date"
 msgstr "Požadované datum odchodu"
 
-#: front/resource.form.php:320 front/resource.form.php:666
-#: front/resource.remove.php:181 src/Resource.php:1852 src/ContractType.php:266
+#: front/resource.form.php:320 front/resource.form.php:670
+#: front/resource.remove.php:181 src/Resource.php:1862 src/ContractType.php:266
 #: src/ContractType.php:286 src/Contracttypeprofile.php:72
 msgid "Without contract"
 msgstr "Bez smlouvy"
@@ -3311,7 +3311,7 @@ msgstr "křestní jméno + příjmení"
 msgid "given name.name"
 msgstr "křestní jméno.jméno"
 
-#: front/resource.form.php:313 front/resource.form.php:659
+#: front/resource.form.php:313 front/resource.form.php:663
 #: front/resource.remove.php:165
 msgid "leave on"
 msgstr "nechat na"
