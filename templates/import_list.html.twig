@@ -28,9 +28,10 @@
 {% if entries is empty %}
     {# No import to show: only the error head, inside its own table so it stays valid. #}
     <table class="tab_cadre_fixe">
-        {{ error_header|raw }}
+        {{ include('@resources/import_error_header.html.twig', {'title': error_title}, with_context = false) }}
     </table>
 {% else %}
+    {# Pager rendered by the core (Html::printPager). #}
     {{ pager|raw }}
 
     <form name="form" method="post" id="import" action="{{ form_action }}">
@@ -55,14 +56,14 @@
                     </td>
                 </tr>
 
-                {{ buttons|raw }}
+                {{ include('@resources/import_list_buttons.html.twig', {}, with_context = false) }}
                 {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
 
                 {% for entry in entries %}
-                    <tr>{{ entry.cells|raw }}</tr>
+                    <tr>{{ include('@resources/import_one_row.html.twig', entry, with_context = false) }}</tr>
                 {% endfor %}
 
-                {{ buttons|raw }}
+                {{ include('@resources/import_list_buttons.html.twig', {}, with_context = false) }}
             </table>
         </div>
     </form>

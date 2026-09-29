@@ -32,7 +32,7 @@
  # and #plugin_resources_button_resting (the submit button is injected there by
  # ajax/resourceresting.php, hence the empty containers below). #}
 <div class="card container" style="min-width: 80%;">
-    {{ wizard_header|raw }}
+    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
 
     <div class="card-body">
         <form method="post" action="{{ form_action }}">

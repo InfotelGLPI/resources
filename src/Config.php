@@ -544,8 +544,11 @@ class Config extends CommonDBTM
                     );
                 Html::requireJs('tinymce');
                 $rows[] = [
-                    'label'  => __('Text in the resource creation ticket after validation', 'resources') . '<br>'
-                        . "<a href='#' data-bs-toggle='modal' data-bs-target='#plugin_resources_available_variables' title='" . htmlescape(__("See variable available", "resources")) . "'>" . htmlescape(__("See variable available", "resources")) . "</a>",
+                    'label'  => __('Text in the resource creation ticket after validation', 'resources'),
+                    'modal_link' => [
+                        'target' => '#plugin_resources_available_variables',
+                        'label'  => __("See variable available", "resources"),
+                    ],
                     'widget' => $capture(fn() => Html::textarea(['name' => 'text_ticket_validation', 'value' => $this->fields['text_ticket_validation']])),
                 ];
                 $rows[] = [

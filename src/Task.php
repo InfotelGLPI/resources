@@ -715,165 +715,161 @@ class Task extends CommonDBTM
      */
     public function showCentral($who)
     {
+        $Checklist = new Checklist();
+
+        TemplateRenderer::getInstance()->display('@resources/task_central.html.twig', [
+            'tasks'          => $this->getCentralParams(),
+            'checklist_todo' => $Checklist->getCentralParams(false),
+            'checklist_done' => $Checklist->getCentralParams(true),
+        ]);
+    }
+
+    /**
+     * Parameters of central_datatable.html.twig for the tasks in progress of the current user.
+     *
+     * @return array<string, mixed>|null Null when there is nothing to display
+     */
+    public function getCentralParams(): ?array
+    {
         global $DB;
 
-        // The datatable component echoes: buffer it so the wrapper template owns the markup.
-        ob_start();
+        if (!$this->canView()) {
+            return null;
+        }
 
-        if ($this->canView()) {
-            $who = Session::getLoginUserID();
+        $who = Session::getLoginUserID();
 
-            $dbu = new DbUtils();
-            $self_table = $this->getTable();
+        $dbu = new DbUtils();
+        $self_table = $this->getTable();
 
-            $or = [];
-            if ($who > 0) {
-                $or[$self_table . '.users_id'] = (int) $who;
-            }
-            $or[$self_table . '.groups_id'] = new QuerySubQuery([
-                'SELECT' => 'groups_id',
-                'FROM'   => 'glpi_groups_users',
-                'WHERE'  => ['users_id' => (int) $who],
-            ]);
+        $or = [];
+        if ($who > 0) {
+            $or[$self_table . '.users_id'] = (int) $who;
+        }
+        $or[$self_table . '.groups_id'] = new QuerySubQuery([
+            'SELECT' => 'groups_id',
+            'FROM'   => 'glpi_groups_users',
+            'WHERE'  => ['users_id' => (int) $who],
+        ]);
 
-            $where = [
-                'glpi_plugin_resources_resources.is_template' => 0,
-                'glpi_plugin_resources_resources.is_deleted'  => 0,
-                $self_table . '.is_deleted'  => 0,
-                $self_table . '.is_finished' => 0,
-                ['OR' => $or],
-            ];
+        $where = [
+            'glpi_plugin_resources_resources.is_template' => 0,
+            'glpi_plugin_resources_resources.is_deleted'  => 0,
+            $self_table . '.is_deleted'  => 0,
+            $self_table . '.is_finished' => 0,
+            ['OR' => $or],
+        ];
 
-            // Add Restrict to current entities
-            $Resource = new Resource();
-            $itemtable = "glpi_plugin_resources_resources";
-            if ($Resource->isEntityAssign()) {
-                $entities_crit = $dbu->getEntitiesRestrictCriteria($itemtable);
-                if (count($entities_crit)) {
-                    $where[] = $entities_crit;
-                }
-            }
-
-            $iterator = $DB->request([
-                'SELECT'     => [
-                    $self_table . '.id AS plugin_resources_tasks_id',
-                    $self_table . '.name AS name_task',
-                    $self_table . '.plugin_resources_tasktypes_id AS plugin_resources_tasktypes_id',
-                    $self_table . '.is_deleted AS is_deleted',
-                    $self_table . '.users_id AS users_id_task',
-                    'glpi_plugin_resources_resources.id AS id',
-                    'glpi_plugin_resources_resources.name AS name',
-                    'glpi_plugin_resources_resources.firstname AS firstname',
-                    'glpi_plugin_resources_resources.entities_id',
-                    'glpi_plugin_resources_resources.users_id AS users_id',
-                ],
-                'FROM'       => $self_table,
-                'INNER JOIN' => [
-                    'glpi_plugin_resources_resources' => [
-                        'ON' => [
-                            $self_table                       => 'plugin_resources_resources_id',
-                            'glpi_plugin_resources_resources' => 'id',
-                        ],
-                    ],
-                ],
-                'WHERE'      => $where,
-                'ORDER'      => 'glpi_plugin_resources_resources.name DESC',
-                'LIMIT'      => 10,
-            ]);
-            $entries = [];
-            foreach ($iterator as $data) {
-                $task_label = htmlescape($data["name_task"]);
-                $resource_label = htmlescape($data["name"] . " " . $data["firstname"]);
-                if ($_SESSION["glpiis_ids_visible"]) {
-                    $task_label .= ' (' . $data["plugin_resources_tasks_id"] . ')';
-                    $resource_label .= ' (' . $data["id"] . ')';
-                }
-
-                $plans = $dbu->getAllDataFromTable(
-                    "glpi_plugin_resources_taskplannings",
-                    ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']],
-                );
-                $planning = '';
-                foreach ($plans as $plan) {
-                    $planning .= Html::convDateTime($plan["begin"]) . "&nbsp;-&gt;&nbsp;"
-                        . Html::convDateTime($plan["end"]);
-                }
-                if ($planning === '') {
-                    $planning = __('None');
-                }
-
-                $entries[] = [
-                    'row_class' => $data["is_deleted"] == '1' ? 'tab_bg_1_2' : 'tab_bg_1',
-                    'name'      => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php?id='
-                        . (int) $data["plugin_resources_tasks_id"] . '">' . $task_label . '</a>',
-                    'entity'    => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
-                    'tasktype'  => Dropdown::getDropdownName(
-                        "glpi_plugin_resources_tasktypes",
-                        $data["plugin_resources_tasktypes_id"],
-                    ),
-                    'planning'  => $planning,
-                    'resource'  => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id='
-                        . (int) $data["id"] . '">' . $resource_label . '</a>',
-                    'manager'   => $dbu->getUserName($data["users_id"]),
-                    'user'      => $dbu->getUserName($data["users_id_task"]),
-                ];
-            }
-
-            if (count($entries) > 0) {
-                $columns = ['name' => __('Name')];
-                if (Session::isMultiEntitiesMode()) {
-                    $columns['entity'] = __('Entity');
-                }
-                $columns['tasktype'] = TaskType::getTypeName(2);
-                $columns['planning'] = __('Planning');
-                $columns['resource'] = Resource::getTypeName(1);
-                $columns['manager']  = __('Resource manager', 'resources');
-                $columns['user']     = __('User');
-
-                $all_url = PLUGIN_RESOURCES_WEBDIR
-                    . '/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0';
-
-                TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
-                    'super_header'    => [
-                        'label'  => Resource::getTypeName(2) . ': '
-                            . __('Tasks in progress', 'resources')
-                            . ' <a href="' . $all_url . '">' . __('All') . '</a>',
-                        'is_raw' => true,
-                    ],
-                    'columns'         => $columns,
-                    'formatters'      => [
-                        'name'     => 'raw_html',
-                        'resource' => 'raw_html',
-                        'planning' => 'raw_html',
-                    ],
-                    'entries'         => $entries,
-                    'total_number'    => count($entries),
-                    'filtered_number' => count($entries),
-                    'nofilter'        => true,
-                    'nosort'          => true,
-                ]);
+        // Add Restrict to current entities
+        $Resource = new Resource();
+        $itemtable = "glpi_plugin_resources_resources";
+        if ($Resource->isEntityAssign()) {
+            $entities_crit = $dbu->getEntitiesRestrictCriteria($itemtable);
+            if (count($entities_crit)) {
+                $where[] = $entities_crit;
             }
         }
 
-        $tasks_list = (string) ob_get_clean();
-
-        $Checklist = new Checklist();
-
-        // Captured separately so the spacing between the two blocks belongs to the
-        // template instead of an echoed <br>.
-        ob_start();
-        $Checklist->showOnCentral(false);
-        $checklist_todo = (string) ob_get_clean();
-
-        ob_start();
-        $Checklist->showOnCentral(true);
-        $checklist_done = (string) ob_get_clean();
-
-        TemplateRenderer::getInstance()->display('@resources/task_central.html.twig', [
-            'tasks_list'     => $tasks_list,
-            'checklist_todo' => $checklist_todo,
-            'checklist_done' => $checklist_done,
+        $iterator = $DB->request([
+            'SELECT'     => [
+                $self_table . '.id AS plugin_resources_tasks_id',
+                $self_table . '.name AS name_task',
+                $self_table . '.plugin_resources_tasktypes_id AS plugin_resources_tasktypes_id',
+                $self_table . '.is_deleted AS is_deleted',
+                $self_table . '.users_id AS users_id_task',
+                'glpi_plugin_resources_resources.id AS id',
+                'glpi_plugin_resources_resources.name AS name',
+                'glpi_plugin_resources_resources.firstname AS firstname',
+                'glpi_plugin_resources_resources.entities_id',
+                'glpi_plugin_resources_resources.users_id AS users_id',
+            ],
+            'FROM'       => $self_table,
+            'INNER JOIN' => [
+                'glpi_plugin_resources_resources' => [
+                    'ON' => [
+                        $self_table                       => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE'      => $where,
+            'ORDER'      => 'glpi_plugin_resources_resources.name DESC',
+            'LIMIT'      => 10,
         ]);
+        // Raw values: central_datatable.html.twig builds the link / list cells and escapes them.
+        $entries = [];
+        foreach ($iterator as $data) {
+            $task_label = (string) $data["name_task"];
+            $resource_label = $data["name"] . " " . $data["firstname"];
+            if ($_SESSION["glpiis_ids_visible"]) {
+                $task_label .= ' (' . $data["plugin_resources_tasks_id"] . ')';
+                $resource_label .= ' (' . $data["id"] . ')';
+            }
+
+            $plans = $dbu->getAllDataFromTable(
+                "glpi_plugin_resources_taskplannings",
+                ["plugin_resources_tasks_id" => $data['plugin_resources_tasks_id']],
+            );
+            $planning = [];
+            foreach ($plans as $plan) {
+                $planning[] = Html::convDateTime($plan["begin"]) . "\u{00A0}->\u{00A0}"
+                    . Html::convDateTime($plan["end"]);
+            }
+            if ($planning === []) {
+                $planning[] = __('None');
+            }
+
+            $entries[] = [
+                'row_class' => $data["is_deleted"] == '1' ? 'tab_bg_1_2' : 'tab_bg_1',
+                'name'      => [
+                    'url'   => PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php?id='
+                        . (int) $data["plugin_resources_tasks_id"],
+                    'label' => $task_label,
+                ],
+                'entity'    => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                'tasktype'  => Dropdown::getDropdownName(
+                    "glpi_plugin_resources_tasktypes",
+                    $data["plugin_resources_tasktypes_id"],
+                ),
+                'planning'  => $planning,
+                'resource'  => [
+                    'url'   => PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id=' . (int) $data["id"],
+                    'label' => $resource_label,
+                ],
+                'manager'   => $dbu->getUserName($data["users_id"]),
+                'user'      => $dbu->getUserName($data["users_id_task"]),
+            ];
+        }
+
+        if (count($entries) === 0) {
+            return null;
+        }
+
+        $columns = ['name' => __('Name')];
+        if (Session::isMultiEntitiesMode()) {
+            $columns['entity'] = __('Entity');
+        }
+        $columns['tasktype'] = TaskType::getTypeName(2);
+        $columns['planning'] = __('Planning');
+        $columns['resource'] = Resource::getTypeName(1);
+        $columns['manager']  = __('Resource manager', 'resources');
+        $columns['user']     = __('User');
+
+        return [
+            'super_header' => Resource::getTypeName(2) . ': ' . __('Tasks in progress', 'resources'),
+            'super_link'   => [
+                'url'   => PLUGIN_RESOURCES_WEBDIR
+                    . '/front/task.php?contains%5B0%5D=0&field%5B0%5D=9&sort=1&is_deleted=0&start=0',
+                'label' => __('All'),
+            ],
+            'columns'      => $columns,
+            'cell_kinds'   => [
+                'name'     => 'link',
+                'planning' => 'lines',
+                'resource' => 'link',
+            ],
+            'entries'      => $entries,
+        ];
     }
 
     // Cron action

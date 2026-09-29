@@ -371,9 +371,7 @@ class Menu extends CommonGLPI
 
     public static function showMenuBlock($title, $icon, $actions)
     {
-        ob_start();
-        Wizard::WizardHeader($title, "", $icon);
-        $wizard_header = (string) ob_get_clean();
+        $wizard_header = Wizard::getHeaderParams($title, "", $icon);
 
         TemplateRenderer::getInstance()->display('@resources/menu_block.html.twig', [
             'wizard_header' => $wizard_header,

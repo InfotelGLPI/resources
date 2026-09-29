@@ -280,22 +280,12 @@ class Task_Item extends CommonDBTM
                     $itemname = $dbu->getUserName($itemID);
                 }
 
-                $delete_form = '';
-                if ($canedit) {
-                    $delete_form = Html::getSimpleForm(
-                        PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php',
-                        'deletetaskitem',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $data["items_id"]],
-                    );
-                }
-
                 $rows[] = [
                     'type'        => $item->getTypeName(),
-                    'link'        => '<a href="' . htmlescape($type::getFormURLWithID($itemID)) . '">'
-                        . htmlescape($itemname . $ID) . '</a>',
+                    'url'         => $type::getFormURLWithID($itemID),
+                    'name'        => $itemname . $ID,
                     'is_deleted'  => isset($data['is_deleted']) && $data['is_deleted'] == '1',
-                    'delete_form' => $delete_form,
+                    'delete_id'   => $data["items_id"],
                 ];
             }
         }
@@ -311,6 +301,7 @@ class Task_Item extends CommonDBTM
 
         TemplateRenderer::getInstance()->display('@resources/task_item_form.html.twig', [
             'form_action'    => "./task.form.php",
+            'delete_action'  => PLUGIN_RESOURCES_WEBDIR . '/front/task.form.php',
             'can_edit'       => $canedit,
             'rows'           => $rows,
             'tasks_id'       => $instID,

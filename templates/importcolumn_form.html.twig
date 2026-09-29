@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {# Standalone form AJAX-loaded into the columns tab: front/importcolumn.form.php
  # dispatches on `add` / `update`, so the generic form buttons cannot be used. #}
 <form name="form" method="post" action="{{ form_action }}">

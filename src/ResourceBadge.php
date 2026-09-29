@@ -232,9 +232,7 @@ class ResourceBadge extends CommonDBTM
      */
     public function showMenu()
     {
-        ob_start();
-        Wizard::WizardHeader(_n('Badge management', 'Badges management', 2, 'resources'));
-        $wizard_header = (string) ob_get_clean();
+        $wizard_header = Wizard::getHeaderParams(_n('Badge management', 'Badges management', 2, 'resources'));
 
         $tiles = [];
         if (Session::haveright('plugin_resources', UPDATE)) {
@@ -267,10 +265,8 @@ class ResourceBadge extends CommonDBTM
      */
     public function showWizardForm()
     {
-        // Capture the wizard header and the resource dropdown as HTML fragments.
-        ob_start();
-        Wizard::WizardHeader(__('Badge restitution', 'resources'));
-        $wizard_header = ob_get_clean();
+        // Capture the resource dropdown as an HTML fragment.
+        $wizard_header = Wizard::getHeaderParams(__('Badge restitution', 'resources'));
 
         ob_start();
         // Picking a resource lists its badges and clears the restitution button, which

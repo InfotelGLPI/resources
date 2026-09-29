@@ -27,7 +27,7 @@
 
 {# Shared wizard landing menu: the caller passes an already right-filtered list of
  # tiles, so an empty list simply renders the bare table. #}
-{{ wizard_header|raw }}
+{{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
 
 <div class="center">
     <table class="tab_menu" width="30%" cellpadding="5">

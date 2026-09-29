@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {# Standalone form shown on the ticket side: front/linkad.form.php dispatches on
  # createAD / updateAD / disableAD, so the generic form buttons cannot be used.
  # The read-only cells (department, company, contract) carry a hidden twin so the

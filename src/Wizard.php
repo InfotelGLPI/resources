@@ -55,18 +55,35 @@ class Wizard extends CommonDBTM
      */
     public static function WizardHeader($title = "", $img = "", $icon = "", $display = true)
     {
-        $render = TemplateRenderer::getInstance()->render('@resources/wizard_header.html.twig', [
-            'title'        => $title,
-            'img'          => $img,
-            'icon'         => $icon,
-            'default_icon' => Resource::getIcon(),
-        ]);
+        $render = TemplateRenderer::getInstance()->render(
+            '@resources/wizard_header.html.twig',
+            self::getHeaderParams($title, $img, $icon),
+        );
 
         if (!$display) {
             return $render;
         }
 
         echo $render;
+    }
+
+    /**
+     * Parameters of wizard_header.html.twig, for templates that include it themselves.
+     *
+     * @param string $title Defaults to the plugin name
+     * @param string $img   Picture, takes precedence over the icon
+     * @param string $icon  Icon class, defaults to the resource one
+     *
+     * @return array<string, string>
+     */
+    public static function getHeaderParams($title = "", $img = "", $icon = ""): array
+    {
+        return [
+            'title'        => (string) $title,
+            'img'          => (string) $img,
+            'icon'         => (string) $icon,
+            'default_icon' => Resource::getIcon(),
+        ];
     }
 
     /**

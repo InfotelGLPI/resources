@@ -29,6 +29,7 @@
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="center">
         {% if extra_html is defined and extra_html is not empty %}
+            {# Modal container built by Ajax::createModalWindow(), a core widget. #}
             {{ extra_html|raw }}
         {% endif %}
         <table class="tab_cadre_fixe">
@@ -37,10 +38,18 @@
             </tr>
             {% for row in rows %}
                 <tr class="tab_bg_1">
-                    <td>{{ row.label|raw }}</td>
+                    <td>
+                        {{ row.label }}
+                        {% if row.modal_link is defined %}
+                            <br>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="{{ row.modal_link.target }}"
+                               title="{{ row.modal_link.label }}">{{ row.modal_link.label }}</a>
+                        {% endif %}
+                    </td>
+                    {# Form widget rendered by a core helper (Dropdown, Html::textarea...). #}
                     <td>{{ row.widget|raw }}</td>
                     {% if row.warning is defined and row.warning is not empty %}
-                        <td><span class="alert alert-warning">{{ row.warning|raw }}</span></td>
+                        <td><span class="alert alert-warning">{{ row.warning }}</span></td>
                     {% endif %}
                 </tr>
             {% endfor %}

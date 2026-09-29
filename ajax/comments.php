@@ -49,7 +49,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
         case "glpi_plugin_resources_resources":
             if ($_REQUEST['value'] == 0) {
                 $tmpname['link'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
-                $tmpname['comment'] = "";
+                $tmpname['comment_data'] = null;
             } else {
                 // Anti-IDOR: getResourceName() builds a WHERE on the resource id with no
                 // entity restriction, so the global plugin_resources READ alone would let a
@@ -77,7 +77,7 @@ if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
             }
 
             TemplateRenderer::getInstance()->display('@resources/resource_comment_ajax.html.twig', [
-                'comment' => (string) $tmpname["comment"],
+                'comment_data' => $tmpname["comment_data"] ?? null,
                 'link_script' => $link_script,
             ]);
             break;

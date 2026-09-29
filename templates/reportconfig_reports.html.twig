@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {% if show_form %}
     <form method="post" name="form_reports{{ rand }}" id="form_reports{{ rand }}" action="./reportconfig.form.php">
         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
@@ -64,8 +68,8 @@
                         </tr>
                         <tr class="tab_bg_1 center">
                             <td colspan="2" class="right">
-                                {{ report.id_hidden|raw }}
-                                {{ report.resource_hidden|raw }}
+                                <input type="hidden" name="id" value="{{ report.id }}">
+                                <input type="hidden" name="plugin_resources_resources_id" value="{{ report.resources_id }}">
                                 <button type="submit" name="delete" class="btn btn-primary">
                                     <i class="ti ti-trash"></i>
                                     {{ _x('button', 'Delete permanently') }}

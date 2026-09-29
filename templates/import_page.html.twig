@@ -25,8 +25,9 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Page shell shared by the verification and import screens: the head and the list
- # are rendered upstream, hence |raw. #}
+{# Page shell shared by the verification and import screens. `content` is the output of
+ # showHead() and of the list methods, all rendered by plugin templates (autoescaped) or
+ # core widgets, captured as one block: hence |raw. #}
 {% if show_loader %}
     <div id="ajax_loader" class="ajax_loader hidden"></div>
 {% endif %}

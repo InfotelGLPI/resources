@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {# Shared by the Actionprofile and Contracttypeprofile blocks of the Profile tab:
  # a standalone form holding a single multi-select plus its save button. Each caller
  # provides its own form action and submit name, which its front controller

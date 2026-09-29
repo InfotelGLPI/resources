@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 <form method="post" action="{{ form_action }}">
     <div class="center">
         <table class="tab_cadre_fixe">
@@ -43,11 +47,31 @@
             {% for row in rows %}
                 <tr class="tab_bg_1">
                     <td class="left">{{ row.name }}</td>
-                    {# Already escaped in PHP (htmlescape then nl2br). #}
-                    <td class="left">{{ row.comments|raw }}</td>
-                    <td class="center">{{ row.comment_cell|raw }}</td>
+                    <td class="left">{{ row.comments|nl2br }}</td>
+                    <td class="center">
+                        {% if row.comment is not empty %}
+                            {{ include('@resources/choice_comment_form.html.twig', {
+                                'items_id': row.id,
+                                'rand': row.rand,
+                                'comment': row.comment,
+                                'ajax_url': comment_ajax_url,
+                                'raw_comment': row.comment|url_encode,
+                            }) }}
+                        {% else %}
+                            {{ include('@resources/choice_add_comment_form.html.twig', {
+                                'items_id': row.id,
+                                'rand': row.rand,
+                                'ajax_url': add_comment_ajax_url,
+                            }) }}
+                        {% endif %}
+                    </td>
                     {% if canedit %}
-                        <td class="center">{{ row.delete_form|raw }}</td>
+                        <td class="center">
+                            <button type="submit" form="deleteneed{{ row.id }}{{ row.rand }}" class="btn btn-sm btn-ghost-danger"
+                                    title="{{ _x('button', 'Delete permanently') }}">
+                                {{ _x('button', 'Delete permanently') }}
+                            </button>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}
@@ -83,3 +107,14 @@
     </div>
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 </form>
+
+{# Delete forms live outside the main form (no nested <form>): each button above targets one. #}
+{% if canedit %}
+    {% for row in rows %}
+        <form id="deleteneed{{ row.id }}{{ row.rand }}" method="post" action="{{ delete_action }}" class="d-none">
+            <input type="hidden" name="deletehelpdeskitem" value="1">
+            <input type="hidden" name="id" value="{{ row.id }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        </form>
+    {% endfor %}
+{% endif %}

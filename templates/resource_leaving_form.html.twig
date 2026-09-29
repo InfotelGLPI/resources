@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {# Standalone form: front/resource.form.php dispatches on validOrderLeaving, so the
  # generic form buttons component cannot be used here. The submit is only offered
  # while no order has been given yet. #}

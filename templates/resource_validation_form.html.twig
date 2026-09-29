@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {% if not validated %}
     {# Not a form: the button opens the confirmation modal below, whose confirm button is
      # handled by public/scripts/validation.js (POST to ajax/validinformation.php). #}

@@ -26,7 +26,7 @@
  #}
 
 {# Standalone form: front/task.form.php dispatches on addtaskitem. Each row's delete
- # affordance is a self-contained form built by Html::getSimpleForm(). #}
+ # button targets its own form, declared after the main one (no nested <form>). #}
 <form method="post" name="addtaskitem" action="{{ form_action }}">
     <table class="tab_cadre_fixe">
         <tr>
@@ -43,9 +43,16 @@
         {% for row in rows %}
             <tr class="tab_bg_1">
                 <td class="center">{{ row.type }}</td>
-                <td class="center{{ row.is_deleted ? ' tab_bg_2_2' : '' }}">{{ row.link|raw }}</td>
+                <td class="center{{ row.is_deleted ? ' tab_bg_2_2' : '' }}">
+                    <a href="{{ row.url }}">{{ row.name }}</a>
+                </td>
                 {% if can_edit %}
-                    <td class="center">{{ row.delete_form|raw }}</td>
+                    <td class="center">
+                        <button type="submit" form="deletetaskitem{{ loop.index }}" class="btn btn-sm btn-ghost-danger"
+                                title="{{ _x('button', 'Delete permanently') }}">
+                            {{ _x('button', 'Delete permanently') }}
+                        </button>
+                    </td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -54,9 +61,11 @@
             <tr class="tab_bg_1">
                 <td colspan="2" class="right">
                     <input type="hidden" name="plugin_resources_tasks_id" value="{{ tasks_id }}">
+                    {# Dropdown rendered by the core helper (Resource_Item::dropdownItems). #}
                     {{ items_dropdown|raw }}
                 </td>
                 <td class="center tab_bg_2">
+                    {# Button rendered by the core helper, attributes escaped there. #}
                     {{ call('Html::submit', [_x('button', 'Add'), {
                         'name': 'addtaskitem',
                         'class': 'btn btn-primary',
@@ -68,4 +77,14 @@
 
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 </form>
+
+{% if can_edit %}
+    {% for row in rows %}
+        <form id="deletetaskitem{{ loop.index }}" method="post" action="{{ delete_action }}" class="d-none">
+            <input type="hidden" name="deletetaskitem" value="1">
+            <input type="hidden" name="id" value="{{ row.delete_id }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+        </form>
+    {% endfor %}
+{% endif %}
 <br>

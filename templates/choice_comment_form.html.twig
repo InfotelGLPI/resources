@@ -25,7 +25,7 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Already escaped in PHP (htmlescape then nl2br), so the <br> tags survive. #}
+
 {# A click swaps the comment for a textarea holding it (public/scripts/fragments.js). #}
 <div id="commentneed{{ items_id }}{{ rand }}" class="center"
      data-resources-hide="#commentneed{{ items_id }}{{ rand }}"
@@ -33,7 +33,7 @@
      data-resources-load-url="{{ ajax_url }}"
      data-resources-load-target="viewcommentneed{{ items_id }}{{ rand }}"
      data-resources-load-params="{{ {'name': 'commentneed' ~ items_id, 'data': raw_comment}|json_encode }}">
-    {{ comment|raw }}
+    {{ comment|nl2br }}
 </div>
 
 <div id="viewcommentneed{{ items_id }}{{ rand }}"></div>

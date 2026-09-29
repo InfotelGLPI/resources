@@ -25,15 +25,14 @@
  # --------------------------------------------------------------------------
  #}
 
-{# `label` is built server-side: either a date range (which carries &nbsp; entities)
- # or an already-escaped caption, hence |raw. #}
+{# `label` is either a date range or a caption, escaped on output. #}
 {% if can_create %}
     {# A click swaps the caption for the planning form (public/scripts/fragments.js). #}
     <div id="plan" data-resources-hide="#plan" data-resources-load-url="{{ load_url }}"
          data-resources-load-target="viewplan" data-resources-load-params="{{ load_params|json_encode }}">
-        <span class="showplan">{{ label|raw }}</span>
+        <span class="showplan">{{ label }}</span>
     </div>
     <div id="viewplan"></div>
 {% else %}
-    {{ label|raw }}
+    {{ label }}
 {% endif %}

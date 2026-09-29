@@ -166,6 +166,7 @@
 
             {% if hidden.plugin_resources_services_id is not defined %}
                 {% set service_field %}
+                    {# Dropdown built by the core helpers (Service::dropdownFromDepart or UserCategory::dropdown), refreshed by organisation_script. #}
                     <div id="show_services">{{ service_dropdown|raw }}</div>
                 {% endset %}
                 {{ fields.htmlField('plugin_resources_services_id', service_field,
@@ -177,6 +178,7 @@
 
             {% if hidden.plugin_resources_roles_id is not defined %}
                 {% set role_field %}
+                    {# Dropdown built by the core helpers (Role::dropdownFromService), refreshed by organisation_script. #}
                     <div id="show_roles">{{ role_dropdown|raw }}</div>
                 {% endset %}
                 {{ fields.htmlField('plugin_resources_roles_id', role_field,
@@ -382,5 +384,6 @@
     </div>
 
     {{ fields.hiddenField('withtemplate', tpl) }}
+    {# Script emitted by the core Ajax::updateItemOnSelectEvent() helper, which encodes its parameters. #}
     {{ organisation_script|raw }}
 {% endblock %}

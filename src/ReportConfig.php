@@ -363,11 +363,8 @@ class ReportConfig extends CommonDBTM
                     'send_report_dropdown'   => $send_report_dropdown,
                     'send_transfer_dropdown' => $send_transfer_dropdown,
                     'send_other_dropdown'    => $send_other_dropdown,
-                    'id_hidden'              => Html::hidden('id', ['value' => $data["id"]]),
-                    'resource_hidden'        => Html::hidden(
-                        'plugin_resources_resources_id',
-                        ['value' => $ID],
-                    ),
+                    'id'                     => $data["id"],
+                    'resources_id'           => $ID,
                 ];
             }
 

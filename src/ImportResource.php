@@ -686,13 +686,6 @@ class ImportResource extends CommonDBTM
      */
     public function showHead($params)
     {
-        // Capture GLPI widgets that echo directly, so they can be injected as |raw.
-        $capture = static function (callable $renderer): string {
-            ob_start();
-            $renderer();
-            return (string) ob_get_clean();
-        };
-
         // FIRST LINE HEADER
         $colspan  = 21;
         $title    = '';
@@ -715,16 +708,16 @@ class ImportResource extends CommonDBTM
                 break;
         }
 
-        // SECOND LINE HEADER
+        // SECOND LINE HEADER: each cell is a {template, params} pair included by import_head.
         $selector_cells = [];
         switch ($params['type']) {
             case self::VERIFY_FILE:
             case self::VERIFY_GLPI:
-                $selector_cells[] = $capture(fn() => self::showFileImporter());
-                $selector_cells[] = $capture(fn() => self::showFileSelector($params));
+                $selector_cells[] = self::getFileImporterCell();
+                $selector_cells[] = self::getFileSelectorCell($params);
                 break;
             case self::UPDATE_RESOURCES:
-                $selector_cells[] = $capture(fn() => self::showImportSelector($params));
+                $selector_cells[] = self::getImportSelectorCell($params);
                 break;
         }
 
@@ -853,6 +846,23 @@ class ImportResource extends CommonDBTM
      */
     public function showOne($importResourceId, $type, $resourceID = null, $borderColor = false)
     {
+        TemplateRenderer::getInstance()->display(
+            '@resources/import_one_row.html.twig',
+            $this->getOneRowParams($importResourceId, $type, $resourceID, $borderColor),
+        );
+    }
+
+    /**
+     * Build the parameters of import_one_row.html.twig for an import line
+     *
+     * @param $importResourceId
+     * @param $type
+     * @param $resourceID
+     *
+     * @return array<string, mixed>
+     */
+    private function getOneRowParams($importResourceId, $type, $resourceID = null, $borderColor = false): array
+    {
         /*
        The date need to be send to form are :
           - ResourceID
@@ -878,12 +888,9 @@ class ImportResource extends CommonDBTM
             return (string) ob_get_clean();
         };
 
-        if ($hasResource) {
-            $link = Toolbox::getItemTypeFormURL(Resource::class) . "?id=" . (int) $resourceID;
-            $resource_link = '<a href="' . htmlescape($link) . '">' . htmlescape((string) $resourceID) . '</a>';
-        } else {
-            $resource_link = htmlescape(__('New resource', 'resources'));
-        }
+        $resource_url = $hasResource
+            ? Toolbox::getItemTypeFormURL(Resource::class) . "?id=" . (int) $resourceID
+            : '';
 
         $numberOfOthersValues = 0;
         foreach ($datas as $data) {
@@ -904,7 +911,7 @@ class ImportResource extends CommonDBTM
             );
 
             $cell = [
-                'hidden'  => '',
+                'hidden'  => null,
                 'has_old' => (bool) $oldValues,
                 'old'     => '',
                 'widget'  => '',
@@ -913,15 +920,15 @@ class ImportResource extends CommonDBTM
             switch ($data['resource_column']) {
                 case 0:
                 case 1:
-                    $cell['hidden'] = Html::hidden($hValue, ['value' => $data['value']]);
-                    $cell['old'] = htmlescape((string) $Resource->getFieldByDataNameID($data['resource_column']));
-                    $cell['widget'] = htmlescape((string) $data['value']);
+                    $cell['hidden'] = ['name' => $hValue, 'value' => $data['value']];
+                    $cell['old'] = (string) $Resource->getFieldByDataNameID($data['resource_column']);
+                    $cell['text'] = (string) $data['value'];
                     break;
                 case 2:
                     if ($oldValues) {
                         $ContractType = new ContractType();
                         $ContractType->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape($ContractType->getName());
+                        $cell['old'] = $ContractType->getName();
                     }
                     if ($data['value'] != -1) {
                         $cell['widget'] = $capture(fn() => Dropdown::show(ContractType::class, [
@@ -936,7 +943,7 @@ class ImportResource extends CommonDBTM
                     if ($oldValues) {
                         $user = new User();
                         $user->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape($user->getName());
+                        $cell['old'] = $user->getName();
                     }
                     $cell['widget'] = $capture(fn() => User::dropdown([
                         'name' => $hValue,
@@ -950,7 +957,7 @@ class ImportResource extends CommonDBTM
                     if ($oldValues) {
                         $oldLocation = new Location();
                         $oldLocation->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape((string) $oldLocation->getField('completename'));
+                        $cell['old'] = (string) $oldLocation->getField('completename');
                     }
                     $cell['widget'] = $capture(fn() => Dropdown::show(Location::class, [
                         'name' => $hValue,
@@ -964,7 +971,7 @@ class ImportResource extends CommonDBTM
                     if ($oldValues) {
                         $user = new User();
                         $user->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape($user->getName());
+                        $cell['old'] = $user->getName();
                     }
                     $cell['widget'] = $this->captureManagerDropdown(
                         $data['resource_column'] == 5 ? 'resource_manager' : 'sales_manager',
@@ -976,7 +983,7 @@ class ImportResource extends CommonDBTM
                     if ($oldValues) {
                         $Department = new Department();
                         $Department->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape($Department->getName());
+                        $cell['old'] = $Department->getName();
                     }
                     $cell['widget'] = $capture(fn() => Dropdown::show(Department::class, [
                         'name' => $hValue,
@@ -987,34 +994,27 @@ class ImportResource extends CommonDBTM
                     break;
                 case 7:
                 case 8:
-                    $cell['old'] = htmlescape((string) $Resource->getFieldByDataNameID($data['resource_column']));
+                    $cell['old'] = (string) $Resource->getFieldByDataNameID($data['resource_column']);
                     $cell['widget'] = $capture(fn() => Html::showDateField($hValue, ['value' => $data['value']]));
                     break;
                 case 10:
                     // "Other" values are shown as their own one-row comparison table.
-                    $cell['hidden'] = Html::hidden($hValue, ['value' => $data['value']]);
+                    $cell['hidden'] = ['name' => $hValue, 'value' => $data['value']];
                     $cell['has_old'] = false;
 
-                    $previous = '';
-                    if ($oldValues) {
-                        $previous = htmlescape(
-                            (string) $Resource->getResourceImportValueByName($resourceID, $data['name']),
-                        );
-                    }
-                    $cell['widget'] = TemplateRenderer::getInstance()->render(
-                        '@resources/import_other_value.html.twig',
-                        [
-                            'name'     => $data['name'],
-                            'previous' => $previous,
-                            'current'  => $data['value'],
-                        ],
-                    );
+                    $cell['other'] = [
+                        'name'     => $data['name'],
+                        'previous' => $oldValues
+                            ? (string) $Resource->getResourceImportValueByName($resourceID, $data['name'])
+                            : '',
+                        'current'  => $data['value'],
+                    ];
                     break;
                 case 11:
                     if ($oldValues) {
                         $Team = new Team();
                         $Team->getFromDB($Resource->getFieldByDataNameID($data['resource_column']));
-                        $cell['old'] = htmlescape($Team->getName());
+                        $cell['old'] = $Team->getName();
                     }
                     $cell['widget'] = $capture(fn() => Dropdown::show(Team::class, [
                         'name' => $hValue,
@@ -1028,16 +1028,17 @@ class ImportResource extends CommonDBTM
             $cells[] = $cell;
         }
 
-        TemplateRenderer::getInstance()->display('@resources/import_one_row.html.twig', [
+        return [
             'border_color'  => is_null($borderColor) ? '' : $borderColor,
             'checkbox'      => $capture(static fn() => Html::showCheckbox(
                 ["name" => "select[" . $importResourceId . "]"],
             )),
-            'resource_link' => $resource_link,
+            'resource_id'   => $hasResource ? (int) $resourceID : 0,
+            'resource_url'  => $resource_url,
             'cells'         => $cells,
             'old_style'     => 'display:block;border-bottom:solid 1px red',
             'new_style'     => 'display:block;border-top:solid 1px green;margin-top:1px;',
-        ]);
+        ];
     }
 
     /**
@@ -1201,24 +1202,31 @@ class ImportResource extends CommonDBTM
         ]);
     }
 
-    private function showFileImporter()
+    /**
+     * @return array{template: string, params: array<string, mixed>}
+     */
+    private function getFileImporterCell(): array
     {
-        $file_widget = '';
         ob_start();
         Html::file();
         $file_widget = (string) ob_get_clean();
 
-        TemplateRenderer::getInstance()->display('@resources/import_file_upload.html.twig', [
-            'form_action'  => self::getFormURL(),
-            'file_widget'  => $file_widget,
-            'label_import' => __('Import file', 'resources'),
-        ]);
+        return [
+            'template' => '@resources/import_file_upload.html.twig',
+            'params'   => [
+                'form_action'  => self::getFormURL(),
+                'file_widget'  => $file_widget,
+                'label_import' => __('Import file', 'resources'),
+            ],
+        ];
     }
 
     /**
      * @param $params
+     *
+     * @return array{template: string, params: array<string, mixed>}
      */
-    private function showFileSelector($params)
+    private function getFileSelectorCell($params): array
     {
         $locationOfFiles = $params['location'];
         $type = $params['type'];
@@ -1237,19 +1245,22 @@ class ImportResource extends CommonDBTM
         self::dropdownFileInFolder($dropdownParams);
         $dropdown = (string) ob_get_clean();
 
-        TemplateRenderer::getInstance()->display('@resources/import_selector_form.html.twig', [
-            'form_action' => $action,
-            'dropdown'    => $dropdown,
-            'buttons'     => [
-                ['name' => 'verify', 'label' => __('Verify file', 'resources')],
-                [
-                    'name'    => 'delete_file',
-                    'label'   => __('Delete file', 'resources'),
-                    'class'   => 'btn-outline-danger',
-                    'confirm' => __('Confirm the deletion of this file?', 'resources'),
+        return [
+            'template' => '@resources/import_selector_form.html.twig',
+            'params'   => [
+                'form_action' => $action,
+                'dropdown'    => $dropdown,
+                'buttons'     => [
+                    ['name' => 'verify', 'label' => __('Verify file', 'resources')],
+                    [
+                        'name'    => 'delete_file',
+                        'label'   => __('Delete file', 'resources'),
+                        'class'   => 'btn-outline-danger',
+                        'confirm' => __('Confirm the deletion of this file?', 'resources'),
+                    ],
                 ],
             ],
-        ]);
+        ];
     }
 
     /**
@@ -1309,34 +1320,44 @@ class ImportResource extends CommonDBTM
     /**
      * @param $params
      */
-    private function showImportSelector($params)
+    /**
+     * @param $params
+     *
+     * @return array{template: string, params: array<string, mixed>}
+     */
+    private function getImportSelectorCell($params): array
     {
-
         $type = $params['type'];
         $imports = $params['imports'];
 
         if (!count($imports)) {
-            $title = __("No imports configured", "resources");
-            $linkText = __("Configure a new import", "resources");
-            $link = PLUGIN_RESOURCES_WEBDIR . "/front/import.php";
+            return [
+                'template' => '@resources/import_error_header.html.twig',
+                'params'   => [
+                    'title'     => __("No imports configured", "resources"),
+                    'link_text' => __("Configure a new import", "resources"),
+                    'url'       => PLUGIN_RESOURCES_WEBDIR . "/front/import.php",
+                ],
+            ];
+        }
 
-            self::showErrorHeader($title, $linkText, $link);
-        } else {
-            $action = ImportResource::getIndexUrl();
-            $action .= "?type=" . $type;
+        $action = ImportResource::getIndexUrl();
+        $action .= "?type=" . $type;
 
-            ob_start();
-            self::dropdownImports($params);
-            $dropdown = (string) ob_get_clean();
+        ob_start();
+        self::dropdownImports($params);
+        $dropdown = (string) ob_get_clean();
 
-            TemplateRenderer::getInstance()->display('@resources/import_selector_form.html.twig', [
+        return [
+            'template' => '@resources/import_selector_form.html.twig',
+            'params'   => [
                 'form_action' => $action,
                 'dropdown'    => $dropdown,
                 'buttons'     => [
                     ['name' => 'select', 'label' => __('Choose', 'resources')],
                 ],
-            ]);
-        }
+            ],
+        ];
     }
 
     /**
@@ -1472,12 +1493,9 @@ class ImportResource extends CommonDBTM
             foreach ($allDatas as $data) {
                 $different = !$resourceID
                     || $Resource->isDifferentFromImportResourceData($resourceID, $data);
-                $cells[] = [
-                    'class'   => $different ? 'text-danger' : '',
-                    'content' => self::formatImportValue($data),
-                ];
+                $cells[] = ['class' => $different ? 'text-danger' : ''] + self::formatImportValue($data);
             }
-            $cells[] = ['content' => htmlescape((string) self::getStatusTitle($status))];
+            $cells[] = ['text' => (string) self::getStatusTitle($status)];
 
             $entries[] = ['cells' => $cells];
         }
@@ -1510,10 +1528,13 @@ class ImportResource extends CommonDBTM
      * Render one imported value: a link when it references a GLPI item, plain text
      * otherwise. The returned string is HTML-escaped and safe to inject as |raw.
      */
-    private static function formatImportValue(array $data): string
+    /**
+     * @return array{text: string, url?: string} Cell of a verification list
+     */
+    private static function formatImportValue(array $data): array
     {
         if ($data['value'] == -1) {
-            return '';
+            return ['text' => ''];
         }
 
         $dataType = $data['resource_column'] > count(Resource::getDataTypes())
@@ -1552,10 +1573,10 @@ class ImportResource extends CommonDBTM
                 $url   = ContractType::getFormURLWithID($data['value']);
                 break;
             default:
-                return htmlescape((string) $data['value']);
+                return ['text' => (string) $data['value']];
         }
 
-        return '<a href="' . htmlescape($url) . '">' . htmlescape((string) $label) . '</a>';
+        return ['text' => (string) $label, 'url' => $url];
     }
 
     /**
@@ -2231,13 +2252,13 @@ class ImportResource extends CommonDBTM
                     [
                         // Deleted resources are flagged with a red left border.
                         'style'   => $resource['is_deleted'] ? 'border-left:solid 5px red;' : '',
-                        'content' => '<a href="' . htmlescape($link) . '">'
-                            . htmlescape((string) $resource['id']) . '</a>',
+                        'text'    => (string) $resource['id'],
+                        'url'     => $link,
                     ],
-                    ['content' => htmlescape((string) $resource['name'])],
-                    ['content' => htmlescape((string) $resource['firstname'])],
-                    ['content' => htmlescape($identification)],
-                    ['content' => $tooltip],
+                    ['text' => (string) $resource['name']],
+                    ['text' => (string) $resource['firstname']],
+                    ['text' => $identification],
+                    ['tooltip' => $tooltip],
                 ],
             ];
         }
@@ -2469,13 +2490,9 @@ class ImportResource extends CommonDBTM
 
 
         if (!is_array($importResources) || !count($importResources)) {
-            ob_start();
-            self::showErrorHeader(__('No Imports', 'resources'));
-            $error_header = (string) ob_get_clean();
-
             TemplateRenderer::getInstance()->display('@resources/import_list.html.twig', [
-                'entries'      => [],
-                'error_header' => $error_header,
+                'entries'     => [],
+                'error_title' => __('No Imports', 'resources'),
             ]);
             return;
         }
@@ -2505,10 +2522,6 @@ class ImportResource extends CommonDBTM
         );
         $pager = (string) ob_get_clean();
 
-        ob_start();
-        self::showImportListButtons();
-        $buttons = (string) ob_get_clean();
-
         $header_columns = $this->getListHeaderColumns([
             'type'   => $params['type'],
             'import' => $pluginResourcesImportDBTM->fields,
@@ -2537,17 +2550,13 @@ class ImportResource extends CommonDBTM
                 'value' => $resourceID,
             ];
 
-            // showOne() echoes the row cells, so capture them for the template.
-            ob_start();
-            $this->showOne($importResource['id'], $params['type'], $resourceID, $borderColor);
-            $entries[] = ['cells' => (string) ob_get_clean()];
+            $entries[] = $this->getOneRowParams($importResource['id'], $params['type'], $resourceID, $borderColor);
         }
 
         TemplateRenderer::getInstance()->display('@resources/import_list.html.twig', [
             'form_action'   => $baseUrl . $parameters2,
             'pager'         => $pager,
             'legends'       => $legends,
-            'buttons'       => $buttons,
             'header_columns' => $header_columns,
             'hidden_inputs' => $hidden_inputs,
             'entries'       => $entries,
@@ -2647,10 +2656,6 @@ class ImportResource extends CommonDBTM
         return $imports;
     }
 
-    private function showImportListButtons()
-    {
-        TemplateRenderer::getInstance()->display('@resources/import_list_buttons.html.twig');
-    }
 
     public function setFileVerify($params)
     {

@@ -213,17 +213,17 @@ class TaskPlanning extends CommonDBTM
 
             if ($this->fields["begin"] && $this->fields["end"]) {
                 $label = Html::convDateTime($this->fields["begin"])
-                    . "&nbsp;-&gt;&nbsp;"
+                    . "\u{00A0}->\u{00A0}"
                     . Html::convDateTime($this->fields["end"]);
             } else {
-                $label = htmlescape(__('Plan this task'));
+                $label = __('Plan this task');
             }
         } else {
             $params = [
                 'form' => 'followups',
                 'entity' => $_SESSION["glpiactive_entity"],
             ];
-            $label = htmlescape($can_create ? __('Plan this task') : __('None'));
+            $label = $can_create ? __('Plan this task') : __('None');
         }
 
         TemplateRenderer::getInstance()->display('@resources/taskplanning_plan.html.twig', [
@@ -412,7 +412,10 @@ class TaskPlanning extends CommonDBTM
                 $output[$key]["name"] = $data["name"];
                 $output[$key]["type"] = $data["type"];
                 $output[$key]["resource"] = $data["resource"];
+                // Read by the core as-is (event description), hence escaped here.
                 $output[$key]["content"] = Html::resume_text($data["comment"], $CFG_GLPI["cut"]);
+                // Unescaped copy for planning_item.html.twig, which escapes on output.
+                $output[$key]["comment"] = self::resumeRawText((string) $data["comment"], (int) $CFG_GLPI["cut"]);
                 $output[$key]["itemtype"] = TaskPlanning::class;
                 $output[$key]["url"] = PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id=" . $data['id'];
                 ;
@@ -485,7 +488,7 @@ class TaskPlanning extends CommonDBTM
             'task_type_name'     => TaskType::getTypeName(1),
             'type'               => (string) ($val["type"] ?? ''),
             'end_date'           => !empty($val["end"]) ? Html::convdatetime($val["end"]) : '',
-            'content'            => (string) ($val["content"] ?? ''),
+            'content'            => (string) ($val["comment"] ?? ''),
         ]);
     }
 

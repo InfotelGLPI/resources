@@ -2718,56 +2718,53 @@ class Resource extends CommonDBTM
                     if ($link == 2) {
                         $user["name"] = $username;
                         $user["link"] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id=" . $ID;
-                        $user["comment"] = "";
 
-                        // "comment" is an HTML fragment consumed by Html::showToolTip(), which
-                        // inserts it verbatim. Since GLPI 10 values are stored raw in database,
-                        // so every one of them is escaped here, at the point of concatenation:
-                        // formatUserName(), the dropdown labels and registration_number all
-                        // return unfiltered text. The picture file name additionally goes
-                        // through urlencode() because it is a query string parameter.
-                        if (isset($data["picture"]) && !empty($data["picture"])) {
-                            $path = GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"];
-                            if (file_exists($path)) {
-                                $picture_url = htmlescape(
-                                    PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file="
-                                    . urlencode($data["picture"]),
-                                );
-                                $user["comment"] .= '<object data="' . $picture_url . '">
-                      <param name="src" value="' . $picture_url . '">
-                     </object><br> ';
-                            } else {
-                                $user["comment"] .= '<img src="'
-                                    . htmlescape(PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png") . '"><br>';
-                            }
-                        } else {
-                            $user["comment"] .= '<img src="'
-                                . htmlescape(PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png") . '"><br>';
+                        // Raw values: resource_comment.html.twig escapes them on output. The
+                        // picture file name goes through urlencode() because it is a query
+                        // string parameter.
+                        $comment_data = [
+                            'picture_url' => '',
+                            'nobody_url'  => PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png",
+                            'rows'        => [
+                                ['label' => __('Name'), 'value' => $username],
+                            ],
+                        ];
+                        if (!empty($data["picture"])
+                            && file_exists(GLPI_PLUGIN_DOC_DIR . "/resources/pictures/" . $data["picture"])) {
+                            $comment_data['picture_url'] = PLUGIN_RESOURCES_WEBDIR
+                                . "/front/picture.send.php?file=" . urlencode($data["picture"]);
                         }
 
-                        $user["comment"] .= htmlescape(__('Name')) . "&nbsp;: "
-                            . htmlescape($username) . "<br>";
-
                         if ($data["plugin_resources_ranks_id"] > 0) {
-                            $user["comment"] .= htmlescape(Rank::getTypeName(1)) . "&nbsp;: "
-                                . htmlescape(Dropdown::getDropdownName(
+                            $comment_data['rows'][] = [
+                                'label' => Rank::getTypeName(1),
+                                'value' => Dropdown::getDropdownName(
                                     "glpi_plugin_resources_ranks",
                                     $data["plugin_resources_ranks_id"],
-                                )) . "<br>";
+                                ),
+                            ];
                         }
 
                         if ($data["locations_id"] > 0) {
-                            $user["comment"] .= htmlescape(__('Location')) . "&nbsp;: "
-                                . htmlescape(Dropdown::getDropdownName(
-                                    "glpi_locations",
-                                    $data["locations_id"],
-                                )) . "<br>";
+                            $comment_data['rows'][] = [
+                                'label' => __('Location'),
+                                'value' => Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                            ];
                         }
 
                         if ($data["registration_number"] > 0) {
-                            $user["comment"] .= htmlescape(_x('user', 'Administrative number')) . "&nbsp;: "
-                                . htmlescape($data["registration_number"]) . "<br>";
+                            $comment_data['rows'][] = [
+                                'label' => _x('user', 'Administrative number'),
+                                'value' => (string) $data["registration_number"],
+                            ];
                         }
+
+                        $user["comment_data"] = $comment_data;
+                        // HTML fragment for Html::showToolTip(), which inserts it verbatim.
+                        $user["comment"] = TemplateRenderer::getInstance()->render(
+                            '@resources/resource_comment.html.twig',
+                            $comment_data,
+                        );
                     } else {
                         $user = $username;
                     }

@@ -39,8 +39,9 @@
     </tr>
 
     <tr>
+        {# `cell.template` is a fixed plugin template name chosen server side. #}
         {% for cell in selector_cells %}
-            <td>{{ cell|raw }}</td>
+            <td>{{ include(cell.template, cell.params, with_context = false) }}</td>
         {% endfor %}
     </tr>
 
@@ -67,6 +68,7 @@
                       action="{{ form_action }}" enctype="multipart/form-data">
                     <div class="center">
                         <input type="hidden" name="filename" value="{{ filename }}">
+                        {# Button rendered by the core helper, attributes escaped there. #}
                         {{ call('Html::submit', [validate_label, {
                             'name': 'verify-file',
                             'class': 'btn btn-primary',

@@ -41,9 +41,6 @@
     {% if end_date is not empty %}<strong>{{ __('End date') }}</strong> : {{ end_date }}<br>{% endif %}
     {% if type is not empty %}<strong>{{ task_type_name }}</strong> : {{ type }}<br>{% endif %}
     {% if content is not empty %}
-        {# Already escaped upstream: populatePlanning() stores the comment through
-         # Html::resume_text(), which truncates and calls htmlescape(). Printing it as an escaped
-         # value would encode the entities a second time. #}
-        <strong>{{ __('Description') }}</strong> : {{ content|raw }}
+        <strong>{{ __('Description') }}</strong> : {{ content }}
     {% endif %}
 </div>

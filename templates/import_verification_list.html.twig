@@ -27,12 +27,12 @@
 
 {# Shared by both verification reports (file vs GLPI, GLPI vs file).
  # `header_columns` describes the header row (ImportResource::getListHeaderColumns());
- # cell contents are escaped server-side because some of them are links or tooltips,
- # hence |raw. #}
+ # a cell is a text, optionally linked (`url`), or a tooltip rendered by the core. #}
 <form name="form" method="post" id="verify" action="{{ form_action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
     <div class="center">
+        {# Pager rendered by the core (Html::printAjaxPager). #}
         {{ pager|raw }}
 
         <table class="tab_cadre_fixe">
@@ -43,7 +43,14 @@
                     {% for cell in entry.cells %}
                         <td class="center {{ cell.class|default('') }}"
                             {%- if cell.style is defined and cell.style is not empty %} style="{{ cell.style }}"{% endif %}>
-                            {{- cell.content|raw -}}
+                            {%- if cell.tooltip is defined -%}
+                                {# Rendered by Html::showToolTipWithArray() from escaped values. #}
+                                {{- cell.tooltip|raw -}}
+                            {%- elseif cell.url is defined -%}
+                                <a href="{{ cell.url }}">{{ cell.text }}</a>
+                            {%- else -%}
+                                {{- cell.text -}}
+                            {%- endif -%}
                         </td>
                     {% endfor %}
                 </tr>

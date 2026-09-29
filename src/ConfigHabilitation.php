@@ -262,9 +262,7 @@ class ConfigHabilitation extends CommonDBTM
      */
     public function showMenu()
     {
-        ob_start();
-        Wizard::WizardHeader(self::getTypeName(2));
-        $wizard_header = (string) ob_get_clean();
+        $wizard_header = Wizard::getHeaderParams(self::getTypeName(2));
 
         $tiles = [];
         if (

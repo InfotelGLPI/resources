@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {# AJAX fragment injected into #plugin_resources_button_resting: the submit button
  # of the "declare the end of a non contract period" form. #}
 {{ call('Html::submit', [_x('button', 'Save'), {

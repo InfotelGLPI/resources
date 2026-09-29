@@ -25,8 +25,12 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 <div class="card container" style="min-width: 80%;">
-    {{ wizard_header|raw }}
+    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
     <div class="card-body">
         <form method="post" action="{{ form_action }}">
             <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">

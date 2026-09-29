@@ -25,9 +25,11 @@
  # --------------------------------------------------------------------------
  #}
 
-{# `form_open` / `form_close` are produced by Html::openMassiveActionsForm() +
- # showMassiveActions() (pending checklist) or by a plain <form> (finished one).
- # They are emitted as a matched pair by the caller, or both empty. #}
+{# `form_open` / `form_close` are produced by the core helpers Html::openMassiveActionsForm() +
+ # showMassiveActions() / closeForm() for a pending checklist, as a matched pair (or both
+ # empty). A finished checklist uses the plain form written below instead.
+ # The "Bring up / down" buttons target their own forms, declared after the main one
+ # (no nested <form>). #}
 <table class="tab_cadre_fixe">
     <tr>
         <th width="15px">
@@ -38,7 +40,15 @@
                 </a>
             </span>
         </th>
-        <th height="30px">{{ title|raw }}</th>
+        <th height="30px">
+            {% if is_finished %}
+                <i style="color:green" class="ti ti-circle-check fa-2x"></i>
+            {% endif %}
+            {{ checklist_label }}
+            {% if is_finished %}
+                - {{ __('Check list done', 'resources') }}
+            {% endif %}
+        </th>
     </tr>
     <tr>
         <td class="center" colspan="2">
@@ -56,7 +66,11 @@
                 {% endif %}
 
                 {% if entries is not empty %}
-                    {{ form_open|raw }}
+                    {% if is_finished %}
+                        <form name="form" method="post" action="{{ finished_action }}">
+                    {% else %}
+                        {{ form_open|raw }}
+                    {% endif %}
 
                     <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
                     <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
@@ -70,6 +84,7 @@
                             </tr>
                             <tr class="tab_bg_1">
                                 <td>{{ __('Templates') }}</td>
+                                {# Core dropdown widgets (Dropdown::show, User::dropdown, showTimeStamp). #}
                                 <td>{{ template_dropdown|raw }}</td>
                                 <td>{{ __('Assigned to') }}</td>
                                 <td>{{ user_dropdown|raw }}</td>
@@ -81,6 +96,7 @@
                             </tr>
                             <tr class="tab_bg_2">
                                 <td colspan="4" class="center">
+                                    {# Buttons rendered by the core helper, attributes escaped there. #}
                                     {{ call('Html::submit', [_x('button', 'Add'), {
                                         'name': 'close_checklist',
                                         'class': 'btn btn-primary',
@@ -120,6 +136,7 @@
                         <table class="tab_cadre" width="100%">
                             <tr>
                                 {% if not is_finished %}
+                                    {# Core "check all" checkbox (Html::getCheckAllAsCheckbox). #}
                                     <th width="10">{{ check_all|raw }}</th>
                                 {% endif %}
                                 <th>{{ __('Name') }}</th>
@@ -135,31 +152,75 @@
                             {% for entry in entries %}
                                 <tr class="tab_bg_1">
                                     {% if not is_finished %}
+                                        {# Core massive action checkbox (Html::showMassiveActionCheckBox). #}
                                         <td width="10">{{ entry.massive_checkbox|raw }}</td>
                                     {% endif %}
-                                    <td width="30%">{{ entry.name|raw }}</td>
+                                    <td width="30%">
+                                        <a href="{{ entry.name_url }}">{{ entry.name }}</a>&nbsp;
+                                        {% if entry.address_tooltip is not empty %}
+                                            {# Built by Html::showToolTip() from an escaped content; the core escapes the link itself. #}
+                                            &nbsp;{{ entry.address_tooltip|raw }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if entry.tag %}
-                                            <span class="plugin_resources_date_over_color">{{ entry.comment|raw }}</span>
+                                            <span class="plugin_resources_date_over_color">{{ entry.comment|nl2br }}</span>
                                         {% else %}
-                                            {{ entry.comment|raw }}
+                                            {{ entry.comment|nl2br }}
                                         {% endif %}
                                     </td>
                                     {% if show_task_column %}
-                                        <td class="center">{{ entry.task|raw }}</td>
+                                        <td class="center">
+                                            {% if entry.task_url is not empty %}
+                                                <a href="{{ entry.task_url }}">{{ __('Yes') }}</a>
+                                            {% else %}
+                                                {{ __('No') }}
+                                            {% endif %}
+                                        </td>
                                     {% endif %}
                                     <td class="center">
                                         <input type="checkbox" disabled name="is_checked"{{ entry.is_checked ? ' checked' : '' }}>
                                         <input type="hidden" name="is_checked{{ entry.id }}" value="{{ entry.is_checked ? 0 : 1 }}">
                                     </td>
-                                    <td>{{ entry.move_up|raw }}</td>
-                                    <td>{{ entry.move_down|raw }}</td>
+                                    {% for direction in ['up', 'down'] %}
+                                        <td>
+                                            {% if entry['move_' ~ direction] %}
+                                                {% set move_label = direction == 'up' ? __('Bring up') : __('Bring down') %}
+                                                <button type="submit" form="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}"
+                                                        class="btn btn-sm btn-ghost-secondary" title="{{ move_label }}">
+                                                    <i class="ti ti-chevrons-{{ direction }}"></i>
+                                                    <span class="visually-hidden">{{ move_label }}</span>
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
                                 </tr>
                             {% endfor %}
                         </table>
                     </div>
 
-                    {{ form_close|raw }}
+                    {% if is_finished %}
+                        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                        </form>
+                    {% else %}
+                        {{ form_close|raw }}
+                    {% endif %}
+
+                    {% for entry in entries %}
+                        {% for direction in ['up', 'down'] %}
+                            {% if entry['move_' ~ direction] %}
+                                <form id="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}" method="post"
+                                      action="{{ move_action }}" class="d-none">
+                                    <input type="hidden" name="move" value="move">
+                                    <input type="hidden" name="action" value="{{ direction }}">
+                                    <input type="hidden" name="id" value="{{ entry.id }}">
+                                    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                                    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
+                                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                                </form>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 {% endif %}
             </div>
         </td>

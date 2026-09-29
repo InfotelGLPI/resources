@@ -285,58 +285,38 @@ class Employee extends CommonDBTM
             ],
         ));
 
-        // Action buttons cell (mix of returned Html::* helpers and the echoing template dropdown).
-        $buttons_cell = '';
-        if ($withtemplate < 2) {
+        // Action buttons, rendered by employee_form.html.twig. Null when none is allowed.
+        $buttons = null;
+        if ($withtemplate < 2 && $this->canCreate() && $canedit) {
             if (empty($ID)) {
-                if ($this->canCreate() && $canedit) {
-                    $buttons_cell .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                    if (!empty($plugin_resources_resources_id)) {
-                        $buttons_cell .= "<div class='center'>";
-                        $buttons_cell .= Html::submit(
-                            _sx('button', 'Add'),
-                            ['name' => 'addemployee', 'class' => 'btn btn-primary'],
-                        );
-                        $buttons_cell .= "</div>";
-                    } else {
-                        $buttons_cell .= "<div class='center'>";
-                        $buttons_cell .= $capture(fn() => Resource::dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]));
-                        $buttons_cell .= Html::hidden('users_id', ['value' => $users_id]);
-                        $buttons_cell .= "&nbsp;";
-                        $buttons_cell .= Html::submit(
-                            _sx('button', 'Add'),
-                            ['name' => 'addressourceandemployee', 'class' => 'btn btn-primary'],
-                        );
-                        $buttons_cell .= "</div>";
-                    }
+                if (!empty($plugin_resources_resources_id)) {
+                    $buttons = [
+                        'mode'         => 'add',
+                        'resources_id' => $plugin_resources_resources_id,
+                    ];
+                } else {
+                    $buttons = [
+                        'mode'              => 'add_with_resource',
+                        'resources_id'      => $plugin_resources_resources_id,
+                        'users_id'          => $users_id,
+                        'template_dropdown' => $capture(
+                            fn() => Resource::dropdownTemplate("templates_id", $_SESSION["glpiactive_entity"]),
+                        ),
+                    ];
                 }
             } else {
-                if ($this->canCreate() && $canedit) {
-                    $buttons_cell .= Html::hidden('id', ['value' => $ID]);
-                    $buttons_cell .= Html::hidden(
-                        'plugin_resources_resources_id',
-                        ['value' => $this->fields["plugin_resources_resources_id"]],
-                    );
-                    $buttons_cell .= "<div class='center'>";
-                    $buttons_cell .= Html::submit(
-                        _sx('button', 'Update'),
-                        ['name' => 'updateemployee', 'class' => 'btn btn-primary'],
-                    );
-                    $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                    $buttons_cell .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                    $buttons_cell .= Html::submit(
-                        _sx('button', 'Delete permanently'),
-                        ['name' => 'deleteemployee', 'class' => 'btn btn-primary'],
-                    );
-                    $buttons_cell .= "</div>";
-                }
+                $buttons = [
+                    'mode'         => 'update',
+                    'id'           => $ID,
+                    'resources_id' => $this->fields["plugin_resources_resources_id"],
+                ];
             }
         }
 
         TemplateRenderer::getInstance()->display('@resources/employee_form.html.twig', [
             'show_form'           => ($withtemplate < 2),
             'form_action'         => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php",
-            'hidden_resources_id' => Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]),
+            'resources_id'        => $plugin_resources_resources_id,
             'title'               => self::getTypeName(1),
             'show_created_note'   => empty($plugin_resources_resources_id),
             'created_note'        => __('The resource is also created if not existent', 'resources'),
@@ -347,7 +327,7 @@ class Employee extends CommonDBTM
             'label_client'        => Client::getTypeName(1),
             'client_dropdown'     => $client_dropdown,
             'compliant'           => Client::isSecurityCompliance($this->fields["plugin_resources_clients_id"]),
-            'buttons_cell'        => $buttons_cell,
+            'buttons'             => $buttons,
         ]);
 
         return true;
@@ -426,51 +406,27 @@ class Employee extends CommonDBTM
             'entity' => $entity,
         ]));
 
-        // Conditional action row: each branch emits its own <tr>/<td> wrapper.
-        $buttons_block = '';
+        // Action row, rendered by employee_helpdesk_form.html.twig. Null when none is allowed.
+        $buttons = null;
         if ($this->canCreate()) {
             if ($exist == 0) {
-                $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
-                $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                $buttons_block .= "<div class='center'>";
-                $buttons_block .= Html::submit(
-                    _sx('button', 'Next step', 'resources'),
-                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary'],
-                );
-                $buttons_block .= "</td></tr>";
+                $buttons = ['mode' => 'next'];
             } elseif (empty($ID)) {
-                $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
-                $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                $buttons_block .= Html::submit(
-                    _sx('button', 'Add'),
-                    ['name' => 'add_helpdesk_employee', 'class' => 'btn btn-primary'],
-                );
-                $buttons_block .= "</td></tr>";
-            } else {
-                if ($resource->fields["is_leaving"] != 1) {
-                    $buttons_block .= "<tr><td class='tab_bg_2 top' colspan='4'>";
-                    $buttons_block .= Html::hidden('id', ['value' => $ID]);
-                    $buttons_block .= Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]);
-                    $buttons_block .= "<div class='center'>";
-                    $buttons_block .= Html::submit(
-                        _sx('button', 'Update'),
-                        ['name' => 'updateemployee', 'class' => 'btn btn-primary'],
-                    );
-                    $buttons_block .= "</div>";
-                    $buttons_block .= "</td></tr>";
-                }
+                $buttons = ['mode' => 'add'];
+            } elseif ($resource->fields["is_leaving"] != 1) {
+                $buttons = ['mode' => 'update', 'id' => $ID];
             }
         }
 
         TemplateRenderer::getInstance()->display('@resources/employee_helpdesk_form.html.twig', [
             'form_action'         => $form_action,
-            'hidden_resources_id' => Html::hidden('plugin_resources_resources_id', ['value' => $plugin_resources_resources_id]),
+            'resources_id'        => $plugin_resources_resources_id,
             'title'               => self::getTypeName(1),
             'label_employer'      => Employer::getTypeName(1),
             'employer_dropdown'   => $employer_dropdown,
             'label_client'        => Client::getTypeName(1),
             'client_dropdown'     => $client_dropdown,
-            'buttons_block'       => $buttons_block,
+            'buttons'             => $buttons,
         ]);
 
         return true;

@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 {% if can_declare %}
     <div class="center">
         <a href="{{ declare_url }}">{{ __('Declare a new employment', 'resources') }}</a>

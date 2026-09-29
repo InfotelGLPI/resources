@@ -287,7 +287,7 @@ class Choice extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/choice_comment_form.html.twig', [
             'items_id' => $items_id,
             'rand'     => $rand,
-            'comment'  => nl2br(htmlescape($item["comment"])),
+            'comment'  => (string) $item["comment"],
             'ajax_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/inputtext.php',
             // Posted back to ajax/inputtext.php, which fills the textarea with it.
             'raw_comment' => rawurlencode((string) $item["comment"]),
@@ -358,33 +358,15 @@ class Choice extends CommonDBTM
                     $choice["plugin_resources_choiceitems_id"],
                 );
 
-                $rand = mt_rand();
-                $comment_cell = $capture(static function () use ($choice, $rand) {
-                    if (!empty($choice["comment"])) {
-                        self::showModifyCommentForm($choice, $rand);
-                    } else {
-                        self::showAddCommentForm($choice, $rand);
-                    }
-                });
-
-                $delete_form = '';
-                if ($canedit) {
-                    $delete_form = Html::getSimpleForm(
-                        PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
-                        'deletehelpdeskitem',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $choice["id"]],
-                    );
-                }
-
                 $rows[] = [
+                    'id'   => $choice["id"],
                     'name' => Dropdown::getDropdownName(
                         "glpi_plugin_resources_choiceitems",
                         $choice["plugin_resources_choiceitems_id"],
                     ),
-                    'comments'     => nl2br(htmlescape($items_comments)),
-                    'comment_cell' => $comment_cell,
-                    'delete_form'  => $delete_form,
+                    'comments' => (string) $items_comments,
+                    'comment'  => (string) $choice["comment"],
+                    'rand'     => mt_rand(),
                 ];
             }
 
@@ -424,6 +406,10 @@ class Choice extends CommonDBTM
                 'resources_id'        => $plugin_resources_resources_id,
                 'choiceitem_dropdown' => $choiceitem_dropdown,
                 'declaration_button'  => $declaration_button,
+                'delete_action'       => PLUGIN_RESOURCES_WEBDIR . '/front/resource_item.list.php',
+                // Same endpoints as showModifyCommentForm() / showAddCommentForm().
+                'comment_ajax_url'     => PLUGIN_RESOURCES_WEBDIR . '/ajax/inputtext.php',
+                'add_comment_ajax_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/addneedcomment.php',
             ]);
         }
 

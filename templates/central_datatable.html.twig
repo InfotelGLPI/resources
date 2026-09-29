@@ -1,0 +1,65 @@
+{#
+ # -------------------------------------------------------------------------
+ # resources plugin for GLPI
+ # Copyright (C) 2015-2026 by the resources Development Team.
+ #
+ # https://github.com/InfotelGLPI/resources
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of resources.
+ #
+ # resources is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # resources is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with resources. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Core datatable fed with raw data (Task / Checklist::getCentralParams()).
+ # `cell_kinds` maps a column to a central_cell.html.twig kind: the cell is rendered here,
+ # through Twig autoescape, then handed to the datatable as `raw_html` (already Markup).
+ # `super_link`, when set, appends a link to the escaped `super_header` label. #}
+{% set rows = [] %}
+{% for entry in entries %}
+    {% set row = entry %}
+    {% for colkey, kind in cell_kinds %}
+        {% set row = row|merge({(colkey): include('@resources/central_cell.html.twig', {
+            kind: kind,
+            value: entry[colkey],
+        }, with_context = false)}) %}
+    {% endfor %}
+    {% set rows = rows|merge([row]) %}
+{% endfor %}
+
+{% set formatters = {} %}
+{% for colkey, kind in cell_kinds %}
+    {% set formatters = formatters|merge({(colkey): 'raw_html'}) %}
+{% endfor %}
+
+{% if super_link is defined and super_link is not empty %}
+    {% set header_label %}{{ super_header }} <a href="{{ super_link.url }}">{{ super_link.label }}</a>{% endset %}
+    {% set header = {label: header_label, is_raw: true} %}
+{% else %}
+    {% set header = super_header %}
+{% endif %}
+
+{{ include('components/datatable.html.twig', {
+    super_header: header,
+    columns: columns,
+    formatters: formatters,
+    entries: rows,
+    total_number: rows|length,
+    filtered_number: rows|length,
+    nofilter: true,
+    nosort: true,
+}, with_context = false) }}

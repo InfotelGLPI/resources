@@ -695,14 +695,6 @@ class Checklist extends CommonDBTM
             "entities_id" => $entities_id,
         ]);
 
-        $title = '';
-        if ($isfinished) {
-            $title = "<i style='color:green' class='ti ti-circle-check fa-2x'></i>";
-        }
-        $title .= htmlescape(self::getChecklistType($checklist_type));
-        if ($isfinished) {
-            $title .= " - " . htmlescape(__('Check list done', 'resources'));
-        }
 
         $can_add = self::canCreate() && $canedit;
         // Get check list
@@ -728,8 +720,9 @@ class Checklist extends CommonDBTM
             return (string) ob_get_clean();
         };
 
-        // The form is only opened when there is something to submit; emit the matching
-        // closing part in the same condition so no orphan </form> or CSRF token is left.
+        // The form is only opened when there is something to submit. The massive actions
+        // one comes from the core helpers (captured as a matched pair); the finished-state
+        // one is a plain form written by the template.
         $form_open  = '';
         $form_close = '';
         $check_all  = '';
@@ -747,10 +740,6 @@ class Checklist extends CommonDBTM
                     Html::closeForm();
                 });
                 $check_all = Html::getCheckAllAsCheckbox('masschecklist' . $rand);
-            } elseif ($isfinished) {
-                $form_open = "<form name='form' method='post' action='"
-                    . htmlescape(Toolbox::getItemTypeFormURL(Resource::class)) . "'>";
-                $form_close = $capture(static fn() => Html::closeForm());
             }
         }
 
@@ -767,12 +756,11 @@ class Checklist extends CommonDBTM
             $ID = $checklist["id"];
             Session::addToNavigateListItems(self::class, $ID);
 
-            $name = '<a href="' . htmlescape(
-                $targetchecklist . "?id=" . $ID
+            $name_url = $targetchecklist . "?id=" . $ID
                 . "&plugin_resources_resources_id=" . $plugin_resources_resources_id
                 . "&plugin_resources_contracttypes_id=" . $plugin_resources_contracttypes_id
-                . "&checklist_type=" . $checklist_type,
-            ) . '">' . htmlescape($checklist["name"]) . '</a>&nbsp;';
+                . "&checklist_type=" . $checklist_type;
+            $address_tooltip = '';
             if (!empty($checklist["address"])) {
                 // Rows saved before the link was validated may still hold another scheme:
                 // those are shown as plain text, never as an href.
@@ -780,59 +768,33 @@ class Checklist extends CommonDBTM
                     ? ['link' => $checklist["address"], 'linktarget' => '_blank']
                     : [];
                 // The content parameter is a raw HTML sink: the core inserts it without any
-                // filtering. Escape it the way "comment" is escaped a few lines below. "link"
-                // needs no treatment, the core escapes it itself.
-                $name .= '&nbsp;' . $capture(static fn() => Html::showToolTip(
-                    htmlescape($checklist["address"]),
-                    $tooltip_options,
-                ));
+                // filtering, so escape it. "link" needs no treatment, the core escapes it itself.
+                $tooltip_options['display'] = false;
+                $address_tooltip = Html::showToolTip(htmlescape($checklist["address"]), $tooltip_options);
             }
 
-            $task = '';
-            if ($show_task_column) {
-                $has_task = !empty($checklist["plugin_resources_tasks_id"]);
-                if ($has_task) {
-                    $task = '<a href="' . htmlescape(
-                        $targettask . "?id=" . $checklist["plugin_resources_tasks_id"]
-                        . "&plugin_resources_resources_id=" . $plugin_resources_resources_id
-                        . "&central=1",
-                    ) . '">';
-                }
-                $task .= htmlescape(Dropdown::getYesNo($checklist["plugin_resources_tasks_id"]));
-                if ($has_task) {
-                    $task .= '</a>';
-                }
+            $task_url = '';
+            if ($show_task_column && !empty($checklist["plugin_resources_tasks_id"])) {
+                $task_url = $targettask . "?id=" . $checklist["plugin_resources_tasks_id"]
+                    . "&plugin_resources_resources_id=" . $plugin_resources_resources_id
+                    . "&central=1";
             }
 
-            $move_up = '&nbsp;';
-            if ($i != 0 && self::canCreate() && $canedit && !$isfinished) {
-                $move_up = Html::getSimpleForm($target, 'move', __('Bring up'), [
-                    'action' => 'up',
-                    'id' => $ID,
-                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                    'checklist_type' => $checklist_type,
-                ], 'fa-angle-double-up fa-1x');
-            }
-
-            $move_down = '&nbsp;';
-            if ($i != $numrows - 1 && self::canCreate() && $canedit && !$isfinished) {
-                $move_down = Html::getSimpleForm($target, 'move', __('Bring down'), [
-                    'action' => 'down',
-                    'id' => $ID,
-                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                    'checklist_type' => $checklist_type,
-                ], 'fa-angle-double-down fa-1x');
-            }
+            $can_move  = self::canCreate() && $canedit && !$isfinished;
+            $move_up   = $can_move && $i != 0;
+            $move_down = $can_move && $i != $numrows - 1;
 
             $entries[] = [
                 'id'               => $ID,
                 'massive_checkbox' => $can_massive
                     ? $capture(static fn() => Html::showMassiveActionCheckBox(self::class, $ID))
                     : '',
-                'name'             => $name,
+                'name'             => $checklist["name"],
+                'name_url'         => $name_url,
+                'address_tooltip'  => $address_tooltip,
                 'tag'              => (bool) $checklist["tag"],
-                'comment'          => nl2br(htmlescape((string) $checklist["comment"])),
-                'task'             => $task,
+                'comment'          => (string) $checklist["comment"],
+                'task_url'         => $task_url,
                 'is_checked'       => (bool) $checklist["is_checked"],
                 'move_up'          => $move_up,
                 'move_down'        => $move_down,
@@ -845,7 +807,7 @@ class Checklist extends CommonDBTM
             'rand'                => $rand,
             'view_id'             => $viewId,
             'view_id_finished'    => $viewId_finished,
-            'title'               => $title,
+            'checklist_label'     => self::getChecklistType($checklist_type),
             'finished_title'      => self::getTypeName(0),
             'can_add'             => $can_add,
             'add_link_name'       => $addLinkName,
@@ -866,6 +828,8 @@ class Checklist extends CommonDBTM
             'entities_id'         => $entities_id,
             'form_open'           => $form_open,
             'form_close'          => $form_close,
+            'finished_action'     => Toolbox::getItemTypeFormURL(Resource::class),
+            'move_action'         => $target,
             'check_all'           => $check_all,
             'entries'             => $entries,
             'template_dropdown'   => $show_close_panel ? $capture(static fn() => Dropdown::show(
@@ -1133,25 +1097,41 @@ class Checklist extends CommonDBTM
      */
     public function showOnCentral($is_leaving)
     {
+        $params = $this->getCentralParams((bool) $is_leaving);
+        if ($params !== null) {
+            TemplateRenderer::getInstance()->display('@resources/central_datatable.html.twig', $params);
+        }
+    }
+
+    /**
+     * Parameters of central_datatable.html.twig for the checklists still to verify.
+     *
+     * @param bool $is_leaving Leaving resources instead of arriving ones
+     *
+     * @return array<string, mixed>|null Null when there is nothing to display
+     */
+    public function getCentralParams(bool $is_leaving): ?array
+    {
         global $DB;
 
         if (!$this->canView()) {
-            return;
+            return null;
         }
 
         $criteria = $is_leaving ? self::queryChecklists(true, 1) : self::queryChecklists(true);
         $iterator = $DB->request($criteria);
 
         if (count($iterator) === 0) {
-            return;
+            return null;
         }
 
         $date_field = $is_leaving ? "date_end" : "date_begin";
         $list_type  = $is_leaving ? self::RESOURCES_CHECKLIST_OUT : self::RESOURCES_CHECKLIST_IN;
 
+        // Raw values: central_datatable.html.twig builds the link / date / list cells and escapes them.
         $entries = [];
         foreach ($iterator as $data) {
-            $resource_label = htmlescape($data["resource_name"]) . " " . htmlescape($data["resource_firstname"]);
+            $resource_label = $data["resource_name"] . " " . $data["resource_firstname"];
             if ($_SESSION["glpiis_ids_visible"]) {
                 $resource_label .= " (" . $data["plugin_resources_resources_id"] . ")";
             }
@@ -1163,7 +1143,7 @@ class Checklist extends CommonDBTM
 
             $sublist = [];
             foreach ($DB->request(self::queryListChecklists($data["plugin_resources_resources_id"], $list_type)) as $c) {
-                $label = htmlescape($c["name"]);
+                $label = (string) $c["name"];
                 if ($_SESSION["glpiis_ids_visible"]) {
                     $label .= " (" . $c["id"] . ")";
                 }
@@ -1171,20 +1151,22 @@ class Checklist extends CommonDBTM
             }
 
             $entries[] = [
-                'resource'  => '<a href="' . PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id='
-                    . (int) $data["plugin_resources_resources_id"] . '">' . $resource_label . '</a>',
-                'date'      => '<div class="' . $date_class . '">'
-                    . Html::convDate($data[$date_field]) . '</div>',
+                'resource'  => [
+                    'url'   => PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id='
+                        . (int) $data["plugin_resources_resources_id"],
+                    'label' => $resource_label,
+                ],
+                'date'      => [
+                    'class' => $date_class,
+                    'text'  => Html::convDate($data[$date_field]),
+                ],
                 'entity'    => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
                 'location'  => Dropdown::getDropdownName("glpi_locations", $data['locations_id']),
                 'contract'  => Dropdown::getDropdownName(
                     "glpi_plugin_resources_contracttypes",
                     $data['plugin_resources_contracttypes_id'],
                 ),
-                'checklist' => TemplateRenderer::getInstance()->render(
-                    '@resources/checklist_central_sublist.html.twig',
-                    ['entries' => $sublist],
-                ),
+                'checklist' => $sublist,
             ];
         }
 
@@ -1199,22 +1181,18 @@ class Checklist extends CommonDBTM
         $columns['contract']  = ContractType::getTypeName(1);
         $columns['checklist'] = __('Checklist needs to verificated', 'resources');
 
-        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
-            'super_header'    => $is_leaving
+        return [
+            'super_header' => $is_leaving
                 ? __('Leaving resource - checklist needs to verificated', 'resources')
                 : __('New resource - checklist needs to verificated', 'resources'),
-            'columns'         => $columns,
-            'formatters'      => [
-                'resource'  => 'raw_html',
-                'date'      => 'raw_html',
-                'checklist' => 'raw_html',
+            'columns'      => $columns,
+            'cell_kinds'   => [
+                'resource'  => 'link',
+                'date'      => 'date',
+                'checklist' => 'checklist',
             ],
-            'entries'         => $entries,
-            'total_number'    => count($entries),
-            'filtered_number' => count($entries),
-            'nofilter'        => true,
-            'nosort'          => true,
-        ]);
+            'entries'      => $entries,
+        ];
     }
 
     // Cron action

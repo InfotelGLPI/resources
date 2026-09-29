@@ -26,7 +26,7 @@
  #}
 
 <div class="container">
-    {{ wizard_header|raw }}
+    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
 
     <div class="row">
         {% for action in actions %}
@@ -59,10 +59,10 @@
                                      # wrap the title below the icon: use a block-level column layout
                                      # constrained to the card width (w-100) with centered, wrapping text. #}
                                     <button type="submit"
-                                            class="btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap">{{ inner|raw }}</button>
+                                            class="btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap">{{ inner }}</button>
                                 </form>
                             {% else %}
-                                <a href="{{ action.url }}">{{ inner|raw }}</a>
+                                <a href="{{ action.url }}">{{ inner }}</a>
                             {% endif %}
                         </div>
                     </div>

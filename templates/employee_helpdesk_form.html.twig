@@ -25,11 +25,15 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 <div class="center">
     <br>
     <form method="post" action="{{ form_action }}">
         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-        {{ hidden_resources_id|raw }}
+        <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
         <table class="tab_cadre_fixe">
             <tr>
                 <th colspan="4">{{ title }}</th>
@@ -42,7 +46,26 @@
                 <td colspan="2" class="center">{{ label_client }}</td>
                 <td colspan="2">{{ client_dropdown|raw }}</td>
             </tr>
-            {{ buttons_block|raw }}
+            {% if buttons is not empty %}
+                <tr>
+                    <td class="tab_bg_2 top center" colspan="4">
+                        {% if buttons.mode == 'next' %}
+                            <button type="submit" name="add_helpdesk_employee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Next step', 'resources') }}
+                            </button>
+                        {% elseif buttons.mode == 'add' %}
+                            <button type="submit" name="add_helpdesk_employee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Add') }}
+                            </button>
+                        {% else %}
+                            <input type="hidden" name="id" value="{{ buttons.id }}">
+                            <button type="submit" name="updateemployee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Update') }}
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </form>
 </div>

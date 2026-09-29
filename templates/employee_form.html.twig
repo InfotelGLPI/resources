@@ -25,6 +25,10 @@
  # --------------------------------------------------------------------------
  #}
 
+{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
+ # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+ # attributes and values. #}
+
 <div class="center">
     {% if show_form %}
         <form method="post" action="{{ form_action }}">
@@ -40,7 +44,10 @@
             </tr>
         {% endif %}
         <tr class="tab_bg_1">
-            <td colspan="2" class="center">{{ hidden_resources_id|raw }}{{ label_employer }}</td>
+            <td colspan="2" class="center">
+                <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                {{ label_employer }}
+            </td>
             <td colspan="2">{{ employer_dropdown|raw }}</td>
         </tr>
         <tr class="tab_bg_1">
@@ -57,7 +64,35 @@
             </td>
         </tr>
         <tr>
-            <td class="tab_bg_2 top" colspan="4">{{ buttons_cell|raw }}</td>
+            <td class="tab_bg_2 top" colspan="4">
+                {% if buttons is not empty %}
+                    {% if buttons.mode == 'update' %}
+                        <input type="hidden" name="id" value="{{ buttons.id }}">
+                    {% endif %}
+                    <input type="hidden" name="plugin_resources_resources_id" value="{{ buttons.resources_id }}">
+                    <div class="center">
+                        {% if buttons.mode == 'add' %}
+                            <button type="submit" name="addemployee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Add') }}
+                            </button>
+                        {% elseif buttons.mode == 'add_with_resource' %}
+                            {# Template dropdown rendered by the core helper (Resource::dropdownTemplate). #}
+                            {{ buttons.template_dropdown|raw }}
+                            <input type="hidden" name="users_id" value="{{ buttons.users_id }}">
+                            <button type="submit" name="addressourceandemployee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Add') }}
+                            </button>
+                        {% else %}
+                            <button type="submit" name="updateemployee" value="1" class="btn btn-primary me-5">
+                                {{ _x('button', 'Update') }}
+                            </button>
+                            <button type="submit" name="deleteemployee" value="1" class="btn btn-primary">
+                                {{ _x('button', 'Delete permanently') }}
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </td>
         </tr>
     </table>
     {% if show_form %}

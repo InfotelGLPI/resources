@@ -287,11 +287,9 @@ class ResourceResting extends CommonDBTM
      */
     public function showMenu()
     {
-        ob_start();
-        Wizard::WizardHeader(
+        $wizard_header = Wizard::getHeaderParams(
             _n('Non contract period management', 'Non contract periods management', 2, 'resources'),
         );
-        $wizard_header = (string) ob_get_clean();
 
         $tiles = [];
         if (Session::haveright('plugin_resources_resting', UPDATE)) {
@@ -335,9 +333,7 @@ class ResourceResting extends CommonDBTM
             $title = __('Detail of non contract period', 'resources');
         }
 
-        ob_start();
-        Wizard::WizardHeader($title, PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png");
-        $wizard_header = (string) ob_get_clean();
+        $wizard_header = Wizard::getHeaderParams($title, PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png");
 
         TemplateRenderer::getInstance()->display('@resources/resourceresting_form.html.twig', [
             'item'              => $this,
@@ -361,12 +357,10 @@ class ResourceResting extends CommonDBTM
     {
         $this->initForm($ID, $options);
 
-        ob_start();
-        Wizard::WizardHeader(
+        $wizard_header = Wizard::getHeaderParams(
             __('Declaring the end of non contract periods', 'resources'),
             PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png",
         );
-        $wizard_header = (string) ob_get_clean();
 
         TemplateRenderer::getInstance()->display('@resources/resourceresting_end_form.html.twig', [
             'wizard_header'     => $wizard_header,
