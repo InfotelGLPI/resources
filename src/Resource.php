@@ -38,6 +38,7 @@ use CommonITILActor;
 use Computer;
 use ComputerType;
 use ConsumableItem;
+use CronTask;
 use DateTime;
 use DBConnection;
 use DbUtils;
@@ -53,6 +54,7 @@ use GlpiPlugin\Positions\Position;
 use Group_Ticket;
 use Html;
 use Item_Problem;
+use ITILSolution;
 use Item_Ticket;
 use Location;
 use Log;
@@ -379,6 +381,140 @@ class Resource extends CommonDBTM
     public function playnotification($resource)
     {
         NotificationEvent::raiseEvent("AlertLeavingRessourceManager", $resource);
+    }
+
+    /**
+     * Declare the leaving of the loaded resource from the leaving form.
+     *
+     * Updates the resource, stores its leaving information, seeds the leaving checklists,
+     * creates the leaving ticket, notifies the managers and pushes the end date to the
+     * directory, as configured in the plugin setup.
+     * The caller is responsible for authorising UPDATE on the resource.
+     *
+     * @param array $post Leaving form values
+     *
+     * @return void
+     */
+    public function declareLeaving(array $post): void
+    {
+        global $CFG_GLPI;
+
+        $date_end = $post["date_end"] ?? '';
+        if (empty($date_end)) {
+            if (!empty($post["effective_leaving_date"])) {
+                $date_end = $post["effective_leaving_date"];
+            } elseif (!empty($post["resignation_date"])) {
+                $date_end = $post["resignation_date"];
+            } else {
+                $date_end = date("Y-m-d");
+            }
+        }
+
+        $resources_id = $this->getID();
+        $config = new Config();
+        $CronTask = new CronTask();
+        $CronTask->getFromDBbyName(Employment::class, "ResourcesLeaving");
+
+        $input = [
+            'id' => $resources_id,
+            'date_end' => $date_end,
+            'remove_manager' => $post["remove_manager"] ?? 0,
+            'plugin_resources_leavingreasons_id' => $post["plugin_resources_leavingreasons_id"] ?? 0,
+            'withtemplate' => "0",
+            'users_id_recipient_leaving' => Session::getLoginUserID(),
+            'send_notification' => 1,
+        ];
+        if (!$config->fields['remove_at_midnight']) {
+            $input["date_end"] .= " 23:59:59";
+        }
+        if (($date_end < date("Y-m-d H:i:s"))
+            || ($CronTask->fields["state"] == CronTask::STATE_DISABLE)) {
+            $input["is_leaving"] = "1";
+            $input["date_declaration_leaving"] = date('Y-m-d H:i:s');
+        } else {
+            $input["is_leaving"] = "0";
+            $input["date_declaration_leaving"] = null;
+        }
+        $this->update($input);
+
+        LeavingInformation::saveForResource($resources_id, $post);
+
+        $this->getFromDB($resources_id);
+        if (!Checklist::checkIfChecklistExist($resources_id, Checklist::RESOURCES_CHECKLIST_OUT)) {
+            (new Checklistconfig())->addChecklistsFromRules($this, Checklist::RESOURCES_CHECKLIST_OUT);
+        }
+        Session::addMessageAfterRedirect(__('Declaration of resource leaving OK', 'resources'));
+
+        $config->getFromDB(1);
+        if ($config->fields["create_ticket_departure"]) {
+            $this->getFromDB($resources_id);
+            $this->createLeavingTicket($input["date_end"], (int) $input["plugin_resources_leavingreasons_id"]);
+
+            // The directory has to be updated again for this departure.
+            $linkad = new LinkAd();
+            if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $resources_id])) {
+                $linkad->update([
+                    'id' => $linkad->getID(),
+                    'action_done' => 0,
+                ]);
+            }
+        }
+
+        if ($config->fields["create_ticket_departure_instructions"]
+            && isset($this->input['send_notification'])
+            && $this->input['send_notification'] == 1
+            && $CFG_GLPI["notifications_mailing"]
+        ) {
+            $this->playnotification($this);
+        }
+
+        LinkAd::syncLeavingToDirectory($this);
+    }
+
+    /**
+     * Solve the open tickets linked to the resource with the given solution content.
+     *
+     * When the escalade plugin is active, the first group of the escalation history is
+     * assigned back to each ticket before it is solved.
+     * The caller is responsible for authorising UPDATE on the resource.
+     *
+     * @param string $content Solution content (rich text, already escaped)
+     *
+     * @return void
+     */
+    public function solveOpenTickets(string $content): void
+    {
+        $ticket = new Ticket();
+        $ticketResources = (new Item_Ticket())->find([
+            'itemtype' => self::class,
+            'items_id' => $this->getID(),
+        ]);
+
+        foreach ($ticketResources as $ticketResource) {
+            $ticket->getFromDB($ticketResource['tickets_id']);
+            if ($ticket->getField('status') >= Ticket::SOLVED) {
+                continue;
+            }
+            if (Plugin::isPluginActive("escalade")) {
+                $first_history = \PluginEscaladeHistory::getFirstLineForTicket($ticketResource['tickets_id']);
+                //add the first history group (if not already exist)
+                $group_ticket = new Group_Ticket();
+                $condition = [
+                    'tickets_id' => $ticketResource['tickets_id'],
+                    'groups_id' => $first_history['groups_id'],
+                    'type' => CommonITILActor::ASSIGN,
+                ];
+                if (!$group_ticket->find($condition)) {
+                    $group_ticket->add($condition);
+                }
+            }
+            (new ITILSolution())->add([
+                'itemtype' => Ticket::class,
+                'items_id' => $ticket->getID(),
+                'content' => $content,
+            ]);
+        }
+        NotificationEvent::raiseEvent('other', $this);
     }
 
     /**

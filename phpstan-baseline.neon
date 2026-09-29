@@ -565,28 +565,10 @@ parameters:
 			path: front/task.form.php
 
 		-
-			message: '#^Call to method getField\(\) on an unknown class PluginFieldsField\.$#'
-			identifier: class.notFound
-			count: 1
-			path: front/user.form.php
-
-		-
-			message: '#^Call to method getFromDBByCrit\(\) on an unknown class PluginFieldsField\.$#'
-			identifier: class.notFound
-			count: 1
-			path: front/user.form.php
-
-		-
 			message: '#^Call to static method getFirstLineForTicket\(\) on an unknown class PluginEscaladeHistory\.$#'
 			identifier: class.notFound
 			count: 1
-			path: front/user.form.php
-
-		-
-			message: '#^Instantiated class PluginFieldsField not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: front/user.form.php
+			path: src/Resource.php
 
 		-
 			message: '#^Call to static method showDefaultHeaderHelpdesk\(\) on an unknown class GlpiPlugin\\Servicecatalog\\Main\.$#'
@@ -4557,6 +4539,12 @@ parameters:
 		-
 			message: '#^Call to method getFromDBByCrit\(\) on an unknown class PluginFieldsField\.$#'
 			identifier: class.notFound
+			count: 2
+			path: src/User.php
+
+		-
+			message: '#^Call to method getField\(\) on an unknown class PluginFieldsField\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/User.php
 
@@ -4581,7 +4569,7 @@ parameters:
 		-
 			message: '#^Instantiated class PluginFieldsField not found\.$#'
 			identifier: class.notFound
-			count: 1
+			count: 2
 			path: src/User.php
 
 		-

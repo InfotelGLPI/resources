@@ -143,6 +143,52 @@ class LeavingInformation extends CommonDBTM
         return true;
     }
 
+    /**
+     * Create or update the leaving information of a resource from the leaving form.
+     *
+     * Mass-assignment guard: only the columns this form owns are copied instead of the
+     * whole request, so a crafted one cannot set arbitrary DB columns. The resource foreign
+     * key is forced from the already authorised resource.
+     *
+     * @param int   $resources_id Authorised resource
+     * @param array $post         Leaving form values
+     *
+     * @return void
+     */
+    public static function saveForResource(int $resources_id, array $post): void
+    {
+        $leaving_fields = [
+            'plugin_resources_clients_id',
+            'plugin_resources_destinations_id',
+            'plugin_resources_workprofiles_id',
+            'plugin_resources_resignationreasons_id',
+            'users_id',
+            'interview_date',
+            'resignation_date',
+            'wished_leaving_date',
+            'effective_leaving_date',
+            'pay_gap',
+            'mission_lost',
+            'company_name',
+            'comment',
+        ];
+        $input = [];
+        foreach ($leaving_fields as $leaving_field) {
+            if (isset($post[$leaving_field])) {
+                $input[$leaving_field] = $post[$leaving_field];
+            }
+        }
+        $input['plugin_resources_resources_id'] = $resources_id;
+
+        $leavingInformation = new self();
+        if ($leavingInformation->getFromDBByCrit(['plugin_resources_resources_id' => $resources_id])) {
+            $input['id'] = $leavingInformation->getID();
+            $leavingInformation->update($input);
+        } else {
+            $leavingInformation->add($input);
+        }
+    }
+
 
     /**
      * Prepare input datas for adding the item

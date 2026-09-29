@@ -87,6 +87,22 @@ class Checklistconfig extends CommonDBTM
         return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
+    public function prepareInputForAdd($input)
+    {
+        // The link is copied onto the checklist of every matching resource.
+        if (!Checklist::checkLinkInput($input)) {
+            return false;
+        }
+        return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        if (!Checklist::checkLinkInput($input)) {
+            return false;
+        }
+        return $input;
+    }
 
     /**
      * Provides search options configuration. Do not rely directly
@@ -210,6 +226,11 @@ class Checklistconfig extends CommonDBTM
                     $checklist["plugin_resources_contracttypes_id"] = $resource->fields["plugin_resources_contracttypes_id"];
                     $checklist["checklist_type"] = $checklist_type;
                     $checklist["entities_id"] = $resource->fields["entities_id"];
+                    // A setup saved before its link was validated must not block the seeding:
+                    // copy the checklist without the link rather than have add() refuse it.
+                    if (!empty($checklist['address']) && !Checklist::isSafeLink((string) $checklist['address'])) {
+                        $checklist['address'] = '';
+                    }
                     $resource_checklist = new Checklist();
                     $resource_checklist->add($checklist);
 

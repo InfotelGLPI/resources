@@ -163,6 +163,45 @@ class User extends \User
     }
 
     /**
+     * Build the solution content of the resource tickets from the posted user form.
+     *
+     * Lists the additional fields, the phone and the emails that were filled in. Every value
+     * is client supplied and injected into rich text: escape each one.
+     *
+     * @param array $post User form values
+     *
+     * @return string
+     */
+    public static function buildSolutionContent(array $post): string
+    {
+        $content = "";
+        foreach ($post as $key => $value) {
+            if (strpos($key, 'field') > 0 && !is_integer(strpos($key, 'plugin_ldapfields'))) {
+                $field = new PluginFieldsField();
+                if ($field->getFromDBByCrit(['name' => $key])) {
+                    $content .= $field->getField('label') . " : " . htmlescape((string) $value) . '<br />';
+                }
+            } else {
+                switch ($key) {
+                    case 'phone':
+                        $content .= __('Phone') . " : " . htmlescape((string) $value) . "<br />";
+                        break;
+                    case '_useremails':
+                        if (is_array($value) && !empty($value)) {
+                            $content .= _n('Email', 'Emails', 1) . " : ";
+                            foreach ($value as $email) {
+                                $content .= htmlescape((string) $email) . "<br />";
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $content;
+    }
+
+    /**
      * Show for PDF an resources : employee informations
      *
      * @param $pdf object for the output

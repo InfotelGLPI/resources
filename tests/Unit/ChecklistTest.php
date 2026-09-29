@@ -55,4 +55,26 @@ class ChecklistTest extends TestCase
         $this->assertNotSame(Checklist::RESOURCES_CHECKLIST_OUT, Checklist::RESOURCES_CHECKLIST_TRANSFER);
         $this->assertNotSame(Checklist::RESOURCES_CHECKLIST_IN, Checklist::RESOURCES_CHECKLIST_TRANSFER);
     }
+
+    public static function linkProvider(): array
+    {
+        return [
+            ['https://intranet.example.com/onboarding', true],
+            ['http://example.com', true],
+            [' HTTPS://example.com ', true],
+            ['javascript:alert(1)', false],
+            ['JavaScript:alert(1)', false],
+            ['data:text/html;base64,PHNjcmlwdD4=', false],
+            ['vbscript:msgbox(1)', false],
+            ['//example.com/path', false],
+            ['/relative/path', false],
+            ['not a url', false],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
+    public function testIsSafeLinkOnlyAcceptsHttpSchemes(string $address, bool $expected): void
+    {
+        $this->assertSame($expected, Checklist::isSafeLink($address));
+    }
 }

@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Resources;
 
+use AuthLDAP;
 use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
@@ -55,6 +56,54 @@ class LinkAd extends CommonDBTM
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;
     public const RESOURCES_CHECKLIST_TRANSFER = 3;
+
+    /**
+     * Push the end date of a leaving resource to the directory account linked to it.
+     *
+     * Does nothing when no directory is configured. Reports the outcome as a session message.
+     *
+     * @param Resource $resource Leaving resource, already authorised by the caller
+     *
+     * @return void
+     */
+    public static function syncLeavingToDirectory(Resource $resource): void
+    {
+        if ((new Adconfig())->fields['auth_id'] <= 0 || !count((new AuthLDAP())->find())) {
+            return;
+        }
+
+        $linkad = new self();
+        if (!$linkad->getFromDBByCrit(["plugin_resources_resources_id" => $resource->getID()])) {
+            Session::addMessageAfterRedirect(
+                __('the user has not been updated to the LDAP directory', 'resources'),
+                false,
+                ERROR,
+            );
+            return;
+        }
+
+        $value = [
+            'id' => $linkad->getID(),
+            'enddate' => $resource->getField("date_end"),
+            'login' => $linkad->getField("login"),
+        ];
+        $res = (new LDAP())->updateUserAD($value);
+        if ($res[0]) {
+            $value["action_done"] = 1;
+            $linkad->update($value);
+            Session::addMessageAfterRedirect(
+                __('the user has been updated to the LDAP directory', 'resources'),
+                false,
+                INFO,
+            );
+        } else {
+            Session::addMessageAfterRedirect(
+                __('the user has not been updated to the LDAP directory', 'resources'),
+                false,
+                ERROR,
+            );
+        }
+    }
 
     /**
      * Validate the ticket a directory operation reports itself into.

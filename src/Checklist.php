@@ -437,9 +437,51 @@ class Checklist extends CommonDBTM
      *
      * @return array the modified $input array
      **/
+    /**
+     * Whether a checklist link may be rendered as a clickable href: http(s) only, so that a
+     * javascript: or data: URI typed in the free text field never reaches the page.
+     */
+    public static function isSafeLink(string $address): bool
+    {
+        $scheme = parse_url(trim($address), PHP_URL_SCHEME);
+        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
+    }
+
+    /**
+     * Rejects an input whose link is not an http(s) URL. Shared with Checklistconfig, whose
+     * rows are copied as is onto the checklists of every resource.
+     *
+     * @param array<string, mixed> $input
+     */
+    public static function checkLinkInput(array $input): bool
+    {
+        $address = trim((string) ($input['address'] ?? ''));
+        if ($address === '' || self::isSafeLink($address)) {
+            return true;
+        }
+        Session::addMessageAfterRedirect(
+            __('The link must be an http or https URL', 'resources'),
+            false,
+            ERROR,
+        );
+        return false;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        if (!self::checkLinkInput($input)) {
+            return false;
+        }
+        return $input;
+    }
+
     public function prepareInputForAdd($input)
     {
         global $DB;
+
+        if (!self::checkLinkInput($input)) {
+            return false;
+        }
 
         $iterator = $DB->request([
             'SELECT' => new QueryExpression(
@@ -732,12 +774,17 @@ class Checklist extends CommonDBTM
                 . "&checklist_type=" . $checklist_type,
             ) . '">' . htmlescape($checklist["name"]) . '</a>&nbsp;';
             if (!empty($checklist["address"])) {
+                // Rows saved before the link was validated may still hold another scheme:
+                // those are shown as plain text, never as an href.
+                $tooltip_options = self::isSafeLink($checklist["address"])
+                    ? ['link' => $checklist["address"], 'linktarget' => '_blank']
+                    : [];
                 // The content parameter is a raw HTML sink: the core inserts it without any
                 // filtering. Escape it the way "comment" is escaped a few lines below. "link"
                 // needs no treatment, the core escapes it itself.
                 $name .= '&nbsp;' . $capture(static fn() => Html::showToolTip(
                     htmlescape($checklist["address"]),
-                    ['link' => $checklist["address"], 'linktarget' => '_blank'],
+                    $tooltip_options,
                 ));
             }
 

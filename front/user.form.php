@@ -30,6 +30,7 @@
 use Glpi\Event;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\User as ResourceUser;
 
 // Every branch of this controller reads or writes a core user, and the tab it backs is gated
 // on \User::canView() (src/User.php:102): pose the same right here. Without it the login
@@ -57,7 +58,8 @@ if (empty($_GET["name"])) {
 if (isset($_POST["update"])) {
     $user->check($_POST['id'], UPDATE);
     // idResource is a second identifier, uncorrelated with the user authorised above.
-    // It drives the enumeration of the linked tickets and the ITILSolution::add() below,
+    // It drives the enumeration of the linked tickets and the ITILSolution::add() of
+    // Resource::solveOpenTickets() below,
     // and nothing downstream re-checks it: ITILSolution::prepareInputForAdd() only
     // validates that the parent exists and enforces no right on the ticket, so this
     // controller is the only gate on that path. Authorise it before anything is written.
@@ -72,59 +74,7 @@ if (isset($_POST["update"])) {
         //TRANS: %s is the user login
         sprintf(__('%s updates an item'), $_SESSION["glpiname"]),
     );
-    $ticket = new Ticket();
-    $itemTicket = new Item_Ticket();
-    $content = "";
-    $ticketResources = $itemTicket->find(['itemtype' => Resource::class, 'items_id' => $resource->getID()]);
-    foreach ($_POST as $key => $value) {
-        if (strpos($key, 'field') > 0 && !is_integer(strpos($key, 'plugin_ldapfields'))) {
-            $field = new PluginFieldsField();
-            if ($field->getFromDBByCrit(['name' => $key])) {
-                // Client-supplied value injected into the rich-text solution content: escape it.
-                $content .= $field->getField('label') . " : " . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '<br />';
-            }
-        } else {
-            switch ($key) {
-                case 'phone':
-                    $content .= __('Phone') . " : " . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . "<br />";
-                    break;
-                case '_useremails':
-                    if (is_array($value) && !empty($value)) {
-                        $content .= _n('Email', 'Emails', 1) . " : ";
-                        foreach ($value as $email) {
-                            $content .= htmlspecialchars((string) $email, ENT_QUOTES, 'UTF-8') . "<br />";
-                        }
-                    }
-                    break;
-            }
-        }
-    }
-
-    foreach ($ticketResources as $ticketResource) {
-        $ticket->getFromDB($ticketResource['tickets_id']);
-        if ($ticket->getField('status') < 5) {
-            if (Plugin::isPluginActive("escalade")) {
-                $first_history = PluginEscaladeHistory::getFirstLineForTicket($ticketResource['tickets_id']);
-                //add the first history group (if not already exist)
-                $group_ticket = new Group_Ticket();
-                $condition = [
-                    'tickets_id' => $ticketResource['tickets_id'],
-                    'groups_id' => $first_history['groups_id'],
-                    'type' => CommonITILActor::ASSIGN,
-                ];
-                if (!$group_ticket->find($condition)) {
-                    $group_ticket->add($condition);
-                }
-            }
-            $solution = new ITILSolution();
-            $solution->add([
-                'itemtype' => 'Ticket',
-                'items_id' => $ticket->getField('id'),
-                'content' => $content,
-            ]);
-        }
-    }
-    NotificationEvent::raiseEvent('other', $resource);
+    $resource->solveOpenTickets(ResourceUser::buildSolutionContent($_POST));
     Html::back();
 } else {
     Html::back();
