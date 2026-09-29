@@ -109,19 +109,20 @@ class Import extends CommonDBTM
 
     public function showTitle($links = true, $display = true)
     {
-        $html = TemplateRenderer::getInstance()->render('@resources/import_title.html.twig', [
+        $params = [
             'title'      => $this->getTypeName(),
             'links'      => $links,
             'index_url'  => self::getIndexUrl(),
             'form_url'   => self::getFormUrl(),
             'can_create' => Session::haveRight(self::$rightname, CREATE),
-        ]);
+        ];
 
         if ($display) {
-            echo $html;
+            TemplateRenderer::getInstance()->display('@resources/import_title.html.twig', $params);
+            return '';
         }
 
-        return $html;
+        return TemplateRenderer::getInstance()->render('@resources/import_title.html.twig', $params);
     }
 
     /**

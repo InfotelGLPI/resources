@@ -357,10 +357,7 @@ class ResourceBadge extends CommonDBTM
      */
     public function loadBadgeRestitution()
     {
-        echo Html::submit(
-            _sx('button', 'Save'),
-            ['name' => 'plugin_resources_badge_restitution', 'class' => 'btn btn-primary'],
-        );
+        TemplateRenderer::getInstance()->display('@resources/resourcebadge_restitution_button.html.twig');
     }
 
     /**

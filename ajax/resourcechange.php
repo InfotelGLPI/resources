@@ -37,7 +37,7 @@ Session::checkRight('plugin_resources', READ);
 $resource_change = new Resource_Change();
 
 if (isset($_POST['load_button_changeresources'])) {
-    $resource_change->loadButtonChangeResources($_POST['action'], $_POST);
+    $resource_change->loadButtonChangeResources((int) ($_POST['action'] ?? 0), $_POST);
 } elseif (isset($_POST['action'])) {
     // The three fragments below belong to the "Managing change actions" setup screen, which
     // Resource_Change::showFormActions() gates on canView() && canCreate(): the READ right
@@ -77,5 +77,5 @@ if (isset($_POST['load_button_changeresources'])) {
     if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
         throw new NotFoundHttpException();
     }
-    $resource_change->setFieldByAction($_POST["id"], $resources_id);
+    $resource_change->setFieldByAction((int) ($_POST['id'] ?? 0), $resources_id);
 }

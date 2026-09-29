@@ -61,10 +61,10 @@ if (isset($_GET['page']) && isset($_GET['file'])) {
 
     switch ($_GET['page']) {
         case ImportResource::VERIFY_FILE:
-            $ImportResource->showVerificationFileList($listParams);
+            echo json_encode($ImportResource->showVerificationFileList($listParams));
             break;
         case ImportResource::VERIFY_GLPI:
-            $ImportResource->showVerificationGLPIFromFileList($listParams);
+            echo json_encode($ImportResource->showVerificationGLPIFromFileList($listParams));
             break;
     }
 }

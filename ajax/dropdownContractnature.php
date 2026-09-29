@@ -50,9 +50,9 @@ if ($entity_restrict === []) {
 
 //allow ContractNature's display depending on resource situation
 $options = [
-    'plugin_resources_resourcesituations_id' => $_POST['plugin_resources_resourcesituations_id'],
+    'plugin_resources_resourcesituations_id' => (int) ($_POST['plugin_resources_resourcesituations_id'] ?? 0),
     'entity' => $entity_restrict,
-    'rand' => $_POST['rand'],
+    'rand' => (int) ($_POST['rand'] ?? 0),
 ];
 
 ContractNature::showContractnature($options);

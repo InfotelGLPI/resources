@@ -50,10 +50,10 @@ if ($entity_restrict === []) {
 
 //allow rank's diplay depending on profession
 $options = [
-    'plugin_resources_professions_id' => $_POST['plugin_resources_professions_id'],
+    'plugin_resources_professions_id' => (int) ($_POST['plugin_resources_professions_id'] ?? 0),
     'entity' => $entity_restrict,
-    'rand' => $_POST['rand'],
-    'sort' => $_POST['sort'],
+    'rand' => (int) ($_POST['rand'] ?? 0),
+    'sort' => $_POST['sort'] ?? false,
 ];
 
 Rank::showRank($options);

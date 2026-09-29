@@ -152,96 +152,6 @@ class ImportResource extends CommonDBTM
         return PLUGIN_RESOURCES_WEBDIR . '/front/importresource.php';
     }
 
-    /**
-     * Copy of html::showDateFieldWithoutDiv
-     *
-     * Underscore removed from name
-     * Change self reference to Html
-     *
-     **/
-    //   static function showDateFieldWithoutDiv($name, $options = []) {
-    //      $p['value'] = '';
-    //      $p['maybeempty'] = true;
-    //      $p['canedit'] = true;
-    //      $p['min'] = '';
-    //      $p['max'] = '';
-    //      $p['showyear'] = true;
-    //      $p['display'] = true;
-    //      $p['rand'] = mt_rand();
-    //      $p['yearrange'] = '';
-    //
-    //      foreach ($options as $key => $val) {
-    //         if (isset($p[$key])) {
-    //            $p[$key] = $val;
-    //         }
-    //      }
-    //      $output = "<input id='showdate" . $p['rand'] . "' type='text' size='10' name='$name' " . "value='" . Html::convDate($p['value']) . "'>";
-    //      $output .= Html::hidden($name, ['value' => $p['value'], 'id' => "hiddendate" . $p['rand']]);
-    //      if ($p['maybeempty'] && $p['canedit']) {
-    //         $output .= "<span class='ti ti-circle-x pointer' title='" . __s('Clear') . "' id='resetdate" . $p['rand'] . "'>" . "<span class='sr-only'>" . __('Clear') . "</span></span>";
-    //      }
-    //
-    //      $js = '$(function(){';
-    //      if ($p['maybeempty'] && $p['canedit']) {
-    //         $js .= "$('#resetdate" . $p['rand'] . "').click(function(){
-    //                  $('#showdate" . $p['rand'] . "').val('');
-    //                  $('#hiddendate" . $p['rand'] . "').val('');
-    //                  });";
-    //      }
-    //      $js .= "$( '#showdate" . $p['rand'] . "' ).datepicker({
-    //                  altField: '#hiddendate" . $p['rand'] . "',
-    //                  altFormat: 'yy-mm-dd',
-    //                  firstDay: 1,
-    //                  showOtherMonths: true,
-    //                  selectOtherMonths: true,
-    //                  showButtonPanel: true,
-    //                  changeMonth: true,
-    //                  changeYear: true,
-    //                  showOn: 'both',
-    //                  showWeek: true,
-    //                  buttonText: '<i class=\'far fa-calendar-alt\'></i>'";
-    //
-    //      if (!$p['canedit']) {
-    //         $js .= ',disabled: true';
-    //      }
-    //
-    //      if (!empty($p['min'])) {
-    //         $js .= ",minDate: '" . self::convDate($p['min']) . "'";
-    //      }
-    //
-    //      if (!empty($p['max'])) {
-    //         $js .= ",maxDate: '" . self::convDate($p['max']) . "'";
-    //      }
-    //
-    //      if (!empty($p['yearrange'])) {
-    //         $js .= ",yearRange: '" . $p['yearrange'] . "'";
-    //      }
-    //
-    //      switch ($_SESSION['glpidate_format']) {
-    //         case 1 :
-    //            $p['showyear'] ? $format = 'dd-mm-yy' : $format = 'dd-mm';
-    //            break;
-    //
-    //         case 2 :
-    //            $p['showyear'] ? $format = 'mm-dd-yy' : $format = 'mm-dd';
-    //            break;
-    //
-    //         default :
-    //            $p['showyear'] ? $format = 'yy-mm-dd' : $format = 'mm-dd';
-    //      }
-    //      $js .= ",dateFormat: '" . $format . "'";
-    //
-    //      $js .= "}).next('.ui-datepicker-trigger').addClass('pointer');";
-    //      $js .= "});";
-    //      $output .= Html::scriptBlock($js);
-    //
-    //      if ($p['display']) {
-    //         echo $output;
-    //         return $p['rand'];
-    //      }
-    //      return $output;
-    //   }
-
     public function purgeDatabase()
     {
         global $DB;
@@ -1396,6 +1306,8 @@ class ImportResource extends CommonDBTM
 
     /**
      * @param array $params
+     *
+     * @return array<string, int>|void The statistics in DISPLAY_STATISTICS mode
      */
     public function showVerificationFileList(array $params)
     {
@@ -1500,9 +1412,9 @@ class ImportResource extends CommonDBTM
             $entries[] = ['cells' => $cells];
         }
 
+        // The statistics are serialized by the AJAX endpoint (ajax/verifyCSVStatistics.php).
         if ($display === self::DISPLAY_STATISTICS) {
-            echo json_encode($result);
-            return;
+            return $result;
         }
 
         // Generate pager parameters
@@ -2002,6 +1914,8 @@ class ImportResource extends CommonDBTM
 
     /**
      * @param array $params
+     *
+     * @return array<string, int>|void The statistics in DISPLAY_STATISTICS mode
      */
     public function showVerificationGLPIFromFileList(array $params)
     {
@@ -2263,9 +2177,9 @@ class ImportResource extends CommonDBTM
             ];
         }
 
+        // The statistics are serialized by the AJAX endpoint (ajax/verifyCSVStatistics.php).
         if ($display === self::DISPLAY_STATISTICS) {
-            echo json_encode($result);
-            return;
+            return $result;
         }
 
         // Generate pager parameters

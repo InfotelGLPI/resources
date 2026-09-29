@@ -298,8 +298,7 @@ function plugin_resources_install()
             ];
 
             foreach ($tables as $table) {
-                $query = "DELETE FROM `$table` WHERE (`itemtype` = '4302' ) ";
-                $DB->doQuery($query);
+                $DB->delete($table, ['itemtype' => '4302']);
             }
 
             //            Plugin::migrateItemType(
@@ -486,10 +485,7 @@ function plugin_resources_install()
                 }
             }
 
-            $query = "DELETE FROM `glpi_plugin_resources_checklists`
-               WHERE `plugin_resources_resources_id` ='-1'
-                  OR `plugin_resources_resources_id` ='0';";
-            $DB->doQuery($query);
+            $DB->delete('glpi_plugin_resources_checklists', ['plugin_resources_resources_id' => [-1, 0]]);
 
             // Put realtime in seconds
             if ($DB->fieldExists('glpi_plugin_resources_tasks', 'realtime')) {
@@ -497,9 +493,12 @@ function plugin_resources_install()
             ADD `actiontime` INT( 11 ) NOT NULL DEFAULT 0 ;";
                 $DB->doQuery($query, "0.80 Add actiontime in glpi_plugin_resources_tasks");
 
-                $query = "UPDATE `glpi_plugin_resources_tasks`
-                   SET `actiontime` = ROUND(realtime * 3600)";
-                $DB->doQuery($query, "0.80 Compute actiontime value in glpi_plugin_resources_tasks");
+                // 0.80: compute actiontime (seconds) from realtime (hours) on every row.
+                $DB->update(
+                    'glpi_plugin_resources_tasks',
+                    ['actiontime' => new QueryExpression('ROUND(' . $DB->quoteName('realtime') . ' * 3600)')],
+                    [new QueryExpression('true')],
+                );
 
                 $query = "ALTER TABLE `glpi_plugin_resources_tasks`
             DROP `realtime` ;";
@@ -565,28 +564,32 @@ function plugin_resources_install()
         }
 
         if ($update171) {
-            $query = "SELECT * FROM `glpi_plugin_resources_choices`
-      WHERE `itemtype`!= '' GROUP BY `comment`,`itemtype`";
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
+            // One representative row (the lowest id) per (comment, itemtype) pair: SELECT * with
+            // GROUP BY is rejected under ONLY_FULL_GROUP_BY.
+            $iterator = $DB->request([
+                'SELECT'  => [
+                    new QueryExpression('MIN(' . $DB->quoteName('id') . ') AS ' . $DB->quoteName('id')),
+                    'comment',
+                    'itemtype',
+                ],
+                'FROM'    => 'glpi_plugin_resources_choices',
+                'WHERE'   => ['itemtype' => ['<>', '']],
+                'GROUPBY' => ['comment', 'itemtype'],
+            ]);
 
             $affectedchoices = [];
 
-            if (!empty($number)) {
-                while ($data = $DB->fetchAssoc($result)) {
-                    $restrictaffected = [
-                        "itemtype" => $data['raw']["ITEMtype"],
-                        "comment" => $data["comment"],
-                    ];
-                    $affected = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
+            foreach ($iterator as $data) {
+                $restrictaffected = [
+                    "itemtype" => $data["itemtype"],
+                    "comment" => $data["comment"],
+                ];
+                $affected = $dbu->getAllDataFromTable("glpi_plugin_resources_choices", $restrictaffected);
 
-                    if (!empty($affected)) {
-                        foreach ($affected as $affect) {
-                            if ($affect["itemtype"] == $data['raw']["ITEMtype"]
-                                && $affect["comment"] == $data["comment"]) {
-                                $affectedchoices[$data["id"]][] = $affect["plugin_resources_resources_id"];
-                            }
-                        }
+                foreach ($affected as $affect) {
+                    if ($affect["itemtype"] == $data["itemtype"]
+                        && $affect["comment"] == $data["comment"]) {
+                        $affectedchoices[$data["id"]][] = $affect["plugin_resources_resources_id"];
                     }
                 }
             }
@@ -822,25 +825,10 @@ function plugin_resources_install()
                         ]);
                         if (count($iterator2) > 0) {
                             foreach ($iterator2 as $dataid) {
-                                $query = $DB->buildDelete(
-                                    'glpi_displaypreferences',
-                                    [
-                                        'id' => $dataid['id'],
-                                    ],
-                                );
-                                $DB->doQuery($query);
+                                $DB->delete('glpi_displaypreferences', ['id' => $dataid['id']]);
                             }
                         } else {
-                            $query = $DB->buildUpdate(
-                                'glpi_displaypreferences',
-                                [
-                                    'itemtype' => $new,
-                                ],
-                                [
-                                    'id' => $data['id'],
-                                ],
-                            );
-                            $DB->doQuery($query);
+                            $DB->update('glpi_displaypreferences', ['itemtype' => $new], ['id' => $data['id']]);
                         }
                     }
                 }

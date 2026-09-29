@@ -85,7 +85,7 @@ class DateCriteria extends AutoCriteria
     public function displayCriteria()
     {
         $this->getReport()->startColumn();
-        echo $this->getCriteriaLabel($this->getName()) . '&nbsp;:';
+        echo htmlescape($this->getCriteriaLabel($this->getName())) . '&nbsp;:';
         $this->getReport()->endColumn();
 
         $this->getReport()->startColumn();

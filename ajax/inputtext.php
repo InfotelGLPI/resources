@@ -37,7 +37,7 @@ if (isset($_POST['name'])) {
         'name' => $_POST['name'],
         // No htmlescape() here: Html::textarea() already escapes 'value', and escaping
         // twice renders the entities themselves (&amp;lt; instead of <).
-        'value' => rawurldecode($_POST["data"]),
+        'value' => rawurldecode((string) ($_POST['data'] ?? '')),
         'cols' => '30',
         'rows' => '3',
         'display' => false,

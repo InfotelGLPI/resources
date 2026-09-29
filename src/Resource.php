@@ -2874,6 +2874,7 @@ class Resource extends CommonDBTM
         }
         $output .= Ajax::commonDropdownUpdateItem($params, false);
         $output .= "</span>";
+        // Same display/return contract as the core Dropdown helpers.
         if ($params['display']) {
             echo $output;
             return $params['rand'];
@@ -3589,6 +3590,7 @@ class Resource extends CommonDBTM
                 Dropdown::show('Entity');
                 break;
             case "plugin_resources_add_item":
+                // showMassiveActionsSubForm() is a printing core hook.
                 echo Html::hidden('itemtype', ['value' => $itemtype]);
                 self::dropdown(['display' => true]);
                 break;

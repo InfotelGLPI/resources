@@ -37,7 +37,7 @@ Session::checkRight('plugin_resources', READ);
 
 if (isset($_POST['duration']) && $_POST['duration'] == 0) {
     Html::showDateTimeField("plan[end]", [
-        'value' => $_POST['end'],
+        'value' => $_POST['end'] ?? '',
         'maybeempty' => false,
         'mintime' => $CFG_GLPI['planning_begin'],
         'maxtime' => $CFG_GLPI['planning_end'],

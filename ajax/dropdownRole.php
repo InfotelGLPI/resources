@@ -35,12 +35,13 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownRole.php")) {
 }
 Session::checkRight('plugin_resources', READ);
 
-if ($_POST['plugin_resources_services_id'] > 0) {
+$services_id = (int) ($_POST['plugin_resources_services_id'] ?? 0);
+if ($services_id > 0) {
     $opt = [
         'name' => "plugin_resources_roles_id",
         'entity' => $_SESSION['glpiactiveentities'],
-        'rand' => $_POST['rand'],
+        'rand' => (int) ($_POST['rand'] ?? 0),
         'display' => false,
     ];
-    echo Role::dropdownFromService($_POST['plugin_resources_services_id'], $opt);
+    echo Role::dropdownFromService($services_id, $opt);
 }

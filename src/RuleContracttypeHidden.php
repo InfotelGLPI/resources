@@ -156,6 +156,7 @@ class RuleContracttypeHidden extends Rule
             }
         }
         if (!$entity_as_criteria) {
+            // Printing core hook: the core caller expects this method to echo, as Rule does.
             echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
         }
     }

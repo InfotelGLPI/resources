@@ -81,7 +81,7 @@ if ($resources_id > 0) {
             TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
                 'item' => $leavinginformation,
                 'params' => [
-                    'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id'],
+                    'plugin_resources_resources_id' => $resources_id,
                     'default_button' => true,
                     'element_sales' => $used,
 
@@ -92,7 +92,7 @@ if ($resources_id > 0) {
             TemplateRenderer::getInstance()->display('@resources/leavinginformation.html.twig', [
                 'item' => $leavinginformation,
                 'params' => [
-                    'plugin_resources_resources_id' => $_POST['plugin_resources_resources_id'],
+                    'plugin_resources_resources_id' => $resources_id,
                     'default_button' => true,
                     'right_sales' => true,
                 ],

@@ -476,17 +476,17 @@ class Resource_Item extends CommonDBRelation
             ];
         }
 
-        $render = TemplateRenderer::getInstance()->render('@resources/resource_item_dropdown.html.twig', [
+        $params = [
             'field_name'  => 'item_item',
             'empty_value' => Dropdown::EMPTY_VALUE,
             'options'     => $options,
-        ]);
+        ];
 
         if (!$display) {
-            return $render;
+            return TemplateRenderer::getInstance()->render('@resources/resource_item_dropdown.html.twig', $params);
         }
 
-        echo $render;
+        TemplateRenderer::getInstance()->display('@resources/resource_item_dropdown.html.twig', $params);
     }
 
     /**

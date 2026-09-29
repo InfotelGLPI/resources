@@ -186,6 +186,7 @@ class RuleChecklist extends Rule
         }
 
         if ($condition == Rule::PATTERN_EXISTS || $condition == Rule::PATTERN_DOES_NOT_EXISTS) {
+            // Printing core hook: the core caller expects this method to echo, as Rule does.
             echo Html::hidden($name, ['value' => 1]);
             $display = true;
         }

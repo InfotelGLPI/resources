@@ -34,6 +34,7 @@ use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\ResourceBadge;
 use GlpiPlugin\Resources\TicketCategory;
 use GlpiPlugin\Resources\TransferEntity;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 Session::checkRight("config", UPDATE);
 
@@ -48,11 +49,26 @@ if (Plugin::isPluginActive("resources")) {
     }
 
     if (isset($_POST["add_ticket"])) {
-        $cat->addTicketCategory($_POST['ticketcategories_id']);
+        $cat->check(-1, CREATE, $_POST);
+        // The posted category is stored and later applied to the created tickets: it must
+        // exist and belong to an entity the current user can reach, as the dropdown offers.
+        $itilcategories_id = (int) ($_POST['ticketcategories_id'] ?? 0);
+        $itilcategory = new ITILCategory();
+        if ($itilcategories_id > 0) {
+            if (
+                !$itilcategory->getFromDB($itilcategories_id)
+                || !Session::haveAccessToEntity($itilcategory->getEntityID(), $itilcategory->isRecursive())
+            ) {
+                throw new NotFoundHttpException();
+            }
+            $cat->addTicketCategory($itilcategories_id);
+        }
         Html::back();
     } elseif (isset($_POST["delete_ticket"])) {
-        if (isset($_POST['id'])) {
-            $cat->delete(['id' => $_POST['id']]);
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id > 0) {
+            $cat->check($id, PURGE);
+            $cat->delete(['id' => $id], true);
         }
         Html::back();
     } elseif (isset($_POST["add_transferentity"])) {
