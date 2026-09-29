@@ -37,7 +37,7 @@
         <button type="submit" name="{{ btn.name }}"
                 class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
                 {%- if btn.confirm is defined and btn.confirm is not empty %}
-                    onclick="return confirm('{{ btn.confirm|e('js') }}');"
+                    data-resources-confirm="{{ btn.confirm }}"
                 {%- endif %}>{{ btn.label }}</button>
     {% endfor %}
 </form>

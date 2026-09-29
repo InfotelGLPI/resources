@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
@@ -269,32 +268,11 @@ class Choice extends CommonDBTM
      */
     public static function showAddCommentForm($item, $rand)
     {
-        $items_id = $item['id'];
-
-        $show_js = "function viewAddNeedComment$items_id(){\n";
-        $show_js .= Ajax::updateItemJsCode(
-            "addneedcomment$items_id$rand",
-            PLUGIN_RESOURCES_WEBDIR . "/ajax/addneedcomment.php",
-            [
-                'id' => $items_id,
-                'rand' => $rand,
-            ],
-            false,
-            false,
-        );
-        $show_js .= "};";
-        echo Html::scriptBlock($show_js);
-
         TemplateRenderer::getInstance()->display('@resources/choice_add_comment_form.html.twig', [
-            'items_id' => $items_id,
+            'items_id' => $item['id'],
             'rand'     => $rand,
+            'ajax_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/addneedcomment.php',
         ]);
-
-        $hide_js = "function hideAddForm$items_id() {\n";
-        $hide_js .= "$('#addcommentneed$items_id$rand').hide();";
-        $hide_js .= "$('#viewaccept$items_id').hide();";
-        $hide_js .= "}\n";
-        echo Html::scriptBlock($hide_js);
     }
 
     /**
@@ -306,36 +284,14 @@ class Choice extends CommonDBTM
 
         $items_id = $item['id'];
 
-        $params = [
-            'name' => 'commentneed' . $items_id,
-            'data' => rawurlencode($item["comment"]),
-        ];
-
-        $show_js = "function showComment$items_id () {\n";
-        $show_js .= "$('#commentneed$items_id$rand').hide();";
-        $show_js .= "$('#viewaccept$items_id$rand').show();";
-        $show_js .= Ajax::updateItemJsCode(
-            "viewcommentneed$items_id$rand",
-            PLUGIN_RESOURCES_WEBDIR . "/ajax/inputtext.php",
-            $params,
-            false,
-            false,
-        );
-        $show_js .= "}";
-        echo Html::scriptBlock($show_js);
-
         TemplateRenderer::getInstance()->display('@resources/choice_comment_form.html.twig', [
             'items_id' => $items_id,
             'rand'     => $rand,
             'comment'  => nl2br(htmlescape($item["comment"])),
+            'ajax_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/inputtext.php',
+            // Posted back to ajax/inputtext.php, which fills the textarea with it.
+            'raw_comment' => rawurlencode((string) $item["comment"]),
         ]);
-
-        $hide_js = "function hideForm$items_id() {\n";
-        $hide_js .= "$('#viewcommentneed$items_id$rand textarea').remove();";
-        $hide_js .= "$('#commentneed$items_id$rand').show();";
-        $hide_js .= "$('#viewaccept$items_id$rand').hide();";
-        $hide_js .= "}\n";
-        echo Html::scriptBlock($hide_js);
     }
 
     /**

@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use Alert;
 use CommonDBTM;
 use CommonGLPI;
@@ -664,25 +663,6 @@ class Checklist extends CommonDBTM
         }
 
         $can_add = self::canCreate() && $canedit;
-        if ($can_add) {
-            $js = "function viewAddChecklistTask{$rand}(){\n";
-            $js .= Ajax::updateItemJsCode(
-                "viewchecklisttask" . $rand,
-                PLUGIN_RESOURCES_WEBDIR . "/ajax/viewchecklisttask.php",
-                [
-                    'type' => self::class,
-                    'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
-                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
-                    'checklist_type' => $checklist_type,
-                    'id' => -1,
-                ],
-                '',
-                false,
-            );
-            $js .= "};";
-            echo Html::scriptBlock($js);
-        }
-
         // Get check list
         $restrict = [
             "entities_id" => $entities_id,
@@ -822,6 +802,14 @@ class Checklist extends CommonDBTM
             'finished_title'      => self::getTypeName(0),
             'can_add'             => $can_add,
             'add_link_name'       => $addLinkName,
+            'add_url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/viewchecklisttask.php',
+            'add_params'          => [
+                'type'                              => self::class,
+                'plugin_resources_contracttypes_id' => $plugin_resources_contracttypes_id,
+                'plugin_resources_resources_id'     => $plugin_resources_resources_id,
+                'checklist_type'                    => $checklist_type,
+                'id'                                => -1,
+            ],
             'is_finished'         => $isfinished,
             'show_close_panel'    => $show_close_panel,
             'show_task_column'    => $show_task_column,
@@ -900,19 +888,24 @@ class Checklist extends CommonDBTM
      */
     public static function showMassiveActionsSubForm(MassiveAction $ma)
     {
-        $input = $ma->getInput();
-        foreach ($input as $key => $val) {
-            if (!is_array($val)) {
-                echo Html::hidden($key, ['value' => $val]);
-            }
+        $hidden = array_filter($ma->getInput(), static fn($val) => !is_array($val));
+
+        $label   = '';
+        $widgets = [];
+        if ($ma->getAction() === 'add_task') {
+            $label     = __('Assigned to');
+            $widgets[] = (string) User::dropdown([
+                'name'    => 'users_id',
+                'right'   => 'interface',
+                'display' => false,
+            ]);
         }
 
-        switch ($ma->getAction()) {
-            case "add_task":
-                echo "&nbsp;" . __('Assigned to') . "&nbsp;";
-                User::dropdown(['name' => "users_id", 'right' => 'interface']);
-                break;
-        }
+        TemplateRenderer::getInstance()->display('@resources/massiveaction_subform.html.twig', [
+            'hidden'  => $hidden,
+            'label'   => $label,
+            'widgets' => $widgets,
+        ]);
 
         return parent::showMassiveActionsSubForm($ma);
     }

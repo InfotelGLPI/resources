@@ -37,6 +37,7 @@ use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\ProfessionCategory;
 use GlpiPlugin\Resources\ProfessionLine;
 use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\ReportExport;
 
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
@@ -371,50 +372,19 @@ if ($report->criteriasValidated()) {
         $start = 0;
     }
 
-    if ($nbtot == 0) {
+    // An export of an empty report falls back to the HTML page and its "no results" message.
+    if ($output_type == Search::HTML_OUTPUT || $nbtot == 0) {
         if (!$HEADER_LOADED) {
             Html::header($title, $report_target, "utils", "report");
             Report::title();
         }
-        echo "<div class='alert alert-danger center'>" . __('No results found') . "</div>";
-        Html::footer();
-    } elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-        include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
-    } elseif ($output_type == Search::HTML_OUTPUT) {
-        if (!$HEADER_LOADED) {
-            Html::header($title, $report_target, "utils", "report");
-            Report::title();
+        $param = ReportExport::showToolbar($title, $report_target, $start, $nbtot);
+        if ($nbtot > 0) {
+            Html::printPager($start, $nbtot, $report_target, $param);
         }
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th>$title</th></tr>\n";
-        echo "<tr class='tab_bg_2 center'><td class='center'>";
-        echo "<form method='POST' action='" . htmlescape($report_target) . "?start=$start'>\n";
-
-        $param = "";
-        foreach ($_POST as $key => $val) {
-            if (is_array($val)) {
-                foreach ($val as $k => $v) {
-                    $name = $key . "[$k]";
-                    echo Html::hidden($name, ['value' => $v]);
-                    if (!empty($param)) {
-                        $param .= "&";
-                    }
-                    $param .= $key . "[" . $k . "]=" . urlencode($v);
-                }
-            } else {
-                echo Html::hidden($key, ['value' => $val]);
-                if (!empty($param)) {
-                    $param .= "&";
-                }
-                $param .= "$key=" . urlencode($val);
-            }
+        if ($output_type != Search::HTML_OUTPUT) {
+            Html::footer();
         }
-        Dropdown::showOutputFormat();
-        Html::closeForm();
-        echo "</td></tr>";
-        echo "</table></div>";
-
-        Html::printPager($start, $nbtot, $report_target, $param);
     }
 
     if ($nbtot > 0) {
@@ -428,9 +398,9 @@ if ($report->criteriasValidated()) {
         $order = 'ASC';
         $issort = false;
 
-        echo Search::showHeader($output_type, $nbrows, $nbcols, true);
+        echo ReportExport::showHeader($output_type, $nbrows, $nbcols, true);
 
-        echo Search::showNewLine($output_type);
+        echo ReportExport::showNewLine($output_type);
 
         showTitle($output_type, $num, ProfessionLine::getTypeName(1), 'professionline', true);
         showTitle($output_type, $num, ProfessionCategory::getTypeName(1), 'professioncategory', true);
@@ -447,34 +417,34 @@ if ($report->criteriasValidated()) {
         showTitle($output_type, $num, __('Begin date'), 'begin_date', true);
         showTitle($output_type, $num, __('End date'), 'end_date', true);
 
-        echo Search::showEndLine($output_type);
+        echo ReportExport::showEndLine($output_type);
 
         if ($limit) {
             $dataAll = array_slice($dataAll, $start, $limit);
         }
 
         // Escape raw DB values (resource identity, rank/profession labels) before output:
-        // Search::showItem() concatenates its value straight into the <td>, and GLPI 10+
+        // ReportExport::showItem() concatenates its value straight into the <td>, and GLPI 10+
         // stores these fields unencoded, so a crafted value would otherwise run as HTML.
         $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
 
         foreach ($dataAll as $key => $data) {
             $num = 1;
             if (!is_numeric($data['professionline'])) {
-                echo Search::showNewLine($output_type);
-                echo Search::showItem($output_type, $escape($data['professionline']), $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
-                echo Search::showItem($output_type, '', $num, $key);
+                echo ReportExport::showNewLine($output_type);
+                echo ReportExport::showItem($output_type, $escape($data['professionline']), $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
+                echo ReportExport::showItem($output_type, '', $num, $key);
 
-                echo Search::showEndLine($output_type);
+                echo ReportExport::showEndLine($output_type);
             } else {
-                echo Search::showNewLine($output_type);
-                echo Search::showItem(
+                echo ReportExport::showNewLine($output_type);
+                echo ReportExport::showItem(
                     $output_type,
                     $escape(
                         Dropdown::getDropdownName(
@@ -485,7 +455,7 @@ if ($report->criteriasValidated()) {
                     $num,
                     $key,
                 );
-                echo Search::showItem(
+                echo ReportExport::showItem(
                     $output_type,
                     $escape(
                         Dropdown::getDropdownName(
@@ -496,23 +466,23 @@ if ($report->criteriasValidated()) {
                     $num,
                     $key,
                 );
-                echo Search::showItem($output_type, $escape($data['profession']), $num, $key);
-                echo Search::showItem($output_type, $escape($data['profession_code']), $num, $key);
+                echo ReportExport::showItem($output_type, $escape($data['profession']), $num, $key);
+                echo ReportExport::showItem($output_type, $escape($data['profession_code']), $num, $key);
                 if ($data['rank_name'] == '0') {
                     $data['rank_name'] = '';
                 }
-                echo Search::showItem($output_type, $escape($data['rank_name']), $num, $key);
+                echo ReportExport::showItem($output_type, $escape($data['rank_name']), $num, $key);
                 if ($data['rank_code'] == '0') {
                     $data['rank_code'] = '';
                 }
-                echo Search::showItem($output_type, $escape($data['rank_code']), $num, $key);
-                echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
-                echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
-                echo Search::showEndLine($output_type);
+                echo ReportExport::showItem($output_type, $escape($data['rank_code']), $num, $key);
+                echo ReportExport::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
+                echo ReportExport::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
+                echo ReportExport::showEndLine($output_type);
             }
         }
 
-        echo Search::showFooter($output_type, $title);
+        echo ReportExport::showFooter($output_type, $title);
     }
 }
 
@@ -533,7 +503,7 @@ if ($output_type == Search::HTML_OUTPUT) {
 function showTitle($output_type, &$num, $title, $columnname, $sort = false)
 {
     if ($output_type != Search::HTML_OUTPUT || $sort == false) {
-        echo Search::showHeaderItem($output_type, $title, $num);
+        echo ReportExport::showHeaderItem($output_type, $title, $num);
         return;
     }
     $order = 'ASC';
@@ -555,7 +525,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
     }
     $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
     $link .= '&amp;order=' . $order;
-    echo Search::showHeaderItem(
+    echo ReportExport::showHeaderItem(
         $output_type,
         $title,
         $num,

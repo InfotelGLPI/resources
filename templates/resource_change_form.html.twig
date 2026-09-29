@@ -39,7 +39,7 @@
             </span>
         </h3>
         <div class="card-body">
-            <form method="post" action="{{ form_action }}">
+            <form method="post" action="{{ form_action }}" data-resources-change-form="{{ fields_url }}">
                 <div class="row">
                     {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, {
                         'wrapper_class': '',
@@ -51,8 +51,8 @@
                     }) }}
                 </div>
 
-                {# Both blocks are filled by public/resources.js once a resource and an action
-                 # have been picked; the submit button comes with the second one. #}
+                {# Both blocks are filled by public/scripts/resourcechange.js once a resource and
+                 # an action have been picked; the submit button comes with the second one. #}
                 <div id="plugin_resources_actions">
                     {% if error_message %}
                         <span class="red">{{ error_message }}</span>

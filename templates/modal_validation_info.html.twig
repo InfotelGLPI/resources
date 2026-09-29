@@ -25,13 +25,15 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Confirmation prompt of the resource information validation. The confirm button calls
- # validinformation(), emitted by Resource_Validation right next to this modal. #}
+{# Confirmation prompt of the resource information validation, included in the modal of
+ # resource_validation_form.html.twig.
+ # The confirm button is handled by public/scripts/validation.js. #}
 <div>{{ __('Do you verify all the information listed on this resource?', 'resources') }}</div>
 <br><br>
 
 <button type="button" id="btnAddAnswer" class="btn btn-primary" data-bs-dismiss="modal"
-        onclick="validinformation()">
+        data-resources-validate="{{ validate_url }}"
+        data-resources-id="{{ resources_id }}">
     {{ __('Validate', 'resources') }}
 </button>
 <button type="button" id="btnClose" class="btn btn-secondary" data-bs-dismiss="modal">

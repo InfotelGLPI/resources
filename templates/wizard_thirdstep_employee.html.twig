@@ -89,24 +89,13 @@
                         "GlpiPlugin\\Resources\\Client"|itemtype_name,
                         {
                             'entity': params['entities_id'],
-                            'on_change' : 'security_compliance(this.value);'
+                            'toupdate': {
+                                'value_fieldname': 'plugin_resources_clients_id',
+                                'to_update': 'security_compliance',
+                                'url': root_resources ~ '/ajax/employee.php',
+                            },
                         }
                     ) }}
-                    <script type='text/javascript'>
-                        function security_compliance(id) {
-                            var root_resources = '{{ root_resources }}';
-                            $.ajax({
-                                url: root_resources + '/ajax/employee.php',
-                                type: 'POST',
-                                data: '&plugin_resources_clients_id=' + id,
-                                dataType: 'html',
-                                success: function (code_html, statut) {
-                                    $('#security_compliance').html(code_html);
-                                },
-
-                            });
-                        }
-                    </script>
                     <div class="form-field row align-items-center col-12 col-sm-12 mb-2"
                          id="security_compliance">
                         {# Only the compliant state is rendered on load: the client dropdown starts

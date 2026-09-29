@@ -90,7 +90,5 @@ if ($default_delay == 0) {
         'duration' => 0,
         'end' => $end,
         'name' => "plan[end]",
-        'global_begin' => $CFG_GLPI["planning_begin"],
-        'global_end' => $CFG_GLPI["planning_end"],
     ]);
 }

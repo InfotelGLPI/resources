@@ -761,48 +761,10 @@ class ImportResource extends CommonDBTM
             'form_action'     => self::getFormURL(),
             'filename'        => $params[self::SELECTED_FILE_DROPDOWN_NAME] ?? '',
             'validate_label'  => __('Validate and pre-import file', 'resources'),
+            // Read by public/scripts/import.js when the counters are computed.
+            'stats_url'       => PLUGIN_RESOURCES_WEBDIR . '/ajax/verifyCSVStatistics.php',
+            'page'            => (string) $params['type'],
         ]);
-
-        // The counters script is only meaningful when the #calculate button was rendered.
-        if (!$show_actions || empty($stats)) {
-            return;
-        }
-
-        $initElemJs     = '';
-        $updateResultJs = '';
-        foreach (array_keys($stats) as $key) {
-            $initElemJs     .= "$('#{$key}').html('?');";
-            $updateResultJs .= "$('#{$key}').html(results.{$key});";
-        }
-
-        $url  = PLUGIN_RESOURCES_WEBDIR . '/ajax/verifyCSVStatistics.php';
-        $page = json_encode((string) $params['type'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
-
-        echo Html::scriptBlock(<<<JAVASCRIPT
-            $('#calculate').click(function () {
-                {$initElemJs}
-                $('#ajax_loader').show();
-                $.ajax({
-                    url: '{$url}',
-                    data: {
-                        page: {$page},
-                        file: $('[name="selected-file"] option:selected').text()
-                    },
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        let results = data;
-                        {$updateResultJs}
-                        $('#ajax_loader').hide();
-                    },
-                    error: function (xhr, status) {
-                        console.error(xhr);
-                        console.error(status);
-                        $('#ajax_loader').hide();
-                    }
-                });
-            });
-            JAVASCRIPT);
     }
 
     /**

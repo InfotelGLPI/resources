@@ -27,8 +27,7 @@
 
 {# Add comment form of a checklist choice, AJAX loaded into #addneedcomment{id}{rand} by
  # Choice::showAddCommentForm(). The submit button belongs to the form of the surrounding
- # list, and hideAddForm{id}() hides the two blocks below, so their ids must stay in sync
- # with the ones it targets. #}
+ # list, and its cancel button hides the two blocks below through public/scripts/fragments.js. #}
 <div id="addcommentneed{{ items_id }}{{ rand }}" class="center">
     <textarea class="form-control" name="commentneed{{ items_id }}" rows="3" cols="30"></textarea>
     <input type="hidden" name="id" value="{{ items_id }}">
@@ -39,7 +38,7 @@
         <input type="submit" name="updateneedcomment[{{ items_id }}]"
                value="{{ _x('button', 'Add') }}" class="submit btn btn-primary">
         &nbsp;
-        <input type="button" onclick="hideAddForm{{ items_id }}();"
+        <input type="button" data-resources-hide="#addcommentneed{{ items_id }}{{ rand }}, #viewaccept{{ items_id }}"
                value="{{ _x('button', 'Cancel') }}" class="submit btn btn-primary">
     </p>
 </div>

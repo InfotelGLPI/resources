@@ -26,9 +26,9 @@
  #}
 
 {# Entity cell of the change-action form, reloaded over AJAX when the action changes.
- # The category dropdown is nested in the span its own reload script targets. #}
+ # The dropdown is the core markup of Dropdown::show(), which reloads the nested category
+ # span itself. #}
 <span class="me-1">{{ label }}</span>{{ dropdown|raw }}
-{{ script|raw }}
 
 <span id="plugin_resource_itil_categories">
     {% include '@resources/resource_change_category.html.twig' with category only %}

@@ -25,31 +25,17 @@
  # --------------------------------------------------------------------------
  #}
 
-{% import 'components/form/fields_macros.html.twig' as fields %}
 
-{# AJAX fragment injected into #plugin_resources_resting by ajax/resourceresting.php.
- # Picking an intercontrat loads its end date field and the submit button. #}
-<div class="row">
-    {{ fields.dropdownArrayField(
-        'plugin_resources_resting_id',
-        0,
-        elements,
-        __('Choosing the intercontrat', 'resources'),
-        {
-            'toupdate': [
-                {
-                    'value_fieldname': 'plugin_resources_resting_id',
-                    'to_update': 'plugin_resources_endate_resting',
-                    'url': ajax_url,
-                    'moreparams': {'action': 'loadEndDateResting'},
-                },
-                {
-                    'value_fieldname': 'plugin_resources_resting_id',
-                    'to_update': 'plugin_resources_button_resting',
-                    'url': ajax_url,
-                    'moreparams': {'action': 'loadButtonResting'},
-                },
-            ],
-        }
-    ) }}
-</div>
+{# Massive action sub form, rendered inside the form opened by MassiveAction.
+ # `hidden` lists the scalar inputs of the action posted back as hidden fields, `widgets`
+ # the core markup of the dropdowns of the action, laid out in a row. #}
+{% for name, value in hidden|default([]) %}
+    <input type="hidden" name="{{ name }}" value="{{ value }}">
+{% endfor %}
+{% if label|default('') is not empty %}
+    <span class="me-1">{{ label }}</span>
+{% endif %}
+{% for widget in widgets|default([]) %}
+    {# Core markup of Dropdown::show*() and RuleCriteria::dropdownConditions(). #}
+    <span class="me-1">{{ widget|raw }}</span>
+{% endfor %}

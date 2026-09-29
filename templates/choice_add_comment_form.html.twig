@@ -29,5 +29,7 @@
 <div class="center" id="addneedcomment{{ items_id }}{{ rand }}"></div>
 
 <p class="center">
-    <a href="javascript:viewAddNeedComment{{ items_id }}();">{{ __('Add a comment', 'resources') }}</a>
+    <a href="#" data-resources-load-url="{{ ajax_url }}"
+       data-resources-load-target="addneedcomment{{ items_id }}{{ rand }}"
+       data-resources-load-params="{{ {'id': items_id, 'rand': rand}|json_encode }}">{{ __('Add a comment', 'resources') }}</a>
 </p>

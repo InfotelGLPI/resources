@@ -26,8 +26,8 @@
  #}
 
 {# Table-head fragment: emitted inside a <table> opened by the calling list.
- # The <span id="..."> placeholders are filled by the statistics AJAX call whose
- # script is emitted alongside this template. #}
+ # The data-resources-stat placeholders are filled by public/scripts/import.js when
+ # the #calculate button is clicked. #}
 <thead>
     <tr>
         <th colspan="{{ colspan }}">
@@ -51,10 +51,12 @@
                     {% if stats is not empty %}
                         <ul>
                             {% for id, label in stats %}
-                                <li>{{ label }}&nbsp;&nbsp;&nbsp;<span id="{{ id }}">?</span></li>
+                                <li>{{ label }}&nbsp;&nbsp;&nbsp;<span id="{{ id }}" data-resources-stat="{{ id }}">?</span></li>
                             {% endfor %}
                             <li>
-                                <button id="calculate" class="button">{{ __('Calculate', 'resources') }}</button>
+                                <button type="button" id="calculate" class="btn btn-secondary"
+                                        data-resources-stats-url="{{ stats_url }}"
+                                        data-resources-page="{{ page }}">{{ __('Calculate', 'resources') }}</button>
                             </li>
                         </ul>
                     {% endif %}

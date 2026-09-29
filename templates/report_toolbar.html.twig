@@ -25,15 +25,26 @@
  # --------------------------------------------------------------------------
  #}
 
-{# `label` is built server-side: either a date range (which carries &nbsp; entities)
- # or an already-escaped caption, hence |raw. #}
-{% if can_create %}
-    {# A click swaps the caption for the planning form (public/scripts/fragments.js). #}
-    <div id="plan" data-resources-hide="#plan" data-resources-load-url="{{ load_url }}"
-         data-resources-load-target="viewplan" data-resources-load-params="{{ load_params|json_encode }}">
-        <span class="showplan">{{ label|raw }}</span>
-    </div>
-    <div id="viewplan"></div>
+{# Export bar of the reports, rendered by ReportExport::showToolbar(). The posted report
+ # criteria are replayed as hidden fields so the export runs on the same selection. #}
+{% if total == 0 %}
+    <div class="alert alert-danger center">{{ __('No results found') }}</div>
 {% else %}
-    {{ label|raw }}
+    <div class="center">
+        <table class="tab_cadre_fixe">
+            <tr><th>{{ title }}</th></tr>
+            <tr class="tab_bg_2 center">
+                <td class="center">
+                    <form method="post" action="{{ action }}">
+                        {% for field in hidden_fields %}
+                            <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+                        {% endfor %}
+                        {# Dropdown::showOutputFormat() echoes the core export selector and its button. #}
+                        {{ output_format|raw }}
+                        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
 {% endif %}

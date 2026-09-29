@@ -32,16 +32,6 @@ use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 
-if (Session::getCurrentInterface() == 'central') {
-    Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
-} else {
-    if (Plugin::isPluginActive('servicecatalog')) {
-        Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
-    } else {
-        Html::helpHeader(Resource::getTypeName(2));
-    }
-}
-
 $resource = new Resource();
 $resource_change = new Resource_Change();
 
@@ -59,25 +49,28 @@ if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["pl
         $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
         Html::back();
     }
-} elseif (isset($_POST["change_action"]) && $_POST["change_action"] == 0 && $_POST["plugin_resources_resources_id"] == 0) {
+} else {
+    if (Session::getCurrentInterface() == 'central') {
+        Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
+    } else {
+        if (Plugin::isPluginActive('servicecatalog')) {
+            Main::showDefaultHeaderHelpdesk(Menu::getTypeName(2));
+        } else {
+            Html::helpHeader(Resource::getTypeName(2));
+        }
+    }
     if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-        //show remove resource form
+        //show change resource form
         $resource->showResourcesToChange($_POST);
     }
-} else {
-    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-        //show remove resource form
-        $resource->showResourcesToChange($_POST);
+    if (Session::getCurrentInterface() != 'central'
+        && Plugin::isPluginActive('servicecatalog')) {
+        Main::showNavBarFooter('resources');
     }
-}
 
-if (Session::getCurrentInterface() != 'central'
-    && Plugin::isPluginActive('servicecatalog')) {
-    Main::showNavBarFooter('resources');
-}
-
-if (Session::getCurrentInterface() == 'central') {
-    Html::footer();
-} else {
-    Html::helpFooter();
+    if (Session::getCurrentInterface() == 'central') {
+        Html::footer();
+    } else {
+        Html::helpFooter();
+    }
 }

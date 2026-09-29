@@ -48,7 +48,8 @@
                 </div>
 
                 {# Refreshed by ajax/leavingform.php every time another resource is picked. #}
-                <div id="leaving_input">
+                <div id="leaving_input"{% if leaving_params is not empty %} data-resources-autoload-url="{{ leaving_url }}"
+                     data-resources-load-params="{{ leaving_params|json_encode }}"{% endif %}>
                     <div class="row">
                         {{ fields.dateField('date_end', date_end, __('Departure date', 'resources')) }}
                     </div>
@@ -59,7 +60,7 @@
                     </div>
                 </div>
 
-                {# Filled by plugin_resources_pdf_resource(), bound on the dropdown above. #}
+                {# Filled by ajax/pdfresource.php when the dropdown above changes. #}
                 <div class="center" id="resource_pdf"></div>
 
                 <div class="row">
@@ -73,8 +74,6 @@
                 </div>
 
                 <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-                {# Emitted last: the scripts target #leaving_input, which must already exist. #}
-                {{ scripts|raw }}
             </form>
         </div>
     </div>

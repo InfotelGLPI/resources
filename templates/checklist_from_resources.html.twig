@@ -32,7 +32,8 @@
     <tr>
         <th width="15px">
             <span id="menu_navigate">
-                <a href="javascript:showHideDiv('{{ view_id }}', 'checklistimg{{ rand }}', 'ti-chevrons-down fa-2x', 'ti-chevrons-up fa-2x')">
+                <a href="#" data-resources-toggle="{{ view_id }}" data-resources-toggle-icon="checklistimg{{ rand }}"
+                   data-resources-toggle-closed="ti-chevrons-down fa-2x" data-resources-toggle-open="ti-chevrons-up fa-2x">
                     <i id="checklistimg{{ rand }}" style="color:orange" class="ti ti-chevrons-up fa-2x"></i>
                 </a>
             </span>
@@ -47,8 +48,10 @@
                     {# AJAX target for the "add a task" sub-form. #}
                     <div id="viewchecklisttask{{ rand }}"></div>
                     <div style="margin:10px">
-                        <a class="submit btn btn-primary"
-                           href="javascript:viewAddChecklistTask{{ rand }}();">{{ add_link_name }}</a>
+                        <a class="submit btn btn-primary" href="#"
+                           data-resources-load-url="{{ add_url }}"
+                           data-resources-load-target="viewchecklisttask{{ rand }}"
+                           data-resources-load-params="{{ add_params|json_encode }}">{{ add_link_name }}</a>
                     </div>
                 {% endif %}
 
@@ -102,7 +105,8 @@
                             <tr>
                                 <th width="15px">
                                     <span id="menu_navigate">
-                                        <a href="javascript:showHideDiv('{{ view_id_finished }}', 'checklistfinished{{ rand }}', 'ti-eye fa-2x', 'ti-eye-closed fa-2x')">
+                                        <a href="#" data-resources-toggle="{{ view_id_finished }}" data-resources-toggle-icon="checklistfinished{{ rand }}"
+                                           data-resources-toggle-closed="ti-eye fa-2x" data-resources-toggle-open="ti-eye-closed fa-2x">
                                             <i id="checklistfinished{{ rand }}" style="color:black" class="ti ti-eye fa-2x"></i>
                                         </a>
                                     </span>

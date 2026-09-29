@@ -46,8 +46,8 @@ use GlpiPlugin\Resources\Resource_Validation;
 Session::checkRight('plugin_resources', READ);
 
 // This endpoint is the sink of Resource_Validation::showValidationForm(), and a display gate
-// is never transitive: the URL is plainly readable in the script block that method emits
-// (src/Resource_Validation.php:176-191), so every condition that screen imposes has to be
+// is never transitive: the URL is plainly readable in the data attributes of the confirm
+// button (templates/modal_validation_info.html.twig), so every condition that screen imposes has to be
 // posed again here. The first one is the dedicated right: plugin_resources is not
 // plugin_resources_validation, and the whole feature hangs off the latter
 // (src/Resource_Validation.php:48). READ is the bit the screen asks for, canView() being what
@@ -59,7 +59,7 @@ Session::checkRight(Resource_Validation::$rightname, READ);
 // This endpoint mutates a resource and creates tickets. GLPI's CheckCsrfListener only
 // validates the CSRF token on non-GET requests, so a state-changing action reachable
 // via GET escapes CSRF protection entirely. Require POST (the legitimate AJAX caller,
-// Resource_Validation.php, already posts) and read $_POST so the token is enforced.
+// public/scripts/validation.js, already posts) and read $_POST so the token is enforced.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     throw new \Glpi\Exception\Http\BadRequestHttpException();
 }

@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBChild;
 use CommonGLPI;
 use DBConnection;
@@ -176,11 +175,12 @@ class ImportColumn extends CommonDBChild
 
     public static function showForImport(Import $import, $withtemplate = '')
     {
+        global $CFG_GLPI;
+
         $importInstance = new self();
         $sID = $import->fields['id'];
         $rand = mt_rand();
 
-        $jsFunctionName = "viewAddColumn$sID$rand";
         $viewDomElementName = "viewcolumn$sID$rand";
 
         $canadd = Session::haveRight(self::$rightname, CREATE);
@@ -190,12 +190,9 @@ class ImportColumn extends CommonDBChild
         TemplateRenderer::getInstance()->display('@resources/importcolumn_add_link.html.twig', [
             'dom_id'      => $viewDomElementName,
             'can_add'     => $canadd,
-            'js_function' => $jsFunctionName,
+            'load_url'    => $CFG_GLPI['root_doc'] . '/ajax/viewsubitem.php',
+            'load_params' => $importInstance->getSubItemParams($sID, -1),
         ]);
-
-        if ($canadd) {
-            $importInstance->addEvent($sID, $jsFunctionName, $viewDomElementName);
-        }
 
         // Display existing columns
         $columns = $importInstance->find([self::$items_id => $sID], 'id');
@@ -212,7 +209,6 @@ class ImportColumn extends CommonDBChild
         $identifiers = self::getIdentifierNames();
 
         $entries = [];
-        $edit_js = '';
         foreach ($columns as $column) {
             if (!$importInstance->getFromDB($column['id'])) {
                 continue;
@@ -221,10 +217,17 @@ class ImportColumn extends CommonDBChild
             // The name cell doubles as the edit affordance, so it carries markup.
             $name = nl2br(htmlescape((string) $importInstance->fields['name']));
             if ($canedit) {
-                $editFunctionName = "viewEditColumn"
-                    . $importInstance->fields[self::$items_id] . $importInstance->fields['id'] . $rand;
-                $edit_js .= $importInstance->editEvent($editFunctionName, $viewDomElementName);
-                $name = '<a href="javascript:' . $editFunctionName . '();">' . $name . '</a>';
+                // Loads the edit form of the column above the list (public/scripts/fragments.js).
+                $name = sprintf(
+                    '<a href="#" data-resources-load-url="%s" data-resources-load-target="%s" data-resources-load-params="%s">%s</a>',
+                    htmlescape($CFG_GLPI['root_doc'] . '/ajax/viewsubitem.php'),
+                    htmlescape($viewDomElementName),
+                    htmlescape(json_encode($importInstance->getSubItemParams(
+                        (int) $importInstance->fields[self::$items_id],
+                        (int) $importInstance->fields['id'],
+                    ), JSON_THROW_ON_ERROR)),
+                    $name,
+                );
             }
 
             $entries[] = [
@@ -235,10 +238,6 @@ class ImportColumn extends CommonDBChild
                 'resource_column' => $data_names[$importInstance->fields['resource_column']] ?? '',
                 'is_identifier'   => $identifiers[$importInstance->fields['is_identifier']] ?? '',
             ];
-        }
-
-        if ($edit_js !== '') {
-            echo Html::scriptBlock($edit_js);
         }
 
         TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
@@ -324,53 +323,19 @@ class ImportColumn extends CommonDBChild
     }
 
 
-    private function addEvent($ID, $jsFunctionName, $viewDomElementName)
-    {
-        global $CFG_GLPI;
-
-        $js = "function $jsFunctionName() {\n";
-        $js .= Ajax::updateItemJsCode(
-            $viewDomElementName,
-            $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
-            [
-                'type' => self::class,
-                'parenttype' => self::$itemtype,
-                self::$items_id => $ID,
-                'id' => -1,
-            ],
-            '',
-            false,
-        );
-        $js .= "};";
-
-        echo Html::scriptBlock($js);
-    }
-
     /**
-     * Build the JS opening the edit form of the current column.
+     * Parameters posted to ajax/viewsubitem.php to load the add (id -1) or edit form of a column.
      *
-     * @return string the function declaration, to be emitted in a script block
+     * @return array<string, int|string>
      */
-    private function editEvent($jsFunctionName, $viewDomElementName): string
+    private function getSubItemParams(int $imports_id, int $id): array
     {
-        global $CFG_GLPI;
-
-        $js = "function $jsFunctionName(){\n";
-        $js .= Ajax::updateItemJsCode(
-            $viewDomElementName,
-            $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php",
-            [
-                'type' => self::class,
-                'parenttype' => self::$itemtype,
-                self::$items_id => $this->fields[self::$items_id],
-                'id' => $this->fields["id"],
-            ],
-            '',
-            false,
-        );
-        $js .= "};";
-
-        return $js;
+        return [
+            'type'          => self::class,
+            'parenttype'    => self::$itemtype,
+            self::$items_id => $imports_id,
+            'id'            => $id,
+        ];
     }
 
     public static function install(Migration $migration)

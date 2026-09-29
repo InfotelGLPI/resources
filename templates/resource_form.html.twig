@@ -48,7 +48,7 @@
                 {{ fields.textField('name', item.fields['name'], __('Surname'), {
                     'required': mandatory.name is defined,
                     'readonly': readonly.name is defined,
-                    'additional_attributes': {'onchange': 'this.value = this.value.toUpperCase();'},
+                    'additional_attributes': {'data-resources-case': 'upper'},
                 }) }}
             {% endif %}
 

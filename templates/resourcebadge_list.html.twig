@@ -30,7 +30,6 @@
     <div class="col-md-4 mb-2">
         {% if has_user %}
             {{ badge_dropdown|raw }}
-            {{ load_script|raw }}
         {% else %}
             <span class="text-muted">{{ __('No user is linked to this resource', 'resources') }}</span>
         {% endif %}

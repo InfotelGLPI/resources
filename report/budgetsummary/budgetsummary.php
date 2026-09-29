@@ -38,6 +38,7 @@ use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\ProfessionCategory;
 use GlpiPlugin\Resources\ProfessionLine;
 use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\ReportExport;
 
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
@@ -198,52 +199,19 @@ if ($report->criteriasValidated()) {
         $start = 0;
     }
 
-    if ($nbtot == 0) {
+    // An export of an empty report falls back to the HTML page and its "no results" message.
+    if ($output_type == Search::HTML_OUTPUT || $nbtot == 0) {
         if (!$HEADER_LOADED) {
             Html::header($title, $report_target, "utils", "report");
             Report::title();
         }
-        echo "<div class='alert alert-danger center'><span style='color : red;font-weight:bold;'>" . __(
-            'No results found',
-        ) . "</span></div>";
-        Html::footer();
-    } elseif ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-        include(GLPI_ROOT . "/vendor/tecnickcom/tcpdf/examples/tcpdf_include.php");
-    } elseif ($output_type == Search::HTML_OUTPUT) {
-        if (!$HEADER_LOADED) {
-            Html::header($title, $report_target, "utils", "report");
-            Report::title();
+        $param = ReportExport::showToolbar($title, $report_target, $start, $nbtot);
+        if ($nbtot > 0) {
+            Html::printPager($start, $nbtot, $report_target, $param);
         }
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th>$title</th></tr>\n";
-        echo "<tr class='tab_bg_2 center'><td class='center'>";
-        echo "<form method='POST' action='" . htmlescape($report_target) . "?start=$start'>\n";
-
-        $param = "";
-        foreach ($_POST as $key => $val) {
-            if (is_array($val)) {
-                foreach ($val as $k => $v) {
-                    $name = $key . "[$k]";
-                    echo Html::hidden($name, ['value' => $v]);
-                    if (!empty($param)) {
-                        $param .= "&";
-                    }
-                    $param .= $key . "[" . $k . "]=" . urlencode($v);
-                }
-            } else {
-                echo Html::hidden($key, ['value' => $val]);
-                if (!empty($param)) {
-                    $param .= "&";
-                }
-                $param .= "$key=" . urlencode($val);
-            }
+        if ($output_type != Search::HTML_OUTPUT) {
+            Html::footer();
         }
-        Dropdown::showOutputFormat();
-        Html::closeForm();
-        echo "</td></tr>";
-        echo "</table></div>";
-
-        Html::printPager($start, $nbtot, $report_target, $param);
     }
 
     if ($nbtot > 0) {
@@ -254,9 +222,9 @@ if ($report->criteriasValidated()) {
         $order = 'ASC';
         $issort = false;
 
-        echo Search::showHeader($output_type, $nbrows, $nbcols, true);
+        echo ReportExport::showHeader($output_type, $nbrows, $nbcols, true);
 
-        echo Search::showNewLine($output_type);
+        echo ReportExport::showNewLine($output_type);
 
         showTitle($output_type, $num, ProfessionCategory::getTypeName(1), 'professioncategory', true);
         showTitle($output_type, $num, ProfessionLine::getTypeName(1), 'professionline', true);
@@ -274,7 +242,7 @@ if ($report->criteriasValidated()) {
         showTitle($output_type, $num, __('Resource volume (€)', 'resources'), 'vol_real');
         showTitle($output_type, $num, __('Remaining budget - employment (€)', 'resources'), 'solde');
 
-        echo Search::showEndLine($output_type);
+        echo ReportExport::showEndLine($output_type);
 
         $totalvolbudget = 0;
         $totalvolemployment = 0;
@@ -288,40 +256,40 @@ if ($report->criteriasValidated()) {
         $row_num = 2;
         foreach ($iterator as $data) {
             $num = 1;
-            echo Search::showNewLine($output_type);
-            echo Search::showItem(
+            echo ReportExport::showNewLine($output_type);
+            echo ReportExport::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professioncategories', $data['professioncategory']),
                 $num,
                 $row_num,
             );
-            echo Search::showItem(
+            echo ReportExport::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professionlines', $data['professionline']),
                 $num,
                 $row_num,
             );
-            echo Search::showItem(
+            echo ReportExport::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_professions', $data['profession']),
                 $num,
                 $row_num,
             );
-            echo Search::showItem(
+            echo ReportExport::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_ranks', $data['rank']),
                 $num,
                 $row_num,
             );
-            echo Search::showItem($output_type, Html::convDate($data['begin_date']), $num, $row_num);
-            echo Search::showItem($output_type, Html::convDate($data['end_date']), $num, $row_num);
-            echo Search::showItem(
+            echo ReportExport::showItem($output_type, Html::convDate($data['begin_date']), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::convDate($data['end_date']), $num, $row_num);
+            echo ReportExport::showItem(
                 $output_type,
                 Dropdown::getDropdownName('glpi_plugin_resources_budgettypes', $data['budget_type']),
                 $num,
                 $row_num,
             );
-            echo Search::showItem($output_type, Html::formatNumber($data['qt_vol_budg_vot'], '', 0), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::formatNumber($data['qt_vol_budg_vot'], '', 0), $num, $row_num);
 
             $totalvolbudget = $totalvolbudget + $data['qt_vol_budg_vot'];
 
@@ -400,7 +368,7 @@ if ($report->criteriasValidated()) {
                     Html::formatNumber($data1['sum'], '', 2) . "</a>";
             }
 
-            echo Search::showItem($output_type, $ratio, $num, $row_num);
+            echo ReportExport::showItem($output_type, $ratio, $num, $row_num);
             $totalvolemployment = $totalvolemployment + $data1['sum'];
             //recover quota sum of resource for each budget depending on rank, profession and year
             $criteriaResourceVolume = [
@@ -483,13 +451,13 @@ if ($report->criteriasValidated()) {
                 $quota .= "' target='_blank'>" .
                     Html::formatNumber($data2['sum'], '', 4) . "</a>";
             }
-            echo Search::showItem($output_type, $quota, $num, $row_num);
+            echo ReportExport::showItem($output_type, $quota, $num, $row_num);
             $totalvolresource = $totalvolresource + $data2['sum'];
 
             //difference between quantity of budget voting and sum of resource quota using it
             $solde = $data['qt_vol_budg_vot'] - $data2['sum'];
 
-            echo Search::showItem($output_type, $solde, $num, $row_num);
+            echo ReportExport::showItem($output_type, $solde, $num, $row_num);
 
             //recover cost allocated for each couple rank/profession/year
             $costIterator = $DB->request([
@@ -513,108 +481,108 @@ if ($report->criteriasValidated()) {
             $calvolbudgvot = $data3['cost'] * $data['qt_vol_budg_vot'];
             $totalamountbudget = $totalamountbudget + $calvolbudgvot;
 
-            echo Search::showItem($output_type, Html::formatNumber($calvolbudgvot, '', 2), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::formatNumber($calvolbudgvot, '', 2), $num, $row_num);
 
             //amount of budget used
             $calvolbudguse = $data3['cost'] * $data1['sum'];
             $totalamountemployment = $totalamountemployment + $calvolbudguse;
 
-            echo Search::showItem($output_type, Html::formatNumber($calvolbudguse, '', 2), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::formatNumber($calvolbudguse, '', 2), $num, $row_num);
 
             //amount of volume real
             $volreal = $data3['cost'] * $data2['sum'];
             $totalamountresource = $totalamountresource + $volreal;
 
-            echo Search::showItem($output_type, Html::formatNumber($volreal, '', 2), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::formatNumber($volreal, '', 2), $num, $row_num);
 
             //difference between amount of budget voting and and sum of resource quota using it
             $soldeamount = $calvolbudgvot - $volreal;
 
             $totalbudgetemployment = $totalbudgetemployment + $soldeamount;
 
-            echo Search::showItem($output_type, Html::formatNumber($soldeamount, '', 2), $num, $row_num);
+            echo ReportExport::showItem($output_type, Html::formatNumber($soldeamount, '', 2), $num, $row_num);
 
-            echo Search::showEndLine($output_type);
+            echo ReportExport::showEndLine($output_type);
 
             $row_num++;
         }
 
         $num = 1;
         $row_num++;
-        echo Search::showNewLine($output_type);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem(
+        echo ReportExport::showNewLine($output_type);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Budget volume(qty)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem(
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Employment volume (qty)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem(
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Resource volume (qty)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem(
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Budget volume (€)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem(
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Employment volume (€)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem(
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Resource volume (€)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showItem(
+        echo ReportExport::showItem(
             $output_type,
             __('Total', 'resources') . " - " . __('Remaining budget - employment (€)', 'resources'),
             $num,
             $row_num,
         );
-        echo Search::showEndLine($output_type);
+        echo ReportExport::showEndLine($output_type);
 
         $num = 1;
         $row_num++;
-        echo Search::showNewLine($output_type);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalvolbudget, '', 0), $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalvolemployment, '', 2), $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalvolresource, '', 4), $num, $row_num);
-        echo Search::showItem($output_type, '', $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalamountbudget, '', 2), $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalamountemployment, '', 2), $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalamountresource, '', 2), $num, $row_num);
-        echo Search::showItem($output_type, Html::formatNumber($totalbudgetemployment, '', 2), $num, $row_num);
-        echo Search::showEndLine($output_type);
+        echo ReportExport::showNewLine($output_type);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalvolbudget, '', 0), $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalvolemployment, '', 2), $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalvolresource, '', 4), $num, $row_num);
+        echo ReportExport::showItem($output_type, '', $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalamountbudget, '', 2), $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalamountemployment, '', 2), $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalamountresource, '', 2), $num, $row_num);
+        echo ReportExport::showItem($output_type, Html::formatNumber($totalbudgetemployment, '', 2), $num, $row_num);
+        echo ReportExport::showEndLine($output_type);
 
-        echo Search::showFooter($output_type, $title);
+        echo ReportExport::showFooter($output_type, $title);
     }
 }
 if ($output_type == Search::HTML_OUTPUT) {
@@ -634,7 +602,7 @@ if ($output_type == Search::HTML_OUTPUT) {
 function showTitle($output_type, &$num, $title, $columnname, $sort = false)
 {
     if ($output_type != Search::HTML_OUTPUT || $sort == false) {
-        echo Search::showHeaderItem($output_type, $title, $num);
+        echo ReportExport::showHeaderItem($output_type, $title, $num);
         return;
     }
     $order = 'ASC';
@@ -656,7 +624,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
     }
     $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
     $link .= '&amp;order=' . $order;
-    echo Search::showHeaderItem(
+    echo ReportExport::showHeaderItem(
         $output_type,
         $title,
         $num,

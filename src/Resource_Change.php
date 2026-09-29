@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use Appliance;
 use CommonDBTM;
 use CommonGLPI;
@@ -233,24 +232,20 @@ class Resource_Change extends CommonDBTM
 
         $dbu = new DbUtils();
 
-        // GLPI dropdowns echo their markup and return their rand: capture both, so the
-        // markup can be injected as |raw and the rand can anchor the generated JS.
-        $captureRand = static function (callable $renderer, &$rand): string {
-            ob_start();
-            $rand = $renderer();
-            return (string) ob_get_clean();
-        };
+        // GLPI dropdowns echo their markup: capture it, so it can be injected as |raw.
         $capture = static function (callable $renderer): string {
             ob_start();
             $renderer();
             return (string) ob_get_clean();
         };
 
-        $rand       = 0;
-        $rows       = [];
-        $js         = '';
-        $row_class  = 'row';
-        $cell_class = 'col-md-4 mb-2';
+        $rows        = [];
+        $row_class   = 'row';
+        $cell_class  = 'col-md-4 mb-2';
+        // Actions made of free text fields reload the start button from
+        // public/scripts/resourcechange.js each time one of their fields changes.
+        $text_action = 0;
+        $show_button = false;
 
         //Display for each action
         switch ($action_id) {
@@ -261,19 +256,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource manager', 'resources'),
-                    'widget' => $captureRand(fn() => User::dropdown([
+                    'widget' => $capture(fn() => User::dropdown([
                         'name' => "users_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('users_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_manager()',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('users_id', self::CHANGE_RESOURCEMANAGER),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_manager',
-                    ['action' => self::CHANGE_RESOURCEMANAGER, 'users_id' => '__VALUE__'],
-                    'dropdown_users_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCESALE:
@@ -283,19 +273,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource sales manager', 'resources'),
-                    'widget' => $captureRand(fn() => User::dropdown([
+                    'widget' => $capture(fn() => User::dropdown([
                         'name' => "users_id_sales",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('users_id_sales')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_sale()',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('users_id_sales', self::CHANGE_RESOURCESALE),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_sale',
-                    ['action' => self::CHANGE_RESOURCESALE, 'users_id_sales' => '__VALUE__'],
-                    'dropdown_users_id_sales' . $rand,
-                );
                 break;
 
             case self::CHANGE_ACCESSPROFILE:
@@ -348,23 +333,15 @@ class Resource_Change extends CommonDBTM
 
                 $rows[] = [
                     'label'  => __('New access profile of the resource', 'resources'),
-                    'widget' => $captureRand(fn() => Habilitation::dropdown([
+                    'widget' => $capture(fn() => Habilitation::dropdown([
                         'name' => "plugin_resources_habilitations_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'condition' => $condition,
                         'used' => $used,
-                        'on_change' => 'plugin_resources_load_button_changeresources_profil()',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_habilitations_id', self::CHANGE_ACCESSPROFILE),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_profil',
-                    [
-                        'action' => self::CHANGE_ACCESSPROFILE,
-                        'plugin_resources_habilitations_id' => '__VALUE__',
-                    ],
-                    'dropdown_plugin_resources_habilitations_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_CONTRACTTYPE:
@@ -377,22 +354,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New type of contract', 'resources'),
-                    'widget' => $captureRand(fn() => ContractType::dropdown([
+                    'widget' => $capture(fn() => ContractType::dropdown([
                         'name' => "plugin_resources_contracttypes_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('plugin_resources_contracttypes_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_contract()',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_contracttypes_id', self::CHANGE_CONTRACTTYPE),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_contract',
-                    [
-                        'action' => self::CHANGE_CONTRACTTYPE,
-                        'plugin_resources_contracttypes_id' => '__VALUE__',
-                    ],
-                    'dropdown_plugin_resources_contracttypes_id' . $rand,
-                );
                 $rows[] = [
                     'label'  => __('Date of contract type change', 'resources'),
                     'widget' => $capture(fn() => Html::showDateField("date_of_change")),
@@ -408,19 +377,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource agency', 'resources'),
-                    'widget' => $captureRand(fn() => Location::dropdown([
+                    'widget' => $capture(fn() => Location::dropdown([
                         'name' => "locations_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('locations_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_agency();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('locations_id', self::CHANGE_AGENCY),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_agency',
-                    ['action' => self::CHANGE_AGENCY, 'locations_id' => '__VALUE__'],
-                    'dropdown_locations_id' . $rand,
-                );
 
                 $rows[] = [
                     'label'  => __("Current team of the resource", "resources"),
@@ -431,12 +395,12 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource team', 'resources'),
-                    'widget' => $captureRand(fn() => Team::dropdown([
+                    'widget' => $capture(fn() => Team::dropdown([
                         'name' => "plugin_resources_teams_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('plugin_resources_teams_id')],
-                    ]), $rand),
+                    ])),
                 ];
                 $rows[] = [
                     'label'  => __('Date of location change', 'resources'),
@@ -445,29 +409,24 @@ class Resource_Change extends CommonDBTM
                 break;
 
             case self::CHANGE_TRANSFER:
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_transfer',
-                    ['action' => self::CHANGE_TRANSFER],
-                    "",
-                );
-                $js .= "plugin_resources_load_button_changeresources_transfer();";
+                $show_button = true;
                 break;
 
             case self::CHANGE_RESOURCEINFORMATIONS:
-                $rand = mt_rand();
+                $text_action = self::CHANGE_RESOURCEINFORMATIONS;
                 $rows[] = [
                     'label'  => __('Name', 'resources'),
                     'widget' => Html::input('name', [
-                        'rand'  => $rand,
-                        'value' => $resource->fields["name"],
+                        'value'               => $resource->fields["name"],
+                        'data-resources-case' => 'upper',
                     ]),
                 ];
                 $rows[] = [
                     'label'  => __('Firstname', 'resources'),
                     'widget' => Html::input('firstname', [
-                        'rand'  => $rand,
-                        'value' => $resource->fields["firstname"],
-                        'style' => 'text-transform: capitalize;',
+                        'value'               => $resource->fields["firstname"],
+                        'style'               => 'text-transform: capitalize;',
+                        'data-resources-case' => 'capitalize',
                     ]),
                 ];
                 $rows[] = [
@@ -477,61 +436,19 @@ class Resource_Change extends CommonDBTM
                         ['value' => $resource->fields["date_end"]],
                     )),
                 ];
-
-                $root_doc = PLUGIN_RESOURCES_WEBDIR;
-                $action = self::CHANGE_RESOURCEINFORMATIONS;
-                $js .= <<<JAVASCRIPT
-                    $('input[name="date_end"]').change(function() {
-                        plugin_resources_load_button_changeresources_information();
-                    });
-                    $('input[name="name"]').on("input", function() {
-                        this.value = this.value.toUpperCase();
-                        plugin_resources_load_button_changeresources_information();
-                    });
-                    $('input[name="firstname"]').on("change", function() {
-                        this.value = First2UpperCase(this.value);
-                        plugin_resources_load_button_changeresources_information();
-                    });
-                    function plugin_resources_load_button_changeresources_information(){
-                        $('#plugin_resources_buttonchangeresources').load('{$root_doc}/ajax/resourcechange.php', {
-                            load_button_changeresources: true,
-                            action: {$action},
-                            name: $('input[name="name"]').val(),
-                            firstname: $('input[name="firstname"]').val(),
-                            date_end: $('input[name="date_end"]').val()
-                        });
-                    }
-                    JAVASCRIPT;
                 break;
 
             case self::CHANGE_NAME:
-                $row_class  = 'form-row';
-                $cell_class = 'bt-feature col-md-4';
-                $rand       = mt_rand();
+                $text_action = self::CHANGE_NAME;
+                $row_class   = 'form-row';
+                $cell_class  = 'bt-feature col-md-4';
                 $rows[] = [
                     'label'  => __('Name', 'resources'),
                     'widget' => Html::input('name', [
-                        'rand'     => $rand,
-                        'value'    => $resource->fields["name"],
-                        'onChange' => "javascript:this.value=this.value.toUpperCase(); "
-                            . "plugin_resources_load_button_changeresources_information(); ",
+                        'value'               => $resource->fields["name"],
+                        'data-resources-case' => 'upper',
                     ]),
                 ];
-
-                $root_doc = PLUGIN_RESOURCES_WEBDIR;
-                $action = self::CHANGE_NAME;
-                $js .= <<<JAVASCRIPT
-                    $('input[name="name"]').change(function() {
-                        plugin_resources_load_button_changeresources_information();
-                    });
-                    function plugin_resources_load_button_changeresources_information(){
-                        $('#plugin_resources_buttonchangeresources').load('{$root_doc}/ajax/resourcechange.php', {
-                            load_button_changeresources: true,
-                            action: {$action},
-                            name: $('input[name="name"]').val()
-                        });
-                    }
-                    JAVASCRIPT;
                 break;
 
             case self::CHANGE_RESOURCECOMPANY:
@@ -546,21 +463,13 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource company', 'resources'),
-                    'widget' => $captureRand(fn() => Employer::dropdown([
+                    'widget' => $capture(fn() => Employer::dropdown([
                         'name' => "employer_id",
                         'right' => 'all',
                         'used' => [$employee->getField('plugin_resources_employers_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_company();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_employers_id', self::CHANGE_RESOURCECOMPANY),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_company',
-                    [
-                        'action' => self::CHANGE_RESOURCECOMPANY,
-                        'plugin_resources_employers_id' => '__VALUE__',
-                    ],
-                    'dropdown_employer_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCEDEPARTMENT:
@@ -573,22 +482,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource department', 'resources'),
-                    'widget' => $captureRand(fn() => Department::dropdown([
+                    'widget' => $capture(fn() => Department::dropdown([
                         'name' => "department_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('plugin_resources_departments_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_department();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_departments_id', self::CHANGE_RESOURCEDEPARTMENT),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_department',
-                    [
-                        'action' => self::CHANGE_RESOURCEDEPARTMENT,
-                        'plugin_resources_departments_id' => '__VALUE__',
-                    ],
-                    'dropdown_department_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCESERVICE:
@@ -601,7 +502,7 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource service', 'resources'),
-                    'widget' => $captureRand(fn() => Service::dropdownFromDepart(
+                    'widget' => $capture(fn() => Service::dropdownFromDepart(
                         $resource->fields["plugin_resources_departments_id"],
                         [
                             'name' => "service_id",
@@ -609,18 +510,10 @@ class Resource_Change extends CommonDBTM
                             'entity' => $resource->fields["entities_id"],
                             'right' => 'all',
                             'used' => [$resource->getField('plugin_resources_services_id')],
-                            'on_change' => 'plugin_resources_load_button_changeresources_service();',
+                            'toupdate' => self::getButtonUpdate('plugin_resources_services_id', self::CHANGE_RESOURCESERVICE),
                         ],
-                    ), $rand),
+                    )),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_service',
-                    [
-                        'action' => self::CHANGE_RESOURCESERVICE,
-                        'plugin_resources_services_id' => '__VALUE__',
-                    ],
-                    'dropdown_service_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCEROLE:
@@ -633,7 +526,7 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource role', 'resources'),
-                    'widget' => $captureRand(fn() => Role::dropdownFromService(
+                    'widget' => $capture(fn() => Role::dropdownFromService(
                         $resource->fields["plugin_resources_services_id"],
                         [
                             'name' => "role_id",
@@ -641,15 +534,10 @@ class Resource_Change extends CommonDBTM
                             'entity' => $resource->fields["entities_id"],
                             'right' => 'all',
                             'used' => [$resource->getField('plugin_resources_roles_id')],
-                            'on_change' => 'plugin_resources_load_button_changeresources_role();',
+                            'toupdate' => self::getButtonUpdate('plugin_resources_roles_id', self::CHANGE_RESOURCEROLE),
                         ],
-                    ), $rand),
+                    )),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_role',
-                    ['action' => self::CHANGE_RESOURCEROLE, 'plugin_resources_roles_id' => '__VALUE__'],
-                    'dropdown_role_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCEFUNCTION:
@@ -662,22 +550,14 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource function', 'resources'),
-                    'widget' => $captureRand(fn() => ResourceFunction::dropdown([
+                    'widget' => $capture(fn() => ResourceFunction::dropdown([
                         'name' => "function_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('plugin_resources_functions_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_function();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_functions_id', self::CHANGE_RESOURCEFUNCTION),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_function',
-                    [
-                        'action' => self::CHANGE_RESOURCEFUNCTION,
-                        'plugin_resources_functions_id' => '__VALUE__',
-                    ],
-                    'dropdown_function_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCETEAM:
@@ -690,42 +570,26 @@ class Resource_Change extends CommonDBTM
                 ];
                 $rows[] = [
                     'label'  => __('New resource function', 'resources'),
-                    'widget' => $captureRand(fn() => Team::dropdown([
+                    'widget' => $capture(fn() => Team::dropdown([
                         'name' => "team_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => [$resource->getField('plugin_resources_teams_id')],
-                        'on_change' => 'plugin_resources_load_button_changeresources_team();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('plugin_resources_teams_id', self::CHANGE_RESOURCETEAM),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_team',
-                    ['action' => self::CHANGE_RESOURCETEAM, 'plugin_resources_teams_id' => '__VALUE__'],
-                    'dropdown_team_id' . $rand,
-                );
                 break;
 
             case self::CHANGE_RESOURCEMATERIAL:
+                // The action button area stays empty until something is typed.
+                $text_action = self::CHANGE_RESOURCEMATERIAL;
                 $rows[] = [
                     'label'  => __("Change material", "resources"),
-                    // Html::textarea() names the tag after 'editor_id', not after 'name':
-                    // pin it, the script below observes that id.
                     'widget' => $capture(fn() => Html::textarea([
                         'name'      => "content",
                         'editor_id' => "content",
                     ])),
                 ];
-                // Ajax::updateItemOnInputTextEvent() was removed in GLPI 11. It only wrapped
-                // updateItemOnEvent() with the typing events, so bind them here instead: the
-                // action button area stays empty until something is typed.
-                $js .= Ajax::updateItemOnEventJsCode(
-                    'content',
-                    'plugin_resources_buttonchangeresources',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                    ['load_button_changeresources' => true, 'action' => self::CHANGE_RESOURCEMATERIAL],
-                    ['keyup', 'change'],
-                    display: false,
-                );
                 break;
 
             case self::CHANGE_RESOURCEITEMAPPLICATION:
@@ -739,60 +603,49 @@ class Resource_Change extends CommonDBTM
                 }
                 $rows[] = [
                     'label'  => __('New Application to add to the resource', 'resources'),
-                    'widget' => $captureRand(fn() => Appliance::dropdown([
+                    'widget' => $capture(fn() => Appliance::dropdown([
                         'name' => "appliances_id",
                         'entity' => $resource->fields["entities_id"],
                         'right' => 'all',
                         'used' => $appliances,
-                        'on_change' => 'plugin_resources_load_button_changeresources_application();',
-                    ]), $rand),
+                        'toupdate' => self::getButtonUpdate('appliances_id', self::CHANGE_RESOURCEITEMAPPLICATION),
+                    ])),
                 ];
-                $js .= self::loadButtonJs(
-                    'plugin_resources_load_button_changeresources_application',
-                    [
-                        'action' => self::CHANGE_RESOURCEITEMAPPLICATION,
-                        'appliances_id' => '__VALUE__',
-                    ],
-                    'dropdown_appliances_id' . $rand,
-                );
                 break;
         }
 
         if (!empty($rows)) {
             TemplateRenderer::getInstance()->display('@resources/resource_change_fields.html.twig', [
-                'rows'       => $rows,
-                'row_class'  => $row_class,
-                'cell_class' => $cell_class,
+                'rows'        => $rows,
+                'row_class'   => $row_class,
+                'cell_class'  => $cell_class,
+                'text_action' => $text_action,
+                'button_url'  => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
             ]);
         }
 
-        if ($js !== '') {
-            echo Html::scriptBlock($js);
+        if ($show_button) {
+            (new self())->loadButtonChangeResources($action_id, []);
         }
     }
 
     /**
-     * Build the JS function reloading the action button area when a field changes.
+     * Build the dropdown "toupdate" option reloading the start button of a change action
+     * each time the dropdown value changes.
      *
-     * @param string $function_name name of the generated JS function
-     * @param array  $params        AJAX parameters, merged after load_button_changeresources
-     * @param string $observed      id of the input whose change feeds __VALUE__
+     * @param string $value_fieldname name under which the dropdown value is posted
+     * @param int    $action_id       change action
      *
-     * @return string the function declaration, to be emitted in a script block
+     * @return array<string, mixed>
      */
-    private static function loadButtonJs(string $function_name, array $params, string $observed): string
+    private static function getButtonUpdate(string $value_fieldname, int $action_id): array
     {
-        $js = "function {$function_name}(){";
-        $js .= Ajax::updateItemJsCode(
-            'plugin_resources_buttonchangeresources',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-            ['load_button_changeresources' => true] + $params,
-            $observed,
-            false,
-        );
-        $js .= "}";
-
-        return $js;
+        return [
+            'value_fieldname' => $value_fieldname,
+            'to_update'       => 'plugin_resources_buttonchangeresources',
+            'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+            'moreparams'      => ['load_button_changeresources' => true, 'action' => $action_id],
+        ];
     }
 
     /**
@@ -1374,38 +1227,25 @@ class Resource_Change extends CommonDBTM
 
         $canedit = true;
 
-        // The reload script targets the dropdown by id, so fix the rand instead of
-        // reading it back from Dropdown::showFromArray(), which returns the markup
-        // when display is off.
-        $rand = mt_rand();
-
+        // Selecting an action reloads its entity dropdown and clears the add button,
+        // which no longer applies to the newly selected action.
         $dropdown = (string) Dropdown::showFromArray('actions_id', $actions, [
-            'on_change' => 'plugin_resources_load_entity();',
-            'rand'      => $rand,
-            'display'   => false,
+            'toupdate' => [
+                [
+                    'value_fieldname' => 'actions_id',
+                    'to_update'       => 'plugin_resources_entity_itil_categories',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                    'moreparams'      => ['action' => 'loadEntity'],
+                ],
+                [
+                    'value_fieldname' => 'actions_id',
+                    'to_update'       => 'plugin_resources_button_add',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                    'moreparams'      => ['action' => 'clean'],
+                ],
+            ],
+            'display'  => false,
         ]);
-
-        // Reloading the entity dropdown also clears the add button, which no longer
-        // applies to the newly selected action.
-        $script = Html::scriptBlock(
-            'function plugin_resources_load_entity(){'
-            . Ajax::updateItemJsCode(
-                'plugin_resources_entity_itil_categories',
-                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                ['action' => 'loadEntity', 'actions_id' => '__VALUE__'],
-                'dropdown_actions_id' . $rand,
-                false,
-            )
-            . ';'
-            . Ajax::updateItemJsCode(
-                'plugin_resources_button_add',
-                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                ['action' => 'clean', 'actions_id' => '__VALUE__'],
-                'dropdown_actions_id' . $rand,
-                false,
-            )
-            . '}',
-        );
 
         TemplateRenderer::getInstance()->display('@resources/resource_change_actions_form.html.twig', [
             'form_action'     => self::getFormURL(),
@@ -1413,7 +1253,6 @@ class Resource_Change extends CommonDBTM
             'title'           => __("Managing change actions", 'resources'),
             'action_label'    => __('Action'),
             'action_dropdown' => $dropdown,
-            'action_script'   => $script,
         ]);
 
         self::listItems($canedit);
@@ -1477,74 +1316,52 @@ class Resource_Change extends CommonDBTM
             }
         }
 
-        // Same reason as in displayCategory(): the reload script targets the dropdown
-        // by id, so the rand is fixed here rather than read back from Dropdown::show().
-        $rand = mt_rand();
-
+        // Selecting an entity reloads the category dropdown of that entity.
         $dropdown = (string) Dropdown::show(Entity::class, [
-            'name'      => 'entities_id',
-            'used'      => $used_entities,
-            'on_change' => 'plugin_resources_load_category();',
-            'rand'      => $rand,
-            'display'   => false,
+            'name'     => 'entities_id',
+            'used'     => $used_entities,
+            'toupdate' => [
+                'value_fieldname' => 'entities_id',
+                'to_update'       => 'plugin_resource_itil_categories',
+                'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                'moreparams'      => ['action' => 'loadCategory'],
+            ],
+            'display'  => false,
         ]);
-
-        // Dropdown list according to the entity
-        $script = Html::scriptBlock(
-            'function plugin_resources_load_category(){' . Ajax::updateItemJsCode(
-                'plugin_resource_itil_categories',
-                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                ['action' => 'loadCategory', 'entities_id' => '__VALUE__'],
-                'dropdown_entities_id' . $rand,
-                false,
-            ) . '}',
-        );
 
         TemplateRenderer::getInstance()->display('@resources/resource_change_entity.html.twig', [
             'label'    => __('Entity'),
             'dropdown' => $dropdown,
-            'script'   => $script,
             'category' => self::getCategoryFields($_SESSION['glpiactive_entity']),
         ]);
     }
 
     /**
-     * Build the category dropdown of a change action, with the script reloading the
-     * add button when the category changes.
+     * Build the category dropdown of a change action, which reloads the add button
+     * when the category changes.
      *
      * @param $entities_id
      *
-     * @return array<string, string>
+     * @return array{label: string, dropdown: string}
      */
     private static function getCategoryFields($entities_id)
     {
-        // The reload script has to target the dropdown by id, so fix the rand instead of
-        // reading it back from Dropdown::show(), which returns the markup when display is off.
-        $rand = mt_rand();
-
         $dropdown = (string) Dropdown::show('ITILCategory', [
-            'name' => 'itilcategories_id',
-            'entity' => $entities_id,
+            'name'      => 'itilcategories_id',
+            'entity'    => $entities_id,
             'condition' => ['is_request' => 1],
-            'on_change' => 'plugin_resources_load_buttonadd();',
-            'rand' => $rand,
-            'display' => false,
+            'toupdate'  => [
+                'value_fieldname' => 'itilcategories_id',
+                'to_update'       => 'plugin_resources_button_add',
+                'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
+                'moreparams'      => ['action' => 'loadButtonAdd'],
+            ],
+            'display'   => false,
         ]);
-
-        $script = Html::scriptBlock(
-            'function plugin_resources_load_buttonadd(){' . Ajax::updateItemJsCode(
-                'plugin_resources_button_add',
-                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
-                ['action' => 'loadButtonAdd', 'itilcategories_id' => '__VALUE__'],
-                'dropdown_itilcategories_id' . $rand,
-                false,
-            ) . '}',
-        );
 
         return [
             'label'    => __('Category'),
             'dropdown' => $dropdown,
-            'script'   => $script,
         ];
     }
 

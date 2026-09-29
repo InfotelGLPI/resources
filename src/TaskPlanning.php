@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use DBConnection;
 use DbUtils;
@@ -204,7 +203,6 @@ class TaskPlanning extends CommonDBTM
         $is_planned = $taskid > 0 && $this->getFromDBbyTask($taskid);
 
         if ($is_planned) {
-            $js_function = 'showPlan' . $taskid;
             $params = [
                 'form' => 'followups',
                 'id' => $this->fields["id"],
@@ -221,7 +219,6 @@ class TaskPlanning extends CommonDBTM
                 $label = htmlescape(__('Plan this task'));
             }
         } else {
-            $js_function = 'showPlanUpdate';
             $params = [
                 'form' => 'followups',
                 'entity' => $_SESSION["glpiactive_entity"],
@@ -229,23 +226,10 @@ class TaskPlanning extends CommonDBTM
             $label = htmlescape($can_create ? __('Plan this task') : __('None'));
         }
 
-        if ($can_create) {
-            $js = "function {$js_function}(){\n";
-            $js .= "$('#plan').css({'display':'none'});";
-            $js .= Ajax::updateItemJsCode(
-                'viewplan',
-                PLUGIN_RESOURCES_WEBDIR . "/ajax/planning.php",
-                $params,
-                '',
-                false,
-            );
-            $js .= "}";
-            echo Html::scriptBlock($js);
-        }
-
         TemplateRenderer::getInstance()->display('@resources/taskplanning_plan.html.twig', [
             'can_create'  => $can_create,
-            'js_function' => $js_function,
+            'load_url'    => PLUGIN_RESOURCES_WEBDIR . '/ajax/planning.php',
+            'load_params' => $params,
             'label'       => $label,
         ]);
     }

@@ -382,6 +382,65 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Create the leaving ticket of the resource, as configured in the plugin setup.
+     *
+     * The ticket carries the identity of the resource and is linked to it, so it is created in
+     * the entity of the resource: the active entity of the session can be a parent one, which
+     * would expose those fields to technicians outside the perimeter of the resource.
+     *
+     * @param string|null $date_end      Leaving date to print, defaults to the one of the resource
+     * @param int|null    $leavingreason Leaving reason, defaults to the one of the resource
+     * @param bool        $with_order    Append the leaving instructions (remove_order)
+     *
+     * @return int|false ID of the created ticket
+     */
+    public function createLeavingTicket(?string $date_end = null, ?int $leavingreason = null, bool $with_order = false)
+    {
+        $config = new Config();
+        $config->getFromDB(1);
+
+        $ticket = new Ticket();
+        $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
+        if (count($tt->predefined)) {
+            foreach ($tt->predefined as $predeffield => $predefvalue) {
+                $ticket->fields[$predeffield] = $predefvalue;
+            }
+        }
+
+        $identity = $this->fields['name'] . " " . $this->fields['firstname'];
+        $date_end ??= $this->fields['date_end'];
+        $leavingreason ??= (int) $this->fields['plugin_resources_leavingreasons_id'];
+
+        // The name is a plain text field; the content is rich text, so every free value
+        // concatenated into it is escaped.
+        $ticket->fields["name"] = __("Departure of", 'resources') . " " . $identity;
+        $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
+        $content = htmlescape($identity . " " . __("leave on", "resources") . " " . Html::convDate($date_end));
+        if (!empty($leavingreason)) {
+            $content .= "<br>" . htmlescape(LeavingReason::getTypeName(0) . " : "
+                . Dropdown::getDropdownName(LeavingReason::getTable(), $leavingreason));
+        }
+        if (!empty($this->fields['plugin_resources_contracttypes_id'])) {
+            $content .= "<br>" . htmlescape(ContractType::getTypeName(0) . " : "
+                . Dropdown::getDropdownName(ContractType::getTable(), $this->fields['plugin_resources_contracttypes_id']));
+        } else {
+            $content .= "<br>" . htmlescape(ContractType::getTypeName(0) . " : " . __("Without contract", 'resources'));
+        }
+        if ($with_order) {
+            $content .= "<br>" . htmlescape(__("Order", 'resources') . " : " . $this->fields['remove_order']);
+        }
+        $ticket->fields["content"] = $content;
+        $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
+        $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
+        $ticket->fields["type"] = Ticket::DEMAND_TYPE;
+        $ticket->fields["entities_id"] = $this->fields['entities_id'];
+        $ticket->fields['items_id'] = [self::class => [$this->getID()]];
+        unset($ticket->fields["id"]);
+
+        return $ticket->add($ticket->fields);
+    }
+
+    /**
      * Get Tab Name used for itemtype
      *
      * NB : Only called for existing object
@@ -3144,34 +3203,20 @@ class Resource extends CommonDBTM
             'condition' => $cond,
             'rand'      => $rand,
             'value'     => $preselected_id,
-            'on_change' => "plugin_resources_pdf_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
-        ]);
-
-        $leaving_url = "../ajax/leavingform.php";
-        $scripts     = (string) Ajax::updateItemOnSelectEvent(
-            "dropdown_plugin_resources_resources_id$rand",
-            "leaving_input",
-            $leaving_url,
-            [
-                'plugin_resources_resources_id' => '__VALUE__',
-                'rand' => $rand,
-            ],
-            false,
-        );
-
-        // A pre-selected resource never fires a change event: fill the block right away.
-        if ($preselected_id > 0) {
-            $scripts .= (string) Ajax::updateItem(
-                "leaving_input",
-                $leaving_url,
+            'toupdate'  => [
                 [
-                    'plugin_resources_resources_id' => $preselected_id,
-                    'rand' => $rand,
+                    'value_fieldname' => 'plugin_resources_resources_id',
+                    'to_update'       => 'resource_pdf',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/pdfresource.php',
                 ],
-                "",
-                false,
-            );
-        }
+                [
+                    'value_fieldname' => 'plugin_resources_resources_id',
+                    'to_update'       => 'leaving_input',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/leavingform.php',
+                    'moreparams'      => ['rand' => $rand],
+                ],
+            ],
+        ]);
 
         $manager_dropdown = (string) User::dropdown([
             'name'    => 'remove_manager',
@@ -3188,7 +3233,12 @@ class Resource extends CommonDBTM
             'resource_dropdown' => $resource_dropdown,
             'date_end'          => $_POST["date_end"] ?? '',
             'manager_dropdown'  => $manager_dropdown,
-            'scripts'           => $scripts,
+            // A pre-selected resource never fires a change event: its leaving block is loaded
+            // as soon as the page is shown (public/scripts/fragments.js).
+            'leaving_url'       => PLUGIN_RESOURCES_WEBDIR . '/ajax/leavingform.php',
+            'leaving_params'    => $preselected_id > 0
+                ? ['plugin_resources_resources_id' => $preselected_id, 'rand' => $rand]
+                : [],
         ]);
     }
 
@@ -3216,7 +3266,6 @@ class Resource extends CommonDBTM
             'name'      => 'plugin_resources_resources_id',
             'display'   => false,
             'entity'    => $_SESSION['glpiactiveentities'],
-            'on_change' => "plugin_resources_change_resource(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
         ]);
 
         // Only offer the actions granted to the current profile.
@@ -3234,8 +3283,7 @@ class Resource extends CommonDBTM
         }
 
         $action_dropdown = (string) Dropdown::showFromArray('change_action', $actions, [
-            'display'   => false,
-            'on_change' => "plugin_resources_change_action(\"" . PLUGIN_RESOURCES_WEBDIR . "\", this.value);",
+            'display' => false,
         ]);
 
         // Fields the previous submit left empty, reported back above the action block.
@@ -3252,6 +3300,7 @@ class Resource extends CommonDBTM
             'header_title'      => __('Declare a change', 'resources'),
             'header_img'        => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
             'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php",
+            'fields_url'        => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
             'resource_label'    => self::getTypeName(1),
             'resource_dropdown' => $resource_dropdown,
             'action_label'      => __('Actions to be taken', 'resources'),
@@ -4625,28 +4674,24 @@ class Resource extends CommonDBTM
     {
 
         if (isset($options['name'])) {
-            // Set dropdown
-            $options['on_change'] = "update" . $options['name'] . "();";
             $options['entity'] = $_SESSION['glpiactive_entity'];
             $options['addicon'] = true;
-            $rand = Dropdown::show($itemtype, $options);
+            // The AJAX endpoints read the rand back to build the ids of the nested dropdown.
+            $options['rand'] ??= mt_rand();
 
-            // Set ajax load if needed
+            // Reload the nested span when the value changes, if needed
             if (isset($options['action']) && isset($options['span'])) {
-                $options[$options['name']] = "__VALUE__";
-                $options['entity_restrict'] = $_SESSION['glpiactive_entity'];
-                $options['rand'] = $rand;
-                $script = "function update" . $options['name'] . "(){";
-                $script .= Ajax::updateItemJsCode(
-                    $options['span'],
-                    $options['action'],
-                    $options,
-                    'dropdown_' . $options['name'] . $rand,
-                    false,
-                );
-                $script .= "}";
-                echo Html::scriptBlock($script);
+                $params = $options;
+                unset($params[$options['name']]);
+                $params['entity_restrict'] = $_SESSION['glpiactive_entity'];
+                $options['toupdate'] = [
+                    'value_fieldname' => $options['name'],
+                    'to_update'       => $options['span'],
+                    'url'             => $options['action'],
+                    'moreparams'      => $params,
+                ];
             }
+            Dropdown::show($itemtype, $options);
         }
     }
 

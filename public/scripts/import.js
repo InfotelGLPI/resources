@@ -50,3 +50,58 @@ document.addEventListener('change', (event) => {
         }
     });
 });
+
+/**
+ * Import header: the #calculate button fetches the counters of the selected file from
+ * ajax/verifyCSVStatistics.php (URL and import type in its data attributes) and writes
+ * each returned value into the <span> carrying the same key in data-resources-stat.
+ */
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element
+        ? event.target.closest('#calculate[data-resources-stats-url]')
+        : null;
+    if (button === null) {
+        return;
+    }
+
+    const counters = document.querySelectorAll('[data-resources-stat]');
+    counters.forEach((counter) => {
+        counter.textContent = '?';
+    });
+
+    const selected = document.querySelector('[name="selected-file"]');
+    const option = selected instanceof HTMLSelectElement ? selected.selectedOptions[0] : null;
+    const params = new URLSearchParams({
+        page: button.dataset.resourcesPage,
+        file: option ? option.text : '',
+    });
+
+    const loader = document.getElementById('ajax_loader');
+    if (loader !== null) {
+        loader.style.display = 'block';
+    }
+
+    fetch(`${button.dataset.resourcesStatsUrl}?${params}`, {
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((results) => {
+            counters.forEach((counter) => {
+                const key = counter.dataset.resourcesStat;
+                if (results !== null && key in results) {
+                    counter.textContent = String(results[key]);
+                }
+            });
+        })
+        .catch((error) => console.error(error))
+        .finally(() => {
+            if (loader !== null) {
+                loader.style.display = 'none';
+            }
+        });
+});

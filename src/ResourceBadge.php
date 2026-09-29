@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use CommonGLPI;
 use CommonITILActor;
@@ -268,47 +267,40 @@ class ResourceBadge extends CommonDBTM
      */
     public function showWizardForm()
     {
-        // Capture the wizard header and the resource dropdown as HTML fragments; keep the
-        // dropdown rand to wire the AJAX loader script to its change event.
+        // Capture the wizard header and the resource dropdown as HTML fragments.
         ob_start();
         Wizard::WizardHeader(__('Badge restitution', 'resources'));
         $wizard_header = ob_get_clean();
 
         ob_start();
-        $rand = Resource::dropdown([
+        // Picking a resource lists its badges and clears the restitution button, which
+        // no longer applies to the newly selected resource.
+        Resource::dropdown([
             'name' => 'plugin_resources_resources_id',
             'display' => true,
-            'on_change' => 'plugin_resources_load_badge()',
             'entity' => $_SESSION['glpiactiveentities'],
+            'toupdate' => [
+                [
+                    'value_fieldname' => 'plugin_resources_resources_id',
+                    'to_update'       => 'plugin_resources_badge',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
+                    'moreparams'      => ['action' => 'loadBadge'],
+                ],
+                [
+                    'to_update'  => 'plugin_resources_button_restitution',
+                    'url'        => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
+                    'moreparams' => ['action' => 'cleanButtonRestitution'],
+                ],
+            ],
         ]);
         $resource_dropdown = ob_get_clean();
 
-        //display list of badges
-        $params = ['action' => 'loadBadge', 'plugin_resources_resources_id' => '__VALUE__'];
-        $load_badge = Ajax::updateItemJsCode(
-            'plugin_resources_badge',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
-            $params,
-            'dropdown_plugin_resources_resources_id' . $rand,
-            false,
-        );
-        $params = ['action' => 'cleanButtonRestitution'];
-        $clean_button = Ajax::updateItemJsCode(
-            'plugin_resources_button_restitution',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
-            $params,
-            'dropdown_plugin_resources_resources_id' . $rand,
-            false,
-        );
-        $load_script = "<script type='text/javascript'>function plugin_resources_load_badge(){"
-            . $load_badge . ";" . $clean_button . "}</script>";
 
         TemplateRenderer::getInstance()->display('@resources/resourcebadge_wizard.html.twig', [
             'wizard_header'     => $wizard_header,
             'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourcebadge.form.php",
             'resource_label'    => Resource::getTypeName(1),
             'resource_dropdown' => $resource_dropdown,
-            'load_script'       => $load_script,
             'badges_list_url'   => PLUGIN_BADGES_WEBDIR . "/front/badge.php",
             'badges_list_label' => __('List of badges', 'resources'),
         ]);
@@ -334,39 +326,32 @@ class ResourceBadge extends CommonDBTM
             }
         }
 
-        $badge_dropdown   = '';
-        $load_restitution = '';
+        $badge_dropdown = '';
 
         // Without a linked user there is no badge to give back: an empty criterion would let
         // the dropdown list every badge of the entity instead.
         if (count($users_id) > 0) {
             // A single IN criterion: one criterion per user would be ANDed together and could
             // never match as soon as the resource is linked to more than one user.
-            // Capture the badge dropdown as an HTML fragment; keep its rand to wire the
-            // restitution button loader to the dropdown change event.
+            // Capture the badge dropdown as an HTML fragment; picking a badge loads the
+            // restitution button.
             ob_start();
-            $rand = Badge::dropdown([
+            Badge::dropdown([
                 'name'      => 'badges_id',
                 'condition' => ['users_id' => array_values($users_id)],
-                'on_change' => 'plugin_resources_load_badge_restitution()',
+                'toupdate'  => [
+                    'to_update'  => 'plugin_resources_button_restitution',
+                    'url'        => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
+                    'moreparams' => ['action' => 'loadBadgeRestitution'],
+                ],
             ]);
             $badge_dropdown = (string) ob_get_clean();
 
-            $load_restitution = Html::scriptBlock(
-                'function plugin_resources_load_badge_restitution(){' . Ajax::updateItemJsCode(
-                    'plugin_resources_button_restitution',
-                    PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcebadge.php',
-                    ['action' => 'loadBadgeRestitution'],
-                    'dropdown_badges_id' . $rand,
-                    false,
-                ) . '}',
-            );
         }
 
         TemplateRenderer::getInstance()->display('@resources/resourcebadge_list.html.twig', [
             'badge_label'    => Badge::getTypeName(1),
             'badge_dropdown' => $badge_dropdown,
-            'load_script'    => $load_restitution,
             'has_user'       => count($users_id) > 0,
         ]);
     }

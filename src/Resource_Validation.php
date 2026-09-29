@@ -29,11 +29,9 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
-use Html;
 use Session;
 
 /**
@@ -153,39 +151,13 @@ class Resource_Validation extends CommonDBTM
         }
 
         if (!$resources->fields['valid_resource_information']) {
-            echo Ajax::createModalWindow(
-                'popupAnswer',
-                PLUGIN_RESOURCES_WEBDIR . '/front/modalvalidationinfo.php',
-                [
-                    'title' => __('Are you sure?', 'resources'),
-                    'reloadonclose' => false,
-                    'width' => 1180,
-                    'height' => 500,
-                ],
-            );
-
+            // The confirmation modal is part of the template; its confirm button is handled by
+            // public/scripts/validation.js, which reads the endpoint from data attributes.
             TemplateRenderer::getInstance()->display('@resources/resource_validation_form.html.twig', [
-                'validated' => false,
+                'validated'    => false,
+                'resources_id' => (int) $plugin_resources_resources_id,
+                'validate_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/validinformation.php',
             ]);
-
-            // Called by the confirmation modal loaded above.
-            $url = PLUGIN_RESOURCES_WEBDIR;
-            $resources_id = (int) $plugin_resources_resources_id;
-            echo Html::scriptBlock(<<<JAVASCRIPT
-                function validinformation() {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{$url}/ajax/validinformation.php',
-                        data: {
-                            'plugin_resources_resources_id': {$resources_id},
-                            'validSaisie': 1
-                        },
-                        success: function() {
-                            window.location.reload();
-                        }
-                    });
-                }
-                JAVASCRIPT);
 
             return;
         }

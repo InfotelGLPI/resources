@@ -527,20 +527,25 @@ class Config extends CommonDBTM
             ];
 
             if ($this->fields['use_module_validation']) {
-                $extra_html = Ajax::createModalWindow(
-                    'popupAvailablevariable',
-                    PLUGIN_RESOURCES_WEBDIR . '/front/modalavailablevariable.php',
-                    [
-                        'title' => __('Are you sure?', 'resources'),
-                        'reloadonclose' => false,
-                        'width' => 1180,
-                        'height' => 500,
-                    ],
-                );
+                // The modal is built in a fixed container so the link below opens it through the
+                // Bootstrap data API, the core script still loading its body on show.bs.modal.
+                $extra_html = '<div id="plugin_resources_available_variables"></div>'
+                    . Ajax::createModalWindow(
+                        'popupAvailablevariable',
+                        PLUGIN_RESOURCES_WEBDIR . '/front/modalavailablevariable.php',
+                        [
+                            'container' => 'plugin_resources_available_variables',
+                            'display' => false,
+                            'title' => __('Are you sure?', 'resources'),
+                            'reloadonclose' => false,
+                            'width' => 1180,
+                            'height' => 500,
+                        ],
+                    );
                 Html::requireJs('tinymce');
                 $rows[] = [
                     'label'  => __('Text in the resource creation ticket after validation', 'resources') . '<br>'
-                        . "<a class='' href='#' onclick='popupAvailablevariable.show()' title='" . htmlescape(__("See variable available", "resources")) . "'>" . htmlescape(__("See variable available", "resources")) . "</a>",
+                        . "<a href='#' data-bs-toggle='modal' data-bs-target='#plugin_resources_available_variables' title='" . htmlescape(__("See variable available", "resources")) . "'>" . htmlescape(__("See variable available", "resources")) . "</a>",
                     'widget' => $capture(fn() => Html::textarea(['name' => 'text_ticket_validation', 'value' => $this->fields['text_ticket_validation']])),
                 ];
                 $rows[] = [

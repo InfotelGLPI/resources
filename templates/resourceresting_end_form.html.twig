@@ -30,8 +30,7 @@
 {# Standalone form driven by an AJAX cascade: picking a resource fills
  # #plugin_resources_resting, which in turn fills #plugin_resources_endate_resting
  # and #plugin_resources_button_resting (the submit button is injected there by
- # ajax/resourceresting.php, hence the empty containers below).
- # `rand` is imposed by the caller so the generated JS can observe the dropdown id. #}
+ # ajax/resourceresting.php, hence the empty containers below). #}
 <div class="card container" style="min-width: 80%;">
     {{ wizard_header|raw }}
 
@@ -44,9 +43,13 @@
                     0,
                     resource_label,
                     {
-                        'rand': rand,
                         'entity': resource_entities,
-                        'on_change': 'plugin_resources_load_user_resting()',
+                        'toupdate': {
+                            'value_fieldname': 'plugin_resources_resources_id',
+                            'to_update': 'plugin_resources_resting',
+                            'url': ajax_url,
+                            'moreparams': {'action': 'loadResting'},
+                        },
                     }
                 ) }}
             </div>

@@ -27,10 +27,14 @@
 
 {# Label/widget rows shared by every branch of Resource_Change::setFieldByAction().
  # Widgets are GLPI dropdowns/inputs already rendered server-side, hence |raw;
- # plain text put in a widget must be escaped by the caller. #}
-{% for row in rows %}
-    <div class="{{ row_class|default('row') }}">
-        <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.label }}</div>
-        <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.widget|raw }}</div>
-    </div>
-{% endfor %}
+ # plain text put in a widget must be escaped by the caller.
+ # When the action is made of free text fields, public/scripts/resourcechange.js posts
+ # every field of the wrapper to the button URL each time one of them changes. #}
+<div{% if text_action|default(0) > 0 %} data-resources-change-action="{{ text_action }}" data-resources-change-url="{{ button_url }}"{% endif %}>
+    {% for row in rows %}
+        <div class="{{ row_class|default('row') }}">
+            <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.label }}</div>
+            <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.widget|raw }}</div>
+        </div>
+    {% endfor %}
+</div>

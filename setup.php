@@ -216,7 +216,12 @@ function plugin_init_resources()
             $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'] = ["css/resources.css"];
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
                 "scripts/resources.js",
+            ];
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['resources'] = [
                 "scripts/import.js",
+                "scripts/validation.js",
+                "scripts/resourcechange.js",
+                "scripts/fragments.js",
             ];
 
             // The resource card is not wired to anything: ResourceCard::resourceCard() has no

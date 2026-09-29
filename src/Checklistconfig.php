@@ -381,15 +381,23 @@ class Checklistconfig extends CommonDBTM
 
         switch ($ma->getAction()) {
             case "Generate_Rule":
-                $Checklist->dropdownChecklistType("checklist_type", $_SESSION["glpiactive_entity"]);
-                echo "&nbsp;";
-                RuleCriteria::dropdownConditions(RuleChecklist::class, [
-                    'criterion' => 'plugin_resources_contracttypes_id',
-                    'allow_conditions' => [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT],
+                // Those three helpers echo their dropdown whatever their options: capture it so
+                // the template stays in charge of the layout.
+                $capture = static function (callable $renderer): string {
+                    ob_start();
+                    $renderer();
+                    return (string) ob_get_clean();
+                };
+                TemplateRenderer::getInstance()->display('@resources/massiveaction_subform.html.twig', [
+                    'widgets' => [
+                        $capture(fn() => $Checklist->dropdownChecklistType("checklist_type", $_SESSION["glpiactive_entity"])),
+                        $capture(fn() => RuleCriteria::dropdownConditions(RuleChecklist::class, [
+                            'criterion' => 'plugin_resources_contracttypes_id',
+                            'allow_conditions' => [Rule::PATTERN_IS, Rule::PATTERN_IS_NOT],
+                        ])),
+                        $capture(fn() => $ContractType->dropdownContractType("plugin_resources_contracttypes_id")),
+                    ],
                 ]);
-                echo "&nbsp;";
-                $ContractType->dropdownContractType("plugin_resources_contracttypes_id");
-                echo "&nbsp;";
                 break;
 
             case "Transfert":

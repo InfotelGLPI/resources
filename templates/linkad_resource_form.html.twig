@@ -56,14 +56,12 @@
             <tr class="tab_bg_1">
                 <td>{{ __('Name') }}</td>
                 <td>
-                    <input type="text" class="form-control" name="name" value="{{ resource_name }}"
-                           onchange="this.value = this.value.toUpperCase();">
+                    <input type="text" class="form-control" name="name" value="{{ resource_name }}" data-resources-case="upper">
                 </td>
                 <td>{{ __('Firstname', 'resources') }}</td>
                 <td>
                     <input type="text" class="form-control" name="firstname" value="{{ resource_firstname }}"
-                           style="text-transform: capitalize;"
-                           onchange="First2UpperCase(this.value); plugin_resources_load_button_changeresources_information();">
+                           style="text-transform: capitalize;" data-resources-case="capitalize">
                 </td>
             </tr>
 

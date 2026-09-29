@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use DBConnection;
 use Dropdown;
@@ -369,31 +368,15 @@ class ResourceResting extends CommonDBTM
         );
         $wizard_header = (string) ob_get_clean();
 
-        // The rand is imposed here so the generated JS can observe the dropdown id.
-        $rand = mt_rand();
-
         TemplateRenderer::getInstance()->display('@resources/resourceresting_end_form.html.twig', [
             'wizard_header'     => $wizard_header,
             'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resourceresting.form.php",
-            'rand'              => $rand,
+            'ajax_url'          => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
             'resource_class'    => Resource::class,
             'resource_label'    => Resource::getTypeName(1),
             'resource_entities' => $_SESSION['glpiactiveentities'],
         ]);
 
-        $js = "function plugin_resources_load_user_resting(){";
-        $js .= Ajax::updateItemJsCode(
-            'plugin_resources_resting',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            [
-                'action' => 'loadResting',
-                'plugin_resources_resources_id' => '__VALUE__',
-            ],
-            'dropdown_plugin_resources_resources_id' . $rand,
-            false,
-        );
-        $js .= "}";
-        echo Html::scriptBlock($js);
     }
 
     /**
@@ -425,33 +408,11 @@ class ResourceResting extends CommonDBTM
             );
         }
 
-        // The rand is imposed here so the generated JS can observe the dropdown id.
-        $rand = mt_rand();
-
         TemplateRenderer::getInstance()->display('@resources/resourceresting_choice.html.twig', [
             'elements' => $elements,
-            'rand'     => $rand,
+            'ajax_url' => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
         ]);
 
-        //script for display of end date
-        $observed = 'dropdown_plugin_resources_resting_id' . $rand;
-        $js = "function plugin_resources_load_end_date_resting(){";
-        $js .= Ajax::updateItemJsCode(
-            'plugin_resources_endate_resting',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            ['action' => 'loadEndDateResting', 'plugin_resources_resting_id' => '__VALUE__'],
-            $observed,
-            false,
-        );
-        $js .= Ajax::updateItemJsCode(
-            'plugin_resources_button_resting',
-            PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceresting.php',
-            ['action' => 'loadButtonResting', 'plugin_resources_resting_id' => '__VALUE__'],
-            $observed,
-            false,
-        );
-        $js .= "}";
-        echo Html::scriptBlock($js);
     }
 
     /**

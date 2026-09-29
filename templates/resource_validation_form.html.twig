@@ -26,8 +26,8 @@
  #}
 
 {% if not validated %}
-    {# Not a form: the button only opens the confirmation modal, which posts through
-     # the validinformation() AJAX call declared alongside this template. #}
+    {# Not a form: the button opens the confirmation modal below, whose confirm button is
+     # handled by public/scripts/validation.js (POST to ajax/validinformation.php). #}
     <div class="center">
         <table class="tab_cadre_fixe">
             <tr class="tab_bg_1">
@@ -35,12 +35,26 @@
             </tr>
             <tr class="tab_bg_1">
                 <td colspan="2" class="tab_bg_2 center">
-                    <a class="btn btn-primary overflow-hidden text-nowrap" href="#"
-                       onclick="popupAnswer.show(); return false;"
-                       title="{{ __('Validate', 'resources') }}">{{ __('Validate', 'resources') }}</a>
+                    <button type="button" class="btn btn-primary overflow-hidden text-nowrap"
+                            data-bs-toggle="modal" data-bs-target="#resources_validation_modal"
+                            title="{{ __('Validate', 'resources') }}">{{ __('Validate', 'resources') }}</button>
                 </td>
             </tr>
         </table>
+    </div>
+
+    <div id="resources_validation_modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ __('Are you sure?', 'resources') }}</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{ include('@resources/modal_validation_info.html.twig') }}
+                </div>
+            </div>
+        </div>
     </div>
 {% else %}
     {# Standalone form: front/resource.form.php dispatches on synchActiveDirectory. #}

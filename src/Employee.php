@@ -204,7 +204,6 @@ class Employee extends CommonDBTM
      */
     public function showEmployeeForm($plugin_resources_resources_id, $users_id, $withtemplate = '')
     {
-        global $CFG_GLPI;
 
         if (!$this->canView()) {
             return false;
@@ -278,7 +277,11 @@ class Employee extends CommonDBTM
             [
                 'value'     => $this->fields["plugin_resources_clients_id"],
                 'entity'    => $entity,
-                'on_change' => "plugin_resources_security_compliance(\"" . $CFG_GLPI['root_doc'] . "\", this.value);",
+                'toupdate'  => [
+                    'value_fieldname' => 'plugin_resources_clients_id',
+                    'to_update'       => 'security_compliance',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/employee.php',
+                ],
             ],
         ));
 

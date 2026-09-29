@@ -35,8 +35,6 @@ use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Choice;
 use GlpiPlugin\Resources\Employee;
 use GlpiPlugin\Resources\LDAP;
-use GlpiPlugin\Resources\ContractType;
-use GlpiPlugin\Resources\LeavingReason;
 use GlpiPlugin\Resources\LinkAd;
 use GlpiPlugin\Resources\Resource_Item;
 use GlpiPlugin\Resources\Role;
@@ -299,33 +297,8 @@ elseif (isset($_POST["update"])) {
         $config = new Config();
         $config->getFromDB(1);
         if ($config->fields["create_ticket_departure"]) {
-            $ticket = new Ticket();
             $resource->getFromDB($_POST['id']);
-
-            $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
-            if (isset($tt->predefined) && count($tt->predefined)) {
-                foreach ($tt->predefined as $predeffield => $predefvalue) {
-                    $ticket->fields[$predeffield] = $predefvalue;
-                }
-            }
-            $ticket->fields["name"] = __("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
-            $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
-            $ticket->fields["content"] = $resource->fields['name'] . " " . $resource->fields['firstname'] . " " . __("leave on", "resources") . " " . Html::convDate($resource->fields['date_end']);
-            if (!empty($resource->fields['plugin_resources_leavingreasons_id'])) {
-                $ticket->fields["content"] .= "<br>" . LeavingReason::getTypeName(0) . " : " . Dropdown::getDropdownName(LeavingReason::getTable(), $resource->fields["plugin_resources_leavingreasons_id"]);
-            }
-            if (!empty($resource->fields['plugin_resources_contracttypes_id'])) {
-                $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . Dropdown::getDropdownName(ContractType::getTable(), $resource->fields['plugin_resources_contracttypes_id']);
-            } else {
-                $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . __("Without contract", 'resources');
-            }
-            $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
-            $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
-            $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-            $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
-            $ticket->fields['items_id'] = [Resource::class => [$_POST['id']]];
-            unset($ticket->fields["id"]);
-            $ticket->add($ticket->fields);
+            $resource->createLeavingTicket();
 
             $linkad = new LinkAd();
             if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $_POST['id']])) {
@@ -645,47 +618,10 @@ elseif (isset($_POST["add_checklist"])) {
     $config->getFromDB(1);
     if ($config->fields["create_ticket_departure_instructions"]) {
         $resource->getFromDB($_POST["id"]);
-        $ticket = new Ticket();
-
-        $tt = $ticket->getITILTemplateToUse(0, Ticket::DEMAND_TYPE, $config->fields["categories_id"]);
-        if (isset($tt->predefined) && count($tt->predefined)) {
-            foreach ($tt->predefined as $predeffield => $predefvalue) {
-                // Load template data
-                // add() goes through the query builder, which quotes values itself.
-                $ticket->fields[$predeffield] = $predefvalue;
-            }
-        }
-        $resource->getFromDB($_POST["id"]);
-        $ticket->fields["name"] = __("Departure of", 'resources') . " " . $resource->fields['name'] . " " . $resource->fields['firstname'];
-        $ticket->fields["itilcategories_id"] = $config->fields["categories_id"];
-
-        $dateend = new DateTime($resource->fields['date_end']);
-        $ticket->fields["content"] = $resource->fields['name'] . " " . $resource->fields['firstname'] . " " . __("leave on", "resources") . " " . Html::convDate($dateend->format('Y-m-d'));
-        if (isset($resource->fields['plugin_resources_leavingreasons_id']) && !empty($resource->fields['plugin_resources_leavingreasons_id'])) {
-            $ticket->fields["content"] .= "<br>" . LeavingReason::getTypeName(0) . " : " . Dropdown::getDropdownName(LeavingReason::getTable(), $resource->fields["plugin_resources_leavingreasons_id"]);
-        }
-        if (($resource->fields['plugin_resources_contracttypes_id']) != 0) {
-            $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . Dropdown::getDropdownName(ContractType::getTable(), $resource->fields['plugin_resources_contracttypes_id']);
-        } else {
-            $ticket->fields["content"] .= "<br>" . ContractType::getTypeName(0) . " : " . __("Without contract", 'resources');
-        }
-        $ticket->fields["content"] .= "<br>" . __("Order", 'resources') . " : " . $resource->fields['remove_order'];
-        $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
-        $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
-        $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-        $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
-        $ticket->fields['items_id'] = [Resource::class => [$_POST['id']]];
-        unset($ticket->fields["id"]);
-        $ticket_id = $ticket->add($ticket->fields);
+        $resource->createLeavingTicket(null, null, true);
 
         if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_module_departure_instruction'] && $config->fields["send_second_ticket_remove"] && $config->fields["assignment_group_second_ticket"]) {
-            $ticket->fields['users_id_recipient'] = Session::getLoginUserID();
-            $ticket->fields['_users_id_requester'] = Session::getLoginUserID();
-            $ticket->fields["type"] = Ticket::DEMAND_TYPE;
-            $ticket->fields["entities_id"] = $_SESSION['glpiactive_entity'];
-            $ticket->fields['items_id'] = [Resource::class => [$_POST['id']]];
-            unset($ticket->fields["id"]);
-            $ticket_id = $ticket->add($ticket->fields);
+            $ticket_id = $resource->createLeavingTicket(null, null, true);
             $groupticket = new Group_Ticket();
             $groupticket->fields['tickets_id'] = $ticket_id;
             $groupticket->fields['groups_id'] = $config->fields["assignment_group_second_ticket"];

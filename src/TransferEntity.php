@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Resources;
 
-use Ajax;
 use CommonDBTM;
 use CommonGLPI;
 use DBConnection;
@@ -136,31 +135,27 @@ class TransferEntity extends CommonDBTM
         }
 
         if ($canedit) {
-            // Capture the GLPI entity dropdown and keep its rand to wire the AJAX refresh
-            // of the adjacent group placeholder.
+            // Capture the GLPI entity dropdown; picking an entity refreshes the adjacent
+            // group placeholder.
             ob_start();
-            $rand = Dropdown::show(
-                'Entity',
-                ['name' => 'entities_id', 'used' => $used_entities, 'on_change' => 'entity_group()'],
-            );
+            Dropdown::show('Entity', [
+                'name'     => 'entities_id',
+                'used'     => $used_entities,
+                'toupdate' => [
+                    'value_fieldname' => 'entities_id',
+                    'to_update'       => 'entity_group',
+                    'url'             => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceinfo.php',
+                    'moreparams'      => ['action' => 'groupEntity'],
+                ],
+            ]);
             $entity_dropdown = ob_get_clean();
 
-            $params = ['action' => 'groupEntity', 'entities_id' => '__VALUE__'];
-            $ajax   = Ajax::updateItemJsCode(
-                'entity_group',
-                PLUGIN_RESOURCES_WEBDIR . '/ajax/resourceinfo.php',
-                $params,
-                'dropdown_entities_id' . $rand,
-                false,
-            );
-            $entity_group_js = "<script type='text/javascript'>function entity_group(){" . $ajax . "}</script>";
 
             TemplateRenderer::getInstance()->display('@resources/transferentity_config.html.twig', [
                 'form_action'     => $target,
                 'title'           => self::getTypeName(),
                 'entity_label'    => __('Entity'),
                 'entity_dropdown' => $entity_dropdown,
-                'entity_group_js' => $entity_group_js,
             ]);
         }
         if ($dataEntity) {
