@@ -2,24 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 12:14+0000\n"
+"POT-Creation-Date: 2026-10-01 13:35+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12371/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12371/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/Resource_Change.php:188
@@ -52,8 +53,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:288
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr "(Dört alanın tümü etkinleştirilmiş ise, istemci güvenliği uygundur)"
 
 #: src/Adconfig.php:355
@@ -88,8 +88,7 @@ msgstr "Sözleşmesiz dönem güncellendi"
 msgid "A resource has been added by"
 msgstr "Şu kişi tarafından bir kaynak eklendi"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:672
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:672
 msgid "A resource has been declared leaving"
 msgstr "Bir kaynak ayrılacağını bildirdi"
 
@@ -145,13 +144,11 @@ msgstr "İşlem yetkilendirmesi"
 msgid "Actions to be taken"
 msgstr "Yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:81
-#: src/NotificationTargetResource.php:568
+#: src/NotificationTargetResource.php:81 src/NotificationTargetResource.php:568
 msgid "Actions to do on these leaving resources"
 msgstr "Ayrılan bu kaynaklarla ilgili yapılacak işlemler"
 
-#: src/NotificationTargetResource.php:80
-#: src/NotificationTargetResource.php:561
+#: src/NotificationTargetResource.php:80 src/NotificationTargetResource.php:561
 msgid "Actions to do on these new resources"
 msgstr "Bu yeni kaynaklara yapılacak işlemler"
 
@@ -845,8 +842,8 @@ msgstr "Kişi türü kimlik doğrulaması"
 msgid "ContractType"
 msgstr "Sözleşme türü"
 
-#: src/Checklist.php:370 src/Resource_Change.php:1457
-#: src/ResourceBadge.php:454 templates/checklist_from_resources.html.twig:83
+#: src/Checklist.php:370 src/Resource_Change.php:1457 src/ResourceBadge.php:454
+#: templates/checklist_from_resources.html.twig:83
 msgid "Create a end treatment ticket"
 msgstr "Onarım sonu destek kaydı ekle"
 
@@ -1329,8 +1326,7 @@ msgstr "Tanımsız ise boş bırakın"
 #: templates/resourceresting_end_date.html.twig:33
 #: templates/resourceresting_form.html.twig:53
 #: templates/budget_form.html.twig:73 templates/planning_item.html.twig:41
-#: templates/cost_form.html.twig:62
-#: templates/resourceholiday_form.html.twig:53
+#: templates/cost_form.html.twig:62 templates/resourceholiday_form.html.twig:53
 #: templates/employment_form.html.twig:77
 msgid "End date"
 msgstr "Bitiş tarihi"
@@ -1578,8 +1574,7 @@ msgstr "başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
 
 #: src/Metademand.php:145
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise kontrol listesi girişi "
 "eklenir"
@@ -1594,8 +1589,7 @@ msgstr ""
 
 #: src/Metademand.php:178
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Seçilmiş değer, kontrol edilecek değere eşit ise davranış biçimi eklenir"
 
@@ -1625,8 +1619,7 @@ msgstr "Dosyayı içe aktar"
 msgid "Import resources"
 msgstr "İçe aktarma kaynakları"
 
-#: src/Checklistconfig.php:135
-#: templates/checklist_from_resources.html.twig:143
+#: src/Checklistconfig.php:135 templates/checklist_from_resources.html.twig:143
 #: templates/linkad_form.html.twig:38
 #: templates/checklistconfig_form.html.twig:34
 #: templates/checklist_form.html.twig:38
@@ -1828,8 +1821,7 @@ msgstr "Zorunlu tatil günleri"
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
 
-#: src/NotificationTargetResource.php:78
-#: src/NotificationTargetResource.php:400
+#: src/NotificationTargetResource.php:78 src/NotificationTargetResource.php:400
 #: src/NotificationTargetResource.php:1647
 msgid "List of not finished tasks"
 msgstr "Tamamlanmamış görev listesi"
@@ -1961,8 +1953,7 @@ msgstr "Aktif dizin kullanıcısını düzenle"
 #: templates/linkad_form.html.twig:36 templates/cost_form.html.twig:35
 #: templates/checklistconfig_form.html.twig:32
 #: templates/linkad_resource_form.html.twig:61
-#: templates/checklist_form.html.twig:36
-#: templates/employment_form.html.twig:32
+#: templates/checklist_form.html.twig:36 templates/employment_form.html.twig:32
 msgid "Name"
 msgstr "Ad"
 
@@ -2286,8 +2277,7 @@ msgstr "Lütfen düzeltin: %s"
 #: templates/resource_restitution_pdf.html.twig:33
 msgid "Please ensure that the return form is signed by the employee"
 msgstr ""
-"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin "
-"olun"
+"Lütfen geri verilen formun çalışan tarafından imzalanmış olduğundan emin olun"
 
 #: src/Resource_Change.php:225
 msgid "Please select a resource"
@@ -2813,8 +2803,8 @@ msgstr "LDAP dizinini kur"
 
 #: src/EmploymentState.php:89 src/EmploymentState.php:151
 #: src/Profession.php:103 src/Profession.php:222 src/ResourceSituation.php:104
-#: src/ResourceSituation.php:168 src/ResourceSituation.php:174
-#: src/Rank.php:107 src/Rank.php:155 src/Employer.php:95 src/Employer.php:134
+#: src/ResourceSituation.php:168 src/ResourceSituation.php:174 src/Rank.php:107
+#: src/Rank.php:155 src/Employer.php:95 src/Employer.php:134
 msgid "Short name"
 msgstr "Kısa ad"
 
@@ -2983,8 +2973,8 @@ msgstr "Doğrulama sonrası kaynak oluşturma destek kaydındaki yazı"
 
 #: templates/wizard_secondstep_resource.html.twig:108
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Adların okunuş ve yazılışına özen gösterin. Birden çok adı yazarken "
 "aralarına tire \"-\" koyun."
@@ -3087,8 +3077,8 @@ msgid ""
 "run by the plugin."
 msgstr ""
 "Aşağıdaki sorgular yalnızca bulunan farklılıklardan oluşturulmuş "
-"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el"
-" ile yürütün. Asla eklenti tarafından yürütülmezler."
+"önerilerdir. Bunları gözden geçirin, veri tabanınızı yedekleyin, ardından el "
+"ile yürütün. Asla eklenti tarafından yürütülmezler."
 
 #: src/Employee.php:322
 msgid "The resource is also created if not existent"
@@ -3129,8 +3119,7 @@ msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
 #: src/Employment.php:511
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr "Bu kaynaklar kurumdan ayrıldığından, geçerli işleri güncellendi"
 
 #: src/Adconfig.php:284
@@ -3140,8 +3129,8 @@ msgid ""
 "prefer the random format."
 msgstr ""
 "Bu parola, hesap sahibinin kimliğinden türetilir veya eklenti tarafından "
-"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz"
-" oldu. Ancak rastgele biçimi yeğleyin."
+"oluşturulan her hesap tarafından paylaşılır. İlk oturum açıldığında geçersiz "
+"oldu. Ancak rastgele biçimi yeğleyin."
 
 #: src/Resource.php:3780 src/Resource.php:3808
 msgid "This resource aldready exists"
