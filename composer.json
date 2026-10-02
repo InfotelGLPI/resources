@@ -1,5 +1,6 @@
 {
     "config": {
+        "autoloader-suffix": "PluginResources",
         "platform": {
             "php": "8.2.99",
             "ext-ldap": "8.2"
