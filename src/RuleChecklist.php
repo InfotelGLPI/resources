@@ -192,7 +192,8 @@ class RuleChecklist extends Rule
         }
 
         if (!$display) {
-            Html::input($name, ['value' => $value, 'size' => 70]);
+            // Html::input() returns the markup, unlike the dropdowns above: echo it, as Rule does
+            echo Html::input($name, ['value' => $value, 'size' => 70]);
         }
     }
 

@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Resources;
 
 //Criteria which allows to select a date
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Reports\AutoCriteria;
 use Html;
 
@@ -85,7 +86,9 @@ class DateCriteria extends AutoCriteria
     public function displayCriteria()
     {
         $this->getReport()->startColumn();
-        echo htmlescape($this->getCriteriaLabel($this->getName())) . '&nbsp;:';
+        TemplateRenderer::getInstance()->display('@resources/report_criteria_label.html.twig', [
+            'label' => $this->getCriteriaLabel($this->getName()),
+        ]);
         $this->getReport()->endColumn();
 
         $this->getReport()->startColumn();

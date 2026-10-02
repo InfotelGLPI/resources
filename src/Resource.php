@@ -2497,8 +2497,14 @@ class Resource extends CommonDBTM
         }
 
         if ($CFG_GLPI["notifications_mailing"]) {
+            // The report configuration is the one of the authorized resource, never the posted
+            // reports_id: it is not bound to the resource, and the notification would otherwise
+            // carry the HR information and comments of a resource of another entity.
             $report = new ReportConfig();
-            $report->getFromDB($options["reports_id"]);
+            if (!$report->getFromDBByResource($this->getID())) {
+                return false;
+            }
+            $options["reports_id"] = $report->getID();
 
             if ($report->fields['send_report_notif']) {
                 $notification = new Notification();
