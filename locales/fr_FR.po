@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:38+0000\n"
+"POT-Creation-Date: 2026-10-05 23:33+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -202,7 +202,7 @@ msgstr "Ajouter un document"
 msgid "Add a need"
 msgstr "Ajouter un besoin"
 
-#: templates/document_item.html.twig:53
+#: templates/document_item.html.twig:52
 msgctxt "button"
 msgid "Add a new file"
 msgstr "Ajouter un nouveau fichier"
@@ -243,7 +243,7 @@ msgstr "Ajouter une application"
 msgid "Add application for"
 msgstr "Ajout de l'application pour"
 
-#: src/Wizard.php:734
+#: src/Wizard.php:756
 msgid "Add documents to the resource"
 msgstr "Ajouter des documents à la ressource"
 
@@ -251,11 +251,11 @@ msgstr "Ajouter des documents à la ressource"
 msgid "Add habiliation"
 msgstr "Ajouter une habilitation"
 
-#: src/Wizard.php:786
+#: src/Wizard.php:808
 msgid "Add recruiting informations to the resource"
 msgstr "Ajouter les informations de recrutement à la ressource"
 
-#: src/Wizard.php:583
+#: src/Wizard.php:603
 msgid "Add the photo of the resource"
 msgstr "Ajouter la photo de la ressource"
 
@@ -384,7 +384,7 @@ msgstr "Règles d'affectation de checklist à un type de contrat"
 msgid "Associable to a ticket"
 msgstr "Associable à un ticket"
 
-#: src/Resource.php:3545 templates/document_item.html.twig:86
+#: src/Resource.php:3545 templates/document_item.html.twig:84
 msgctxt "button"
 msgid "Associate"
 msgstr "Associer"
@@ -393,7 +393,7 @@ msgstr "Associer"
 msgid "Associate a resource"
 msgstr "Associer une ressource"
 
-#: templates/document_item.html.twig:70
+#: templates/document_item.html.twig:68
 msgid "Associate an existing document"
 msgstr "Associer un document existant"
 
@@ -740,7 +740,7 @@ msgstr "Choisir"
 msgid "Choosing the intercontrat"
 msgstr "Choisir l'intercontrat"
 
-#: src/Resource.php:4779 src/Directory.php:374
+#: src/Resource.php:4776 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "Cliquez ici pour envoyer votre courriel"
 
@@ -1361,11 +1361,11 @@ msgstr "Date de fin"
 msgid "End date was not completed. Please try again."
 msgstr "La date de départ n'a pas été indiquée. Merci de la spécifier."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:391
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:409
 msgid "Enter employer information about the resource"
 msgstr "Entrez les informations employeurs de la ressource"
 
-#: src/Wizard.php:305
+#: src/Wizard.php:313
 msgid "Enter general information about the resource"
 msgstr "Entrez les informations générales concernant la ressource"
 
@@ -1377,11 +1377,11 @@ msgstr "Entrez les informations d'habilitation"
 msgid "Enter habilitation information "
 msgstr "Entrer les informations d'habilitations"
 
-#: src/Wizard.php:689
+#: src/Wizard.php:710
 msgid "Enter habilitations about the resource"
 msgstr "Entrez les habilitations pour la ressource"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:523
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:542
 msgid "Enter the computing needs of the resource"
 msgstr "Entrez les besoins informatiques de la ressource"
 
@@ -1413,7 +1413,7 @@ msgstr "Échec de la vérification de l'intégrité des tables !"
 msgid "Failed to send the file"
 msgstr "Erreur dans l'envoi du fichier"
 
-#: src/Resource.php:5326 src/Resource.php:5338
+#: src/Resource.php:5323 src/Resource.php:5335
 msgid "Female"
 msgstr "Femme"
 
@@ -1897,7 +1897,7 @@ msgstr "Courriel"
 msgid "Mail Creation"
 msgstr "Création de mail"
 
-#: src/Resource.php:5325 src/Resource.php:5335
+#: src/Resource.php:5322 src/Resource.php:5332
 msgid "Male"
 msgstr "Homme"
 
@@ -2238,7 +2238,7 @@ msgstr "Instructions"
 msgid "Order resources by"
 msgstr "Ordonner les ressources par"
 
-#: src/Resource.php:189 src/Resource.php:5327 src/Resource.php:5341
+#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Autre"
@@ -2692,7 +2692,7 @@ msgstr "Données de ressources"
 msgid "Resources directory"
 msgstr "Annuaire des ressources"
 
-#: src/Resource.php:5022
+#: src/Resource.php:5019
 msgid "Resources list"
 msgstr "Listes des ressources"
 
