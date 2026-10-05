@@ -116,6 +116,19 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
         working-directory: glpi
 
+      # bin/console refuses to run without public/lib ("Missing node /public/lib folder")
+      # GLPI 12 requires node >= 24.11 (package.json "engines"); ubuntu-latest ships node 22
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Build GLPI frontend dependencies
+        run: |
+          npm install --no-save
+          npm run-script build
+        working-directory: glpi
+
       - name: Compile GLPI locales
         run: |
           sudo apt-get install -y gettext
