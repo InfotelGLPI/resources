@@ -35,7 +35,7 @@ use GlpiPlugin\Resources\Resource;
 Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Budget::class);
 
 $budget = new Budget();
-if ($budget->canView() || Session::haveRight("config", UPDATE)) {
+if ($budget->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
     Search::show(Budget::class);
 } else {
     throw new AccessDeniedHttpException();

@@ -45,13 +45,12 @@
 
                             {% if action.post is defined and action.post is not empty %}
                                 {# Destructive actions must not be triggerable by a GET link (CSRF):
-                                 # render them as a CSRF-protected POST submit. The listener validates
-                                 # the token on POST; an optional 'confirm' adds a client-side guard. #}
+                                 # render them as a POST submit, which the core CSRF check validates
+                                 # (Sec-Fetch-Site/Origin); an optional 'confirm' adds a client-side guard. #}
                                 <form method="post" action="{{ action.url }}" class="d-inline"
                                       {% if action.confirm is defined and action.confirm is not empty %}
                                           onsubmit="return confirm('{{ action.confirm|e('js') }}');"
                                       {% endif %}>
-                                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
                                     {% for post_key, post_value in action.post %}
                                         <input type="hidden" name="{{ post_key }}" value="{{ post_value }}">
                                     {% endfor %}

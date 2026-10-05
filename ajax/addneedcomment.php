@@ -29,11 +29,12 @@
 
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (!isset($_POST["id"])) {
     throw new AccessDeniedHttpException();

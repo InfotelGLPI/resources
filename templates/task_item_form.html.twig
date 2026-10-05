@@ -75,7 +75,6 @@
         {% endif %}
     </table>
 
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 </form>
 
 {% if can_edit %}
@@ -83,7 +82,6 @@
         <form id="deletetaskitem{{ loop.index }}" method="post" action="{{ delete_action }}" class="d-none">
             <input type="hidden" name="deletetaskitem" value="1">
             <input type="hidden" name="id" value="{{ row.delete_id }}">
-            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
         </form>
     {% endfor %}
 {% endif %}

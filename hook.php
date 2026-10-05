@@ -1255,7 +1255,7 @@ function plugin_resources_postinit()
  */
 function plugin_resources_AssignToTicket($types)
 {
-    if (Session::haveRight("plugin_resources_open_ticket", 1)) {
+    if (Session::haveRight(Profile::RIGHT_OPEN_TICKET, 1)) {
         $types[Resource::class] = Resource::getTypeName(2);
     }
 
@@ -1435,7 +1435,7 @@ function plugin_resources_getAddSearchOptions($itemtype)
     $sopt = [];
 
     if ($itemtype == "User") {
-        if (Session::haveRight("plugin_resources", READ)) {
+        if (Session::haveRight(Resource::$rightname, READ)) {
             $sopt[4311]['table'] = 'glpi_plugin_resources_contracttypes';
             $sopt[4311]['field'] = 'name';
             $sopt[4311]['name'] = Resource::getTypeName(
@@ -1518,7 +1518,7 @@ function plugin_resources_getAddSearchOptions($itemtype)
             $sopt[4326]['massiveaction'] = false;
         }
     } elseif ($itemtype == "Computer") {
-        if (Session::haveRight("plugin_resources", READ)) {
+        if (Session::haveRight(Resource::$rightname, READ)) {
             $sopt[4331]['table'] = 'glpi_plugin_resources_resources';
             $sopt[4331]['field'] = 'name';
             $sopt[4331]['datatype'] = 'itemlink';
@@ -1708,7 +1708,7 @@ function plugin_resources_addDefaultWhere($type)
             // in charge of. Access by id (form, AJAX, check()/can()) stays governed by the
             // plugin_resources right and the entity scope, so that validators, technicians
             // and checklist actors can still act on resources they are not in charge of.
-            if (!Session::haveRight("plugin_resources_all", READ)) {
+            if (!Session::haveRight(Profile::RIGHT_ALL, READ)) {
                 $criteria = [
                     'OR' => [
                         'glpi_plugin_resources_resources.users_id_recipient' => $who,
@@ -2709,7 +2709,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                             $out .= "</a>";
                         }
 
-                        if (Session::haveRight("plugin_resources_task", READ) && $output_type == Search::HTML_OUTPUT) {
+                        if (Session::haveRight(Task::$rightname, READ) && $output_type == Search::HTML_OUTPUT) {
                             // Built through the query builder: the row id reaches this
                             // function straight from the search result set, and the raw
                             // string it used to be concatenated into quoted nothing.
@@ -3044,7 +3044,7 @@ function plugin_pre_item_add_solutions($item)
                         ) || ($linkad->getFromDBByCrit(
                             ['plugin_resources_resources_id' => $items->getField('items_id')],
                         ) && $linkad->getField('action_done') == 0)) {
-                            $item->input = null;
+                            $item->input = false;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),
                                 false,
@@ -3062,7 +3062,7 @@ function plugin_pre_item_add_solutions($item)
                             ],
                         );
                         if (!empty($checklists)) {
-                            $item->input = null;
+                            $item->input = false;
                             Session::addMessageAfterRedirect(
                                 __('You have to do all checklist in action before', 'resources'),
                                 false,
@@ -3074,7 +3074,7 @@ function plugin_pre_item_add_solutions($item)
                 //         } else if ($ticket->fields["itilcategories_id"] == $adconfig->fields["modification_categories_id"]) {
                 //            if ($items->getFromDBByCrit(["tickets_id" => $ticket->getID(), "itemtype" => Resource::getType()])) {
                 //               if (!$linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) || ($linkad->getFromDBByCrit(['plugin_resources_resources_id' => $items->getField('items_id')]) && $linkad->getField('action_done') == 0)) {
-                //                  $item->input = null;
+                //                  $item->input = false;
                 //                  Session::addMessageAfterRedirect(
                 //                     __('You have to perform the action on the LDAP directory before', 'resources'),
                 //                     false, ERROR);
@@ -3092,7 +3092,7 @@ function plugin_pre_item_add_solutions($item)
                         ) || ($linkad->getFromDBByCrit(
                             ['plugin_resources_resources_id' => $items->getField('items_id')],
                         ) && $linkad->getField('action_done') == 0)) {
-                            $item->input = null;
+                            $item->input = false;
                             Session::addMessageAfterRedirect(
                                 __('You have to perform the action on the LDAP directory before', 'resources'),
                                 false,
@@ -3110,7 +3110,7 @@ function plugin_pre_item_add_solutions($item)
                             ],
                         );
                         if (!empty($checklists)) {
-                            $item->input = null;
+                            $item->input = false;
                             Session::addMessageAfterRedirect(
                                 __('You have to do all checklist out action before', 'resources'),
                                 false,

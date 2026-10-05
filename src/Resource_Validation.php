@@ -39,7 +39,7 @@ use Session;
  */
 class Resource_Validation extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_validation';
+    public static string $rightname = 'plugin_resources_validation';
 
     /**
      * @param int $nb

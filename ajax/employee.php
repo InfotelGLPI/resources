@@ -29,11 +29,12 @@
 
 use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Client;
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST['plugin_resources_clients_id'])) {
     TemplateRenderer::getInstance()->display('@resources/employee_security_compliance.html.twig', [

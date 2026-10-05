@@ -28,8 +28,9 @@
  */
 
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Resources\RuleContracttype;
 
-Session::checkRight('plugin_resources_rule', READ);
+Session::checkRight(RuleContracttype::$rightname, READ);
 
 if (isset($_POST["sub_type"])) {
     $sub_type = $_POST["sub_type"];

@@ -41,8 +41,8 @@ use Migration;
  */
 class Contracttypeprofile extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources';
+    public bool $dohistory = true;
 
     /**
      * Add a category to profile

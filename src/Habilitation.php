@@ -41,8 +41,8 @@ use Session;
 class Habilitation extends CommonTreeDropdown
 {
     // From CommonDBTM
-    public $dohistory = true;
-    public $can_be_translated = true;
+    public bool $dohistory = true;
+    public bool $can_be_translated = true;
 
     /**
      * @param $nb
@@ -65,7 +65,7 @@ class Habilitation extends CommonTreeDropdown
      **/
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_resources', READ);
+        return Session::haveRight(Resource::$rightname, READ);
     }
 
     /**
@@ -76,7 +76,7 @@ class Habilitation extends CommonTreeDropdown
      **/
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
+        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**

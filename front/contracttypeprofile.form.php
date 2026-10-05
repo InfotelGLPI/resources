@@ -34,7 +34,7 @@ use GlpiPlugin\Resources\Contracttypeprofile;
 // config.form.php/adconfig.form.php, rather than on the ordinary plugin_resources
 // CREATE right that any resource manager holds — the latter would let a non-admin
 // widen any profile's visible contract types (privilege escalation).
-Session::checkRight('config', UPDATE);
+Session::checkRight(\Config::$rightname, UPDATE);
 
 $contracttype = new Contracttypeprofile();
 if (isset($_POST["addContracttype"])) {

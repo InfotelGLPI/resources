@@ -26,6 +26,7 @@
  * along with resources. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  */
+use GlpiPlugin\Resources\Resource;
 
 // Send UTF8 Headers
 header("Content-Type: text/html; charset=UTF-8");
@@ -33,7 +34,7 @@ Html::header_nocache();
 
 global $CFG_GLPI;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST['duration']) && $_POST['duration'] == 0) {
     Html::showDateTimeField("plan[end]", [

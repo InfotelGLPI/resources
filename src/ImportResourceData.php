@@ -31,6 +31,7 @@ namespace GlpiPlugin\Resources;
 
 use CommonDBChild;
 use DBConnection;
+use Glpi\DBAL\QueryExpression;
 use Migration;
 
 /**
@@ -38,11 +39,11 @@ use Migration;
  */
 class ImportResourceData extends CommonDBChild
 {
-    public static $rightname = 'plugin_resources_importresourcedatas';
+    public static string $rightname = 'plugin_resources_importresourcedatas';
 
     // From CommonDBChild
-    public static $itemtype = ImportResource::class;
-    public static $items_id = 'plugin_resources_importresources_id';
+    public static string $itemtype = ImportResource::class;
+    public static string $items_id = 'plugin_resources_importresources_id';
 
 
     public function prepareInput($name, $value, $parent_id, $column_id)
@@ -59,7 +60,7 @@ class ImportResourceData extends CommonDBChild
     {
         global $DB;
 
-        return $DB->delete(self::getTable(), [1]);
+        return $DB->delete(self::getTable(), [new QueryExpression('true')]);
     }
 
     public function purgeDataByImportResource($importResourceId)

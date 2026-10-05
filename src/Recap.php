@@ -41,7 +41,7 @@ use Session;
  * */
 class Recap extends CommonDBTM
 {
-    protected static $notable = true;
+    protected static bool $notable = true;
     private $table = "glpi_users";
 
     public static function getTable($classname = null)
@@ -70,7 +70,7 @@ class Recap extends CommonDBTM
      **/
     public static function canCreate(): bool
     {
-        if (Session::haveRight('plugin_resources_employment', UPDATE)) {
+        if (Session::haveRight(Employment::$rightname, UPDATE)) {
             return true;
         }
         return false;
@@ -87,7 +87,7 @@ class Recap extends CommonDBTM
      **/
     public static function canView(): bool
     {
-        if (Session::haveRight('plugin_resources_employment', READ)) {
+        if (Session::haveRight(Employment::$rightname, READ)) {
             return true;
         }
         return false;

@@ -36,7 +36,7 @@ use GlpiPlugin\Resources\TicketCategory;
 use GlpiPlugin\Resources\TransferEntity;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-Session::checkRight("config", UPDATE);
+Session::checkRight(\Config::$rightname, UPDATE);
 
 if (Plugin::isPluginActive("resources")) {
     $cat = new TicketCategory();

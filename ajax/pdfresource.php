@@ -32,7 +32,7 @@ use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Item;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 global $CFG_GLPI, $DB;
 

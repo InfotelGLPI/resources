@@ -67,7 +67,6 @@ const loadFragment = (url, target, params_json) => {
         method: 'POST',
         body,
         headers: {
-            'X-Glpi-Csrf-Token': getAjaxCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
     })

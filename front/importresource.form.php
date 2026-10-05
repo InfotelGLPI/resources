@@ -54,7 +54,7 @@ if (isset($_POST["add"])) {
     $importResource->setFileVerify($_POST);
     Html::back();
 } elseif (isset($_POST["reset-imports"])) {
-    // POST-only (was GET): the CheckCsrfListener validates the token on POST, so the
+    // POST-only (was GET): the CheckCsrfListener validates POST requests, so the
     // destructive purge can no longer be triggered by a crafted link (CSRF).
     Session::checkRight(Import::$rightname, PURGE);
     $importResource->purgeDatabase();

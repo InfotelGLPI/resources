@@ -32,7 +32,6 @@
 <div class="center">
     {% if show_form %}
         <form method="post" action="{{ form_action }}">
-            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     {% endif %}
     <table class="tab_cadre_fixe">
         <tr>

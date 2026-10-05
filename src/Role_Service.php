@@ -39,11 +39,11 @@ use Migration;
 class Role_Service extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = ResourceFunction::class;
-    public static $items_id_1 = 'plugin_resources_roles_id';
+    public static ?string $itemtype_1 = ResourceFunction::class;
+    public static ?string $items_id_1 = 'plugin_resources_roles_id';
 
-    public static $itemtype_2 = Service::class;
-    public static $items_id_2 = 'plugin_resources_services_id';
+    public static ?string $itemtype_2 = Service::class;
+    public static ?string $items_id_2 = 'plugin_resources_services_id';
 
 
     public function getForbiddenStandardMassiveAction()

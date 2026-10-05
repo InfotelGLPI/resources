@@ -43,7 +43,7 @@ use GlpiPlugin\Resources\Team;
 use GlpiPlugin\Resources\Config;
 use GlpiPlugin\Resources\Resource_Validation;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 // This endpoint is the sink of Resource_Validation::showValidationForm(), and a display gate
 // is never transitive: the URL is plainly readable in the data attributes of the confirm
@@ -57,9 +57,9 @@ Session::checkRight('plugin_resources', READ);
 Session::checkRight(Resource_Validation::$rightname, READ);
 
 // This endpoint mutates a resource and creates tickets. GLPI's CheckCsrfListener only
-// validates the CSRF token on non-GET requests, so a state-changing action reachable
+// validates non-GET requests, so a state-changing action reachable
 // via GET escapes CSRF protection entirely. Require POST (the legitimate AJAX caller,
-// public/scripts/validation.js, already posts) and read $_POST so the token is enforced.
+// public/scripts/validation.js, already posts) and read $_POST so the check is enforced.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     throw new \Glpi\Exception\Http\BadRequestHttpException();
 }

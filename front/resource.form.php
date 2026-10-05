@@ -147,9 +147,8 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
                     $template->fields["is_recursive"],
                 );
 
-                $fields = [];
                 foreach ($template->fields as $key => $value) {
-                    if ($value != '' && (!isset($fields[$key]) || $fields[$key] == '' || $fields[$key] == 0)) {
+                    if ($value != '') {
                         $_POST[$key] = $value;
                     }
                 }

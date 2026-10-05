@@ -39,8 +39,8 @@ use Session;
  */
 class Department extends CommonDropdown
 {
-    public $can_be_translated = true;
-    public static $rightname = 'plugin_resources';
+    public bool $can_be_translated = true;
+    public static string $rightname = 'plugin_resources';
 
     /**
      * @param $nb

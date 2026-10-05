@@ -32,7 +32,7 @@ use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Change;
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $resource_change = new Resource_Change();
 

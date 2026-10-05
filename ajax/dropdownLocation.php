@@ -29,12 +29,13 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Employer;
+use GlpiPlugin\Resources\Resource;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownLocation.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $employers_id = (int) ($_POST['plugin_resources_employers_id'] ?? 0);
 if ($employers_id > 0) {

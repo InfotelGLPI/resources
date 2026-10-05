@@ -30,7 +30,7 @@
 use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Adconfig;
 
-Session::checkRight("config", UPDATE);
+Session::checkRight(\Config::$rightname, UPDATE);
 
 if (Plugin::isPluginActive("resources")) {
     $config = new Adconfig();

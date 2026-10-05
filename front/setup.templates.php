@@ -35,7 +35,7 @@ $resource = new Resource();
 
 // A guard clause rather than a wrapping if: without the right this used to answer 200 with an
 // empty body, which reads as "nothing to show here" instead of "you may not look".
-if (!$resource->canView() && !Session::haveRight("config", UPDATE)) {
+if (!$resource->canView() && !Session::haveRight(\Config::$rightname, UPDATE)) {
     throw new AccessDeniedHttpException();
 }
 

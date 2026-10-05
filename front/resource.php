@@ -32,6 +32,7 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Profile;
 
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
@@ -46,8 +47,8 @@ if (Session::getCurrentInterface() == 'central') {
 
 $resource = new Resource();
 
-if ($resource->canView() || Session::haveRight("config", UPDATE)) {
-    if (Session::haveRight("plugin_resources_all", READ)
+if ($resource->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
+    if (Session::haveRight(Profile::RIGHT_ALL, READ)
     && Session::getCurrentInterface() == 'central') {
         // The modal markup and the script that opens it come from the core helper: ask for
         // the string, so the template stays in charge of the layout.

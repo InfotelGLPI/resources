@@ -47,7 +47,7 @@ if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] 
             Html::helpHeader(Resource::getTypeName(2));
         }
     }
-    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+    if ($resource->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         //show remove resource form
         $resource->showResourcesToRemove();
     }

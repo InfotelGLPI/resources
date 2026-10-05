@@ -36,7 +36,7 @@ Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Employment::cla
 
 $employment = new Employment();
 
-if ($employment->canView() || Session::haveRight("config", UPDATE)) {
+if ($employment->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
     if (isset($_GET["plugin_resources_resources_id"])
         && !empty($_GET["plugin_resources_resources_id"])) {
         $_GET["field"] = [0 => "13"];

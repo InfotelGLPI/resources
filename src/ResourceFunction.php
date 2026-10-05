@@ -39,7 +39,7 @@ use Session;
  */
 class ResourceFunction extends CommonDropdown
 {
-    public static $rightname = 'plugin_resources_role';
+    public static string $rightname = 'plugin_resources_role';
 
     /**
      * @param $nb

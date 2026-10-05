@@ -43,7 +43,7 @@ use Session;
  */
 class Task_Item extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_task';
+    public static string $rightname = 'plugin_resources_task';
 
     /**
      * @return bool
@@ -143,7 +143,7 @@ class Task_Item extends CommonDBTM
             return false;
         }
         $this->fields = $iterator->current();
-        if (is_array($this->fields) && count($this->fields)) {
+        if (count($this->fields)) {
             return true;
         } else {
             return false;

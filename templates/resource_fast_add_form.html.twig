@@ -29,7 +29,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {# Massive action sub form: it is rendered inside the form opened by MassiveAction,
- # so no <form> tag and no CSRF token here, both belong to the caller.
+ # so no <form> tag here, it belongs to the caller.
  # The itemtype hidden input is emitted by Resource::showMassiveActionsSubForm(). #}
 <div class="row">
     {{ fields.htmlField('plugin_resources_contracttypes_id', contracttype_dropdown, contracttype_label, {

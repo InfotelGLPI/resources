@@ -79,15 +79,15 @@ if (isset($_POST["addrestingresources"]) && $_POST["plugin_resources_resources_i
     $resting->delete($_POST, 1);
     $resting->redirectToList();
 } elseif (isset($_GET['menu'])) {
-    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+    if ($resting->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         $resting->showMenu();
     }
 } elseif (isset($_GET['end'])) {
-    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+    if ($resting->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         $resting->showFormEnd($_GET["id"], []);
     }
 } else {
-    if ($resting->canView() || Session::haveRight("config", UPDATE)) {
+    if ($resting->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         $resting->showForm($_GET["id"], []);
     }
 }

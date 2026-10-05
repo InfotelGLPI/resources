@@ -49,15 +49,15 @@ use Toolbox;
  */
 class Resource_Item extends CommonDBRelation
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
-    public static $itemtype_1 = Resource::class;
-    public static $items_id_1 = 'plugin_resources_resources_id';
-    public static $take_entity_1 = false;
+    public static ?string $itemtype_1 = Resource::class;
+    public static ?string $items_id_1 = 'plugin_resources_resources_id';
+    public static bool $take_entity_1 = false;
 
-    public static $itemtype_2 = 'itemtype';
-    public static $items_id_2 = 'items_id';
-    public static $take_entity_2 = true;
+    public static ?string $itemtype_2 = 'itemtype';
+    public static ?string $items_id_2 = 'items_id';
+    public static bool $take_entity_2 = true;
     /**
      * Have I the global right to "view" the Object
      *
@@ -777,7 +777,7 @@ class Resource_Item extends CommonDBRelation
             return false;
         }
 
-        if (!Session::haveRight("plugin_resources", READ)) {
+        if (!Session::haveRight(Resource::$rightname, READ)) {
             return false;
         }
 

@@ -33,7 +33,7 @@ use GlpiPlugin\Resources\Resource_Item;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST["computer_id"])) {
     /** @var \DBmysql $DB */

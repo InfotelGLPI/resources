@@ -75,7 +75,7 @@ if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_i
 } else {
     // Both remaining branches only display, and both used to answer with an empty page when the
     // right was missing: pose the read guard once and refuse.
-    if (!$holiday->canView() && !Session::haveRight("config", UPDATE)) {
+    if (!$holiday->canView() && !Session::haveRight(\Config::$rightname, UPDATE)) {
         throw new AccessDeniedHttpException();
     }
     if (isset($_GET['menu'])) {

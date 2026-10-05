@@ -39,7 +39,7 @@ use Session;
  */
 class TaskType extends CommonDropdown
 {
-    public $can_be_translated = true;
+    public bool $can_be_translated = true;
 
     /**
      * @param int $nb
@@ -56,7 +56,7 @@ class TaskType extends CommonDropdown
      */
     public static function canCreate(): bool
     {
-        return Session::haveRight('dropdown', UPDATE);
+        return Session::haveRight(\CommonDropdown::$rightname, UPDATE);
     }
 
     /**
@@ -64,7 +64,7 @@ class TaskType extends CommonDropdown
      */
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_resources_task', READ);
+        return Session::haveRight(Task::$rightname, READ);
     }
 
     /**

@@ -35,7 +35,6 @@
     {{ pager|raw }}
 
     <form name="form" method="post" id="import" action="{{ form_action }}">
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
         {# Kept out of the table: an <input> is not valid as a direct child of <tr>. #}
         {% for hidden in hidden_inputs %}

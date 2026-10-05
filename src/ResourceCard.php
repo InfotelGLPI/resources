@@ -43,7 +43,7 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ResourceCard extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     public static $types = ['Computer', 'Peripheral', 'Phone', 'Printer', 'PluginSimcardSimcard', Badge::class];
 
@@ -61,7 +61,7 @@ class ResourceCard extends CommonDBTM
         $data = $resource_item->find([
             'itemtype' => 'User',
             'plugin_resources_resources_id' => $ID,
-        ], [], [1]);
+        ], [], 1);
 
         $data = reset($data);
 

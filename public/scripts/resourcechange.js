@@ -65,7 +65,6 @@ const reloadChangeButton = (wrapper) => {
         method: 'POST',
         body,
         headers: {
-            'X-Glpi-Csrf-Token': getAjaxCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
     })
@@ -105,7 +104,6 @@ const checkExistingResource = (field) => {
         method: 'POST',
         body,
         headers: {
-            'X-Glpi-Csrf-Token': getAjaxCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
     })
@@ -185,7 +183,6 @@ const loadChangeFields = (form) => {
         method: 'POST',
         body,
         headers: {
-            'X-Glpi-Csrf-Token': getAjaxCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
     })

@@ -41,7 +41,17 @@ use Session;
  */
 class Profile extends \Profile
 {
-    public static $rightname = "profile";
+    public static string $rightname = "profile";
+
+    public const RIGHT_ALL         = 'plugin_resources_all';
+    public const RIGHT_OPEN_TICKET = 'plugin_resources_open_ticket';
+    public const RIGHT_DROPDOWN_PUBLIC     = 'plugin_resources_dropdown_public';
+    public const RIGHT_LEAVINGINFORMATION  = 'plugin_resources_leavinginformation';
+    public const RIGHT_EMPLOYEE_CORE_FORM  = 'plugin_resources_employee_core_form';
+
+    // Rights of the servicecatalog plugin, which may not be installed
+    public const RIGHT_SERVICECATALOG       = 'plugin_servicecatalog';
+    public const RIGHT_SERVICECATALOG_SETUP = 'plugin_servicecatalog_setup';
 
     /**
      * @param \CommonGLPI $item

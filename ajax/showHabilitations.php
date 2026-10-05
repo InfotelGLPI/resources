@@ -38,7 +38,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 // The wizard is driven by a caller-supplied resource id ($_POST['value']): validate it and
 // confirm the caller may actually read that specific resource (right + entity scope) before

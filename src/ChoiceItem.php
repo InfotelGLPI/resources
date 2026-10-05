@@ -60,7 +60,7 @@ class ChoiceItem extends CommonTreeDropdown
      **/
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_resources', READ);
+        return Session::haveRight(Resource::$rightname, READ);
     }
 
     /**
@@ -71,7 +71,7 @@ class ChoiceItem extends CommonTreeDropdown
      **/
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
+        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**

@@ -39,7 +39,7 @@ use Session;
  */
 class Destination extends CommonDropdown
 {
-    public $can_be_translated = true;
+    public bool $can_be_translated = true;
 
     /**
      * @param $nb
@@ -59,7 +59,7 @@ class Destination extends CommonDropdown
      **/
     public static function canCreate(): bool
     {
-        return Session::haveRight('dropdown', UPDATE);
+        return Session::haveRight(\CommonDropdown::$rightname, UPDATE);
     }
 
     /**
@@ -73,7 +73,7 @@ class Destination extends CommonDropdown
      **/
     public static function canView(): bool
     {
-        return Session::haveRight('plugin_resources_budget', READ);
+        return Session::haveRight(Budget::$rightname, READ);
     }
 
     /**

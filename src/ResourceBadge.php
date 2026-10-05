@@ -56,8 +56,8 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ResourceBadge extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources';
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type

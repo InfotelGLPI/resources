@@ -38,7 +38,7 @@ if (strpos($_SERVER['PHP_SELF'], "leavingform.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
 if ($resources_id > 0) {

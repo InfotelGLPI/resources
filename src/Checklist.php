@@ -58,7 +58,7 @@ use User;
  */
 class Checklist extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_checklist';
+    public static string $rightname = 'plugin_resources_checklist';
 
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;
@@ -743,7 +743,7 @@ class Checklist extends CommonDBTM
             }
         }
 
-        $show_task_column = Session::haveRight("plugin_resources_task", UPDATE) && $canedit;
+        $show_task_column = Session::haveRight(Task::$rightname, UPDATE) && $canedit;
 
         Session::initNavigateListItems(
             self::class,
@@ -861,28 +861,28 @@ class Checklist extends CommonDBTM
     {
         $actions = parent::getSpecificMassiveActions($checkitem);
 
-        if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
+        if (Session::haveRight(Checklist::$rightname, UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'do_checklist'] = __(
                 'Mark as finished',
                 'resources',
             );
         }
 
-        if (Session::haveRight("plugin_resources_checklist", UPDATE)) {
+        if (Session::haveRight(Checklist::$rightname, UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'undo_checklist'] = __(
                 'Mark as unfinished',
                 'resources',
             );
         }
 
-        if (Session::haveRight("plugin_resources_task", UPDATE)) {
+        if (Session::haveRight(Task::$rightname, UPDATE)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'add_task'] = __(
                 'Link a task',
                 'resources',
             );
         }
 
-        if (Session::haveRight("ticket", Ticket::READALL)) {
+        if (Session::haveRight(\Ticket::$rightname, Ticket::READALL)) {
             $actions['GlpiPlugin\Resources\Checklist' . MassiveAction::CLASS_ACTION_SEPARATOR . 'add_ticket'] = __(
                 'Add ticket',
                 'resources',
@@ -1435,7 +1435,7 @@ class Checklist extends CommonDBTM
             return false;
         }
 
-        if (!Session::haveRight("plugin_resources", READ)) {
+        if (!Session::haveRight(Resource::$rightname, READ)) {
             return false;
         }
 
@@ -1502,7 +1502,7 @@ class Checklist extends CommonDBTM
         }
 
         // Config
-        if (Session::haveRight("config", UPDATE)) {
+        if (Session::haveRight(\Config::$rightname, UPDATE)) {
             $menu['options'][$itemtype]['links']['config'] = PLUGIN_RESOURCES_WEBDIR . '/front/config.form.php';
         }
 

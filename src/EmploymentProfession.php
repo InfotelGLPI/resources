@@ -36,7 +36,7 @@ use CommonDropdown;
  */
 class EmploymentProfession extends CommonDropdown
 {
-    public $can_be_translated = true;
+    public bool $can_be_translated = true;
     public $table = 'glpi_plugin_resources_professions';
 
 }

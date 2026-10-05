@@ -36,7 +36,7 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 Html::header(Resource::getTypeName(2), '', "admin", Menu::class, Checklist::class);
 
 $checklistconfig = new Checklistconfig();
-if (($checklistconfig->canView() || Session::haveRight("config", UPDATE))) {
+if (($checklistconfig->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
     Search::show(Checklistconfig::class);
 } else {
     throw new AccessDeniedHttpException();

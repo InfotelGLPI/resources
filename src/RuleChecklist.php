@@ -42,10 +42,7 @@ use Session;
  **/
 class RuleChecklist extends Rule
 {
-    public static $rightname = 'plugin_resources_rule';
-
-    // From Rule
-    public $can_sort = true;
+    public static string $rightname = 'plugin_resources_rule';
 
     /**
      * Get title used in rule

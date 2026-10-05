@@ -38,11 +38,11 @@ use Toolbox;
  */
 class RuleContracttypeReadonlyCollection extends RuleCollection
 {
-    public static $rightname = 'plugin_resources_rule';
+    public static string $rightname = 'plugin_resources_rule';
 
     // From RuleCollection
-    public $stop_on_first_match = true;
-    public $menu_option = 'contracttypereadonlys';
+    public bool $stop_on_first_match = true;
+    public string $menu_option = 'contracttypereadonlys';
 
     /**
      * Get title used in list of rules

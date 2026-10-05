@@ -217,7 +217,7 @@ class User extends \User
             return false;
         }
 
-        if (!Session::haveRight("plugin_resources", READ)) {
+        if (!Session::haveRight(Resource::$rightname, READ)) {
             return false;
         }
 

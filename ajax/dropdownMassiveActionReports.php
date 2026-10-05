@@ -26,11 +26,12 @@
  * along with resources. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  */
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST["action"]) && isset($_POST["id"])) {
     echo Html::hidden('action', ['value' => $_POST["action"]]);

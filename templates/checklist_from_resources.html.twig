@@ -200,7 +200,6 @@
                     </div>
 
                     {% if is_finished %}
-                        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
                         </form>
                     {% else %}
                         {{ form_close|raw }}
@@ -216,7 +215,6 @@
                                     <input type="hidden" name="id" value="{{ entry.id }}">
                                     <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
                                     <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
-                                    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
                                 </form>
                             {% endif %}
                         {% endfor %}

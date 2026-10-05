@@ -113,7 +113,6 @@
                                 {{ inputs.hidden('plugin_resources_resources_id', params["plugin_resources_resources_id"]) }}
                                 {{ inputs.hidden('id', params["id"]) }}
                                 {{ inputs.hidden('withtemplate', 0) }}
-                                {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
 
                                 {% if can_purge %}
                                     {{ inputs.submit('cancel_request',

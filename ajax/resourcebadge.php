@@ -34,7 +34,7 @@ use GlpiPlugin\Resources\ResourceBadge;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST['action'])) {
     $badge = new ResourceBadge();

@@ -105,7 +105,6 @@
             {% endif %}
         </table>
     </div>
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 </form>
 
 {# Delete forms live outside the main form (no nested <form>): each button above targets one. #}
@@ -114,7 +113,6 @@
         <form id="deleteneed{{ row.id }}{{ row.rand }}" method="post" action="{{ delete_action }}" class="d-none">
             <input type="hidden" name="deletehelpdeskitem" value="1">
             <input type="hidden" name="id" value="{{ row.id }}">
-            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
         </form>
     {% endfor %}
 {% endif %}

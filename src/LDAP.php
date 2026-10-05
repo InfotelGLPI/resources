@@ -49,9 +49,9 @@ use Toolbox;
  */
 class LDAP extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
     // From CommonDBTM
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type

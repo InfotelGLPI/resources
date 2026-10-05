@@ -29,10 +29,11 @@
 
 use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Config;
+use GlpiPlugin\Resources\Resource;
 
 // This endpoint exposes the full notification variable catalog; gate it behind the
 // plugin read right like every other resources endpoint (was reachable unauthenticated).
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 TemplateRenderer::getInstance()->display('@resources/modal_available_variable.html.twig', [
     'variables' => Config::getAvailablevariable(),

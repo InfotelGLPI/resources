@@ -26,7 +26,6 @@
  #}
 
 <form name="form" method="post" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="center">
         {% if extra_html is defined and extra_html is not empty %}
             {# Modal container built by Ajax::createModalWindow(), a core widget. #}

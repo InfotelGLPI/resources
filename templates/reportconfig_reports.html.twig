@@ -31,7 +31,6 @@
 
 {% if show_form %}
     <form method="post" name="form_reports{{ rand }}" id="form_reports{{ rand }}" action="./reportconfig.form.php">
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 {% endif %}
         <div class="center">
             <table class="tab_cadre_fixe">

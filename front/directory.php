@@ -46,7 +46,7 @@ if (Session::getCurrentInterface() == 'central') {
 
 $directory = new Directory();
 
-if (($directory->canView() || Session::haveRight("config", UPDATE))) {
+if (($directory->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
     if (empty($_GET["sort"])) {
         $_GET["sort"] = "34";
     }

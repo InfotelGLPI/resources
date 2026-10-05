@@ -40,7 +40,7 @@ Html::header_nocache();
 // plugin_resources_resting: the plugin_resources right this file used to ask for is a
 // different bit of a different profile right, and a session holding it alone had no business
 // here. The config bypass is the one that controller grants alongside canView().
-if (!ResourceResting::canView() && !Session::haveRight('config', UPDATE)) {
+if (!ResourceResting::canView() && !Session::haveRight(\Config::$rightname, UPDATE)) {
     throw new AccessDeniedHttpException();
 }
 

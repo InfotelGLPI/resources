@@ -57,7 +57,6 @@
                         {{ inputs.hidden('is_recursive', item.isRecursive() ? '1' : '0') }}
                         {{ inputs.hidden('itemtype', item.getType()) }}
                         {{ inputs.hidden('items_id', item.getID()) }}
-                        {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
                     </div>
 {#                </form>#}
             </div>
@@ -89,7 +88,6 @@
 
                         {{ inputs.hidden('itemtype', item.getType()) }}
                         {{ inputs.hidden('items_id', item.getID()) }}
-                        {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
 {#                    </form>#}
                 </div>
             </div>

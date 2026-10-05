@@ -42,8 +42,8 @@ use Session;
  */
 class Directory extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
-    protected static $notable = true;
+    public static string $rightname = 'plugin_resources';
+    protected static bool $notable = true;
     private $table = "glpi_users";
 
     public static function getTable($classname = null)

@@ -44,8 +44,8 @@ use Session;
  */
 class ResourceResting extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_resting';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources_resting';
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type
@@ -223,7 +223,7 @@ class ResourceResting extends CommonDBTM
             'datatype' => 'itemlink',
             'itemlink_type' => $this->getType(),
         ];
-        if (!Session::haveRight("plugin_resources_all", READ)) {
+        if (!Session::haveRight(Profile::RIGHT_ALL, READ)) {
             $tab[] = [
                 'id' => '1',
                 'searchtype' => 'contains',

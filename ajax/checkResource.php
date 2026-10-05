@@ -32,7 +32,7 @@ use GlpiPlugin\Resources\Resource;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $name = $_POST['name'] ?? '';
 $firstname = $_POST['firstname'] ?? '';

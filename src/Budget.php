@@ -40,9 +40,9 @@ use Session;
  */
 class Budget extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_budget';
+    public static string $rightname = 'plugin_resources_budget';
     // From CommonDBTM
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type

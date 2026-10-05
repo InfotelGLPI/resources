@@ -44,7 +44,7 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ReportConfig extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     /**
      * Return the localized name of the current Type
@@ -200,7 +200,7 @@ class ReportConfig extends CommonDBTM
             return false;
         }
         $this->fields = $iterator->current();
-        if (is_array($this->fields) && count($this->fields)) {
+        if (count($this->fields)) {
             return true;
         }
         return false;

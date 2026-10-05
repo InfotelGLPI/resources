@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
     Html::header_nocache();
 }
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
     $values = 0;

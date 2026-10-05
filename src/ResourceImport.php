@@ -42,11 +42,11 @@ use Migration;
  */
 class ResourceImport extends CommonDBChild
 {
-    public static $rightname = 'plugin_resources_import';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources_import';
+    public bool $dohistory = true;
 
-    public static $itemtype = Resource::class;
-    public static $items_id = 'plugin_resources_resources_id';
+    public static string $itemtype = Resource::class;
+    public static string $items_id = 'plugin_resources_resources_id';
 
     /**
      * Return the localized name of the current Type

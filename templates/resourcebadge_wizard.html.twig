@@ -33,7 +33,6 @@
     {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
     <div class="card-body">
         <form method="post" action="{{ form_action }}">
-            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
             <div class="row">
                 <div class="col-md-4 mb-2">{{ resource_label }}</div>
                 <div class="col-md-4 mb-2">

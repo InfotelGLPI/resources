@@ -28,12 +28,13 @@
  */
 
 use GlpiPlugin\Resources\Service;
+use GlpiPlugin\Resources\Resource;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownService.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $departments_id = (int) ($_POST['plugin_resources_departments_id'] ?? 0);
 if ($departments_id > 0) {

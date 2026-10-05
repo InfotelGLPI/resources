@@ -29,7 +29,6 @@
  # `header_columns` describes the header row (ImportResource::getListHeaderColumns());
  # a cell is a text, optionally linked (`url`), or a tooltip rendered by the core. #}
 <form name="form" method="post" id="verify" action="{{ form_action }}">
-    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
 
     <div class="center">
         {# Pager rendered by the core (Html::printAjaxPager). #}

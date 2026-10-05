@@ -45,7 +45,7 @@ use User;
 class LeavingInformation extends CommonDBTM
 {
     //   static $rightname = 'plugin_resources_leavinginformation';
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     /**
      * Return the localized name of the current Type
@@ -110,7 +110,7 @@ class LeavingInformation extends CommonDBTM
 
         if ($item->getType() == Resource::class
             && $this->canView()
-            && Session::haveRight('plugin_resources_leavinginformation', 1)
+            && Session::haveRight(Profile::RIGHT_LEAVINGINFORMATION, 1)
             && $item->fields['is_leaving']
         ) {
             return self::createTabEntry(self::getTypeName(1));
@@ -135,7 +135,7 @@ class LeavingInformation extends CommonDBTM
         global $CFG_GLPI;
 
         if ($item->getType() == Resource::class
-            && Session::haveRight('plugin_resources_leavinginformation', 1)
+            && Session::haveRight(Profile::RIGHT_LEAVINGINFORMATION, 1)
             && $item->fields['is_leaving']) {
             $self = new self();
             $self->showLeavingInformationForm($item->getField('id'), 0, $withtemplate);
@@ -451,7 +451,7 @@ class LeavingInformation extends CommonDBTM
     public static function rawSearchOptionsToAdd($itemtype)
     {
         $tab = [];
-        $haveRight = Session::haveRight('plugin_resources_leavinginformation', 1);
+        $haveRight = Session::haveRight(Profile::RIGHT_LEAVINGINFORMATION, 1);
         if ($itemtype == Resource::getType() && $haveRight) {
             $tab[] = [
                 'id' => '160',

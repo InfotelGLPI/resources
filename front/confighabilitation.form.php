@@ -63,7 +63,7 @@ if (isset($_POST['add_metademand'])) {
     Html::back();
 
 } elseif (isset($_GET['menu'])) {
-    if ($habilitation->canView() || Session::haveRight("config", UPDATE)) {
+    if ($habilitation->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         $habilitation->showMenu();
     }
 } elseif (isset($_GET['config'])) {

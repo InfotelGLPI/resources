@@ -49,7 +49,7 @@ global $HEADER_LOADED, $DB;
 // Authorization guard: this report script is directly addressable and bypasses the
 // reports plugin dispatcher, so enforce the plugin business right — like every other
 // resources endpoint — before running any query or emitting output.
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $report = new AutoReport(__("Report listing departing resources with active employment", "resources"));
 

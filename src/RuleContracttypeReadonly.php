@@ -44,9 +44,7 @@ use Session;
  **/
 class RuleContracttypeReadonly extends Rule
 {
-    public static $rightname = 'plugin_resources_rule';
-
-    public $can_sort = true;
+    public static string $rightname = 'plugin_resources_rule';
 
     /**
      * Get title used in rule
@@ -360,7 +358,7 @@ class RuleContracttypeReadonly extends Rule
         $actions['readonlyfields_plugin_resources_employers_id']['type']  = "yesonly";
         $actions['readonlyfields_plugin_resources_employers_id']['force_actions'] = ['assign'];
 
-        if (Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
+        if (Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, UPDATE)) {
 
             $actions['readonlyfields_plugin_resources_resourcesituations_id']['name']  = ResourceSituation::getTypeName(1);
             $actions['readonlyfields_plugin_resources_resourcesituations_id']['type']  = "yesonly";

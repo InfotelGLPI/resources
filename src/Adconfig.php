@@ -47,7 +47,7 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class Adconfig extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     // Initial password of the accounts created in the directory.
     /** Initials of the holder, optionally their arrival date, plus a shared suffix. */
@@ -59,12 +59,12 @@ class Adconfig extends CommonDBTM
 
     // Bind and default-account secrets are stored encrypted (GLPIKey); keep them out of
     // API/exports and out of the update history so the (encrypted) value is not disclosed.
-    public static $undisclosedFields = [
+    public static array $undisclosedFields = [
         'password',
         'default_account_password',
     ];
 
-    public $history_blacklist = [
+    public array $history_blacklist = [
         'password',
         'default_account_password',
     ];

@@ -40,7 +40,7 @@ use Session;
  */
 class Resource_Leaving extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     /**
      * @param int $nb

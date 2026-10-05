@@ -39,8 +39,8 @@ use Session;
  */
 class LeavingReason extends CommonDropdown
 {
-    public static $rightname = 'plugin_resources';
-    public $can_be_translated = true;
+    public static string $rightname = 'plugin_resources';
+    public bool $can_be_translated = true;
 
     /**
      * @param $nb
@@ -60,7 +60,7 @@ class LeavingReason extends CommonDropdown
      **/
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
+        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**

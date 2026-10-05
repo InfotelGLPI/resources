@@ -37,11 +37,11 @@ use Session;
  */
 class RuleChecklistCollection extends RuleCollection
 {
-    public static $rightname = 'plugin_resources_rule';
+    public static string $rightname = 'plugin_resources_rule';
 
     // From RuleCollection
     //public $use_output_rule_process_as_next_input=true;
-    public $menu_option = 'checklists';
+    public string $menu_option = 'checklists';
 
     /**
      * Get title used in list of rules

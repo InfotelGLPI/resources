@@ -42,7 +42,7 @@ if (empty($_GET)) {
     $_GET = $_POST;
 }
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 // Default view : Nobody
 if (!isset($_GET['all'])) {
     $_GET['all'] = 0;

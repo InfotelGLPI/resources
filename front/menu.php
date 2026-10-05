@@ -46,7 +46,7 @@ if (Session::getCurrentInterface() == 'central') {
 $resource = new Resource();
 $menu = new Menu();
 
-if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+if ($resource->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
     $menu->display();
 } else {
     throw new AccessDeniedHttpException();

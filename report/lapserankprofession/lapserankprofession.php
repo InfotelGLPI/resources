@@ -34,6 +34,7 @@ use GlpiPlugin\Reports\ColumnDate;
 use GlpiPlugin\Reports\ColumnLink;
 use GlpiPlugin\Resources\Profession;
 use GlpiPlugin\Resources\Rank;
+use GlpiPlugin\Resources\Resource;
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
 $USEDBREPLICATE = 1;
@@ -45,7 +46,7 @@ global $HEADER_LOADED, $DB;
 // Authorization guard: this report script is directly addressable and bypasses the
 // reports plugin dispatcher, so enforce the plugin business right — like every other
 // resources endpoint — before running any query or emitting output.
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $report = new AutoReport(__("Report listing obsolete corps and ranks", "resources"));
 

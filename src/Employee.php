@@ -46,7 +46,7 @@ use Toolbox;
  */
 class Employee extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_employee';
+    public static string $rightname = 'plugin_resources_employee';
 
     /**
      * Return the localized name of the current Type
@@ -465,7 +465,7 @@ class Employee extends CommonDBTM
             return false;
         }
 
-        if (!Session::haveRight("plugin_resources", READ)) {
+        if (!Session::haveRight(Resource::$rightname, READ)) {
             return false;
         }
         $iterator = $DB->request([

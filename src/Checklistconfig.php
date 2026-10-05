@@ -47,7 +47,7 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class Checklistconfig extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_checklist';
+    public static string $rightname = 'plugin_resources_checklist';
 
     /**
      * Return the localized name of the current Type
@@ -376,7 +376,7 @@ class Checklistconfig extends CommonDBTM
                 'resources',
             );
 
-            if (Session::haveRight('transfer', READ)
+            if (Session::haveRight(\Transfer::$rightname, READ)
                 && Session::isMultiEntitiesMode()) {
                 $actions['GlpiPlugin\Resources\Checklistconfig' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
                     'Transfer',

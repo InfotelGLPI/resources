@@ -38,6 +38,7 @@ use GlpiPlugin\Resources\ProfessionCategory;
 use GlpiPlugin\Resources\ProfessionLine;
 use GlpiPlugin\Resources\Rank;
 use GlpiPlugin\Resources\ReportExport;
+use GlpiPlugin\Resources\Resource;
 
 $USEDBREPLICATE = 1;
 $DBCONNECTION_REQUIRED = 1;
@@ -47,7 +48,7 @@ global $HEADER_LOADED, $DB;
 // Authorization guard: this report script is directly addressable and bypasses the
 // reports plugin dispatcher, so enforce the plugin business right — like every other
 // resources endpoint — before running any query or emitting output.
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 // GLPI 11 routes every request through the Symfony front controller, so $_SERVER['PHP_SELF']
 // resolves to the router entry point instead of this script: the filter form and the pagination

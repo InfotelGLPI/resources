@@ -46,7 +46,7 @@ if (Session::getCurrentInterface() == 'central') {
 
 $recap = new Recap();
 
-if ($recap->canView() || Session::haveRight("config", UPDATE)) {
+if ($recap->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
     //if $_GET["employment_professions_id"] exist this show list of resource / employment
     //by employment rank and profession
     if (isset($_GET["employment_professions_id"]) && !empty($_GET["employment_professions_id"])) {

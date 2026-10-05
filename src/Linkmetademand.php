@@ -40,9 +40,9 @@ use Session;
  */
 class Linkmetademand extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_checklist';
+    public static string $rightname = 'plugin_resources_checklist';
     // From CommonDBTM
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type

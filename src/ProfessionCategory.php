@@ -39,8 +39,8 @@ use Session;
  */
 class ProfessionCategory extends CommonDropdown
 {
-    public static $rightname = 'plugin_resources';
-    public $can_be_translated = true;
+    public static string $rightname = 'plugin_resources';
+    public bool $can_be_translated = true;
 
     /**
      * @param $nb
@@ -61,7 +61,7 @@ class ProfessionCategory extends CommonDropdown
     public static function canCreate(): bool
     {
         if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
-            && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
+            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, UPDATE)) {
             return true;
         }
         return false;
@@ -79,7 +79,7 @@ class ProfessionCategory extends CommonDropdown
     public static function canView(): bool
     {
         if (Session::haveRight(self::$rightname, READ)
-            && Session::haveRight('plugin_resources_dropdown_public', READ)) {
+            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, READ)) {
             return true;
         }
         return false;

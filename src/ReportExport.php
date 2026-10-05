@@ -77,10 +77,6 @@ class ReportExport
         $hidden_fields = [];
         $param = [];
         foreach ($_POST as $key => $val) {
-            // The token of the previous request is spent, the template adds a fresh one.
-            if ($key === '_glpi_csrf_token') {
-                continue;
-            }
             $values = is_array($val) ? $val : [$key => $val];
             foreach ($values as $k => $v) {
                 $name = is_array($val) ? $key . '[' . $k . ']' : (string) $key;

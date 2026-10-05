@@ -84,7 +84,7 @@ class ImportResource extends CommonDBTM
     public const DISPLAY_STATISTICS = 1;
     public const DISPLAY_CSV = 2;
 
-    public static $rightname = 'plugin_resources_importresources';
+    public static string $rightname = 'plugin_resources_importresources';
     public static $keyInOtherTables = 'plugin_resources_importresources_id';
     public static $currentStart;
     public static $currentVerifiedFile;
@@ -156,7 +156,7 @@ class ImportResource extends CommonDBTM
     {
         global $DB;
 
-        return $DB->delete(self::getTable(), [1]);
+        return $DB->delete(self::getTable(), [new QueryExpression('true')]);
     }
 
     /**

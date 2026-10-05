@@ -41,7 +41,7 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class Role extends CommonDropdown
 {
-    public static $rightname = 'plugin_resources_role';
+    public static string $rightname = 'plugin_resources_role';
 
     /**
      * @param $nb

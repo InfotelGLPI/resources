@@ -32,7 +32,6 @@
     <form method="post" action="{{ 'GlpiPlugin\\Resources\\Resource'|itemtype_form_path }}">
         <div class="d-flex">
             <div class="col-auto">
-                {{ inputs.hidden('_glpi_csrf_token', csrf_token()) }}
                 {% if item is instanceof('GlpiPlugin\\Resources\\Resource') %}
                     {{ inputs.hidden('plugin_resources_resources_id', item.getID()) }}
                     {{ fields.dropdownItemsFromItemtypes('items_id', '', {

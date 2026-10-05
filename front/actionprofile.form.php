@@ -35,7 +35,7 @@ use GlpiPlugin\Resources\Actionprofile;
 // ordinary plugin_resources CREATE right that any resource manager holds — the
 // latter would let a non-admin grant capabilities to any profile (privilege
 // escalation).
-Session::checkRight('config', UPDATE);
+Session::checkRight(\Config::$rightname, UPDATE);
 
 $actionprofile = new Actionprofile();
 if (isset($_POST["addAction"])) {

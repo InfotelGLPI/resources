@@ -59,7 +59,7 @@ if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["pl
             Html::helpHeader(Resource::getTypeName(2));
         }
     }
-    if ($resource->canView() || Session::haveRight("config", UPDATE)) {
+    if ($resource->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
         //show change resource form
         $resource->showResourcesToChange($_POST);
     }

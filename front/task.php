@@ -36,7 +36,7 @@ Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
 
 $task = new Task();
 
-if (($task->canView() || Session::haveRight("config", UPDATE))) {
+if (($task->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
     //if $_GET["plugin_resources_resources_id"] exist this show list of tasks from a resource
     //else show all resources
     if (isset($_GET["plugin_resources_resources_id"]) && !empty($_GET["plugin_resources_resources_id"])) {

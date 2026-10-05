@@ -31,7 +31,7 @@ use GlpiPlugin\Resources\Resource;
 
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 global $CFG_GLPI;
 

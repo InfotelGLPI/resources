@@ -47,7 +47,7 @@ if (Session::getCurrentInterface() == 'central') {
 
 $resting = new ResourceResting();
 
-if (($resting->canView() || Session::haveRight("config", UPDATE))) {
+if (($resting->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
     Search::show(ResourceResting::class);
 } else {
     throw new AccessDeniedHttpException();

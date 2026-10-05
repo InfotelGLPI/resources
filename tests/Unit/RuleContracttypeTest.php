@@ -38,9 +38,9 @@ class RuleContracttypeTest extends TestCase
     {
         global $DB;
         $_SESSION['glpiactiveprofile'] = [];
-        // Session::haveRight() appelle $DB->isSlave() — on fournit un stub minimal
+        // Session::haveRight() appelle $DB->isReplica() — on fournit un stub minimal
         $DB = new class {
-            public function isSlave(): bool
+            public function isReplica(): bool
             {
                 return false;
             }

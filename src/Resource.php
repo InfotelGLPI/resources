@@ -84,7 +84,7 @@ use UserTitle;
  */
 class Resource extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     /**
      * Set server-side by the validation workflow (ajax/validinformation.php) only.
@@ -109,9 +109,9 @@ class Resource extends CommonDBTM
 
     public static $itemtype = Resource::class;
 
-    protected $usenotepad = true;
+    protected bool $usenotepad = true;
 
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type
@@ -2157,7 +2157,7 @@ class Resource extends CommonDBTM
 
         // The employer is not a resource column: it is carried by the Employee relation.
         $employers_id      = 0;
-        $can_read_employee = Session::haveRight('plugin_resources_employee_core_form', READ) && !$display_employee;
+        $can_read_employee = Session::haveRight(Profile::RIGHT_EMPLOYEE_CORE_FORM, READ) && !$display_employee;
         if ($can_read_employee) {
             $employee = new Employee();
             if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $this->getID()])) {
@@ -3123,7 +3123,7 @@ class Resource extends CommonDBTM
             $where[] = ['NOT' => ['glpi_plugin_resources_resources.id' => $exclude]];
         }
 
-        if (!Session::haveRight("plugin_resources_all", READ)) {
+        if (!Session::haveRight(Profile::RIGHT_ALL, READ)) {
             $who = (int) Session::getLoginUserID();
             $where[] = [
                 'OR' => [
@@ -3236,7 +3236,7 @@ class Resource extends CommonDBTM
      * List the resource templates.
      *
      * Rendering is delegated to the core template list view, which already brings the
-     * multi entity column, the purge button and its CSRF token. Template names are
+     * multi entity column and the purge button. Template names are
      * escaped here: they are free text and used to be echoed raw inside the link.
      *
      * @param string $target
@@ -3511,14 +3511,14 @@ class Resource extends CommonDBTM
     {
         $action = [];
         $prefix = $this->getType() . MassiveAction::CLASS_ACTION_SEPARATOR;
-        if (Session::haveRightsOr('plugin_resources', [CREATE, UPDATE])) {
+        if (Session::haveRightsOr(Resource::$rightname, [CREATE, UPDATE])) {
             $action[$prefix . "plugin_resources_add_item"] = __('Associate a resource', 'resources');
         }
 
         // Both entries write plugin records from a list the plugin does not own (a Resource
         // for the first, a ResourceHabilitation for the second), so the right they need is the
         // plugin's, not the one that opened the User list. Same test as above.
-        if ($type == "User" && Session::haveRightsOr('plugin_resources', [CREATE, UPDATE])) {
+        if ($type == "User" && Session::haveRightsOr(Resource::$rightname, [CREATE, UPDATE])) {
             $action[$prefix . "plugin_resources_generate_resources"] = __('Generate resources', 'resources');
             $action[$prefix . "plugin_resources_add_habilitation"] = __('Add habiliation', 'resources');
         }
@@ -3549,7 +3549,7 @@ class Resource extends CommonDBTM
                 'Dissociate',
             );
 
-            if (Session::haveRight('transfer', READ)
+            if (Session::haveRight(\Transfer::$rightname, READ)
                 && Session::isMultiEntitiesMode()
             ) {
                 $actions['GlpiPlugin\Resources\Resource' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
@@ -4530,7 +4530,7 @@ class Resource extends CommonDBTM
             ],
         ];
 
-        if (!Session::haveRight('plugin_resources_all', READ)) {
+        if (!Session::haveRight(Profile::RIGHT_ALL, READ)) {
             $who = Session::getLoginUserID();
             $criteria['AND'][] = [
                 'OR' => [

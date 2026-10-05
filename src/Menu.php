@@ -38,7 +38,7 @@ use Toolbox;
 
 class Menu extends CommonGLPI
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     private const RESOURCES_TAB = 1;
     private const SSII_TAB = 2;
@@ -336,7 +336,7 @@ class Menu extends CommonGLPI
                 'trash' => ['pics' => '',
                     'icon' => 'ti ti-trash',
                     'title' => __('Purge imported resources', 'resources'),
-                    // POST-only + CSRF token: a destructive purge must not be a GET link.
+                    // POST-only: a destructive purge must not be a GET link (CSRF).
                     'url' => ImportResource::getFormURL(),
                     'post' => ['reset-imports' => 1],
                     'confirm' => __('Confirm the purge of all imported resources?', 'resources'),
@@ -476,13 +476,13 @@ class Menu extends CommonGLPI
         ) . "'></i>"] = $url;
 
         // Import page
-        if (Session::haveRight('plugin_resources_import', READ)) {
+        if (Session::haveRight(Import::$rightname, READ)) {
             $menu['links']["<i class='ti ti-settings fa-1x' title='" . __('Import configuration', 'resources') . "'></i>"]
                 = PLUGIN_RESOURCES_WEBDIR . '/front/import.php';
         }
 
         // Config page
-        if (Session::haveRight("config", UPDATE)) {
+        if (Session::haveRight(\Config::$rightname, UPDATE)) {
             $menu['links']['config'] = PLUGIN_RESOURCES_WEBDIR . '/front/config.form.php';
         }
 

@@ -61,7 +61,7 @@ if (Plugin::isPluginActive("badges")) {
 
         Html::back();
     } elseif (isset($_GET['menu'])) {
-        if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
+        if ($pluginbadge->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
             $badge->showMenu();
         } else {
             TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
@@ -111,7 +111,7 @@ if (Plugin::isPluginActive("badges")) {
         // createTicket() is a write: a read right on badges alone must not open tickets, so
         // the ticket creation right is required too. The entity test honours is_recursive,
         // Resource being a recursive item.
-        if (($pluginbadge->canView() || Session::haveRight("config", UPDATE))
+        if (($pluginbadge->canView() || Session::haveRight(\Config::$rightname, UPDATE))
             && Ticket::canCreate()
             && $resources_id > 0
             && $resource->getFromDB($resources_id)
@@ -123,7 +123,7 @@ if (Plugin::isPluginActive("badges")) {
         }
         Html::back();
     } else {
-        if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
+        if ($pluginbadge->canView() || Session::haveRight(\Config::$rightname, UPDATE)) {
             $badge->showWizardForm();
         }
     }

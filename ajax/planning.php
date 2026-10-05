@@ -28,11 +28,12 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 global $CFG_GLPI;
 

@@ -120,14 +120,13 @@ function plugin_resources_pdf_resource(root_doc, id) {
     });
 }
 
-// The restitution PDF is generated server-side (write), so it is requested by POST with a
-// CSRF token. The token is single-use: the block is reloaded afterwards to get a new one.
+// The restitution PDF is generated server-side (write), so it is requested by POST, which
+// goes through the core CSRF check. The block is reloaded afterwards.
 $(document).on('click', '#resource_pdf .plugin-resources-pdf-download', function () {
     var btn = $(this);
     var form = $('<form>', {method: 'post', action: btn.data('url'), target: '_blank'})
         .append($('<input>', {type: 'hidden', name: 'generate_pdf', value: 1}))
         .append($('<input>', {type: 'hidden', name: 'users_id', value: btn.data('users-id')}))
-        .append($('<input>', {type: 'hidden', name: '_glpi_csrf_token', value: btn.data('csrf')}))
         .appendTo(document.body);
     form.trigger('submit');
     form.remove();

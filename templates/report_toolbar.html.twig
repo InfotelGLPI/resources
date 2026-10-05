@@ -41,7 +41,6 @@
                         {% endfor %}
                         {# Dropdown::showOutputFormat() echoes the core export selector and its button. #}
                         {{ output_format|raw }}
-                        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
                     </form>
                 </td>
             </tr>

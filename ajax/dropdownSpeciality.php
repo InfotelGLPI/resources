@@ -28,13 +28,14 @@
  */
 
 use GlpiPlugin\Resources\ResourceSpeciality;
+use GlpiPlugin\Resources\Resource;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownSpeciality.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 // entity_restrict is client supplied and is the only entity scope of the dropdown query
 // below: intersect it with the session scope, the way ajax/dropdownRole.php ignores the posted

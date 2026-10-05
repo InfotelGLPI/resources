@@ -47,7 +47,7 @@ use Toolbox;
  */
 class Choice extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    public static string $rightname = 'plugin_resources';
 
     public const TYPE_CHOICE = [1 => 'Element(s) to be affected', 2 => 'Specials requirements'];
 
@@ -316,7 +316,7 @@ class Choice extends CommonDBTM
                 $resource->fields['entities_id'],
                 $resource->fields['is_recursive'],
             )
-            || !($resource->canView() || Session::haveRight('config', UPDATE))) {
+            || !($resource->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
             throw new AccessDeniedHttpException();
         }
 

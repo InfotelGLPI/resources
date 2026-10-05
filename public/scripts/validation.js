@@ -50,7 +50,6 @@ document.addEventListener('click', (event) => {
         method: 'POST',
         body,
         headers: {
-            'X-Glpi-Csrf-Token': getAjaxCsrfToken(),
             'X-Requested-With': 'XMLHttpRequest',
         },
     })

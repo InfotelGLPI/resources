@@ -35,7 +35,6 @@
 
 <div class="center">
     <form method="post" action="{{ form_action }}">
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
         <table class="tab_cadre_fixe" cellpadding="5">
             <tr><th colspan="2">{{ title }}</th></tr>
             {% if has_category %}

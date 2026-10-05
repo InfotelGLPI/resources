@@ -54,6 +54,8 @@ use GlpiPlugin\Resources\RuleContracttypeReadonlyCollection;
 use GlpiPlugin\Resources\Servicecatalog;
 use GlpiPlugin\Resources\TaskPlanning;
 use GlpiPlugin\Reports\Report;
+use GlpiPlugin\Resources\Employee;
+use GlpiPlugin\Resources\Checklist;
 
 define('PLUGIN_RESOURCES_VERSION', '4.1.6');
 
@@ -134,18 +136,18 @@ function plugin_init_resources()
             //         'massiveaction_nodelete_types' => true
         ]);
 
-        if (Session::haveRight("plugin_servicecatalog", READ)
-            || Session::haveRight("plugin_servicecatalog_setup", UPDATE)) {
+        if (Session::haveRight(Profile::RIGHT_SERVICECATALOG, READ)
+            || Session::haveRight(Profile::RIGHT_SERVICECATALOG_SETUP, UPDATE)) {
             $PLUGIN_HOOKS['servicecatalog']['resources'] = [Servicecatalog::class];
         }
 
-        if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveRight("plugin_resources_employee", UPDATE))) {
+        if ((Session::haveRight(Resource::$rightname, READ)
+            || Session::haveRight(Employee::$rightname, UPDATE))) {
             $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['resources'] = PLUGIN_RESOURCES_WEBDIR . '/front/menu.php';
             $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['resources'] = Resource::getIcon();
         }
 
-        if (Session::haveRight("plugin_resources_checklist", READ)
+        if (Session::haveRight(Checklist::$rightname, READ)
             && class_exists(DashboardMenu::class)
         ) {
             $PLUGIN_HOOKS['mydashboard']['resources'] = [Dashboard::class];
@@ -168,8 +170,8 @@ function plugin_init_resources()
             $PLUGIN_HOOKS['treeview_params']['resources'] = [Resource::class, 'showResourceTreeview'];
         }
 
-        if ((Session::haveRight("plugin_resources", READ)
-            || Session::haveRight("plugin_resources_employee", UPDATE))) {
+        if ((Session::haveRight(Resource::$rightname, READ)
+            || Session::haveRight(Employee::$rightname, UPDATE))) {
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['resources'] = ['admin' => Menu::class];
         }
         Plugin::registerClass(LinkAd::class, ['addtabon' => 'Ticket']);
@@ -197,8 +199,8 @@ function plugin_init_resources()
         }
 
         // Resource menu
-        if (Session::haveRight("plugin_resources", READ)
-            || Session::haveRight("plugin_resources_employee", UPDATE)) {
+        if (Session::haveRight(Resource::$rightname, READ)
+            || Session::haveRight(Employee::$rightname, UPDATE)) {
             $PLUGIN_HOOKS['redirect_page']['resources'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php";
         }
 
@@ -207,12 +209,12 @@ function plugin_init_resources()
         //      }
 
         // Config
-        if (Session::haveRight("config", UPDATE)) {
+        if (Session::haveRight(\Config::$rightname, UPDATE)) {
             $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['resources'] = 'front/config.form.php';
         }
 
         // Add specific files to add to the header : javascript or css
-        if (Session::haveRight("plugin_resources", READ)) {
+        if (Session::haveRight(Resource::$rightname, READ)) {
             $PLUGIN_HOOKS[Hooks::ADD_CSS]['resources'] = ["css/resources.css"];
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['resources'] = [
                 "scripts/resources.js",
@@ -277,8 +279,8 @@ function plugin_version_resources()
         'homepage' => 'https://github.com/InfotelGLPI/resources',
         'requirements' => [
             'glpi' => [
-                'min' => '11.0',
-                'max' => '12.0',
+                'min' => '11.0.99',
+                'max' => '12.0.99',
                 'dev' => false,
             ],
         ],

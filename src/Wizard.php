@@ -93,7 +93,7 @@ class Wizard extends CommonDBTM
     public function wizardFirstStep()
     {
         TemplateRenderer::getInstance()->display('@resources/wizard_firststep_contractype.html.twig', [
-            'can_edit' => Session::haveRight("plugin_resources", CREATE),
+            'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
             'params' => [
                 'title' => __('Welcome to the wizard resource', 'resources'),
                 'target' => Toolbox::getItemTypeFormURL(Wizard::class),
@@ -291,9 +291,9 @@ class Wizard extends CommonDBTM
         $rank = new Rank();
 
         TemplateRenderer::getInstance()->display('@resources/wizard_secondstep_resource.html.twig', [
-            'can_edit' => Session::haveRight("plugin_resources", CREATE),
-            'can_purge' => Session::haveRight("plugin_resources", PURGE),
-            'can_read_employee' => Session::haveRight('plugin_resources_employee_core_form', READ),
+            'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+            'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
+            'can_read_employee' => Session::haveRight(Profile::RIGHT_EMPLOYEE_CORE_FORM, READ),
             'can_view_rank' => $rank->canView(),
             'item' => $resource,
             'root_resources' => PLUGIN_RESOURCES_WEBDIR,
@@ -383,8 +383,8 @@ class Wizard extends CommonDBTM
             $entity = $resource->fields["entities_id"];
 
             TemplateRenderer::getInstance()->display('@resources/wizard_thirdstep_employee.html.twig', [
-                'can_edit' => Session::haveRight("plugin_resources", CREATE),
-                'can_purge' => Session::haveRight("plugin_resources", PURGE),
+                'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+                'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
                 'item' => $employee,
                 'root_resources' => PLUGIN_RESOURCES_WEBDIR,
                 'params' => [
@@ -513,8 +513,8 @@ class Wizard extends CommonDBTM
             TemplateRenderer::getInstance()->display(
                 '@resources/wizard_fourstep_choice.html.twig',
                 [
-                    'can_edit' => Session::haveRight("plugin_resources", CREATE),
-                    'can_purge' => Session::haveRight("plugin_resources", PURGE),
+                    'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+                    'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
                     'item' => $resource,
                     'comment' => $resource->fields['comment'],
                     'used' => $used,
@@ -538,7 +538,7 @@ class Wizard extends CommonDBTM
                         'footers' => $footers,
                         'total_number' => count($entries),
                         'filtered_number' => count($entries),
-                        //                        'showmassiveactions' => Session::haveRight("plugin_resources", CREATE),
+                        //                        'showmassiveactions' => Session::haveRight(Resource::$rightname, CREATE),
                         //                        'massiveactionparams' => [
                         //                            'container' => 'massiveactioncontainer' . $rand,
                         //                            'itemtype' => Choice::class,
@@ -576,8 +576,8 @@ class Wizard extends CommonDBTM
         }
 
         TemplateRenderer::getInstance()->display('@resources/wizard_fivestep_photo.html.twig', [
-            'can_edit' => Session::haveRight("plugin_resources", CREATE),
-            'can_purge' => Session::haveRight("plugin_resources", PURGE),
+            'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+            'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
             'root_resources' => PLUGIN_RESOURCES_WEBDIR,
             'params' => [
                 'title' => __('Add the photo of the resource', 'resources'),
@@ -679,8 +679,8 @@ class Wizard extends CommonDBTM
         }
 
         TemplateRenderer::getInstance()->display('@resources/wizard_sixstep_habilitation.html.twig', [
-            'can_edit' => Session::haveRight("plugin_resources", CREATE),
-            'can_purge' => Session::haveRight("plugin_resources", PURGE),
+            'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+            'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
             'root_resources' => PLUGIN_RESOURCES_WEBDIR,
             'habilitation_levels' => $habilitation_levels,
             'existing_habilitations' => $existing_habilitations,
@@ -778,8 +778,8 @@ class Wizard extends CommonDBTM
         }
 
         TemplateRenderer::getInstance()->display('@resources/wizard_eightstep_recruitinginformation.html.twig', [
-            'can_edit' => Session::haveRight("plugin_resources", CREATE),
-            'can_purge' => Session::haveRight("plugin_resources", PURGE),
+            'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
+            'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
             'item' => $resource,
             'root_resources' => PLUGIN_RESOURCES_WEBDIR,
             'params' => [

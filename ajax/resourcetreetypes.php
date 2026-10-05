@@ -32,7 +32,7 @@ use GlpiPlugin\Resources\Resource;
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 // fancytree asks for the root level without a node key, then for the key of the node it
 // lazy-loads. Resource::getTreeNodes() validates that key and applies the same visibility

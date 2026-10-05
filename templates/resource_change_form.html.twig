@@ -27,8 +27,7 @@
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
-{# Helpdesk form used to declare a change on a resource. It owns its <form>,
- # so it carries the CSRF token itself. #}
+{# Helpdesk form used to declare a change on a resource. It owns its <form>. #}
 {% if not has_resources %}
     <div class="alert alert-info">{{ __('No results found') }}</div>
 {% else %}
@@ -60,7 +59,6 @@
                 </div>
                 <div id="plugin_resources_buttonchangeresources"></div>
 
-                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
             </form>
         </div>
     </div>

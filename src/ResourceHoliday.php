@@ -41,9 +41,9 @@ use Session;
  */
 class ResourceHoliday extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_holiday';
+    public static string $rightname = 'plugin_resources_holiday';
 
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type
@@ -236,7 +236,7 @@ class ResourceHoliday extends CommonDBTM
             'itemlink_type' => $this->getType(),
         ];
 
-        if (!Session::haveRight("plugin_resources_all", READ)) {
+        if (!Session::haveRight(Profile::RIGHT_ALL, READ)) {
             $tab[] = [
                 'id' => '1',
                 'searchtype' => 'contains',

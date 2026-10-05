@@ -51,7 +51,7 @@ use Toolbox;
  */
 class LinkAd extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_checklist';
+    public static string $rightname = 'plugin_resources_checklist';
 
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;

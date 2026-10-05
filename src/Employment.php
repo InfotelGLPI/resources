@@ -47,13 +47,13 @@ use Session;
  */
 class Employment extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_employment';
+    public static string $rightname = 'plugin_resources_employment';
 
     public static $itemtype = Resource::class;
     public static $items_id = 'plugin_resources_resources_id';
 
     // From CommonDBTM
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type
@@ -142,10 +142,10 @@ class Employment extends CommonDBTM
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         if ($item->getType() == Resource::class) {
-            if (Session::haveRight('plugin_resources_employment', UPDATE)) {
+            if (Session::haveRight(Employment::$rightname, UPDATE)) {
                 self::addNewEmployments($item);
             }
-            if (Session::haveRight('plugin_resources_employment', READ)) {
+            if (Session::haveRight(Employment::$rightname, READ)) {
                 self::showMinimalList($item);
             }
         }

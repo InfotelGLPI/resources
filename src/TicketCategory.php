@@ -63,7 +63,7 @@ class TicketCategory extends CommonDBTM
      */
     private static function canConfigure()
     {
-        return (bool) Session::haveRight('config', UPDATE);
+        return (bool) Session::haveRight(\Config::$rightname, UPDATE);
     }
 
     public static function canView(): bool
@@ -108,7 +108,7 @@ class TicketCategory extends CommonDBTM
             return false;
         }
         $this->fields = $iterator->current();
-        if (is_array($this->fields) && count($this->fields)) {
+        if (count($this->fields)) {
             return true;
         } else {
             return false;

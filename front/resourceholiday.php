@@ -47,7 +47,7 @@ if (Session::getCurrentInterface() == 'central') {
 
 $holiday = new ResourceHoliday();
 
-if (($holiday->canView() || Session::haveRight("config", UPDATE))) {
+if (($holiday->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
     Search::show(ResourceHoliday::class);
 } else {
     throw new AccessDeniedHttpException();

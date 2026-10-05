@@ -52,11 +52,11 @@ use Toolbox;
  */
 class Task extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_task';
+    public static string $rightname = 'plugin_resources_task';
 
     public $itemtype = Resource::class;
     public $items_id = 'plugin_resources_resources_id';
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     public const STATE_KO = 0;
     public const STATE_OK = 1;
@@ -1041,7 +1041,7 @@ class Task extends CommonDBTM
                 'button',
                 'Duplicate',
             );
-            if (Session::haveRight('transfer', READ)
+            if (Session::haveRight(\Transfer::$rightname, READ)
                 && Session::isMultiEntitiesMode()
             ) {
                 $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
@@ -1238,7 +1238,7 @@ class Task extends CommonDBTM
             return false;
         }
 
-        if (!Session::haveRight("plugin_resources", READ)) {
+        if (!Session::haveRight(Resource::$rightname, READ)) {
             return false;
         }
 

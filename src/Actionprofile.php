@@ -43,8 +43,8 @@ use Migration;
 
 class Actionprofile extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources';
+    public bool $dohistory = true;
 
     /**
      * Add an action authorization to profile

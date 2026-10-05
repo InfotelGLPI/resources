@@ -30,11 +30,12 @@
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Resources\Checklist;
+use GlpiPlugin\Resources\Resource;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 
 $item = new Checklist();
 
@@ -59,7 +60,7 @@ if (isset($_POST["plugin_resources_contracttypes_id"]) && isset($_POST["checklis
         'id' => $id,
         // The target is decided here and never read from the request. Posted straight through,
         // it became the action attribute of the checklist form through generic_show_form, so an
-        // absolute URL would have sent the typed fields and the CSRF token of the session to a
+        // absolute URL would have sent the typed fields to a
         // third party host. The value below is the one the caller always sent anyway.
         'target' => PLUGIN_RESOURCES_WEBDIR . '/front/checklist.form.php',
         'plugin_resources_contracttypes_id' => (int) $_POST["plugin_resources_contracttypes_id"],

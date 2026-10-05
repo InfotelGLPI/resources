@@ -46,8 +46,8 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ConfigHabilitation extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources_habilitation';
-    public $dohistory = true;
+    public static string $rightname = 'plugin_resources_habilitation';
+    public bool $dohistory = true;
 
     public const ACTION_ADD = 1;
     public const ACTION_DELETE = 2;

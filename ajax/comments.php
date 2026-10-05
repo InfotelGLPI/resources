@@ -36,7 +36,7 @@ use GlpiPlugin\Resources\Resource;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
 global $DB;
 
 if (isset($_REQUEST["table"]) && isset($_REQUEST["value"])) {
