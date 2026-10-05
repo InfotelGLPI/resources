@@ -116,7 +116,15 @@ class Wizard extends CommonDBTM
     {
         $resource = new Resource();
 
-        $input = [];
+        // Every key the template reads, so that the strict Twig mode of GLPI 12 does not
+        // fail on the branches below that only fill part of them.
+        $input = [
+            'plugin_resources_resources_id'      => 0,
+            'plugin_resources_contracttypes_id'  => 0,
+            'plugin_resources_resourcestates_id' => 0,
+            'template'                           => 0,
+            'entities_id'                        => $_SESSION['glpiactive_entity'],
+        ];
         $empty = 0;
         if ($ID > 0) {
             $resource->check($ID, READ);
@@ -175,7 +183,7 @@ class Wizard extends CommonDBTM
             $options["users_id_sales"] = $resource->fields["users_id_sales"];
             $options["plugin_resources_departments_id"] = $resource->fields["plugin_resources_departments_id"];
             $options["plugin_resources_services_id"] = $resource->fields["plugin_resources_services_id"];
-            $options["secondary_services"] = json_decode($resource->fields['secondary_services'], true);
+            $options["secondary_services"] = json_decode($resource->fields['secondary_services'] ?? '', true) ?? [];
             $options["plugin_resources_functions_id"] = $resource->fields["plugin_resources_functions_id"];
             $options["plugin_resources_teams_id"] = $resource->fields["plugin_resources_teams_id"];
             $options["date_begin"] = $resource->fields["date_begin"];
@@ -307,6 +315,7 @@ class Wizard extends CommonDBTM
                 'icon' => '',
                 'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                 'plugin_resources_resources_id' => $ID,
+                'id' => $ID,
                 'default_button' => $options['default_button'] ?? false,
                 'candel' => false,
                 'readonly_fields' => $readonly,
@@ -382,6 +391,15 @@ class Wizard extends CommonDBTM
         if ($employee_spotted && $plugin_resources_resources_id) {
             $entity = $resource->fields["entities_id"];
 
+            // Address shown next to the employer, as in Employee::showForm(): the location
+            // of the employer already chosen, updated in place when another one is picked.
+            $locations_id = 0;
+            $employer = new Employer();
+            if ((int) ($employee->fields['plugin_resources_employers_id'] ?? 0) > 0
+                && $employer->getFromDB($employee->fields['plugin_resources_employers_id'])) {
+                $locations_id = (int) $employer->fields['locations_id'];
+            }
+
             TemplateRenderer::getInstance()->display('@resources/wizard_thirdstep_employee.html.twig', [
                 'can_edit' => Session::haveRight(Resource::$rightname, CREATE),
                 'can_purge' => Session::haveRight(Resource::$rightname, PURGE),
@@ -395,6 +413,7 @@ class Wizard extends CommonDBTM
                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
                     'id' => $ID,
                     'entities_id' => $entity,
+                    'glpi_locations' => $locations_id,
                     'default_button' => $options['default_button'] ?? false,
                     'compliant' => Client::isSecurityCompliance($employee->fields["plugin_resources_clients_id"]),
                 ],
@@ -525,6 +544,7 @@ class Wizard extends CommonDBTM
                         'icon' => '',
                         'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                         'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                        'id' => $plugin_resources_resources_id,
                         'entities_id' => $entity,
                         'default_button' => $options['default_button'] ?? false,
                     ],
@@ -585,6 +605,7 @@ class Wizard extends CommonDBTM
                 'icon' => '',
                 'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                 'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                'id' => $plugin_resources_resources_id,
                 'empty_picture' => $empty_picture,
                 'path' => $path,
                 'path_send' => $path_send,
@@ -691,6 +712,7 @@ class Wizard extends CommonDBTM
                 'icon' => '',
                 'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                 'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                'id' => $plugin_resources_resources_id,
                 'default_button' => $options['default_button'] ?? false,
             ],
         ]);
@@ -788,6 +810,7 @@ class Wizard extends CommonDBTM
                 'icon' => '',
                 'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
                 'plugin_resources_resources_id' => $ID,
+                'id' => $ID,
                 'hidden_fields' => $hidden,
                 'mandatory_fields' => $mandatory,
                 'readonly_fields' => $readonly,

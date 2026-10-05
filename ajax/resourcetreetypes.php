@@ -34,7 +34,7 @@ Html::header_nocache();
 
 Session::checkRight(Resource::$rightname, READ);
 
-// fancytree asks for the root level without a node key, then for the key of the node it
+// The tree asks for the root level with node=-1, then for the key of the node it
 // lazy-loads. Resource::getTreeNodes() validates that key and applies the same visibility
 // criteria as the resource list, so the endpoint stays a thin dispatcher.
 echo json_encode(Resource::getTreeNodes($_GET['node'] ?? '-1'));

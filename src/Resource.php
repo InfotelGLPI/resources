@@ -4569,14 +4569,14 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * Build the fancytree nodes of the contract type browser.
+     * Build the Wunderbaum nodes of the contract type browser.
      *
      * The root level lists the contract types holding at least one visible resource;
      * expanding one lazy-loads its resources. Leaf nodes carry their target URL in
-     * data.url, which the script opens on activation, so no event handler is built
-     * server side any more.
+     * `url` (Wunderbaum keeps unknown keys in node.data), which the script opens on
+     * click, so no event handler is built server side any more.
      *
-     * @param string $node fancytree key of the node being expanded, '-1' for the root
+     * @param string $node Wunderbaum key of the node being expanded, '-1' for the root
      *
      * @return array
      */
@@ -4634,7 +4634,6 @@ class Resource extends CommonDBTM
             $nodes[] = [
                 'key'     => 'contracttype-' . $contract['id'],
                 'title'   => sprintf(__('%1$s (%2$s)'), $contract['name'], $contract['nb']),
-                'folder'  => true,
                 'lazy'    => true,
                 'tooltip' => ContractType::getTypeName(1) . ' - ' . $contract['name'],
             ];
@@ -4670,7 +4669,7 @@ class Resource extends CommonDBTM
                 'key'   => 'contracttype-' . $contracttypes_id . '-all',
                 'title' => sprintf(__('%1$s (%2$s)'), __('Show all'), $total),
                 'icon'  => 'ti ti-list-search',
-                'data'  => ['url' => self::getTreeSearchUrl($contracttypes_id)],
+                'url'   => self::getTreeSearchUrl($contracttypes_id),
             ],
         ];
 
@@ -4687,9 +4686,7 @@ class Resource extends CommonDBTM
                 'key'   => 'resource-' . $resource['id'],
                 'title' => trim($resource['name'] . ' ' . $resource['firstname']),
                 'icon'  => 'ti ti-user',
-                'data'  => [
-                    'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id=' . $resource['id'],
-                ],
+                'url'   => PLUGIN_RESOURCES_WEBDIR . '/front/resource.form.php?id=' . $resource['id'],
             ];
         }
 
@@ -4712,7 +4709,7 @@ class Resource extends CommonDBTM
         Plugin::loadLang('resources');
 
         // The page goes through Html::popHeader(), which already brings the whole GLPI
-        // stylesheet and the core bundles carrying fancytree: only the tree own assets
+        // stylesheet and the core bundles carrying Wunderbaum: only the tree own assets
         // are left to pull.
         $assets = Html::css(PLUGIN_RESOURCES_WEBDIR . "/css/resourcetree.css", [], false)
             . Html::script(PLUGIN_RESOURCES_WEBDIR . "/scripts/resourcetree.js", ['type' => 'module'], false);

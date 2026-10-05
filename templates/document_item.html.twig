@@ -35,7 +35,6 @@
                 {{ __('Add a document') }}
             </div>
             <div class="card-body">
-                {% set target       = params['target'] %}
 {#                <form method="post" action="{{ target }}" enctype="multipart/form-data" data-submit-once>#}
                     <div class="d-flex flex-column align-items-center">
                         {{ fields.dropdownField('DocumentCategory', 'documentcategories_id', item.fields['documentcategories_id'] ?? '', 'DocumentCategory'|itemtype_name, {
@@ -62,7 +61,6 @@
             </div>
         </div>
     </div>
-    {% set target       = params['target'] %}
     {% if canview %}
         <div class="col-12 col-lg-6">
             <div class="card shadow-sm h-100">

@@ -723,7 +723,7 @@
                                 {% if get_current_interface() == 'central' %}
                                     {{ fields.checkboxField(
                                         'send_notification',
-                                        options['send_notification'],
+                                        options['send_notification'] ?? 1,
                                         __('Send a notification'),
                                         {
                                             'required': mandatory.send_notification is defined,
