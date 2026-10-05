@@ -59,11 +59,11 @@ body.in_modal > #page {
     /* Wunderbaum virtualizes its rows: the container needs a real height. */
     min-height: 0;
     flex: 1 1 auto;
-    border: 1px solid var(--tblr-border-color);
+    /* Wunderbaum draws the border itself (and highlights it while the tree has the focus) */
     border-radius: var(--tblr-border-radius);
 
-    --wb-border-color: transparent;
-    --wb-focus-border-color: var(--tblr-focus-ring-color);
+    --wb-border-color: var(--tblr-border-color);
+    --wb-focus-border-color: var(--tblr-primary);
     --wb-background-color: var(--tblr-bg-surface);
     --wb-node-text-color: var(--tblr-body-color);
     --wb-hover-color: var(--tblr-bg-surface-secondary);
