@@ -23,6 +23,7 @@
         "symfony/polyfill-mbstring": "1.38.1",
         "symfony/polyfill-php83": "1.38.1",
         "symfony/polyfill-php84": "1.37.0",
+        "symfony/polyfill-php85": "1.43.0",
         "symfony/translation-contracts": "3.7.0"
     },
     "scripts": {

@@ -1,6 +1,0 @@
-<phpunit bootstrap="tests/bootstrap.integration.php" colors="true" testdox="true">
-   <testsuites>
-      <testsuite name="Integration">
-      </testsuite>
-   </testsuites>
-</phpunit>
