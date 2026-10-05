@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:38+0000\n"
+"POT-Creation-Date: 2026-10-05 23:33+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -198,7 +198,7 @@ msgstr "Belge ekle"
 msgid "Add a need"
 msgstr "Gereksinim ekle"
 
-#: templates/document_item.html.twig:53
+#: templates/document_item.html.twig:52
 msgctxt "button"
 msgid "Add a new file"
 msgstr "Yeni bir dosya ekle"
@@ -239,7 +239,7 @@ msgstr "Uygulama ekle"
 msgid "Add application for"
 msgstr "Şunun için uygulama ekle"
 
-#: src/Wizard.php:734
+#: src/Wizard.php:756
 msgid "Add documents to the resource"
 msgstr "Kaynağa belgeler ekle"
 
@@ -247,11 +247,11 @@ msgstr "Kaynağa belgeler ekle"
 msgid "Add habiliation"
 msgstr "Yetenek ekle"
 
-#: src/Wizard.php:786
+#: src/Wizard.php:808
 msgid "Add recruiting informations to the resource"
 msgstr "Kaynağa işe alım bilgilerini ekle"
 
-#: src/Wizard.php:583
+#: src/Wizard.php:603
 msgid "Add the photo of the resource"
 msgstr "Kaynağa fotoğraf ekle"
 
@@ -383,7 +383,7 @@ msgstr "Bir kontrol listesiyle sözleşme türünü ilişkilendirme kuralları"
 msgid "Associable to a ticket"
 msgstr "Bir destek kaydı ile ilişkilendirilebilir"
 
-#: src/Resource.php:3545 templates/document_item.html.twig:86
+#: src/Resource.php:3545 templates/document_item.html.twig:84
 msgctxt "button"
 msgid "Associate"
 msgstr "İlişkilendir"
@@ -392,7 +392,7 @@ msgstr "İlişkilendir"
 msgid "Associate a resource"
 msgstr "Bir kaynakla ilişkilendirin"
 
-#: templates/document_item.html.twig:70
+#: templates/document_item.html.twig:68
 msgid "Associate an existing document"
 msgstr "Var olan bir belge ile ilişkilendir"
 
@@ -731,7 +731,7 @@ msgstr "Seçin"
 msgid "Choosing the intercontrat"
 msgstr "Ara sözleşme seçimi"
 
-#: src/Resource.php:4779 src/Directory.php:374
+#: src/Resource.php:4776 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "E-postanızı göndermek için buraya tıklayın"
 
@@ -1335,11 +1335,11 @@ msgstr "Bitiş tarihi"
 msgid "End date was not completed. Please try again."
 msgstr "Bitiş tarihi yazılmamış. Lütfen yeniden deneyin."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:391
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:409
 msgid "Enter employer information about the resource"
 msgstr "Kaynakla ilgili işveren bilgilerini yazın"
 
-#: src/Wizard.php:305
+#: src/Wizard.php:313
 msgid "Enter general information about the resource"
 msgstr "Kaynakla ilgili genel bilgileri yazın"
 
@@ -1351,11 +1351,11 @@ msgstr "Süper güç bilgilerini yazın"
 msgid "Enter habilitation information "
 msgstr "Süper güç bilgilerini yazın"
 
-#: src/Wizard.php:689
+#: src/Wizard.php:710
 msgid "Enter habilitations about the resource"
 msgstr "Kaynak hakkındaki güçleri yazın"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:523
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:542
 msgid "Enter the computing needs of the resource"
 msgstr "Kaynağın bilişim gereksinimlerini yazın"
 
@@ -1387,7 +1387,7 @@ msgstr "Tabloların doğruluğu denetlenemedi!"
 msgid "Failed to send the file"
 msgstr "Dosya gönderilemedi"
 
-#: src/Resource.php:5326 src/Resource.php:5338
+#: src/Resource.php:5323 src/Resource.php:5335
 msgid "Female"
 msgstr "Dişi"
 
@@ -1854,7 +1854,7 @@ msgstr "E-posta"
 msgid "Mail Creation"
 msgstr "E-posta oluşturma"
 
-#: src/Resource.php:5325 src/Resource.php:5335
+#: src/Resource.php:5322 src/Resource.php:5332
 msgid "Male"
 msgstr "Erkek"
 
@@ -2192,7 +2192,7 @@ msgstr "Sıra"
 msgid "Order resources by"
 msgstr "Kaynak sıralaması"
 
-#: src/Resource.php:189 src/Resource.php:5327 src/Resource.php:5341
+#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Diğer"
@@ -2629,7 +2629,7 @@ msgstr "Kaynak verileri"
 msgid "Resources directory"
 msgstr "Kaynaklar dizini"
 
-#: src/Resource.php:5022
+#: src/Resource.php:5019
 msgid "Resources list"
 msgstr "Kaynak listesi"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:38+0000\n"
+"POT-Creation-Date: 2026-10-05 23:33+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/"
@@ -194,7 +194,7 @@ msgstr ""
 msgid "Add a need"
 msgstr "Add a need"
 
-#: templates/document_item.html.twig:53
+#: templates/document_item.html.twig:52
 msgctxt "button"
 msgid "Add a new file"
 msgstr ""
@@ -235,7 +235,7 @@ msgstr ""
 msgid "Add application for"
 msgstr ""
 
-#: src/Wizard.php:734
+#: src/Wizard.php:756
 msgid "Add documents to the resource"
 msgstr "Add documents to the resource"
 
@@ -243,11 +243,11 @@ msgstr "Add documents to the resource"
 msgid "Add habiliation"
 msgstr ""
 
-#: src/Wizard.php:786
+#: src/Wizard.php:808
 msgid "Add recruiting informations to the resource"
 msgstr ""
 
-#: src/Wizard.php:583
+#: src/Wizard.php:603
 msgid "Add the photo of the resource"
 msgstr "Add the photo of the resource"
 
@@ -375,7 +375,7 @@ msgstr "Assignment rules of a checklist to a contract type"
 msgid "Associable to a ticket"
 msgstr ""
 
-#: src/Resource.php:3545 templates/document_item.html.twig:86
+#: src/Resource.php:3545 templates/document_item.html.twig:84
 msgctxt "button"
 msgid "Associate"
 msgstr ""
@@ -384,7 +384,7 @@ msgstr ""
 msgid "Associate a resource"
 msgstr "Associate a resource"
 
-#: templates/document_item.html.twig:70
+#: templates/document_item.html.twig:68
 msgid "Associate an existing document"
 msgstr ""
 
@@ -723,7 +723,7 @@ msgstr "Choose"
 msgid "Choosing the intercontrat"
 msgstr "Choosing the intercontrat"
 
-#: src/Resource.php:4779 src/Directory.php:374
+#: src/Resource.php:4776 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "Click here to send your email"
 
@@ -1325,11 +1325,11 @@ msgstr ""
 msgid "End date was not completed. Please try again."
 msgstr "End date was not completed. Please try again."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:391
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:409
 msgid "Enter employer information about the resource"
 msgstr "Enter employer information about the resource"
 
-#: src/Wizard.php:305
+#: src/Wizard.php:313
 msgid "Enter general information about the resource"
 msgstr "Enter general information about the resource"
 
@@ -1341,11 +1341,11 @@ msgstr "Enter habilitation information"
 msgid "Enter habilitation information "
 msgstr "Enter habilitation information "
 
-#: src/Wizard.php:689
+#: src/Wizard.php:710
 msgid "Enter habilitations about the resource"
 msgstr "Enter habilitations about the resource"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:523
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:542
 msgid "Enter the computing needs of the resource"
 msgstr "Enter the computing needs of the resource"
 
@@ -1377,7 +1377,7 @@ msgstr ""
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:5326 src/Resource.php:5338
+#: src/Resource.php:5323 src/Resource.php:5335
 msgid "Female"
 msgstr ""
 
@@ -1838,7 +1838,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:5325 src/Resource.php:5335
+#: src/Resource.php:5322 src/Resource.php:5332
 msgid "Male"
 msgstr ""
 
@@ -2174,7 +2174,7 @@ msgstr ""
 msgid "Order resources by"
 msgstr ""
 
-#: src/Resource.php:189 src/Resource.php:5327 src/Resource.php:5341
+#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Other"
@@ -2610,7 +2610,7 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:5022
+#: src/Resource.php:5019
 msgid "Resources list"
 msgstr "Resources list"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:38+0000\n"
+"POT-Creation-Date: 2026-10-05 23:33+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/infotelGLPI/"
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Add a need"
 msgstr "Adaugă un necesar"
 
-#: templates/document_item.html.twig:53
+#: templates/document_item.html.twig:52
 msgctxt "button"
 msgid "Add a new file"
 msgstr ""
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Add application for"
 msgstr ""
 
-#: src/Wizard.php:734
+#: src/Wizard.php:756
 msgid "Add documents to the resource"
 msgstr ""
 
@@ -244,11 +244,11 @@ msgstr ""
 msgid "Add habiliation"
 msgstr ""
 
-#: src/Wizard.php:786
+#: src/Wizard.php:808
 msgid "Add recruiting informations to the resource"
 msgstr ""
 
-#: src/Wizard.php:583
+#: src/Wizard.php:603
 msgid "Add the photo of the resource"
 msgstr "Adaugă foto al resursei"
 
@@ -377,7 +377,7 @@ msgstr "Reguli de atribuire al listelor de verificare la un tip de contract"
 msgid "Associable to a ticket"
 msgstr ""
 
-#: src/Resource.php:3545 templates/document_item.html.twig:86
+#: src/Resource.php:3545 templates/document_item.html.twig:84
 msgctxt "button"
 msgid "Associate"
 msgstr ""
@@ -386,7 +386,7 @@ msgstr ""
 msgid "Associate a resource"
 msgstr "Asociază o resursă"
 
-#: templates/document_item.html.twig:70
+#: templates/document_item.html.twig:68
 msgid "Associate an existing document"
 msgstr ""
 
@@ -732,7 +732,7 @@ msgstr ""
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Resource.php:4779 src/Directory.php:374
+#: src/Resource.php:4776 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "Clic aici pentru a trimite emailul dvs."
 
@@ -1346,11 +1346,11 @@ msgstr ""
 msgid "End date was not completed. Please try again."
 msgstr "Data de sfârşit nu a fost completată. Încearcă din nou."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:391
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:409
 msgid "Enter employer information about the resource"
 msgstr "Introduceţi informaţii angajator despre resursă"
 
-#: src/Wizard.php:305
+#: src/Wizard.php:313
 msgid "Enter general information about the resource"
 msgstr "Introduceţi informaţii generale despre resursă"
 
@@ -1362,11 +1362,11 @@ msgstr ""
 msgid "Enter habilitation information "
 msgstr ""
 
-#: src/Wizard.php:689
+#: src/Wizard.php:710
 msgid "Enter habilitations about the resource"
 msgstr ""
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:523
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:542
 msgid "Enter the computing needs of the resource"
 msgstr "Introduceţi necesarele informatice ale resursei"
 
@@ -1398,7 +1398,7 @@ msgstr ""
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:5326 src/Resource.php:5338
+#: src/Resource.php:5323 src/Resource.php:5335
 msgid "Female"
 msgstr ""
 
@@ -1873,7 +1873,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:5325 src/Resource.php:5335
+#: src/Resource.php:5322 src/Resource.php:5332
 msgid "Male"
 msgstr ""
 
@@ -2212,7 +2212,7 @@ msgstr ""
 msgid "Order resources by"
 msgstr ""
 
-#: src/Resource.php:189 src/Resource.php:5327 src/Resource.php:5341
+#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Altele"
@@ -2656,7 +2656,7 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:5022
+#: src/Resource.php:5019
 msgid "Resources list"
 msgstr ""
 
