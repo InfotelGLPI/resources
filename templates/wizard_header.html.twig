@@ -32,6 +32,8 @@
 
 <h3 class="alert alert-secondary" role="alert">
     <span class="resources_wizard_resp_img">
+        {% if img|default('') is not empty %}
+            <img src="{{ img }}" alt="">&nbsp;
         {% elseif header_icon is not empty %}
             <i class="{{ header_icon }}"></i>&nbsp;
         {% endif %}
