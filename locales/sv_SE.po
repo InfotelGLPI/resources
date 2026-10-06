@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-06 22:49+0000\n"
+"POT-Creation-Date: 2026-10-06 22:56+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Swedish (Sweden) (http://www.transifex.com/infotelGLPI/"
@@ -161,7 +161,7 @@ msgstr ""
 #: templates/choice_need_comment_form.html.twig:39
 #: templates/employment_add_form.html.twig:54
 #: templates/resourcehabilitation_add_form.html.twig:47
-#: templates/checklist_from_resources.html.twig:100
+#: templates/checklist_from_resources.html.twig:116
 #: templates/choice_helpdesk_needs.html.twig:91
 #: templates/employee_helpdesk_form.html.twig:57
 #: templates/confighabilitation_form.html.twig:47
@@ -346,7 +346,7 @@ msgstr ""
 msgid "Ascending"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:89
+#: templates/checklist_from_resources.html.twig:106
 msgid "Assigned to"
 msgstr ""
 
@@ -465,11 +465,11 @@ msgstr ""
 msgid "Begin date"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:188
+#: templates/checklist_from_resources.html.twig:206
 msgid "Bring down"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:188
+#: templates/checklist_from_resources.html.twig:206
 msgid "Bring up"
 msgstr ""
 
@@ -834,7 +834,7 @@ msgid "ContractType"
 msgstr ""
 
 #: src/Checklist.php:370 src/Resource_Change.php:1457 src/ResourceBadge.php:450
-#: templates/checklist_from_resources.html.twig:83
+#: templates/checklist_from_resources.html.twig:97
 msgid "Create a end treatment ticket"
 msgstr "Crate a end treatment ticket"
 
@@ -1209,6 +1209,10 @@ msgstr ""
 
 #: templates/modal_validation_info.html.twig:31
 msgid "Do you verify all the information listed on this resource?"
+msgstr ""
+
+#: templates/checklist_from_resources.html.twig:170
+msgid "Done"
 msgstr ""
 
 #: templates/resource_restitution_pdf.html.twig:44
@@ -1603,7 +1607,7 @@ msgstr ""
 msgid "Import resources"
 msgstr ""
 
-#: src/Checklistconfig.php:135 templates/checklist_from_resources.html.twig:143
+#: src/Checklistconfig.php:135 templates/checklist_from_resources.html.twig:154
 #: templates/linkad_form.html.twig:38
 #: templates/checklistconfig_form.html.twig:34
 #: templates/checklist_form.html.twig:38
@@ -1772,7 +1776,7 @@ msgstr ""
 msgid "Link with metademand"
 msgstr ""
 
-#: src/Checklist.php:1459 templates/checklist_from_resources.html.twig:145
+#: src/Checklist.php:1459 templates/checklist_from_resources.html.twig:156
 msgid "Linked task"
 msgstr "Länkad uppgift"
 
@@ -1932,7 +1936,7 @@ msgstr ""
 #: templates/task_item_form.html.twig:37 templates/import_form.html.twig:32
 #: templates/budget_form.html.twig:32
 #: templates/resourcecard_identity.html.twig:64
-#: templates/checklist_from_resources.html.twig:142
+#: templates/checklist_from_resources.html.twig:153
 #: templates/importcolumn_form.html.twig:44 templates/task_form.html.twig:38
 #: templates/linkad_form.html.twig:36 templates/cost_form.html.twig:35
 #: templates/checklistconfig_form.html.twig:32
@@ -2039,7 +2043,7 @@ msgctxt "button"
 msgid "Next step"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:177
+#: templates/checklist_from_resources.html.twig:199
 #: templates/datatable.html.twig:204 templates/datatable.html.twig:344
 msgid "No"
 msgstr ""
@@ -2083,6 +2087,7 @@ msgstr ""
 
 #: templates/resource_change_form.html.twig:34
 #: templates/report_toolbar.html.twig:31
+#: templates/checklist_from_resources.html.twig:72
 #: templates/resource_remove_form.html.twig:34
 #: templates/resourcecard_items.html.twig:58
 #: templates/resource_transfer_form.html.twig:33
@@ -2264,8 +2269,8 @@ msgstr ""
 msgid "Please select a resource"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:109
-#: templates/checklist_add_form.html.twig:37
+#: templates/checklist_from_resources.html.twig:128
+#: templates/checklist_add_form.html.twig:38
 msgctxt "button"
 msgid "Post"
 msgstr ""
@@ -2507,7 +2512,7 @@ msgstr "Obligatoriska fält måste fyllas i. V.v. försök igen."
 msgid "Resend the declaration"
 msgstr "Skicka registreringen igen"
 
-#: templates/checklist_from_resources.html.twig:107
+#: templates/checklist_from_resources.html.twig:124
 msgid "Reset the checklist"
 msgstr "Reset the checklist"
 
@@ -2842,7 +2847,7 @@ msgstr ""
 msgid "Starting change"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:147
+#: templates/checklist_from_resources.html.twig:152
 msgctxt "location"
 msgid "State"
 msgstr ""
@@ -2941,7 +2946,7 @@ msgstr ""
 msgid "Technician"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:86
+#: templates/checklist_from_resources.html.twig:102
 msgid "Templates"
 msgstr ""
 
@@ -3128,6 +3133,10 @@ msgstr "To affect an employment"
 msgid "To begin, select type of contract"
 msgstr "To begin, select type of contract"
 
+#: templates/checklist_from_resources.html.twig:172
+msgid "To do"
+msgstr ""
+
 #: src/ImportResource.php:644 report/budgetsummary/budgetsummary.php:523
 #: report/budgetsummary/budgetsummary.php:529
 #: report/budgetsummary/budgetsummary.php:535
@@ -3138,7 +3147,7 @@ msgstr "To begin, select type of contract"
 msgid "Total"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:93
+#: templates/checklist_from_resources.html.twig:110
 msgid "Total duration"
 msgstr ""
 
@@ -3384,7 +3393,7 @@ msgstr[1] ""
 msgid "Writer"
 msgstr ""
 
-#: templates/checklist_from_resources.html.twig:175
+#: templates/checklist_from_resources.html.twig:196
 #: templates/datatable.html.twig:201 templates/datatable.html.twig:342
 msgid "Yes"
 msgstr ""
