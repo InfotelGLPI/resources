@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 23:33+0000\n"
+"POT-Creation-Date: 2026-10-06 09:57+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Italian (Italy) (http://www.transifex.com/infotelGLPI/"
@@ -1182,6 +1182,10 @@ msgstr ""
 #: src/LinkAd.php:423
 msgctxt "button"
 msgid "Disable user in AD"
+msgstr ""
+
+#: src/Profile.php:311
+msgid "Display employee in core form"
 msgstr ""
 
 #: src/Config.php:664
