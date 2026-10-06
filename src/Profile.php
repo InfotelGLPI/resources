@@ -308,7 +308,7 @@ class Profile extends \Profile
 
             $rights[] = [
                 'itemtype' => Resource::class,
-                'label' => __('Display employee in core form'),
+                'label' => __('Display employee in core form', 'resources'),
                 'field' => 'plugin_resources_employee_core_form',
                 'rights' => [
                     READ => __('Read'),
