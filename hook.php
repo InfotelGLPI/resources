@@ -2750,7 +2750,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     return $out;
                 case "glpi_plugin_resources_resources_items.items_id":
                     $restrict = ["plugin_resources_resources_id" => $data['id']]
-                        + ["ORDER" => "`itemtype`, `items_id`"];
+                        + ["ORDER" => ["itemtype", "items_id"]];
                     $items = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);
                     $out = '';
                     if (!empty($items)) {
@@ -2809,7 +2809,7 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                     return Task::getStatusImg($data['raw']["ITEM_$num"]);
                 case "glpi_plugin_resources_tasks_items.items_id":
                     $restrict = ["plugin_resources_tasks_id" => $data['id']]
-                        + ["ORDER" => "`itemtype`, `items_id`"];
+                        + ["ORDER" => ["itemtype", "items_id"]];
                     $items = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks_items", $restrict);
                     $out = '';
                     if (!empty($items)) {
