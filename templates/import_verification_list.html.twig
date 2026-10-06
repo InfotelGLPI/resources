@@ -28,32 +28,36 @@
 {# Shared by both verification reports (file vs GLPI, GLPI vs file).
  # `header_columns` describes the header row (ImportResource::getListHeaderColumns());
  # a cell is a text, optionally linked (`url`), or a tooltip rendered by the core. #}
-<form name="form" method="post" id="verify" action="{{ form_action }}">
-
-    <div class="center">
+<form name="form" method="post" id="verify" action="{{ form_action }}" class="card">
+    <div class="card-body p-0">
         {# Pager rendered by the core (Html::printAjaxPager). #}
         {{ pager|raw }}
 
-        <table class="tab_cadre_fixe">
-            {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
-
-            {% for entry in entries %}
-                <tr>
-                    {% for cell in entry.cells %}
-                        <td class="center {{ cell.class|default('') }}"
-                            {%- if cell.style is defined and cell.style is not empty %} style="{{ cell.style }}"{% endif %}>
-                            {%- if cell.tooltip is defined -%}
-                                {# Rendered by Html::showToolTipWithArray() from escaped values. #}
-                                {{- cell.tooltip|raw -}}
-                            {%- elseif cell.url is defined -%}
-                                <a href="{{ cell.url }}">{{ cell.text }}</a>
-                            {%- else -%}
-                                {{- cell.text -}}
-                            {%- endif -%}
-                        </td>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-vcenter card-table mb-0">
+                <thead>
+                    {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                        <tr>
+                            {% for cell in entry.cells %}
+                                <td class="text-center {{ cell.class|default('') }}"
+                                    {%- if cell.style is defined and cell.style is not empty %} style="{{ cell.style }}"{% endif %}>
+                                    {%- if cell.tooltip is defined -%}
+                                        {# Rendered by Html::showToolTipWithArray() from escaped values. #}
+                                        {{- cell.tooltip|raw -}}
+                                    {%- elseif cell.url is defined -%}
+                                        <a href="{{ cell.url }}">{{ cell.text }}</a>
+                                    {%- else -%}
+                                        {{- cell.text -}}
+                                    {%- endif -%}
+                                </td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </form>

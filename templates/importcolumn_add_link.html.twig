@@ -25,13 +25,16 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Target container the add/edit sub-item form is AJAX-loaded into. #}
+{# Target container the add/edit sub-item form is AJAX-loaded into
+ # (public/scripts/fragments.js reads the data-resources-load-* attributes). #}
 <div id="{{ dom_id }}"></div>
 
 {% if can_add %}
-    <div class="center">
-        <a href="#" data-resources-load-url="{{ load_url }}" data-resources-load-target="{{ dom_id }}"
-           data-resources-load-params="{{ load_params|json_encode }}">{{ __('Add a column', 'resources') }}</a>
+    <div class="text-end mb-3">
+        <button type="button" class="btn btn-outline-primary"
+                data-resources-load-url="{{ load_url }}" data-resources-load-target="{{ dom_id }}"
+                data-resources-load-params="{{ load_params|json_encode }}">
+            <i class="ti ti-plus me-1"></i>{{ __('Add a column', 'resources') }}
+        </button>
     </div>
-    <br>
 {% endif %}

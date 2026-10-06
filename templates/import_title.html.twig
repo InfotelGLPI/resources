@@ -25,19 +25,22 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="center mb-3">
-    {% if links %}
-        <a href="{{ index_url }}" class="btn btn-primary me-2" title="{{ __('List of Imports', 'resources') }}">
-            <i class="ti ti-list me-1"></i>{{ title }}
-        </a>
-        {% if can_create %}
-            <a href="{{ form_url }}" class="btn btn-primary"
-               title="{{ __('Add an Import', 'resources') }}"
-               aria-label="{{ __('Add an Import', 'resources') }}">
-                <i class="ti ti-plus"></i>
+{# Title of the import configuration screens (Import::showTitle()): with links, the list
+ # and the add buttons; without, the title alone. #}
+<div class="container-fluid mt-3">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <h2 class="mb-0 me-auto">
+            <i class="ti ti-file-import me-2"></i>{{ title }}
+        </h2>
+        {% if links %}
+            <a href="{{ index_url }}" class="btn btn-outline-secondary">
+                <i class="ti ti-list me-1"></i>{{ __('List of Imports', 'resources') }}
             </a>
+            {% if can_create %}
+                <a href="{{ form_url }}" class="btn btn-primary">
+                    <i class="ti ti-plus me-1"></i>{{ __('Add an Import', 'resources') }}
+                </a>
+            {% endif %}
         {% endif %}
-    {% else %}
-        <h2>{{ title }}</h2>
-    {% endif %}
+    </div>
 </div>

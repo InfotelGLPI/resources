@@ -27,17 +27,21 @@
 
 {# Inline selector: a dropdown followed by its actions. Each button carries its own
  # submit name, which the import controller dispatches on. #}
-<form name="file-selector" method="post" action="{{ form_action }}"
-      class="d-flex flex-wrap align-items-center gap-2 my-2">
+<form name="file-selector" method="post" action="{{ form_action }}">
+    {% if label is defined and label is not empty %}
+        <label class="form-label">{{ label }}</label>
+    {% endif %}
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        {# Dropdown rendered by the core helper (Dropdown::showFromArray). #}
+        <div class="flex-grow-1" style="min-width: 12rem;">{{ dropdown|raw }}</div>
 
-    {# Dropdown rendered by the core helper (Dropdown::showFromArray). #}
-    <div class="flex-grow-1" style="min-width: 12rem;">{{ dropdown|raw }}</div>
-
-    {% for btn in buttons %}
-        <button type="submit" name="{{ btn.name }}"
-                class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
-                {%- if btn.confirm is defined and btn.confirm is not empty %}
-                    data-resources-confirm="{{ btn.confirm }}"
-                {%- endif %}>{{ btn.label }}</button>
-    {% endfor %}
+        {% for btn in buttons %}
+            <button type="submit" name="{{ btn.name }}" value="1"
+                    class="btn {{ btn.class|default('btn-primary') }} text-nowrap"
+                    {%- if btn.confirm is defined and btn.confirm is not empty %}
+                        data-resources-confirm="{{ btn.confirm }}"
+                    {%- endif %}>
+                {%- if btn.icon is defined %}<i class="{{ btn.icon }} me-1"></i>{% endif %}{{ btn.label }}</button>
+        {% endfor %}
+    </div>
 </form>

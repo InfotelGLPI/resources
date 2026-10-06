@@ -289,6 +289,8 @@ class ResourceResting extends CommonDBTM
     {
         $wizard_header = Wizard::getHeaderParams(
             _n('Non contract period management', 'Non contract periods management', 2, 'resources'),
+            '',
+            'ti ti-calendar-pause',
         );
 
         $tiles = [];
@@ -296,17 +298,17 @@ class ResourceResting extends CommonDBTM
             $tiles = [
                 [
                     'url'   => './resourceresting.form.php',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png",
+                    'icon'  => 'ti ti-calendar-plus',
                     'label' => __('Declare a non contract period', 'resources'),
                 ],
                 [
                     'url'   => './resourceresting.form.php?end',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/closeresting.png",
+                    'icon'  => 'ti ti-calendar-check',
                     'label' => __('Declaring the end of non contract periods', 'resources'),
                 ],
                 [
                     'url'   => './resourceresting.php',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/restinglist.png",
+                    'icon'  => 'ti ti-list-details',
                     'label' => __('List of non contract periods', 'resources'),
                 ],
             ];
@@ -333,7 +335,7 @@ class ResourceResting extends CommonDBTM
             $title = __('Detail of non contract period', 'resources');
         }
 
-        $wizard_header = Wizard::getHeaderParams($title, PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png");
+        $wizard_header = Wizard::getHeaderParams($title, '', $ID > 0 ? 'ti ti-calendar-event' : 'ti ti-calendar-plus');
 
         TemplateRenderer::getInstance()->display('@resources/resourceresting_form.html.twig', [
             'item'              => $this,
@@ -359,7 +361,8 @@ class ResourceResting extends CommonDBTM
 
         $wizard_header = Wizard::getHeaderParams(
             __('Declaring the end of non contract periods', 'resources'),
-            PLUGIN_RESOURCES_WEBDIR . "/pics/newresting.png",
+            '',
+            'ti ti-calendar-check',
         );
 
         TemplateRenderer::getInstance()->display('@resources/resourceresting_end_form.html.twig', [

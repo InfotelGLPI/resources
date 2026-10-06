@@ -25,25 +25,29 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Shared wizard landing menu: the caller passes an already right-filtered list of
- # tiles, so an empty list simply renders the bare table. #}
-{{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
-
-<div class="center">
-    <table class="tab_menu" width="30%" cellpadding="5">
-        <tr>
-            {% for tile in tiles %}
-                <td class="tab_td_menu center"{% if tile.colspan is defined %} colspan="{{ tile.colspan }}"{% endif %}>
-                    <a href="{{ tile.url }}">
+{# Shared wizard landing menu: one clickable card per tile. The caller passes an already
+ # right-filtered list, so an empty list renders the title alone. A tile shows its Tabler
+ # icon, or its picture for the menus that still provide one. #}
+<div class="container-lg my-3">
+    <h2 class="mb-3">
+        <i class="{{ wizard_header.icon is not empty ? wizard_header.icon : wizard_header.default_icon }} me-2"></i>{{ wizard_header.title is not empty ? wizard_header.title : __('Resources management', 'resources') }}
+    </h2>
+    <div class="row row-cards g-3">
+        {% for tile in tiles %}
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="{{ tile.url }}" class="card card-link card-link-pop h-100 text-reset text-decoration-none">
+                    <div class="card-body text-center py-4">
                         {% if tile.icon is defined %}
-                            <i class="{{ tile.icon }}" style="font-size:6em"></i>
+                            <span class="avatar avatar-xl bg-secondary-lt mb-3">
+                                <i class="{{ tile.icon }} fs-1"></i>
+                            </span>
                         {% else %}
-                            <img src="{{ tile.img }}" alt="{{ tile.label }}">
+                            <img src="{{ tile.img }}" alt="" class="mb-3" style="max-height: 64px">
                         {% endif %}
-                        <br>{{ tile.label }}
-                    </a>
-                </td>
-            {% endfor %}
-        </tr>
-    </table>
+                        <h3 class="card-title mb-0">{{ tile.label }}</h3>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 </div>

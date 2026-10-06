@@ -232,25 +232,21 @@ class ResourceBadge extends CommonDBTM
      */
     public function showMenu()
     {
-        $wizard_header = Wizard::getHeaderParams(_n('Badge management', 'Badges management', 2, 'resources'));
+        $wizard_header = Wizard::getHeaderParams(_n('Badge management', 'Badges management', 2, 'resources'), '', 'ti ti-id-badge');
 
         $tiles = [];
         if (Session::haveright('plugin_resources', UPDATE)) {
-            $colspan = 1;
             if (Plugin::isPluginActive("metademands")) {
                 $tiles[] = [
                     'url'   => './resourcebadge.form.php?new',
                     'icon'  => 'ti ti-id-badge-2',
                     'label' => __('Request new badge', 'resources'),
                 ];
-            } else {
-                $colspan = 2;
             }
             $tiles[] = [
-                'url'     => './resourcebadge.form.php',
-                'icon'    => 'ti ti-circle-arrow-left',
-                'label'   => __('Badge restitution', 'resources'),
-                'colspan' => $colspan,
+                'url'   => './resourcebadge.form.php',
+                'icon'  => 'ti ti-circle-arrow-left',
+                'label' => __('Badge restitution', 'resources'),
             ];
         }
 
@@ -266,7 +262,7 @@ class ResourceBadge extends CommonDBTM
     public function showWizardForm()
     {
         // Capture the resource dropdown as an HTML fragment.
-        $wizard_header = Wizard::getHeaderParams(__('Badge restitution', 'resources'));
+        $wizard_header = Wizard::getHeaderParams(__('Badge restitution', 'resources'), '', 'ti ti-circle-arrow-left');
 
         ob_start();
         // Picking a resource lists its badges and clears the restitution button, which

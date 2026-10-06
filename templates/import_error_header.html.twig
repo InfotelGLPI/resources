@@ -25,15 +25,14 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Table-head fragment: emitted inside a <table> opened by the calling list. #}
-<thead>
-    <tr>
-        <th colspan="21">
-            {{ title }}
-            {% if link_text is not empty and url is not empty %}
-                <br>
-                <a href="{{ url }}">{{ link_text }}</a>
-            {% endif %}
-        </th>
-    </tr>
-</thead>
+{# Blocking message of an import screen (no file, header not matching, no import
+ # configured), with an optional link to fix it. #}
+<div class="alert alert-warning mb-3">
+    <div class="d-flex align-items-center flex-wrap gap-2">
+        <i class="ti ti-alert-triangle"></i>
+        <span>{{ title }}</span>
+        {% if link_text is not empty and url is not empty %}
+            <a href="{{ url }}" class="btn btn-sm btn-outline-warning ms-auto">{{ link_text }}</a>
+        {% endif %}
+    </div>
+</div>

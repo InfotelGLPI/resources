@@ -262,7 +262,7 @@ class ConfigHabilitation extends CommonDBTM
      */
     public function showMenu()
     {
-        $wizard_header = Wizard::getHeaderParams(self::getTypeName(2));
+        $wizard_header = Wizard::getHeaderParams(self::getTypeName(2), '', 'ti ti-shield-lock');
 
         $tiles = [];
         if (
@@ -272,12 +272,12 @@ class ConfigHabilitation extends CommonDBTM
             $tiles = [
                 [
                     'url'   => './confighabilitation.form.php?new',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationnew.png",
+                    'icon'  => 'ti ti-shield-plus',
                     'label' => __('Declare a super habilitation', 'resources'),
                 ],
                 [
                     'url'   => './confighabilitation.form.php?delete',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitationdelete.png",
+                    'icon'  => 'ti ti-shield-minus',
                     'label' => __('Remove a super habilitation', 'resources'),
                 ],
             ];

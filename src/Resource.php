@@ -3154,21 +3154,17 @@ class Resource extends CommonDBTM
                 }
             }
             if (strlen($search) > 0 && $search != $CFG_GLPI["ajax_wildcard"]) {
-                $search_sql = Search::makeTextSearch($search);
+                // makeTextSearch() now returns a "LIKE ?" placeholder with no value bound to it:
+                // build the criteria from the pattern itself. A null pattern means IS NULL.
+                $search_value = Search::makeTextSearchValue($search);
+                $search_crit  = $search_value === null ? null : ['LIKE', $search_value];
                 $where[] = [
                     'OR' => [
-                        new QueryExpression(
-                            $DB->quoteName('glpi_plugin_resources_resources.name') . ' ' . $search_sql,
-                        ),
-                        new QueryExpression(
-                            $DB->quoteName('glpi_plugin_resources_resources.firstname') . ' ' . $search_sql,
-                        ),
-                        new QueryExpression(
-                            $DB->quoteName('glpi_users.registration_number') . ' ' . $search_sql,
-                        ),
-                        new QueryExpression(
-                            $DB->quoteName('glpi_users.name') . ' ' . $search_sql,
-                        ),
+                        'glpi_plugin_resources_resources.name'      => $search_crit,
+                        'glpi_plugin_resources_resources.firstname' => $search_crit,
+                        'glpi_users.registration_number'            => $search_crit,
+                        'glpi_users.name'                           => $search_crit,
+                        // A function call cannot be a criteria key: the pattern is quoted here
                         new QueryExpression(
                             'CONCAT(' . $DB->quoteName('glpi_plugin_resources_resources.name') . ', '
                             . $DB->quoteValue(' ') . ', '
@@ -3176,7 +3172,8 @@ class Resource extends CommonDBTM
                             . $DB->quoteValue(' ') . ', '
                             . $DB->quoteName('glpi_users.registration_number') . ', '
                             . $DB->quoteValue(' ') . ', '
-                            . $DB->quoteName('glpi_users.name') . ') ' . $search_sql,
+                            . $DB->quoteName('glpi_users.name') . ')'
+                            . ($search_value === null ? ' IS NULL' : ' LIKE ' . $DB->quoteValue($search_value)),
                         ),
                     ],
                 ];
@@ -3367,7 +3364,7 @@ class Resource extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/resource_remove_form.html.twig', [
             'has_resources'     => true,
             'header_title'      => __('Declare a departure', 'resources'),
-            'header_img'        => PLUGIN_RESOURCES_WEBDIR . "/pics/removeresource.png",
+            'header_icon'       => 'ti ti-user-minus',
             'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php",
             'resource_label'    => self::getTypeName(1),
             'resource_dropdown' => $resource_dropdown,
@@ -3438,7 +3435,7 @@ class Resource extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/resource_change_form.html.twig', [
             'has_resources'     => true,
             'header_title'      => __('Declare a change', 'resources'),
-            'header_img'        => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
+            'header_icon'       => 'ti ti-user-edit',
             'form_action'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php",
             'fields_url'        => PLUGIN_RESOURCES_WEBDIR . '/ajax/resourcechange.php',
             'resource_label'    => self::getTypeName(1),
@@ -3485,7 +3482,7 @@ class Resource extends CommonDBTM
         TemplateRenderer::getInstance()->display('@resources/resource_transfer_form.html.twig', [
             'has_resource'                  => true,
             'header_title'                  => __('Declare a transfer', 'resources'),
-            'header_img'                    => PLUGIN_RESOURCES_WEBDIR . "/pics/transferresource.png",
+            'header_icon'                   => 'ti ti-transfer',
             'form_action'                   => PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php",
             'resource_label'                => self::getTypeName(1),
             'resource_name'                 => self::getResourceName($resource->getID()),

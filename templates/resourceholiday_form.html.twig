@@ -25,70 +25,57 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
- # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
- # attributes and values. #}
-
+{# Declaration or detail of a forced holiday (ResourceHoliday::showForm()).
+ # Standalone form: the submit names below (addholidayresources, ...) are the ones
+ # front/resourceholiday.form.php dispatches on, so the generic form buttons component
+ # (which emits add/update/delete) cannot be used here. #}
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
-{# Standalone form: the submit names below (addholidayresources, ...) are the ones
- # front/resourceholiday.form.php dispatches on, so the generic form buttons
- # component (which emits add/update/delete) cannot be used here. #}
-<div class="card container" style="min-width: 80%;">
-    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
+{% set field_options = {'is_horizontal': false, 'field_class': 'col-12 col-md-6'} %}
 
-    <div class="card-body">
-        <form method="post" action="{{ form_action }}">
+<div class="container-lg my-3">
+    <form method="post" action="{{ form_action }}" class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="{{ wizard_header.icon }} me-2"></i>{{ wizard_header.title }}
+            </h3>
+            <div class="card-actions">
+                <a href="./resourceholiday.php" class="btn btn-ghost-secondary">
+                    <i class="ti ti-list-details me-1"></i>{{ __('List of forced holidays', 'resources') }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
             <div class="row">
                 {{ fields.dropdownField(
                     resource_class,
                     'plugin_resources_resources_id',
                     item.fields['plugin_resources_resources_id'],
                     resource_label,
-                    {'entity': resource_entities}
+                    field_options|merge({'entity': resource_entities, 'field_class': 'col-12'})
                 ) }}
 
-                {{ fields.dateField('date_begin', item.fields['date_begin'], __('Begin date')) }}
+                {{ fields.dateField('date_begin', item.fields['date_begin'], __('Begin date'), field_options) }}
 
-                {{ fields.dateField('date_end', item.fields['date_end'], __('End date')) }}
+                {{ fields.dateField('date_end', item.fields['date_end'], __('End date'), field_options) }}
 
-                {{ fields.textareaField('comment', item.fields['comment'], __('Comments')) }}
+                {{ fields.textareaField('comment', item.fields['comment'], __('Comments'), field_options|merge({'field_class': 'col-12'})) }}
             </div>
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="preview">
-                        <a href="./resourceholiday.form.php">{{ __('Declare a forced holiday', 'resources') }}</a>
-                        &nbsp;/&nbsp;
-                        <a href="./resourceholiday.php">{{ __('List of forced holidays', 'resources') }}</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="next">
-                        {% if is_new %}
-                            {{ call('Html::submit', [_x('button', 'Add'), {
-                                'name': 'addholidayresources',
-                                'class': 'btn btn-success',
-                            }])|raw }}
-                        {% else %}
-                            <input type="hidden" name="id" value="{{ item.fields['id'] }}">
-                            {{ call('Html::submit', [_x('button', 'Update'), {
-                                'name': 'updateholidayresources',
-                                'class': 'btn btn-primary',
-                            }])|raw }}
-                            &nbsp;&nbsp;
-                            {{ call('Html::submit', [_x('button', 'Delete permanently'), {
-                                'name': 'deleteholidayresources',
-                                'class': 'btn btn-primary',
-                            }])|raw }}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
+        </div>
+        <div class="card-footer d-flex flex-wrap gap-2 justify-content-end">
+            {% if is_new %}
+                <button type="submit" name="addholidayresources" value="1" class="btn btn-primary">
+                    <i class="ti ti-plus me-1"></i>{{ _x('button', 'Add') }}
+                </button>
+            {% else %}
+                <input type="hidden" name="id" value="{{ item.fields['id'] }}">
+                <button type="submit" name="deleteholidayresources" value="1" class="btn btn-outline-danger me-auto">
+                    <i class="ti ti-trash me-1"></i>{{ _x('button', 'Delete permanently') }}
+                </button>
+                <button type="submit" name="updateholidayresources" value="1" class="btn btn-primary">
+                    <i class="ti ti-device-floppy me-1"></i>{{ _x('button', 'Update') }}
+                </button>
+            {% endif %}
+        </div>
+    </form>
 </div>

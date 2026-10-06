@@ -291,19 +291,19 @@ class ResourceHoliday extends CommonDBTM
      */
     public function showMenu()
     {
-        $wizard_header = Wizard::getHeaderParams(__('Forced holiday management', 'resources'));
+        $wizard_header = Wizard::getHeaderParams(__('Forced holiday management', 'resources'), '', 'ti ti-beach');
 
         $tiles = [];
         if (Session::haveright('plugin_resources_holiday', UPDATE)) {
             $tiles = [
                 [
                     'url'   => './resourceholiday.form.php',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png",
+                    'icon'  => 'ti ti-calendar-plus',
                     'label' => __('Declare a forced holiday', 'resources'),
                 ],
                 [
                     'url'   => './resourceholiday.php',
-                    'img'   => PLUGIN_RESOURCES_WEBDIR . "/pics/holidaylist.png",
+                    'icon'  => 'ti ti-list-details',
                     'label' => __('List of forced holidays', 'resources'),
                 ],
             ];
@@ -331,7 +331,7 @@ class ResourceHoliday extends CommonDBTM
             $title = __('Detail of the forced holiday', 'resources');
         }
 
-        $wizard_header = Wizard::getHeaderParams($title, PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png");
+        $wizard_header = Wizard::getHeaderParams($title, '', $ID > 0 ? 'ti ti-calendar-event' : 'ti ti-calendar-plus');
 
         TemplateRenderer::getInstance()->display('@resources/resourceholiday_form.html.twig', [
             'item'              => $this,

@@ -28,38 +28,34 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {# Helpdesk form used to declare a change on a resource. It owns its <form>. #}
-{% if not has_resources %}
-    <div class="alert alert-info">{{ __('No results found') }}</div>
-{% else %}
-    <div class="card container" style="min-width: 80%;">
-        <h3 class="alert alert-secondary" role="alert" style="margin-top: 10px;">
-            <span class="resources_wizard_resp_img">
-                <img src="{{ header_img }}">&nbsp;{{ header_title }}
-            </span>
-        </h3>
-        <div class="card-body">
-            <form method="post" action="{{ form_action }}" data-resources-change-form="{{ fields_url }}">
+{% set field_options = {'is_horizontal': false, 'field_class': 'col-12 col-md-6', 'wrapper_class': ''} %}
+<div class="container-lg my-3">
+    {% if not has_resources %}
+        <div class="alert alert-info"><i class="ti ti-info-circle me-2"></i>{{ __('No results found') }}</div>
+    {% else %}
+        <form method="post" action="{{ form_action }}" data-resources-change-form="{{ fields_url }}" class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="{{ header_icon }} me-2"></i>{{ header_title }}
+                </h3>
+            </div>
+            <div class="card-body">
                 <div class="row">
-                    {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, {
-                        'wrapper_class': '',
-                    }) }}
-                </div>
-                <div class="row">
-                    {{ fields.htmlField('change_action', action_dropdown, action_label, {
-                        'wrapper_class': '',
-                    }) }}
+                    {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, field_options) }}
+                    {{ fields.htmlField('change_action', action_dropdown, action_label, field_options) }}
                 </div>
 
-                {# Both blocks are filled by public/scripts/resourcechange.js once a resource and
-                 # an action have been picked; the submit button comes with the second one. #}
+                {# Filled by public/scripts/resourcechange.js once a resource and an action have
+                 # been picked; the submit button lands in the card footer below. #}
                 <div id="plugin_resources_actions">
                     {% if error_message %}
-                        <span class="red">{{ error_message }}</span>
+                        <div class="alert alert-danger">
+                            <i class="ti ti-alert-circle me-2"></i>{{ error_message }}
+                        </div>
                     {% endif %}
                 </div>
-                <div id="plugin_resources_buttonchangeresources"></div>
-
-            </form>
-        </div>
-    </div>
-{% endif %}
+            </div>
+            <div class="card-footer text-end" id="plugin_resources_buttonchangeresources"></div>
+        </form>
+    {% endif %}
+</div>

@@ -1738,17 +1738,21 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
     $table = $searchopt[$ID]["table"];
     $field = $searchopt[$ID]["field"];
 
-    $SEARCH = Search::makeTextSearch($val, $nott);
+    // makeTextSearch() now returns a "LIKE ?" placeholder with no value bound to it, and the
+    // core reinjects whatever this hook returns verbatim through new QueryExpression($out):
+    // build the comparison from the pattern, quoted here. $val itself is never concatenated.
+    global $DB;
+    $search_value = Search::makeTextSearchValue($val);
+    $SEARCH = $search_value === null
+        ? ($nott ? ' IS NOT NULL ' : ' IS NULL ')
+        : ($nott ? ' NOT LIKE ' : ' LIKE ') . $DB->quoteValue($search_value) . ' ';
 
     switch ($table . "." . $field) {
         case "glpi_plugin_resources_managers.name":
         case "glpi_plugin_resources_recipients_leaving.name":
         case "glpi_plugin_resources_recipients.name":
         case "glpi_plugin_resources_salemanagers.name":
-            // $SEARCH is escaped by makeTextSearch(); $val is not. The core reinjects
-            // whatever this hook returns verbatim through new QueryExpression($out)
-            // (SQLProvider::getAddWhereHook()), so concatenating the raw search value here
-            // was a plain SQL injection. Reuse the escaped comparison on every column.
+            // Reuse the quoted comparison on every column.
             if ($nott && $val != "NULL") {
                 // Negative search: a row matches only when NONE of the three columns
                 // matches, so they are combined with AND. Keeping the OR of the positive

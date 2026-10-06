@@ -167,17 +167,20 @@ class Menu extends CommonGLPI
 
                 $actions = [
                     'new' => [
-                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                        'pics' => '',
+                        'icon' => 'ti ti-user-plus',
                         'title' => __('Declare an arrival', 'resources'),
                         'url' => PLUGIN_RESOURCES_WEBDIR . '/front/wizard.form.php',
                     ],
                     'change' => [
-                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/newresource.png',
+                        'pics' => '',
+                        'icon' => 'ti ti-user-edit',
                         'title' => __('Declare a change', 'resources'),
                         'url' => $url_change,
                     ],
                     'remove' => [
-                        'pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/removeresource.png',
+                        'pics' => '',
+                        'icon' => 'ti ti-user-minus',
                         'title' => __('Declare a departure', 'resources'),
                         'url' => $url_remove,
                     ],
@@ -187,13 +190,15 @@ class Menu extends CommonGLPI
             }
             if ($item->canView()) {
 
-                $actions_others = ['search' => ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/resourcelist.png',
+                $actions_others = ['search' => ['pics' => '',
+                    'icon' => 'ti ti-users',
                     'title' => __('Search resources', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/resource.php?reset=reset',
                 ]];
 
                 if ($canAnnuaire) {
-                    $actions_others['directory'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . '/pics/directory.png',
+                    $actions_others['directory'] = ['pics' => '',
+                        'icon' => 'ti ti-address-book',
                         'title' => Directory::getTypeName(1),
                         'url' => PLUGIN_RESOURCES_WEBDIR . '/front/directory.php',
                     ];
@@ -234,7 +239,8 @@ class Menu extends CommonGLPI
             $actions_declare = [];
 
             if ($canresting) {
-                $actions_declare['resting'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/deleteresting.png",
+                $actions_declare['resting'] = ['pics' => '',
+                    'icon' => 'ti ti-calendar-pause',
                     'title' =>  _n(
                         'Non contract period management',
                         'Non contract periods management',
@@ -246,7 +252,8 @@ class Menu extends CommonGLPI
             }
 
             if ($canholiday) {
-                $actions_declare['holiday'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/holidayresource.png",
+                $actions_declare['holiday'] = ['pics' => '',
+                    'icon' => 'ti ti-beach',
                     'title' =>  __(
                         'Forced holiday management',
                         'resources',
@@ -257,7 +264,8 @@ class Menu extends CommonGLPI
 
             if ($canhabilitation && Plugin::isPluginActive("metademands")) {
                 //Management of a super habilitation
-                $actions_declare['habilitation'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/habilitation.png",
+                $actions_declare['habilitation'] = ['pics' => '',
+                    'icon' => 'ti ti-shield-lock',
                     'title' =>  ConfigHabilitation::getTypeName(
                         1,
                     ),
@@ -266,7 +274,8 @@ class Menu extends CommonGLPI
             }
 
             if ($canbadges && Plugin::isPluginActive("badges")) {
-                $actions_declare['badge'] = ['pics' => PLUGIN_BADGES_WEBDIR . "/badges.png",
+                $actions_declare['badge'] = ['pics' => '',
+                    'icon' => 'ti ti-id-badge',
                     'title' =>  _n(
                         'Badge management',
                         'Badges management',
@@ -285,27 +294,31 @@ class Menu extends CommonGLPI
 
             if ($canemployment) {
                 //Add an employment
-                $actions_employment['new'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employment.png",
+                $actions_employment['new'] = ['pics' => '',
+                    'icon' => 'ti ti-briefcase',
                     'title' =>  __('Declare an employment', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.form.php',
                 ];
             }
             if ($canseeemployment) {
-                $actions_employment['listemployment'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/employmentlist.png",
+                $actions_employment['listemployment'] = ['pics' => '',
+                    'icon' => 'ti ti-list-details',
                     'title' =>  __('Employment management', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/employment.php',
                 ];
             }
 
             if ($canseebudget) {
-                $actions_employment['listbudget'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/budgetlist.png",
+                $actions_employment['listbudget'] = ['pics' => '',
+                    'icon' => 'ti ti-report-money',
                     'title' =>  __('Budget management', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/budget.php',
                 ];
             }
 
             if ($canseeemployment) {
-                $actions_employment['recap'] = ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/recap.png",
+                $actions_employment['recap'] = ['pics' => '',
+                    'icon' => 'ti ti-table',
                     'title' =>  __('List Employments / Resources', 'resources'),
                     'url' => PLUGIN_RESOURCES_WEBDIR . '/front/recap.php',
                 ];
@@ -320,11 +333,13 @@ class Menu extends CommonGLPI
                 'title' =>  __('Update GLPI Resources', 'resources'),
                 'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::UPDATE_RESOURCES,
             ],
-                'csv' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/csv_check.png",
+                'csv' => ['pics' => '',
+                    'icon' => 'ti ti-file-check',
                     'title' => __('Verify CSV file', 'resources'),
                     'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_FILE,
                 ],
-                'glpi' => ['pics' => PLUGIN_RESOURCES_WEBDIR . "/pics/resource_check.png",
+                'glpi' => ['pics' => '',
+                    'icon' => 'ti ti-user-check',
                     'title' => __('Verify GLPI resources', 'resources'),
                     'url' => ImportResource::getIndexUrl() . "?type=" . ImportResource::VERIFY_GLPI,
                 ],

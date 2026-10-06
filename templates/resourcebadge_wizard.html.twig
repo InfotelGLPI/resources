@@ -25,29 +25,32 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
- # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+{# Badge restitution (ResourceBadge::showWizardForm()), driven by an AJAX cascade: picking a
+ # resource fills #plugin_resources_badge with its badges, and picking a badge injects the
+ # submit button into #plugin_resources_button_restitution (ajax/resourcebadge.php).
+ # resource_dropdown is a widget rendered by Resource::dropdown(), which escapes its own
  # attributes and values. #}
-
-<div class="card container" style="min-width: 80%;">
-    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
-    <div class="card-body">
-        <form method="post" action="{{ form_action }}">
-            <div class="row">
-                <div class="col-md-4 mb-2">{{ resource_label }}</div>
-                <div class="col-md-4 mb-2">
+<div class="container-lg my-3">
+    <form method="post" action="{{ form_action }}" class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="{{ wizard_header.icon }} me-2"></i>{{ wizard_header.title }}
+            </h3>
+            <div class="card-actions">
+                <a href="{{ badges_list_url }}" class="btn btn-ghost-secondary">
+                    <i class="ti ti-list-details me-1"></i>{{ badges_list_label }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3 align-items-center">
+                <label class="col-12 col-md-3 col-form-label">{{ resource_label }}</label>
+                <div class="col-12 col-md-9">
                     {{ resource_dropdown|raw }}
                 </div>
             </div>
             <div id="plugin_resources_badge"></div>
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="preview">
-                        <a href="{{ badges_list_url }}">{{ badges_list_label }}</a>
-                    </div>
-                    <div class="next" id="plugin_resources_button_restitution"></div>
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="card-footer text-end" id="plugin_resources_button_restitution"></div>
+    </form>
 </div>

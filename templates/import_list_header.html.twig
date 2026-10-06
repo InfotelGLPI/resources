@@ -42,10 +42,8 @@
                 </div>
             </th>
         {% elseif column.type|default('') == 'file' %}
-            <th>
-                <img src="{{ column.icon }}" alt="{{ column.icon_title }}" title="{{ column.icon_title }}"
-                     width="30" height="30" style="vertical-align: middle;">
-                <span style="vertical-align: middle;">{{ column.label }}</span>
+            <th class="text-nowrap">
+                <i class="ti ti-file-spreadsheet me-1" title="{{ column.icon_title }}"></i>{{ column.label }}
             </th>
         {% else %}
             <th>{{ column.label }}</th>

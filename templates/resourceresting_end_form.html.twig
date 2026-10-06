@@ -25,17 +25,25 @@
  # --------------------------------------------------------------------------
  #}
 
+{# End of a non contract period (ResourceResting::showFormEnd()), driven by an AJAX cascade:
+ # picking a resource fills #plugin_resources_resting, which in turn fills
+ # #plugin_resources_endate_resting and #plugin_resources_button_resting (the submit button
+ # is injected there by ajax/resourceresting.php, hence the empty containers below). #}
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
-{# Standalone form driven by an AJAX cascade: picking a resource fills
- # #plugin_resources_resting, which in turn fills #plugin_resources_endate_resting
- # and #plugin_resources_button_resting (the submit button is injected there by
- # ajax/resourceresting.php, hence the empty containers below). #}
-<div class="card container" style="min-width: 80%;">
-    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
-
-    <div class="card-body">
-        <form method="post" action="{{ form_action }}">
+<div class="container-lg my-3">
+    <form method="post" action="{{ form_action }}" class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="{{ wizard_header.icon }} me-2"></i>{{ wizard_header.title }}
+            </h3>
+            <div class="card-actions">
+                <a href="./resourceresting.php" class="btn btn-ghost-secondary">
+                    <i class="ti ti-list-details me-1"></i>{{ __('List of non contract periods', 'resources') }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
             <div class="row">
                 {{ fields.dropdownField(
                     resource_class,
@@ -43,6 +51,8 @@
                     0,
                     resource_label,
                     {
+                        'is_horizontal': false,
+                        'field_class': 'col-12',
                         'entity': resource_entities,
                         'toupdate': {
                             'value_fieldname': 'plugin_resources_resources_id',
@@ -57,16 +67,7 @@
             <div id="plugin_resources_resting"></div>
 
             <div id="plugin_resources_endate_resting"></div>
-
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <div class="preview">
-                        <a href="./resourceresting.php">{{ __('List of non contract periods', 'resources') }}</a>
-                    </div>
-                    <div class="next" id="plugin_resources_button_resting"></div>
-                </div>
-            </div>
-
-        </form>
-    </div>
+        </div>
+        <div class="card-footer text-end" id="plugin_resources_button_resting"></div>
+    </form>
 </div>

@@ -178,10 +178,11 @@
                             {% endif %}
                             {% if hidden.plugin_resources_resignationreasons_id is not defined %}
                                 {#                            {% if item.isField('plugin_resources_leavingreasons_id') %} #}
+                                {# Stored on the resource by Resource::declareLeaving(), not a column of this table #}
                                 {{ fields.dropdownField(
                                     "PluginResourcesLeavingReason",
                                     "plugin_resources_leavingreasons_id",
-                                    item.fields['plugin_resources_leavingreasons_id'],
+                                    item.fields['plugin_resources_leavingreasons_id'] ?? 0,
                                     "PluginResourcesLeavingReason"|itemtype_name,
                                     {
                                         'required': mandatory.plugin_resources_leavingreasons_id is defined,

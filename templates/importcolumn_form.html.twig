@@ -25,46 +25,42 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
- # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
- # attributes and values. #}
-
-{# Standalone form AJAX-loaded into the columns tab: front/importcolumn.form.php
- # dispatches on `add` / `update`, so the generic form buttons cannot be used. #}
-<form name="form" method="post" action="{{ form_action }}">
+{# Column of an import, AJAX-loaded into the columns tab (ImportColumn::showForm()).
+ # front/importcolumn.form.php dispatches on `add` / `update`, so the generic form buttons
+ # cannot be used. The |raw values are widgets rendered by core helpers (Html::input,
+ # Dropdown::*), which escape their own attributes and values. #}
+<form name="form" method="post" action="{{ form_action }}" class="card mb-3">
     <input type="hidden" name="id" value="{{ column_id }}">
     <input type="hidden" name="{{ items_id_field }}" value="{{ items_id }}">
 
-    <div class="center">
-        <table class="tab_cadre_fixe">
-            <tr>
-                <th colspan="4">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_1">
-                <td>{{ __('Name') }}</td>
-                <td>{{ name_input|raw }}</td>
-            </tr>
-            <tr class="tab_bg_1">
-                <td>{{ __('Type') }}</td>
-                <td>{{ type_dropdown|raw }}</td>
-            </tr>
-            <tr class="tab_bg_1">
-                <td>{{ __('Resource Attribute', 'resources') }}</td>
-                <td>{{ attribute_dropdown|raw }}</td>
-            </tr>
-            <tr class="tab_bg_1">
-                <td>{{ __('Identifiers', 'resources') }}</td>
-                <td>{{ identifier_dropdown|raw }}</td>
-            </tr>
-            <tr>
-                <td class="tab_bg_2 center" colspan="4">
-                    {{ call('Html::submit', [submit_label, {
-                        'name': submit_name,
-                        'class': 'btn btn-primary',
-                    }])|raw }}
-                </td>
-            </tr>
-        </table>
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="ti ti-columns me-2"></i>{{ title }}
+        </h3>
     </div>
-
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label">{{ __('Name') }}</label>
+                {{ name_input|raw }}
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">{{ __('Type') }}</label>
+                {{ type_dropdown|raw }}
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">{{ __('Resource Attribute', 'resources') }}</label>
+                {{ attribute_dropdown|raw }}
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">{{ __('Identifiers', 'resources') }}</label>
+                {{ identifier_dropdown|raw }}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-end">
+        <button type="submit" name="{{ submit_name }}" value="1" class="btn btn-primary">
+            <i class="ti {{ submit_name == 'add' ? 'ti-plus' : 'ti-device-floppy' }} me-1"></i>{{ submit_label }}
+        </button>
+    </div>
 </form>

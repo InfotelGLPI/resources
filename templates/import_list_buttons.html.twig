@@ -25,18 +25,13 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Table-row fragment: emitted inside the import list table, whose surrounding form
- # dispatches on save / delete. #}
-<tr>
-    <td class="center" colspan="100">
-        {{ call('Html::submit', [_x('button', 'Save'), {
-            'name': 'save',
-            'class': 'btn btn-primary',
-        }])|raw }}
-        &nbsp;&nbsp;
-        {{ call('Html::submit', [_x('button', 'Remove an item'), {
-            'name': 'delete',
-            'class': 'btn btn-primary',
-        }])|raw }}
-    </td>
-</tr>
+{# Actions of the import list, shown above and below it; the surrounding form dispatches
+ # on save / delete (front/resourceimport.form.php). #}
+<div class="d-inline-flex flex-wrap gap-2">
+    <button type="submit" name="delete" value="1" class="btn btn-outline-danger">
+        <i class="ti ti-trash me-1"></i>{{ _x('button', 'Remove an item') }}
+    </button>
+    <button type="submit" name="save" value="1" class="btn btn-primary">
+        <i class="ti ti-device-floppy me-1"></i>{{ _x('button', 'Save') }}
+    </button>
+</div>

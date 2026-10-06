@@ -25,17 +25,18 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
- # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
- # attributes and values. #}
-
-<div class="row">
-    <div class="col-md-4 mb-2">{{ badge_label }}</div>
-    <div class="col-md-4 mb-2">
+{# AJAX fragment injected into #plugin_resources_badge (resourcebadge_wizard.html.twig):
+ # the badges of the chosen resource. badge_dropdown is a widget rendered by
+ # Badge::dropdown(), which escapes its own attributes and values. #}
+<div class="row mb-3 align-items-center">
+    <label class="col-12 col-md-3 col-form-label">{{ badge_label }}</label>
+    <div class="col-12 col-md-9">
         {% if has_user %}
             {{ badge_dropdown|raw }}
         {% else %}
-            <span class="text-muted">{{ __('No user is linked to this resource', 'resources') }}</span>
+            <div class="alert alert-info mb-0">
+                <i class="ti ti-info-circle me-2"></i>{{ __('No user is linked to this resource', 'resources') }}
+            </div>
         {% endif %}
     </div>
 </div>

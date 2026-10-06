@@ -62,6 +62,11 @@ class ImportColumn extends CommonDBChild
         return _n('Column', 'Columns', $nb, 'resources');
     }
 
+    public static function getIcon()
+    {
+        return "ti ti-layout-columns";
+    }
+
     public static function getColumnsTypes()
     {
         return [

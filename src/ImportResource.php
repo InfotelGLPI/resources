@@ -597,12 +597,12 @@ class ImportResource extends CommonDBTM
     public function showHead($params)
     {
         // FIRST LINE HEADER
-        $colspan  = 21;
         $title    = '';
         $subtitle = '';
+        $icon     = 'ti ti-file-import';
         switch ($params['type']) {
             case self::UPDATE_RESOURCES:
-                $colspan  = 16;
+                $icon     = 'ti ti-user-edit';
                 $title    = __('Update GLPI Resources', 'resources');
                 $subtitle = sprintf(
                     __('%1$s : %2$s'),
@@ -611,9 +611,11 @@ class ImportResource extends CommonDBTM
                 );
                 break;
             case self::VERIFY_FILE:
+                $icon  = 'ti ti-file-check';
                 $title = __('Compare File with GLPI Resources', 'resources');
                 break;
             case self::VERIFY_GLPI:
+                $icon  = 'ti ti-user-check';
                 $title = __('Compare GLPI Resources with File', 'resources');
                 break;
         }
@@ -655,7 +657,7 @@ class ImportResource extends CommonDBTM
         $show_actions = !empty($params[self::SELECTED_FILE_DROPDOWN_NAME]);
 
         TemplateRenderer::getInstance()->display('@resources/import_head.html.twig', [
-            'colspan'         => $colspan,
+            'icon'            => $icon,
             'title'           => $title,
             'subtitle'        => $subtitle,
             'selector_cells'  => $selector_cells,
@@ -706,13 +708,11 @@ class ImportResource extends CommonDBTM
             case self::UPDATE_RESOURCES:
                 $columns[] = ['type' => 'check_all'];
                 $columns[] = ['label' => __('Resource', 'resources')];
-                $csv_icon  = PLUGIN_RESOURCES_WEBDIR . "/pics/csv_file.png";
                 $csv_title = __("Data from file", "resources");
                 foreach ($this->getImportColumnNames($params['import']) as $name) {
                     $columns[] = [
                         'type'       => 'file',
                         'label'      => $name,
-                        'icon'       => $csv_icon,
                         'icon_title' => $csv_title,
                     ];
                 }
@@ -1159,12 +1159,14 @@ class ImportResource extends CommonDBTM
             'template' => '@resources/import_selector_form.html.twig',
             'params'   => [
                 'form_action' => $action,
+                'label'       => __('File'),
                 'dropdown'    => $dropdown,
                 'buttons'     => [
-                    ['name' => 'verify', 'label' => __('Verify file', 'resources')],
+                    ['name' => 'verify', 'label' => __('Verify file', 'resources'), 'icon' => 'ti ti-search'],
                     [
                         'name'    => 'delete_file',
                         'label'   => __('Delete file', 'resources'),
+                        'icon'    => 'ti ti-trash',
                         'class'   => 'btn-outline-danger',
                         'confirm' => __('Confirm the deletion of this file?', 'resources'),
                     ],
@@ -1262,9 +1264,10 @@ class ImportResource extends CommonDBTM
             'template' => '@resources/import_selector_form.html.twig',
             'params'   => [
                 'form_action' => $action,
+                'label'       => Import::getTypeName(1),
                 'dropdown'    => $dropdown,
                 'buttons'     => [
-                    ['name' => 'select', 'label' => __('Choose', 'resources')],
+                    ['name' => 'select', 'label' => __('Choose', 'resources'), 'icon' => 'ti ti-check'],
                 ],
             ],
         ];

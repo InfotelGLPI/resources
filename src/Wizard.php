@@ -97,8 +97,8 @@ class Wizard extends CommonDBTM
             'params' => [
                 'title' => __('Welcome to the wizard resource', 'resources'),
                 'target' => Toolbox::getItemTypeFormURL(Wizard::class),
-                'icon' => '',
-                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
             ],
         ]);
 
@@ -312,8 +312,8 @@ class Wizard extends CommonDBTM
             'params' => [
                 'title' => __('Enter general information about the resource', 'resources'),
                 'target' => $target,
-                'icon' => '',
-                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
                 'plugin_resources_resources_id' => $ID,
                 'id' => $ID,
                 'default_button' => $options['default_button'] ?? false,
@@ -408,8 +408,8 @@ class Wizard extends CommonDBTM
                 'params' => [
                     'title' => __('Enter employer information about the resource', 'resources'),
                     'target' => $target,
-                    'icon' => '',
-                    'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                    'icon' => 'ti ti-user-plus fs-1',
+                    'img' => "",
                     'plugin_resources_resources_id' => $plugin_resources_resources_id,
                     'id' => $ID,
                     'entities_id' => $entity,
@@ -541,8 +541,8 @@ class Wizard extends CommonDBTM
                     'params' => [
                         'title' => __('Enter the computing needs of the resource', 'resources'),
                         'target' => $target,
-                        'icon' => '',
-                        'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                        'icon' => 'ti ti-user-plus fs-1',
+                        'img' => "",
                         'plugin_resources_resources_id' => $plugin_resources_resources_id,
                         'id' => $plugin_resources_resources_id,
                         'entities_id' => $entity,
@@ -602,8 +602,8 @@ class Wizard extends CommonDBTM
             'params' => [
                 'title' => __('Add the photo of the resource', 'resources'),
                 'target' => Toolbox::getItemTypeFormURL(Wizard::class),
-                'icon' => '',
-                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
                 'plugin_resources_resources_id' => $plugin_resources_resources_id,
                 'id' => $plugin_resources_resources_id,
                 'empty_picture' => $empty_picture,
@@ -709,8 +709,8 @@ class Wizard extends CommonDBTM
             'params' => [
                 'title' => __('Enter habilitations about the resource', 'resources'),
                 'target' => $target,
-                'icon' => '',
-                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
                 'plugin_resources_resources_id' => $plugin_resources_resources_id,
                 'id' => $plugin_resources_resources_id,
                 'default_button' => $options['default_button'] ?? false,
@@ -755,8 +755,8 @@ class Wizard extends CommonDBTM
             'params'            => [
                 'title'                         => __('Add documents to the resource', 'resources'),
                 'target'                        => Toolbox::getItemTypeFormURL(Wizard::class),
-                'icon'                          => '',
-                'img'                           => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
                 'plugin_resources_resources_id' => $resource->fields["id"] ?? 0,
             ],
         ]);
@@ -807,8 +807,8 @@ class Wizard extends CommonDBTM
             'params' => [
                 'title' => __('Add recruiting informations to the resource', 'resources'),
                 'target' => $target,
-                'icon' => '',
-                'img' => PLUGIN_RESOURCES_WEBDIR . "/pics/newresource.png",
+                'icon' => 'ti ti-user-plus fs-1',
+                'img' => "",
                 'plugin_resources_resources_id' => $ID,
                 'id' => $ID,
                 'hidden_fields' => $hidden,

@@ -27,13 +27,11 @@
 
 {# Page shell shared by the verification and import screens. `content` is the output of
  # showHead() and of the list methods, all rendered by plugin templates (autoescaped) or
- # core widgets, captured as one block: hence |raw. #}
+ # core widgets, captured as one block: hence |raw. Each part brings its own card. #}
 {% if show_loader %}
     <div id="ajax_loader" class="ajax_loader hidden"></div>
 {% endif %}
 
-<div class="center">
-    <table class="tab_cadre_fixe">
-        {{ content|raw }}
-    </table>
+<div class="container-fluid my-3">
+    {{ content|raw }}
 </div>

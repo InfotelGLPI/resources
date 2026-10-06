@@ -26,11 +26,10 @@
  #}
 
 {# Submit button of the change wizard, reloaded over AJAX by ajax/resourcechange.php
- # once the fields the selected action depends on are all filled in. #}
+ # once the fields the selected action depends on are all filled in. It lands in the card
+ # footer of resource_change_form.html.twig. #}
 {% if display %}
-    <div class="next">
-        <button type="submit" name="changeresources" class="btn btn-success" value="{{ label }}">
-            <span>{{ label }}</span>
-        </button>
-    </div>
+    <button type="submit" name="changeresources" class="btn btn-primary" value="{{ label }}">
+        <i class="ti ti-check me-1"></i>{{ label }}
+    </button>
 {% endif %}

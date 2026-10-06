@@ -25,51 +25,39 @@
  # --------------------------------------------------------------------------
  #}
 
-{# The |raw values below are widgets rendered by core helpers (Dropdown::*, Html::input,
- # Html::textarea, Html::showDate*Field, Html::submit...), which escape their own
+{# Helpdesk form used to declare the transfer of a resource to another entity. It owns its
+ # <form>. entity_dropdown is a widget rendered by a core helper, which escapes its own
  # attributes and values. #}
-
-{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
-
-{# Helpdesk form used to declare the transfer of a resource to another entity. It owns its <form>. #}
-{% if not has_resource %}
-    <div class="alert alert-info">{{ __('No results found') }}</div>
-{% else %}
-    <div class="card container" style="min-width: 80%;">
-        {% include '@resources/wizard_header.html.twig' with {
-            'title': header_title,
-            'img': header_img,
-        } only %}
-
-        <div class="card-body">
-            <form method="post" action="{{ form_action }}">
-                <div class="row">
-                    <div class="col-md-4 mb-2">{{ resource_label }}</div>
-                    <div class="col-md-4 mb-2">{{ resource_name }}</div>
+<div class="container-lg my-3">
+    {% if not has_resource %}
+        <div class="alert alert-info"><i class="ti ti-info-circle me-2"></i>{{ __('No results found') }}</div>
+    {% else %}
+        <form method="post" action="{{ form_action }}" class="card">
+            <input type="hidden" name="plugin_resources_resources_id" value="{{ plugin_resources_resources_id }}">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="{{ header_icon }} me-2"></i>{{ header_title }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-12 col-md-3">{{ resource_label }}</dt>
+                    <dd class="col-12 col-md-9">{{ resource_name }}</dd>
+                    <dt class="col-12 col-md-3">{{ __('Current entity', 'resources') }}</dt>
+                    <dd class="col-12 col-md-9">{{ current_entity }}</dd>
+                </dl>
+                <div class="row align-items-center">
+                    <label class="col-12 col-md-3 col-form-label">
+                        {{ __('Target entity', 'resources') }} <span class="required">*</span>
+                    </label>
+                    <div class="col-12 col-md-9">{{ entity_dropdown|raw }}</div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 mb-2">{{ __('Current entity', 'resources') }}</div>
-                    <div class="col-md-4 mb-2">{{ current_entity }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 mb-2">
-                        {{ __('Target entity', 'resources') }} <span class="red">*</span>
-                    </div>
-                    <div class="col-md-4 mb-2">{{ entity_dropdown|raw }}</div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12 mb-2">
-                        <div class="next">
-                            {{ inputs.hidden('plugin_resources_resources_id', plugin_resources_resources_id) }}
-                            {{ inputs.submit('transferresources', __('Declare a transfer', 'resources'), 1, {
-                                'class': 'btn btn-success',
-                            }) }}
-                        </div>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-{% endif %}
+            </div>
+            <div class="card-footer text-end">
+                <button type="submit" name="transferresources" value="1" class="btn btn-primary">
+                    <i class="ti ti-transfer me-1"></i>{{ __('Declare a transfer', 'resources') }}
+                </button>
+            </div>
+        </form>
+    {% endif %}
+</div>

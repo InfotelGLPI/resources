@@ -25,57 +25,64 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Table-head fragment: emitted inside a <table> opened by the calling list.
- # The data-resources-stat placeholders are filled by public/scripts/import.js when
- # the #calculate button is clicked. #}
-<thead>
-    <tr>
-        <th colspan="{{ colspan }}">
-            {{ title }}
+{# Head of an import screen (ImportResource::showHead()): title, file or import selectors,
+ # then the statistics and the pre-import action once a file is chosen. The
+ # data-resources-stat placeholders are filled by public/scripts/import.js when the
+ # #calculate button is clicked. #}
+<div class="card mb-3">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title">
+                <i class="{{ icon }} me-2"></i>{{ title }}
+            </h3>
             {% if subtitle is not empty %}
-                <br><span class="red">{{ subtitle }}</span>
+                <div class="text-danger small mt-1">
+                    <i class="ti ti-alert-triangle me-1"></i>{{ subtitle }}
+                </div>
             {% endif %}
-        </th>
-    </tr>
-
-    <tr>
-        {# `cell.template` is a fixed plugin template name chosen server side. #}
-        {% for cell in selector_cells %}
-            <td>{{ include(cell.template, cell.params, with_context = false) }}</td>
-        {% endfor %}
-    </tr>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            {# `cell.template` is a fixed plugin template name chosen server side. #}
+            {% for cell in selector_cells %}
+                <div class="col-12 {{ selector_cells|length > 1 ? 'col-xl-6' : '' }}">
+                    {{ include(cell.template, cell.params, with_context = false) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
     {% if show_actions %}
-        <tr>
-            <td>
-                <div class="center">
+        <div class="card-footer">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-lg">
                     {% if stats is not empty %}
-                        <ul>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
                             {% for id, label in stats %}
-                                <li>{{ label }}&nbsp;&nbsp;&nbsp;<span id="{{ id }}" data-resources-stat="{{ id }}">?</span></li>
+                                <span class="badge bg-secondary-lt fs-5 fw-normal">
+                                    {{ label }} :
+                                    <strong id="{{ id }}" data-resources-stat="{{ id }}">?</strong>
+                                </span>
                             {% endfor %}
-                            <li>
-                                <button type="button" id="calculate" class="btn btn-secondary"
-                                        data-resources-stats-url="{{ stats_url }}"
-                                        data-resources-page="{{ page }}">{{ __('Calculate', 'resources') }}</button>
-                            </li>
-                        </ul>
+                            <button type="button" id="calculate" class="btn btn-outline-secondary btn-sm"
+                                    data-resources-stats-url="{{ stats_url }}"
+                                    data-resources-page="{{ page }}">
+                                <i class="ti ti-calculator me-1"></i>{{ __('Calculate', 'resources') }}
+                            </button>
+                        </div>
                     {% endif %}
                 </div>
-            </td>
-            <td>
-                <form name="import_file_form" id="import_file_form" method="post"
-                      action="{{ form_action }}" enctype="multipart/form-data">
-                    <div class="center">
+                <div class="col-12 col-lg-auto">
+                    <form name="import_file_form" id="import_file_form" method="post"
+                          action="{{ form_action }}" enctype="multipart/form-data">
                         <input type="hidden" name="filename" value="{{ filename }}">
-                        {# Button rendered by the core helper, attributes escaped there. #}
-                        {{ call('Html::submit', [validate_label, {
-                            'name': 'verify-file',
-                            'class': 'btn btn-primary',
-                        }])|raw }}
-                    </div>
-                </form>
-            </td>
-        </tr>
+                        <button type="submit" name="verify-file" value="1" class="btn btn-primary">
+                            <i class="ti ti-file-import me-1"></i>{{ validate_label }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     {% endif %}
-</thead>
+</div>

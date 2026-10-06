@@ -32,9 +32,9 @@
  # every field of the wrapper to the button URL each time one of them changes. #}
 <div{% if text_action|default(0) > 0 %} data-resources-change-action="{{ text_action }}" data-resources-change-url="{{ button_url }}"{% endif %}>
     {% for row in rows %}
-        <div class="{{ row_class|default('row') }}">
-            <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.label }}</div>
-            <div class="{{ cell_class|default('col-md-4 mb-2') }}">{{ row.widget|raw }}</div>
+        <div class="{{ row_class|default('row') }} align-items-center">
+            <label class="{{ cell_class|default('col-12 col-md-6 mb-3') }} col-form-label">{{ row.label }}</label>
+            <div class="{{ cell_class|default('col-12 col-md-6 mb-3') }}">{{ row.widget|raw }}</div>
         </div>
     {% endfor %}
 </div>

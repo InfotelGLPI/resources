@@ -25,47 +25,49 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="container">
-    {{ include('@resources/wizard_header.html.twig', wizard_header, with_context = false) }}
-
-    <div class="row">
+{# One block of the plugin menu (Menu::showMenuBlock()): a title and one clickable card per
+ # action. An action shows its Tabler icon, or its picture for the entries that still provide
+ # one. An action carrying `post` is destructive and must not be a GET link (CSRF): it is
+ # rendered as a POST form, which the core CSRF check validates (Sec-Fetch-Site/Origin), and
+ # an optional `confirm` adds a client-side guard. #}
+<div class="container-lg my-3">
+    {% if wizard_header.title is not empty %}
+        <h2 class="mb-3">
+            <i class="{{ wizard_header.icon is not empty ? wizard_header.icon : wizard_header.default_icon }} me-2"></i>{{ wizard_header.title }}
+        </h2>
+    {% endif %}
+    <div class="row row-cards g-3">
         {% for action in actions %}
-            <div class="col-md-2 mb-2 center">
-                <div class="card" style="min-height: 140px;">
-                    <div class="card-body">
-                        <div class="card-text">
-                            {% set inner %}
-                                {% if action.icon is defined and action.icon is not empty %}
-                                    <i class="{{ action.icon }}" style="font-size: 3em"></i>
-                                {% elseif action.pics is defined and action.pics is not empty %}
-                                    <img src="{{ action.pics }}">
-                                {% endif %}
-                                <br>{{ action.title }}
-                            {% endset %}
-
-                            {% if action.post is defined and action.post is not empty %}
-                                {# Destructive actions must not be triggerable by a GET link (CSRF):
-                                 # render them as a POST submit, which the core CSRF check validates
-                                 # (Sec-Fetch-Site/Origin); an optional 'confirm' adds a client-side guard. #}
-                                <form method="post" action="{{ action.url }}" class="d-inline"
-                                      {% if action.confirm is defined and action.confirm is not empty %}
-                                          onsubmit="return confirm('{{ action.confirm|e('js') }}');"
-                                      {% endif %}>
-                                    {% for post_key, post_value in action.post %}
-                                        <input type="hidden" name="{{ post_key }}" value="{{ post_value }}">
-                                    {% endfor %}
-                                    {# .btn is inline-flex under Tabler, so the <br> in the label would not
-                                     # wrap the title below the icon: use a block-level column layout
-                                     # constrained to the card width (w-100) with centered, wrapping text. #}
-                                    <button type="submit"
-                                            class="btn btn-link p-0 border-0 text-reset text-decoration-none d-flex flex-column align-items-center w-100 text-center text-wrap">{{ inner }}</button>
-                                </form>
-                            {% else %}
-                                <a href="{{ action.url }}">{{ inner }}</a>
-                            {% endif %}
-                        </div>
-                    </div>
+            {% set inner %}
+                <div class="card-body text-center py-4">
+                    {% if action.icon is defined and action.icon is not empty %}
+                        <span class="avatar avatar-xl bg-secondary-lt mb-3">
+                            <i class="{{ action.icon }} fs-1"></i>
+                        </span>
+                    {% elseif action.pics is defined and action.pics is not empty %}
+                        <img src="{{ action.pics }}" alt="" class="mb-3" style="max-height: 64px">
+                    {% endif %}
+                    <h3 class="card-title mb-0">{{ action.title }}</h3>
                 </div>
+            {% endset %}
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                {% if action.post is defined and action.post is not empty %}
+                    <form method="post" action="{{ action.url }}" class="h-100"
+                          {% if action.confirm is defined and action.confirm is not empty %}
+                              onsubmit="return confirm('{{ action.confirm|e('js') }}');"
+                          {% endif %}>
+                        {% for post_key, post_value in action.post %}
+                            <input type="hidden" name="{{ post_key }}" value="{{ post_value }}">
+                        {% endfor %}
+                        <button type="submit" class="card card-link card-link-pop h-100 w-100 text-reset text-decoration-none border p-0 bg-transparent">
+                            {{ inner }}
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{{ action.url }}" class="card card-link card-link-pop h-100 text-reset text-decoration-none">
+                        {{ inner }}
+                    </a>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

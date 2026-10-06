@@ -30,10 +30,8 @@
 {% set header_title = title|default('') is not empty ? title : __('Resources management', 'resources') %}
 {% set header_icon = icon|default('') is not empty ? icon : default_icon|default('') %}
 
-<h3 class="alert alert-secondary" role="alert" style="margin-top: 10px;">
+<h3 class="alert alert-secondary" role="alert">
     <span class="resources_wizard_resp_img">
-        {% if img|default('') is not empty %}
-            <img src="{{ img }}">&nbsp;
         {% elseif header_icon is not empty %}
             <i class="{{ header_icon }}"></i>&nbsp;
         {% endif %}

@@ -104,7 +104,9 @@ if (isset($_POST['add_metademand'])) {
     if (Plugin::isPluginActive("metademands")) {
         $data = $habilitation->find([
             'entities_id' => $_SESSION['glpiactive_entity'],
-            'action' => ConfigHabilitation::ACTION_ADD,
+            // The removal has its own advanced request: ACTION_ADD used to be looked up here too,
+            // so this menu entry opened the declaration form
+            'action' => ConfigHabilitation::ACTION_DELETE,
         ]);
         $data = array_shift($data);
 

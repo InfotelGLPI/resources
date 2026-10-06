@@ -241,7 +241,7 @@ class Resource_Change extends CommonDBTM
 
         $rows        = [];
         $row_class   = 'row';
-        $cell_class  = 'col-md-4 mb-2';
+        $cell_class  = 'col-12 col-md-6 mb-3';
         // Actions made of free text fields reload the start button from
         // public/scripts/resourcechange.js each time one of their fields changes.
         $text_action = 0;
@@ -440,8 +440,8 @@ class Resource_Change extends CommonDBTM
 
             case self::CHANGE_NAME:
                 $text_action = self::CHANGE_NAME;
-                $row_class   = 'form-row';
-                $cell_class  = 'bt-feature col-md-4';
+                $row_class   = 'row';
+                $cell_class  = 'col-12 col-md-6 mb-3';
                 $rows[] = [
                     'label'  => __('Name', 'resources'),
                     'widget' => Html::input('name', [

@@ -158,8 +158,9 @@ if ($_GET['addUnlinkedUsers'] ?? false) {
                             . $DB->quoteValue(' ') . ', '
                             . $DB->quoteName('glpi_users.registration_number') . ', '
                             . $DB->quoteValue(' ') . ', '
-                            . $DB->quoteName('glpi_users.name') . ') '
-                            . Search::makeTextSearch($_GET['searchText']),
+                            . $DB->quoteName('glpi_users.name') . ')'
+                            // makeTextSearch() now returns an unbound "LIKE ?": quote the pattern
+                            . ($search_value == null ? ' IS NULL' : ' LIKE ' . $DB->quoteValue($search_value)),
                         ),
                     ],
                 ],

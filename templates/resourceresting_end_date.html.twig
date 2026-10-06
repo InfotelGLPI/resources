@@ -30,6 +30,6 @@
 {# AJAX fragment injected into #plugin_resources_endate_resting. The hidden id is
  # what front/resourceresting.form.php reads on addenddaterestingresources. #}
 <div class="row">
-    {{ fields.dateField('date_end', null, __('End date')) }}
+    {{ fields.dateField('date_end', null, __('End date'), {'is_horizontal': false, 'field_class': 'col-12 col-md-6'}) }}
     <input type="hidden" name="id" value="{{ resting_id }}">
 </div>

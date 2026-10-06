@@ -26,53 +26,41 @@
  #}
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% import 'components/form/basic_inputs_macros.html.twig' as inputs %}
 
 {# Helpdesk form used to declare the departure of a resource. It owns its <form>. #}
-{% if not has_resources %}
-    <div class="alert alert-info">{{ __('No results found') }}</div>
-{% else %}
-    <div class="card container" style="min-width: 80%;">
-        <h3 class="alert alert-secondary" role="alert" style="margin-top: 10px;">
-            <span class="resources_wizard_resp_img">
-                <img src="{{ header_img }}">&nbsp;{{ header_title }}
-            </span>
-        </h3>
-        <div class="card-body">
-            <form method="post" action="{{ form_action }}">
+{% set field_options = {'is_horizontal': false, 'field_class': 'col-12 col-md-6', 'wrapper_class': ''} %}
+<div class="container-lg my-3">
+    {% if not has_resources %}
+        <div class="alert alert-info"><i class="ti ti-info-circle me-2"></i>{{ __('No results found') }}</div>
+    {% else %}
+        <form method="post" action="{{ form_action }}" class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="{{ header_icon }} me-2"></i>{{ header_title }}
+                </h3>
+            </div>
+            <div class="card-body">
                 <div class="row">
-                    {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, {
-                        'wrapper_class': '',
-                    }) }}
+                    {{ fields.htmlField('plugin_resources_resources_id', resource_dropdown, resource_label, field_options|merge({'field_class': 'col-12'})) }}
                 </div>
 
                 {# Refreshed by ajax/leavingform.php every time another resource is picked. #}
                 <div id="leaving_input"{% if leaving_params is not empty %} data-resources-autoload-url="{{ leaving_url }}"
                      data-resources-load-params="{{ leaving_params|json_encode }}"{% endif %}>
                     <div class="row">
-                        {{ fields.dateField('date_end', date_end, __('Departure date', 'resources')) }}
-                    </div>
-                    <div class="row">
-                        {{ fields.htmlField('remove_manager', manager_dropdown, __('Resource manager', 'resources'), {
-                            'wrapper_class': '',
-                        }) }}
+                        {{ fields.dateField('date_end', date_end, __('Departure date', 'resources'), field_options) }}
+                        {{ fields.htmlField('remove_manager', manager_dropdown, __('Resource manager', 'resources'), field_options) }}
                     </div>
                 </div>
 
                 {# Filled by ajax/pdfresource.php when the dropdown above changes. #}
-                <div class="center" id="resource_pdf"></div>
-
-                <div class="row">
-                    <div class="col-md-12 mb-2">
-                        <div class="next">
-                            {{ inputs.submit('removeresources', __('Declare a departure', 'resources'), 1, {
-                                'class': 'btn btn-success',
-                            }) }}
-                        </div>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-{% endif %}
+                <div class="text-center" id="resource_pdf"></div>
+            </div>
+            <div class="card-footer text-end">
+                <button type="submit" name="removeresources" value="1" class="btn btn-primary">
+                    <i class="ti ti-user-minus me-1"></i>{{ __('Declare a departure', 'resources') }}
+                </button>
+            </div>
+        </form>
+    {% endif %}
+</div>

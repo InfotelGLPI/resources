@@ -25,19 +25,17 @@
  # --------------------------------------------------------------------------
  #}
 
+{# Upload of a CSV file to verify (ImportResource::getFileImporterCell()). The upload
+ # widget is rendered by the core helper (Html::file). #}
 <form name="import_file_form" id="import_file_form" method="post" action="{{ form_action }}" enctype="multipart/form-data">
-    <div class="center">
-        <table>
-            <tr>
-                <td>
-                    <input class="form-control" type="file" name="picture">
-                    {# Upload widget rendered by the core helper (Html::file). #}
-                    {{ file_widget|raw }}
-                </td>
-                <td>
-                    <button type="submit" name="import-file" class="btn btn-primary">{{ label_import }}</button>
-                </td>
-            </tr>
-        </table>
+    <label class="form-label">{{ label_import }}</label>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="flex-grow-1" style="min-width: 12rem;">
+            <input class="form-control" type="file" name="picture">
+            {{ file_widget|raw }}
+        </div>
+        <button type="submit" name="import-file" value="1" class="btn btn-primary text-nowrap">
+            <i class="ti ti-upload me-1"></i>{{ label_import }}
+        </button>
     </div>
 </form>

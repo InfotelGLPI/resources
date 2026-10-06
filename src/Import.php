@@ -45,6 +45,10 @@ class Import extends CommonDBTM
 
     public static $keyInOtherTables = 'plugin_resources_imports_id';
 
+    public static function getIcon()
+    {
+        return "ti ti-file-import";
+    }
     public static function getFormUrl($full = true)
     {
         global $CFG_GLPI;

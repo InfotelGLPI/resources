@@ -26,44 +26,48 @@
  #}
 
 {% if entries is empty %}
-    {# No import to show: only the error head, inside its own table so it stays valid. #}
-    <table class="tab_cadre_fixe">
-        {{ include('@resources/import_error_header.html.twig', {'title': error_title}, with_context = false) }}
-    </table>
+    {{ include('@resources/import_error_header.html.twig', {'title': error_title}, with_context = false) }}
 {% else %}
-    {# Pager rendered by the core (Html::printPager). #}
-    {{ pager|raw }}
+    <form name="form" method="post" id="import" action="{{ form_action }}" class="card">
 
-    <form name="form" method="post" id="import" action="{{ form_action }}">
-
-        {# Kept out of the table: an <input> is not valid as a direct child of <tr>. #}
         {% for hidden in hidden_inputs %}
             <input type="hidden" name="{{ hidden.name }}" value="{{ hidden.value }}">
         {% endfor %}
 
-        <div class="center">
-            <table class="tab_cadre_fixe">
-                <tr class="center">
-                    <td class="center" colspan="100">
-                        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
-                            {% for legend in legends %}
-                                <span class="d-inline-block"
-                                      style="width:10px;height:10px;background-color:{{ legend.color }};"></span>
-                                <a href="{{ legend.url }}" class="me-3">{{ legend.label }}</a>
-                            {% endfor %}
-                        </div>
-                    </td>
-                </tr>
-
-                {{ include('@resources/import_list_buttons.html.twig', {}, with_context = false) }}
-                {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
-
-                {% for entry in entries %}
-                    <tr>{{ include('@resources/import_one_row.html.twig', entry, with_context = false) }}</tr>
+        <div class="card-header">
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                {% for legend in legends %}
+                    <a href="{{ legend.url }}" class="d-inline-flex align-items-center text-reset">
+                        <span class="d-inline-block rounded-circle me-2"
+                              style="width:10px;height:10px;background-color:{{ legend.color }};"></span>{{ legend.label }}
+                    </a>
                 {% endfor %}
-
+            </div>
+            <div class="card-actions">
                 {{ include('@resources/import_list_buttons.html.twig', {}, with_context = false) }}
-            </table>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            {# Pager rendered by the core (Html::printPager). #}
+            {{ pager|raw }}
+
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-vcenter card-table mb-0">
+                    <thead>
+                        {% include '@resources/import_list_header.html.twig' with {'columns': header_columns} only %}
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                            <tr>{{ include('@resources/import_one_row.html.twig', entry, with_context = false) }}</tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer text-end">
+            {{ include('@resources/import_list_buttons.html.twig', {}, with_context = false) }}
         </div>
     </form>
 {% endif %}
