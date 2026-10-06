@@ -4639,6 +4639,20 @@ class Resource extends CommonDBTM
             ];
         }
 
+        // Resources without a contract type are left out by the join above: list them under
+        // their own node, last, so that every resource of the list is reachable from the tree
+        $criteria = self::getTreeVisibilityCriteria();
+        $criteria['AND'][] = ["$table.plugin_resources_contracttypes_id" => 0];
+        $nb_without = countElementsInTable($table, $criteria);
+        if ($nb_without > 0) {
+            $nodes[] = [
+                'key'     => 'contracttype-0',
+                'title'   => sprintf(__('%1$s (%2$s)'), __('Without contract', 'resources'), $nb_without),
+                'lazy'    => true,
+                'tooltip' => ContractType::getTypeName(1) . ' - ' . __('Without contract', 'resources'),
+            ];
+        }
+
         return $nodes;
     }
 
