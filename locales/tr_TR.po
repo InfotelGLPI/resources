@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-06 09:57+0000\n"
+"POT-Creation-Date: 2026-10-06 11:50+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -731,7 +731,7 @@ msgstr "Seçin"
 msgid "Choosing the intercontrat"
 msgstr "Ara sözleşme seçimi"
 
-#: src/Resource.php:4776 src/Directory.php:374
+#: src/Resource.php:4790 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "E-postanızı göndermek için buraya tıklayın"
 
@@ -1391,7 +1391,7 @@ msgstr "Tabloların doğruluğu denetlenemedi!"
 msgid "Failed to send the file"
 msgstr "Dosya gönderilemedi"
 
-#: src/Resource.php:5323 src/Resource.php:5335
+#: src/Resource.php:5337 src/Resource.php:5349
 msgid "Female"
 msgstr "Dişi"
 
@@ -1858,7 +1858,7 @@ msgstr "E-posta"
 msgid "Mail Creation"
 msgstr "E-posta oluşturma"
 
-#: src/Resource.php:5322 src/Resource.php:5332
+#: src/Resource.php:5336 src/Resource.php:5346
 msgid "Male"
 msgstr "Erkek"
 
@@ -2196,7 +2196,7 @@ msgstr "Sıra"
 msgid "Order resources by"
 msgstr "Kaynak sıralaması"
 
-#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
+#: src/Resource.php:189 src/Resource.php:5338 src/Resource.php:5352
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Diğer"
@@ -2633,7 +2633,7 @@ msgstr "Kaynak verileri"
 msgid "Resources directory"
 msgstr "Kaynaklar dizini"
 
-#: src/Resource.php:5019
+#: src/Resource.php:5033
 msgid "Resources list"
 msgstr "Kaynak listesi"
 
@@ -3400,8 +3400,9 @@ msgstr "Kaynak yorumu alanına eklenecek"
 msgid "Wished leaving date"
 msgstr "İstenilen ayrılma tarihi"
 
-#: src/Resource.php:563 src/Resource.php:2057 src/ContractType.php:266
-#: src/ContractType.php:286 src/Contracttypeprofile.php:72
+#: src/Resource.php:563 src/Resource.php:2057 src/Resource.php:4650
+#: src/Resource.php:4652 src/ContractType.php:266 src/ContractType.php:286
+#: src/Contracttypeprofile.php:72
 msgid "Without contract"
 msgstr "Sözleşmesiz"
 

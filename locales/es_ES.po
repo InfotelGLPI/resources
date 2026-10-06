@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-06 09:57+0000\n"
+"POT-Creation-Date: 2026-10-06 11:50+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/infotelGLPI/"
@@ -723,7 +723,7 @@ msgstr ""
 msgid "Choosing the intercontrat"
 msgstr ""
 
-#: src/Resource.php:4776 src/Directory.php:374
+#: src/Resource.php:4790 src/Directory.php:374
 msgid "Click here to send your email"
 msgstr "Pinchar aquí para enviar el email"
 
@@ -1381,7 +1381,7 @@ msgstr ""
 msgid "Failed to send the file"
 msgstr ""
 
-#: src/Resource.php:5323 src/Resource.php:5335
+#: src/Resource.php:5337 src/Resource.php:5349
 msgid "Female"
 msgstr ""
 
@@ -1842,7 +1842,7 @@ msgstr ""
 msgid "Mail Creation"
 msgstr ""
 
-#: src/Resource.php:5322 src/Resource.php:5332
+#: src/Resource.php:5336 src/Resource.php:5346
 msgid "Male"
 msgstr ""
 
@@ -2178,7 +2178,7 @@ msgstr ""
 msgid "Order resources by"
 msgstr ""
 
-#: src/Resource.php:189 src/Resource.php:5324 src/Resource.php:5338
+#: src/Resource.php:189 src/Resource.php:5338 src/Resource.php:5352
 #: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Otro"
@@ -2614,7 +2614,7 @@ msgstr ""
 msgid "Resources directory"
 msgstr ""
 
-#: src/Resource.php:5019
+#: src/Resource.php:5033
 msgid "Resources list"
 msgstr ""
 
@@ -3370,8 +3370,9 @@ msgstr "Se añadirá a la zona de descripción del recurso"
 msgid "Wished leaving date"
 msgstr ""
 
-#: src/Resource.php:563 src/Resource.php:2057 src/ContractType.php:266
-#: src/ContractType.php:286 src/Contracttypeprofile.php:72
+#: src/Resource.php:563 src/Resource.php:2057 src/Resource.php:4650
+#: src/Resource.php:4652 src/ContractType.php:266 src/ContractType.php:286
+#: src/Contracttypeprofile.php:72
 msgid "Without contract"
 msgstr "Sin contrato"
 
