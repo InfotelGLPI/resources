@@ -25,203 +25,223 @@
  # --------------------------------------------------------------------------
  #}
 
-{# `form_open` / `form_close` are produced by the core helpers Html::openMassiveActionsForm() +
+{# One checklist of a resource (Checklist::showFromResources()), as a collapsible card.
+ # `form_open` / `form_close` are produced by the core helpers Html::openMassiveActionsForm() +
  # showMassiveActions() / closeForm() for a pending checklist, as a matched pair (or both
  # empty). A finished checklist uses the plain form written below instead.
  # The "Bring up / down" buttons target their own forms, declared after the main one
  # (no nested <form>). #}
-<table class="tab_cadre_fixe">
-    <tr>
-        <th width="15px">
-            <span id="menu_navigate">
-                <a href="#" data-resources-toggle="{{ view_id }}" data-resources-toggle-icon="checklistimg{{ rand }}"
-                   data-resources-toggle-closed="ti-chevrons-down fa-2x" data-resources-toggle-open="ti-chevrons-up fa-2x">
-                    <i id="checklistimg{{ rand }}" style="color:orange" class="ti ti-chevrons-up fa-2x"></i>
-                </a>
+{% set done_count = entries|filter(e => e.is_checked)|length %}
+<div class="card mb-3">
+    <div class="card-header">
+        <a href="#{{ view_id }}" class="d-flex align-items-center flex-fill gap-2 text-reset text-decoration-none"
+           data-bs-toggle="collapse" role="button" aria-expanded="true" aria-controls="{{ view_id }}">
+            <span class="avatar {{ is_finished ? 'bg-green-lt' : 'bg-orange-lt' }}">
+                <i class="ti {{ is_finished ? 'ti-circle-check' : 'ti-checklist' }} fs-2"></i>
             </span>
-        </th>
-        <th height="30px">
-            {% if is_finished %}
-                <i style="color:green" class="ti ti-circle-check fa-2x"></i>
+            <span class="card-title mb-0">{{ checklist_label }}</span>
+            {% if entries is not empty %}
+                <span class="badge {{ is_finished ? 'bg-green-lt' : 'bg-secondary-lt' }}">
+                    {{ done_count }} / {{ entries|length }}
+                </span>
             {% endif %}
-            {{ checklist_label }}
             {% if is_finished %}
-                - {{ __('Check list done', 'resources') }}
+                <span class="badge bg-green-lt">{{ __('Check list done', 'resources') }}</span>
             {% endif %}
-        </th>
-    </tr>
-    <tr>
-        <td class="center" colspan="2">
-            <div class="text-start" id="{{ view_id }}">
+            <i class="ti ti-chevron-down ms-auto"></i>
+        </a>
+    </div>
 
-                {% if can_add %}
-                    {# AJAX target for the "add a task" sub-form. #}
-                    <div id="viewchecklisttask{{ rand }}"></div>
-                    <div style="margin:10px">
-                        <a class="submit btn btn-primary" href="#"
-                           data-resources-load-url="{{ add_url }}"
-                           data-resources-load-target="viewchecklisttask{{ rand }}"
-                           data-resources-load-params="{{ add_params|json_encode }}">{{ add_link_name }}</a>
+    <div class="collapse show" id="{{ view_id }}">
+        <div class="card-body">
+            {% if can_add %}
+                {# AJAX target for the "add a task" sub-form. #}
+                <div id="viewchecklisttask{{ rand }}"></div>
+                <div class="text-end mb-3">
+                    <button type="button" class="btn btn-outline-primary"
+                            data-resources-load-url="{{ add_url }}"
+                            data-resources-load-target="viewchecklisttask{{ rand }}"
+                            data-resources-load-params="{{ add_params|json_encode }}">
+                        <i class="ti ti-plus me-1"></i>{{ add_link_name }}
+                    </button>
+                </div>
+            {% endif %}
+
+            {% if entries is empty %}
+                <div class="text-secondary text-center py-3">
+                    <i class="ti ti-list-check me-1"></i>{{ __('No results found') }}
+                </div>
+            {% else %}
+                <div class="progress progress-sm mb-3">
+                    <div class="progress-bar {{ is_finished ? 'bg-green' : 'bg-orange' }}" role="progressbar"
+                         style="width: {{ (done_count * 100 / entries|length)|round }}%"
+                         aria-valuenow="{{ done_count }}" aria-valuemin="0" aria-valuemax="{{ entries|length }}"></div>
+                </div>
+
+                {% if is_finished %}
+                    <form name="form" method="post" action="{{ finished_action }}">
+                {% else %}
+                    {{ form_open|raw }}
+                {% endif %}
+
+                <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
+                <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
+                <input type="hidden" name="entities_id" value="{{ entities_id }}">
+
+                {% if show_close_panel %}
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-xl-8">
+                            <div class="border rounded p-3 h-100">
+                                <h4 class="mb-3">
+                                    <i class="ti ti-ticket me-1"></i>{{ __('Create a end treatment ticket', 'resources') }}
+                                </h4>
+                                <div class="row g-3">
+                                    {# Core dropdown widgets (Dropdown::show, User::dropdown, showTimeStamp). #}
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label">{{ __('Templates') }}</label>
+                                        {{ template_dropdown|raw }}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label">{{ __('Assigned to') }}</label>
+                                        {{ user_dropdown|raw }}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label class="form-label">{{ __('Total duration') }}</label>
+                                        {{ actiontime_dropdown|raw }}
+                                    </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button type="submit" name="close_checklist" value="1" class="btn btn-primary">
+                                        <i class="ti ti-plus me-1"></i>{{ _x('button', 'Add') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-4">
+                            <div class="border rounded p-3 h-100 d-flex flex-column">
+                                <h4 class="mb-3">
+                                    <i class="ti ti-refresh me-1"></i>{{ __('Reset the checklist', 'resources') }}
+                                </h4>
+                                <div class="mt-auto text-end">
+                                    <button type="submit" name="open_checklist" value="1" class="btn btn-outline-warning">
+                                        <i class="ti ti-refresh me-1"></i>{{ _x('button', 'Post') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 {% endif %}
 
-                {% if entries is not empty %}
-                    {% if is_finished %}
-                        <form name="form" method="post" action="{{ finished_action }}">
-                    {% else %}
-                        {{ form_open|raw }}
-                    {% endif %}
+                {% if is_finished %}
+                    <a href="#{{ view_id_finished }}" class="btn btn-ghost-secondary mb-2" data-bs-toggle="collapse"
+                       role="button" aria-expanded="false" aria-controls="{{ view_id_finished }}">
+                        <i class="ti ti-eye me-1"></i>{{ finished_title }}
+                    </a>
+                {% endif %}
 
-                    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
-                    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
-                    <input type="hidden" name="plugin_resources_contracttypes_id" value="{{ contracttypes_id }}">
-                    <input type="hidden" name="entities_id" value="{{ entities_id }}">
-
-                    {% if show_close_panel %}
-                        <table class="tab_cadre" width="100%">
-                            <tr>
-                                <th colspan="4">{{ __('Create a end treatment ticket', 'resources') }}</th>
-                            </tr>
-                            <tr class="tab_bg_1">
-                                <td>{{ __('Templates') }}</td>
-                                {# Core dropdown widgets (Dropdown::show, User::dropdown, showTimeStamp). #}
-                                <td>{{ template_dropdown|raw }}</td>
-                                <td>{{ __('Assigned to') }}</td>
-                                <td>{{ user_dropdown|raw }}</td>
-                            </tr>
-                            <tr class="tab_bg_1">
-                                <td>{{ __('Total duration') }}</td>
-                                <td>{{ actiontime_dropdown|raw }}</td>
-                                <td colspan="2"></td>
-                            </tr>
-                            <tr class="tab_bg_2">
-                                <td colspan="4" class="center">
-                                    {# Buttons rendered by the core helper, attributes escaped there. #}
-                                    {{ call('Html::submit', [_x('button', 'Add'), {
-                                        'name': 'close_checklist',
-                                        'class': 'btn btn-primary',
-                                    }])|raw }}
-                                </td>
-                            </tr>
-                            <tr class="tab_bg_2">
-                                <th colspan="2">{{ __('Reset the checklist', 'resources') }}</th>
-                                <td colspan="2" class="center">
-                                    {{ call('Html::submit', [_x('button', 'Post'), {
-                                        'name': 'open_checklist',
-                                        'class': 'btn btn-primary',
-                                    }])|raw }}
-                                </td>
-                            </tr>
-                        </table>
-                    {% endif %}
-
-                    {% if is_finished %}
-                        <br>
-                        <table class="tab_cadre_fixe">
-                            <tr>
-                                <th width="15px">
-                                    <span id="menu_navigate">
-                                        <a href="#" data-resources-toggle="{{ view_id_finished }}" data-resources-toggle-icon="checklistfinished{{ rand }}"
-                                           data-resources-toggle-closed="ti-eye fa-2x" data-resources-toggle-open="ti-eye-closed fa-2x">
-                                            <i id="checklistfinished{{ rand }}" style="color:black" class="ti ti-eye fa-2x"></i>
-                                        </a>
-                                    </span>
-                                </th>
-                                <th height="30px" colspan="4">{{ finished_title }}</th>
-                            </tr>
-                        </table>
-                    {% endif %}
-
-                    <div class="center" id="{{ view_id_finished }}"{% if is_finished %} style="display: none;"{% endif %}>
-                        <table class="tab_cadre" width="100%">
-                            <tr>
-                                {% if not is_finished %}
-                                    {# Core "check all" checkbox (Html::getCheckAllAsCheckbox). #}
-                                    <th width="10">{{ check_all|raw }}</th>
-                                {% endif %}
-                                <th>{{ __('Name') }}</th>
-                                <th>{{ __('Important', 'resources') }}</th>
-                                {% if show_task_column %}
-                                    <th>{{ __('Linked task', 'resources') }}</th>
-                                {% endif %}
-                                <th>{{ _x('location', 'State') }}</th>
-                                <th>&nbsp;</th>
-                                <th>&nbsp;</th>
-                            </tr>
-
-                            {% for entry in entries %}
-                                <tr class="tab_bg_1">
+                <div class="{{ is_finished ? 'collapse' : '' }}" id="{{ view_id_finished }}">
+                    <div class="table-responsive">
+                        <table class="table table-vcenter table-hover mb-0">
+                            <thead>
+                                <tr>
                                     {% if not is_finished %}
-                                        {# Core massive action checkbox (Html::showMassiveActionCheckBox). #}
-                                        <td width="10">{{ entry.massive_checkbox|raw }}</td>
+                                        {# Core "check all" checkbox (Html::getCheckAllAsCheckbox). #}
+                                        <th class="w-1">{{ check_all|raw }}</th>
                                     {% endif %}
-                                    <td width="30%">
-                                        <a href="{{ entry.name_url }}">{{ entry.name }}</a>&nbsp;
-                                        {% if entry.address_tooltip is not empty %}
-                                            {# Built by Html::showToolTip() from an escaped content; the core escapes the link itself. #}
-                                            &nbsp;{{ entry.address_tooltip|raw }}
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if entry.tag %}
-                                            <span class="plugin_resources_date_over_color">{{ entry.comment|nl2br }}</span>
-                                        {% else %}
-                                            {{ entry.comment|nl2br }}
-                                        {% endif %}
-                                    </td>
+                                    <th class="w-1">{{ _x('location', 'State') }}</th>
+                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Important', 'resources') }}</th>
                                     {% if show_task_column %}
-                                        <td class="center">
-                                            {% if entry.task_url is not empty %}
-                                                <a href="{{ entry.task_url }}">{{ __('Yes') }}</a>
-                                            {% else %}
-                                                {{ __('No') }}
-                                            {% endif %}
-                                        </td>
+                                        <th class="text-center">{{ __('Linked task', 'resources') }}</th>
                                     {% endif %}
-                                    <td class="center">
-                                        <input type="checkbox" disabled name="is_checked"{{ entry.is_checked ? ' checked' : '' }}>
-                                        <input type="hidden" name="is_checked{{ entry.id }}" value="{{ entry.is_checked ? 0 : 1 }}">
-                                    </td>
-                                    {% for direction in ['up', 'down'] %}
+                                    <th class="w-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in entries %}
+                                    <tr class="{{ entry.is_checked ? 'text-secondary' : '' }}">
+                                        {% if not is_finished %}
+                                            {# Core massive action checkbox (Html::showMassiveActionCheckBox). #}
+                                            <td>{{ entry.massive_checkbox|raw }}</td>
+                                        {% endif %}
+                                        <td class="text-center">
+                                            {% if entry.is_checked %}
+                                                <i class="ti ti-circle-check-filled text-green fs-2" title="{{ __('Done') }}"></i>
+                                            {% else %}
+                                                <i class="ti ti-circle-dashed text-secondary fs-2" title="{{ __('To do') }}"></i>
+                                            {% endif %}
+                                            <input type="hidden" name="is_checked{{ entry.id }}" value="{{ entry.is_checked ? 0 : 1 }}">
+                                        </td>
                                         <td>
-                                            {% if entry['move_' ~ direction] %}
-                                                {% set move_label = direction == 'up' ? __('Bring up') : __('Bring down') %}
-                                                <button type="submit" form="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}"
-                                                        class="btn btn-sm btn-ghost-secondary" title="{{ move_label }}">
-                                                    <i class="ti ti-chevrons-{{ direction }}"></i>
-                                                    <span class="visually-hidden">{{ move_label }}</span>
-                                                </button>
+                                            <a href="{{ entry.name_url }}" class="{{ entry.is_checked ? 'text-decoration-line-through text-reset' : '' }}">{{ entry.name }}</a>
+                                            {% if entry.address_tooltip is not empty %}
+                                                {# Built by Html::showToolTip() from an escaped content; the core escapes the link itself. #}
+                                                <span class="ms-1">{{ entry.address_tooltip|raw }}</span>
                                             {% endif %}
                                         </td>
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
+                                        <td>
+                                            {% if entry.tag %}
+                                                <span class="badge bg-red-lt text-wrap text-start">
+                                                    <i class="ti ti-alert-triangle me-1"></i>{{ entry.comment|nl2br }}
+                                                </span>
+                                            {% else %}
+                                                {{ entry.comment|nl2br }}
+                                            {% endif %}
+                                        </td>
+                                        {% if show_task_column %}
+                                            <td class="text-center">
+                                                {% if entry.task_url is not empty %}
+                                                    <a href="{{ entry.task_url }}" class="badge bg-blue-lt">
+                                                        <i class="ti ti-link me-1"></i>{{ __('Yes') }}
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-secondary">{{ __('No') }}</span>
+                                                {% endif %}
+                                            </td>
+                                        {% endif %}
+                                        <td class="text-nowrap">
+                                            {% for direction in ['up', 'down'] %}
+                                                {% if entry['move_' ~ direction] %}
+                                                    {% set move_label = direction == 'up' ? __('Bring up') : __('Bring down') %}
+                                                    <button type="submit" form="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}"
+                                                            class="btn btn-sm btn-icon btn-ghost-secondary" title="{{ move_label }}">
+                                                        <i class="ti ti-chevron-{{ direction }}"></i>
+                                                        <span class="visually-hidden">{{ move_label }}</span>
+                                                    </button>
+                                                {% else %}
+                                                    <span class="btn btn-sm btn-icon invisible"><i class="ti ti-chevron-{{ direction }}"></i></span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
+                </div>
 
-                    {% if is_finished %}
-                        </form>
-                    {% else %}
-                        {{ form_close|raw }}
-                    {% endif %}
-
-                    {% for entry in entries %}
-                        {% for direction in ['up', 'down'] %}
-                            {% if entry['move_' ~ direction] %}
-                                <form id="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}" method="post"
-                                      action="{{ move_action }}" class="d-none">
-                                    <input type="hidden" name="move" value="move">
-                                    <input type="hidden" name="action" value="{{ direction }}">
-                                    <input type="hidden" name="id" value="{{ entry.id }}">
-                                    <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
-                                    <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
-                                </form>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
+                {% if is_finished %}
+                    </form>
+                {% else %}
+                    {{ form_close|raw }}
                 {% endif %}
-            </div>
-        </td>
-    </tr>
-</table>
-<br>
+
+                {% for entry in entries %}
+                    {% for direction in ['up', 'down'] %}
+                        {% if entry['move_' ~ direction] %}
+                            <form id="checklistmove{{ rand }}_{{ entry.id }}_{{ direction }}" method="post"
+                                  action="{{ move_action }}" class="d-none">
+                                <input type="hidden" name="move" value="move">
+                                <input type="hidden" name="action" value="{{ direction }}">
+                                <input type="hidden" name="id" value="{{ entry.id }}">
+                                <input type="hidden" name="plugin_resources_resources_id" value="{{ resources_id }}">
+                                <input type="hidden" name="checklist_type" value="{{ checklist_type }}">
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

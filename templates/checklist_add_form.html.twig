@@ -25,20 +25,17 @@
  # --------------------------------------------------------------------------
  #}
 
-<form name="form" method="post" action="{{ form_action }}">
-    <div class="center">
-        <table class="tab_cadre" width="50%">
-            <tr>
-                <th colspan="2">{{ title }}</th>
-            </tr>
-            <tr class="tab_bg_2 center">
-                <td colspan="2">
-                    <button type="submit" name="add_checklist_resources" class="btn btn-primary">
-                        {{ _x('button', 'Post') }}
-                    </button>
-                    <input type="hidden" name="id" value="{{ id }}">
-                </td>
-            </tr>
-        </table>
+{# Shown by Checklist::displayTabContentForItem() while the resource has no checklist yet:
+ # front/resource.form.php creates them on add_checklist_resources. #}
+<form name="form" method="post" action="{{ form_action }}" class="card">
+    <input type="hidden" name="id" value="{{ id }}">
+    <div class="card-body text-center py-5">
+        <span class="avatar avatar-xl bg-secondary-lt mb-3">
+            <i class="ti ti-checklist fs-1"></i>
+        </span>
+        <h3 class="mb-3">{{ title }}</h3>
+        <button type="submit" name="add_checklist_resources" value="1" class="btn btn-primary">
+            <i class="ti ti-plus me-1"></i>{{ _x('button', 'Post') }}
+        </button>
     </div>
 </form>
