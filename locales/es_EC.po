@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 23:33+0000\n"
+"POT-Creation-Date: 2026-10-06 09:57+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -1204,6 +1204,10 @@ msgstr "Directorios"
 msgctxt "button"
 msgid "Disable user in AD"
 msgstr "Desactivar usuario en AD"
+
+#: src/Profile.php:311
+msgid "Display employee in core form"
+msgstr ""
 
 #: src/Config.php:664
 msgid "Display habilitation resource with dropdown"
