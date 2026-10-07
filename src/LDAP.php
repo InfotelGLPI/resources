@@ -480,22 +480,21 @@ class LDAP extends CommonDBTM
             $attributes['description'] = $data["role"];
             $user->fill($attributes);
 
-            // save() returns void and throws LdapRecordException on failure.
-            $user->save();
+            // Compute the initial password before the first save so it is included in the
+            // ldap_add() call. Setting unicodepwd in a separate ldap_modify_batch() after
+            // creation fails with "Type or value exists" (LDAP error 20) because AD has already
+            // initialised the attribute internally, and LdapRecord sends MODIFY_ADD (not REPLACE)
+            // for attributes that were not present on the model at creation time.
             if (!empty($adConfig->fields['use_password_module'])) {
                 if (!self::isTrustedADChannel()) {
-                    // Fail closed: the account is created, but its initial password is not sent
-                    // down a channel whose far end has not been authenticated. The gate used to
-                    // ask for encryption only, and did so without saying anything when it
-                    // declined.
+                    // Fail closed: do not send a password down a channel whose far end has not
+                    // been authenticated. Log the reason so the administrator can act on it.
                     Toolbox::logInFile(
                         'LDAPERROR',
                         'Initial password not written: the directory connection is not encrypted, '
                         . 'or its certificate is not validated.',
                     );
-                    return true;
-                }
-                try {
+                } else {
                     $newPassword = '';
                     $format      = (int) $adConfig->fields['format_default_account_password'];
                     if ($format === Adconfig::PASSWORD_FORMAT_DYNAMIC) {
@@ -504,30 +503,28 @@ class LDAP extends CommonDBTM
                         if ($adConfig->fields['prefix_default_account_password'] == 1 && isset($data['begindate'])) {
                             $date = substr($data["begindate"], 0, 10);
                             $date = explode('-', $date);
-                            $newPassword .= $date[2] . $date[1] . $date[0] ;
+                            $newPassword .= $date[2] . $date[1] . $date[0];
                         }
                         $newPassword .= (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
-
                     } elseif ($format === Adconfig::PASSWORD_FORMAT_STATIC) {
                         $newPassword = (new GLPIKey())->decrypt($adConfig->fields['default_account_password']);
                     } elseif ($format === Adconfig::PASSWORD_FORMAT_RANDOM) {
                         $newPassword = self::generateRandomPassword();
                     }
-                    if ($newPassword != '') {
-                        // Reset the password. The 'unicodepwd' mutator auto-encodes it (UTF-16LE, quoted).
+
+                    if ($newPassword !== '') {
+                        // unicodepwd mutator auto-encodes to UTF-16LE with quotes.
                         $user->setAttribute('unicodepwd', $newPassword);
-                        // The first two formats derive the initial password from public identity
-                        // data or share a single secret across every account: expiring it right
-                        // away keeps the window in which it can be guessed to the first logon.
+                        // The first two formats derive the password from public identity data or
+                        // share one secret across all accounts: expire it immediately so the user
+                        // must change it on first logon.
                         $user->setAttribute('pwdlastset', 0);
-                        $user->save();
                     }
-                    return true;
-                } catch (Exception $ex) {
-                    Toolbox::logInFile('LDAPERROR', "Erreur LDAP : " . $ex->getMessage());
-                    return false;
                 }
             }
+
+            // save() returns void and throws LdapRecordException on failure.
+            $user->save();
             return true;
         } catch (LdapRecordException $e) {
             // Record wasn't found or the write failed.

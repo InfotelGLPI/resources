@@ -496,14 +496,14 @@ class LinkAd extends CommonDBTM
         if ($config->fields["mail_prefix"] == 2) {
             $mail = $login;
         } elseif ($config->fields["mail_prefix"] == 1) {
-            $nametab = explode(" ", strtolower($resource->fields["name"]));
+            $nametab = explode(" ", strtolower(self::removeAccents($resource->fields["name"])));
             $name = "";
 
             foreach ($nametab as $namepart) {
                 $name .= $namepart;
             }
 
-            $firstnametab = explode(" ", strtolower($resource->fields["firstname"]));
+            $firstnametab = explode(" ", strtolower(self::removeAccents($resource->fields["firstname"])));
             $firstname = "";
 
             foreach ($firstnametab as $namepart) {
@@ -517,8 +517,17 @@ class LinkAd extends CommonDBTM
         return $mail;
     }
 
+    private static function removeAccents(string $str): string
+    {
+        $result = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
+        return $result !== false ? $result : $str;
+    }
+
     public static function getLoginFromRule($firstname, $name, $conf)
     {
+        $firstname = self::removeAccents($firstname);
+        $name      = self::removeAccents($name);
+
         switch ($conf) {
             case 1:
                 //            $name = strtolower($name);
