@@ -57,7 +57,7 @@ use GlpiPlugin\Reports\Report;
 use GlpiPlugin\Resources\Employee;
 use GlpiPlugin\Resources\Checklist;
 
-define('PLUGIN_RESOURCES_VERSION', '4.2.0');
+define('PLUGIN_RESOURCES_VERSION', '4.2.1');
 
 global $CFG_GLPI;
 
