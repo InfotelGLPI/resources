@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 15:27+0000\n"
+"POT-Creation-Date: 2026-10-10 22:29+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -239,7 +239,7 @@ msgstr "Uygulama ekle"
 msgid "Add application for"
 msgstr "Şunun için uygulama ekle"
 
-#: src/Wizard.php:783
+#: src/Wizard.php:812
 msgid "Add documents to the resource"
 msgstr "Kaynağa belgeler ekle"
 
@@ -247,11 +247,11 @@ msgstr "Kaynağa belgeler ekle"
 msgid "Add habiliation"
 msgstr "Yetenek ekle"
 
-#: src/Wizard.php:835
+#: src/Wizard.php:864
 msgid "Add recruiting informations to the resource"
 msgstr "Kaynağa işe alım bilgilerini ekle"
 
-#: src/Wizard.php:630
+#: src/Wizard.php:659
 msgid "Add the photo of the resource"
 msgstr "Kaynağa fotoğraf ekle"
 
@@ -1341,11 +1341,11 @@ msgstr "Bitiş tarihi"
 msgid "End date was not completed. Please try again."
 msgstr "Bitiş tarihi yazılmamış. Lütfen yeniden deneyin."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:436
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:465
 msgid "Enter employer information about the resource"
 msgstr "Kaynakla ilgili işveren bilgilerini yazın"
 
-#: src/Wizard.php:340
+#: src/Wizard.php:369
 msgid "Enter general information about the resource"
 msgstr "Kaynakla ilgili genel bilgileri yazın"
 
@@ -1357,11 +1357,11 @@ msgstr "Süper güç bilgilerini yazın"
 msgid "Enter habilitation information "
 msgstr "Süper güç bilgilerini yazın"
 
-#: src/Wizard.php:737
+#: src/Wizard.php:766
 msgid "Enter habilitations about the resource"
 msgstr "Kaynak hakkındaki güçleri yazın"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:569
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:598
 msgid "Enter the computing needs of the resource"
 msgstr "Kaynağın bilişim gereksinimlerini yazın"
 
