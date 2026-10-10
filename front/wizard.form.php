@@ -654,10 +654,10 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $resourcestemplate = new Resource();
         $resourcestemplatedata = $resourcestemplate->find(['is_template' => 1]);
         if (count($resourcestemplatedata) == 1) {
-            $values['name'] = '';
+            // A first display, prefilled from the only template: not a redisplay of typed values
+            // (requiredfields), which would skip the defaults and the template
             $values['withtemplate'] = 2;
             $values['new']          = 1;
-            $values["requiredfields"] = 1;
             foreach ($resourcestemplatedata as $id => $resourcestemplatevalue) {
                 $values['template'] = $id;
             }

@@ -137,6 +137,95 @@ class WizardStepsTest extends DbTestCase
         );
     }
 
+    /**
+     * Second step of a new resource prefilled from $template_id, its values as typed back
+     */
+    private function renderFromTemplate(int $template_id, array $options = []): string
+    {
+        return $this->render(fn() => (new Wizard())->wizardSecondStep(0, $options + [
+            'withtemplate' => 0,
+            'new'          => 1,
+            'template'     => $template_id,
+        ]));
+    }
+
+    public function testSecondStepIsPrefilledFromATemplate(): void
+    {
+        $template = $this->createItem(Resource::class, [
+            'name'          => 'TemplateName',
+            'firstname'     => 'TemplateFirstname',
+            'comment'       => 'Template comment',
+            'entities_id'   => $this->getTestRootEntity(true),
+            'is_template'   => 1,
+            'template_name' => 'Arrival template ' . mt_rand(),
+        ]);
+
+        $html = $this->renderFromTemplate($template->getID());
+
+        $this->assertStringContainsString('TemplateFirstname', $html);
+        $this->assertMatchesRegularExpression(
+            '/name="template"[^>]*value="' . $template->getID() . '"/',
+            $html,
+        );
+    }
+
+    public function testSecondStepIgnoresAResourceThatIsNotATemplate(): void
+    {
+        // A real person: its id must not prefill the form of someone else (IDOR)
+        $resource = $this->createResource();
+        $resource->update([
+            'id'         => $resource->getID(),
+            'firstname'  => 'SecretFirstname',
+            'comment'    => 'Secret HR comment',
+            'matricule'  => 'SECRET-42',
+        ]);
+
+        $html = $this->renderFromTemplate($resource->getID());
+
+        $this->assertStringNotContainsString('SecretFirstname', $html);
+        $this->assertStringNotContainsString('Secret HR comment', $html);
+        $this->assertStringNotContainsString('SECRET-42', $html);
+    }
+
+    public function testSecondStepIgnoresATemplateOfAnotherEntity(): void
+    {
+        $template = $this->createItem(Resource::class, [
+            'name'          => 'OtherName',
+            'firstname'     => 'OtherEntityFirstname',
+            'entities_id'   => getItemByTypeName(\Entity::class, '_test_child_2', true),
+            'is_template'   => 1,
+            'template_name' => 'Other entity template ' . mt_rand(),
+        ]);
+        // Only the first child entity is visible
+        $this->setEntity('_test_child_1', false);
+
+        $html = $this->renderFromTemplate($template->getID());
+
+        $this->assertStringNotContainsString('OtherEntityFirstname', $html);
+    }
+
+    public function testRedisplayKeepsTheTypedValues(): void
+    {
+        $template = $this->createItem(Resource::class, [
+            'name'          => 'TemplateName',
+            'firstname'     => 'TemplateFirstname',
+            'entities_id'   => $this->getTestRootEntity(true),
+            'is_template'   => 1,
+            'template_name' => 'Redisplay template ' . mt_rand(),
+        ]);
+
+        // Required fields missing: the third step sends the posted values back
+        $html = $this->renderFromTemplate($template->getID(), [
+            'requiredfields'     => 1,
+            'name'               => 'TypedName',
+            'firstname'          => 'TypedFirstname',
+            'secondary_services' => [],
+        ]);
+
+        $this->assertStringContainsString('TypedFirstname', $html);
+        $this->assertStringNotContainsString('TemplateFirstname', $html);
+    }
+
     public function testFollowingStepsRenderForAnExistingResource(): void
     {
         $resource = $this->createResource();

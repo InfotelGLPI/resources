@@ -112,6 +112,24 @@ class Wizard extends CommonDBTM
      *
      * @return bool
      */
+    /**
+     * Template a new resource may be prefilled from: a template (is_template = 1) the active
+     * profile can read, i.e. one offered by Resource::dropdownTemplate()
+     */
+    private static function getAllowedTemplate(int $templates_id): ?Resource
+    {
+        $template = new Resource();
+        if (
+            $templates_id <= 0
+            || !$template->getFromDBByCrit(['id' => $templates_id, 'is_template' => 1])
+            || !$template->can($templates_id, READ)
+        ) {
+            return null;
+        }
+
+        return $template;
+    }
+
     public function wizardSecondStep($ID, $options = [])
     {
         $resource = new Resource();
@@ -137,36 +155,41 @@ class Wizard extends CommonDBTM
             $empty = 1;
         }
 
+        $defaults = [
+            'gender'                                   => 0,
+            'name'                                     => "",
+            'firstname'                                => "",
+            'locations_id'                             => 0,
+            'phone'                                    => "",
+            'cellphone'                                => "",
+            'users_id'                                 => 0,
+            'users_id_sales'                           => 0,
+            'plugin_resources_departments_id'          => 0,
+            'plugin_resources_services_id'             => 0,
+            'secondary_services'                       => [],
+            'plugin_resources_functions_id'            => 0,
+            'plugin_resources_teams_id'                => 0,
+            'date_begin'                               => null,
+            'date_end'                                 => null,
+            'comment'                                  => "",
+            'quota'                                    => 0,
+            'plugin_resources_resourcesituations_id'   => 0,
+            'plugin_resources_contractnatures_id'      => 0,
+            'plugin_resources_ranks_id'                => 0,
+            'plugin_resources_resourcespecialities_id' => 0,
+            'plugin_resources_leavingreasons_id'       => 0,
+            'sensitize_security'                       => 0,
+            'read_chart'                               => 0,
+            'plugin_resources_roles_id'                => 0,
+            'matricule'                                => "",
+            'matricule_second'                         => "",
+        ];
         if (!isset($options["requiredfields"])) {
-            $options["requiredfields"] = 0;
-            $options["gender"] = 0;
-            $options["name"] = "";
-            $options["firstname"] = "";
-            $options["locations_id"] = 0;
-            $options["phone"] = "";
-            $options["cellphone"] = "";
-            $options["users_id"] = 0;
-            $options["users_id_sales"] = 0;
-            $options["plugin_resources_departments_id"] = 0;
-            $options["plugin_resources_services_id"] = 0;
-            $options["secondary_services"] = [];
-            $options["plugin_resources_functions_id"] = 0;
-            $options["plugin_resources_teams_id"] = 0;
-            $options["date_begin"] = null;
-            $options["date_end"] = null;
-            $options["comment"] = "";
-            $options["quota"] = 0;
-            $options["plugin_resources_resourcesituations_id"] = 0;
-            $options["plugin_resources_contractnatures_id"] = 0;
-            $options["plugin_resources_ranks_id"] = 0;
-            $options["plugin_resources_resourcespecialities_id"] = 0;
-            $options["plugin_resources_leavingreasons_id"] = 0;
-            $options["sensitize_security"] = 0;
-            $options["read_chart"] = 0;
-            $options["plugin_resources_roles_id"] = 0;
-            $options["matricule"] = "";
-            $options["matricule_second"] = "";
-            $options["withtemplate"] = 0;
+            $options = array_merge($options, $defaults, ['requiredfields' => 0, 'withtemplate' => 0]);
+        } else {
+            // Redisplay of the posted values: a field the form did not post (hidden by the
+            // configuration) gets its default, the strict Twig mode needs every key
+            $options += $defaults;
         }
 
 
@@ -214,12 +237,18 @@ class Wizard extends CommonDBTM
         if (isset($resource->fields["entities_id"]) || $empty == 1) {
             if ($empty == 1) {
                 $input['plugin_resources_contracttypes_id'] = 0;
-                $resourceTemplate = new Resource();
-                if (isset($options['template'])
-                    && $resourceTemplate->getFromDB($options['template'])) {
+                // The template id comes from the request (GET or POST): only a template the user
+                // could have picked in the first step (dropdownTemplate(): is_template = 1, in a
+                // visible entity) is read. Any other id, such as a real resource of another
+                // entity, is ignored and the form stays empty.
+                $resourceTemplate = self::getAllowedTemplate((int) ($options['template'] ?? 0));
+                if ($resourceTemplate !== null) {
                     $input['plugin_resources_contracttypes_id'] = $resourceTemplate->fields['plugin_resources_contracttypes_id'];
                     $input['plugin_resources_resourcestates_id'] = $resourceTemplate->fields['plugin_resources_resourcestates_id'];
-                    $input['template'] = $options['template'];
+                    $input['template'] = $resourceTemplate->getID();
+                }
+                // The redisplay after a refused third step keeps what the user typed
+                if ($resourceTemplate !== null && $options['requiredfields'] != 1) {
                     $options["gender"] = $resourceTemplate->fields["gender"];
                     $options["name"] = $resourceTemplate->fields["name"];
                     $options["firstname"] = $resourceTemplate->fields["firstname"];
@@ -230,7 +259,7 @@ class Wizard extends CommonDBTM
                     $options["users_id_sales"] = $resourceTemplate->fields["users_id_sales"];
                     $options["plugin_resources_departments_id"] = $resourceTemplate->fields["plugin_resources_departments_id"];
                     $options["plugin_resources_services_id"] = $resourceTemplate->fields["plugin_resources_services_id"];
-                    $options["secondary_services"] = json_decode($resourceTemplate->fields['secondary_services'], true);
+                    $options["secondary_services"] = json_decode($resourceTemplate->fields['secondary_services'] ?? '', true) ?? [];
                     $options["plugin_resources_functions_id"] = $resourceTemplate->fields["plugin_resources_functions_id"];
                     $options["plugin_resources_teams_id"] = $resourceTemplate->fields["plugin_resources_teams_id"];
                     $options["date_begin"] = $resourceTemplate->fields["date_begin"];
