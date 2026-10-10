@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 15:27+0000\n"
+"POT-Creation-Date: 2026-10-10 22:29+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -243,7 +243,7 @@ msgstr "Ajouter une application"
 msgid "Add application for"
 msgstr "Ajout de l'application pour"
 
-#: src/Wizard.php:783
+#: src/Wizard.php:812
 msgid "Add documents to the resource"
 msgstr "Ajouter des documents à la ressource"
 
@@ -251,11 +251,11 @@ msgstr "Ajouter des documents à la ressource"
 msgid "Add habiliation"
 msgstr "Ajouter une habilitation"
 
-#: src/Wizard.php:835
+#: src/Wizard.php:864
 msgid "Add recruiting informations to the resource"
 msgstr "Ajouter les informations de recrutement à la ressource"
 
-#: src/Wizard.php:630
+#: src/Wizard.php:659
 msgid "Add the photo of the resource"
 msgstr "Ajouter la photo de la ressource"
 
@@ -1367,11 +1367,11 @@ msgstr "Date de fin"
 msgid "End date was not completed. Please try again."
 msgstr "La date de départ n'a pas été indiquée. Merci de la spécifier."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:436
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:465
 msgid "Enter employer information about the resource"
 msgstr "Entrez les informations employeurs de la ressource"
 
-#: src/Wizard.php:340
+#: src/Wizard.php:369
 msgid "Enter general information about the resource"
 msgstr "Entrez les informations générales concernant la ressource"
 
@@ -1383,11 +1383,11 @@ msgstr "Entrez les informations d'habilitation"
 msgid "Enter habilitation information "
 msgstr "Entrer les informations d'habilitations"
 
-#: src/Wizard.php:737
+#: src/Wizard.php:766
 msgid "Enter habilitations about the resource"
 msgstr "Entrez les habilitations pour la ressource"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:569
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:598
 msgid "Enter the computing needs of the resource"
 msgstr "Entrez les besoins informatiques de la ressource"
 

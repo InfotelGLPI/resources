@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 15:27+0000\n"
+"POT-Creation-Date: 2026-10-10 22:29+0000\n"
 "PO-Revision-Date: 2019-09-19 06:49+0000\n"
 "Last-Translator: Kevin HAINRY <kevin.hainry@infotel.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/"
@@ -235,7 +235,7 @@ msgstr ""
 msgid "Add application for"
 msgstr ""
 
-#: src/Wizard.php:783
+#: src/Wizard.php:812
 msgid "Add documents to the resource"
 msgstr "Add documents to the resource"
 
@@ -243,11 +243,11 @@ msgstr "Add documents to the resource"
 msgid "Add habiliation"
 msgstr ""
 
-#: src/Wizard.php:835
+#: src/Wizard.php:864
 msgid "Add recruiting informations to the resource"
 msgstr ""
 
-#: src/Wizard.php:630
+#: src/Wizard.php:659
 msgid "Add the photo of the resource"
 msgstr "Add the photo of the resource"
 
@@ -1331,11 +1331,11 @@ msgstr ""
 msgid "End date was not completed. Please try again."
 msgstr "End date was not completed. Please try again."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:436
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:465
 msgid "Enter employer information about the resource"
 msgstr "Enter employer information about the resource"
 
-#: src/Wizard.php:340
+#: src/Wizard.php:369
 msgid "Enter general information about the resource"
 msgstr "Enter general information about the resource"
 
@@ -1347,11 +1347,11 @@ msgstr "Enter habilitation information"
 msgid "Enter habilitation information "
 msgstr "Enter habilitation information "
 
-#: src/Wizard.php:737
+#: src/Wizard.php:766
 msgid "Enter habilitations about the resource"
 msgstr "Enter habilitations about the resource"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:569
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:598
 msgid "Enter the computing needs of the resource"
 msgstr "Enter the computing needs of the resource"
 

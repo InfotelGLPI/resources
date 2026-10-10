@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 15:27+0000\n"
+"POT-Creation-Date: 2026-10-10 22:29+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -240,7 +240,7 @@ msgstr "Agregar aplicación"
 msgid "Add application for"
 msgstr "Agregar aplicación para"
 
-#: src/Wizard.php:783
+#: src/Wizard.php:812
 msgid "Add documents to the resource"
 msgstr "Añadir documentos a los recursos"
 
@@ -248,11 +248,11 @@ msgstr "Añadir documentos a los recursos"
 msgid "Add habiliation"
 msgstr "Añadir habilitación"
 
-#: src/Wizard.php:835
+#: src/Wizard.php:864
 msgid "Add recruiting informations to the resource"
 msgstr ""
 
-#: src/Wizard.php:630
+#: src/Wizard.php:659
 msgid "Add the photo of the resource"
 msgstr "Añadir la foto del recurso"
 
@@ -1361,11 +1361,11 @@ msgid "End date was not completed. Please try again."
 msgstr ""
 "La fecha de finalización no se ha completado. Por favor, inténtalo de nuevo."
 
-#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:436
+#: src/ContractType.php:81 src/ContractType.php:156 src/Wizard.php:465
 msgid "Enter employer information about the resource"
 msgstr "Ingrese la información del empleador sobre el recurso"
 
-#: src/Wizard.php:340
+#: src/Wizard.php:369
 msgid "Enter general information about the resource"
 msgstr "Introduzca información general sobre el recurso"
 
@@ -1377,11 +1377,11 @@ msgstr "Introducir información de habilitación"
 msgid "Enter habilitation information "
 msgstr "Introducir información de habilitación"
 
-#: src/Wizard.php:737
+#: src/Wizard.php:766
 msgid "Enter habilitations about the resource"
 msgstr "Introducir habilitaciones sobre el recurso"
 
-#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:569
+#: src/ContractType.php:87 src/ContractType.php:163 src/Wizard.php:598
 msgid "Enter the computing needs of the resource"
 msgstr "Introduzca las necesidades informáticas del recurso"
 
