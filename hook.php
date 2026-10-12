@@ -2848,8 +2848,14 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                 case "glpi_plugin_resources_managers.name":
                 case "glpi_plugin_resources_salemanagers.name":
                 case "glpi_plugin_resources_recipients.name":
+                    // A user without any linked resource leaves the joined columns NULL. The cell
+                    // stays blank, but not empty: an empty result hands the column back to the
+                    // core, which has no itemtype for these aliased user tables and fails on it.
+                    if (empty($data['raw']["ITEM_" . $num . "_2"])) {
+                        return " ";
+                    }
                     $out = $esc(getUserName($data['raw']["ITEM_" . $num . "_2"]));
-                    return $out;
+                    return $out !== '' ? $out : " ";
             }
             return "";
         case ResourceResting::class:
