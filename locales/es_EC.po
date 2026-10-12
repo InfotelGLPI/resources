@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 22:29+0000\n"
+"POT-Creation-Date: 2026-10-12 14:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -1966,7 +1966,7 @@ msgstr ""
 msgid "Modification category"
 msgstr "Categoría de modificación"
 
-#: hook.php:3003
+#: hook.php:3009
 msgid "Modification of the associated resource's location"
 msgstr "Modificación de la ubicación del recurso asociado"
 
@@ -3501,16 +3501,16 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: src/LinkAd.php:752 hook.php:3071
+#: src/LinkAd.php:752 hook.php:3077
 msgid "You have to do all checklist in action before"
 msgstr "Tienes que hacer toda la lista de comprobación en acción antes de"
 
-#: hook.php:3119
+#: hook.php:3125
 msgid "You have to do all checklist out action before"
 msgstr ""
 "Usted tiene que hacer toda la lista de verificación a cabo la acción antes de"
 
-#: src/LinkAd.php:750 hook.php:3053 hook.php:3101
+#: src/LinkAd.php:750 hook.php:3059 hook.php:3107
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "Tiene que realizar la acción en el directorio LDAP antes de"
 

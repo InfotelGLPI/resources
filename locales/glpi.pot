@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 22:32+0000\n"
+"POT-Creation-Date: 2026-10-12 14:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1914,7 +1914,7 @@ msgstr ""
 msgid "Modification category"
 msgstr ""
 
-#: hook.php:3003
+#: hook.php:3009
 msgid "Modification of the associated resource's location"
 msgstr ""
 
@@ -3406,15 +3406,15 @@ msgstr ""
 msgid "You are not the manager of this resource departure"
 msgstr ""
 
-#: src/LinkAd.php:752 hook.php:3071
+#: src/LinkAd.php:752 hook.php:3077
 msgid "You have to do all checklist in action before"
 msgstr ""
 
-#: hook.php:3119
+#: hook.php:3125
 msgid "You have to do all checklist out action before"
 msgstr ""
 
-#: src/LinkAd.php:750 hook.php:3053 hook.php:3101
+#: src/LinkAd.php:750 hook.php:3059 hook.php:3107
 msgid "You have to perform the action on the LDAP directory before"
 msgstr ""
 
