@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 22:29+0000\n"
+"POT-Creation-Date: 2026-10-12 14:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -1932,7 +1932,7 @@ msgstr "Cep telefonu"
 msgid "Modification category"
 msgstr "Kategori değiştirme"
 
-#: hook.php:3003
+#: hook.php:3009
 msgid "Modification of the associated resource's location"
 msgstr "İlgili kaynak konumunda değişiklik"
 
@@ -3445,15 +3445,15 @@ msgstr "Bu hesabı eşitleyemezsiniz."
 msgid "You are not the manager of this resource departure"
 msgstr "Bu kaynak ayrılmasının yöneticisi değilsiniz"
 
-#: src/LinkAd.php:752 hook.php:3071
+#: src/LinkAd.php:752 hook.php:3077
 msgid "You have to do all checklist in action before"
 msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 
-#: hook.php:3119
+#: hook.php:3125
 msgid "You have to do all checklist out action before"
 msgstr "Önce kontrol listesindeki tüm çıkış işlemleri tamamlanmalıdır"
 
-#: src/LinkAd.php:750 hook.php:3053 hook.php:3101
+#: src/LinkAd.php:750 hook.php:3059 hook.php:3107
 msgid "You have to perform the action on the LDAP directory before"
 msgstr "İşlemi önce LDAP dizini üzerinde yapmalısınız"
 
