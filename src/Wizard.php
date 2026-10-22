@@ -212,6 +212,33 @@ class Wizard extends CommonDBTM
                     $input['plugin_resources_contracttypes_id'] = $resourceTemplate->fields['plugin_resources_contracttypes_id'];
                     $input['plugin_resources_resourcestates_id'] = $resourceTemplate->fields['plugin_resources_resourcestates_id'];
                     $input['template'] = $options['template'];
+                    $options["gender"] = $resourceTemplate->fields["gender"];
+                    $options["name"] = $resourceTemplate->fields["name"];
+                    $options["firstname"] = $resourceTemplate->fields["firstname"];
+                    $options["phone"] = $resourceTemplate->fields["phone"];
+                    $options["cellphone"] = $resourceTemplate->fields["cellphone"];
+                    $options["locations_id"] = $resourceTemplate->fields["locations_id"];
+                    $options["users_id"] = $resourceTemplate->fields["users_id"];
+                    $options["users_id_sales"] = $resourceTemplate->fields["users_id_sales"];
+                    $options["plugin_resources_departments_id"] = $resourceTemplate->fields["plugin_resources_departments_id"];
+                    $options["plugin_resources_services_id"] = $resourceTemplate->fields["plugin_resources_services_id"];
+                    $options["secondary_services"] = json_decode($resourceTemplate->fields['secondary_services'], true);
+                    $options["plugin_resources_functions_id"] = $resourceTemplate->fields["plugin_resources_functions_id"];
+                    $options["plugin_resources_teams_id"] = $resourceTemplate->fields["plugin_resources_teams_id"];
+                    $options["date_begin"] = $resourceTemplate->fields["date_begin"];
+                    $options["date_end"] = $resourceTemplate->fields["date_end"];
+                    $options["comment"] = $resourceTemplate->fields["comment"];
+                    $options["quota"] = $resourceTemplate->fields["quota"];
+                    $options["plugin_resources_resourcesituations_id"] = $resourceTemplate->fields["plugin_resources_resourcesituations_id"];
+                    $options["plugin_resources_contractnatures_id"] = $resourceTemplate->fields["plugin_resources_contractnatures_id"];
+                    $options["plugin_resources_ranks_id"] = $resourceTemplate->fields["plugin_resources_ranks_id"];
+                    $options["plugin_resources_resourcespecialities_id"] = $resourceTemplate->fields["plugin_resources_resourcespecialities_id"];
+                    $options["plugin_resources_leavingreasons_id"] = $resourceTemplate->fields["plugin_resources_leavingreasons_id"];
+                    $options["sensitize_security"] = $resourceTemplate->fields["sensitize_security"];
+                    $options["read_chart"] = $resourceTemplate->fields["read_chart"];
+                    $options["plugin_resources_roles_id"] = $resourceTemplate->fields["plugin_resources_roles_id"];
+                    $options["matricule"] = $resourceTemplate->fields["matricule"];
+                    $options["matricule_second"] = $resourceTemplate->fields["matricule_second"];
                 }
                 $input['entities_id'] = $_SESSION['glpiactive_entity'];
             } else {
