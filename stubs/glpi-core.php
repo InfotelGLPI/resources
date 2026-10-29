@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * resources plugin for GLPI
- * Copyright (C) 2017-2026 by the resources Development Team.
+ * Copyright (C) 2015-2026 by the resources Development Team.
  *
  * https://github.com/InfotelGLPI/resources
  * -------------------------------------------------------------------------
@@ -14,7 +14,7 @@
  *
  * resources is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
  * resources is distributed in the hope that it will be useful,
