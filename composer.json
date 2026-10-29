@@ -1,8 +1,9 @@
 {
     "config": {
+        "platform-check": false,
         "autoloader-suffix": "PluginResources",
         "platform": {
-            "php": "8.2.99",
+            "php": "8.3.99",
             "ext-ldap": "8.2"
         },
         "optimize-autoloader": true,
@@ -11,7 +12,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "directorytree/ldaprecord": "^3.0"
     },
     "replace": {
