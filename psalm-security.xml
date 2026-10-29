@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+<!--
+    Configuration of the security scan (.github/workflows/psalm.yml) only. Not named
+    psalm.xml on purpose: the reusable GLPI CI runs the Psalm of the GLPI core on any
+    plugin holding a psalm.xml, and that version crashes on the illuminate/* 13 docblocks.
+-->
 <psalm
     noCache="true"
     errorLevel="8"

@@ -29,8 +29,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      # psalm/psalm-github-security-scan is pinned to Psalm 5.15, which crashes on the
-      # docblocks of illuminate/* 13 (vendor dependency of LdapRecord): Psalm 6 instead
+      # psalm/psalm-github-security-scan (Psalm 5.15) and Psalm 6.16 crash on the
+      # docblocks of illuminate/* 13 (vendor dependency of LdapRecord); 6.20.3 checked
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -42,13 +42,13 @@ jobs:
         run: composer install --no-interaction --no-progress --no-scripts
 
       - name: Install Psalm
-        run: composer global require --no-interaction --no-progress "vimeo/psalm:^6"
+        run: composer global require --no-interaction --no-progress "vimeo/psalm:^6.20"
 
       - name: Psalm Security Scan
         # 0 = no issue, 2 = issues found (reported through SARIF); anything else is a crash
         run: |
           set +e
-          "$(composer global config bin-dir --absolute)/psalm" --taint-analysis --no-cache --no-progress --report=results.sarif
+          "$(composer global config bin-dir --absolute)/psalm" --config=psalm-security.xml --taint-analysis --no-cache --no-progress --report=results.sarif
           status=$?
           [ "$status" -eq 0 ] || [ "$status" -eq 2 ]
 
