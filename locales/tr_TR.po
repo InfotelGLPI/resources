@@ -963,7 +963,7 @@ msgstr "Kaynak aktarımı bildirildi"
 
 #: src/Resource.php:3437 src/Menu.php:178
 msgid "Declare a change"
-msgstr "Değişiklik bildir"
+msgstr "Değişiklik bildirimi"
 
 #: src/Resource.php:3366 src/Menu.php:184 ⁨standard input⁩:307 ⁨standard
 #: input⁩:61
