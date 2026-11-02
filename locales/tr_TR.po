@@ -2553,7 +2553,7 @@ msgstr "Kaynak listesi"
 #: src/Resource.php:4211 src/NotificationTargetResource.php:92
 #: src/NotificationTargetResource.php:1757
 msgid "Resources list of commercial manager"
-msgstr "Ticari sorumlunun kaynak listesi"
+msgstr "İlan sorumlusunun kaynak listesi"
 
 #: ⁨standard input⁩:30 ⁨standard input⁩:33
 msgid "Resources management"
@@ -2667,7 +2667,7 @@ msgstr "Bildirilmesinden sonra ayrılma için ikinci bir destek kaydı gönder"
 
 #: src/Resource.php:4401 src/Resource.php:4407
 msgid "Send alert to the commercial manager"
-msgstr "Ticari sorumluya uyarı gönder"
+msgstr "İlan sorumlusuna uyarı gönder"
 
 #: src/Config.php:439
 msgid "Send an automatic notification on the \"declare an arrival\" form"
