@@ -1167,7 +1167,7 @@ msgstr "Bir kaynakta iki ek güvenlik alanı görüntülensin"
 
 #: src/Config.php:278
 msgid "Displaying the security block on the resource"
-msgstr "Kaynak üzerindeki güvenlik bloğu görüntüleniyor"
+msgstr "Kaynak üzerinde güvenlik bloğu görüntülensin"
 
 #: src/Task.php:1038
 msgid "Dissociate"
