@@ -3327,7 +3327,7 @@ msgstr "Bu kaynak ayrılmasının yöneticisi değilsiniz"
 
 #: src/LinkAd.php:752 hook.php:3077
 msgid "You have to do all checklist in action before"
-msgstr "Önce kontrol listesindeki tüm işlemler tamamlanmalıdır"
+msgstr "Önce kontrol listesindeki tüm giriş işlemleri tamamlanmalıdır"
 
 #: hook.php:3125
 msgid "You have to do all checklist out action before"
