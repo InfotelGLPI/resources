@@ -516,7 +516,7 @@ msgstr "Aktif Dizin eşitleme sekmesini görüntüleyebilir"
 
 #: src/Config.php:335
 msgid "Can view notification tab"
-msgstr "Bildirim sekmesini görüntüleyebilir"
+msgstr "Bildirim sekmesi görüntülenebilsin"
 
 #: ⁨standard input⁩:49 ⁨standard input⁩:42
 msgctxt "button"
