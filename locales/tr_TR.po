@@ -1338,7 +1338,7 @@ msgstr "FIFOUR - Hizmet sağlayıcı sayfası"
 
 #: src/Resource.php:4414 src/Resource.php:4419
 msgid "Failed to Send alert to the commercial manager"
-msgstr "Ticari sorumluya uyarı gönderilemedi"
+msgstr "İlan sorumlusuna uyarı gönderilemedi"
 
 #: src/CheckSchema.php:157
 msgid "Failed to check the sanity of the tables!"
@@ -3273,7 +3273,7 @@ msgstr "Sözleşme türüne göre bakın"
 
 #: src/Menu.php:224 src/Menu.php:489 src/Config.php:492 src/Config.php:505
 msgid "View my resources as a commercial"
-msgstr "Kaynaklarım ticari olarak görüntülensin"
+msgstr "Kaynaklarım ilan olarak görüntülensin"
 
 #: src/Wizard.php:98
 msgid "Welcome to the wizard resource"
