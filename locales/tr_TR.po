@@ -1011,7 +1011,7 @@ msgstr "Ayrılacağı bildirildi"
 
 #: src/ResourceResting.php:307 src/ResourceResting.php:363
 msgid "Declaring the end of non contract periods"
-msgstr "Sözleşmesiz dönemlerin sonu bildiriliyor"
+msgstr "Sözleşmesiz dönem sonu bildirimi"
 
 #: src/Config.php:496
 msgid "Default assignment group"
