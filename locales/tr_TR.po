@@ -972,7 +972,7 @@ msgstr "Ayrılış bildirimi"
 
 #: src/ResourceHoliday.php:302 src/ResourceHoliday.php:329
 msgid "Declare a forced holiday"
-msgstr "Zorunlu tatil bildirin"
+msgstr "Zorunlu tatil bildirimi"
 
 #: ⁨standard input⁩:34
 msgid "Declare a new employment"
