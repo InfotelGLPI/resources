@@ -827,7 +827,7 @@ msgstr "Ayrılma ile bir destek kaydı oluştur"
 
 #: src/Config.php:594
 msgid "Create a ticket with departure and instructions"
-msgstr "Ayrılma ile bir destek kaydı ve yönergeleri oluştur"
+msgstr "Ayrılma ile bir destek kaydı ve yönergeleri oluşturulsun"
 
 #: src/Checklist.php:510
 msgid "Create checklists"
