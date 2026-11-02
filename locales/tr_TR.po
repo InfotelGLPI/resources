@@ -310,7 +310,7 @@ msgstr "Emin misiniz?"
 
 #: src/Config.php:110 src/Config.php:459
 msgid "Arrival / Departure workflow"
-msgstr "Giriş / Çıkış iş akışı"
+msgstr "Başlama / Ayrılma iş akışı"
 
 #: src/RuleContracttypeReadonly.php:321 src/Checklist.php:1176
 #: src/ResourcePDF.php:106 src/Resource.php:186 src/Resource.php:697
