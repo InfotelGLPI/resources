@@ -988,7 +988,7 @@ msgstr "Süper güç ata"
 
 #: src/Resource.php:3484 ⁨standard input⁩:58
 msgid "Declare a transfer"
-msgstr "Aktarım bildirin"
+msgstr "Aktarım bildirimi"
 
 #: src/Menu.php:172
 msgid "Declare an arrival"
