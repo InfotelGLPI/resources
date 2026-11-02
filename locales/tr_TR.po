@@ -996,7 +996,7 @@ msgstr "Giriş bildirimi"
 
 #: src/Menu.php:299
 msgid "Declare an employment"
-msgstr "Bir iş bildirin"
+msgstr "İş bildirimi"
 
 #: src/RuleContracttypeReadonly.php:293 src/Resource.php:760
 #: src/NotificationTargetResource.php:480
