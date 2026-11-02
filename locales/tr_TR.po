@@ -980,7 +980,7 @@ msgstr "Yeni işe başlama bildirimi"
 
 #: src/ResourceResting.php:302 src/ResourceResting.php:333
 msgid "Declare a non contract period"
-msgstr "Sözleşmesiz dönemi bildirin"
+msgstr "Sözleşmesiz dönem bildirimi"
 
 #: src/ConfigHabilitation.php:103 src/ConfigHabilitation.php:276
 msgid "Declare a super habilitation"
