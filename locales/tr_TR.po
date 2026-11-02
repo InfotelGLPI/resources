@@ -992,7 +992,7 @@ msgstr "Aktarım bildirimi"
 
 #: src/Menu.php:172
 msgid "Declare an arrival"
-msgstr "Giriş bildirimi"
+msgstr "Başlama bildirimi"
 
 #: src/Menu.php:299
 msgid "Declare an employment"
