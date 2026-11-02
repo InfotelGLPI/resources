@@ -1159,7 +1159,7 @@ msgstr "Güç kaynağı açılan liste ile görüntülensin"
 
 #: src/Config.php:287
 msgid "Display of four additional security fields in the clients"
-msgstr "İstemcilere dört ek güvenlik alanı görüntülensin"
+msgstr "İstemcilere dört ek güvenlik alanı görüntülenir"
 
 #: src/Config.php:280
 msgid "Display of two additional security fields on a resource"
