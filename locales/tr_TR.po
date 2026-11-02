@@ -968,7 +968,7 @@ msgstr "Değişiklik bildirimi"
 #: src/Resource.php:3366 src/Menu.php:184 ⁨standard input⁩:307 ⁨standard
 #: input⁩:61
 msgid "Declare a departure"
-msgstr "Ayrılış bildirin"
+msgstr "Ayrılış bildirimi"
 
 #: src/ResourceHoliday.php:302 src/ResourceHoliday.php:329
 msgid "Declare a forced holiday"
