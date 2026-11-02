@@ -126,7 +126,7 @@ msgstr "Hakkında"
 
 #: src/Adconfig.php:186
 msgid "Accept a directory certificate that cannot be validated"
-msgstr "Doğrulanamayan bir klasör sertifikasını kabul edin"
+msgstr "Doğrulanamayan klasör sertifikası kabul edilsin"
 
 #: src/Config.php:331
 msgid "Access the needs tab"
