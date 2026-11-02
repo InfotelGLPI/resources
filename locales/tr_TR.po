@@ -1479,7 +1479,7 @@ msgstr "Gizli alanlar"
 
 #: src/Config.php:266
 msgid "Hidden first form when you have only one template"
-msgstr "Yalnızca bir kalıbınız varsa ilk formu gizleyin"
+msgstr "Yalnızca bir kalıbınız varsa ilk form gizlensin"
 
 #: src/Config.php:448
 msgid "Hide the following fields in the \"Report an Arrival\" form"
