@@ -2700,7 +2700,7 @@ msgstr[1] "Hizmetler"
 
 #: src/Adconfig.php:78
 msgid "Setup LDAP directory"
-msgstr "LDAP dizinini kur"
+msgstr "LDAP dizini kurulumu"
 
 #: src/Profession.php:103 src/Profession.php:222 src/EmploymentState.php:89
 #: src/EmploymentState.php:151 src/ResourceSituation.php:104
