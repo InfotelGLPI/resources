@@ -2671,7 +2671,7 @@ msgstr "Ticari sorumluya uyarı gönder"
 
 #: src/Config.php:439
 msgid "Send an automatic notification on the \"declare an arrival\" form"
-msgstr "\"Bir başlama bildir\" formunda otomatik bildirim gönderilsin"
+msgstr "\"Başlama bildirimi\" formunda otomatik bildirim gönderilsin"
 
 #: src/ReportConfig.php:380 ⁨standard input⁩:60
 msgid "Send other notification"
