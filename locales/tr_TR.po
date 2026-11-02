@@ -976,7 +976,7 @@ msgstr "Zorunlu tatil bildirimi"
 
 #: ⁨standard input⁩:34
 msgid "Declare a new employment"
-msgstr "Yeni işe başlama bildirimi"
+msgstr "Yeni başlama bildirimi"
 
 #: src/ResourceResting.php:302 src/ResourceResting.php:333
 msgid "Declare a non contract period"
