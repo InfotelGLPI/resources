@@ -837,7 +837,7 @@ msgstr "Kontrol listeleri oluştur"
 msgid "Create or delete user in ldap is mandatory to close ticket"
 msgstr ""
 "Destek kaydının kapatılabilmesi için LDAP üzerindeki kullanıcı hesabını "
-"ekleyin ya da silin"
+"eklensin ya da silinsin"
 
 #: src/LinkAd.php:411
 msgctxt "button"
