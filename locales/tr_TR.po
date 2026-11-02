@@ -290,7 +290,7 @@ msgid ""
 "All checklist done is mandatory for arrival and departure to close ticket"
 msgstr ""
 "Destek kaydının kapatılabilmesi için, tüm başlama ve ayrılma kontrol "
-"listesinin tamamlanması zorunludur"
+"listesinin tamamlanması zorunlu olsun"
 
 #: src/Profile.php:293
 msgid "All resources access"
