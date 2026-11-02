@@ -1527,7 +1527,7 @@ msgstr "Belirteçler"
 
 #: src/Config.php:262
 msgid "If other contract are available don't display without contract"
-msgstr "Başka bir sözleşme varsa sözleşme olmadan görüntülenmesin"
+msgstr "Başka bir sözleşme varsa sözleşmesiz olarak görüntülenmesin"
 
 #: src/Metademand.php:145
 msgid ""
