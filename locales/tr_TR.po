@@ -1483,7 +1483,7 @@ msgstr "Yalnızca bir kalıbınız varsa ilk formu gizleyin"
 
 #: src/Config.php:448
 msgid "Hide the following fields in the \"Report an Arrival\" form"
-msgstr "\"Bir başlama bildir\" formunda şu alanlar gizlensin"
+msgstr "\"Başlama bildirimi\" formunda şu alanlar gizlensin"
 
 #: src/Config.php:492
 msgid "Hide/Show elements"
