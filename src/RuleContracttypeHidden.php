@@ -259,6 +259,18 @@ class RuleContracttypeHidden extends Rule
         $actions['hiddenfields_name']['force_actions'] = ['assign'];
         $actions['hiddenfields_name']['type'] = "yesonly";
 
+        $actions['hiddenfields_plugin_resources_resourcestates_id']['name'] = ResourceState::getTypeName(1);
+        $actions['hiddenfields_plugin_resources_resourcestates_id']['type'] = "yesonly";
+        $actions['hiddenfields_plugin_resources_resourcestates_id']['force_actions'] = ['assign'];
+
+        $actions['hiddenfields_plugin_resources_contracttypes_id']['name'] = ContractType::getTypeName(1);
+        $actions['hiddenfields_plugin_resources_contracttypes_id']['type'] = "yesonly";
+        $actions['hiddenfields_plugin_resources_contracttypes_id']['force_actions'] = ['assign'];
+
+        $actions['hiddenfields_is_helpdesk_visible']['name'] = __('Associable to a ticket');
+        $actions['hiddenfields_is_helpdesk_visible']['type'] = "yesonly";
+        $actions['hiddenfields_is_helpdesk_visible']['force_actions'] = ['assign'];
+
         $actions['hiddenfields_firstname']['name'] = __('First name');
         $actions['hiddenfields_firstname']['type'] = "yesonly";
         $actions['hiddenfields_firstname']['force_actions'] = ['assign'];
@@ -274,6 +286,10 @@ class RuleContracttypeHidden extends Rule
         $actions['hiddenfields_users_id_sales']['name'] = __('Sales manager', 'resources');
         $actions['hiddenfields_users_id_sales']['type'] = "yesonly";
         $actions['hiddenfields_users_id_sales']['force_actions'] = ['assign'];
+
+        $actions['hiddenfields_users_id_recipient']['name'] = __('Writer', 'resources');
+        $actions['hiddenfields_users_id_recipient']['type'] = "yesonly";
+        $actions['hiddenfields_users_id_recipient']['force_actions'] = ['assign'];
 
         $actions['hiddenfields_plugin_resources_departments_id']['name'] = Department::getTypeName(1);
         $actions['hiddenfields_plugin_resources_departments_id']['type'] = "yesonly";
