@@ -3057,7 +3057,7 @@ msgstr "Kaynağın kaldırılma zamanı"
 
 #: ⁨standard input⁩:44
 msgid "To affect an employment"
-msgstr "Bir işi etkilemek için"
+msgstr "Bir işe alımı etkilemek için"
 
 #: ⁨standard input⁩:50
 msgid "To begin, select type of contract"
