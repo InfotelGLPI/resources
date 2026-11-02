@@ -1019,7 +1019,7 @@ msgstr "Varsayılan atama grubu"
 
 #: src/Config.php:270
 msgid "Default contract template selected"
-msgstr "Varsayılan sözleşme kalıbı seçildi"
+msgstr "Varsayılan olarak seçilecek sözleşme kalıbı"
 
 #: src/Adconfig.php:298
 msgid "Default password"
