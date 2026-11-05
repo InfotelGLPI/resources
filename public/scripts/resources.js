@@ -127,6 +127,7 @@ $(document).on('click', '#resource_pdf .plugin-resources-pdf-download', function
     var form = $('<form>', {method: 'post', action: btn.data('url'), target: '_blank'})
         .append($('<input>', {type: 'hidden', name: 'generate_pdf', value: 1}))
         .append($('<input>', {type: 'hidden', name: 'users_id', value: btn.data('users-id')}))
+        .append($('<input>', {type: 'hidden', name: 'plugin_resources_resources_id', value: btn.data('resources-id')}))
         .appendTo(document.body);
     form.trigger('submit');
     form.remove();

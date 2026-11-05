@@ -29,6 +29,7 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Item;
 
 if (Session::getCurrentInterface()
     && (Session::getCurrentInterface() == "helpdesk")) {
@@ -51,17 +52,21 @@ if (isset($_POST['generate_pdf']) && isset($_POST['users_id'])) {
         $users_id = (int) Session::getLoginUserID();
     } else {
         $users_id = (int) $_POST['users_id'];
-        // The global plugin_resources READ right does not enforce entity scope, so
-        // resolve the resource linked to the target user and require ->can($id, READ)
-        // (right + checkEntity) before exporting — mirroring the guard used by
-        // picture.send.php and ajax/showHabilitations.php — to prevent exporting an
-        // arbitrary user's equipment across entities (horizontal IDOR).
+        // The global plugin_resources READ right does not enforce entity scope: require
+        // ->can($id, READ) (right + checkEntity) on the resource of the button, and that the
+        // exported user is the one linked to it (Resource_Item), to prevent exporting an
+        // arbitrary user's equipment across entities (horizontal IDOR). The resource used to
+        // be looked up on its users_id, which is its manager and not the linked user: the
+        // restitution form of a leaving employee was always refused.
         $resource    = new Resource();
-        $resource_id = 0;
-        foreach ($resource->find(['users_id' => $users_id], ['id ASC'], 1) as $row) {
-            $resource_id = (int) $row['id'];
-        }
-        if ($resource_id <= 0 || !$resource->can($resource_id, READ)) {
+        $resource_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+        if ($resource_id <= 0
+            || !$resource->can($resource_id, READ)
+            || countElementsInTable(Resource_Item::getTable(), [
+                'plugin_resources_resources_id' => $resource_id,
+                'itemtype'                      => User::class,
+                'items_id'                      => $users_id,
+            ]) === 0) {
             throw new AccessDeniedHttpException();
         }
     }
