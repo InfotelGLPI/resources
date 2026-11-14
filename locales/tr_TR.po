@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 16:44+0000\n"
+"POT-Creation-Date: 2026-11-14 17:17+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/"
@@ -111,7 +111,7 @@ msgstr "Şu kişi tarafından bir görev silindi"
 msgid "A task has been updated by"
 msgstr "Şu kişi tarafından bir görev güncellendi"
 
-#: src/Resource_Validation.php:54 src/Profile.php:279
+#: src/Profile.php:279 src/Resource_Validation.php:54
 msgid "AD Synchronization"
 msgstr "Aktif Dizin eşitlemesi"
 
@@ -159,11 +159,11 @@ msgstr "Etkin"
 msgid "Active Directory synchronization"
 msgstr "Aktif Dizin eşitlemesi"
 
-#: ⁨standard input⁩:63 ⁨standard input⁩:47 ⁨standard input⁩:58 ⁨standard input⁩:71
-#: ⁨standard input⁩:105 ⁨standard input⁩:57 ⁨standard input⁩:48 ⁨standard input⁩:78
-#: ⁨standard input⁩:116 ⁨standard input⁩:54 ⁨standard input⁩:69 ⁨standard input⁩:91
-#: ⁨standard input⁩:75 ⁨standard input⁩:82 ⁨standard input⁩:46 ⁨standard input⁩:39
-#: ⁨standard input⁩:68
+#: ⁨standard input⁩:39 ⁨standard input⁩:47 ⁨standard input⁩:57 ⁨standard input⁩:46
+#: ⁨standard input⁩:58 ⁨standard input⁩:75 ⁨standard input⁩:82 ⁨standard input⁩:116
+#: ⁨standard input⁩:69 ⁨standard input⁩:78 ⁨standard input⁩:91 ⁨standard input⁩:63
+#: ⁨standard input⁩:71 ⁨standard input⁩:105 ⁨standard input⁩:54 ⁨standard input⁩:68
+#: ⁨standard input⁩:48
 msgctxt "button"
 msgid "Add"
 msgstr "Ekle"
@@ -180,7 +180,7 @@ msgstr "Yorum ekle"
 msgid "Add a document"
 msgstr "Belge ekle"
 
-#: ⁨standard input⁩:60 ⁨standard input⁩:81
+#: ⁨standard input⁩:81 ⁨standard input⁩:60
 msgid "Add a need"
 msgstr "Gereksinim ekle"
 
@@ -309,24 +309,23 @@ msgstr "Emin misiniz?"
 msgid "Arrival / Departure workflow"
 msgstr "Başlama / Ayrılma iş akışı"
 
-#: src/RuleContracttypeReadonly.php:321 src/Checklist.php:1176
-#: src/ResourcePDF.php:106 src/Resource.php:186 src/Resource.php:697
-#: src/NotificationTargetResource.php:469
+#: src/RuleContracttypeHidden.php:280 src/Config.php:136 src/Config.php:515
+#: src/RuleContracttypeReadonly.php:321 src/NotificationTargetResource.php:469
 #: src/NotificationTargetResource.php:584
 #: src/NotificationTargetResource.php:774
 #: src/NotificationTargetResource.php:849
 #: src/NotificationTargetResource.php:1022
 #: src/NotificationTargetResource.php:1659
-#: src/NotificationTargetResource.php:1690 src/Recap.php:220
-#: src/RuleContracttype.php:277 src/RuleContracttypeHidden.php:280
-#: src/Config.php:136 src/Config.php:515 src/Resource_Item.php:718
-#: src/Resource_Item.php:989 src/Resource_Item.php:999 src/Directory.php:220
-#: src/Dashboard.php:137 report/resourcewithoutuser/resourcewithoutuser.php:85
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:91
+#: src/NotificationTargetResource.php:1690 src/Directory.php:220
+#: src/ResourcePDF.php:106 src/Dashboard.php:137 src/Resource_Item.php:718
+#: src/Resource_Item.php:989 src/Resource_Item.php:999 src/Recap.php:220
+#: src/Checklist.php:1176 src/RuleContracttype.php:277 src/Resource.php:186
+#: src/Resource.php:697 report/resourcewithoutuser/resourcewithoutuser.php:85
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:303
-#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:297
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:91
-#: ⁨standard input⁩:637 ⁨standard input⁩:57 ⁨standard input⁩:264
+#: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:297
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:91
+#: ⁨standard input⁩:637 ⁨standard input⁩:264 ⁨standard input⁩:57
 msgid "Arrival date"
 msgstr "Başlama tarihi"
 
@@ -450,7 +449,7 @@ msgstr "Yaka kartı iadesi"
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Dikkatli olun, birim içinde yeni kaynaklar oluşturulacak"
 
-#: ⁨standard input⁩:71 ⁨standard input⁩:58 ⁨standard input⁩:75 ⁨standard input⁩:60
+#: ⁨standard input⁩:75 ⁨standard input⁩:60 ⁨standard input⁩:58 ⁨standard input⁩:71
 msgid "Begin date"
 msgstr "Başlangıç tarihi"
 
@@ -472,7 +471,7 @@ msgstr[1] "Bütçe masrafları"
 msgid "Budget management"
 msgstr "Bütçe yönetimi"
 
-#: src/BudgetType.php:51 src/Budget.php:183 ⁨standard input⁩:38
+#: src/Budget.php:183 src/BudgetType.php:51 ⁨standard input⁩:38
 msgid "Budget type"
 msgid_plural "Budget types"
 msgstr[0] "Bütçe türü"
@@ -514,13 +513,13 @@ msgstr "Aktif Dizin eşitleme sekmesini görüntüleyebilir"
 msgid "Can view notification tab"
 msgstr "Bildirim sekmesi görüntülenebilsin"
 
-#: ⁨standard input⁩:49 ⁨standard input⁩:42
+#: ⁨standard input⁩:42 ⁨standard input⁩:49
 msgctxt "button"
 msgid "Cancel"
 msgstr "İptal"
 
-#: ⁨standard input⁩:77 ⁨standard input⁩:121 ⁨standard input⁩:130 ⁨standard input⁩:58
-#: ⁨standard input⁩:92 ⁨standard input⁩:118
+#: ⁨standard input⁩:92 ⁨standard input⁩:118 ⁨standard input⁩:77 ⁨standard input⁩:121
+#: ⁨standard input⁩:130 ⁨standard input⁩:58
 msgctxt "button"
 msgid "Cancel the request"
 msgstr "İsteği iptal et"
@@ -656,7 +655,7 @@ msgstr "Satış sorumlusunu değiştir"
 msgid "Change the type of contract for"
 msgstr "Şunun sözleşme türünü değiştir"
 
-#: ⁨standard input⁩:102 ⁨standard input⁩:37 ⁨standard input⁩:38
+#: ⁨standard input⁩:37 ⁨standard input⁩:38 ⁨standard input⁩:102
 msgid "Check all"
 msgstr "Tümünü seç"
 
@@ -668,7 +667,7 @@ msgstr "Kontrol listesi tamamlandı"
 msgid "Checked"
 msgstr "Tamamlandı"
 
-#: src/Checklist.php:77 src/Menu.php:472 src/Profile.php:202
+#: src/Profile.php:202 src/Menu.php:472 src/Checklist.php:77
 msgid "Checklist"
 msgid_plural "Checklists"
 msgstr[0] "Kontrol listesi"
@@ -678,7 +677,7 @@ msgstr[1] "Kontrol listeleri"
 msgid "Checklist action"
 msgstr "Kontrol listesi işlemi"
 
-#: src/Checklist.php:1182 src/NotificationTargetResource.php:574
+#: src/NotificationTargetResource.php:574 src/Checklist.php:1182
 msgid "Checklist needs to verificated"
 msgstr "Kontrol listesi doğrulanmalıdır"
 
@@ -704,7 +703,7 @@ msgstr "Seçin"
 msgid "Choosing the intercontrat"
 msgstr "Ara sözleşme seçimi"
 
-#: src/Resource.php:4787 src/Directory.php:374
+#: src/Directory.php:374 src/Resource.php:4787
 msgid "Click here to send your email"
 msgstr "E-postanızı göndermek için buraya tıklayın"
 
@@ -716,19 +715,19 @@ msgstr "İstemcinin güvenlik duyarlılığı arttırıldı"
 msgid "Close"
 msgstr "Kapat"
 
-#: src/ProfessionLine.php:96 src/ProfessionLine.php:148
-#: src/ProfessionCategory.php:98 src/ProfessionCategory.php:150
-#: src/Profession.php:97 src/Profession.php:216 src/ContractNature.php:96
-#: src/ContractNature.php:183 src/ResourceSituation.php:98
-#: src/ResourceSituation.php:162 src/ContractType.php:69
-#: src/ContractType.php:149 src/BudgetType.php:89 src/BudgetType.php:141
 #: src/BudgetVolume.php:89 src/BudgetVolume.php:141 src/Rank.php:101
-#: src/Rank.php:149 report/professionwithoutcost/professionwithoutcost.php:412
-#: report/professionwithoutcost/professionwithoutcost.php:417
-#: report/professionwithoutvolume/professionwithoutvolume.php:428
-#: report/professionwithoutvolume/professionwithoutvolume.php:433
+#: src/Rank.php:149 src/ResourceSituation.php:98 src/ResourceSituation.php:162
+#: src/ContractType.php:69 src/ContractType.php:149
+#: src/ProfessionCategory.php:98 src/ProfessionCategory.php:150
+#: src/ProfessionLine.php:96 src/ProfessionLine.php:148 src/Profession.php:97
+#: src/Profession.php:216 src/BudgetType.php:89 src/BudgetType.php:141
+#: src/ContractNature.php:96 src/ContractNature.php:183
 #: report/lapserankprofession/lapserankprofession.php:63
 #: report/lapserankprofession/lapserankprofession.php:84
+#: report/professionwithoutvolume/professionwithoutvolume.php:428
+#: report/professionwithoutvolume/professionwithoutvolume.php:433
+#: report/professionwithoutcost/professionwithoutcost.php:412
+#: report/professionwithoutcost/professionwithoutcost.php:417
 msgid "Code"
 msgstr "Kod"
 
@@ -744,8 +743,8 @@ msgid_plural "Comments"
 msgstr[0] "Yorum"
 msgstr[1] "Yorumlar"
 
-#: ⁨standard input⁩:34 ⁨standard input⁩:72 ⁨standard input⁩:41 ⁨standard input⁩:88
-#: ⁨standard input⁩:75 ⁨standard input⁩:62
+#: ⁨standard input⁩:75 ⁨standard input⁩:34 ⁨standard input⁩:88 ⁨standard input⁩:72
+#: ⁨standard input⁩:41 ⁨standard input⁩:62
 msgid "Comments"
 msgstr "Yorumlar"
 
@@ -753,9 +752,9 @@ msgstr "Yorumlar"
 msgid "Company"
 msgstr "Kuruluş"
 
-#: src/RuleContracttypeReadonly.php:456 src/RuleContracttype.php:380
+#: src/RuleContracttypeHidden.php:418 src/RuleContracttypeReadonly.php:456
 #: src/LeavingInformation.php:442 src/LeavingInformation.php:613
-#: src/RuleContracttypeHidden.php:418 ⁨standard input⁩:211
+#: src/RuleContracttype.php:380 ⁨standard input⁩:211
 msgid "Company name"
 msgstr "Kuruluş adı"
 
@@ -811,7 +810,7 @@ msgstr "Kişi türü kimlik doğrulaması"
 msgid "ContractType"
 msgstr "Sözleşme türü"
 
-#: src/Checklist.php:370 src/ResourceBadge.php:450 src/Resource_Change.php:1457
+#: src/ResourceBadge.php:450 src/Checklist.php:370 src/Resource_Change.php:1457
 #: ⁨standard input⁩:97
 msgid "Create a end treatment ticket"
 msgstr "Onarım sonu destek kaydı ekle"
@@ -917,9 +916,8 @@ msgstr "Dosyadan veriler"
 msgid "Date"
 msgstr "Tarih"
 
-#: src/RuleContracttypeReadonly.php:404 src/Resource.php:1055
-#: src/RuleContracttype.php:324 src/RuleContracttypeHidden.php:362
-#: ⁨standard input⁩:57
+#: src/RuleContracttypeHidden.php:362 src/RuleContracttypeReadonly.php:404
+#: src/RuleContracttype.php:324 src/Resource.php:1055 ⁨standard input⁩:57
 msgid "Date agreement candidate"
 msgstr "Aday anlaşma tarihi"
 
@@ -943,8 +941,8 @@ msgstr "Konum değişikliği tarihi"
 msgid "Decimal"
 msgstr "Ondalık"
 
-#: src/Resource.php:885 src/NotificationTargetResource.php:801
-#: src/NotificationTargetResource.php:1089
+#: src/NotificationTargetResource.php:801
+#: src/NotificationTargetResource.php:1089 src/Resource.php:885
 msgid "Declaration of departure date"
 msgstr "Ayrılma tarihi bildirimi"
 
@@ -956,11 +954,11 @@ msgstr "Kaynağın ayrılacağı bildirildi"
 msgid "Declaration of resource transfer OK"
 msgstr "Kaynak aktarımı bildirildi"
 
-#: src/Resource.php:3437 src/Menu.php:178
+#: src/Menu.php:178 src/Resource.php:3437
 msgid "Declare a change"
 msgstr "Değişiklik bildirimi"
 
-#: src/Resource.php:3366 src/Menu.php:184 ⁨standard input⁩:307 ⁨standard input⁩:61
+#: src/Menu.php:184 src/Resource.php:3366 ⁨standard input⁩:307 ⁨standard input⁩:61
 msgid "Declare a departure"
 msgstr "Ayrılış bildirimi"
 
@@ -992,14 +990,14 @@ msgstr "Başlama bildirimi"
 msgid "Declare an employment"
 msgstr "İş bildirimi"
 
-#: src/RuleContracttypeReadonly.php:293 src/Resource.php:760
-#: src/NotificationTargetResource.php:480
+#: src/RuleContracttypeReadonly.php:293 src/NotificationTargetResource.php:480
 #: src/NotificationTargetResource.php:592
 #: src/NotificationTargetResource.php:789
 #: src/NotificationTargetResource.php:853
 #: src/NotificationTargetResource.php:1098
 #: src/NotificationTargetResource.php:1671
-#: src/NotificationTargetResource.php:1697 hook.php:1475 ⁨standard input⁩:303
+#: src/NotificationTargetResource.php:1697 src/Resource.php:760 hook.php:1475
+#: ⁨standard input⁩:303
 msgid "Declared as leaving"
 msgstr "Ayrılacağı bildirildi"
 
@@ -1038,9 +1036,9 @@ msgstr[1] "Derece grupları"
 msgid "Delete file"
 msgstr "Dosyayı sil"
 
-#: ⁨standard input⁩:47 ⁨standard input⁩:83 ⁨standard input⁩:379 ⁨standard input⁩:52
-#: ⁨standard input⁩:53 ⁨standard input⁩:71 ⁨standard input⁩:72 ⁨standard input⁩:89
-#: ⁨standard input⁩:74 ⁨standard input⁩:73
+#: ⁨standard input⁩:47 ⁨standard input⁩:89 ⁨standard input⁩:74 ⁨standard input⁩:52
+#: ⁨standard input⁩:53 ⁨standard input⁩:379 ⁨standard input⁩:83 ⁨standard input⁩:71
+#: ⁨standard input⁩:72 ⁨standard input⁩:73
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Kalıcı olarak sil"
@@ -1053,37 +1051,37 @@ msgstr "Kaynak silindi"
 msgid "Deletion category"
 msgstr "Kategori silme"
 
-#: src/Resource.php:185 src/Department.php:52 src/Adconfig.php:312
-#: src/LinkAd.php:615 ⁨standard input⁩:53 ⁨standard input⁩:161
+#: src/Adconfig.php:312 src/LinkAd.php:615 src/Department.php:52
+#: src/Resource.php:185 ⁨standard input⁩:161 ⁨standard input⁩:53
 msgid "Department"
 msgid_plural "Departments"
 msgstr[0] "Bölüm"
 msgstr[1] "Bölümler"
 
-#: src/RuleContracttypeReadonly.php:325 src/Checklist.php:1175
-#: src/ResourcePDF.php:107 src/Resource.php:187 src/Resource.php:704
-#: src/NotificationTargetResource.php:470
+#: src/RuleContracttypeHidden.php:284 src/Config.php:137
+#: src/RuleContracttypeReadonly.php:325 src/NotificationTargetResource.php:470
 #: src/NotificationTargetResource.php:585
 #: src/NotificationTargetResource.php:777
 #: src/NotificationTargetResource.php:850
 #: src/NotificationTargetResource.php:1025
 #: src/NotificationTargetResource.php:1660
-#: src/NotificationTargetResource.php:1691 src/Recap.php:228
-#: src/RuleContracttype.php:281 src/Adconfig.php:318
-#: src/RuleContracttypeHidden.php:284 src/Config.php:137 src/LinkAd.php:617
-#: src/Resource_Item.php:719 src/Resource_Item.php:990
-#: src/Resource_Item.php:1000 src/Resource_Change.php:433 src/Directory.php:228
-#: src/Dashboard.php:190 report/resourcewithoutuser/resourcewithoutuser.php:90
+#: src/NotificationTargetResource.php:1691 src/Directory.php:228
+#: src/Adconfig.php:318 src/ResourcePDF.php:107 src/Dashboard.php:190
+#: src/LinkAd.php:617 src/Resource_Item.php:719 src/Resource_Item.php:990
+#: src/Resource_Item.php:1000 src/Recap.php:228 src/Checklist.php:1175
+#: src/Resource_Change.php:433 src/RuleContracttype.php:281
+#: src/Resource.php:187 src/Resource.php:704
 #: report/checkmissingN0group/checkmissingN0group.php:229
-#: report/checkmissingN1group/checkmissingN1group.php:229
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:96
-#: report/checkhabilitation/checkhabilitation.php:240
+#: report/resourcewithoutuser/resourcewithoutuser.php:90
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:304
+#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:96
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:298
 #: report/checkgroup/checkgroup.php:301
-#: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:96
-#: ⁨standard input⁩:651 ⁨standard input⁩:37 ⁨standard input⁩:324 ⁨standard input⁩:329
-#: ⁨standard input⁩:42 ⁨standard input⁩:51
+#: report/checkhabilitation/checkhabilitation.php:240
+#: report/checkmissingN1group/checkmissingN1group.php:229
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:96
+#: ⁨standard input⁩:37 ⁨standard input⁩:651 ⁨standard input⁩:324 ⁨standard input⁩:329
+#: ⁨standard input⁩:51 ⁨standard input⁩:42
 msgid "Departure date"
 msgstr "Ayrılma tarihi"
 
@@ -1095,8 +1093,8 @@ msgstr "Şunun ayrılması"
 msgid "Descending"
 msgstr "Azalan"
 
-#: src/Config.php:138 ⁨standard input⁩:45 ⁨standard input⁩:708 ⁨standard input⁩:35
-#: ⁨standard input⁩:42 ⁨standard input⁩:348 ⁨standard input⁩:40 ⁨standard input⁩:44
+#: src/Config.php:138 ⁨standard input⁩:708 ⁨standard input⁩:44 ⁨standard input⁩:348
+#: ⁨standard input⁩:40 ⁨standard input⁩:45 ⁨standard input⁩:42 ⁨standard input⁩:35
 msgid "Description"
 msgstr "Açıklama"
 
@@ -1205,8 +1203,8 @@ msgstr "Bir sütunu düzenle"
 msgid "Effective duration"
 msgstr "Etkin süre"
 
-#: src/RuleContracttypeReadonly.php:444 src/RuleContracttype.php:368
-#: src/LeavingInformation.php:418 src/RuleContracttypeHidden.php:406
+#: src/RuleContracttypeHidden.php:406 src/RuleContracttypeReadonly.php:444
+#: src/LeavingInformation.php:418 src/RuleContracttype.php:368
 #: ⁨standard input⁩:158
 msgid "Effective leaving date"
 msgstr "Gerçek ayrılma tarihi"
@@ -1227,10 +1225,10 @@ msgid_plural "Employees"
 msgstr[0] "Çalışan"
 msgstr[1] "Çalışanlar"
 
-#: src/Department.php:80 src/Department.php:113 src/Employment.php:226
-#: src/Employer.php:53 hook.php:1482
+#: src/Employer.php:53 src/Employment.php:226 src/Department.php:80
+#: src/Department.php:113 hook.php:1482
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:117
-#: ⁨standard input⁩:220 ⁨standard input⁩:38
+#: ⁨standard input⁩:38 ⁨standard input⁩:220
 msgid "Employer"
 msgid_plural "Employers"
 msgstr[0] "İşveren"
@@ -1278,8 +1276,8 @@ msgstr "İş / bütçe yönetimi"
 msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
 
-#: ⁨standard input⁩:33 ⁨standard input⁩:73 ⁨standard input⁩:60 ⁨standard input⁩:41
-#: ⁨standard input⁩:77 ⁨standard input⁩:62
+#: ⁨standard input⁩:41 ⁨standard input⁩:77 ⁨standard input⁩:62 ⁨standard input⁩:60
+#: ⁨standard input⁩:33 ⁨standard input⁩:73
 msgid "End date"
 msgstr "Bitiş tarihi"
 
@@ -1379,7 +1377,7 @@ msgid ""
 msgstr ""
 "Adın ilk harfi (büyük) + Soyadın ilk harfi (küçük) + geliş tarihi (GGAAYYYY)"
 
-#: src/Resource.php:179 src/LinkAd.php:604 src/Resource_Change.php:425
+#: src/LinkAd.php:604 src/Resource_Change.php:425 src/Resource.php:179
 #: ⁨standard input⁩:65
 msgid "Firstname"
 msgstr "Ad"
@@ -1428,9 +1426,9 @@ msgstr "Mobilya gereksinimleri"
 msgid "GISF - Supplier security incident management"
 msgstr "GISF - Hizmet sağlayıcı güvenlik tehdidi yönetimi"
 
-#: src/RuleContracttypeReadonly.php:273 src/Resource.php:1150
 #: src/RuleContracttypeHidden.php:251 src/Config.php:124 src/Config.php:159
-#: ⁨standard input⁩:82 ⁨standard input⁩:93 ⁨standard input⁩:41
+#: src/RuleContracttypeReadonly.php:273 src/Resource.php:1150 ⁨standard input⁩:82
+#: ⁨standard input⁩:93 ⁨standard input⁩:41
 msgid "Gender"
 msgstr "Cinsiyet"
 
@@ -1450,15 +1448,15 @@ msgstr "Bir ayrılma emri ver"
 msgid "Group"
 msgstr "Grup"
 
-#: src/ResourceHabilitation.php:62 src/Habilitation.php:54
-#: src/Metademand.php:176
+#: src/ResourceHabilitation.php:62 src/Metademand.php:176
+#: src/Habilitation.php:54
 msgid "Habilitation"
 msgid_plural "Habilitations"
 msgstr[0] "Güç"
 msgstr[1] "Güçler"
 
-#: src/HabilitationLevel.php:53 src/Habilitation.php:96
-#: src/Habilitation.php:118
+#: src/Habilitation.php:96 src/Habilitation.php:118
+#: src/HabilitationLevel.php:53
 msgid "Habilitation level"
 msgid_plural "Habilitations level"
 msgstr[0] "Güç düzeyi"
@@ -1486,14 +1484,14 @@ msgid_plural "Holidays"
 msgstr[0] "Tatil"
 msgstr[1] "Tatiller"
 
-#: src/Metademand.php:74 setup.php:275
+#: setup.php:275 src/Metademand.php:74
 msgid "Human Resource"
 msgid_plural "Human Resources"
 msgstr[0] "İnsan kaynağı"
 msgstr[1] "İnsan kaynakları"
 
-#: src/TaskPlanning.php:66 src/Resource.php:124 src/Menu.php:376
-#: src/Profile.php:184 src/Employment.php:181 src/Employment.php:240
+#: src/Profile.php:184 src/Menu.php:376 src/Employment.php:181
+#: src/Employment.php:240 src/TaskPlanning.php:66 src/Resource.php:124
 #: ⁨standard input⁩:84
 msgid "Human resource"
 msgid_plural "Human resources"
@@ -1545,7 +1543,7 @@ msgstr ""
 msgid "If yes, the resource will be declared as leaving"
 msgstr "Bu seçenek etkinleştirildiğinde, kaynak ayrılıyor olarak bildirilir"
 
-#: src/Import.php:72 src/ResourceImport.php:59
+#: src/ResourceImport.php:59 src/Import.php:72
 msgid "Import"
 msgid_plural "Imports"
 msgstr[0] "İçe aktarma"
@@ -1567,8 +1565,8 @@ msgstr "Dosyayı içe aktar"
 msgid "Import resources"
 msgstr "İçe aktarma kaynakları"
 
-#: src/Checklistconfig.php:135 ⁨standard input⁩:34 ⁨standard input⁩:38
-#: ⁨standard input⁩:154
+#: src/Checklistconfig.php:135 ⁨standard input⁩:154 ⁨standard input⁩:34
+#: ⁨standard input⁩:38
 msgid "Important"
 msgstr "Önemli"
 
@@ -1580,14 +1578,14 @@ msgstr "İçe aktarılmış değerler"
 msgid "In element"
 msgstr "Şu bileşende"
 
-#: src/Resource.php:768 src/NotificationTargetResource.php:110
+#: src/NotificationTargetResource.php:110
 #: src/NotificationTargetResource.php:479
 #: src/NotificationTargetResource.php:591
 #: src/NotificationTargetResource.php:798
 #: src/NotificationTargetResource.php:855
 #: src/NotificationTargetResource.php:1082
 #: src/NotificationTargetResource.php:1670
-#: src/NotificationTargetResource.php:1696 hook.php:1504
+#: src/NotificationTargetResource.php:1696 src/Resource.php:768 hook.php:1504
 msgid "Informant of leaving"
 msgstr "Ayrılma bilgileri"
 
@@ -1614,9 +1612,9 @@ msgstr "Oluşturulan bu kullanıcı hakkındaki bilgiler"
 msgid "Integer"
 msgstr "Tam sayı"
 
-#: src/RuleContracttypeReadonly.php:424 src/RuleContracttype.php:344
+#: src/RuleContracttypeHidden.php:382 src/RuleContracttypeReadonly.php:424
 #: src/LeavingInformation.php:394 src/LeavingInformation.php:553
-#: src/RuleContracttypeHidden.php:382 ⁨standard input⁩:65
+#: src/RuleContracttype.php:344 ⁨standard input⁩:65
 msgid "Interview date"
 msgstr "Görüşme tarihi"
 
@@ -1678,8 +1676,8 @@ msgstr[1] "Ayrılma nedenleri"
 msgid "Leaving resource"
 msgstr "Ayrılan kaynak"
 
-#: src/Checklist.php:1186 src/NotificationTargetResource.php:570
-#: src/Dashboard.php:75 src/Dashboard.php:202
+#: src/NotificationTargetResource.php:570 src/Dashboard.php:75
+#: src/Dashboard.php:202 src/Checklist.php:1186
 msgid "Leaving resource - checklist needs to verificated"
 msgstr "Ayrılan kaynak - kontrol listesi doğrulanmalıdır"
 
@@ -1757,7 +1755,7 @@ msgstr "Yaka kartı listesi"
 msgid "List of forced holidays"
 msgstr "Zorunlu tatil günleri"
 
-#: src/Menu.php:428 src/ResourceResting.php:312 ⁨standard input⁩:44
+#: src/ResourceResting.php:312 src/Menu.php:428 ⁨standard input⁩:44
 #: ⁨standard input⁩:42
 msgid "List of non contract periods"
 msgstr "Sözleşmesiz dönem listesi"
@@ -1828,13 +1826,13 @@ msgstr "Tamamlanmış olarak işaretle"
 msgid "Mark as unfinished"
 msgstr "Tamamlanmamış olarak işaretle"
 
-#: src/RuleContracttypeReadonly.php:337 src/Resource.php:1004
-#: src/RuleContracttype.php:289 src/RuleContracttypeHidden.php:296
-#: src/Config.php:147 src/Config.php:162 ⁨standard input⁩:157 ⁨standard input⁩:64
+#: src/RuleContracttypeHidden.php:296 src/Config.php:147 src/Config.php:162
+#: src/RuleContracttypeReadonly.php:337 src/RuleContracttype.php:289
+#: src/Resource.php:1004 ⁨standard input⁩:157 ⁨standard input⁩:64
 msgid "Matricule"
 msgstr "Kayıt defteri"
 
-#: src/ConfigHabilitation.php:243 src/ResourceBadge.php:214
+#: src/ResourceBadge.php:214 src/ConfigHabilitation.php:243
 msgid "Meta-demands linked"
 msgstr "Bağlantılı meta-demands"
 
@@ -1850,9 +1848,9 @@ msgstr "Güç eksik"
 msgid "Missing table"
 msgstr "Tablo eksik"
 
-#: src/RuleContracttypeReadonly.php:464 src/RuleContracttype.php:388
+#: src/RuleContracttypeHidden.php:426 src/RuleContracttypeReadonly.php:464
 #: src/LeavingInformation.php:434 src/LeavingInformation.php:601
-#: src/RuleContracttypeHidden.php:426 ⁨standard input⁩:235
+#: src/RuleContracttype.php:388 ⁨standard input⁩:235
 msgid "Mission lost"
 msgstr "Görev tamamlanamadı"
 
@@ -1882,9 +1880,9 @@ msgctxt "button"
 msgid "Modify user in AD"
 msgstr "Aktif dizin kullanıcısını düzenle"
 
-#: src/Resource_Change.php:418 src/Resource_Change.php:446 ⁨standard input⁩:32
-#: ⁨standard input⁩:61 ⁨standard input⁩:64 ⁨standard input⁩:36 ⁨standard input⁩:153
-#: ⁨standard input⁩:37 ⁨standard input⁩:44 ⁨standard input⁩:38 ⁨standard input⁩:35
+#: src/Resource_Change.php:418 src/Resource_Change.php:446 ⁨standard input⁩:38
+#: ⁨standard input⁩:153 ⁨standard input⁩:32 ⁨standard input⁩:37 ⁨standard input⁩:35
+#: ⁨standard input⁩:44 ⁨standard input⁩:61 ⁨standard input⁩:36 ⁨standard input⁩:64
 msgid "Name"
 msgstr "Ad"
 
@@ -1906,8 +1904,8 @@ msgstr "Kaynağın yeni erişim profili"
 msgid "New resource"
 msgstr "Yeni kaynak"
 
-#: src/Checklist.php:1187 src/NotificationTargetResource.php:563
-#: src/Dashboard.php:70 src/Dashboard.php:149
+#: src/NotificationTargetResource.php:563 src/Dashboard.php:70
+#: src/Dashboard.php:149 src/Checklist.php:1187
 msgid "New resource - checklist needs to verificated"
 msgstr "Yeni kaynak - kontrol listesi doğrulanmalıdır"
 
@@ -1969,8 +1967,8 @@ msgstr "Kaynağın yeni satış sorumlusu"
 msgid "New type of contract"
 msgstr "Yeni sözleşme türü"
 
-#: ⁨standard input⁩:89 ⁨standard input⁩:133 ⁨standard input⁩:759 ⁨standard input⁩:142
-#: ⁨standard input⁩:71 ⁨standard input⁩:104 ⁨standard input⁩:64 ⁨standard input⁩:130
+#: ⁨standard input⁩:104 ⁨standard input⁩:759 ⁨standard input⁩:130 ⁨standard input⁩:64
+#: ⁨standard input⁩:89 ⁨standard input⁩:133 ⁨standard input⁩:142 ⁨standard input⁩:71
 msgctxt "button"
 msgid "Next"
 msgstr "Sonraki"
@@ -2023,8 +2021,8 @@ msgstr "Henüz bir içe aktarma yapılandırılmamış"
 msgid "No query could be suggested for this difference."
 msgstr "Bu fark için herhangi bir sorgu önerilemedi."
 
-#: ⁨standard input⁩:58 ⁨standard input⁩:64 ⁨standard input⁩:360 ⁨standard input⁩:34
-#: ⁨standard input⁩:31 ⁨standard input⁩:72 ⁨standard input⁩:33
+#: ⁨standard input⁩:34 ⁨standard input⁩:64 ⁨standard input⁩:360 ⁨standard input⁩:58
+#: ⁨standard input⁩:72 ⁨standard input⁩:31 ⁨standard input⁩:33
 msgid "No results found"
 msgstr "Herhangi bir sonuç bulunamadı"
 
@@ -2042,9 +2040,9 @@ msgstr[1] "Sözleşmesiz dönemler"
 msgid "Non contract period declaration of a resource performed"
 msgstr "Kaynağa sözleşmesiz dönemin başladığı bildirildi"
 
-#: src/NotificationTargetResource.php:1247
-#: src/NotificationTargetResource.php:1667 src/Menu.php:245 src/Profile.php:230
-#: src/ResourceResting.php:291
+#: src/Profile.php:230 src/NotificationTargetResource.php:1247
+#: src/NotificationTargetResource.php:1667 src/ResourceResting.php:291
+#: src/Menu.php:245
 msgid "Non contract period management"
 msgid_plural "Non contract periods management"
 msgstr[0] "Sözleşmesiz dönem yönetimi"
@@ -2086,9 +2084,8 @@ msgstr "Bildirim gönderildi"
 msgid "Number of titles and values of tooltip doesn't match"
 msgstr "İpuçlarının başlıkları ile değerleri eşleşmiyor"
 
-#: src/RuleContracttypeReadonly.php:416 src/Resource.php:1080
-#: src/RuleContracttype.php:336 src/RuleContracttypeHidden.php:374
-#: ⁨standard input⁩:98
+#: src/RuleContracttypeHidden.php:374 src/RuleContracttypeReadonly.php:416
+#: src/RuleContracttype.php:336 src/Resource.php:1080 ⁨standard input⁩:98
 msgid "Number of years experience"
 msgstr "İş deneyimi yılı"
 
@@ -2112,8 +2109,8 @@ msgstr "Sıra"
 msgid "Order resources by"
 msgstr "Kaynak sıralaması"
 
+#: src/Config.php:111 src/Config.php:601 src/Notification.php:209
 #: src/Resource.php:189 src/Resource.php:5335 src/Resource.php:5349
-#: src/Notification.php:209 src/Config.php:111 src/Config.php:601
 msgid "Other"
 msgstr "Diğer"
 
@@ -2141,9 +2138,9 @@ msgstr "Diğer gereksinimler"
 msgid "Password Creation"
 msgstr "Parola oluşturma"
 
-#: src/RuleContracttypeReadonly.php:460 src/RuleContracttype.php:384
+#: src/RuleContracttypeHidden.php:422 src/RuleContracttypeReadonly.php:460
 #: src/LeavingInformation.php:426 src/LeavingInformation.php:589
-#: src/RuleContracttypeHidden.php:422 ⁨standard input⁩:223
+#: src/RuleContracttype.php:384 ⁨standard input⁩:223
 msgid "Pay gap"
 msgstr "Ücret farkı"
 
@@ -2151,7 +2148,7 @@ msgstr "Ücret farkı"
 msgid "Period"
 msgstr "Dönem"
 
-#: ⁨standard input⁩:171 ⁨standard input⁩:73 ⁨standard input⁩:78
+#: ⁨standard input⁩:171 ⁨standard input⁩:78 ⁨standard input⁩:73
 msgid "Phone"
 msgstr "Telefon"
 
@@ -2159,7 +2156,7 @@ msgstr "Telefon"
 msgid "Photo"
 msgstr "Fotoğraf"
 
-#: ⁨standard input⁩:55 ⁨standard input⁩:371
+#: ⁨standard input⁩:371 ⁨standard input⁩:55
 msgid "Photo format : JPG"
 msgstr "Fotoğraf biçimi : JPG"
 
@@ -2167,7 +2164,7 @@ msgstr "Fotoğraf biçimi : JPG"
 msgid "Planning"
 msgstr "Planlama"
 
-#: front/config.form.php:90 front/adconfig.form.php:47
+#: front/adconfig.form.php:47 front/config.form.php:90
 msgid "Please activate the plugin"
 msgstr "Lütfen eklentiyi etkinleştirin"
 
@@ -2208,16 +2205,16 @@ msgstr "Gönder"
 msgid "Prefix"
 msgstr "Ön ek"
 
-#: ⁨standard input⁩:83 ⁨standard input⁩:127 ⁨standard input⁩:753 ⁨standard input⁩:136
-#: ⁨standard input⁩:65 ⁨standard input⁩:98 ⁨standard input⁩:124
+#: ⁨standard input⁩:98 ⁨standard input⁩:753 ⁨standard input⁩:124 ⁨standard input⁩:83
+#: ⁨standard input⁩:127 ⁨standard input⁩:136 ⁨standard input⁩:65
 msgctxt "button"
 msgid "Previous"
 msgstr "Önceki"
 
-#: src/Profession.php:51 src/Cost.php:142 src/Cost.php:184
-#: src/Employment.php:197 src/Rank.php:113 src/Rank.php:161 src/Budget.php:174
+#: src/Budget.php:174 src/Employment.php:197 src/Rank.php:113 src/Rank.php:161
+#: src/Cost.php:142 src/Cost.php:184 src/Profession.php:51
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:107
-#: ⁨standard input⁩:46 ⁨standard input⁩:47
+#: ⁨standard input⁩:47 ⁨standard input⁩:46
 msgid "Profession"
 msgid_plural "Professions"
 msgstr[0] "Meslek"
@@ -2249,14 +2246,13 @@ msgstr "İçe aktarılmış kaynakları sil"
 msgid "Queries to run"
 msgstr "Yürütülecek sorgular"
 
-#: src/RuleContracttypeReadonly.php:329 src/Resource.php:821
-#: src/NotificationTargetResource.php:705
+#: src/RuleContracttypeHidden.php:288 src/Config.php:139 src/Config.php:167
+#: src/RuleContracttypeReadonly.php:329 src/NotificationTargetResource.php:705
 #: src/NotificationTargetResource.php:836
 #: src/NotificationTargetResource.php:1007
 #: src/NotificationTargetResource.php:1651
 #: src/NotificationTargetResource.php:1682 src/Recap.php:148
-#: src/RuleContracttype.php:285 src/RuleContracttypeHidden.php:288
-#: src/Config.php:139 src/Config.php:167
+#: src/RuleContracttype.php:285 src/Resource.php:821
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:80
 #: ⁨standard input⁩:237 ⁨standard input⁩:110
 msgid "Quota"
@@ -2266,16 +2262,16 @@ msgstr "Kota"
 msgid "Random password (recommended)"
 msgstr "Rastgele parola (önerilir)"
 
-#: src/Cost.php:148 src/Cost.php:192 src/Employment.php:189
-#: src/ResourceSpeciality.php:101 src/ResourceSpeciality.php:185
-#: src/Rank.php:54 src/Budget.php:165 ⁨standard input⁩:58 ⁨standard input⁩:135
+#: src/Budget.php:165 src/ResourceSpeciality.php:101
+#: src/ResourceSpeciality.php:185 src/Employment.php:189 src/Rank.php:54
+#: src/Cost.php:148 src/Cost.php:192 ⁨standard input⁩:58 ⁨standard input⁩:135
 #: ⁨standard input⁩:57
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Dilim"
 msgstr[1] "Dilimler"
 
-#: src/Recap.php:244 src/Employment.php:233
+#: src/Employment.php:233 src/Recap.php:244
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:111
 #: ⁨standard input⁩:72
 msgid "Ratio Employment / Budget"
@@ -2285,16 +2281,15 @@ msgstr "İş / bütçe oranı"
 msgid "Read only Fields"
 msgstr "Salt okunur alanlar"
 
-#: src/RuleContracttypeReadonly.php:388 src/Resource.php:896
-#: src/NotificationTargetResource.php:1126
-#: src/NotificationTargetResource.php:1674 src/RuleContracttypeHidden.php:346
-#: src/Config.php:145 ⁨standard input⁩:687 ⁨standard input⁩:341
+#: src/RuleContracttypeHidden.php:346 src/Config.php:145
+#: src/RuleContracttypeReadonly.php:388 src/NotificationTargetResource.php:1126
+#: src/NotificationTargetResource.php:1674 src/Resource.php:896
+#: ⁨standard input⁩:687 ⁨standard input⁩:341
 msgid "Reading the security charter"
 msgstr "Güvenlik ilkesi okunuyor"
 
-#: src/RuleContracttypeReadonly.php:420 src/Resource.php:1088
-#: src/RuleContracttype.php:340 src/RuleContracttypeHidden.php:378
-#: ⁨standard input⁩:110
+#: src/RuleContracttypeHidden.php:378 src/RuleContracttypeReadonly.php:420
+#: src/RuleContracttype.php:340 src/Resource.php:1088 ⁨standard input⁩:110
 msgid "Reconversion"
 msgstr "Yeniden görüşme"
 
@@ -2424,7 +2419,7 @@ msgstr "İstekte bulunan kullanıcı"
 msgid "Required Fields"
 msgstr "Zorunlu alanlar"
 
-#: src/Resource.php:1433 front/wizard.form.php:128 front/wizard.form.php:441
+#: front/wizard.form.php:128 front/wizard.form.php:441 src/Resource.php:1433
 msgid "Required fields are not filled. Please try again."
 msgstr "Zorunlu alanlar doldurulmamış. Lütfen yeniden deneyin."
 
@@ -2442,9 +2437,9 @@ msgid_plural "Resignation Reasons"
 msgstr[0] "İstifa nedeni"
 msgstr[1] "İstifa nedenleri"
 
-#: src/RuleContracttypeReadonly.php:436 src/RuleContracttype.php:360
+#: src/RuleContracttypeHidden.php:398 src/RuleContracttypeReadonly.php:436
 #: src/LeavingInformation.php:402 src/LeavingInformation.php:565
-#: src/RuleContracttypeHidden.php:398 ⁨standard input⁩:134
+#: src/RuleContracttype.php:360 ⁨standard input⁩:134
 msgid "Resignation date"
 msgstr "İstifa tarihi"
 
@@ -2472,21 +2467,21 @@ msgstr "Kaynak oluşturma"
 msgid "Resource files imports"
 msgstr "Kaynak dosyaları içe aktarmaları"
 
+#: src/RuleContracttypeHidden.php:268 src/Config.php:130 src/Config.php:502
 #: src/RuleContracttypeReadonly.php:187 src/RuleContracttypeReadonly.php:228
 #: src/RuleContracttypeReadonly.php:258 src/RuleContracttypeReadonly.php:309
-#: src/ResourcePDF.php:98 src/Resource.php:184 src/Resource.php:684
-#: src/Resource.php:2922 src/NotificationTargetResource.php:107
+#: src/NotificationTargetResource.php:107
 #: src/NotificationTargetResource.php:465
 #: src/NotificationTargetResource.php:580
 #: src/NotificationTargetResource.php:762
 #: src/NotificationTargetResource.php:845
 #: src/NotificationTargetResource.php:1010
 #: src/NotificationTargetResource.php:1656
-#: src/NotificationTargetResource.php:1687 src/RuleContracttype.php:265
-#: src/RuleContracttypeHidden.php:268 src/Config.php:130 src/Config.php:502
-#: src/Task.php:855 src/Task.php:1270 src/Directory.php:211 hook.php:1491
-#: ⁨standard input⁩:343 ⁨standard input⁩:353 ⁨standard input⁩:368 ⁨standard input⁩:42
-#: ⁨standard input⁩:230 ⁨standard input⁩:235 ⁨standard input⁩:52
+#: src/NotificationTargetResource.php:1687 src/Task.php:855 src/Task.php:1270
+#: src/Directory.php:211 src/ResourcePDF.php:98 src/RuleContracttype.php:265
+#: src/Resource.php:184 src/Resource.php:684 src/Resource.php:2922
+#: hook.php:1491 ⁨standard input⁩:42 ⁨standard input⁩:343 ⁨standard input⁩:353
+#: ⁨standard input⁩:368 ⁨standard input⁩:230 ⁨standard input⁩:235 ⁨standard input⁩:52
 msgid "Resource manager"
 msgstr "Kaynak yönetimi"
 
@@ -2534,12 +2529,12 @@ msgstr "Kaynaklar dizini"
 msgid "Resources list"
 msgstr "Kaynak listesi"
 
-#: src/Resource.php:4211 src/NotificationTargetResource.php:92
-#: src/NotificationTargetResource.php:1757
+#: src/NotificationTargetResource.php:92
+#: src/NotificationTargetResource.php:1757 src/Resource.php:4211
 msgid "Resources list of commercial manager"
 msgstr "İlan sorumlusunun kaynak listesi"
 
-#: ⁨standard input⁩:30 ⁨standard input⁩:33
+#: ⁨standard input⁩:33 ⁨standard input⁩:30
 msgid "Resources management"
 msgstr "Kaynak yönetimi"
 
@@ -2547,26 +2542,26 @@ msgstr "Kaynak yönetimi"
 msgid "Resources not declaring leaving"
 msgstr "Ayrılmayacağı söylenen kaynaklar"
 
-#: src/RuleContracttypeReadonly.php:353 src/RuleContracttype.php:305
-#: src/Adconfig.php:320 src/RuleContracttypeHidden.php:312 src/Profile.php:214
-#: src/LinkAd.php:611 src/Role.php:53 ⁨standard input⁩:95 ⁨standard input⁩:185
+#: src/RuleContracttypeHidden.php:312 src/RuleContracttypeReadonly.php:353
+#: src/Profile.php:214 src/Adconfig.php:320 src/Role.php:53 src/LinkAd.php:611
+#: src/RuleContracttype.php:305 ⁨standard input⁩:185 ⁨standard input⁩:95
 msgid "Role"
 msgid_plural "Roles"
 msgstr[0] "Rol"
 msgstr[1] "Roller"
 
-#: src/RuleContracttypeReadonly.php:313 src/Resource.php:188
-#: src/Resource.php:873 src/NotificationTargetResource.php:108
+#: src/RuleContracttypeHidden.php:272 src/Config.php:131 src/Config.php:501
+#: src/RuleContracttypeReadonly.php:313 src/NotificationTargetResource.php:108
 #: src/NotificationTargetResource.php:138
 #: src/NotificationTargetResource.php:466
 #: src/NotificationTargetResource.php:581
 #: src/NotificationTargetResource.php:765
 #: src/NotificationTargetResource.php:846
-#: src/NotificationTargetResource.php:1013 src/RuleContracttype.php:269
-#: src/LeavingInformation.php:387 src/LeavingInformation.php:534
-#: src/RuleContracttypeHidden.php:272 src/Config.php:131 src/Config.php:501
-#: hook.php:1512 ⁨standard input⁩:388 ⁨standard input⁩:398 ⁨standard input⁩:413
-#: ⁨standard input⁩:247 ⁨standard input⁩:253 ⁨standard input⁩:77 ⁨standard input⁩:91
+#: src/NotificationTargetResource.php:1013 src/LeavingInformation.php:387
+#: src/LeavingInformation.php:534 src/RuleContracttype.php:269
+#: src/Resource.php:188 src/Resource.php:873 hook.php:1512 ⁨standard input⁩:388
+#: ⁨standard input⁩:398 ⁨standard input⁩:413 ⁨standard input⁩:247 ⁨standard input⁩:253
+#: ⁨standard input⁩:77 ⁨standard input⁩:91
 msgid "Sales manager"
 msgstr "Satış sorumlusu"
 
@@ -2578,8 +2573,8 @@ msgstr "Geçerli kaynağın satış sorumlusu"
 msgid "Sales managers selection : only these users with these profiles"
 msgstr "Satış yöneticileri seçimi : Yalnız bu profillerdeki bu kullanıcılar"
 
-#: ⁨standard input⁩:50 ⁨standard input⁩:35 ⁨standard input⁩:31 ⁨standard input⁩:38
-#: ⁨standard input⁩:48 ⁨standard input⁩:32 ⁨standard input⁩:64
+#: ⁨standard input⁩:32 ⁨standard input⁩:38 ⁨standard input⁩:64 ⁨standard input⁩:35
+#: ⁨standard input⁩:50 ⁨standard input⁩:31 ⁨standard input⁩:48
 msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
@@ -2600,9 +2595,9 @@ msgstr "Kaynak arayın"
 msgid "Second Form"
 msgstr "İkinci form"
 
-#: src/RuleContracttypeReadonly.php:349 src/Resource.php:1049
-#: src/RuleContracttype.php:301 src/RuleContracttypeHidden.php:308
-#: src/Config.php:148 src/Config.php:164 ⁨standard input⁩:200 ⁨standard input⁩:71
+#: src/RuleContracttypeHidden.php:308 src/Config.php:148 src/Config.php:164
+#: src/RuleContracttypeReadonly.php:349 src/RuleContracttype.php:301
+#: src/Resource.php:1049 ⁨standard input⁩:200 ⁨standard input⁩:71
 msgid "Second matricule"
 msgstr "İkinci kayıt defteri"
 
@@ -2634,7 +2629,7 @@ msgstr "Ögeyi seçin"
 msgid "Select the contract type"
 msgstr "Sözleşme türünü seçin"
 
-#: src/Resource.php:3561 src/Directory.php:295 ⁨standard input⁩:726
+#: src/Directory.php:295 src/Resource.php:3561 ⁨standard input⁩:726
 #: ⁨standard input⁩:292
 msgid "Send a notification"
 msgstr "Bir bildirim gönder"
@@ -2667,10 +2662,10 @@ msgstr "Kaynak oluşturma raporu bildirimi gönderilsin"
 msgid "Send resource transfer notification"
 msgstr "Kaynak aktarımı bildirimi gönderilsin"
 
-#: src/RuleContracttypeReadonly.php:384 src/Resource.php:904
-#: src/Resource.php:996 src/NotificationTargetResource.php:1121
-#: src/NotificationTargetResource.php:1673 src/RuleContracttypeHidden.php:342
-#: src/Config.php:144 ⁨standard input⁩:673 ⁨standard input⁩:336
+#: src/RuleContracttypeHidden.php:342 src/Config.php:144
+#: src/RuleContracttypeReadonly.php:384 src/NotificationTargetResource.php:1121
+#: src/NotificationTargetResource.php:1673 src/Resource.php:904
+#: src/Resource.php:996 ⁨standard input⁩:673 ⁨standard input⁩:336
 msgid "Sensitized to security"
 msgstr "Güvenliğe duyarlı"
 
@@ -2684,10 +2679,10 @@ msgstr[1] "Hizmetler"
 msgid "Setup LDAP directory"
 msgstr "LDAP dizini kurulumu"
 
-#: src/Profession.php:103 src/Profession.php:222 src/EmploymentState.php:89
-#: src/EmploymentState.php:151 src/ResourceSituation.php:104
-#: src/ResourceSituation.php:168 src/ResourceSituation.php:174
-#: src/Employer.php:95 src/Employer.php:134 src/Rank.php:107 src/Rank.php:155
+#: src/EmploymentState.php:89 src/EmploymentState.php:151 src/Employer.php:95
+#: src/Employer.php:134 src/Rank.php:107 src/Rank.php:155
+#: src/ResourceSituation.php:104 src/ResourceSituation.php:168
+#: src/ResourceSituation.php:174 src/Profession.php:103 src/Profession.php:222
 msgid "Short name"
 msgstr "Kısa ad"
 
@@ -2821,7 +2816,7 @@ msgstr "Görevden sorumlu teknisyen"
 msgid "Tasks in progress"
 msgstr "İşlenen görevler"
 
-#: src/TaskPlanning.php:67 src/Menu.php:464
+#: src/Menu.php:464 src/TaskPlanning.php:67
 msgid "Tasks list"
 msgstr "Görev listesi"
 
@@ -2894,7 +2889,7 @@ msgstr "Kontol listesi tamamlanmış"
 msgid "The checklist is not finished"
 msgstr "Kontrol listesi tamamlanmamış"
 
-#: src/ConfigHabilitation.php:178 src/ResourceBadge.php:160
+#: src/ResourceBadge.php:160 src/ConfigHabilitation.php:178
 msgid "The current entity is already linked to a meta-demand"
 msgstr "Geçerli birim zaten bir meta-demand ile bağlantılı"
 
@@ -2935,7 +2930,7 @@ msgstr ""
 msgid "The link must be an http or https URL"
 msgstr "Bağlantı bir http veya https adresi olmalıdır"
 
-#: src/Resource.php:4180 front/resource.form.php:481
+#: front/resource.form.php:481 src/Resource.php:4180
 msgid ""
 "The notification is not sent because the resource is not linked with a user"
 msgstr ""
@@ -2946,7 +2941,7 @@ msgstr ""
 msgid "The plugin schema is good"
 msgstr "Eklenti şeması iyi"
 
-#: src/Cost.php:101 src/Cost.php:122 src/Budget.php:114 src/Budget.php:135
+#: src/Budget.php:114 src/Budget.php:135 src/Cost.php:101 src/Cost.php:122
 msgid "The profession for the budget must be filled"
 msgstr "Bütçenin mesleği doldurulmalıdır"
 
@@ -2992,8 +2987,8 @@ msgstr "Kaynak oluşturulurken bir sorun çıktı"
 msgid "There is a right problem"
 msgstr "Doğru bir sorun var"
 
-#: src/Resource.php:4284 src/NotificationTargetResource.php:79
-#: src/NotificationTargetResource.php:459
+#: src/NotificationTargetResource.php:79 src/NotificationTargetResource.php:459
+#: src/Resource.php:4284
 msgid "These resources have normally left the company"
 msgstr "Bu kaynaklar kurumdan normal şekilde ayrıldı"
 
@@ -3070,7 +3065,7 @@ msgstr "Dosyadaki satır sayısı"
 msgid "Trainee"
 msgstr "Stajer"
 
-#: src/Resource.php:3553 src/Task.php:1048 src/Checklistconfig.php:382
+#: src/Task.php:1048 src/Checklistconfig.php:382 src/Resource.php:3553
 msgid "Transfer"
 msgstr "Aktar"
 
@@ -3092,7 +3087,7 @@ msgid_plural "Types"
 msgstr[0] "Tür"
 msgstr[1] "Türler"
 
-#: src/BudgetVolume.php:51 src/Budget.php:214 ⁨standard input⁩:67
+#: src/Budget.php:214 src/BudgetVolume.php:51 ⁨standard input⁩:67
 msgid "Type of budget volume"
 msgid_plural "Types of Budget volume"
 msgstr[0] "Bütçe hacmi türü"
@@ -3128,7 +3123,7 @@ msgstr "Sınırsız sayıda seçilebilir güçler"
 msgid "Unsupported item type"
 msgstr "Öge türü desteklenmiyor"
 
-#: ⁨standard input⁩:59 ⁨standard input⁩:62 ⁨standard input⁩:44 ⁨standard input⁩:86
+#: ⁨standard input⁩:44 ⁨standard input⁩:86 ⁨standard input⁩:59 ⁨standard input⁩:62
 #: ⁨standard input⁩:132 ⁨standard input⁩:76
 msgctxt "button"
 msgid "Update"
@@ -3248,11 +3243,11 @@ msgstr "GLPI kaynaklarını doğrula"
 msgid "Verify file"
 msgstr "Dosyayı doğrula"
 
-#: ajax/resourcetree.php:53 front/resource.php:59 front/resource.php:69
+#: front/resource.php:59 front/resource.php:69 ajax/resourcetree.php:53
 msgid "View by contract type"
 msgstr "Sözleşme türüne göre bakın"
 
-#: src/Menu.php:224 src/Menu.php:489 src/Config.php:492 src/Config.php:505
+#: src/Config.php:492 src/Config.php:505 src/Menu.php:224 src/Menu.php:489
 msgid "View my resources as a commercial"
 msgstr "Kaynaklarım ilan olarak görüntülensin"
 
@@ -3264,15 +3259,15 @@ msgstr "Kaynak yardımcısına hoş geldiniz"
 msgid "Will be added to the resource comment area"
 msgstr "Kaynak yorumu alanına eklenecek"
 
-#: src/RuleContracttypeReadonly.php:440 src/RuleContracttype.php:364
+#: src/RuleContracttypeHidden.php:402 src/RuleContracttypeReadonly.php:440
 #: src/LeavingInformation.php:410 src/LeavingInformation.php:577
-#: src/RuleContracttypeHidden.php:402 ⁨standard input⁩:146
+#: src/RuleContracttype.php:364 ⁨standard input⁩:146
 msgid "Wished leaving date"
 msgstr "İstenilen ayrılma tarihi"
 
-#: src/Contracttypeprofile.php:72 src/Resource.php:563 src/Resource.php:2057
-#: src/Resource.php:4647 src/Resource.php:4649 src/ContractType.php:266
-#: src/ContractType.php:286
+#: src/Contracttypeprofile.php:72 src/ContractType.php:266
+#: src/ContractType.php:286 src/Resource.php:563 src/Resource.php:2057
+#: src/Resource.php:4647 src/Resource.php:4649
 msgid "Without contract"
 msgstr "Sözleşmesiz"
 
@@ -3284,7 +3279,7 @@ msgstr "Yardımcı"
 msgid "Wizard resource creation"
 msgstr "Kaynak oluşturma yardımcısı"
 
-#: src/WorkProfile.php:51 src/Candidateorigin.php:51
+#: src/Candidateorigin.php:51 src/WorkProfile.php:51
 msgid "Work Profile"
 msgid_plural "Work Profiles"
 msgstr[0] "Çalışma profili"
@@ -3366,7 +3361,7 @@ msgstr "kullanıcı LDAP dizinine eklendi"
 msgid "the user has been disabled and moved to the LDAP directory"
 msgstr "kullanıcı etkisizleştirildi ve LDAP dizinine taşındı"
 
-#: src/LinkAd.php:95 front/resource.form.php:592 front/linkad.form.php:174
+#: front/resource.form.php:592 front/linkad.form.php:174 src/LinkAd.php:95
 msgid "the user has been updated to the LDAP directory"
 msgstr "kullanıcı LDAP dizininde güncellendi"
 
@@ -3378,7 +3373,7 @@ msgstr "kullanıcı LDAP dizinine eklenmedi"
 msgid "the user has not been disabled and moved to the LDAP directory"
 msgstr "kullanıcı etkisizleştirilmesi ve LDAP dizinine taşınmadı"
 
-#: src/LinkAd.php:78 src/LinkAd.php:101 front/resource.form.php:595
-#: front/linkad.form.php:177
+#: front/resource.form.php:595 front/linkad.form.php:177 src/LinkAd.php:78
+#: src/LinkAd.php:101
 msgid "the user has not been updated to the LDAP directory"
 msgstr "kullanıcı LDAP dizininde güncellenmedi"
