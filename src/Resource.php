@@ -5339,13 +5339,13 @@ class Resource extends CommonDBTM
     public static function getGenderByValue($value)
     {
         switch ($value) {
-            case 1 :
+            case 1:
                 return __('Male', 'resources');
                 break;
-            case 2 :
+            case 2:
                 return __('Female', 'resources');
                 break;
-            case 3 :
+            case 3:
                 return __('Other', 'resources');
                 break;
             default:

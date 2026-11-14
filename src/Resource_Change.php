@@ -186,7 +186,7 @@ class Resource_Change extends CommonDBTM
                 return __('Badge restitution', 'resources');
             case self::CHANGE_RESOURCEINFORMATIONS:
                 return __(' Change information', 'resources');
-            case self::CHANGE_NAME :
+            case self::CHANGE_NAME:
                 return __(' Change name', 'resources');
             case self::CHANGE_RESOURCECOMPANY:
                 return __('Change company', 'resources');

@@ -111,47 +111,47 @@ foreach (Config::getAvailablevariable() as $key => $value) {
         case '##resource_gender##':
             $content = str_replace($key, Resource::getGenderByValue($resource->fields['gender']), $content);
             break;
-        case '##resource_locations_id##' :
+        case '##resource_locations_id##':
             $content = str_replace($key, Location::getFriendlyNameById($resource->fields['locations_id']), $content);
             break;
-        case '##resource_users_id##' :
-        case '##resource_users_id_sales##' :
+        case '##resource_users_id##':
+        case '##resource_users_id_sales##':
             $field = str_replace("##resource_", "", $key);
             $field = str_replace("##", "", $field);
             $content = str_replace($key, User::getFriendlyNameById($resource->fields[$field]), $content);
             break;
-        case '##resource_plugin_resources_departments_id##' :
+        case '##resource_plugin_resources_departments_id##':
             $content = str_replace($key, Department::getFriendlyNameById($resource->fields['plugin_resources_departments_id']), $content);
             break;
-        case '##resource_plugin_resources_services_id##' :
+        case '##resource_plugin_resources_services_id##':
             $content = str_replace($key, Service::getFriendlyNameById($resource->fields['plugin_resources_services_id']), $content);
             break;
-        case '##resource_plugin_resources_functions_id##' :
+        case '##resource_plugin_resources_functions_id##':
             $content = str_replace($key, ResourceFunction::getFriendlyNameById($resource->fields['plugin_resources_functions_id']), $content);
             break;
-        case '##resource_plugin_resources_teams_id##' :
+        case '##resource_plugin_resources_teams_id##':
             $content = str_replace($key, Team::getFriendlyNameById($resource->fields['plugin_resources_teams_id']), $content);
             break;
-        case '##resource_date_begin##' :
-        case '##resource_date_end##' :
+        case '##resource_date_begin##':
+        case '##resource_date_end##':
             $field = str_replace("##resource_", "", $key);
             $field = str_replace("##", "", $field);
             $date = new DateTime($resource->fields[$field]);
             $content = str_replace($key, $date->format('Y-m-d'), $content);
             break;
-        case '##resource_plugin_resources_resourcesituations_id##' :
+        case '##resource_plugin_resources_resourcesituations_id##':
             $content = str_replace($key, ResourceSituation::getFriendlyNameById($resource->fields['plugin_resources_resourcesituations_id']), $content);
             break;
-        case '##resource_plugin_resources_contractnatures_id##' :
+        case '##resource_plugin_resources_contractnatures_id##':
             $content = str_replace($key, ContractNature::getFriendlyNameById($resource->fields['plugin_resources_contractnatures_id']), $content);
             break;
-        case '##resource_plugin_resources_ranks_id##' :
+        case '##resource_plugin_resources_ranks_id##':
             $content = str_replace($key, Rank::getFriendlyNameById($resource->fields['plugin_resources_ranks_id']), $content);
             break;
-        case '##resource_plugin_resources_resourcespecialities_id##' :
+        case '##resource_plugin_resources_resourcespecialities_id##':
             $content = str_replace($key, ResourceSpeciality::getFriendlyNameById($resource->fields['plugin_resources_resourcespecialities_id']), $content);
             break;
-        case '##resource_plugin_resources_roles_id##' :
+        case '##resource_plugin_resources_roles_id##':
             $content = str_replace($key, Role::getFriendlyNameById($resource->fields['plugin_resources_roles_id']), $content);
             break;
         default:
