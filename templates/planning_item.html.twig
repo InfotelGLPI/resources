@@ -35,7 +35,8 @@
  # user displaying the planning.
  #}
 {% set dom_id = 'content_task_' ~ id ~ rand %}
-<a href="{{ task_url }}" onmouseout="cleanhide('{{ dom_id }}')" onmouseover="cleandisplay('{{ dom_id }}')">{{ heading_format|format(time_label, task_name) }}{% if user_name is not empty %} - {{ __('User') }} {{ user_name }}{% endif %}</a><br>
+{# The details below are shown while the link is hovered, by public/scripts/fragments.js (no inline handler: CSP) #}
+<a href="{{ task_url }}" data-resources-hover="{{ dom_id }}">{{ heading_format|format(time_label, task_name) }}{% if user_name is not empty %} - {{ __('User') }} {{ user_name }}{% endif %}</a><br>
 {{ resource_type_name }} : <a href="{{ resource_url }}">{{ resource }}</a>
 <div class="over_link" id="{{ dom_id }}">
     {% if end_date is not empty %}<strong>{{ __('End date') }}</strong> : {{ end_date }}<br>{% endif %}

@@ -100,7 +100,7 @@
                                 <div>
                                     <input class="form-check-input massive_action_checkbox" type="checkbox" id="checkall_{{ massiveactionparams['container'] }}"
                                         value="" aria-label="{{ __('Check all') }}"
-                                        onclick="checkAsCheckboxes(this, '{{ massiveactionparams['container']|e('js') }}', '.massive_action_checkbox');" />
+                                        data-resources-check-all="{{ massiveactionparams['container'] }}" />
                                 </div>
                             </th>
                         {% endif %}
@@ -114,11 +114,12 @@
                                 {% set new_order = (order == 'ASC' ? 'DESC' : 'ASC') %}
                             {% endif %}
 
-                            {% set sort_href = "javascript:reloadTab('sort=" ~ colkey ~ "&order=" ~ new_order ~ "&" ~ additional_params ~ "');" %}
+                            {# Reloads the tab sorted on the column, by public/scripts/fragments.js (no javascript: URL: CSP) #}
+                            {% set sort_query = "sort=" ~ colkey ~ "&order=" ~ new_order ~ "&" ~ additional_params %}
 
                             <th>
                                 {% if not nosort and not (column is array and column['nosort'] is defined) %}
-                                    <a href="{{ sort_href }}">
+                                    <a href="#" role="button" data-resources-reload-tab="{{ sort_query }}">
                                     <i class="{{ sort_icon }}"></i>
                                 {% endif %}
                                 <span>{{ raw_header ? column_label|raw : column_label }}</span>
@@ -310,24 +311,22 @@
                                             {% set content = entry_data['content'] %}
                                             {% if content is not empty %}
                                                 <div class="btn-group btn-group-sm d-flex" >
+                                                    {# submitGetLink() called by public/scripts/fragments.js (no inline
+                                                     # handler: CSP), with the fields of this row. An empty target posts
+                                                     # to the current page, as the former delete_choice_*() did. #}
                                                     <div class="pointer"
                                                          name='{{ entry_data['button-name'] }}'
-                                                         onclick="delete_choice_{{ rand }}(event)"
+                                                         data-resources-submit-get-link="{{ target|default('') }}"
+                                                         data-resources-submit-get-link-fields="{{ {
+                                                             'id': entry_data['id'],
+                                                             'plugin_resources_resources_id': entry_data['plugin_resources_resources_id'],
+                                                             '_glpi_csrf_token': csrf_token(),
+                                                             '_glpi_simple_form': 1,
+                                                             'deletechoice': 1
+                                                         }|json_encode }}"
                                                          style="max-width: 50px;">
                                                         <i class="ti ti-circle-x"></i>
                                                     </div>
-                                                    <script type="text/javascript">
-                                                        function delete_choice_{{ rand }}(e) {
-                                                            e.preventDefault();
-                                                            submitGetLink('{{ target }}', {
-                                                                'id': {{ entry_data['id'] }},
-                                                                'plugin_resources_resources_id': {{ entry_data['plugin_resources_resources_id'] }},
-                                                                '_glpi_csrf_token': '{{ csrf_token() }}',
-                                                                '_glpi_simple_form': 1,
-                                                                'deletechoice': 1
-                                                            });
-                                                        }
-                                                    </script>
                                                 </div>
                                             {% endif %}
                                         {% elseif formatter == "hidden" and entry[colkey] is not empty %}

@@ -36,7 +36,17 @@
  * - data-resources-toggle (element id) + data-resources-toggle-icon (element id) and
  *   data-resources-toggle-closed / data-resources-toggle-open (classes): folds the element
  *   through the showHideDiv() of the core;
- * - data-resources-confirm: the message a submit button asks to confirm before going on.
+ * - data-resources-confirm: the message a submit button asks to confirm before going on;
+ * - data-resources-check-all (container id): "check all" box of the massive actions;
+ * - data-resources-reload-tab (query string): sorting link of a tab, through reloadTab();
+ * - data-resources-submit-get-link (URL) + data-resources-submit-get-link-fields (JSON object):
+ *   posts the fields to the URL through the submitGetLink() of the core.
+ *
+ * And while hovered, an element carrying data-resources-hover (element id) shows that element
+ * through the cleandisplay() / cleanhide() of the core.
+ *
+ * These replace inline event handlers and javascript: URLs, blocked by the Content Security
+ * Policy of GLPI.
  *
  * An element carrying data-resources-autoload-url fills itself on page load in the same way,
  * with its own data-resources-load-params.
@@ -102,6 +112,32 @@ document.addEventListener('click', (event) => {
         return;
     }
 
+    // "Check all" box of templates/datatable.html.twig: the box itself toggles as usual
+    const check_all = event.target.closest('[data-resources-check-all]');
+    if (check_all !== null) {
+        checkAsCheckboxes(check_all, check_all.dataset.resourcesCheckAll, '.massive_action_checkbox');
+        return;
+    }
+
+    // Sorting links of templates/datatable.html.twig
+    const sort = event.target.closest('[data-resources-reload-tab]');
+    if (sort !== null) {
+        event.preventDefault();
+        reloadTab(sort.dataset.resourcesReloadTab);
+        return;
+    }
+
+    // Delete buttons of templates/datatable.html.twig: each posts the fields of its own row
+    const link = event.target.closest('[data-resources-submit-get-link]');
+    if (link !== null) {
+        event.preventDefault();
+        submitGetLink(
+            link.dataset.resourcesSubmitGetLink,
+            JSON.parse(link.dataset.resourcesSubmitGetLinkFields || '{}'),
+        );
+        return;
+    }
+
     const trigger = event.target.closest(
         '[data-resources-load-url], [data-resources-toggle], [data-resources-hide], [data-resources-show], [data-resources-remove]',
     );
@@ -135,6 +171,21 @@ document.addEventListener('click', (event) => {
             document.getElementById(data.resourcesLoadTarget),
             data.resourcesLoadParams,
         );
+    }
+});
+
+// Planning items of a resource task (templates/planning_item.html.twig): the details are shown
+// while the link is hovered, as the former onmouseover / onmouseout did
+document.addEventListener('mouseover', (event) => {
+    const link = event.target instanceof Element ? event.target.closest('[data-resources-hover]') : null;
+    if (link !== null) {
+        cleandisplay(link.dataset.resourcesHover);
+    }
+});
+document.addEventListener('mouseout', (event) => {
+    const link = event.target instanceof Element ? event.target.closest('[data-resources-hover]') : null;
+    if (link !== null) {
+        cleanhide(link.dataset.resourcesHover);
     }
 });
 
