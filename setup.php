@@ -277,6 +277,9 @@ function plugin_version_resources()
         'license' => 'GPLv2+',
         'author' => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD",
         'homepage' => 'https://github.com/InfotelGLPI/resources',
+        // No inline event handler, javascript: URL nor script without nonce: the plugin works
+        // under the Content Security Policy of GLPI (public/scripts/fragments.js)
+        'csp_compliant' => true,
         'requirements' => [
             'glpi' => [
                 'min' => '11.0.99',

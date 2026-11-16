@@ -52,14 +52,14 @@
             {% endset %}
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                 {% if action.post is defined and action.post is not empty %}
-                    <form method="post" action="{{ action.url }}" class="h-100"
-                          {% if action.confirm is defined and action.confirm is not empty %}
-                              onsubmit="return confirm('{{ action.confirm|e('js') }}');"
-                          {% endif %}>
+                    <form method="post" action="{{ action.url }}" class="h-100">
                         {% for post_key, post_value in action.post %}
                             <input type="hidden" name="{{ post_key }}" value="{{ post_value }}">
                         {% endfor %}
-                        <button type="submit" class="card card-link card-link-pop h-100 w-100 text-reset text-decoration-none border p-0 bg-transparent">
+                        {# The confirmation is asked by public/scripts/fragments.js (data-resources-confirm),
+                         # on the only submit button of the form (no inline handler: CSP) #}
+                        <button type="submit" class="card card-link card-link-pop h-100 w-100 text-reset text-decoration-none border p-0 bg-transparent"
+                                {% if action.confirm is defined and action.confirm is not empty %}data-resources-confirm="{{ action.confirm }}"{% endif %}>
                             {{ inner }}
                         </button>
                     </form>
