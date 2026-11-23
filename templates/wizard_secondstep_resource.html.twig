@@ -638,13 +638,13 @@
                                         __('Arrival date', 'resources'),
                                         {
                                             'required': mandatory.date_begin is defined,
-                                            'canedit': readonly.date_begin is defined,
+                                            'readonly': readonly.date_begin is defined,
                                         }
                                     ) }}
                                 {% endif %}
                             {% endif %}
 
-                            {% if hidden.date_begin is not defined %}
+                            {% if hidden.date_end is not defined %}
                                 {% if item.isField('date_end') %}
                                     {{ fields.dateField(
                                         'date_end',
@@ -652,7 +652,7 @@
                                         __('Departure date', 'resources'),
                                         {
                                             'required': mandatory.date_end is defined,
-                                            'canedit': readonly.date_end is defined,
+                                            'readonly': readonly.date_end is defined,
                                             'helper': __('Empty for non defined', 'resources')
                                         }
                                     ) }}

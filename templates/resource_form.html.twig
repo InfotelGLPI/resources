@@ -90,12 +90,14 @@
 
             {# Read-only outside the central interface: the value is kept through the hidden input
              # rendered by the dropdown itself #}
-            {{ fields.dropdownField(resourcestate_class, 'plugin_resources_resourcestates_id',
-                item.fields['plugin_resources_resourcestates_id'],
-                _n('Resource state', 'Resource states', 1, 'resources'), {
-                    'entity': item.fields['entities_id'],
-                    'readonly': not is_central or readonly.plugin_resources_resourcestates_id is defined,
-                }) }}
+            {% if hidden.plugin_resources_resourcestates_id is not defined %}
+                {{ fields.dropdownField(resourcestate_class, 'plugin_resources_resourcestates_id',
+                    item.fields['plugin_resources_resourcestates_id'],
+                    _n('Resource state', 'Resource states', 1, 'resources'), {
+                        'entity': item.fields['entities_id'],
+                        'readonly': not is_central or readonly.plugin_resources_resourcestates_id is defined,
+                    }) }}
+            {% endif %}
 
             {% if hidden.plugin_resources_contracttypes_id is not defined %}
                 {{ fields.dropdownField(contracttype_class, 'plugin_resources_contracttypes_id',
@@ -261,39 +263,52 @@
             {% endif %}
 
             {% if hidden.date_begin is not defined %}
-                {{ fields.dateField('date_begin', item.fields['date_begin'], __('Arrival date', 'resources'), {
-                    'required': mandatory.date_begin is defined,
-                }) }}
+                {% if readonly.date_begin is defined %}
+                    {{ fields.readOnlyField('date_begin', date_begin_display, __('Arrival date', 'resources')) }}
+                    {{ fields.hiddenField('date_begin', item.fields['date_begin']) }}
+                {% else %}
+                    {{ fields.dateField('date_begin', item.fields['date_begin'], __('Arrival date', 'resources'), {
+                        'required': mandatory.date_begin is defined,
+                    }) }}
+                {% endif %}
             {% endif %}
 
             {% if item.fields['id'] > 0 and tpl < 2 %}
                 {{ fields.readOnlyField('date_declaration', declaration_date, __('Request date')) }}
-                {% if can_set_recipient %}
-                    {{ fields.dropdownField(user_class, 'users_id_recipient', item.fields['users_id_recipient'], __('Writer'), {
-                        'entity': item.fields['entities_id'],
-                        'entity_sons': true,
-                        'right': 'all',
-                        'readonly': readonly.users_id_recipient is defined,
-                    }) }}
-                {% else %}
-                    {{ fields.readOnlyField('users_id_recipient', recipient_name, __('Writer')) }}
+                {% if hidden.users_id_recipient is not defined %}
+                    {% if can_set_recipient %}
+                        {{ fields.dropdownField(user_class, 'users_id_recipient', item.fields['users_id_recipient'], __('Writer'), {
+                            'entity': item.fields['entities_id'],
+                            'entity_sons': true,
+                            'right': 'all',
+                            'readonly': readonly.users_id_recipient is defined,
+                        }) }}
+                    {% else %}
+                        {{ fields.readOnlyField('users_id_recipient', recipient_name, __('Writer')) }}
+                    {% endif %}
                 {% endif %}
             {% else %}
                 {{ fields.hiddenField('users_id_recipient', session('glpiID')) }}
                 {{ fields.hiddenField('date_declaration', 'now'|date('Y-m-d')) }}
             {% endif %}
 
-            {{ fields.dropdownYesNo('is_helpdesk_visible', item.fields['is_helpdesk_visible'], __('Associable to a ticket'), {
-                'readonly': not is_central or readonly.is_helpdesk_visible is defined,
-            }) }}
+            {% if hidden.is_helpdesk_visible is not defined %}
+                {{ fields.dropdownYesNo('is_helpdesk_visible', item.fields['is_helpdesk_visible'], __('Associable to a ticket'), {
+                    'readonly': not is_central or readonly.is_helpdesk_visible is defined,
+                }) }}
+            {% endif %}
 
-            {# Always on, and only the central interface may turn it off. The hidden input added
-             # below keeps posting 1 when the checkbox itself is disabled #}
-            {{ fields.checkboxField('send_notification', 1, __('Send a notification'), {
-                'disabled': not is_central or tpl,
-            }) }}
-            {% if not is_central %}
+            {% if use_notification == 1 %}
                 {{ fields.hiddenField('send_notification', 1) }}
+            {% else %}
+                {# Always on, and only the central interface may turn it off. The hidden input added
+                 # below keeps posting 1 when the checkbox itself is disabled #}
+                {{ fields.checkboxField('send_notification', 1, __('Send a notification'), {
+                    'disabled': not is_central or tpl,
+                }) }}
+                {% if not is_central %}
+                    {{ fields.hiddenField('send_notification', 1) }}
+                {% endif %}
             {% endif %}
 
             {% set leaving_options = {'readonly': not is_central or readonly.is_leaving is defined} %}
@@ -320,7 +335,7 @@
             {% endif %}
 
             {% if hidden.date_end is not defined %}
-                {% if is_central %}
+                {% if is_central and readonly.date_end is not defined %}
                     {{ fields.dateField('date_end', item.fields['date_end'], __('Departure date', 'resources'), {
                         'required': mandatory.date_end is defined,
                         'helper': mandatory.date_end is defined ? false : __('Empty for non defined', 'resources'),

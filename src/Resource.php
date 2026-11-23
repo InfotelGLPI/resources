@@ -77,12 +77,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Ticket;
 use Toolbox;
 use UserCategory;
+use Glpi\Search\DefaultSearchRequestInterface;
 use UserTitle;
 
 /**
  * Class Resource
  */
-class Resource extends CommonDBTM
+class Resource extends CommonDBTM implements DefaultSearchRequestInterface
 {
     public static $rightname = 'plugin_resources';
 
@@ -627,14 +628,13 @@ class Resource extends CommonDBTM
         return true;
     }
 
-    public static function getDefaultSearchRequest()
+    public static function getDefaultSearchRequest(): array
     {
-
         $config = new Config();
-        $search = ['sort'  => $config->fields['order_column'],
-            'order' => $config->fields['order_order'],];
+        $sort  = (int) $config->fields['order_column'];
+        $order = $config->fields['order_order'];
 
-        return $search;
+        return ['sort' => $sort, 'order' => $order];
     }
 
     /**
@@ -2305,10 +2305,12 @@ class Resource extends CommonDBTM
             'organisation_script'        => $organisation['script'],
             'declaration_date'           => Html::convDate($this->fields["date_declaration"]),
             'recipient_name'             => getUserName($this->fields["users_id_recipient"]),
+            'date_begin_display'         => Html::convDate($this->fields["date_begin"]),
             'date_end_display'           => Html::convDate($this->fields["date_end"]),
             'leaving_by'                 => $leaving_by,
             'remove_url'                 => PLUGIN_RESOURCES_WEBDIR . "/front/resource.remove.php?resource_id=" . (int) $ID,
             'created_on'                 => sprintf(__('Created on %s'), Html::convDateTime($_SESSION["glpi_currenttime"])),
+            'use_notification'           => (int) ($config->fields['automatic_notification_declare_arrival_form'] ?? 0),
         ]);
 
         return true;

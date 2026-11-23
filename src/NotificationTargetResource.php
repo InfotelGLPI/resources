@@ -510,7 +510,7 @@ class NotificationTargetResource extends NotificationTarget
                     $resource['plugin_resources_services_id'],
                 );
                 $tmp['##resource.function##']      = Dropdown::getDropdownName(
-                    'glpi_plugin_resources_functions',
+                    'glpi_plugin_resources_resourcefunctions',
                     $resource['plugin_resources_functions_id'],
                 );
                 $resourcehabilitation = new ResourceHabilitation();
@@ -718,7 +718,7 @@ class NotificationTargetResource extends NotificationTarget
                 $this->obj->getField('plugin_resources_services_id'),
             );
             $this->data['##resource.function##']      = Dropdown::getDropdownName(
-                'glpi_plugin_resources_functions',
+                'glpi_plugin_resources_resourcefunctions',
                 $this->obj->getField('plugin_resources_functions_id'),
             );
             $this->data['##lang.resource.role##'] = Role::getTypeName(1);
@@ -804,6 +804,7 @@ class NotificationTargetResource extends NotificationTarget
             );
 
             $this->data['##lang.resource.comment##'] = __('Description');
+            $this->data['##resource.comment##'] = '';
             if ($this->obj->getField("comment")) {
                 $comment = str_replace(['\r\n', '\n', '\r'], "<br/>", $this->obj->getField("comment"));
                 $this->data['##resource.comment##'] = RichText::getTextFromHtml($comment);
@@ -891,7 +892,7 @@ class NotificationTargetResource extends NotificationTarget
                     $resource['plugin_resources_services_id'],
                 );
                 $tmp['##resource.function##']      = Dropdown::getDropdownName(
-                    'glpi_plugin_resources_functions',
+                    'glpi_plugin_resources_resourcefunctions',
                     $resource['plugin_resources_functions_id'],
                 );
                 $this->data['##resource.role##']      = Dropdown::getDropdownName(
@@ -1037,7 +1038,7 @@ class NotificationTargetResource extends NotificationTarget
             );
             $this->data['##lang.resource.function##']         = ResourceFunction::getTypeName(1);
             $this->data['##resource.function##']      = Dropdown::getDropdownName(
-                'glpi_plugin_resources_functions',
+                'glpi_plugin_resources_resourcefunctions',
                 $this->obj->getField('plugin_resources_functions_id'),
             );
             $this->data['##lang.resource.role##'] = Role::getTypeName(1);
@@ -1072,7 +1073,7 @@ class NotificationTargetResource extends NotificationTarget
             );
 
             $this->data['##lang.resource.comment##'] = __('Description');
-
+            $this->data['##resource.comment##'] = '';
             if ($this->obj->getField("comment")) {
                 $this->data['##resource.comment##'] = RichText::getTextFromHtml($this->obj->getField("comment"));
             }
