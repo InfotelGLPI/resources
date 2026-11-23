@@ -13,7 +13,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.3",
-        "directorytree/ldaprecord": "^3.0"
+        "directorytree/ldaprecord": "^4.1"
     },
     "replace": {
         "psr/clock": "1.0.0",
