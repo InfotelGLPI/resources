@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 10:19+0000\n"
+"POT-Creation-Date: 2026-11-27 11:47+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -313,7 +313,7 @@ msgstr ""
 msgid "Arrival / Departure workflow"
 msgstr ""
 
-#: src/Directory.php:219 src/Dashboard.php:137 src/Resource.php:477
+#: src/Directory.php:232 src/Dashboard.php:137 src/Resource.php:477
 #: src/Resource.php:994 src/Checklist.php:1331
 #: src/RuleContracttypeHidden.php:280 src/RuleContracttypeReadonly.php:321
 #: src/NotificationTargetResource.php:469
@@ -324,7 +324,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:1659
 #: src/NotificationTargetResource.php:1690 src/Resource_Item.php:877
 #: src/Resource_Item.php:1162 src/Resource_Item.php:1172
-#: src/ResourcePDF.php:109 src/Recap.php:214 src/Config.php:117
+#: src/ResourcePDF.php:109 src/Recap.php:227 src/Config.php:117
 #: src/Config.php:496 src/RuleContracttype.php:277
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:305
 #: report/resourcewithoutuser/resourcewithoutuser.php:85
@@ -717,7 +717,7 @@ msgstr "Elegir"
 msgid "Choosing the intercontrat"
 msgstr "Elegir el intercontrato"
 
-#: src/Directory.php:376 src/Resource.php:5240
+#: src/Directory.php:389 src/Resource.php:5240
 msgid "Click here to send your email"
 msgstr "Haga clic aquí para enviar su correo electrónico"
 
@@ -1076,7 +1076,7 @@ msgstr[0] "Departamentos"
 msgstr[1] "Departamentos"
 msgstr[2] "Departamentos"
 
-#: src/Adconfig.php:297 src/Directory.php:227 src/Dashboard.php:190
+#: src/Adconfig.php:297 src/Directory.php:240 src/Dashboard.php:190
 #: src/LinkAd.php:706 src/Resource_Change.php:595 src/Resource.php:478
 #: src/Resource.php:1001 src/Checklist.php:1330
 #: src/RuleContracttypeHidden.php:284 src/RuleContracttypeReadonly.php:325
@@ -1088,7 +1088,7 @@ msgstr[2] "Departamentos"
 #: src/NotificationTargetResource.php:1660
 #: src/NotificationTargetResource.php:1691 src/Resource_Item.php:878
 #: src/Resource_Item.php:1163 src/Resource_Item.php:1173
-#: src/ResourcePDF.php:110 src/Recap.php:222 src/Config.php:118
+#: src/ResourcePDF.php:110 src/Recap.php:235 src/Config.php:118
 #: src/RuleContracttype.php:281
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:306
 #: report/resourcewithoutuser/resourcewithoutuser.php:90
@@ -1774,7 +1774,7 @@ msgstr ""
 msgid "Linked task"
 msgstr "Tarea vinculada"
 
-#: src/Recap.php:70
+#: src/Recap.php:83
 msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
 msgstr[0] "Lista de empleos / recursos"
@@ -2300,7 +2300,7 @@ msgstr ""
 #: src/NotificationTargetResource.php:836
 #: src/NotificationTargetResource.php:1007
 #: src/NotificationTargetResource.php:1651
-#: src/NotificationTargetResource.php:1682 src/Recap.php:142 src/Config.php:120
+#: src/NotificationTargetResource.php:1682 src/Recap.php:155 src/Config.php:120
 #: src/Config.php:148 src/RuleContracttype.php:285
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:80
 #: ⁨standard input⁩:110 ⁨standard input⁩:237
@@ -2320,7 +2320,7 @@ msgstr[0] "Rangos"
 msgstr[1] "Rangos"
 msgstr[2] "Rangos"
 
-#: src/Employment.php:257 src/Recap.php:238
+#: src/Employment.php:257 src/Recap.php:251
 #: report/resourceemploymentdiff/resourceemploymentdiff.php:111
 #: ⁨standard input⁩:72
 msgid "Ratio Employment / Budget"
@@ -2516,7 +2516,7 @@ msgstr "Creación de recursos"
 msgid "Resource files imports"
 msgstr "Importación de archivos de recursos"
 
-#: hook.php:1528 src/Directory.php:210 src/Resource.php:475
+#: hook.php:1528 src/Directory.php:223 src/Resource.php:475
 #: src/Resource.php:981 src/Resource.php:3342 src/Task.php:949
 #: src/Task.php:1340 src/RuleContracttypeHidden.php:268
 #: src/RuleContracttypeReadonly.php:187 src/RuleContracttypeReadonly.php:228
@@ -2573,7 +2573,7 @@ msgstr "Volumen de recursos (euros)"
 msgid "Resources data"
 msgstr "Datos de recursos"
 
-#: src/Directory.php:74
+#: src/Directory.php:87
 msgid "Resources directory"
 msgstr ""
 
@@ -2685,7 +2685,7 @@ msgstr ""
 msgid "Select the contract type"
 msgstr "Seleccione el tipo de contrato"
 
-#: src/Directory.php:283 src/Resource.php:3969 ⁨standard input⁩:292
+#: src/Directory.php:296 src/Resource.php:3969 ⁨standard input⁩:292
 #: ⁨standard input⁩:726
 msgid "Send a notification"
 msgstr ""
