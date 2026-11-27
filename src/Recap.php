@@ -43,6 +43,20 @@ class Recap extends CommonDBTM
 {
     use UserListTrait;
 
+    // The rows are users: keep out of any output what User keeps out of it (its own list
+    // cannot be referenced in a declaration), plus the password reset token User only shows
+    // to whoever may update the account. Not in UserListTrait, see there.
+    public static $undisclosedFields = [
+        'password',
+        'password_history',
+        'personal_token',
+        'api_token',
+        'cookie_token',
+        '2fa',
+        'password_forget_token',
+        'password_forget_token_date',
+    ];
+
     protected static $notable = true;
     private $table = "glpi_users";
 
