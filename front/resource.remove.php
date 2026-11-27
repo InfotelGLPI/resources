@@ -34,7 +34,8 @@ use GlpiPlugin\Resources\Resource;
 $resource = new Resource();
 
 if (isset($_POST["removeresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    // declareLeaving() works on the resource loaded here, checked on a plain id
+    Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'], UPDATE);
     $resource->declareLeaving($_POST);
     Html::back();
 } else {

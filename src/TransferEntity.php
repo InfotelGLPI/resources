@@ -43,6 +43,10 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class TransferEntity extends CommonDBTM
 {
+    // Entities opened to transfers and group notified about them: setup of the administrator,
+    // which the standard massive actions of the setup list must not open to every HR user.
+    use ConfigRightTrait;
+
     public static $rightname = 'plugin_resources';
 
     /**
@@ -52,31 +56,6 @@ class TransferEntity extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Transfer entities', 'resources');
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     public static function getIcon()

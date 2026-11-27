@@ -30,62 +30,56 @@
 /**
  * Update from 2.3.1 to 2.3.2
  *
+ * Every statement goes through the query builder: the names and comments of the legacy
+ * access profiles are stored values, an apostrophe in one of them used to end the SQL
+ * literal they were concatenated into (and to make the profile migration fail silently).
+ *
  * @return bool for success (will die for most error)
  * */
 function update231_232()
 {
     global $DB;
 
-    $query = "SELECT *
-             FROM `glpi_plugin_resources_accessprofiles`";
+    foreach ($DB->request(['FROM' => 'glpi_plugin_resources_accessprofiles']) as $data) {
+        $DB->insert('glpi_plugin_resources_habilitations', [
+            'entities_id'             => (int) $data['entities_id'],
+            'is_recursive'            => (int) $data['is_recursive'],
+            'name'                    => $data['name'],
+            'completename'            => $data['name'],
+            'comment'                 => $data['comment'],
+            'allow_resource_creation' => 1,
+        ]);
+        // The row just written, not a lookup by name: another habilitation could share it
+        $id = (int) $DB->insertId();
 
-    if ($result = $DB->doQuery($query)) {
-        if ($DB->numrows($result) > 0) {
-            while ($data = $DB->fetchAssoc($result)) {
-                $query_add = "INSERT INTO `glpi_plugin_resources_habilitations` (entities_id, is_recursive, name, completename,
-                                                                              comment, allow_resource_creation)
-                          VALUES ('" . $data['entities_id'] . "', '" . $data['is_recursive'] . "',
-                          '" . $data['name'] . "', '" . $data['name'] . "', '" . $data['comment'] . "', '1')";
-                $DB->doQuery($query_add);
-
-                $query_id = "SELECT `id`
-                         FROM `glpi_plugin_resources_habilitations`
-                         WHERE `name` LIKE '" . $data['name'] . "'";
-                if ($result_id = $DB->doQuery($query_id)) {
-                    $id = $DB->result($result_id, 1, 'id');
-
-                    $query_resource = "SELECT *
-                                 FROM `glpi_plugin_resources_resources`
-                                 WHERE `plugin_resources_habilitations_id` = '" . $data['id'] . "'";
-                    if ($result_resource = $DB->doQuery($query_resource)) {
-                        if ($DB->numrows($result_resource) > 0) {
-                            while ($data_resource = $DB->fetchAssoc($result_resource)) {
-                                if ($data_resource['is_template'] == 0) {
-                                    $query_insert = "INSERT INTO `glpi_plugin_resources_resourcehabilitations`
-                                             (`plugin_resources_resources_id`, `plugin_resources_habilitations_id`)
-                                             VALUES ('" . $data_resource['id'] . "', '$id')";
-
-                                    $DB->doQuery($query_insert);
-                                } else {
-                                    $query_update = "UPDATE glpi_plugin_resources_resources
-                                         SET `plugin_resources_habilitations_id` = '$id'
-                                         WHERE `id` = '" . $data_resource['id'] . "'";
-                                    $DB->doQuery($query_update);
-                                }
-                            }
-                        }
-                    }
-                }
+        $resources = $DB->request([
+            'SELECT' => ['id', 'is_template'],
+            'FROM'   => 'glpi_plugin_resources_resources',
+            'WHERE'  => ['plugin_resources_habilitations_id' => (int) $data['id']],
+        ]);
+        foreach ($resources as $data_resource) {
+            if ($data_resource['is_template'] == 0) {
+                $DB->insert('glpi_plugin_resources_resourcehabilitations', [
+                    'plugin_resources_resources_id'     => (int) $data_resource['id'],
+                    'plugin_resources_habilitations_id' => $id,
+                ]);
+            } else {
+                $DB->update(
+                    'glpi_plugin_resources_resources',
+                    ['plugin_resources_habilitations_id' => $id],
+                    ['id' => (int) $data_resource['id']],
+                );
             }
         }
     }
 
-    $query_drop = "DROP TABLE IF EXISTS `glpi_plugin_resources_accessprofiles`;";
-    $DB->doQuery($query_drop);
+    $DB->dropTable('glpi_plugin_resources_accessprofiles', true);
 
-    $query_delete_rule = "UPDATE `glpi_ruleactions` SET `field` = 'requiredfields_plugin_resources_habilitations_id'
-                          WHERE `glpi_ruleactions`.`field` = 'requiredfields_plugin_resources_accessprofiles_id';";
-    $DB->doQuery($query_delete_rule);
+    $DB->update(
+        'glpi_ruleactions',
+        ['field' => 'requiredfields_plugin_resources_habilitations_id'],
+        ['field' => 'requiredfields_plugin_resources_accessprofiles_id'],
+    );
 
     return true;
 }

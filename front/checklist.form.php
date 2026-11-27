@@ -42,22 +42,23 @@ if (isset($_POST["add"])) {
     // check(-1, CREATE) only covers the posted entity, which the client chooses: the parent
     // resource has to be authorised too, and it fixes the entity of the new row, as the
     // add_checklist branch of front/resource.form.php does.
-    $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
+    // The row is attached to the id checked, not to the posted value.
+    $resources_id = Resource::getPostedId($_POST['plugin_resources_resources_id'] ?? null);
     if ($resources_id > 0) {
         $resource = new Resource();
         $resource->check($resources_id, UPDATE);
         $_POST['entities_id'] = $resource->fields['entities_id'];
     }
-    $checklist->add($_POST);
+    $checklist->add(['plugin_resources_resources_id' => $resources_id] + $_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
     // check($id, UPDATE) instead of the global canCreate(): CommonDBTM::update() performs
     // no per-item authorization, so without this any authenticated user holding the create
     // right could update an arbitrary checklist by id (IDOR), regardless of its entity.
-    $checklist->check($_POST["id"], UPDATE, $_POST);
+    $checklists_id = Resource::checkPostedItem($checklist, $_POST["id"] ?? null, UPDATE);
     // The check above authorises the existing row, not the values it is updated with: a
     // checklist stays attached to the resource and entity it was created under.
-    $input = $_POST;
+    $input = ['id' => $checklists_id] + $_POST;
     unset($input['plugin_resources_resources_id'], $input['entities_id']);
     $checklist->update($input);
     Html::back();

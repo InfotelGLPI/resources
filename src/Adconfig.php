@@ -39,7 +39,6 @@ use Html;
 use ITILCategory;
 use Location;
 use Migration;
-use Session;
 use Glpi\Application\View\TemplateRenderer;
 
 /**
@@ -47,6 +46,11 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class Adconfig extends CommonDBTM
 {
+    // Directory bind account, provisioning formats and destination OUs: setup of the
+    // administrator, edited from front/adconfig.form.php only.
+    use ConfigRightTrait;
+    use NoStandardMassiveActionTrait;
+
     public static $rightname = 'plugin_resources';
 
     // Initial password of the accounts created in the directory.
@@ -76,31 +80,6 @@ class Adconfig extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Setup LDAP directory', 'resources');
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     public function __construct()

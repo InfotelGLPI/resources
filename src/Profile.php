@@ -33,6 +33,7 @@ use CommonGLPI;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Html;
+use Migration;
 use ProfileRight;
 use Session;
 
@@ -454,6 +455,50 @@ class Profile extends \Profile
                 $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
             }
         }
+    }
+
+    /**
+     * Carry the profiles over the rights enforced from 4.1.7 on. Run once, on update.
+     *
+     * canCreate() of many itemtypes accepted UPDATE or DELETE (PURGE for the checklists) in
+     * place of CREATE, and the public sector dropdowns tested the UPDATE bit of the dropdown
+     * management right to create. The CREATE bit is now required: give it to the profiles
+     * that were relying on the former test.
+     *
+     * The directory only asked for plugin_resources READ, its own right hiding a menu tile at
+     * most: give that right to the profiles that could open the directory.
+     *
+     * The rights can be narrowed afterwards from the profile form.
+     */
+    public static function migrateEnforcedRights(Migration $migration): void
+    {
+        // Right => bits the former canCreate() of its itemtypes accepted in place of CREATE.
+        // plugin_resources is left out: its CREATE bit is the one that declares a resource,
+        // which Resource always enforced strictly, so granting it would open the creation of
+        // resources to profiles that were denied it. The rows of a resource sharing that right
+        // ask for UPDATE instead (ResourceChildRightTrait), which those profiles already hold.
+        // The core "dropdown" right, used by a few plugin dropdowns, is left alone as well: the
+        // CREATE bit it now requires for them is the one it requires for every core dropdown.
+        $former_create_bits = [
+            'plugin_resources_budget'         => [UPDATE, DELETE],
+            'plugin_resources_checklist'      => [UPDATE, DELETE, PURGE],
+            'plugin_resources_employee'       => [UPDATE, DELETE],
+            'plugin_resources_employment'     => [UPDATE, DELETE],
+            'plugin_resources_holiday'        => [UPDATE, DELETE],
+            'plugin_resources_resting'        => [UPDATE, DELETE],
+            'plugin_resources_role'           => [UPDATE, DELETE],
+            'plugin_resources_rule'           => [UPDATE, DELETE],
+            'plugin_resources_task'           => [UPDATE, DELETE],
+            'plugin_resources_validation'     => [UPDATE, DELETE],
+            'plugin_resources_dropdown_public' => [UPDATE],
+        ];
+        foreach ($former_create_bits as $right => $bits) {
+            foreach ($bits as $bit) {
+                $migration->giveRight($right, CREATE, [$right => $bit]);
+            }
+        }
+
+        $migration->giveRight('plugin_resources_annuary', READ, ['plugin_resources' => READ]);
     }
 
     public static function removeRightsFromSession()

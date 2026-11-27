@@ -52,17 +52,6 @@ class EmploymentState extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Have I the global right to "view" the Object
      *
      * Default is true and check entity if the objet is entity assign

@@ -316,7 +316,9 @@ if ($report->criteriasValidated()) {
                 $resource = new Resource();
                 $resource->getFromDB($data['resources_id']);
 
-                echo ReportExport::showItem($output_type, $resource->getLink(), $num, $key);
+                // getLink() escapes the name it prints: trusted HTML
+                echo ReportExport::showItem($output_type, $resource->getLink(), $num, $key, '', true);
+                // Location name as stored: escaped by showItem()
                 echo ReportExport::showItem(
                     $output_type,
                     Dropdown::getDropdownName(
@@ -327,15 +329,14 @@ if ($report->criteriasValidated()) {
                     $key,
                 );
                 echo ReportExport::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
-                // Escape raw DB values (group/habilitation labels, user login) before output:
-                // GLPI 10+ stores them unencoded, so a crafted label would otherwise run as HTML.
-                $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
-                echo ReportExport::showItem($output_type, implode('<br>', array_map($escape, $data['groups'])), $num, $key);
+                // One group label per line: each label escaped, joined by static markup
+                echo ReportExport::showItem($output_type, implode('<br>', array_map('htmlescape', $data['groups'])), $num, $key, '', true);
                 $user = new User();
                 $user->getFromDB($data['users_id']);
-                echo ReportExport::showItem($output_type, $user->getLink(), $num, $key);
-                echo ReportExport::showItem($output_type, $escape($user->getField('name')), $num, $key);
-                echo ReportExport::showItem($output_type, implode('<br>', array_map($escape, $data['diff'])), $num, $key);
+                echo ReportExport::showItem($output_type, $user->getLink(), $num, $key, '', true);
+                // Login as stored: escaped by showItem()
+                echo ReportExport::showItem($output_type, $user->getField('name'), $num, $key);
+                echo ReportExport::showItem($output_type, implode('<br>', array_map('htmlescape', $data['diff'])), $num, $key, '', true);
 
                 echo ReportExport::showEndLine($output_type);
             }

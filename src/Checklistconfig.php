@@ -34,6 +34,7 @@ use CommonDBTM;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Exception\Http\BadRequestHttpException;
 use MassiveAction;
 use Migration;
 use Rule;
@@ -76,24 +77,13 @@ class Checklistconfig extends CommonDBTM
         return Session::haveRight(self::$rightname, READ);
     }
 
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
     public function prepareInputForAdd($input)
     {
         // The link is copied onto the checklist of every matching resource.
         if (!Checklist::checkLinkInput($input)) {
             return false;
         }
-        return $input;
+        return self::checkLinkedItemInput($input, []);
     }
 
     public function prepareInputForUpdate($input)
@@ -101,6 +91,56 @@ class Checklistconfig extends CommonDBTM
         if (!Checklist::checkLinkInput($input)) {
             return false;
         }
+        return self::checkLinkedItemInput($input, $this->fields);
+    }
+
+    /**
+     * Validate the object a setup row attaches to the resources it is applied to.
+     *
+     * addResourceChecklist() turns the pair into a link on every matching resource, whose
+     * tab then displays the name, serial and inventory number of the object: the type has to
+     * be one the plugin links, and the author of the setup has to be allowed to read that
+     * very object (right and entity). Without an object (empty itemtype or no item), the
+     * setup links nothing.
+     *
+     * @param array $input   input of add() or update()
+     * @param array $current row as stored, empty for a new one
+     *
+     * @return array|false the input, items cast to int, or false
+     */
+    private static function checkLinkedItemInput(array $input, array $current)
+    {
+        if (!array_key_exists('itemtype', $input) && !array_key_exists('items', $input)) {
+            return $input;
+        }
+
+        // An update may carry one of the two fields only: check the pair as it will be stored
+        $itemtype = (string) ($input['itemtype'] ?? $current['itemtype'] ?? '');
+        try {
+            $items_id = Resource::getPostedId($input['items'] ?? $current['items'] ?? 0);
+        } catch (BadRequestHttpException) {
+            $items_id = -1;
+        }
+
+        if (($itemtype === '' || $itemtype === '0') && $items_id === 0) {
+            return $input;
+        }
+
+        $item = in_array($itemtype, Resource::getTypes(true), true) ? getItemForItemtype($itemtype) : null;
+        if (!$item
+            || $items_id < 0
+            || ($items_id > 0 && !$item->can($items_id, READ))) {
+            Session::addMessageAfterRedirect(
+                __("You don't have permission to perform this action."),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        if (array_key_exists('items', $input)) {
+            $input['items'] = $items_id;
+        }
+
         return $input;
     }
 
@@ -236,13 +276,19 @@ class Checklistconfig extends CommonDBTM
 
 
                     $resourceItem = new Resource_Item();
-                    $item_id = $checklist["items"];
-                    if (isset($item_id) && !empty($item_id)) {
+                    $item_id = (int) $checklist["items"];
+                    // The setup may predate the checks of prepareInputForAdd(): its object is
+                    // checked against the entity of the resource, not against the session,
+                    // which may be a cron one. A setup naming an object that does not qualify
+                    // still seeds its checklist, without the link.
+                    if ($item_id > 0
+                        && Resource_Item::isLinkableTo((string) $checklist["itemtype"], $item_id, $resource)) {
                         $input = [];
                         $input["plugin_resources_resources_id"] = $resource->getID();
                         $input["items_id"] = $item_id;
                         $input["itemtype"] = $checklist["itemtype"];
                         if (!$resourceItem->getFromDBByCrit($input)) {
+                            $resourceItem->item_checked_by_caller = true;
                             $resourceItem->add($input);
                         }
                     }

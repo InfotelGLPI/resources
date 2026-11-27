@@ -37,6 +37,7 @@ use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Item_Ticket;
 use Location;
@@ -51,11 +52,80 @@ use Toolbox;
  */
 class LinkAd extends CommonDBTM
 {
+    // No entity of its own: the item rights are those of the resource the link belongs to
+    use ResourceChildItemRightTrait;
+
     public static $rightname = 'plugin_resources_checklist';
 
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;
     public const RESOURCES_CHECKLIST_TRANSFER = 3;
+
+    /**
+     * Columns the forms may write: the attributes of the account to create or update.
+     */
+    private const FORM_FIELDS = ['mail', 'phone', 'role', 'service', 'location', 'cellphone'];
+
+    /**
+     * Columns describing the account in the directory and the state of the operation.
+     *
+     * The login names the account updateAD/disableAD act on, and action_done satisfies the
+     * mandatory_adcreation test that gates the solution of the ticket: both used to be taken
+     * from the request. Only the server code that has just run a directory operation, or that
+     * asks for one to be run again, writes them (see $allow_directory_fields).
+     */
+    private const DIRECTORY_FIELDS = ['login', 'action_done', 'auth_id'];
+
+    /**
+     * Directory columns (DIRECTORY_FIELDS) the next add() or update() of this object may write.
+     *
+     * Set by server-side code, never from the input. Consumed by prepareInputForAdd() and
+     * prepareInputForUpdate(), so that it never outlives the write it was set for.
+     *
+     * @var string[]
+     */
+    public array $allow_directory_fields = [];
+
+    /**
+     * Flag the directory operation of the link of a resource as done, or to be done again.
+     *
+     * @param int  $resources_id resource the caller authorised
+     * @param bool $done         whether the directory is up to date
+     *
+     * @return void
+     */
+    public static function setActionDoneForResource(int $resources_id, bool $done): void
+    {
+        $linkad = new self();
+        if ($resources_id > 0
+            && $linkad->getFromDBByCrit(["plugin_resources_resources_id" => $resources_id])) {
+            $linkad->allow_directory_fields = ['action_done'];
+            $linkad->update([
+                'id'          => $linkad->getID(),
+                'action_done' => (int) $done,
+            ]);
+        }
+    }
+
+    /**
+     * Columns of DIRECTORY_FIELDS the current write may set, the others are dropped.
+     *
+     * @param array<string, mixed> $input
+     *
+     * @return array<string, mixed>
+     */
+    private function filterDirectoryFields(array $input): array
+    {
+        $allowed = $this->allow_directory_fields;
+        $this->allow_directory_fields = [];
+        foreach (self::DIRECTORY_FIELDS as $field) {
+            if (!in_array($field, $allowed, true)) {
+                unset($input[$field]);
+            }
+        }
+
+        return $input;
+    }
 
     /**
      * Push the end date of a leaving resource to the directory account linked to it.
@@ -90,6 +160,7 @@ class LinkAd extends CommonDBTM
         $res = (new LDAP())->updateUserAD($value);
         if ($res[0]) {
             $value["action_done"] = 1;
+            $linkad->allow_directory_fields = ['action_done'];
             $linkad->update($value);
             Session::addMessageAfterRedirect(
                 __('the user has been updated to the LDAP directory', 'resources'),
@@ -158,15 +229,28 @@ class LinkAd extends CommonDBTM
         return Session::haveRight(self::$rightname, READ);
     }
 
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
+    public function prepareInputForAdd($input)
     {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
+        // The forms post their whole request: keep the account attributes and the resource,
+        // the directory columns being written by the server code only.
+        $input = $this->filterDirectoryFields($input);
+        $input = self::keepWritableColumns(
+            $input,
+            array_merge(self::FORM_FIELDS, self::DIRECTORY_FIELDS, ['plugin_resources_resources_id']),
+        );
+
+        // A link only exists for a resource
+        try {
+            $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $resources_id = 0;
+        }
+        if ($resources_id <= 0) {
+            return false;
+        }
+        $input['plugin_resources_resources_id'] = $resources_id;
+
+        return $input;
     }
 
     public function prepareInputForUpdate($input)
@@ -175,9 +259,14 @@ class LinkAd extends CommonDBTM
         // the resource currently stored in the row, while several forms post the whole
         // request (with plugin_resources_resources_id as a hidden field) to update(): never
         // let an update reparent the link onto another resource, possibly in another entity.
-        unset($input['plugin_resources_resources_id']);
+        // Nor may it rewrite the login (the account updateAD/disableAD act on) or the state
+        // of the directory operation, which only the server code sets.
+        $input = $this->filterDirectoryFields($input);
 
-        return $input;
+        return self::keepWritableColumns(
+            $input,
+            array_merge(self::FORM_FIELDS, self::DIRECTORY_FIELDS, ['id']),
+        );
     }
 
 

@@ -43,20 +43,23 @@ $choice = new Choice();
 $resource = new Resource();
 
 //add items needs from helpdesk
+// Each branch checks a right on an id and then writes with an id: both are the same integer,
+// see Resource::getPostedId().
 if (isset($_POST["addhelpdeskitem"])) {
-    if ($_POST['plugin_resources_choiceitems_id'] > 0
-        && $_POST['plugin_resources_resources_id'] > 0) {
+    $resources_id   = Resource::getPostedId($_POST['plugin_resources_resources_id'] ?? null);
+    $choiceitems_id = Resource::getPostedId($_POST['plugin_resources_choiceitems_id'] ?? null);
+    if ($choiceitems_id > 0 && $resources_id > 0) {
         // check($id, UPDATE) instead of the global canCreate(): these branches mutate a
         // specific Resource's data (directly, or its Choice rows), so the right must be
         // re-checked on that instance, not just globally (IDOR otherwise).
-        $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
-        $choice->addHelpdeskItem($_POST);
+        $resource->check($resources_id, UPDATE);
+        $choice->addHelpdeskItem($resources_id, $choiceitems_id);
     }
     Html::back();
 } //delete items needs from helpdesk
 elseif (isset($_POST["deletehelpdeskitem"])) {
-    Resource::checkChildOwnership($choice, $_POST["id"]);
-    $choice->delete(['id' => $_POST["id"]]);
+    $choices_id = Resource::checkChildOwnership($choice, $_POST["id"] ?? null);
+    $choice->delete(['id' => $choices_id]);
     Html::back();
     //next step : email and finish resource creation
 } elseif (isset($_POST["finish"])) {
@@ -65,25 +68,20 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     // updateneedcomment[] keys are Choice ids, not the checked Resource id: a caller could
     // pass a Resource they own in plugin_resources_resources_id while listing Choice ids
     // belonging to a different Resource, so each Choice's own parent must be re-checked.
-    foreach ($_POST["updateneedcomment"] as $key => $val) {
-        Resource::checkChildOwnership($choice, $key);
-        $varcomment = "commentneed" . $key;
-        $values['id'] = $key;
-        $values['commentneed'] = $_POST[$varcomment];
-        $choice->addNeedComment($values);
+    foreach (array_keys((array) $_POST["updateneedcomment"]) as $key) {
+        $choices_id = Resource::checkChildOwnership($choice, $key);
+        $choice->addNeedComment($choices_id, (string) ($_POST["commentneed" . $choices_id] ?? ''));
     }
     Html::back();
 } elseif (isset($_POST['updateSpecialRequirement'])) {
-    $resource->check($_POST['plugin_resources_resources_id'], UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
     // The frozen form only hides its save button: refuse the same POST server-side.
-    if ($resource->isFrozenAfterValidation()) {
-        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
-    }
+    $resource->checkNotFrozen();
     // Whitelist to the fields actually exposed by this form (see the "Specials
     // requirements" section of Choice::showItemHelpdesk()) to avoid mass-assigning
     // unrelated Resource fields (entities_id, is_leaving, ...) via a crafted POST.
     $input = [
-        'id' => $_POST['plugin_resources_resources_id'],
+        'id' => $resources_id,
         'computer_phone_equipment' => $_POST['computer_phone_equipment'] ?? '',
         'softwares_requirements' => $_POST['softwares_requirements'] ?? '',
         'furnitures_needs' => $_POST['furnitures_needs'] ?? '',

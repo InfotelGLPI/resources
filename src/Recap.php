@@ -41,12 +41,20 @@ use Session;
  * */
 class Recap extends CommonDBTM
 {
+    use UserListTrait;
+
     protected static $notable = true;
     private $table = "glpi_users";
 
     public static function getTable($classname = null)
     {
         return \User::getTable();
+    }
+
+    public static function getDisclosedFields(): array
+    {
+        // The glpi_users columns of rawSearchOptions(): the location is shown through its id
+        return ['id', 'registration_number', 'locations_id'];
     }
 
     /**
@@ -60,20 +68,6 @@ class Recap extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return _n('List Employment / Resource', 'List Employments / Resources', $nb, 'resources');
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        if (Session::haveRight('plugin_resources_employment', UPDATE)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -338,17 +332,6 @@ class Recap extends CommonDBTM
         ];
 
         return $tab;
-    }
-
-    /**
-     * @since version 0.84
-     **/
-    public function getForbiddenStandardMassiveAction()
-    {
-        $forbidden = parent::getForbiddenStandardMassiveAction();
-        $forbidden[] = 'update';
-        $forbidden[] = 'purge';
-        return $forbidden;
     }
 
     /**

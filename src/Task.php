@@ -37,6 +37,8 @@ use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QuerySubQuery;
+use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\RichText\RichText;
 use Html;
 use MassiveAction;
 use Migration;
@@ -62,6 +64,22 @@ class Task extends CommonDBTM
     public const STATE_OK = 1;
 
     /**
+     * Set by Resource::transferResource() only, which moves the tasks along with their
+     * resource: the next update() of this object may then write entities_id. Consumed by
+     * prepareInputForUpdate(), never read from the input.
+     */
+    public bool $allow_entity_change = false;
+
+    /**
+     * Set by cloneItem() only, which copies the tasks of a checked template to the resource
+     * just created from it (Resource::post_addItem()): the next add() of this object then
+     * takes that resource without requiring UPDATE on it, the creator having been allowed to
+     * create it (a profile may create resources without being allowed to change them).
+     * Consumed by prepareInputForAdd(), never read from the input.
+     */
+    public bool $resource_checked_by_caller = false;
+
+    /**
      * @param int $nb
      *
      * @return string
@@ -83,14 +101,6 @@ class Task extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * @return bool
-     */
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
 
@@ -128,11 +138,33 @@ class Task extends CommonDBTM
         unset($input["minute"]);
         unset($input["hour"]);
 
-        if (!isset($input['plugin_resources_resources_id'])
-            || $input['plugin_resources_resources_id'] <= 0
-        ) {
+        // A task is a change of the resource it is attached to: the caller only checked the
+        // task right and the entity it posted, so the resource is authorised here, for every
+        // writer (form, checklist massive action, duplication), except the copy of a template
+        // to the resource just created from it (resource_checked_by_caller). The task then
+        // takes the entity of that resource, whatever entity came with the input.
+        $resource_checked_by_caller       = $this->resource_checked_by_caller;
+        $this->resource_checked_by_caller = false;
+        try {
+            $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $resources_id = 0;
+        }
+        $resource = new Resource();
+        if ($resources_id <= 0
+            || !($resource_checked_by_caller
+                ? $resource->getFromDB($resources_id)
+                : $resource->can($resources_id, UPDATE))) {
+            Session::addMessageAfterRedirect(
+                __("You don't have permission to perform this action."),
+                false,
+                ERROR,
+            );
             return false;
         }
+        $input['plugin_resources_resources_id'] = $resources_id;
+        $input['entities_id']                   = $resource->fields['entities_id'];
+        $input['is_recursive']                  = $resource->fields['is_recursive'];
 
         return $input;
     }
@@ -146,6 +178,9 @@ class Task extends CommonDBTM
 
         if (isset($this->input["_plan"])) {
             $this->input["_plan"]['plugin_resources_tasks_id'] = $this->fields['id'];
+            // A new task has no planning row yet: a posted row id would be inserted as the
+            // primary key of the new row.
+            unset($this->input["_plan"]['id']);
             $pt = new TaskPlanning();
 
             if (!$pt->add($this->input["_plan"])) {
@@ -188,6 +223,17 @@ class Task extends CommonDBTM
             unset($input["plan"]);
         }
 
+        // The form hands the whole request to update(), which the caller authorised on the
+        // stored task only: the resource and the entity a task belongs to are not the
+        // request's to change. A task follows its resource, which moves it through
+        // Resource::transferResource() (allow_entity_change).
+        $allow_entity_change       = $this->allow_entity_change;
+        $this->allow_entity_change = false;
+        unset($input['plugin_resources_resources_id']);
+        if (!$allow_entity_change) {
+            unset($input['entities_id'], $input['is_recursive']);
+        }
+
         $this->getFromDB($input["id"]);
         $input["_old_name"] = $this->fields["name"];
         $input["_old_plugin_resources_tasktypes_id"] = $this->fields["plugin_resources_tasktypes_id"];
@@ -211,21 +257,27 @@ class Task extends CommonDBTM
 
         if (isset($this->input["_plan"])) {
             $pt = new TaskPlanning();
-            // Update case
-            if (isset($this->input["_plan"]["id"])) {
-                $this->input["_plan"]['plugin_resources_tasks_id'] = $this->input["id"];
-
-                if (!$pt->update($this->input["_plan"])) {
+            // The planning row written is the one stored for this task, looked up here: the
+            // row id of the form is a hidden field, and trusting it let a task update rewrite
+            // the planning of any other task and re-parent it.
+            $plan = $this->input["_plan"];
+            unset($plan['id']);
+            $plan['plugin_resources_tasks_id'] = $this->getID();
+            unset($this->input["_plan"]);
+            if ($pt->getFromDBbyTask($this->getID())) {
+                // Update case
+                if (!$pt->update(['id' => $pt->getID()] + $plan)) {
                     return false;
                 }
-                unset($this->input["_plan"]);
-                // Add case
-            } else {
-                $this->input["_plan"]['plugin_resources_tasks_id'] = $this->input["id"];
-                if (!$pt->add($this->input["_plan"])) {
+            } elseif (countElementsInTable(
+                TaskPlanning::getTable(),
+                ['plugin_resources_tasks_id' => $this->getID()],
+            ) === 0) {
+                // Add case. With several rows (left by an older version), none of them can be
+                // told to be the one edited: nothing is written.
+                if (!$pt->add($plan)) {
                     return false;
                 }
-                unset($this->input["_plan"]);
             }
         }
 
@@ -328,11 +380,13 @@ class Task extends CommonDBTM
     public static function countForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
+        // Same scope as the list of the tab (a search, restricted to the active entities):
+        // the count must not reveal tasks the list does not show.
         $restrict = [
             "plugin_resources_resources_id" => $item->getField('id'),
             "is_deleted" => 0,
             "NOT" => ["is_finished" => 1],
-        ];
+        ] + $dbu->getEntitiesRestrictCriteria(self::getTable(), '', '', true);
         $nb = $dbu->countElementsInTable(['glpi_plugin_resources_tasks'], $restrict);
 
         return $nb;
@@ -428,12 +482,16 @@ class Task extends CommonDBTM
             'datatype' => 'number',
         ];
 
+        // The id comes along with the name: plugin_resources_giveItem() checks that the viewer
+        // may read the resource before printing it. Both columns are restricted by the join
+        // (plugin_resources_getTaskResourceJoinRestriction()).
         $tab[] = [
             'id' => '12',
             'table' => 'glpi_plugin_resources_resources',
             'field' => 'name',
             'name' => Resource::getTypeName(2),
             'massiveaction' => false,
+            'additionalfields' => ['id'],
         ];
 
         $tab[] = [
@@ -486,12 +544,20 @@ class Task extends CommonDBTM
     {
         $task_item = new Task_Item();
 
+        // The copies belong to the new resource: they take its entity, not the one of the
+        // template, which may sit in a parent entity (or any other one, for a forged source).
+        $resource = new Resource();
+        if (!$resource->getFromDB($newid)) {
+            return;
+        }
+
         $restrict = [
             "plugin_resources_resources_id" => $oldid,
             "NOT" => ["is_deleted" => 1],
         ];
         $dbu = new DbUtils();
         $ptasks = $dbu->getAllDataFromTable("glpi_plugin_resources_tasks", $restrict);
+        $skipped = 0;
         if (!empty($ptasks)) {
             foreach ($ptasks as $ptask) {
                 $item = new self();
@@ -499,26 +565,47 @@ class Task extends CommonDBTM
                 $taskid = $values["id"];
                 unset($values["id"]);
                 $values["plugin_resources_resources_id"] = $newid;
+                $values["entities_id"] = $resource->fields["entities_id"];
+                $values["is_recursive"] = $resource->fields["is_recursive"];
                 $values["name"] = $ptask["name"];
                 $values["comment"] = $ptask["comment"];
 
+                // The template was checked by Resource::prepareInputForAdd() and the resource
+                // was just created by the caller: its tasks are copied without requiring
+                // UPDATE on it, which the CREATE right alone does not grant.
+                $item->resource_checked_by_caller = true;
                 $newtid = $item->add($values);
+                if (!$newtid) {
+                    // Refused by prepareInputForAdd(): no row to attach the items to
+                    continue;
+                }
 
                 $restrictitems = ["plugin_resources_tasks_id" => $taskid];
                 $tasksitems = $dbu->getAllDataFromTable(
                     "glpi_plugin_resources_tasks_items",
                     $restrictitems,
                 );
-                if (!empty($tasksitems)) {
-                    foreach ($tasksitems as $tasksitem) {
-                        $task_item->add([
-                            'plugin_resources_tasks_id' => $newtid,
-                            'itemtype' => $tasksitem["itemtype"],
-                            'items_id' => $tasksitem["items_id"],
-                        ]);
+                foreach ($tasksitems as $tasksitem) {
+                    // The objects of the template are checked against the entity of the new
+                    // resource, as the links of the resource itself (Resource_Item::cloneItem()),
+                    // not against the rights of the session on each type: the creator may well
+                    // hold none on the hardware a template lists.
+                    if (!Resource_Item::isLinkableTo((string) $tasksitem["itemtype"], (int) $tasksitem["items_id"], $resource)) {
+                        $skipped++;
+                        continue;
                     }
+                    $task_item->item_checked_by_caller = true;
+                    $task_item->add([
+                        'plugin_resources_tasks_id' => $newtid,
+                        'itemtype' => $tasksitem["itemtype"],
+                        'items_id' => $tasksitem["items_id"],
+                    ]);
                 }
             }
+        }
+
+        if ($skipped > 0) {
+            Resource_Item::addTemplateItemsSkippedMessage();
         }
     }
 
@@ -577,12 +664,19 @@ class Task extends CommonDBTM
             $this->check(-1, UPDATE, $input);
         }
 
-        $user = Resource::getResourceName($plugin_resources_resources_id, 2);
-        $resource_link = '<a href="' . htmlescape($user['link']) . '">' . htmlescape($user["name"]);
-        if ($_SESSION["glpiis_ids_visible"]) {
-            $resource_link .= ' (' . $plugin_resources_resources_id . ')';
+        // The task may be readable where its resource is not (a recursive task, a row left by
+        // an older version): the identity of the resource is only shown to who may read it.
+        if ((int) $plugin_resources_resources_id > 0
+            && (new Resource())->can((int) $plugin_resources_resources_id, READ)) {
+            $user = Resource::getResourceName($plugin_resources_resources_id, 2);
+            $resource_link = '<a href="' . htmlescape($user['link']) . '">' . htmlescape($user["name"]);
+            if ($_SESSION["glpiis_ids_visible"]) {
+                $resource_link .= ' (' . (int) $plugin_resources_resources_id . ')';
+            }
+            $resource_link .= '</a>';
+        } else {
+            $resource_link = '(' . (int) $plugin_resources_resources_id . ')';
         }
-        $resource_link .= '</a>';
 
         // TaskPlanning echoes its block and the JS driving it: capture both.
         ob_start();
@@ -1041,13 +1135,9 @@ class Task extends CommonDBTM
                 'button',
                 'Duplicate',
             );
-            if (Session::haveRight('transfer', READ)
-                && Session::isMultiEntitiesMode()
-            ) {
-                $actions['GlpiPlugin\Resources\Task' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert'] = __(
-                    'Transfer',
-                );
-            }
+            // No transfer of tasks: a task belongs to the entity of its resource (see
+            // prepareInputForAdd() and prepareInputForUpdate()), and moves with it when the
+            // resource is transferred.
         }
         return $actions;
     }
@@ -1075,11 +1165,8 @@ class Task extends CommonDBTM
                 break;
 
             case "Duplicate":
-                Dropdown::show('Entity');
-                break;
-
-            case "Transfert":
-                Dropdown::show('Entity');
+                // The copy stays on the resource of the task copied, in the entity of that
+                // resource: there is no destination entity to choose.
                 break;
         }
 
@@ -1097,67 +1184,33 @@ class Task extends CommonDBTM
         $input = $ma->getInput();
         $itemtype = $ma->getItemtype(false);
 
+        // Each branch checks a key with can() and then writes with it: only keys that are
+        // plain ids go on, so that both use the same integer.
+        $ids = Resource::getMassiveActionIds($ma, $item, $ids);
+        if ($ids === []) {
+            return;
+        }
+
         switch ($ma->getAction()) {
-            case "Transfert":
-                if ($itemtype == Task::class) {
-                    // The destination entity travels in the massive action form: refuse
-                    // one the session has no access to before moving any task into it.
-                    if (!Session::haveAccessToEntity((int) ($input['entities_id'] ?? -1))) {
-                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
-                        return;
-                    }
-                    foreach ($ids as $key => $val) {
-                        // MassiveAction passes the posted ids through untouched: this
-                        // handler is the only gate on the rows themselves.
-                        if (!$item->can($key, UPDATE)) {
-                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
-                            continue;
-                        }
-                        $tasktype = TaskType::transfer(
-                            $item->fields["plugin_resources_tasktypes_id"],
-                            $input['entities_id'],
-                        );
-                        if ($tasktype > 0) {
-                            $values["id"] = $key;
-                            $values["plugin_resources_tasktypes_id"] = $tasktype;
-                            $item->update($values);
-                        }
-
-                        unset($values);
-                        $values["id"] = $key;
-                        $values["entities_id"] = $input['entities_id'];
-
-                        if ($item->update($values)) {
-                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
-                        } else {
-                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
-                        }
-                    }
-                }
-                break;
-
             case "Duplicate":
                 if ($itemtype == Task::class) {
-                    // The destination entity travels in the massive action form: require
-                    // access to it and the right to create a task there, once, before the
-                    // loop -- can(-1, CREATE) would otherwise reset the loaded record.
-                    $create_input = ['entities_id' => (int) ($input['entities_id'] ?? -1)];
-                    $target = new Task();
-                    if (!Session::haveAccessToEntity($create_input['entities_id'])
-                        || !$target->can(-1, CREATE, $create_input)) {
+                    // The copy stays on the resource of its source, in the entity of that
+                    // resource: prepareInputForAdd() requires UPDATE on the resource and takes
+                    // the entity from it. Only the task right is left to test here, once.
+                    if (!Task::canCreate()) {
                         $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
                         return;
                     }
                     foreach ($ids as $key => $val) {
                         // MassiveAction passes the posted ids through untouched: the source
-                        // row has to be readable before it is copied anywhere.
+                        // row has to be readable before it is copied.
                         if (!$item->can($key, READ)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
                             continue;
                         }
-                        unset($item->fields["id"]);
-                        $item->fields["entities_id"] = $input['entities_id'];
-                        if ($item->add($item->fields)) {
+                        $values = $item->fields;
+                        unset($values["id"]);
+                        if ((new Task())->add($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -1167,6 +1220,17 @@ class Task extends CommonDBTM
                 break;
 
             case "Install":
+                // The object linked is posted with the form, and the per-task can() below
+                // answers for the task only: the object has to be readable by the session
+                // (Task_Item::prepareInputForAdd() refuses it otherwise, for every writer).
+                $linked_item = getItemForItemtype((string) ($input['itemtype'] ?? ''));
+                if (!in_array($input['itemtype'] ?? '', Resource::getTypes(true), true)
+                    || !$linked_item
+                    || !$linked_item->can((int) ($input['item_item'] ?? 0), READ)) {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                    $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                    return;
+                }
                 foreach ($ids as $key => $val) {
                     // Task_Item carries no entity of its own: authorise the owning task,
                     // whose id comes straight from the posted massive action.
@@ -1175,7 +1239,7 @@ class Task extends CommonDBTM
                         continue;
                     }
                     $values = [
-                        'plugin_resources_tasks_id' => $key,
+                        'plugin_resources_tasks_id' => $item->getID(),
                         'items_id' => $input["item_item"],
                         'itemtype' => $input['itemtype'],
                     ];
@@ -1195,7 +1259,7 @@ class Task extends CommonDBTM
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
                         continue;
                     }
-                    if ($task_item->deleteItemByTaskAndItem($key, $input['item_item'], $input['itemtype'])) {
+                    if ($task_item->deleteItemByTaskAndItem($item->getID(), $input['item_item'], $input['itemtype'])) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                     } else {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -1242,6 +1306,11 @@ class Task extends CommonDBTM
             return false;
         }
 
+        // Same right as the tab on screen: reading the resource says nothing about its tasks.
+        if (!self::canView()) {
+            return false;
+        }
+
         $iterator = $DB->request([
             'FROM'  => 'glpi_plugin_resources_tasks',
             'WHERE' => [
@@ -1257,18 +1326,19 @@ class Task extends CommonDBTM
         $pdf->setColumnsSize(100);
 
         if ($number > 0) {
-            $pdf->displayTitle('<b>' . self::getTypeName(2) . '</b>');
+            // Only the static markup is kept: labels are escaped like the values below.
+            $pdf->displayTitle('<b>' . htmlescape(self::getTypeName(2)) . '</b>');
 
             $pdf->setColumnsSize(14, 14, 14, 14, 16, 14, 14);
             $pdf->displayTitle(
                 '<b><i>'
-                . __('Name'),
-                __('Type'),
-                __('Comments'),
-                __('Duration'),
-                __('Planning'),
-                __('Resource manager', 'resources'),
-                __('Group') . '</i></b>',
+                . htmlescape(__('Name')),
+                htmlescape(__('Type')),
+                htmlescape(__('Comments')),
+                htmlescape(__('Duration')),
+                htmlescape(__('Planning')),
+                htmlescape(__('Resource manager', 'resources')),
+                htmlescape(__('Group')) . '</i></b>',
             );
 
             $i++;
@@ -1293,13 +1363,14 @@ class Task extends CommonDBTM
                 $dbu = new DbUtils();
                 $plans = $dbu->getAllDataFromTable("glpi_plugin_resources_taskplannings", $restrict);
 
+                // Only the arrow is markup: the dates and the label are escaped
                 if (!empty($plans)) {
                     foreach ($plans as $plan) {
-                        $planification = Html::convDateTime($plan["begin"]) . "&nbsp;->&nbsp;"
-                            . Html::convDateTime($plan["end"]);
+                        $planification = htmlescape((string) Html::convDateTime($plan["begin"])) . "&nbsp;->&nbsp;"
+                            . htmlescape((string) Html::convDateTime($plan["end"]));
                     }
                 } else {
-                    $planification = __('None');
+                    $planification = htmlescape(__('None'));
                 }
 
                 $users_id = $rows[$j]["users_id"];
@@ -1310,19 +1381,21 @@ class Task extends CommonDBTM
                 $comment = $rows[$j]["comment"];
                 $groups_id = $rows[$j]["groups_id"];
 
+                // The PDF engine reads its cells as HTML: every value coming from the database
+                // is encoded, the comment being reduced to its text first.
                 $pdf->displayLine(
-                    $name,
-                    Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type),
-                    $comment,
-                    $actiontime,
+                    htmlescape((string) $name),
+                    htmlescape(Dropdown::getDropdownName("glpi_plugin_resources_tasktypes", $task_type)),
+                    htmlescape(RichText::getTextFromHtml((string) $comment, false, true)),
+                    htmlescape($actiontime),
                     $planification,
-                    $managers,
-                    Dropdown::getDropdownName("glpi_groups", $groups_id),
+                    htmlescape((string) $managers),
+                    htmlescape(Dropdown::getDropdownName("glpi_groups", $groups_id)),
                 );
                 $j++;
             }
         } else {
-            $pdf->displayLine(__('No results found'));
+            $pdf->displayLine(htmlescape(__('No results found')));
         }
 
         $pdf->displaySpace();

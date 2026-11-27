@@ -146,7 +146,7 @@ class Menu extends CommonGLPI
         $canseeemployment = Session::haveright('plugin_resources_employment', READ);
         $canseebudget = Session::haveright('plugin_resources_budget', READ);
         $canImport = Session::haveright('plugin_resources_import', READ);
-        $canAnnuaire     = Session::haveright('plugin_resources_annuary', READ);
+        $canAnnuaire     = Directory::canView();
 
         if ($tabnum == self::RESOURCES_TAB) {
 
@@ -402,10 +402,12 @@ class Menu extends CommonGLPI
         }
 
         // Resource directory
-        $menu['links']["<i class='far fa-address-book fa-1x' title='" . __(
-            'Directory',
-            'resources',
-        ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/directory.php';
+        if (Directory::canView()) {
+            $menu['links']["<i class='far fa-address-book fa-1x' title='" . __(
+                'Directory',
+                'resources',
+            ) . "'></i>"] = PLUGIN_RESOURCES_WEBDIR . '/front/directory.php';
+        }
 
         // Resting
         if (Session::haveright("plugin_resources_resting", UPDATE)) {

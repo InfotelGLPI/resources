@@ -61,14 +61,6 @@ class Service extends CommonDropdown
     }
 
     /**
-     * @return
-     */
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Return Additional Fields for this type
      *
      * @return array

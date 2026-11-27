@@ -36,6 +36,7 @@ use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use MassiveAction;
 use Migration;
@@ -47,6 +48,13 @@ use Toolbox;
  */
 class Choice extends CommonDBTM
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait;
+    // No entity of its own: the item rights are those of the resource. With the global right
+    // alone, the generic entry points of the core (API, massive actions) created, rewrote or
+    // purged the needs of the resources of every entity.
+    use ResourceChildItemRightTrait;
+
     public static $rightname = 'plugin_resources';
 
     public const TYPE_CHOICE = [1 => 'Element(s) to be affected', 2 => 'Specials requirements'];
@@ -73,17 +81,6 @@ class Choice extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -159,47 +156,64 @@ class Choice extends CommonDBTM
     }
 
     /**
-     * @param $values
+     * Add a need to a resource.
+     *
+     * @param int $resources_id    id of the resource the caller checked: the row is attached
+     *                             to that id, never to a value read from the request
+     * @param int $choiceitems_id  need
+     *
+     * @return false|int
      */
-    public function addHelpdeskItem($values)
+    public function addHelpdeskItem(int $resources_id, int $choiceitems_id)
     {
-        $this->add([
-            'plugin_resources_resources_id' => $values["plugin_resources_resources_id"],
-            'plugin_resources_choiceitems_id' => $values["plugin_resources_choiceitems_id"],
+        if ($resources_id <= 0 || $choiceitems_id <= 0) {
+            return false;
+        }
+
+        return $this->add([
+            'plugin_resources_resources_id' => $resources_id,
+            'plugin_resources_choiceitems_id' => $choiceitems_id,
             'comment' => '',
         ]);
     }
 
     /**
-     * @param $values
+     * Append the "others needs" comment to a resource.
+     *
+     * @param Resource $resource the resource the caller loaded and checked: the comment is
+     *                           read from and written to that very row
+     * @param string   $comment
+     *
+     * @return bool
      */
-    public function addComment($values)
+    public function addComment(Resource $resource, string $comment): bool
     {
-        $resource = new Resource();
-        $resource->getFromDB($values['plugin_resources_resources_id']);
-
-        $comment = $values['comment'];
+        if ($resource->isNewItem()) {
+            return false;
+        }
 
         if (!empty($resource->fields['comment'])) {
             $comment = $resource->fields['comment'] .
-                "\r\n\r" . __('Others needs', 'resources') . "\r\n\r" . $values['comment'];
+                "\r\n\r" . __('Others needs', 'resources') . "\r\n\r" . $comment;
         }
 
-        $resource->update([
-            'id' => $values['plugin_resources_resources_id'],
+        return $resource->update([
+            'id' => $resource->getID(),
             'comment' => $comment,
         ]);
-
     }
 
     /**
-     * @param $values
+     * @param int    $id      id of the need the caller checked
+     * @param string $comment
+     *
+     * @return bool
      */
-    public function addNeedComment($values)
+    public function addNeedComment(int $id, string $comment): bool
     {
-        $this->update([
-            'id' => $values['id'],
-            'comment' => $values['commentneed'],
+        return $this->update([
+            'id' => $id,
+            'comment' => $comment,
         ]);
     }
 
@@ -208,12 +222,28 @@ class Choice extends CommonDBTM
      *
      * @param array $input datas used to add the item
      *
-     * @return array the modified $input array
+     * @return array|false the modified $input array, false to refuse the need
      **/
     public function prepareInputForAdd($input)
     {
+        // A need only exists under a resource and names an existing need item. canCreateItem()
+        // answered for the resource named here: both ids are kept as the plain values checked.
+        try {
+            $resources_id   = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+            $choiceitems_id = Resource::getPostedId($input['plugin_resources_choiceitems_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            return false;
+        }
         $choice_item = new ChoiceItem();
-        $choice_item->getfromDB($input['plugin_resources_choiceitems_id']);
+        if ($resources_id <= 0
+            || $choiceitems_id <= 0
+            || !(new Resource())->getFromDB($resources_id)
+            || !$choice_item->getFromDB($choiceitems_id)) {
+            return false;
+        }
+        $input['plugin_resources_resources_id']   = $resources_id;
+        $input['plugin_resources_choiceitems_id'] = $choiceitems_id;
+
         $childs = $choice_item->haveChildren();
         if ($childs) {
             Session::addMessageAfterRedirect(
@@ -221,6 +251,17 @@ class Choice extends CommonDBTM
                 true,
                 ERROR,
             );
+            return false;
+        }
+
+        return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // canUpdateItem() answered for the resource the need is stored under, not for the one
+        // an update would move it to
+        if (!$this->canMoveToParentResource($input)) {
             return false;
         }
 

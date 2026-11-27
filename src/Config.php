@@ -41,13 +41,19 @@ use Html;
 use ITILCategory;
 use Migration;
 use Plugin;
-use Session;
 
 /**
  * Class Config
  */
 class Config extends CommonDBTM
 {
+    // The setup row and every tab of the setup page (wizard, workflow, AD, schema check...)
+    // require the right of front/config.form.php: the tab loader of the core only asks
+    // can($id, READ) on this item before rendering any of them.
+    use ConfigRightTrait;
+    // Single row, edited from its form only
+    use NoStandardMassiveActionTrait;
+
     public static $rightname = 'plugin_resources';
 
     /**
@@ -57,31 +63,6 @@ class Config extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Setup');
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**

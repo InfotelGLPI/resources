@@ -51,26 +51,28 @@ if (!isset($_GET["id"])) {
 
 $holiday = new ResourceHoliday();
 
+// The writes below use the ids checked, as integers, and never the posted values: see
+// Resource::getPostedId().
 if (isset($_POST["addholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
     $holiday->check(-1, CREATE, $_POST);
     // ResourceHoliday has no entities_id of its own, so the check() above cannot enforce
     // any entity boundary: re-check it on the owning Resource.
-    Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
-    $holiday->add($_POST);
+    $resources_id = Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
+    $holiday->add(['plugin_resources_resources_id' => $resources_id] + $_POST);
     Html::back();
 } elseif (isset($_POST["updateholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-    $holiday->check($_POST['id'], UPDATE);
+    $holidays_id = Resource::checkPostedItem($holiday, $_POST['id'] ?? null, UPDATE);
     // Check the currently owning Resource...
-    Resource::checkChildOwnership($holiday, $_POST['id']);
+    Resource::checkChildOwnership($holiday, $holidays_id);
     // ...and the posted one too, as the form allows reassigning the holiday to
     // another Resource: checkChildOwnership() only validates the stored owner.
-    Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
-    $holiday->update($_POST);
+    $resources_id = Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
+    $holiday->update(['id' => $holidays_id, 'plugin_resources_resources_id' => $resources_id] + $_POST);
     Html::back();
 } elseif (isset($_POST["deleteholidayresources"]) && $_POST["plugin_resources_resources_id"] != 0) {
-    $holiday->check($_POST['id'], PURGE);
-    Resource::checkChildOwnership($holiday, $_POST['id']);
-    $holiday->delete($_POST, 1);
+    $holidays_id = Resource::checkPostedItem($holiday, $_POST['id'] ?? null, PURGE);
+    Resource::checkChildOwnership($holiday, $holidays_id);
+    $holiday->delete(['id' => $holidays_id] + $_POST, 1);
     $holiday->redirectToList();
 } else {
     // Both remaining branches only display, and both used to answer with an empty page when the

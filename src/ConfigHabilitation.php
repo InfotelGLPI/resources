@@ -46,6 +46,10 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ConfigHabilitation extends CommonDBTM
 {
+    // The rows link a meta-demand to an entity for the super habilitation requests: they are
+    // written from the setup page only. canView() is kept below.
+    use ConfigRightTrait;
+
     public static $rightname = 'plugin_resources_habilitation';
     public $dohistory = true;
 
@@ -66,28 +70,14 @@ class ConfigHabilitation extends CommonDBTM
     }
 
     /**
-     * Have I the global right to "view" the Object
+     * Reading the links stays with the habilitation right: front/confighabilitation.form.php
+     * opens the declaration menu with it. Writing them is setup (ConfigRightTrait).
      *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
+     * @return bool
      **/
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**

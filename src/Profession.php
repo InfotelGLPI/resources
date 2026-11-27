@@ -32,13 +32,15 @@ namespace GlpiPlugin\Resources;
 use CommonDropdown;
 use DBConnection;
 use Migration;
-use Session;
 
 /**
  * Class Profession
  */
 class Profession extends CommonDropdown
 {
+    // "Dropdown management" right of the profile, bit by bit
+    use DropdownPublicRightTrait;
+
     public static $rightname = 'plugin_resources';
     public $can_be_translated = true;
     /**
@@ -49,39 +51,6 @@ class Profession extends CommonDropdown
     public static function getTypeName($nb = 0)
     {
         return _n('Profession', 'Professions', $nb, 'resources');
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
-            && Session::haveRight('plugin_resources_dropdown_public', UPDATE)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        if (Session::haveRight(self::$rightname, READ)
-            && Session::haveRight('plugin_resources_dropdown_public', READ)) {
-            return true;
-        }
-        return false;
     }
 
     /**

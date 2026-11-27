@@ -39,7 +39,7 @@ class ResourceTest extends TestCase
     {
         global $DB;
         $_SESSION['glpiactiveprofile'] = [];
-        // Session::haveRight() et Rank::canCreate() nécessitent $DB->isSlave()
+        // Session::haveRight() et Rank::canFillPublicSectorFields() nécessitent $DB->isSlave()
         $DB = new class {
             public function isSlave(): bool
             {

@@ -44,3 +44,10 @@ if (!$DB->tableExists('glpi_plugin_resources_resources')) {
     require_once dirname(__DIR__) . '/hook.php';
     plugin_resources_install();
 }
+
+// The test environment does not load the plugin, so its Twig namespace is missing: the
+// forms, tabs and wizard steps under test render @resources templates.
+$twig_loader = \Glpi\Application\View\TemplateRenderer::getInstance()->getEnvironment()->getLoader();
+if ($twig_loader instanceof \Twig\Loader\FilesystemLoader && !in_array('resources', $twig_loader->getNamespaces(), true)) {
+    $twig_loader->addPath(dirname(__DIR__) . '/templates', 'resources');
+}

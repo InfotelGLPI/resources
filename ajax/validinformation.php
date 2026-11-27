@@ -64,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     throw new \Glpi\Exception\Http\BadRequestHttpException();
 }
 
-$resource_id = (int) ($_POST["plugin_resources_resources_id"] ?? 0);
+// An existing resource, checked and then written with the same integer
 $resource = new Resource();
-$resource->check($resource_id, UPDATE);
+$resource_id = Resource::checkPostedItem($resource, $_POST["plugin_resources_resources_id"] ?? null, UPDATE);
 
 // The two remaining conditions of showValidationForm(): the screen only offers the validate
 // button to the direct manager of the resource, and only while the information has not been

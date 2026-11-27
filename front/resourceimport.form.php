@@ -60,7 +60,7 @@ if (isset($_POST['save'])) {
                 continue;
             }
 
-            // add()/update() iterate over this, so refuse a scalar here instead of
+            // The import methods iterate over this, so refuse a scalar here instead of
             // letting foreach() fail deeper down.
             $datas = $_POST['import'][$key] ?? [];
             if (!is_array($datas)) {
@@ -72,24 +72,16 @@ if (isset($_POST['save'])) {
                 // Authorize the Resource actually overwritten (global right + entity),
                 // otherwise a POST could rewrite any resource of any entity by id.
                 $resource = new Resource();
-                $resource->check((int) $_POST['resource'][$key], UPDATE);
+                $resources_id = Resource::checkPostedItem($resource, $_POST['resource'][$key], UPDATE);
 
-                $input = [
-                    'resourceID' => (int) $_POST['resource'][$key],
-                    'datas' => $datas,
-                ];
-
-                $pluginResourcesResourceImport->update($input);
+                $pluginResourcesResourceImport->importIntoResource($resources_id, $datas);
                 $pluginResourcesImportResource->delete(['id' => (int) $key]);
             } //New
             else {
                 $import->check(-1, CREATE, $_POST);
-                $input = [
-                    'importID' => (int) $key,
-                    'datas' => $datas,
-                ];
 
-                $pluginResourcesResourceImport->add($input);
+                // Checks the right to create the resource in the active entity itself
+                $pluginResourcesResourceImport->createResourceFromImport($pluginResourcesImportResource->getID(), $datas);
                 $pluginResourcesImportResource->delete(['id' => (int) $key]);
             }
         }
@@ -98,8 +90,9 @@ if (isset($_POST['save'])) {
 } elseif (isset($_POST["purge"])) {
     // Check the row actually purged: an Import (model) id says nothing about the
     // ResourceImport row sharing the same id nor about its parent resource's entity.
-    $pluginResourcesResourceImport->check((int) $_POST['id'], PURGE);
-    $pluginResourcesResourceImport->delete($_POST);
+    // The row purged is the one checked: same integer for both
+    $resourceimports_id = Resource::checkPostedItem($pluginResourcesResourceImport, $_POST['id'] ?? null, PURGE);
+    $pluginResourcesResourceImport->delete(['id' => $resourceimports_id]);
     redirectWithParameters(ImportResource::getIndexUrl(), $_GET);
 } elseif (isset($_POST["delete"])) {
     if (!is_array($_POST['select'] ?? null)) {

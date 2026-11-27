@@ -54,14 +54,6 @@ class TaskType extends CommonDropdown
     /**
      * @return
      */
-    public static function canCreate(): bool
-    {
-        return Session::haveRight('dropdown', UPDATE);
-    }
-
-    /**
-     * @return
-     */
     public static function canView(): bool
     {
         return Session::haveRight('plugin_resources_task', READ);

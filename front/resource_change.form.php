@@ -32,6 +32,10 @@ use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 use GlpiPlugin\Resources\Resource_Change;
 
+// Setup of the change actions: same right as the other setup controllers, on display too
+// (the list names the entities and categories of the configured actions).
+Session::checkRight(\Config::$rightname, UPDATE);
+
 if (!isset($_GET["id"])) {
     $_GET["id"] = "";
 }
@@ -39,7 +43,8 @@ if (!isset($_GET["id"])) {
 $resource_change = new Resource_Change();
 
 if (isset($_POST['add_entity_category'])) {
-    $resource_change->check(-1, UPDATE, $_POST);
+    // prepareInputForAdd() validates the action, the entity and the category posted
+    $resource_change->check(-1, CREATE, $_POST);
     $resource_change->add($_POST);
     Html::back();
 } else {

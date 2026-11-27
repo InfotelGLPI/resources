@@ -413,7 +413,9 @@ class Metademand extends CommonGLPI
                                                     }
                                                 }
                                                 $idResource = $resource->getField('id');
-                                                $resource->update([
+                                                // Leaving workflow: it applies to validated
+                                                // resources as well
+                                                $resource->updateFromWorkflow([
                                                     'id' => $idResource,
                                                     'is_leaving' => 1,
                                                     'date_declaration_leaving' => date('Y-m-d H:i:s'),

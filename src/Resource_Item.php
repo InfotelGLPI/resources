@@ -37,10 +37,12 @@ use DbUtils;
 use Dropdown;
 use Entity;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Migration;
 use Plugin;
 use PluginPdfSimplePDF;
+use Profile_User;
 use Session;
 use Toolbox;
 
@@ -49,6 +51,9 @@ use Toolbox;
  */
 class Resource_Item extends CommonDBRelation
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait;
+
     public static $rightname = 'plugin_resources';
 
     public static $itemtype_1 = Resource::class;
@@ -58,6 +63,119 @@ class Resource_Item extends CommonDBRelation
     public static $itemtype_2 = 'itemtype';
     public static $items_id_2 = 'items_id';
     public static $take_entity_2 = true;
+
+    /**
+     * Set by server-side code that checked the linked object itself, the next add() of this
+     * object then skips the READ test of the session on it: the checklist seeding
+     * (Checklistconfig::addResourceChecklist()), which checks the object against the entity of
+     * the resource through isLinkableTo() and may run from a cron, without a session entity.
+     * Consumed by prepareInputForAdd(), never read from the input.
+     */
+    public bool $item_checked_by_caller = false;
+
+    /**
+     * A link is created by many callers (forms, massive actions, template clone, checklist
+     * seeding, change workflow): the type and the linked object are checked here, once for
+     * all of them. The type is one the plugin links, the object exists and the session may
+     * read it (right and entity), unless the caller checked it (item_checked_by_caller).
+     *
+     * @param array $input
+     *
+     * @return array|false
+     */
+    public function prepareInputForAdd($input)
+    {
+        $checked_by_caller            = $this->item_checked_by_caller;
+        $this->item_checked_by_caller = false;
+
+        if (!is_array($input)) {
+            return false;
+        }
+
+        $itemtype = $input['itemtype'] ?? '';
+        try {
+            $items_id = Resource::getPostedId($input['items_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $items_id = 0;
+        }
+        $item = in_array($itemtype, Resource::getTypes(true), true) ? getItemForItemtype($itemtype) : null;
+        if ($items_id <= 0
+            || !$item
+            || !($checked_by_caller ? $item->getFromDB($items_id) : $item->can($items_id, READ))) {
+            Session::addMessageAfterRedirect(
+                __("You don't have permission to perform this action."),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        $input['items_id'] = $items_id;
+
+        return parent::prepareInputForAdd($input);
+    }
+
+    /**
+     * Only the comment of a link changes: the resource and the object it relates were checked
+     * when it was created, and are not the request's to change afterwards.
+     *
+     * @param array $input
+     *
+     * @return array|false
+     */
+    public function prepareInputForUpdate($input)
+    {
+        if (!is_array($input)) {
+            return false;
+        }
+        unset($input['plugin_resources_resources_id'], $input['itemtype'], $input['items_id']);
+
+        return parent::prepareInputForUpdate($input);
+    }
+
+    /**
+     * Whether an object may be linked to a resource by server-side code (checklist seeding),
+     * independently of the session: the type is one the plugin links, the object exists and
+     * it belongs to the scope of the entity of the resource, as the dropdowns of that entity
+     * offer it (same entity, or a parent one for a recursive object). A user must have a
+     * profile in that entity.
+     *
+     * @param string   $itemtype
+     * @param int      $items_id
+     * @param Resource $resource the resource, loaded
+     *
+     * @return bool
+     */
+    public static function isLinkableTo(string $itemtype, int $items_id, Resource $resource): bool
+    {
+        if ($items_id <= 0 || !in_array($itemtype, Resource::getTypes(true), true)) {
+            return false;
+        }
+        $item = getItemForItemtype($itemtype);
+        if (!$item || !$item->getFromDB($items_id)) {
+            return false;
+        }
+
+        $entities_id = (int) $resource->fields['entities_id'];
+        if ($item instanceof \User) {
+            return in_array($entities_id, Profile_User::getUserEntities($items_id, true));
+        }
+        if (!$item->isEntityAssign()) {
+            return true;
+        }
+
+        $dbu = new DbUtils();
+
+        return $dbu->countElementsInTable(
+            $item->getTable(),
+            ['id' => $items_id] + $dbu->getEntitiesRestrictCriteria(
+                $item->getTable(),
+                '',
+                $entities_id,
+                $item->maybeRecursive(),
+            ),
+        ) > 0;
+    }
+
     /**
      * Have I the global right to "view" the Object
      *
@@ -70,17 +188,6 @@ class Resource_Item extends CommonDBRelation
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -208,13 +315,16 @@ class Resource_Item extends CommonDBRelation
     }
 
     /**
-     * @param $plugin_resources_resources_id
-     * @param $items_id
-     * @param $itemtype
+     * Callers pass the ids they checked: as integers, the criteria cannot designate another
+     * row, or several.
+     *
+     * @param int    $plugin_resources_resources_id
+     * @param int    $items_id
+     * @param string $itemtype
      *
      * @return bool
      */
-    public function getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
+    public function getFromDBbyResourcesAndItem(int $plugin_resources_resources_id, int $items_id, string $itemtype)
     {
         // Use the query builder (getFromDBByCrit) so the itemtype/items_id parameters are
         // bound instead of concatenated into raw SQL. Returns true only on a single match,
@@ -238,11 +348,15 @@ class Resource_Item extends CommonDBRelation
         ) {
             return false;
         } else {
-            $this->add([
+            // prepareInputForAdd() refuses an object the session may not read: nothing is
+            // linked then, and the location of a user refused is not touched either.
+            if (!$this->add([
                 'plugin_resources_resources_id' => $options["plugin_resources_resources_id"],
                 'items_id' => $options["items_id"],
                 'itemtype' => $options["itemtype"],
-            ]);
+            ])) {
+                return false;
+            }
 
             if ($options["itemtype"] == 'User') {
                 $values["id"] = $options["items_id"];
@@ -257,13 +371,15 @@ class Resource_Item extends CommonDBRelation
                 $this->updateLocation($values, $options["itemtype"]);
             }
         }
+
+        return true;
     }
 
     /**
-     * @param $ID
-     * @param $comment
+     * @param int    $ID      id of the row the caller checked
+     * @param string $comment
      */
-    public function updateItem($ID, $comment)
+    public function updateItem(int $ID, string $comment)
     {
         if ($ID > 0) {
             $values["id"] = $ID;
@@ -273,21 +389,21 @@ class Resource_Item extends CommonDBRelation
     }
 
     /**
-     * @param $ID
+     * @param int $ID id of the row the caller checked
      */
-    public function deleteItem($ID)
+    public function deleteItem(int $ID)
     {
         $this->delete(['id' => $ID]);
     }
 
     /**
-     * @param $plugin_resources_resources_id
-     * @param $items_id
-     * @param $itemtype
+     * @param int    $plugin_resources_resources_id id of the resource the caller checked
+     * @param int    $items_id
+     * @param string $itemtype
      *
      * @return bool
      */
-    public function deleteItemByResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)
+    public function deleteItemByResourcesAndItem(int $plugin_resources_resources_id, int $items_id, string $itemtype)
     {
         if ($this->getFromDBbyResourcesAndItem($plugin_resources_resources_id, $items_id, $itemtype)) {
             return $this->delete(['id' => $this->fields["id"]]);
@@ -310,6 +426,11 @@ class Resource_Item extends CommonDBRelation
     {
         global $DB;
 
+        $resource = new Resource();
+        if (!$resource->getFromDB((int) $newid)) {
+            return;
+        }
+
         $query
             = [
                 'SELECT' => [
@@ -321,8 +442,20 @@ class Resource_Item extends CommonDBRelation
                 ],
             ];
 
+        $skipped = 0;
         foreach ($DB->request($query) as $data) {
+            // The template was checked by Resource::prepareInputForAdd(): its links are copied
+            // when the object fits the new resource (type linked by the plugin, object of the
+            // scope of its entity), the way the checklist seeding checks them, not on the
+            // rights of the creator on each type. A profile declaring arrivals usually holds
+            // none on the hardware, nor on ComputerType and PhoneType (the "dropdown" right),
+            // the types a template uses to express a need.
+            if (!self::isLinkableTo((string) $data["itemtype"], (int) $data["items_id"], $resource)) {
+                $skipped++;
+                continue;
+            }
             $item = new self();
+            $item->item_checked_by_caller = true;
             $item->add([
                 'plugin_resources_resources_id' => $newid,
                 'itemtype' => $data["itemtype"],
@@ -330,6 +463,26 @@ class Resource_Item extends CommonDBRelation
                 'comment' => $data["comment"],
             ]);
         }
+
+        if ($skipped > 0) {
+            self::addTemplateItemsSkippedMessage();
+        }
+    }
+
+    /**
+     * Report, once, that objects of a template were not copied to a resource created from it,
+     * being out of the scope of its entity (cloneItem(), Task::cloneItem()).
+     *
+     * @return void
+     */
+    public static function addTemplateItemsSkippedMessage(): void
+    {
+        // check_once: the links and the task items of the same template report it once
+        Session::addMessageAfterRedirect(
+            __('Some items linked to the template are out of the entity of the resource: they were not copied', 'resources'),
+            true,
+            WARNING,
+        );
     }
 
     /**
@@ -359,6 +512,12 @@ class Resource_Item extends CommonDBRelation
         }
         if (isset($id) && $id > 0 && isset($values["locations_id"]) && $values["locations_id"] > 0) {
             $item = new \User();
+            // The write lands on a core user: linking it to a resource, or changing the location
+            // of that resource, takes no right on the user. Only a session allowed to update
+            // that very user may move it.
+            if (!$item->can((int) $id, UPDATE)) {
+                return;
+            }
             $update["id"] = $id;
             $update["locations_id"] = $values["locations_id"];
             if ($itemtype == Resource::class) {
@@ -783,8 +942,10 @@ class Resource_Item extends CommonDBRelation
 
         $dbu = new DbUtils();
 
+        // The pdf plugin writes every argument as HTML (TCPDF writeHTMLCell): only the static
+        // markup below is kept, every label and stored value is escaped.
         $pdf->setColumnsSize(100);
-        $pdf->displayTitle('<b>' . _n('Associated item', 'Associated items', 2) . '</b>');
+        $pdf->displayTitle('<b>' . htmlescape(_n('Associated item', 'Associated items', 2)) . '</b>');
 
         $iterator = $DB->request([
             'SELECT'   => 'itemtype',
@@ -798,24 +959,24 @@ class Resource_Item extends CommonDBRelation
         if (Session::isMultiEntitiesMode()) {
             $pdf->setColumnsSize(12, 27, 25, 18, 18);
             $pdf->displayTitle(
-                '<b><i>' . __('Type'),
-                __('Name'),
-                __('Entity'),
-                __('Serial Number'),
-                __('Inventory number') . '</i></b>',
+                '<b><i>' . htmlescape(__('Type')),
+                htmlescape(__('Name')),
+                htmlescape(__('Entity')),
+                htmlescape(__('Serial Number')),
+                htmlescape(__('Inventory number')) . '</i></b>',
             );
         } else {
             $pdf->setColumnsSize(25, 31, 22, 22);
             $pdf->displayTitle(
-                '<b><i>' . __('Type'),
-                __('Name'),
-                __('Serial Number'),
-                __('Inventory number') . '</i></b>',
+                '<b><i>' . htmlescape(__('Type')),
+                htmlescape(__('Name')),
+                htmlescape(__('Serial Number')),
+                htmlescape(__('Inventory number')) . '</i></b>',
             );
         }
 
         if (!$number) {
-            $pdf->displayLine(__('No results found'));
+            $pdf->displayLine(htmlescape(__('No results found')));
         } else {
             foreach ($iterator as $row) {
                 $type = $row["itemtype"];
@@ -871,7 +1032,10 @@ class Resource_Item extends CommonDBRelation
 
                     if (count($iterator_linked)) {
                         foreach ($iterator_linked as $data) {
-                            if (!$items->getFromDB($data["id"])) {
+                            // The query above restricts the entity of most types, not the
+                            // one of the users: each item printed has to be readable, as on
+                            // the tab.
+                            if (!$items->can($data["id"], READ)) {
                                 continue;
                             }
                             $items_id_display = "";
@@ -891,22 +1055,25 @@ class Resource_Item extends CommonDBRelation
                                 $entity = "-";
                             }
 
+                            $serial      = isset($data["serial"]) ? (string) $data["serial"] : "-";
+                            $otherserial = isset($data["otherserial"]) ? (string) $data["otherserial"] : "-";
                             if (Session::isMultiEntitiesMode()) {
                                 $pdf->setColumnsSize(12, 27, 25, 18, 18);
                                 $pdf->displayLine(
-                                    $items->getTypeName(),
-                                    $name,
-                                    $entity,
-                                    (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                                    (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-"),
+                                    htmlescape($items->getTypeName()),
+                                    htmlescape($name),
+                                    htmlescape($entity),
+                                    htmlescape($serial),
+                                    htmlescape($otherserial),
                                 );
                             } else {
+                                // A data row, printed as such (it was printed as a title)
                                 $pdf->setColumnsSize(25, 31, 22, 22);
-                                $pdf->displayTitle(
-                                    $items->getTypeName(),
-                                    $name,
-                                    (isset($data["serial"]) ? "" . $data["serial"] . "" : "-"),
-                                    (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-"),
+                                $pdf->displayLine(
+                                    htmlescape($items->getTypeName()),
+                                    htmlescape($name),
+                                    htmlescape($serial),
+                                    htmlescape($otherserial),
                                 );
                             }
                         } // Each device
@@ -925,15 +1092,21 @@ class Resource_Item extends CommonDBRelation
      */
     public static function PdfFromItems($pdf, $item)
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
+        // The resources listed are HR records: the PDF of an item prints them only for a
+        // profile allowed to read resources, as the tab of that item requires.
+        if (!Session::haveRight(Resource::$rightname, READ)) {
+            return;
+        }
+
+        // The pdf plugin writes every argument as HTML (TCPDF writeHTMLCell): only the static
+        // markup below is kept, every label and stored value is escaped.
         $pdf->setColumnsSize(100);
-        $pdf->displayTitle('<b>' . __('Associated Human Resource', 'resources') . '</b>');
+        $pdf->displayTitle('<b>' . htmlescape(__('Associated Human Resource', 'resources')) . '</b>');
 
         $ID = $item->getField('id');
         $itemtype = get_Class($item);
-        $canread = $item->can($ID, READ);
-        $canedit = $item->can($ID, UPDATE);
 
         $Resource = new Resource();
         $dbu = new DbUtils();
@@ -976,67 +1149,54 @@ class Resource_Item extends CommonDBRelation
         $number = count($iterator);
 
         if (!$number) {
-            $pdf->displayLine(__('No results found'));
+            $pdf->displayLine(htmlescape(__('No results found')));
         } else {
             if (Session::isMultiEntitiesMode()) {
                 $pdf->setColumnsSize(14, 14, 14, 14, 14, 14, 16);
                 $pdf->displayTitle(
-                    '<b><i>' . __('Name'),
-                    __('Entity'),
-                    __('Location'),
-                    ContractType::getTypeName(1),
-                    Department::getTypeName(1),
-                    __('Arrival date', 'resources'),
-                    __('Departure date', 'resources') . '</i></b>',
+                    '<b><i>' . htmlescape(__('Name')),
+                    htmlescape(__('Entity')),
+                    htmlescape(__('Location')),
+                    htmlescape(ContractType::getTypeName(1)),
+                    htmlescape(Department::getTypeName(1)),
+                    htmlescape(__('Arrival date', 'resources')),
+                    htmlescape(__('Departure date', 'resources')) . '</i></b>',
                 );
             } else {
                 $pdf->setColumnsSize(17, 17, 17, 17, 17, 17);
                 $pdf->displayTitle(
-                    '<b><i>' . __('Name'),
-                    __('Location'),
-                    ContractType::getTypeName(1),
-                    Department::getTypeName(1),
-                    __('Arrival date', 'resources'),
-                    __('Departure date', 'resources') . '</i></b>',
+                    '<b><i>' . htmlescape(__('Name')),
+                    htmlescape(__('Location')),
+                    htmlescape(ContractType::getTypeName(1)),
+                    htmlescape(Department::getTypeName(1)),
+                    htmlescape(__('Arrival date', 'resources')),
+                    htmlescape(__('Departure date', 'resources')) . '</i></b>',
                 );
             }
             foreach ($iterator as $data) {
-                $resourcesID = $data["id"];
+                $values = [
+                    (string) $data["name"],
+                    Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
+                    Dropdown::getDropdownName(
+                        "glpi_plugin_resources_contracttypes",
+                        $data["plugin_resources_contracttypes_id"],
+                    ),
+                    Dropdown::getDropdownName(
+                        "glpi_plugin_resources_departments",
+                        $data["plugin_resources_departments_id"],
+                    ),
+                    (string) Html::convDate($data["date_begin"]),
+                    (string) Html::convDate($data["date_end"]),
+                ];
 
                 if (Session::isMultiEntitiesMode()) {
+                    // The entity column comes second
+                    array_splice($values, 1, 0, [Dropdown::getDropdownName("glpi_entities", $data['entities_id'])]);
                     $pdf->setColumnsSize(14, 14, 14, 14, 14, 14, 16);
-                    $pdf->displayLine(
-                        $data["name"],
-                        Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
-                        Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
-                        Dropdown::getDropdownName(
-                            "glpi_plugin_resources_contracttypes",
-                            $data["plugin_resources_contracttypes_id"],
-                        ),
-                        Dropdown::getDropdownName(
-                            "glpi_plugin_resources_departments",
-                            $data["plugin_resources_departments_id"],
-                        ),
-                        Html::convDate($data["date_begin"]),
-                        Html::convDate($data["date_end"]),
-                    );
                 } else {
                     $pdf->setColumnsSize(17, 17, 17, 17, 17, 17);
-                    $pdf->displayLine(
-                        $data["name"],
-                        Dropdown::getDropdownName("glpi_locations", $data["locations_id"]),
-                        Dropdown::getDropdownName(
-                            "glpi_plugin_resources_contracttypes",
-                            $data["plugin_resources_contracttypes_id"],
-                        ),
-                        Dropdown::getDropdownName(
-                            "glpi_plugin_resources_departments",
-                            $data["plugin_resources_departments_id"],
-                        ),
-                        Html::convDate($data["date_begin"]),
-                        Html::convDate($data["date_end"]),
-                    );
                 }
+                $pdf->displayLine(...array_map(static fn(string $value): string => htmlescape($value), $values));
             }
         }
     }

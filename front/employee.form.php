@@ -47,16 +47,16 @@ if (isset($_POST["add_helpdesk_employee"])) {
     Session::checkRight(Employee::$rightname, CREATE);
     // Employee has no entities_id of its own, so the global right above is the only guard
     // here: scope the creation to the Resource it is attached to.
-    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
-    $newID = $employee->add($_POST);
-    Html::redirect("./resource_item.list.php?id=" . $_POST["plugin_resources_resources_id"] . "&exist=0");
+    // The record is attached to the id checked, not to the posted value.
+    $resources_id = Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? null);
+    $newID = $employee->add(['plugin_resources_resources_id' => $resources_id] + $_POST);
+    Html::redirect("./resource_item.list.php?id=" . $resources_id . "&exist=0");
 } else {
     //show form employee informations from helpdesk
     // The write branch above is guarded by checkOwnership(); this one was not, and the
     // canView() inside showFormHelpdesk() is a global right test that never looks at the
     // entity of the requested row. The parameter is a Resource id, so guard it as one.
-    $resources_id = (int) ($_GET["id"] ?? 0);
-    Resource::checkOwnership($resources_id, READ);
+    $resources_id = Resource::checkOwnership($_GET["id"] ?? null, READ);
     $employee->showFormHelpdesk($resources_id, 0);
 }
 

@@ -29,13 +29,16 @@
 
 use GlpiPlugin\Resources\Resource;
 
-header("Content-Type: text/html; charset=UTF-8");
+// The answer is a JSON number, read by response.json() in public/scripts/resourcechange.js:
+// declared as such rather than as an HTML page.
+header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkRight('plugin_resources', READ);
 
-$name = $_POST['name'] ?? '';
-$firstname = $_POST['firstname'] ?? '';
+// Plain strings only: an array would turn each criterion into an IN() over several names
+$name = is_string($_POST['name'] ?? null) ? $_POST['name'] : '';
+$firstname = is_string($_POST['firstname'] ?? null) ? $_POST['firstname'] : '';
 
 $resource = new Resource();
 // find() applies no entity restriction of its own: without this the probe answered on the
@@ -45,4 +48,4 @@ $resources = $resource->find(
     + getEntitiesRestrictCriteria($resource->getTable(), '', '', true),
 );
 
-echo json_encode(count($resources));
+echo json_encode(count($resources), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);

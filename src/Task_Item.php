@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Migration;
 use Session;
@@ -43,7 +44,19 @@ use Session;
  */
 class Task_Item extends CommonDBTM
 {
+    // No entity of its own: a link is read and written with its task
+    use TaskChildItemRightTrait;
+
     public static $rightname = 'plugin_resources_task';
+
+    /**
+     * Set by server-side code that checked the linked object itself, the next add() of this
+     * object then skips the READ test of the session on it: the copy of the tasks of a
+     * template (Task::cloneItem()), which checks each object against the entity of the new
+     * resource through Resource_Item::isLinkableTo(). Consumed by prepareInputForAdd(), never
+     * read from the input.
+     */
+    public bool $item_checked_by_caller = false;
 
     /**
      * @return bool
@@ -51,14 +64,6 @@ class Task_Item extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * @return bool
-     */
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -157,6 +162,9 @@ class Task_Item extends CommonDBTM
      */
     public function prepareInputForAdd($input)
     {
+        $checked_by_caller            = $this->item_checked_by_caller;
+        $this->item_checked_by_caller = false;
+
         // The itemtype travels in the posted form (front/task.form.php) and in the
         // massive action input (Task::processMassiveActionsForOneItemtype), and every
         // reader of this table instantiates it. Validate the value here, at the sink,
@@ -164,6 +172,44 @@ class Task_Item extends CommonDBTM
         if (!in_array($input['itemtype'] ?? '', Resource::getTypes(true), true)) {
             return false;
         }
+
+        // The callers authorise the task, never the object linked to it, whose name and state
+        // the tab of the task displays back: the session has to be allowed to read that very
+        // object (right and entity), unless the caller checked it (item_checked_by_caller).
+        try {
+            $items_id = Resource::getPostedId($input['items_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $items_id = 0;
+        }
+        $item = getItemForItemtype($input['itemtype']);
+        if ($items_id <= 0
+            || !$item
+            || !($checked_by_caller ? $item->getFromDB($items_id) : $item->can($items_id, READ))) {
+            Session::addMessageAfterRedirect(
+                __("You don't have permission to perform this action."),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        $input['items_id'] = $items_id;
+
+        return $input;
+    }
+
+    /**
+     * A link is created or deleted, never changed: the task and the object were checked when
+     * it was created, and an update (the API one included) is authorised on the task stored
+     * only. Moving the link to another task, or pointing it to another object or to a type
+     * out of the allow-list, would skip both checks.
+     *
+     * @param array $input
+     *
+     * @return array
+     */
+    public function prepareInputForUpdate($input)
+    {
+        unset($input['plugin_resources_tasks_id'], $input['itemtype'], $input['items_id']);
 
         return $input;
     }
@@ -237,11 +283,12 @@ class Task_Item extends CommonDBTM
 
         foreach ($iterator as $line) {
             $type = $line["itemtype"];
-            if (!class_exists($type)) {
+            // The type comes from the database: only the ones the plugin links are instantiated
+            if (!in_array($type, Resource::getTypes(true), true)) {
                 continue;
             }
-            $item = new $type();
-            if (!$item->canView()) {
+            $item = getItemForItemtype($type);
+            if (!$item || !$item->canView()) {
                 continue;
             }
 
@@ -272,6 +319,13 @@ class Task_Item extends CommonDBTM
                 $ID = "";
                 $itemID = $data["id"];
                 $used[] = $itemID;
+                // canView() above is the global right on the type: each object is listed only
+                // if the session may read it (right and entity), a link created before that
+                // was checked included.
+                $linked = getItemForItemtype($type);
+                if (!$linked || !$linked->can((int) $itemID, READ)) {
+                    continue;
+                }
                 if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
                     $ID = " (" . $data["id"] . ")";
                 }

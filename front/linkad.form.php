@@ -42,9 +42,9 @@ $linkad = new LinkAd();
 if (isset($_POST["add"])) {
     Session::checkRight(LinkAd::$rightname, CREATE);
     // LinkAd has no entities_id of its own, so the global right above is the only guard
-    // here: scope the creation to the Resource it is attached to.
-    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
-    $linkad->add($_POST);
+    // here: scope the creation to the Resource it is attached to, by the id checked.
+    $resources_id = Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? null);
+    $linkad->add(['plugin_resources_resources_id' => $resources_id] + $_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
     // checkChildOwnership() below only asks for the plugin_resources right on the owning
@@ -54,16 +54,17 @@ if (isset($_POST["add"])) {
     // LinkAd carries no entities_id of its own, so check($id, UPDATE) alone cannot scope
     // this to the caller's entity: resolve the owning Resource via
     // plugin_resources_resources_id and check the right on that instance instead.
-    Resource::checkChildOwnership($linkad, $_POST["id"]);
+    $linkads_id = Resource::checkChildOwnership($linkad, $_POST["id"] ?? null);
+    $input = ['id' => $linkads_id] + $_POST;
     // The guard above validates the Resource currently STORED in the row. The form posts
     // plugin_resources_resources_id as a hidden field (linkad_form.html.twig,
-    // linkad_resource_form.html.twig) and update() writes it back, so the posted value has
-    // to be authorized at the sink as well: otherwise the row can be reparented onto a
-    // Resource of another entity, whose form would then display the AD account it carries.
+    // linkad_resource_form.html.twig): LinkAd::prepareInputForUpdate() never writes it back,
+    // nor the login and the state of the directory operation, and a forged value is still
+    // refused here rather than silently ignored.
     if (isset($_POST["plugin_resources_resources_id"])) {
-        Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
+        $input['plugin_resources_resources_id'] = Resource::checkOwnership($_POST["plugin_resources_resources_id"]);
     }
-    $linkad->update($_POST);
+    $linkad->update($input);
     // auth_id names the directory the server binds to, with its stored rootdn password:
     // take it as an id, and do not bind at all when the form named none.
     $auth_id = (int) ($_POST["auth_id"] ?? 0);
@@ -78,15 +79,21 @@ if (isset($_POST["add"])) {
     // to the Resource this account is created for (LinkAd carries no entities_id, so no
     // check() on it can enforce the entity boundary — see the "update" branch below).
     Session::checkRight(LinkAd::$rightname, CREATE);
-    Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? 0);
+    $resources_id = Resource::checkOwnership($_POST["plugin_resources_resources_id"] ?? null);
     // The follow-up below reports the operation into the ticket named by the form: validate
     // it before the directory is touched, not after.
     $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $ldap = new LDAP();
     $res = $ldap->createUserAD($_POST);
     if ($res) {
-        $_POST["action_done"] = 1;
-        $linkad->add($_POST);
+        // The account now exists under the posted login: record it, and the operation as
+        // done, through the one write allowed to set them (an add or update posted by a form
+        // drops them, see LinkAd::prepareInputForAdd()).
+        $linkad->allow_directory_fields = ['login', 'action_done'];
+        $linkad->add([
+            'plugin_resources_resources_id' => $resources_id,
+            'action_done'                   => 1,
+        ] + $_POST);
         $fup = new ITILFollowup();
 
         $toadd = [
@@ -122,15 +129,20 @@ if (isset($_POST["add"])) {
     // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
-    Resource::checkChildOwnership($linkad, $_POST['id']);
+    $linkads_id = Resource::checkChildOwnership($linkad, $_POST['id'] ?? null);
     // The follow-up below reports the operation into the ticket named by the form: validate
     // it before the directory is touched, not after.
     $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->updateUserAD($_POST);
     if ($res[0]) {
-        $_POST["action_done"] = 1;
-        $linkad->update($_POST);
+        // The row checked, which stays under the resource and the login it is stored with:
+        // only the outcome of the operation is recorded on top of the form fields.
+        $linkad->allow_directory_fields = ['action_done'];
+        $linkad->update([
+            'id'          => $linkads_id,
+            'action_done' => 1,
+        ] + $_POST);
         $fup = new ITILFollowup();
 
         $toadd = [
@@ -184,15 +196,19 @@ if (isset($_POST["add"])) {
     // check($id, UPDATE) on LinkAd itself cannot enforce entity isolation).
     Session::checkRight(LinkAd::$rightname, UPDATE);
     $ldap = new LDAP();
-    Resource::checkChildOwnership($linkad, $_POST['id']);
+    $linkads_id = Resource::checkChildOwnership($linkad, $_POST['id'] ?? null);
     // The follow-up below reports the operation into the ticket named by the form: validate
     // it before the directory is touched, not after.
     $tickets_id = LinkAd::checkTicketAccess($_POST["ticket_id"] ?? 0);
     $_POST["login"] = $linkad->getField("login");
     $res = $ldap->disableUserAD($_POST);
     if ($res) {
-        $_POST["action_done"] = 1;
-        $linkad->update($_POST);
+        // Same as updateAD: the stored login and resource are kept, the outcome is recorded
+        $linkad->allow_directory_fields = ['action_done'];
+        $linkad->update([
+            'id'          => $linkads_id,
+            'action_done' => 1,
+        ] + $_POST);
         $fup = new ITILFollowup();
 
         $toadd = [

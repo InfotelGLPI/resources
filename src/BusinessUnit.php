@@ -52,17 +52,6 @@ class BusinessUnit extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRight('dropdown', UPDATE);
-    }
-
-    /**
      * Have I the global right to "view" the Object
      *
      * Default is true and check entity if the objet is entity assign

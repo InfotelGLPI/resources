@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Resources\Checklistconfig;
 use GlpiPlugin\Resources\Resource;
 
 if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
@@ -34,28 +35,38 @@ if (strpos($_SERVER['PHP_SELF'], "linkItems.php")) {
     Html::header_nocache();
 }
 
-Session::checkRight('plugin_resources', READ);
+Session::checkRight(Resource::$rightname, READ);
+// The only caller is the checklist setup form (Checklistconfig::showForm()): the right of
+// that screen is required, not only the generic plugin one.
+Session::checkRight(Checklistconfig::$rightname, READ);
 
-if (isset($_POST["type"]) && isset($_POST["current_type"])) {
-    $values = 0;
-    if ($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
-        // Restrict the dynamic ::dropdown() call to the itemtypes the plugin actually
-        // exposes: prevents an attacker from invoking a static dropdown() on an arbitrary
-        // class through the POSTed "type" value.
-        if (!in_array($_POST["type"], Resource::getTypes(true), true)) {
+$type         = $_POST["type"] ?? null;
+$current_type = $_POST["current_type"] ?? null;
+
+if (is_string($type) && is_string($current_type)) {
+    if ($type != "0" && $type != "" && $type != "ALL") {
+        // Restrict the dynamic ::dropdown() call to the itemtypes the plugin exposes and the
+        // session may view, the list the form itself offers: an arbitrary class would have
+        // its static dropdown() invoked, and a type without the right would be listed.
+        if (!in_array($type, Resource::getTypes(), true)
+            || !is_a($type, CommonDBTM::class, true)) {
             throw new \Glpi\Exception\Http\BadRequestHttpException();
         }
 
-        if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
-            $values = $_POST['values'];
+        // The current value is resolved to a name and a comment by the dropdown: kept only
+        // when the session may read that very object, entity included.
+        $values = 0;
+        if ($type === $current_type && is_numeric($_POST["values"] ?? null)) {
+            $posted = (int) $_POST["values"];
+            $item   = new $type();
+            if ($posted > 0 && $item->can($posted, READ)) {
+                $values = $posted;
+            }
         }
 
-
-        $option["name"] = "items";
-        // $values is always defined above (defaults to 0), so use it directly.
-        $option["value"] = $values;
-
-
-        $_POST["type"]::dropdown($option);
+        $type::dropdown([
+            'name'  => 'items',
+            'value' => $values,
+        ]);
     }
 }

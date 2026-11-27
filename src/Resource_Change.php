@@ -58,6 +58,11 @@ use User;
  */
 class Resource_Change extends CommonDBTM
 {
+    // The rows are the setup of the change actions (entity and ticket category of each action),
+    // edited from the setup page only. Running a change on a resource does not ask this class
+    // for any right: front/resource.change.php checks the resource itself.
+    use ConfigRightTrait;
+
     public static $rightname = 'plugin_resources';
 
     //List of possible actions
@@ -145,7 +150,11 @@ class Resource_Change extends CommonDBTM
         }
         if ($menu == false) {
             foreach ($actions as $key => $val) {
-                if ($key == 0) {
+                // The transfer is set up by its own table (TransferEntity, tested above): no
+                // setup row of this table may be created for it (getConfigurableActions()), so
+                // requiring one dropped it from every list, the one the profiles are restricted
+                // to (Actionprofile) and the one front/resource.transfer.php is checked against.
+                if ($key == 0 || $key == self::CHANGE_TRANSFER) {
                     continue;
                 }
                 $self = new self();
@@ -158,6 +167,153 @@ class Resource_Change extends CommonDBTM
         }
 
         return $actions;
+    }
+
+    /**
+     * Change actions the active profile may run.
+     *
+     * The actions set up (getAllActions()), narrowed to the list an administrator granted to
+     * the profile (Actionprofile), an empty list standing for no restriction. This used to be
+     * applied by the dropdown of the change form only: the form handler, startingChange() and
+     * the field fragments go through this list too, so an action the dropdown hides cannot be
+     * posted instead.
+     *
+     * @return array<int, string> labels indexed by action id, without the empty choice
+     */
+    public static function getAllowedActions(): array
+    {
+        $actions = self::getAllActions();
+        unset($actions[0]);
+
+        $actionProfile = new Actionprofile();
+        if (isset($_SESSION['glpiactiveprofile']['id'])
+            && $actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
+            $available_action = json_decode((string) $actionProfile->fields['actions_id']);
+            if (!empty($available_action) && is_array($available_action)) {
+                foreach (array_keys($actions) as $id) {
+                    if (!in_array($id, $available_action)) {
+                        unset($actions[$id]);
+                    }
+                }
+            }
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Whether the active profile may run a change action, see getAllowedActions().
+     *
+     * @param int $action_id
+     *
+     * @return bool
+     */
+    public static function isAllowedAction(int $action_id): bool
+    {
+        return $action_id > 0 && array_key_exists($action_id, self::getAllowedActions());
+    }
+
+    /**
+     * Actions a setup row may be created for: the ones the setup form offers.
+     *
+     * The transfer has its own setup (TransferEntity). The badge restitution is no change of
+     * the resource, so getAllActions() leaves it out, but ResourceBadge::createTicket() takes
+     * the category of its tickets from here too.
+     *
+     * @return array<int, string> labels indexed by action id, 0 being the empty choice
+     */
+    public static function getConfigurableActions(): array
+    {
+        $actions = self::getAllActions(true);
+        $actions[self::BADGE_RESTITUTION] = self::getNameActions(self::BADGE_RESTITUTION);
+        //delete mutation
+        unset($actions[self::CHANGE_TRANSFER]);
+
+        return $actions;
+    }
+
+    public function prepareInputForAdd($input)
+    {
+        return $this->checkSetupInput($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // The row as it would be stored: an update may carry only some of the fields
+        if ($this->checkSetupInput($input + $this->fields) === false) {
+            return false;
+        }
+        return $input;
+    }
+
+    /**
+     * Validate a setup row: the action enables a change for the entity, and the template of the
+     * category is applied to the tickets that change creates there.
+     *
+     * @param array $input
+     *
+     * @return array|false the input, with its three fields cast to int, or false
+     */
+    private function checkSetupInput(array $input)
+    {
+        $actions_id        = (int) ($input['actions_id'] ?? 0);
+        $entities_id       = (int) ($input['entities_id'] ?? -1);
+        $itilcategories_id = (int) ($input['itilcategories_id'] ?? 0);
+
+        $dbu   = new DbUtils();
+        $valid = $actions_id > 0
+            // Only an action the setup form offers: getAllActions() enables every action that
+            // has a row; the transfer has its own setup (TransferEntity).
+            && array_key_exists($actions_id, self::getConfigurableActions())
+            && Session::haveAccessToEntity($entities_id)
+            // Same test as front/config.form.php for its own category: it must exist and be
+            // reachable. It must also be one the dropdown of the form offers for that entity
+            // (request category of the entity or inherited from a parent one): a category of
+            // an unrelated entity would apply its template to the tickets of this one.
+            && $itilcategories_id > 0
+            && $dbu->countElementsInTable(
+                ITILCategory::getTable(),
+                [
+                    'id'         => $itilcategories_id,
+                    'is_request' => 1,
+                ] + $dbu->getEntitiesRestrictCriteria(ITILCategory::getTable(), '', $entities_id, true),
+            ) > 0;
+
+        $category = new ITILCategory();
+        if (
+            !$valid
+            || !$category->getFromDB($itilcategories_id)
+            || !Session::haveAccessToEntity($category->getEntityID(), $category->isRecursive())
+        ) {
+            Session::addMessageAfterRedirect(
+                __('The action, the entity or the category of this change action is not valid', 'resources'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+
+        $input['actions_id']        = $actions_id;
+        $input['entities_id']       = $entities_id;
+        $input['itilcategories_id'] = $itilcategories_id;
+
+        return $input;
+    }
+
+    /**
+     * The setup list only removes rows: a row is set up from its form, where its action, entity
+     * and category are checked together.
+     */
+    public function getForbiddenStandardMassiveAction()
+    {
+        $forbidden   = parent::getForbiddenStandardMassiveAction();
+        $forbidden[] = 'update';
+        $forbidden[] = 'clone';
+        $forbidden[] = 'amend_comment';
+        $forbidden[] = 'add_note';
+        $forbidden[] = 'add_transfer_list';
+
+        return $forbidden;
     }
 
     /**
@@ -224,6 +380,12 @@ class Resource_Change extends CommonDBTM
                 'level'   => 'danger',
                 'message' => __('Please select a resource', 'resources'),
             ]);
+            return;
+        }
+
+        // The action is posted by the client: no field of an action the profile may not run
+        // (nor the current values they show)
+        if (!self::isAllowedAction((int) $action_id)) {
             return;
         }
 
@@ -834,16 +996,31 @@ class Resource_Change extends CommonDBTM
     /**
      * Launch of change for ticket creation
      *
-     * @param       $plugin_resources_resources_id
-     * @param       $action_id
+     * @param int   $plugin_resources_resources_id
+     * @param int   $action_id
      * @param array $options
+     *
+     * @return bool
      */
-    public static function startingChange($plugin_resources_resources_id, $action_id, $options = [])
+    public static function startingChange(int $plugin_resources_resources_id, int $action_id, array $options = []): bool
     {
         global $DB;
 
+        // Every write below and the ticket are keyed on this id: check the row loaded here,
+        // so that the change can only land on a resource the session may update.
         $resource = new Resource();
-        $resource->getFromDB($plugin_resources_resources_id);
+        if ($plugin_resources_resources_id <= 0
+            || !$resource->can($plugin_resources_resources_id, UPDATE)) {
+            return false;
+        }
+        $plugin_resources_resources_id = $resource->getID();
+
+        // Only an action set up and granted to the active profile, the list the change form
+        // offers: the id is posted. The freeze after validation is not applied here, the
+        // change workflow being the way to change a validated resource.
+        if (!self::isAllowedAction($action_id)) {
+            return false;
+        }
 
         $dbu = new DbUtils();
 
@@ -1045,8 +1222,11 @@ class Resource_Change extends CommonDBTM
                 $data['content'] = __("Change of company for", 'resources') . " " .
                     Resource::getResourceName($plugin_resources_resources_id) . "\n";
                 $employee = new Employee();
+                // The company is the employer of the Employee row: its own right is required,
+                // stated here even though can() on that row (no entity) comes down to it.
                 if (
-                    !$employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id])
+                    !Session::haveRight(Employee::$rightname, UPDATE)
+                    || !$employee->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id])
                     || !$employee->can($employee->getID(), UPDATE)
                 ) {
                     throw new AccessDeniedHttpException();
@@ -1161,35 +1341,50 @@ class Resource_Change extends CommonDBTM
 
                 break;
             case self::CHANGE_RESOURCEITEMAPPLICATION:
+                // The link is the change itself: checked against the resource (type linked by
+                // the plugin, appliance of the scope of its entity, as the list of the form
+                // offers it), not against the right of the session on appliances, which the
+                // HR profiles declaring this change from the helpdesk usually lack. Without
+                // the link, no ticket announces it.
+                $appliances_id = (int) ($options['appliances_id'] ?? 0);
+                if (!Resource_Item::isLinkableTo(Appliance::class, $appliances_id, $resource)) {
+                    Session::addMessageAfterRedirect(
+                        __("You don't have permission to perform this action."),
+                        false,
+                        ERROR,
+                    );
+                    return false;
+                }
+                $resource_item = new Resource_Item();
+                $resource_item->item_checked_by_caller = true;
+                if (!$resource_item->add([
+                    'itemtype'                      => Appliance::class,
+                    'items_id'                      => $appliances_id,
+                    'plugin_resources_resources_id' => $plugin_resources_resources_id,
+                ])) {
+                    return false;
+                }
                 $data['name'] = __("Add application for", 'resources') . " " .
                     Resource::getResourceName($plugin_resources_resources_id);
                 $data['content'] = sprintf(
                     __("The added appliance is %s ", 'resources'),
-                    Dropdown::getDropdownName('glpi_appliances', $options['appliances_id']),
+                    Dropdown::getDropdownName('glpi_appliances', $appliances_id),
                 );
-                $resource_item = new Resource_Item();
-                $inputInfo = [];
-                $inputInfo['itemtype'] = Appliance::getType();
-                $inputInfo['items_id'] = $options['appliances_id'];
-                $inputInfo['plugin_resources_resources_id'] = $plugin_resources_resources_id;
-                $resource_item->add($inputInfo);
                 break;
         }
 
         $input['id'] = $plugin_resources_resources_id;
         $input['send_notification'] = 0;
-        //update resource
-        $resource->update($input);
+        // The change actions are the way to change a resource once its information is
+        // validated and frozen
+        $resource->updateFromWorkflow($input);
 
         self::createTicket($data);
 
-        $linkad = new LinkAd();
-        if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $plugin_resources_resources_id])) {
-            $input2 = [];
-            $input2['action_done'] = 0;
-            $input2['id'] = $linkad->getID();
-            $linkad->update($input2);
-        }
+        // The directory has to be updated again for this change
+        LinkAd::setActionDoneForResource((int) $plugin_resources_resources_id, false);
+
+        return true;
     }
 
     /**
@@ -1220,10 +1415,7 @@ class Resource_Change extends CommonDBTM
             return false;
         }
 
-        $actions = self::getAllActions(true);
-        $actions[self::BADGE_RESTITUTION] = self::getNameActions(self::BADGE_RESTITUTION);
-        //delete mutation
-        unset($actions[self::CHANGE_TRANSFER]);
+        $actions = self::getConfigurableActions();
 
         $canedit = true;
 
@@ -1265,8 +1457,12 @@ class Resource_Change extends CommonDBTM
      */
     private function listItems($canedit)
     {
-        // Entity already added for this action
-        $datas = $this->find([], "actions_id");
+        // Only the rows of the entities the session can reach, as in any other list
+        $dbu   = new DbUtils();
+        $datas = $this->find(
+            $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', $this->maybeRecursive()),
+            "actions_id",
+        );
 
         if (count($datas) === 0) {
             return;

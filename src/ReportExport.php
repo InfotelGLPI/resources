@@ -85,7 +85,11 @@ class ReportExport
             foreach ($values as $k => $v) {
                 $name = is_array($val) ? $key . '[' . $k . ']' : (string) $key;
                 $hidden_fields[] = ['name' => $name, 'value' => (string) $v];
-                $param[] = $name . '=' . urlencode((string) $v);
+                // The pager links are plain GET: the CSRF token has nothing to do there and
+                // would leak through the URL. Names are encoded like the values.
+                if ($key !== '_glpi_csrf_token') {
+                    $param[] = urlencode($name) . '=' . urlencode((string) $v);
+                }
             }
         }
 
@@ -134,14 +138,71 @@ class ReportExport
         return '';
     }
 
-    public static function showItem($type, $value, &$num, $row, $extraparam = '')
+    /**
+     * Display one cell of a report.
+     *
+     * The HTML output writes the value into the cell as it is: a plain value is therefore
+     * escaped, so that a label read from the database cannot carry markup into the page.
+     * Markup built by the caller (getLink(), a link whose parts are escaped) is passed with
+     * $is_html, and only that markup. The spreadsheet outputs (PDF, CSV, ODS, XLSX) write
+     * text: the core output reduces the cell to its text, entities decoded and tags dropped.
+     *
+     * @param int|string $type       display type (Search::*_OUTPUT)
+     * @param mixed      $value      cell content, plain text unless $is_html
+     * @param int        $num        column counter
+     * @param int        $row        row number
+     * @param string     $extraparam attributes of the cell, static markup
+     * @param bool       $is_html    the value is trusted HTML, written as it is
+     *
+     * @return string
+     */
+    public static function showItem($type, $value, &$num, $row, $extraparam = '', bool $is_html = false)
     {
+        $value = is_scalar($value) ? (string) $value : '';
+        if (!$is_html) {
+            $value = htmlescape($value);
+        }
+
         if (!self::isSpreadsheet($type)) {
             return Search::showItem($type, $value, $num, $row, $extraparam);
         }
-        self::$current_row[] = (string) ($value ?? '');
+        // Kept as markup: the spreadsheet output of GLPI 11 converts every cell to text itself
+        // (DataExport::normalizeValueForTextExport(), see showFooter()), as it does for its
+        // own search results: the escaped value gets its characters back, a trusted link only
+        // keeps its label. Converting it here as well would strip a "<" the text contains.
+        self::$current_row[] = $value;
         $num++;
         return '';
+    }
+
+    /**
+     * Sort link of a column header of a report.
+     *
+     * Built from the parameters of the report own criteria (AutoReport::getRequestParameters()),
+     * not from the whole request: $_REQUEST may hold cookies and any parameter name a link
+     * carries. The URL is returned unescaped, the core header escapes it as an attribute;
+     * joining the parameters with "&amp;" here made it print "&amp;amp;" and broke the link.
+     *
+     * @param string               $target   URL of the report
+     * @param array<string, mixed> $criteria parameters of the report criteria, by name
+     * @param string               $column   column to sort on
+     * @param string               $order    sort direction
+     *
+     * @return string
+     */
+    public static function getSortLink(string $target, array $criteria, string $column, string $order): string
+    {
+        $params = [];
+        foreach ($criteria as $name => $value) {
+            if (in_array($name, ['sort', 'order'], true) || !(is_scalar($value) || is_array($value))) {
+                continue;
+            }
+            $params[$name] = is_bool($value) ? (int) $value : $value;
+        }
+        $params['sort']  = $column;
+        $params['order'] = $order === 'DESC' ? 'DESC' : 'ASC';
+
+        return $target . '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     public static function showEndLine($type, bool $is_header_line = false)
@@ -181,6 +242,8 @@ class ReportExport
         foreach (self::$rows as $row) {
             $cells = [];
             foreach ($row as $index => $value) {
+                // The output of GLPI 11 reads the "displayname" of each cell and converts it to
+                // text (see showItem())
                 $cells[$itemtype . '_' . ($index + 1)] = ['displayname' => $value];
             }
             $rows[] = $cells;

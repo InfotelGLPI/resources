@@ -68,17 +68,6 @@ class HabilitationLevel extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr('dropdown', [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Return Additional Fields for this type
      *
      * @return array

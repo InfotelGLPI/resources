@@ -53,21 +53,24 @@ if (isset($_POST["add"])) {
     $reportconfig->add($_POST);
     Html::back();
 } elseif (isset($_POST["update"])) {
-    $reportconfig->check((int) $_POST["id"], UPDATE);
-    $reportconfig->update($_POST);
+    // The row written is the one checked: same integer for both, see Resource::getPostedId()
+    $reportconfigs_id = Resource::checkPostedItem($reportconfig, $_POST["id"] ?? null, UPDATE);
+    $reportconfig->update(['id' => $reportconfigs_id] + $_POST);
     Html::back();
 } elseif (isset($_POST["delete"])) {
-    $reportconfig->check((int) $_POST["id"], PURGE);
-    $reportconfig->delete($_POST, 1);
+    $reportconfigs_id = Resource::checkPostedItem($reportconfig, $_POST["id"] ?? null, PURGE);
+    // Back to the resource of the row deleted, read before the deletion
+    $resources_id = (int) $reportconfig->fields['plugin_resources_resources_id'];
+    $reportconfig->delete(['id' => $reportconfigs_id] + $_POST, 1);
 
     Html::redirect(
         Toolbox::getItemTypeFormURL(Resource::class) .
-        "?id=" . $_POST["plugin_resources_resources_id"],
+        "?id=" . $resources_id,
     );
 } elseif (isset($_POST["delete_report"])) {
-    foreach ($_POST["check"] as $ID => $value) {
-        $reportconfig->check((int) $ID, PURGE);
-        $reportconfig->delete(["id" => $ID], 1);
+    foreach (array_keys((array) ($_POST["check"] ?? [])) as $ID) {
+        $reportconfigs_id = Resource::checkPostedItem($reportconfig, $ID, PURGE);
+        $reportconfig->delete(["id" => $reportconfigs_id], 1);
     }
     Html::back();
 } else {

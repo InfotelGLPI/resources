@@ -112,14 +112,80 @@ class Wizard extends CommonDBTM
      *
      * @return bool
      */
+    /**
+     * Template a new resource may be prefilled from: a template (is_template = 1) the active
+     * profile can read, i.e. one offered by Resource::dropdownTemplate(). The rule is the one
+     * Resource::prepareInputForAdd() applies to the template it clones the rows of.
+     */
+    private static function getAllowedTemplate(int $templates_id): ?Resource
+    {
+        return Resource::getAllowedTemplate($templates_id);
+    }
+
+    /**
+     * Remember that the session created a resource through the wizard.
+     *
+     * The steps after the creation fill in rows of the new resource that the creation itself
+     * wrote: the Employee row copied from the template, or written with the employer of the
+     * second step. Filling them in is part of the creation, the way
+     * Employee::getEmployerWrite() treats the employer of a resource being created: the
+     * steps check isCreatedInSession() to accept the CREATE right there. Kept server-side,
+     * never read from the request.
+     *
+     * @param int $resources_id resource the wizard just created
+     *
+     * @return void
+     */
+    public static function rememberCreatedResource(int $resources_id): void
+    {
+        if ($resources_id > 0) {
+            $_SESSION['plugin_resources_wizard_created'][$resources_id] = $resources_id;
+        }
+    }
+
+    /**
+     * Whether the session created this resource through the wizard (rememberCreatedResource()).
+     *
+     * @param int $resources_id
+     *
+     * @return bool
+     */
+    public static function isCreatedInSession(int $resources_id): bool
+    {
+        return $resources_id > 0
+            && isset($_SESSION['plugin_resources_wizard_created'][$resources_id]);
+    }
+
+    /**
+     * Resource a wizard step is rendered for.
+     *
+     * The id travels in the wizard form. A resource is only loaded once that exact record
+     * passed the READ check, and the id returned is the one checked: the step goes on with
+     * it, never with the posted value. A value that is not a plain id is refused.
+     *
+     * @param mixed    $resources_id id posted, 0 for a resource being created
+     * @param Resource $resource     left empty for a resource being created
+     *
+     * @return int
+     */
+    private static function checkStepResource(mixed $resources_id, Resource $resource): int
+    {
+        $id = Resource::getPostedId($resources_id);
+        if ($id > 0) {
+            $resource->check($id, READ);
+        }
+
+        return $id;
+    }
+
     public function wizardSecondStep($ID, $options = [])
     {
         $resource = new Resource();
+        $ID = self::checkStepResource($ID, $resource);
 
         $input = [];
         $empty = 0;
         if ($ID > 0) {
-            $resource->check($ID, READ);
             $options['new'] = $ID;
             $input['plugin_resources_resources_id'] = $ID;
         } else {
@@ -175,7 +241,8 @@ class Wizard extends CommonDBTM
             $options["users_id_sales"] = $resource->fields["users_id_sales"];
             $options["plugin_resources_departments_id"] = $resource->fields["plugin_resources_departments_id"];
             $options["plugin_resources_services_id"] = $resource->fields["plugin_resources_services_id"];
-            $options["secondary_services"] = json_decode($resource->fields['secondary_services'], true);
+            // NULL for a resource that never had any (json_decode() refuses null)
+            $options["secondary_services"] = json_decode($resource->fields['secondary_services'] ?? '', true) ?? [];
             $options["plugin_resources_functions_id"] = $resource->fields["plugin_resources_functions_id"];
             $options["plugin_resources_teams_id"] = $resource->fields["plugin_resources_teams_id"];
             $options["date_begin"] = $resource->fields["date_begin"];
@@ -193,7 +260,6 @@ class Wizard extends CommonDBTM
             $options["matricule"] = $resource->fields["matricule"];
             $options["matricule_second"] = $resource->fields["matricule_second"];
         }
-        $options["plugin_resources_employers_id"] = 0;
 
         //        if (isset($options['target']) && $options['target'] == 'item') {
         //            $target = null;
@@ -206,12 +272,15 @@ class Wizard extends CommonDBTM
         if (isset($resource->fields["entities_id"]) || $empty == 1) {
             if ($empty == 1) {
                 $input['plugin_resources_contracttypes_id'] = 0;
-                $resourceTemplate = new Resource();
-                if (isset($options['template'])
-                    && $resourceTemplate->getFromDB($options['template'])) {
+                // The template id comes from the request (GET or POST): only a template the user
+                // could have picked in the first step (dropdownTemplate(): is_template = 1, in a
+                // visible entity) is read. Any other id, such as a real resource of another
+                // entity, is ignored and the form stays empty.
+                $resourceTemplate = self::getAllowedTemplate((int) ($options['template'] ?? 0));
+                if ($resourceTemplate !== null) {
                     $input['plugin_resources_contracttypes_id'] = $resourceTemplate->fields['plugin_resources_contracttypes_id'];
                     $input['plugin_resources_resourcestates_id'] = $resourceTemplate->fields['plugin_resources_resourcestates_id'];
-                    $input['template'] = $options['template'];
+                    $input['template'] = $resourceTemplate->getID();
                 }
                 $input['entities_id'] = $_SESSION['glpiactive_entity'];
             } else {
@@ -227,6 +296,20 @@ class Wizard extends CommonDBTM
         $input['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
         $input['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
+        // The third step compares the posted employer with the one stored
+        // (Employee::getEmployerWrite()): the field shows the employer of the resource
+        // redisplayed (back from a later step), or of the template a new resource is
+        // prefilled from, whose row the resource gets a copy of. A forced 0 was posted back as
+        // a change, erasing the employer or ending on an access denied page.
+        if ($options['requiredfields'] == 1) {
+            // Redisplay of the values typed before a refused third step
+            $options['plugin_resources_employers_id'] = (int) ($options['plugin_resources_employers_id'] ?? 0);
+        } else {
+            // No "template" key when the template is not an allowed one (see above)
+            $options['plugin_resources_employers_id'] = Employee::getEmployerOf($ID > 0 ? $ID : (int) ($input['template'] ?? 0));
+        }
+        // A change the Employee right of the session does not allow is not offered either
+        $employer_readonly = !Employee::canChangeEmployer($ID);
 
         $mandatory = $resource->checkRequiredFields($input);
         $hidden = $resource->getHiddenFields($input);
@@ -318,6 +401,7 @@ class Wizard extends CommonDBTM
                 'use_security' => $config->useSecurity(),
                 'use_notification' => $config->fields['automatic_notification_declare_arrival_form'] ?? 0,
                 'display_employee' => $display_employee,
+                'employer_readonly' => $employer_readonly,
                 'condition_emp' => $condition_emp,
                 'date_declaration' => date('Y-m-d'),
                 'users_id_recipient' => Session::getLoginUserID(),
@@ -347,11 +431,8 @@ class Wizard extends CommonDBTM
 
         $resource = new Resource();
         // The id travels in the wizard form: authorise the record, not only the global
-        // right the canView() above answers for. Mirrors wizardSevenStep().
-        if ($plugin_resources_resources_id > 0) {
-            $resource->check($plugin_resources_resources_id, READ);
-        }
-        $resource->getFromDB($plugin_resources_resources_id);
+        // right the canView() above answers for.
+        $plugin_resources_resources_id = self::checkStepResource($plugin_resources_resources_id, $resource);
 
         $restrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
         $dbu = new DbUtils();
@@ -421,11 +502,8 @@ class Wizard extends CommonDBTM
 
         $resource = new Resource();
         // The id travels in the wizard form: authorise the record, not only the global
-        // right the canView() above answers for. Mirrors wizardSevenStep().
-        if ($plugin_resources_resources_id > 0) {
-            $resource->check($plugin_resources_resources_id, READ);
-        }
-        $resource->getFromDB($plugin_resources_resources_id);
+        // right the canView() above answers for.
+        $plugin_resources_resources_id = self::checkStepResource($plugin_resources_resources_id, $resource);
 
         $newrestrict = ["plugin_resources_resources_id" => $plugin_resources_resources_id];
 
@@ -562,10 +640,7 @@ class Wizard extends CommonDBTM
         $resource = new Resource();
         // The id travels in the wizard form: authorise the record. This step exposes the
         // picture attached to it, so it must not be reachable by id alone.
-        if ($plugin_resources_resources_id > 0) {
-            $resource->check($plugin_resources_resources_id, READ);
-        }
-        $resource->getFromDB($plugin_resources_resources_id);
+        $plugin_resources_resources_id = self::checkStepResource($plugin_resources_resources_id, $resource);
         $path = "";
         $path_send = "";
         $empty_picture = PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png";
@@ -611,11 +686,8 @@ class Wizard extends CommonDBTM
 
         $resource = new Resource();
         // The id travels in the wizard form: authorise the record, not only the global
-        // right the canView() above answers for. Mirrors wizardSevenStep().
-        if ($plugin_resources_resources_id > 0) {
-            $resource->check($plugin_resources_resources_id, READ);
-        }
-        $resource->getFromDB($plugin_resources_resources_id);
+        // right the canView() above answers for.
+        $plugin_resources_resources_id = self::checkStepResource($plugin_resources_resources_id, $resource);
 
         $existing_habilitations = [];
 
@@ -709,11 +781,7 @@ class Wizard extends CommonDBTM
     public function wizardSevenStep($plugin_resources_resources_id, $options = [])
     {
         $resource = new Resource();
-        if ($plugin_resources_resources_id > 0) {
-            $resource->check($plugin_resources_resources_id, READ);
-        }
-
-        $resource->getFromDB($plugin_resources_resources_id);
+        $plugin_resources_resources_id = self::checkStepResource($plugin_resources_resources_id, $resource);
 
         // Both helpers echo their own markup: capture them so the template stays in charge
         // of the layout. Neither of them opens a form of its own.
@@ -753,12 +821,9 @@ class Wizard extends CommonDBTM
     {
         $resource = new Resource();
         // The id travels in the wizard form: authorise the record before rendering the
-        // entrance information of that resource. Mirrors wizardSevenStep().
-        if ($ID > 0) {
-            $resource->check($ID, READ);
-        }
+        // entrance information of that resource.
+        $ID = self::checkStepResource($ID, $resource);
         $resource->initForm($ID, $options);
-        $resource->getFromDB($ID);
 
         $input['plugin_resources_contracttypes_id'] = $resource->fields['plugin_resources_contracttypes_id'];
         $input['entities_id'] = $resource->fields['entities_id'];

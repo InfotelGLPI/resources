@@ -68,23 +68,29 @@ if (isset($_POST["secondary_services"])) {
 } else {
     $_POST["secondary_services"] = "";
 }
+// Every branch below checks a right on an id and then acts on an id: both have to be the same
+// integer. Posted ids go through Resource::getPostedId(), which refuses a value that is not a
+// plain id instead of casting it, and the branches act on the integer checked (or on the object
+// check() loaded), never on the raw request value.
 if (isset($_POST["resend"])) {
     // resend reads the resource by POST id and raises a notification event (e-mails
     // carrying resource data). The id comes entirely from POST and this branch runs
     // before any other guard, so enforce READ right + entity access on the target
     // first, like the sibling "report" branch.
-    $resource->check((int) $_POST["id"], READ);
-    $resource->reSendResourceCreation($_POST);
+    Resource::checkPostedItem($resource, $_POST["id"] ?? null, READ);
+    $resource->reSendResourceCreation();
     $resource->redirectToList();
 
     //from helpdesk
     //add items needs of a resource
 } elseif (isset($_POST["addhelpdeskitem"])) {
-    if ($_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
+    $resources_id   = Resource::getPostedId($_POST['plugin_resources_resources_id'] ?? null);
+    $choiceitems_id = Resource::getPostedId($_POST['plugin_resources_choiceitems_id'] ?? null);
+    if ($choiceitems_id > 0 && $resources_id > 0) {
         // Choices carry no entity of their own: gate right + entity access on the
         // parent resource (the entity owner) instead of the global create right.
-        $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
-        $choice->addHelpdeskItem($_POST);
+        $resource->check($resources_id, UPDATE);
+        $choice->addHelpdeskItem($resources_id, $choiceitems_id);
     }
     Html::back();
 } //from helpdesk
@@ -92,10 +98,8 @@ if (isset($_POST["resend"])) {
 elseif (isset($_POST["deletehelpdeskitem"])) {
     // Resolve the choice's parent resource and gate right + entity access on it
     // (the choice itself has no entities_id) before deleting.
-    if ($choice->getFromDB((int) $_POST["id"])) {
-        $resource->check((int) $choice->fields['plugin_resources_resources_id'], UPDATE);
-        $choice->delete(['id' => $_POST["id"]]);
-    }
+    $choices_id = Resource::checkChildOwnership($choice, $_POST["id"] ?? null);
+    $choice->delete(['id' => $choices_id]);
     Html::back();
 
     ///////////////////////////////employees///////////////////////////////
@@ -108,8 +112,11 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     $_POST["entities_id"] = $_SESSION["glpiactive_entity"];
     $resource->check(-1, CREATE, $_POST);
     if ($employee->canCreate()) {
-        $User = new user();
-        $User->getFromDB($_POST["users_id"]);
+        // The user is posted: its name, first name and location are copied into the new
+        // resource and it gets linked to it. The session has to be allowed to read that very
+        // user (right and entity) before anything is copied or created.
+        $User = new User();
+        Resource::checkPostedItem($User, $_POST["users_id"] ?? null, READ);
         //Check unicity by criteria control
         $_POST["name"] = $User->fields["realname"];
         $_POST["firstname"] = $User->fields["firstname"];
@@ -127,14 +134,13 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
         $_POST["is_deleted"] = 0;
         $_POST["withtemplate"] = 0;
 
-        if ($_POST["templates_id"] > 0) {
+        // -1 stands for "Without contract" in Resource::dropdownTemplate()
+        if (($_POST["templates_id"] ?? 0) > 0) {
             // The template id is client-supplied and its whole record is merged into the
             // new resource below: accept a row only when it really is a template and the
             // session may read it, otherwise any resource of the instance was clonable.
-            $template = new Resource();
-            if ($template->getFromDB((int) $_POST["templates_id"])
-                && $template->fields["is_template"]
-                && $template->can($template->getID(), READ)) {
+            $template = Resource::getAllowedTemplate(Resource::getPostedId($_POST["templates_id"]));
+            if ($template !== null) {
                 // The merge below copies every column of the template, entities_id and the
                 // row identity included, which is how the entity fixed above could be
                 // overwritten by the one the template belongs to. Drop them first.
@@ -189,11 +195,15 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
     //from central
     //add employee informations from user details form or resource form
 } elseif (isset($_POST["addemployee"])) {
-    if ($_POST['plugin_resources_resources_id'] > 0) {
+    $resources_id = Resource::getPostedId($_POST['plugin_resources_resources_id'] ?? null);
+    if ($resources_id > 0) {
+        // The Employee right governs the record itself: the form only hides the button
+        // from profiles without it.
+        Session::checkRight(Employee::$rightname, CREATE);
         // Employees carry no entity of their own: gate right + entity access on the
         // parent resource before creating the employee record under it.
-        $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
-        $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
+        $resource->check($resources_id, UPDATE);
+        $values["plugin_resources_resources_id"] = $resources_id;
         $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
         $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
         $newID = $employee->add($values);
@@ -203,25 +213,27 @@ elseif (isset($_POST["deletehelpdeskitem"])) {
 //update employee informations from user details form or resource form
 elseif (isset($_POST["updateemployee"])) {
     // Gate on the employee's own parent resource (the entity owner of the record
-    // being modified), not on the global right, to prevent cross-entity IDOR.
-    if ($_POST['plugin_resources_resources_id'] > 0 && $employee->getFromDB((int) $_POST['id'])) {
-        $resource->check((int) $employee->fields['plugin_resources_resources_id'], UPDATE);
-        $values["id"] = $_POST['id'];
-        $values["plugin_resources_resources_id"] = $_POST["plugin_resources_resources_id"];
-        $values["plugin_resources_employers_id"] = $_POST["plugin_resources_employers_id"];
-        $values["plugin_resources_clients_id"] = $_POST["plugin_resources_clients_id"];
-        $employee->update($values);
+    // being modified), not on the global right, to prevent cross-entity IDOR. The record
+    // stays under that resource: the parent posted by the form is never read
+    // (Employee::prepareInputForUpdate() drops it as well). The Employee right is required too.
+    Session::checkRight(Employee::$rightname, UPDATE);
+    $employees_id = Resource::checkChildOwnership($employee, $_POST['id'] ?? null);
+    $values = ['id' => $employees_id];
+    foreach (['plugin_resources_employers_id', 'plugin_resources_clients_id'] as $field) {
+        if (isset($_POST[$field])) {
+            $values[$field] = $_POST[$field];
+        }
     }
+    $employee->update($values);
     Html::back();
 } //from central
 //delete employee informations from user details form or resource form
 elseif (isset($_POST["deleteemployee"])) {
     // Resolve the employee's parent resource and gate right + entity access on it
-    // (the employee has no entities_id) before purging.
-    if ($employee->getFromDB((int) $_POST["id"])) {
-        $resource->check((int) $employee->fields['plugin_resources_resources_id'], UPDATE);
-        $employee->delete($_POST, 1);
-    }
+    // (the employee has no entities_id) before purging, on top of the Employee right.
+    Session::checkRight(Employee::$rightname, PURGE);
+    $employees_id = Resource::checkChildOwnership($employee, $_POST["id"] ?? null);
+    $employee->delete(['id' => $employees_id], 1);
     Html::back();
 
     /////////////////////////////////resource from central///////////////////////////////
@@ -232,24 +244,21 @@ elseif (isset($_POST["deleteemployee"])) {
     // so a profile deliberately given update only was creating resources through this branch.
     // The branch at line 110 of this same file already takes it that way.
     $resource->check(-1, CREATE, $_POST);
+    // The employer lands on an Employee row, which takes the Employee right: checked before
+    // the resource is created, written once it is. A creation from a template shows the
+    // employer of the template, whose row post_addItem() copies: compared with that one.
+    $employer_write = Employee::getEmployerWrite(0, $_POST, Resource::getTemplateSourceId($_POST));
     $newID = $resource->add($_POST);
-    if (isset($_POST['plugin_resources_employers_id'])) {
-        $employee = new Employee();
-        $employee->add([
-            'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-            'plugin_resources_resources_id' => $newID,
-            'plugin_resources_clients_id' => 0,
-        ]);
+    if ($newID) {
+        Employee::saveEmployerWrite((int) $newID, $employer_write);
     }
     Html::back();
 } //from central
 //update resource
 elseif (isset($_POST["update"])) {
-    $resource->check($_POST['id'], UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['id'] ?? null, UPDATE);
     // The frozen form only hides its buttons: refuse the same POST server-side.
-    if ($resource->isFrozenAfterValidation()) {
-        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
-    }
+    $resource->checkNotFrozen();
     $_POST['plugin_resources_profiletypes_id'] = $_SESSION["glpiactiveprofile"]['id'];
     $_POST['plugin_resources_grouptypes_id'] = $_SESSION["glpigroups"];
 
@@ -272,24 +281,31 @@ elseif (isset($_POST["update"])) {
         Html::back();
     }
     $old_is_leaving = $resource->fields['is_leaving'] ?? 0;
-    $resource->update($_POST);
-    if (isset($_POST['plugin_resources_employers_id'])) {
-        $employee = new Employee();
-        if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $_POST['id']])) {
-            $employee->update([
-                'id' => $employee->getID(),
-                'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                'plugin_resources_resources_id' => $_POST['id'],
-                'plugin_resources_clients_id' => 0,
-            ]);
-        } else {
-            $employee->add([
-                'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                'plugin_resources_resources_id' => $_POST['id'],
-                'plugin_resources_clients_id' => 0,
-            ]);
+    // An update drops the structural columns (Resource::prepareInputForUpdate()). The form
+    // offers the writer to those Resource::canSetRecipient() lets choose it: this write may
+    // then change it, and it is the only one.
+    $structural_fields = [];
+    if (Resource::canSetRecipient()) {
+        $structural_fields[] = 'users_id_recipient';
+    }
+    // The header of the form (generic_show_form) posts the "child entities" flag, enabled on
+    // the conditions the core shows it on: canRecurs(), and canUnrecurs() to clear it. On
+    // those same conditions, this write may change it.
+    if (isset($_POST['is_recursive']) && !is_array($_POST['is_recursive'])) {
+        $is_recursive = (int) $_POST['is_recursive'] === 1 ? 1 : 0;
+        if ($resource->canRecurs() && ($is_recursive === 1 || $resource->canUnrecurs())) {
+            $structural_fields[] = 'is_recursive';
+            $_POST['is_recursive'] = $is_recursive;
         }
     }
+    $resource->allow_structural_fields = $structural_fields;
+    // The employer lands on an Employee row, which takes the Employee right: checked before
+    // the resource is written (a changed employer only, see Employee::getEmployerWrite()).
+    $employer_write = Employee::getEmployerWrite($resources_id, $_POST);
+    // The update and its side effects below (employee, leaving ticket, directory sync flag)
+    // are all keyed on the id checked above.
+    $resource->update(['id' => $resources_id] + $_POST);
+    Employee::saveEmployerWrite($resources_id, $employer_write);
 
     // Create departure ticket when is_leaving is set to 1 for the first time from the resource form
     $new_is_leaving = $_POST['is_leaving'] ?? 0;
@@ -297,13 +313,11 @@ elseif (isset($_POST["update"])) {
         $config = new Config();
         $config->getFromDB(1);
         if ($config->fields["create_ticket_departure"]) {
-            $resource->getFromDB($_POST['id']);
+            $resource->getFromDB($resources_id);
             $resource->createLeavingTicket();
 
-            $linkad = new LinkAd();
-            if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $_POST['id']])) {
-                $linkad->update(['id' => $linkad->getID(), 'action_done' => 0]);
-            }
+            // The directory has to be updated again for this departure.
+            LinkAd::setActionDoneForResource($resources_id, false);
         }
     }
 
@@ -313,11 +327,15 @@ elseif (isset($_POST["update"])) {
 elseif (isset($_POST["delete"])) {
     // The template variant below is a forced delete, that is a definitive purge: ask for the
     // bit the branch actually spends rather than the UPDATE it used to settle for.
-    $resource->check((int) $_POST['id'], !empty($_POST["withtemplate"]) ? PURGE : DELETE);
+    $resources_id = Resource::checkPostedItem(
+        $resource,
+        $_POST['id'] ?? null,
+        !empty($_POST["withtemplate"]) ? PURGE : DELETE,
+    );
     if (!empty($_POST["withtemplate"])) {
-        $resource->delete($_POST, 1);
+        $resource->delete(['id' => $resources_id] + $_POST, 1);
     } else {
-        $resource->delete($_POST);
+        $resource->delete(['id' => $resources_id] + $_POST);
     }
 
     if (!empty($_POST["withtemplate"])) {
@@ -329,8 +347,8 @@ elseif (isset($_POST["delete"])) {
 //restore resource
 elseif (isset($_POST["restore"])) {
     // Restoring is the counterpart of deleting and carries the same bit in the core.
-    $resource->check((int) $_POST['id'], DELETE);
-    $resource->restore($_POST);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['id'] ?? null, DELETE);
+    $resource->restore(['id' => $resources_id] + $_POST);
     $resource->redirectToList();
 } //from central
 //purge resource template
@@ -338,8 +356,8 @@ elseif (isset($_POST["purge"])) {
     // delete($_POST, 1) erases the record and its related data for good, with no trash bin to
     // restore it from: PURGE is the bit for that, the way front/wizard.form.php:83 asks for it
     // on this very itemtype.
-    $resource->check((int) $_POST['id'], PURGE);
-    $resource->delete($_POST, 1);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['id'] ?? null, PURGE);
+    $resource->delete(['id' => $resources_id] + $_POST, 1);
     if (!empty($_POST["withtemplate"])) {
         Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/setup.templates.php?add=0");
     } else {
@@ -352,7 +370,7 @@ elseif (isset($_POST["additem"])) {
         // Authorize the parent resource (right + entity) before linking an item to it,
         // like the neighbouring addhelpdeskitem branch — otherwise any authenticated
         // user could attach an arbitrary object to a resource of another entity.
-        $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
+        $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
 
         // The pair below is stored as posted, then reused to instantiate a class and to
         // build SQL identifiers downstream: pin the itemtype to the list the plugin
@@ -365,32 +383,36 @@ elseif (isset($_POST["additem"])) {
         // and that object's name, serial and inventory number are displayed back on the
         // resource afterwards. can(READ) covers the right bit and the entity boundary
         // alike, which getTypeItems() does not.
+        $items_id = Resource::getPostedId($_POST['items_id']);
         $linked_item = getItemForItemtype($_POST['itemtype']);
-        if (!$linked_item || !$linked_item->can((int) $_POST['items_id'], READ)) {
+        if (!$linked_item || !$linked_item->can($items_id, READ)) {
             throw new \Glpi\Exception\Http\AccessDeniedHttpException();
         }
 
-        $resource_item->addItem($_POST);
+        $resource_item->addItem([
+            'plugin_resources_resources_id' => $resources_id,
+            'items_id'                      => $items_id,
+            'itemtype'                      => $_POST['itemtype'],
+        ]);
     }
     Html::back();
 } //from central
 //update comment of item of a resource
 elseif (isset($_POST["updatecomment"])) {
-    foreach ($_POST["updatecomment"] as $key => $val) {
+    foreach (array_keys((array) $_POST["updatecomment"]) as $key) {
         // Authorize each Resource_Item actually updated (right + entity), mirroring
         // the deleteitem branch, to prevent editing comments of items one does not own.
-        $resource_item->check((int) $key, UPDATE);
-        $varcomment = "comment" . $key;
-        $resource_item->updateItem($key, $_POST[$varcomment]);
+        $items_id = Resource::checkPostedItem($resource_item, $key, UPDATE);
+        $resource_item->updateItem($items_id, (string) ($_POST["comment" . $items_id] ?? ''));
     }
     Html::back();
 } //from central
 //delete item of a resource
 elseif (isset($_POST["deleteitem"])) {
-    foreach ($_POST["item"] as $key => $val) {
+    foreach ((array) ($_POST["item"] ?? []) as $key => $val) {
         if ($val == 1) {
-            $resource_item->check($key, UPDATE);
-            $resource_item->deleteItem($key);
+            $items_id = Resource::checkPostedItem($resource_item, $key, UPDATE);
+            $resource_item->deleteItem($items_id);
         }
     }
 
@@ -398,16 +420,15 @@ elseif (isset($_POST["deleteitem"])) {
 } //from central
 //delete item of a resource form items detail
 elseif (isset($_POST["deleteresources"])) {
-    $input = ['id' => $_POST["id"]];
-    $resource_item->check($_POST["id"], UPDATE);
-    $resource_item->deleteItem($_POST["id"]);
+    $items_id = Resource::checkPostedItem($resource_item, $_POST["id"] ?? null, UPDATE);
+    $resource_item->deleteItem($items_id);
     Html::back();
 } //from central
 //add checklist from resource form
 elseif (isset($_POST["add_checklist_resources"])) {
     // canCreate() only answers for the global right bit. The resource id is client-supplied
     // and the checklists are seeded under it, so authorise the record itself.
-    $resource->check((int) ($_POST["id"] ?? 0), UPDATE);
+    Resource::checkPostedItem($resource, $_POST["id"] ?? null, UPDATE);
     if ($checklist->canCreate()) {
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_IN);
         $checklistconfig->addChecklistsFromRules($resource, Checklist::RESOURCES_CHECKLIST_OUT);
@@ -420,10 +441,12 @@ elseif (isset($_POST["add_checklist_resources"])) {
 elseif (isset($_POST["add_checklist"])) {
     // The whole $_POST is written as-is, so the parent resource has to be authorised
     // before anything is created under it, and it also fixes the entity of the new row.
-    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
     if ($checklist->canCreate()) {
-        $_POST['entities_id'] = $resource->fields['entities_id'];
-        $newID = $checklist->add($_POST);
+        $newID = $checklist->add([
+            'plugin_resources_resources_id' => $resources_id,
+            'entities_id'                   => $resource->fields['entities_id'],
+        ] + $_POST);
     }
     Html::back();
 
@@ -432,12 +455,18 @@ elseif (isset($_POST["add_checklist"])) {
 } elseif (isset($_POST["close_checklist"])) {
     // This branch had no guard at all: both the checklist lookup and the ticket creation
     // below are keyed on the posted plugin_resources_resources_id, so authorising that
-    // resource (right bit and entity) is what gates the whole path.
-    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
-    $isfinished = Checklist::checkifChecklistFinished($_POST);
+    // resource (right bit and entity) is what gates the whole path. The checklist right is
+    // required as well, the one add_checklist and open_checklist ask for and the tab requires.
+    Session::checkRight(Checklist::$rightname, CREATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
+    $input = [
+        'plugin_resources_resources_id' => $resources_id,
+        'checklist_type'                => Checklist::getPostedType($_POST['checklist_type'] ?? null),
+    ] + $_POST;
+    $isfinished = Checklist::checkifChecklistFinished($input);
 
     if ($isfinished) {
-        Checklist::createTicket($_POST);
+        Checklist::createTicket($input);
     } else {
         Session::addMessageAfterRedirect(__('The checklist is not finished', 'resources'), true, ERROR);
     }
@@ -449,9 +478,12 @@ elseif (isset($_POST["add_checklist"])) {
     // openFinishedChecklist() is keyed on the posted plugin_resources_resources_id and
     // reopens every checklist row of that resource: authorise the resource, not just the
     // global right bit canCreate() answers for.
-    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
     if ($checklist->canCreate()) {
-        $checklist->openFinishedChecklist($_POST);
+        $checklist->openFinishedChecklist([
+            'plugin_resources_resources_id' => $resources_id,
+            'checklist_type'                => Checklist::getPostedType($_POST['checklist_type'] ?? null),
+        ]);
     }
     Html::back();
 
@@ -459,23 +491,30 @@ elseif (isset($_POST["add_checklist"])) {
     //up / down checklist
 } elseif (isset($_POST["move"])) {
     // changeRank reorders a checklist row of a given resource: authorize the parent
-    // resource (right + entity) before mutating its checklist ordering.
-    $resource->check((int) ($_POST['plugin_resources_resources_id'] ?? 0), UPDATE);
-    $checklist->changeRank($_POST);
+    // resource (right + entity) before mutating its checklist ordering, on top of the
+    // checklist right the tab requires to offer the arrows.
+    Session::checkRight(Checklist::$rightname, CREATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
+    $checklist->changeRank([
+        'id'                            => Resource::getPostedId($_POST['id'] ?? null),
+        'plugin_resources_resources_id' => $resources_id,
+        'checklist_type'                => Checklist::getPostedType($_POST['checklist_type'] ?? null),
+        'action'                        => $_POST['action'] ?? '',
+    ]);
     Html::back();
 } elseif (isset($_POST["report"])) {
     // sendReport() triggers an outbound notification about the resource: authorize
     // read access (right + entity) on the targeted resource before sending it.
-    $resource->check((int) $_POST["id"], READ);
+    $resources_id = Resource::checkPostedItem($resource, $_POST["id"] ?? null, READ);
     $restrict = [
         "itemtype" => 'User',
-        "plugin_resources_resources_id" => $_POST["id"],
+        "plugin_resources_resources_id" => $resources_id,
     ];
     $dbu = new DbUtils();
     $linkeduser = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
 
     if (!empty($linkeduser)) {
-        $resource->sendReport($_POST);
+        $resource->sendReport();
         Session::addMessageAfterRedirect(__('Notification sent', 'resources'), true);
     } else {
         Session::addMessageAfterRedirect(
@@ -487,7 +526,9 @@ elseif (isset($_POST["add_checklist"])) {
     Html::back();
 } elseif (isset($_POST["delete_picture"])) {
     // Enforce the right BEFORE any filesystem mutation (check() dies on failure).
-    $resource->check($_POST['id'], UPDATE);
+    Resource::checkPostedItem($resource, $_POST['id'] ?? null, UPDATE);
+    // The picture belongs to the frozen information as much as the other fields
+    $resource->checkNotFrozen();
     // The file to delete is the one stored on the authorized resource, never the posted
     // 'picture' value, which is not bound to it and could target another resource's picture.
     if ($resource->deletePictureFile()) {
@@ -503,7 +544,13 @@ elseif (isset($_POST["add_checklist"])) {
     // never enforced, leaving this branch reachable by any authenticated user. Gate on
     // UPDATE right + entity access of the target resource before touching the directory.
     Session::checkRight(Resource_Validation::$rightname, UPDATE);
-    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+    Resource::checkPostedItem($resource, $_POST["plugin_resources_resources_id"] ?? null, UPDATE);
+    // The validation tab only offers the synchronization once the manager validated the
+    // information, with the validation module on, to the profiles allowed to synchronize:
+    // the same condition has to stand here, the POST being reachable without the tab.
+    if (!$resource->canSynchronizeAD()) {
+        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+    }
 
     $config          = new Config();
     $configAD        = new Adconfig();
@@ -570,8 +617,11 @@ elseif (isset($_POST["add_checklist"])) {
         $ldap = new LDAP();
         $res = $ldap->createUserAD($value);
         if ($res) {
-            $_POST["action_done"] = 1;
-            $linkad->add($value);
+            // The account now exists under this login: record both, through the one write
+            // allowed to set the directory state of a link (forms cannot, see LinkAd). The
+            // flag used to be set on $_POST, which this add() never read.
+            $linkad->allow_directory_fields = ['login', 'action_done'];
+            $linkad->add(['action_done' => 1] + $value);
             $message = __('the user has been added to the LDAP directory', 'resources');
             Session::addMessageAfterRedirect($message, false, INFO);
         } else {
@@ -586,8 +636,9 @@ elseif (isset($_POST["add_checklist"])) {
         $value["login"] = $linkad->getField("login");
         $res = $ldap->updateUserAD($value);
         if ($res[0]) {
-
+            // The login stays the stored one: only the outcome of the operation is recorded
             $value["action_done"] = 1;
+            $linkad->allow_directory_fields = ['action_done'];
             $linkad->update($value);
 
             $message = __('the user has been updated to the LDAP directory', 'resources');
@@ -604,20 +655,20 @@ elseif (isset($_POST["add_checklist"])) {
     // IDOR + unauthorized write: the target id comes entirely from POST and update()
     // enforces neither right nor entity. Gate on UPDATE of the target resource, like the
     // sibling write branches, before mutating it and generating a departure ticket.
-    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST["plugin_resources_resources_id"] ?? null, UPDATE);
     // The leaving form only owns the order text. Never hand the raw body to update(): any
     // other resource column posted alongside it was written as is, bypassing the frozen form
-    // check of the update branch above.
-    $_POST["id"] = (int) $_POST["plugin_resources_resources_id"];
-    $resource->update([
-        'id'           => $_POST["id"],
+    // check of the update branch above. The leaving order belongs to the leaving workflow,
+    // which the freeze of the arrival information does not stop.
+    $resource->updateFromWorkflow([
+        'id'           => $resources_id,
         'remove_order' => $_POST['remove_order'] ?? '',
     ]);
 
     $config = new Config();
     $config->getFromDB(1);
     if ($config->fields["create_ticket_departure_instructions"]) {
-        $resource->getFromDB($_POST["id"]);
+        $resource->getFromDB($resources_id);
         $resource->createLeavingTicket(null, null, true);
 
         if ($config->fields['use_module_duplicata_ticket'] && $config->fields['use_module_departure_instruction'] && $config->fields["send_second_ticket_remove"] && $config->fields["assignment_group_second_ticket"]) {

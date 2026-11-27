@@ -42,13 +42,23 @@ use Session;
  */
 class Directory extends CommonDBTM
 {
-    public static $rightname = 'plugin_resources';
+    use UserListTrait;
+
+    // The directory has its own line in the profile form: plugin_resources only governs the
+    // resources themselves, so it used to leave that line without effect.
+    public static $rightname = 'plugin_resources_annuary';
     protected static $notable = true;
     private $table = "glpi_users";
 
     public static function getTable($classname = null)
     {
         return \User::getTable();
+    }
+
+    public static function getDisclosedFields(): array
+    {
+        // The glpi_users columns of rawSearchOptions()
+        return ['id', 'registration_number', 'realname', 'firstname', 'phone', 'phone2', 'mobile'];
     }
 
     /**
@@ -76,17 +86,6 @@ class Directory extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -263,17 +262,6 @@ class Directory extends CommonDBTM
         Search::displayData($data);
     }
 
-    /**
-     * @since version 0.84
-     * */
-    public function getForbiddenStandardMassiveAction()
-    {
-        $forbidden = parent::getForbiddenStandardMassiveAction();
-        $forbidden[] = 'update';
-        $forbidden[] = 'purge';
-        return $forbidden;
-    }
-
     //Massive action
 
     /**
@@ -290,7 +278,7 @@ class Directory extends CommonDBTM
     public function getSpecificMassiveActions($checkitem = null)
     {
         $actions = [];
-        if (Session::getCurrentInterface() == "central") {
+        if (self::canView() && Session::getCurrentInterface() == "central") {
             $actions['GlpiPlugin\Resources\Directory' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Send'] = __(
                 'Send a notification',
             );
@@ -309,6 +297,13 @@ class Directory extends CommonDBTM
 
         switch ($ma->getAction()) {
             case "Send":
+                // The core endpoint runs whatever action is posted to it: test the right of
+                // the list here too, not only when offering the action.
+                if (!self::canView()) {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                    $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                    break;
+                }
                 if ($item->sendEmail($ids)) {
                     $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_OK);
                 } else {
@@ -334,8 +329,15 @@ class Directory extends CommonDBTM
         // The ids come straight from the massive-action form. The directory list itself is
         // scoped through glpi_profiles_users, so replay that scope here: without it a forged
         // id list disclosed the mail address of any user of the instance.
+        // Only plain ids are kept: the scope is checked on an integer and the address is
+        // then read with that same integer.
         $allowed   = [];
-        $requested = array_map('intval', array_keys($items));
+        $requested = [];
+        foreach (array_keys($items) as $key) {
+            if (is_int($key) && $key > 0) {
+                $requested[] = $key;
+            }
+        }
         if (!empty($requested)) {
             $dbu      = new DbUtils();
             $iterator = $DB->request([
@@ -353,8 +355,8 @@ class Directory extends CommonDBTM
         $User = new User();
         $mail = "";
         $first = true;
-        foreach ($items as $key => $val) {
-            if (isset($allowed[(int) $key]) && $User->getFromDB($key)) {
+        foreach ($requested as $users_id) {
+            if (isset($allowed[$users_id]) && $User->getFromDB($users_id)) {
                 $email = $User->getDefaultEmail();
                 if (!empty($email)) {
                     if (!$first) {

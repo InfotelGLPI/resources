@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Migration;
 use Profile_User;
 use Session;
@@ -44,8 +45,34 @@ use User;
  */
 class LeavingInformation extends CommonDBTM
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait {
+        canCreate as private canCreateResourceRow;
+    }
+    // No entity of its own: the item rights are those of the resource
+    use ResourceChildItemRightTrait;
+
     //   static $rightname = 'plugin_resources_leavinginformation';
     public static $rightname = 'plugin_resources';
+
+    /**
+     * Columns the leaving form may write.
+     */
+    private const FORM_FIELDS = [
+        'plugin_resources_clients_id',
+        'plugin_resources_destinations_id',
+        'plugin_resources_workprofiles_id',
+        'plugin_resources_resignationreasons_id',
+        'users_id',
+        'interview_date',
+        'resignation_date',
+        'wished_leaving_date',
+        'effective_leaving_date',
+        'pay_gap',
+        'mission_lost',
+        'company_name',
+        'comment',
+    ];
 
     /**
      * Return the localized name of the current Type
@@ -77,18 +104,42 @@ class LeavingInformation extends CommonDBTM
      **/
     public static function canView(): bool
     {
-        return Session::haveRight(self::$rightname, READ);
+        return Session::haveRight(self::$rightname, READ) && self::haveLeavingInformationRight();
+    }
+
+    public static function canCreate(): bool
+    {
+        return self::canCreateResourceRow() && self::haveLeavingInformationRight();
+    }
+
+    public static function canUpdate(): bool
+    {
+        return Session::haveRight(self::$rightname, UPDATE) && self::haveLeavingInformationRight();
+    }
+
+    public static function canDelete(): bool
+    {
+        return Session::haveRight(self::$rightname, DELETE) && self::haveLeavingInformationRight();
+    }
+
+    public static function canPurge(): bool
+    {
+        return Session::haveRight(self::$rightname, PURGE) && self::haveLeavingInformationRight();
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
+     * The tab and its form only exist for the profiles holding the dedicated right
+     * (plugin_resources_leavinginformation), but the generic entry points of the core (search
+     * list, legacy API, massive actions) only ask the itemtype: it requires that right too.
      *
-     * @return
-     **/
-    public static function canCreate(): bool
+     * The leaving declaration (Resource::declareLeaving()) still writes the record, through
+     * add() and update(), on the resource its caller checked: the declaration form asks for
+     * these values whenever the contract type of the resource uses the resignation form,
+     * whatever this right, which the profile form does not even offer.
+     */
+    private static function haveLeavingInformationRight(): bool
     {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
+        return Session::haveRight('plugin_resources_leavinginformation', READ);
     }
 
     /**
@@ -157,23 +208,8 @@ class LeavingInformation extends CommonDBTM
      */
     public static function saveForResource(int $resources_id, array $post): void
     {
-        $leaving_fields = [
-            'plugin_resources_clients_id',
-            'plugin_resources_destinations_id',
-            'plugin_resources_workprofiles_id',
-            'plugin_resources_resignationreasons_id',
-            'users_id',
-            'interview_date',
-            'resignation_date',
-            'wished_leaving_date',
-            'effective_leaving_date',
-            'pay_gap',
-            'mission_lost',
-            'company_name',
-            'comment',
-        ];
         $input = [];
-        foreach ($leaving_fields as $leaving_field) {
+        foreach (self::FORM_FIELDS as $leaving_field) {
             if (isset($post[$leaving_field])) {
                 $input[$leaving_field] = $post[$leaving_field];
             }
@@ -199,14 +235,33 @@ class LeavingInformation extends CommonDBTM
      **/
     public function prepareInputForAdd($input)
     {
+        // Same columns as saveForResource(), whatever the entry point
+        $input = self::keepWritableColumns($input, array_merge(self::FORM_FIELDS, ['plugin_resources_resources_id']));
+
         // Not attached to resource -> not added
-        if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
+        try {
+            $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $resources_id = 0;
+        }
+        if ($resources_id <= 0) {
             return false;
         }
-        if ($this->getFromDBByCrit(['plugin_resources_resources_id' => $input['plugin_resources_resources_id']])) {
+        $input['plugin_resources_resources_id'] = $resources_id;
+
+        // One row per resource
+        if (countElementsInTable(self::getTable(), ['plugin_resources_resources_id' => $resources_id]) > 0) {
             return false;
         }
         return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // The row stays with the resource canUpdateItem() answered for: moving it would
+        // attach the leaving information of one person to the file of another, possibly in
+        // another entity. Only the columns of the form are written.
+        return self::keepWritableColumns($input, array_merge(self::FORM_FIELDS, ['id']));
     }
 
     /**
@@ -700,8 +755,6 @@ class LeavingInformation extends CommonDBTM
         $fields = [];
         $fields = $rulecollection->processAllRules($input, $fields, []);
 
-        $rank = new Rank();
-
         $field = [];
         foreach ($fields as $key => $val) {
             $required = explode("requiredfields_", $key);
@@ -717,7 +770,7 @@ class LeavingInformation extends CommonDBTM
                     || is_null($input[$val])
                     || $input[$val] == "NULL"
                 ) {
-                    if (!$rank->canCreate()
+                    if (!Rank::canFillPublicSectorFields()
                         && in_array(
                             $val,
                             [

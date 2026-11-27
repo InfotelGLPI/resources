@@ -33,13 +33,20 @@ use CommonDBTM;
 use DBConnection;
 use Dropdown;
 use Migration;
-use Session;
 
 /**
  * Class Linkmetademand
  */
 class Linkmetademand extends CommonDBTM
 {
+    // Each row decides which checklists and habilitations a meta-demand field attaches to a
+    // resource, and whether it declares the resource as leaving: field setup, which the
+    // operational checklist right must not rewrite or purge through the generic entry points.
+    // Its only writer, Metademand::saveOptions(), is the options form of the meta-demand
+    // field and calls add() / update() directly.
+    use ConfigRightTrait;
+    use NoStandardMassiveActionTrait;
+
     public static $rightname = 'plugin_resources_checklist';
     // From CommonDBTM
     public $dohistory = true;
@@ -55,31 +62,6 @@ class Linkmetademand extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Link metademands', 'resources');
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return bool
-     **/
-    public static function canView(): bool
-    {
-        return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return bool
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
 

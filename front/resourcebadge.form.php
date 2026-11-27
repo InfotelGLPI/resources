@@ -54,8 +54,7 @@ if (Plugin::isPluginActive("badges")) {
     $badge = new ResourceBadge();
     $pluginbadge = new Badge();
     if (isset($_POST['add_metademand'])) {
-        // CREATE, not UPDATE: canCreate() is widened here to
-        // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+        // The links are setup: ResourceBadge::canCreate() requires config UPDATE.
         $badge->check(-1, CREATE, $_POST);
         $badge->add($_POST);
 
@@ -106,25 +105,26 @@ if (Plugin::isPluginActive("badges")) {
         // other branches and validate the resource's entity scope, otherwise any user
         // could trigger a badge-restitution ticket for an arbitrary resource, possibly
         // in another entity.
-        $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
-        $resource     = new Resource();
         // createTicket() is a write: a read right on badges alone must not open tickets, so
-        // the ticket creation right is required too. The entity test honours is_recursive,
-        // Resource being a recursive item.
-        if (($pluginbadge->canView() || Session::haveRight("config", UPDATE))
-            && Ticket::canCreate()
-            && $resources_id > 0
-            && $resource->getFromDB($resources_id)
-            && Session::haveAccessToEntity(
-                $resource->fields['entities_id'],
-                (bool) $resource->fields['is_recursive'],
-            )) {
+        // the ticket creation right is required too. The ticket and its history line change
+        // the resource: UPDATE on it (right and entity), not mere entity access.
+        $resources_id = Resource::checkPostedItem(new Resource(), $_POST['plugin_resources_resources_id'] ?? null, UPDATE);
+        // The badge given back has to be readable (ResourceBadge::canCreateRestitution()): the
+        // badges right, which the setup right does not stand for.
+        if ($pluginbadge->canView() && Ticket::canCreate()) {
+            // The badge is checked there: readable, and held by a user linked to the resource
             $badge->createTicket($resources_id, $_POST);
         }
         Html::back();
     } else {
-        if ($pluginbadge->canView() || Session::haveRight("config", UPDATE)) {
+        // The restitution form, on the right its submission requires (see above): with the
+        // setup right alone, every badge picked was refused.
+        if ($pluginbadge->canView()) {
             $badge->showWizardForm();
+        } else {
+            TemplateRenderer::getInstance()->display('@resources/alert_warning.html.twig', [
+                'message' => __('You need rights into badges plugin', 'resources'),
+            ]);
         }
     }
 

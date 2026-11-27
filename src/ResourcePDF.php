@@ -30,7 +30,6 @@
 namespace GlpiPlugin\Resources;
 
 use CommonGLPI;
-use DbUtils;
 use Dropdown;
 use Html;
 use PluginPdfCommon;
@@ -65,51 +64,61 @@ class ResourcePDF extends PluginPdfCommon
             return false;
         }
 
+        // The pdf plugin renders every argument as HTML (TCPDF writeHTMLCell): the bold and
+        // italic labels are the only markup kept, every label and stored value is escaped.
+        $label = static fn(string $text): string => '<b><i>' . htmlescape($text) . ' :</i></b> ';
+
         $pdf->setColumnsSize(50, 50);
-        $col1 = '<b>' . __('ID') . ' ' . $res->fields['id'] . '</b>';
+        $col1 = '<b>' . htmlescape(__('ID') . ' ' . $res->fields['id']) . '</b>';
         if (isset($res->fields["date_declaration"])) {
-            $users_id_recipient = new User();
-            $users_id_recipient->getFromDB($res->fields["users_id_recipient"]);
-            $col2 = __('Request date') . ' : ' . Html::convDate($res->fields["date_declaration"]) . ' ' . __(
-                'Requester',
-            ) . ' ' . $users_id_recipient->getName();
+            // getUserName() reads glpi_users: the plugin User class of this namespace reads
+            // the resource items table instead.
+            $col2 = htmlescape(
+                __('Request date') . ' : ' . Html::convDate($res->fields["date_declaration"]) . ' '
+                . __('Requester') . ' ' . getUserName((int) $res->fields["users_id_recipient"]),
+            );
         } else {
             $col2 = '';
         }
         $pdf->displayTitle($col1, $col2);
 
         $pdf->displayLine(
-            '<b><i>' . __('Surname') . ' :</i></b> ' . $res->fields['name'],
-            '<b><i>' . __('First name') . ' :</i></b> ' . $res->fields['firstname'],
+            $label(__('Surname')) . htmlescape((string) $res->fields['name']),
+            $label(__('First name')) . htmlescape((string) $res->fields['firstname']),
         );
         $pdf->displayLine(
-            '<b><i>' . __('Location') . ' :</i></b> ' . Dropdown::getDropdownName(
+            $label(__('Location')) . htmlescape(Dropdown::getDropdownName(
                 'glpi_locations',
                 $res->fields['locations_id'],
-            ),
-            '<b><i>' . ContractType::getTypeName(1) . ' :</i></b> ' . Dropdown::getDropdownName(
+            )),
+            $label(ContractType::getTypeName(1)) . htmlescape(Dropdown::getDropdownName(
                 'glpi_plugin_resources_contracttypes',
                 $res->fields['plugin_resources_contracttypes_id'],
-            ),
+            )),
         );
 
-        $dbu = new DbUtils();
         $pdf->displayLine(
-            '<b><i>' . __('Resource manager', 'resources') . ' :</i></b> ' . getUserName($res->fields["users_id"]),
-            '<b><i>' . Department::getTypeName(1) . ' :</i></b> ' . Dropdown::getDropdownName(
+            $label(__('Resource manager', 'resources')) . htmlescape(getUserName((int) $res->fields["users_id"])),
+            $label(Department::getTypeName(1)) . htmlescape(Dropdown::getDropdownName(
                 'glpi_plugin_resources_departments',
                 $res->fields["plugin_resources_departments_id"],
-            ),
+            )),
         );
 
         $pdf->displayLine(
-            '<b><i>' . __('Arrival date', 'resources') . ' :</i></b> ' . Html::convDate($res->fields["date_begin"]),
-            '<b><i>' . __('Departure date', 'resources') . ' :</i></b> ' . Html::convDate($res->fields["date_end"]),
+            $label(__('Arrival date', 'resources')) . htmlescape(Html::convDate($res->fields["date_begin"])),
+            $label(__('Departure date', 'resources')) . htmlescape(Html::convDate($res->fields["date_end"])),
         );
 
         $pdf->setColumnsSize(100);
 
-        $pdf->displayText('<b><i>' . __('Description') . ' :</i></b>', $res->fields['comment']);
+        // Plain text field (textarea, no rich text editor), printed with displayLine(), which
+        // writes its argument as it is. displayText() is meant for rich text: the pdf plugin
+        // decodes the entities of its content after sanitizing it, which would turn the
+        // escaped markup back into tags, and embeds the documents its images point to.
+        $pdf->displayLine(
+            $label(__('Description')) . nl2br(htmlescape((string) $res->fields['comment'])),
+        );
 
         $pdf->displaySpace();
     }
